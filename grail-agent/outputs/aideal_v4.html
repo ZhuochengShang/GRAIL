@@ -1,0 +1,1255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AIDEAL — AI Documentation Evaluation and Alias Library</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=DM+Sans:wght@300;400;500;600&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f2f5fb;--bg2:#ffffff;--bg3:#edf0f8;--bg4:#e2e7f4;
+  --border:#cdd4e8;--border2:#aab5d4;
+  --text:#18203e;--dim:#64709a;--mid:#38437a;
+  --green:#15803d;--gbg:#dcfce7;--gborder:#86efac;
+  --red:#dc2626;--rbg:#fee2e2;--rborder:#fca5a5;
+  --amber:#b45309;--abg:#fef3c7;--aborder:#fcd34d;
+  --blue:#1d4ed8;--bbg:#dbeafe;--bborder:#93c5fd;
+  --teal:#0d9488;--tbg:#ccfbf1;--tborder:#5eead4;
+  --purple:#6d28d9;--pbg:#ede9fe;--pborder:#c4b5fd;
+  --mono:'JetBrains Mono',monospace;
+  --sans:'DM Sans',sans-serif;
+}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);height:100vh;display:flex;flex-direction:column;font-size:13px;overflow:hidden;}
+
+/* TOPBAR */
+.topbar{height:46px;display:flex;align-items:center;padding:0 18px;background:var(--bg2);border-bottom:2px solid var(--border);flex-shrink:0;box-shadow:0 1px 4px rgba(0,0,0,.06);gap:10px;}
+.logo{font-family:var(--mono);font-size:15px;font-weight:600;color:var(--teal);}
+.logo-sub{font-size:11px;color:var(--dim);}
+.tb-pill{font-family:var(--mono);font-size:11px;font-weight:600;padding:3px 12px;border-radius:20px;border:1.5px solid;}
+.tp-idle{background:var(--bg3);color:var(--dim);border-color:var(--border);}
+.tp-run{background:var(--abg);color:var(--amber);border-color:var(--aborder);}
+.tp-fail{background:var(--rbg);color:var(--red);border-color:var(--rborder);}
+.tp-pass{background:var(--gbg);color:var(--green);border-color:var(--gborder);}
+.tb-right{margin-left:auto;}
+.run-btn{display:flex;align-items:center;gap:8px;padding:8px 20px;background:var(--teal);color:#fff;border:none;border-radius:7px;font-family:var(--sans);font-size:12px;font-weight:700;cursor:pointer;box-shadow:0 2px 6px rgba(13,148,136,.3);transition:all .15s;}
+.run-btn:hover{background:#0f766e;transform:translateY(-1px);}
+.run-btn:disabled{background:var(--bg3);color:var(--dim);box-shadow:none;cursor:not-allowed;transform:none;}
+
+/* PANELS */
+.panels{display:grid;grid-template-columns:268px 1fr 390px;flex:1;overflow:hidden;}
+.panel{display:flex;flex-direction:column;overflow:hidden;border-right:1.5px solid var(--border);}
+.panel:last-child{border-right:none;}
+.ph{padding:10px 16px;background:var(--bg2);border-bottom:1.5px solid var(--border);flex-shrink:0;}
+.ph-title{font-size:10px;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:.1em;}
+
+/* LEFT */
+.left-body{flex:1;overflow-y:auto;padding:14px 16px;}
+.field{margin-bottom:13px;}
+.fl{font-size:10px;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:.09em;margin-bottom:5px;display:flex;align-items:center;gap:6px;}
+.fi{width:100%;padding:7px 10px;background:var(--bg2);border:1.5px solid var(--border);border-radius:6px;color:var(--text);font-size:12px;font-family:var(--mono);outline:none;transition:border-color .15s;}
+.fi:focus{border-color:var(--teal);}
+.fsel{width:100%;padding:7px 10px;background:var(--bg2);border:1.5px solid var(--border);border-radius:6px;color:var(--text);font-size:12px;font-family:var(--sans);outline:none;cursor:pointer;transition:border-color .15s;}
+.fsel:focus{border-color:var(--teal);}
+textarea.fi{resize:none;line-height:1.5;font-family:var(--sans);font-size:12px;}
+.fhint{font-size:10px;color:var(--dim);margin-top:3px;font-style:italic;}
+.sec-sep{margin:14px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--border);font-size:10px;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:.09em;}
+.num-row{display:flex;align-items:center;gap:7px;}
+.num-row .fi{flex:1;}
+.ibadge{width:18px;height:18px;border-radius:50%;background:var(--bbg);border:1px solid var(--bborder);color:var(--blue);font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;cursor:default;flex-shrink:0;position:relative;font-family:var(--mono);}
+.ibadge:hover .tip{display:block;}
+.tip{display:none;position:absolute;left:24px;top:-4px;background:var(--text);color:#fff;font-size:10px;padding:6px 10px;border-radius:6px;width:210px;line-height:1.5;font-family:var(--sans);z-index:100;font-weight:400;box-shadow:0 4px 12px rgba(0,0,0,.2);}
+
+/* sample data files */
+let sampleFiles = [];
+const RASTER_EXTS = new Set(['tif','tiff','img','nc','hdf','h5','asc','dem','bil','bip','bsq']);
+const VECTOR_EXTS = new Set(['shp','geojson','gpkg','kml','kmz','gdb','json']);
+const TABLE_EXTS  = new Set(['csv','tsv','xlsx','xls','parquet']);
+
+function getCategory(ext){
+  if(RASTER_EXTS.has(ext)) return 'raster';
+  if(VECTOR_EXTS.has(ext)) return 'vector';
+  if(TABLE_EXTS.has(ext))  return 'table';
+  return 'other';
+}
+function getCatColor(cat){
+  return cat==='raster'?'var(--teal)':cat==='vector'?'var(--blue)':cat==='table'?'var(--amber)':'var(--dim)';
+}
+
+function addSampleFiles(files){
+  let added=0;
+  [...files].forEach(f=>{
+    if(sampleFiles.find(x=>x.name===f.name)) return;
+    sampleFiles.push(f); added++;
+  });
+  renderSampleFiles();
+}
+
+function renderSampleFiles(){
+  const total = sampleFiles.length;
+  const countEl = document.getElementById('dataCount');
+  const empty = document.getElementById('sampleEmptyState');
+  const groups = document.getElementById('sampleGroups');
+  if(!countEl) return;
+  countEl.textContent = total + (total===1?' file':' files');
+  if(total===0){ if(empty)empty.style.display='flex'; if(groups)groups.style.display='none'; return; }
+  if(empty)empty.style.display='none';
+  if(groups)groups.style.display='block';
+
+  const cats = {raster:[],vector:[],table:[],other:[]};
+  sampleFiles.forEach((f,i)=>{
+    const ext=f.name.split('.').pop().toLowerCase();
+    const cat=getCategory(ext);
+    cats[cat].push({f,i,ext});
+  });
+
+  Object.entries(cats).forEach(([cat,items])=>{
+    const grp=document.getElementById('grp-'+cat);
+    const lst=document.getElementById('grp-'+cat+'-list');
+    const cnt=document.getElementById('grp-'+cat+'-count');
+    if(!grp) return;
+    if(items.length===0){grp.style.display='none';return;}
+    grp.style.display='block';
+    if(cnt) cnt.textContent=items.length;
+    const color=getCatColor(cat);
+    lst.innerHTML=items.map(({f,i,ext})=>`
+      <div style="display:flex;align-items:center;gap:8px;padding:6px 10px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;transition:border-color .15s;" onmouseover="this.style.borderColor='var(--border2)'" onmouseout="this.style.borderColor='var(--border)'">
+        <span style="font-family:var(--mono);font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px;background:var(--bg2);border:1px solid var(--border);color:${color};">.${ext}</span>
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:12px;color:var(--text);font-family:var(--mono);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${f.name}</div>
+          <div style="font-size:10px;color:var(--dim);margin-top:1px;">${f.size>1048576?(f.size/1048576).toFixed(1)+' MB':(f.size/1024).toFixed(0)+' KB'}</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:5px;">
+          <label style="font-size:10px;padding:2px 8px;background:var(--bbg);border:1px solid var(--bborder);color:var(--blue);border-radius:4px;cursor:pointer;font-weight:600;" title="Replace with different file">
+            swap
+            <input type="file" style="display:none" onchange="swapSampleFile(${i},this.files[0])"/>
+          </label>
+          <span onclick="removeSampleFile(${i})" style="font-size:11px;color:var(--dim);cursor:pointer;padding:2px 5px;border-radius:3px;opacity:.6;" title="Remove">✕</span>
+        </div>
+      </div>`).join('');
+  });
+}
+
+function removeSampleFile(i){sampleFiles.splice(i,1);renderSampleFiles();}
+function swapSampleFile(i,f){if(f){sampleFiles[i]=f;renderSampleFiles();}}
+function clearAllSampleFiles(){sampleFiles=[];renderSampleFiles();}
+
+/* output tab filter */
+let outputFilter='all';
+function filterOutput(f,el){
+  outputFilter=f;
+  document.querySelectorAll('#midtab-output .fpill').forEach(p=>p.classList.remove('active'));
+  if(el)el.classList.add('active');
+  if(document.getElementById('outputList').querySelector('.out-entry')) renderOutputLog();
+}
+
+const OUTPUT_RUNS=[
+  {id:'O1',tier:'T2',fn:'sc.openRaster[T]()',status:'pass',duration:'1.8s',cmd:'sbt test -- -Dtest=ScaffoldTest',exit:0,
+   stdout:`[info] Compiling scaffold...\n[info] ScaffoldTest\n[info] - T2 openRaster[Int] loaded · 1247×983 pixels\n[info] All tests passed.`,stderr:''},
+  {id:'O2',tier:'T2',fn:'raptorJoinFeature()',status:'fail',duration:'2.3s',cmd:'sbt test -- -Dtest=ScaffoldTest',exit:1,
+   stdout:`[info] Compiling scaffold...\n[info] ScaffoldTest`,
+   stderr:`[error] Task not serializable:\n[error]   edu.ucr.bdlab.raptor.RaptorJoin$$anon$1\n[error]   → LLM captured outer sc reference in closure\n[error] at ScaffoldTest$.run(ScaffoldTest.scala:18)`},
+  {id:'O3',tier:'T2',fn:'SpatialRDD.reproject()',status:'pass',duration:'1.2s',cmd:'sbt test -- -Dtest=ScaffoldTest',exit:0,
+   stdout:`[info] Compiling scaffold...\n[info] - T2 reproject · cities → EPSG:5070\n[info] All tests passed.`,stderr:''},
+  {id:'O4',tier:'T4',fn:'Integration draw #02 · K=5',status:'fail',duration:'4.1s',cmd:'sbt test -- -Dtest=ScaffoldTest',exit:1,
+   stdout:`[info] Compiling scaffold...`,
+   stderr:`[error] type mismatch: found AnyVal, required Int\n[error]   val raster = sc.openRaster(path)  ← missing [Int]\n[error]   ScaffoldTest.scala:14`},
+  {id:'O5',tier:'T4',fn:'Integration draw #07 · K=5',status:'pass',duration:'5.2s',cmd:'sbt test -- -Dtest=ScaffoldTest',exit:0,
+   stdout:`[info] Compiling scaffold...\n[info] - T4 draw #07: openRaster+readWKT+reproject+join+save\n[info] 4/4 tests passed · output: nlcd_zonal_out/part-00000\n[info] All tests passed.`,stderr:''},
+];
+
+function renderOutputLog(){
+  document.getElementById('outputPH').style.display='none';
+  const list=document.getElementById('outputList');
+  list.innerHTML='';
+  const show=OUTPUT_RUNS.filter(r=>{
+    if(outputFilter==='all') return true;
+    if(outputFilter==='pass') return r.status==='pass';
+    if(outputFilter==='fail') return r.status==='fail';
+    return r.tier===outputFilter;
+  });
+  const pass=show.filter(r=>r.status==='pass').length;
+  const fail=show.filter(r=>r.status==='fail').length;
+  document.getElementById('outputSummary').textContent=pass+' pass · '+fail+' fail of '+show.length;
+  if(!show.length){list.innerHTML='<div style="font-size:11px;color:var(--dim)">No runs match this filter.</div>';return;}
+  show.forEach(r=>{
+    const div=document.createElement('div');
+    div.className='out-entry';
+    const sc=r.status==='pass'?'var(--green)':'var(--red)';
+    const bg=r.status==='pass'?'var(--gbg)':'var(--rbg)';
+    const tc=r.tier==='T4'?'var(--purple)':'var(--blue)';
+    div.style.cssText='border:1.5px solid '+(r.status==='pass'?'var(--gborder)':'var(--rborder)')+';border-radius:9px;overflow:hidden;margin-bottom:8px;background:var(--bg2);';
+    div.innerHTML=`<div style="display:flex;align-items:center;gap:8px;padding:9px 12px;background:${bg};cursor:pointer;" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='block'?'none':'block';this.querySelector('.oarr').textContent=this.nextElementSibling.style.display==='block'?'▼':'▶';">
+      <div style="font-family:var(--mono);font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px;background:var(--bg2);border:1.5px solid ${sc};color:${sc};">${r.status.toUpperCase()}</div>
+      <div style="font-family:var(--mono);font-size:10px;padding:2px 7px;border-radius:4px;background:var(--bg2);border:1px solid ${tc};color:${tc};">${r.tier}</div>
+      <div style="font-family:var(--mono);font-size:12px;color:${sc};font-weight:600;flex:1;">${r.fn}</div>
+      <div style="font-size:10px;color:var(--dim);">${r.duration}</div>
+      <div class="oarr" style="font-size:10px;color:var(--dim);">▶</div>
+    </div>
+    <div style="display:none;border-top:1px solid var(--border);">
+      <div style="padding:7px 12px;background:var(--bg3);border-bottom:1px solid var(--border);">
+        <div style="font-size:10px;color:var(--dim);font-family:var(--mono);margin-bottom:2px;">$ ${r.cmd}</div>
+        <div style="font-size:10px;color:var(--dim);">exit: <span style="font-weight:700;color:${r.exit===0?'var(--green)':'var(--red)'};">${r.exit}</span></div>
+      </div>
+      ${r.stdout?`<div style="padding:8px 12px;${r.stderr?'border-bottom:1px solid var(--bg3);':''}">
+        <div style="font-size:10px;font-weight:700;color:var(--green);margin-bottom:4px;font-family:var(--mono);">STDOUT</div>
+        <pre style="font-family:var(--mono);font-size:10px;color:var(--mid);white-space:pre-wrap;line-height:1.7;">${r.stdout}</pre></div>`:''}
+      ${r.stderr?`<div style="padding:8px 12px;">
+        <div style="font-size:10px;font-weight:700;color:var(--red);margin-bottom:4px;font-family:var(--mono);">STDERR</div>
+        <pre style="font-family:var(--mono);font-size:10px;color:var(--red);opacity:.85;white-space:pre-wrap;line-height:1.7;">${r.stderr}</pre></div>`:''}
+    </div>`;
+    list.appendChild(div);
+  });
+}
+
+/* lang multi */
+.lang-multi{width:100%;border:1.5px solid var(--border);border-radius:6px;background:var(--bg2);overflow:hidden;}
+.lm-head{display:flex;align-items:center;gap:6px;padding:7px 10px;cursor:pointer;user-select:none;font-size:12px;color:var(--mid);transition:background .15s;}
+.lm-head:hover{background:var(--bg3);}
+.lm-tags{display:flex;flex-wrap:wrap;gap:4px;flex:1;}
+.ltag{font-size:10px;font-family:var(--mono);font-weight:600;padding:2px 7px;border-radius:4px;background:var(--tbg);color:var(--teal);border:1px solid var(--tborder);}
+.lm-arr{font-size:10px;color:var(--dim);transition:transform .2s;}
+.lm-head.open .lm-arr{transform:rotate(180deg);}
+.lm-opts{border-top:1px solid var(--border);background:var(--bg3);display:none;padding:7px;}
+.lm-opts.open{display:block;}
+.lg{display:grid;grid-template-columns:1fr 1fr;gap:4px;}
+.lo{display:flex;align-items:center;gap:6px;padding:5px 8px;border-radius:5px;cursor:pointer;font-size:11px;color:var(--mid);transition:background .12s;font-family:var(--mono);}
+.lo:hover{background:var(--bg4);}
+.lo.ck{color:var(--teal);font-weight:600;}
+.lchk{width:13px;height:13px;border-radius:3px;border:1.5px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:8px;transition:all .15s;}
+.lo.ck .lchk{background:var(--teal);border-color:var(--teal);color:#fff;}
+
+/* ══ MIDDLE ══ */
+.mid-body{flex:1;overflow-y:auto;padding:18px 20px;}
+.mid-intro{margin-bottom:20px;}
+.mid-title{font-size:17px;font-weight:700;color:var(--teal);letter-spacing:-.02em;margin-bottom:3px;}
+.mid-sub{font-size:12px;color:var(--dim);}
+
+/* capability cards — the 4 functions */
+.cap-card{
+  border:1.5px solid var(--border);border-radius:12px;
+  background:var(--bg2);margin-bottom:10px;
+  overflow:hidden;transition:border-color .25s,box-shadow .25s;
+}
+.cap-card.state-run{border-color:var(--aborder);box-shadow:0 0 0 3px rgba(180,83,9,.08);}
+.cap-card.state-pass{border-color:var(--gborder);box-shadow:0 0 0 3px rgba(21,128,61,.08);}
+.cap-card.state-fail{border-color:var(--rborder);box-shadow:0 0 0 3px rgba(220,38,38,.08);}
+
+.cap-head{display:flex;align-items:flex-start;gap:14px;padding:14px 16px;}
+.cap-card.state-run  .cap-head{background:var(--abg);}
+.cap-card.state-pass .cap-head{background:var(--gbg);}
+.cap-card.state-fail .cap-head{background:var(--rbg);}
+
+/* numbered badge */
+.cap-num{
+  width:36px;height:36px;border-radius:9px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--mono);font-size:13px;font-weight:700;
+  border:1.5px solid var(--border);color:var(--dim);
+  background:var(--bg3);transition:all .25s;
+  margin-top:1px;
+}
+.cap-card.state-run  .cap-num{border-color:var(--amber);color:var(--amber);background:var(--abg);animation:spin .9s linear infinite;}
+.cap-card.state-pass .cap-num{border-color:var(--green);color:var(--green);background:var(--gbg);}
+.cap-card.state-fail .cap-num{border-color:var(--red);color:var(--red);background:var(--rbg);}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.cap-body{flex:1;}
+.cap-name{font-size:14px;font-weight:700;color:var(--text);margin-bottom:3px;transition:color .25s;}
+.cap-card.state-run  .cap-name{color:var(--amber);}
+.cap-card.state-pass .cap-name{color:var(--green);}
+.cap-card.state-fail .cap-name{color:var(--red);}
+.cap-desc{font-size:11px;color:var(--dim);line-height:1.5;margin-bottom:8px;}
+
+/* tier chips inside card */
+.cap-chips{display:flex;gap:5px;flex-wrap:wrap;}
+.chip{
+  font-family:var(--mono);font-size:10px;font-weight:600;
+  padding:3px 9px;border-radius:12px;border:1.5px solid;
+  transition:all .3s;
+}
+.chip-idle{border-color:var(--border);color:var(--dim);background:var(--bg3);}
+.chip-pass{border-color:var(--gborder);color:var(--green);background:var(--gbg);}
+.chip-fail{border-color:var(--rborder);color:var(--red);background:var(--rbg);}
+.chip-run{border-color:var(--aborder);color:var(--amber);background:var(--abg);}
+.chip-int{border-color:var(--pborder);color:var(--purple);background:var(--pbg);}
+
+/* integration badge */
+.int-badge{
+  display:inline-flex;align-items:center;gap:5px;
+  font-size:10px;font-family:var(--mono);font-weight:700;
+  padding:2px 9px;border-radius:4px;
+  border:1.5px solid var(--pborder);
+  color:var(--purple);background:var(--pbg);
+  margin-bottom:6px;
+}
+
+.cap-score{
+  margin-left:auto;font-family:var(--mono);font-size:12px;
+  font-weight:700;padding:4px 11px;border-radius:6px;border:1.5px solid;
+  align-self:flex-start;flex-shrink:0;
+}
+.cap-card.state-pass .cap-score{background:var(--gbg);color:var(--green);border-color:var(--gborder);}
+.cap-card.state-fail .cap-score{background:var(--rbg);color:var(--red);border-color:var(--rborder);}
+.cap-card.state-run  .cap-score{background:var(--abg);color:var(--amber);border-color:var(--aborder);}
+
+/* summary */
+.sum-card{background:var(--bg2);border:1.5px solid var(--border);border-radius:10px;padding:14px 16px;margin-top:16px;}
+.sum-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.sum-row:last-child{margin-bottom:0;}
+.sum-lbl{font-size:11px;color:var(--mid);flex:1;}
+.sum-bar{flex:2;height:5px;background:var(--bg3);border-radius:3px;overflow:hidden;}
+.sum-fill{height:100%;border-radius:3px;transition:width 1.1s ease;}
+.sum-fill.g{background:var(--green);}
+.sum-fill.r{background:var(--red);}
+.sum-fill.a{background:var(--amber);}
+.sum-fill.p{background:var(--purple);}
+.sum-val{font-family:var(--mono);font-size:12px;font-weight:700;width:36px;text-align:right;}
+.sum-val.g{color:var(--green);}
+.sum-val.r{color:var(--red);}
+.sum-val.a{color:var(--amber);}
+.sum-val.p{color:var(--purple);}
+
+.ready-strip{display:none;margin-top:10px;padding:12px 14px;background:var(--gbg);border:1.5px solid var(--gborder);border-radius:10px;}
+.ready-strip.show{display:block;}
+.ready-title{color:var(--green);font-weight:700;font-size:12px;}
+.ready-sub{font-size:11px;color:#166534;margin-top:2px;}
+
+/* RIGHT */
+.right-tabs{display:flex;border-bottom:1.5px solid var(--border);background:var(--bg2);flex-shrink:0;}
+.rtab{padding:10px 16px;font-size:12px;color:var(--dim);cursor:pointer;border-bottom:2.5px solid transparent;transition:all .15s;user-select:none;font-weight:500;}
+.rtab:hover{color:var(--text);}
+.rtab.active{color:var(--teal);border-bottom-color:var(--teal);}
+.right-body{flex:1;overflow-y:auto;}
+.rb{padding:12px 14px;}
+
+.efbar{padding:8px 14px;border-bottom:1px solid var(--border);background:var(--bg2);display:flex;gap:6px;align-items:center;flex-wrap:wrap;flex-shrink:0;}
+.fl-lbl{font-size:10px;color:var(--dim);font-weight:700;margin-right:2px;}
+.fpill{font-size:10px;padding:3px 10px;border-radius:12px;border:1.5px solid var(--border);color:var(--dim);cursor:pointer;transition:all .15s;user-select:none;font-family:var(--mono);background:var(--bg2);font-weight:600;}
+.fpill:hover{border-color:var(--border2);}
+.fpill.active{background:var(--teal);border-color:var(--teal);color:#fff;}
+
+.elog{border:1.5px solid var(--border);border-radius:9px;overflow:hidden;margin-bottom:8px;background:var(--bg2);transition:border-color .2s,box-shadow .2s;}
+.elog.open{border-color:var(--rborder);}
+.elog.hl{border-color:var(--teal);box-shadow:0 0 0 3px rgba(13,148,136,.14);}
+.ehd{display:flex;align-items:flex-start;gap:8px;padding:10px 12px;cursor:pointer;background:var(--bg2);transition:background .15s;}
+.elog.open .ehd{background:var(--rbg);}
+.elog.hl   .ehd{background:var(--tbg);}
+.eid{font-family:var(--mono);font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px;background:var(--rbg);color:var(--red);border:1.5px solid var(--rborder);flex-shrink:0;margin-top:2px;}
+.elog.hl .eid{background:var(--tbg);color:var(--teal);border-color:var(--tborder);}
+.efn{font-family:var(--mono);font-size:12px;color:var(--red);font-weight:600;}
+.elog.hl .efn{color:var(--teal);}
+.emeta{font-size:10px;color:var(--dim);margin-top:2px;}
+.earr{margin-left:auto;color:var(--dim);font-size:10px;align-self:center;transition:transform .2s;}
+.elog.open .earr{transform:rotate(90deg);}
+.ebd{border-top:1px solid var(--border);max-height:0;overflow:hidden;transition:max-height .35s ease;}
+.elog.open .ebd{max-height:700px;}
+.esec{padding:10px 12px;border-bottom:1px solid var(--bg3);}
+.esec:last-child{border-bottom:none;}
+.esl{font-size:10px;font-family:var(--mono);font-weight:700;margin-bottom:6px;text-transform:uppercase;letter-spacing:.07em;}
+.esl.err{color:var(--red);}
+.esl.fix{color:var(--teal);}
+.trace{font-family:var(--mono);font-size:11px;line-height:1.7;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:9px 11px;}
+.te{color:var(--red);font-weight:600;}
+.ta{color:var(--amber);font-weight:600;}
+.td{color:var(--dim);}
+.fbox{background:var(--tbg);border:1.5px solid var(--tborder);border-radius:8px;padding:12px 13px;}
+.ftit{color:var(--teal);font-weight:700;font-size:12px;margin-bottom:5px;}
+.fexp{font-size:11px;color:#134e4a;line-height:1.6;margin-bottom:9px;}
+.cdiff{font-family:var(--mono);font-size:11px;line-height:1.7;background:var(--bg2);border:1px solid var(--border);border-radius:6px;overflow:hidden;}
+.dl{padding:1px 10px;display:flex;gap:6px;}
+.dl.add{background:#f0fdf4;}
+.dl.del{background:#fff1f2;}
+.ds{width:10px;flex-shrink:0;font-weight:700;}
+.dl.add .ds{color:var(--green);}
+.dl.del .ds{color:var(--red);}
+.dl.ctx .ds{color:var(--dim);}
+.dc{flex:1;white-space:pre;}
+.dl.add .dc{color:#15803d;}
+.dl.del .dc{color:#b91c1c;}
+.dl.ctx .dc{color:var(--dim);}
+.fconf{display:flex;align-items:center;gap:8px;margin-top:9px;font-size:11px;color:var(--dim);}
+.ctrack{flex:1;height:4px;background:var(--bg3);border-radius:3px;overflow:hidden;}
+.cfill{height:100%;border-radius:3px;background:var(--teal);}
+.abox{background:var(--abg);border:1.5px solid var(--aborder);border-radius:6px;padding:9px 11px;margin-top:8px;}
+.abt{font-size:10px;color:var(--amber);font-family:var(--mono);text-transform:uppercase;letter-spacing:.07em;font-weight:700;margin-bottom:5px;}
+.abr{display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:12px;}
+.ab-f{color:var(--red);font-weight:600;}
+.ab-a{color:var(--dim);}
+.ab-t{color:var(--green);font-weight:600;}
+.ab-w{font-size:10px;color:#92400e;margin-top:3px;font-family:var(--sans);}
+
+/* alias tab */
+.atcard{border:1.5px solid var(--border);border-radius:9px;overflow:hidden;margin-bottom:8px;background:var(--bg2);}
+.atc{padding:10px 12px;display:flex;align-items:flex-start;gap:8px;}
+.atr{display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:12px;}
+.at-f{color:var(--red);font-weight:600;}
+.at-t{color:var(--green);font-weight:600;}
+.at-a{color:var(--dim);}
+.at-s{font-size:10px;padding:2px 7px;border-radius:4px;background:var(--rbg);color:var(--red);border:1px solid var(--rborder);font-family:var(--mono);font-weight:600;flex-shrink:0;margin-left:auto;margin-top:2px;}
+.at-why{font-size:11px;color:var(--dim);margin-top:4px;line-height:1.5;}
+
+/* doc tab */
+.dfcard{border:1.5px solid var(--border);border-radius:9px;overflow:hidden;margin-bottom:8px;background:var(--bg2);}
+.dft{font-family:var(--mono);font-size:12px;color:var(--blue);font-weight:600;padding:9px 12px;border-bottom:1px solid var(--border);background:var(--bbg);}
+.dfcard.has-err .dft{color:var(--red);background:var(--rbg);}
+.dfi-row{display:flex;align-items:flex-start;gap:8px;padding:6px 12px;border-bottom:1px solid var(--bg3);}
+.dfi-row:last-child{border-bottom:none;}
+.dfi{font-size:10px;font-weight:700;width:14px;flex-shrink:0;margin-top:1px;font-family:var(--mono);}
+.dfi.ok{color:var(--green);}
+.dfi.no{color:var(--red);}
+.dfk{font-size:10px;color:var(--dim);width:80px;flex-shrink:0;font-family:var(--mono);margin-top:1px;}
+.dfv{font-size:11px;color:var(--mid);flex:1;line-height:1.5;}
+.dfv.miss{color:var(--red);font-style:italic;}
+
+::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar-track{background:var(--bg3);}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px;}
+
+/* middle tabs */
+.mid-tabs{display:flex;border-bottom:1.5px solid var(--border);background:var(--bg2);flex-shrink:0;}
+.mtab{padding:10px 18px;font-size:12px;color:var(--dim);cursor:pointer;border-bottom:2.5px solid transparent;transition:all .15s;user-select:none;font-weight:500;}
+.mtab:hover{color:var(--text);}
+.mtab.active{color:var(--teal);border-bottom-color:var(--teal);}
+
+/* scaffold editor */
+.scaf-body{flex:1;overflow-y:auto;padding:14px 18px;}
+.scaf-intro{margin-bottom:14px;}
+.scaf-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:3px;}
+.scaf-sub{font-size:11px;color:var(--dim);line-height:1.5;}
+
+/* fixed code block */
+.code-fixed{
+  font-family:var(--mono);font-size:11px;line-height:1.8;
+  background:var(--bg3);border:1.5px solid var(--border);
+  border-radius:8px;padding:10px 14px;margin-bottom:6px;
+  color:var(--mid);
+}
+.code-fixed .kw{color:var(--blue);}
+.code-fixed .str{color:var(--teal);}
+.code-fixed .cm{color:var(--dim);font-style:italic;}
+.lock-badge{
+  display:inline-flex;align-items:center;gap:4px;
+  font-size:9px;font-family:var(--mono);font-weight:700;
+  padding:1px 6px;border-radius:3px;
+  background:var(--bg4);color:var(--dim);border:1px solid var(--border);
+  margin-bottom:6px;
+}
+
+/* draggable sections */
+.sections-list{display:flex;flex-direction:column;gap:6px;margin:6px 0;}
+.scaf-section{
+  border:1.5px solid var(--aborder);border-radius:8px;
+  background:var(--bg2);overflow:hidden;
+  transition:box-shadow .2s,border-color .2s;
+  cursor:default;
+}
+.scaf-section.dragging{
+  opacity:.5;box-shadow:0 8px 24px rgba(0,0,0,.15);
+}
+.scaf-section.drag-over{
+  border-color:var(--teal);box-shadow:0 0 0 3px rgba(13,148,136,.15);
+}
+.sec-head{
+  display:flex;align-items:center;gap:8px;
+  padding:7px 10px;background:var(--abg);
+  border-bottom:1px solid var(--aborder);
+  user-select:none;
+}
+.drag-handle{
+  display:flex;flex-direction:column;gap:2px;
+  cursor:grab;padding:2px 3px;border-radius:3px;
+  transition:background .12s;
+}
+.drag-handle:active{cursor:grabbing;}
+.drag-handle:hover{background:var(--aborder);}
+.drag-handle span{display:block;width:14px;height:2px;background:var(--amber);border-radius:1px;}
+.sec-label{
+  font-family:var(--mono);font-size:11px;font-weight:700;
+  color:var(--amber);flex:1;
+}
+.sec-badge{
+  font-size:9px;font-family:var(--mono);font-weight:700;
+  padding:2px 7px;border-radius:3px;
+  background:var(--pbg);color:var(--purple);border:1px solid var(--pborder);
+}
+.sec-textarea{
+  width:100%;padding:9px 12px;
+  font-family:var(--mono);font-size:11px;line-height:1.7;
+  color:var(--text);background:var(--bg2);
+  border:none;outline:none;resize:vertical;min-height:70px;
+  transition:background .15s;
+}
+.sec-textarea:focus{background:var(--bg3);}
+.sec-textarea::placeholder{color:var(--dim);font-style:italic;}
+
+/* closing brace block */
+.code-close{
+  font-family:var(--mono);font-size:11px;
+  background:var(--bg3);border:1.5px solid var(--border);
+  border-radius:8px;padding:8px 14px;color:var(--mid);margin-top:6px;
+}
+
+/* validate strip */
+.scaf-validate{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 14px;background:var(--bg2);
+  border-top:1.5px solid var(--border);flex-shrink:0;
+}
+.val-btn{
+  padding:6px 14px;background:var(--bbg);
+  border:1.5px solid var(--bborder);color:var(--blue);
+  border-radius:6px;font-family:var(--sans);font-size:11px;
+  font-weight:600;cursor:pointer;transition:all .15s;
+}
+.val-btn:hover{background:var(--blue);color:#fff;border-color:var(--blue);}
+.val-result{font-size:11px;font-family:var(--mono);}
+.val-result.ok{color:var(--green);}
+.val-result.err{color:var(--red);}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo">AIDEAL</div>
+  <div class="logo-sub">AI Documentation Evaluation and Alias Library</div>
+  <div class="tb-pill tp-idle" id="statusPill">idle</div>
+  <div class="tb-right">
+    <button class="run-btn" id="runBtn" onclick="runAll()">
+      <span style="border-left:8px solid #fff;border-top:5px solid transparent;border-bottom:5px solid transparent;display:inline-block;"></span>
+      Run checks
+    </button>
+  </div>
+</div>
+
+<div class="panels">
+
+  <!-- ══ LEFT: SETUP ══ -->
+  <div class="panel">
+    <div class="ph"><div class="ph-title">Library setup</div></div>
+    <div class="left-body">
+
+      <div class="field">
+        <div class="fl">Library path</div>
+        <input class="fi" value="/Users/clockorangezoe/beast-rdpro/"/>
+      </div>
+
+      <div class="field">
+        <div class="fl">Language <span style="color:var(--teal);font-size:9px;font-weight:700;">MULTI-SELECT</span></div>
+        <div class="lang-multi" id="langMulti">
+          <div class="lm-head" id="langHead" onclick="toggleLangMenu()">
+            <div class="lm-tags" id="langTags"><span class="ltag">Scala</span></div>
+            <span class="lm-arr">▾</span>
+          </div>
+          <div class="lm-opts" id="langOpts">
+            <div class="lg">
+              <div class="lo ck" onclick="togLang(this,'Scala')"><div class="lchk">✓</div>Scala</div>
+              <div class="lo" onclick="togLang(this,'Java')"><div class="lchk"></div>Java</div>
+              <div class="lo" onclick="togLang(this,'Python')"><div class="lchk"></div>Python</div>
+              <div class="lo" onclick="togLang(this,'SQL')"><div class="lchk"></div>SQL</div>
+              <div class="lo" onclick="togLang(this,'TypeScript')"><div class="lchk"></div>TypeScript</div>
+              <div class="lo" onclick="togLang(this,'Kotlin')"><div class="lchk"></div>Kotlin</div>
+              <div class="lo" onclick="togLang(this,'Rust')"><div class="lchk"></div>Rust</div>
+              <div class="lo" onclick="togLang(this,'Go')"><div class="lchk"></div>Go</div>
+              <div class="lo" onclick="togLang(this,'R')"><div class="lchk"></div>R</div>
+              <div class="lo" onclick="togLang(this,'C++')"><div class="lchk"></div>C++</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="fl">Working domain description</div>
+        <textarea class="fi" rows="3">Distributed geospatial computing on Apache Spark. Users are Python/GDAL scientists migrating workflows to Scala.</textarea>
+      </div>
+
+      <div class="field">
+        <div class="fl">Doc format</div>
+        <select class="fsel">
+          <option>Markdown file (RDProLLM.md)</option>
+          <option>Scaladoc / Javadoc</option>
+          <option>Python docstrings</option>
+          <option>TSDoc</option>
+          <option>Rustdoc</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <div class="fl">Requirement file</div>
+        <select class="fsel">
+          <option>build.sbt (Scala/SBT)</option>
+          <option>requirements.txt (Python)</option>
+          <option>pom.xml (Maven)</option>
+          <option>package.json (Node)</option>
+          <option>Cargo.toml (Rust)</option>
+          <option>go.mod (Go)</option>
+        </select>
+        <div class="fhint">Sets up the compile + test environment</div>
+      </div>
+
+      <div class="field">
+        <div class="fl">Run environment</div>
+        <select class="fsel">
+          <option>Local (sbt / mvn / pip)</option>
+          <option>Docker container</option>
+          <option>GitHub Actions runner</option>
+          <option>AWS Lambda</option>
+          <option>Custom script</option>
+        </select>
+        <div class="fhint">Where LLM-generated code is compiled and tested</div>
+      </div>
+
+      <div class="field">
+        <div class="fl">Compile + test command</div>
+        <input class="fi" value="sbt test"/>
+      </div>
+
+      <div class="field">
+        <div class="fl">
+          Scaffold template
+          <div class="ibadge">?<div class="tip" style="width:220px;">A compile-ready skeleton the LLM fills during every test. Developer writes it once — reused for all T2 and T4 evaluations. Edit it in the Scaffold template tab.</div></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:7px;">
+          <input class="fi" value="test/scaffold/ScaffoldTest.scala" style="flex:1"/>
+          <div onclick="switchMidTab('scaffold',document.getElementById('mt-scaffold'))" style="padding:5px 10px;background:var(--tbg);border:1.5px solid var(--tborder);border-radius:5px;font-size:10px;color:var(--teal);font-family:var(--mono);cursor:pointer;white-space:nowrap;font-weight:600;">edit ↗</div>
+        </div>
+        <div class="fhint">Reusable for all tests · LLM fills sections · edit in middle tab</div>
+      </div>
+
+      <div class="field">
+        <div class="fl">LLM model</div>
+        <select class="fsel">
+          <option>gpt-4o</option>
+          <option>claude-sonnet-4-6</option>
+          <option>gemini-1.5-pro</option>
+        </select>
+      </div>
+
+      <div class="sec-sep">Integration test (puzzle eval) settings</div>
+
+      <div class="field">
+        <div class="fl">K — functions per draw</div>
+        <div class="num-row">
+          <input class="fi" value="5"/>
+          <div class="ibadge">?<div class="tip">K functions are randomly picked from your API and combined into one joint program. K=5 means each test must use exactly 5 functions together — testing how they compose.</div></div>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="fl">N — number of draws</div>
+        <div class="num-row">
+          <input class="fi" value="50"/>
+          <div class="ibadge">?<div class="tip">N is how many random K-function programs are generated and tested. N=50 = 50 different random combinations. Pass rate = programs that compile and pass ÷ 50. Higher N = more reliable signal, higher LLM cost (~$0.02/draw).</div></div>
+        </div>
+        <div class="fhint">Each draw = random K functions → LLM writes one joint program → compile + test</div>
+      </div>
+
+      <div class="field">
+        <div class="fl">Pass threshold</div>
+        <div class="num-row">
+          <input class="fi" value="80%"/>
+          <div class="ibadge">?<div class="tip">If integration test pass rate falls below this, the CI check fails and the PR is blocked. 80% = at least 40/50 draws must pass.</div></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══ MIDDLE: TABBED ══ -->
+  <div class="panel">
+    <div class="ph" style="padding:0;">
+      <div class="mid-tabs">
+        <div class="mtab active" id="mt-check" onclick="switchMidTab('check',this)">Check your library</div>
+        <div class="mtab" id="mt-data" onclick="switchMidTab('data',this)">Sample data</div>
+        <div class="mtab" id="mt-scaffold" onclick="switchMidTab('scaffold',this)">Scaffold template</div>
+        <div class="mtab" id="mt-output" onclick="switchMidTab('output',this)">Run output</div>
+      </div>
+    </div>
+
+    <!-- TAB 1: Check your library -->
+    <div id="midtab-check" class="mid-body">
+      <div class="mid-intro">
+        <div class="mid-title">Check your library</div>
+        <div class="mid-sub">Four supported functions · errors feed back into your documentation</div>
+      </div>
+
+      <div class="cap-card" id="cap-doc">
+        <div class="cap-head">
+          <div class="cap-num" id="cn-doc">D</div>
+          <div class="cap-body">
+            <div class="cap-name">Documentation scan</div>
+            <div class="cap-desc">Parse public API surface · check 5 required fields per function<br>name · parameters · return type · description · working example</div>
+            <div class="cap-chips"><div class="chip chip-idle" id="chip-t1">T1 form check</div></div>
+          </div>
+          <div class="cap-score" id="cs-doc" style="display:none"></div>
+        </div>
+      </div>
+
+      <div class="cap-card" id="cap-eval">
+        <div class="cap-head">
+          <div class="cap-num" id="cn-eval">E</div>
+          <div class="cap-body">
+            <div class="cap-name">Doc evaluation</div>
+            <div class="cap-desc">LLM generates usage code from your doc · compile + test oracle · coverage gate · <strong>integration test</strong> across random function combinations</div>
+            <div class="cap-chips">
+              <div class="chip chip-idle" id="chip-t2">T2 comprehension</div>
+              <div class="chip chip-idle" id="chip-t3">T3 coverage</div>
+              <div class="chip chip-idle" id="chip-t4" style="border-color:var(--pborder);color:var(--purple);background:var(--pbg)">T4 integration test</div>
+            </div>
+          </div>
+          <div class="cap-score" id="cs-eval" style="display:none"></div>
+        </div>
+        <div id="int-explain" style="display:none;padding:10px 16px 12px;border-top:1px solid var(--border);background:var(--pbg);">
+          <div class="int-badge" style="margin-bottom:5px;">T4 integration test = puzzle eval</div>
+          <div style="font-size:11px;color:#4c1d95;line-height:1.6;">T1–T3 test each function <em>individually</em>. T4 tests how they work <em>together</em> using the scaffold template — randomly drawing K=5 functions and asking the LLM to fill the scaffold sections. This catches interface gaps unit tests miss.</div>
+        </div>
+      </div>
+
+      <div class="cap-card" id="cap-alias">
+        <div class="cap-head">
+          <div class="cap-num" id="cn-alias">A</div>
+          <div class="cap-body">
+            <div class="cap-name">Alias suggestion</div>
+            <div class="cap-desc">Detect slop-squatting — API names LLMs hallucinate · propose vocabulary-aligned aliases that match LLM search vocabulary</div>
+            <div class="cap-chips"><div class="chip chip-idle" id="chip-alias">alias detection</div></div>
+          </div>
+          <div class="cap-score" id="cs-alias" style="display:none"></div>
+        </div>
+      </div>
+
+      <div class="cap-card" id="cap-errlog">
+        <div class="cap-head">
+          <div class="cap-num" id="cn-errlog">L</div>
+          <div class="cap-body">
+            <div class="cap-name">Accumulate error log</div>
+            <div class="cap-desc">Collect all failures from T1–T4 with LLM-generated fix suggestions · each error linked to its API function · visible in right panel</div>
+            <div class="cap-chips"><div class="chip chip-idle" id="chip-log">error accumulation</div></div>
+          </div>
+          <div class="cap-score" id="cs-errlog" style="display:none"></div>
+        </div>
+      </div>
+
+      <div class="sum-card">
+        <div class="sum-row"><div class="sum-lbl">Doc scan (T1 form)</div><div class="sum-bar"><div class="sum-fill g" id="sb-t1" style="width:0%"></div></div><div class="sum-val g" id="sv-t1">—</div></div>
+        <div class="sum-row"><div class="sum-lbl">Comprehension (T2)</div><div class="sum-bar"><div class="sum-fill r" id="sb-t2" style="width:0%"></div></div><div class="sum-val r" id="sv-t2">—</div></div>
+        <div class="sum-row"><div class="sum-lbl">Coverage (T3)</div><div class="sum-bar"><div class="sum-fill r" id="sb-t3" style="width:0%"></div></div><div class="sum-val r" id="sv-t3">—</div></div>
+        <div class="sum-row"><div class="sum-lbl">Integration test (T4)</div><div class="sum-bar"><div class="sum-fill p" id="sb-t4" style="width:0%"></div></div><div class="sum-val p" id="sv-t4">—</div></div>
+      </div>
+      <div class="ready-strip" id="readyStrip">
+        <div class="ready-title">✓ Ready to integrate into original code</div>
+        <div class="ready-sub">Apply alias + doc fixes shown in right panel · re-run to verify · current score: 72%</div>
+      </div>
+    </div>
+
+    <!-- TAB 2: Scaffold template -->
+    <!-- TAB: Sample data -->
+    <div id="midtab-data" style="display:none;flex-direction:column;flex:1;overflow:hidden;">
+
+      <!-- toolbar -->
+      <div style="display:flex;align-items:center;gap:8px;padding:9px 14px;background:var(--bg2);border-bottom:1.5px solid var(--border);flex-shrink:0;">
+        <label style="display:flex;align-items:center;gap:6px;padding:5px 12px;background:var(--tbg);border:1.5px solid var(--tborder);border-radius:6px;cursor:pointer;font-size:11px;color:var(--teal);font-weight:600;transition:all .15s;" onmouseover="this.style.background='var(--teal)';this.style.color='#fff'" onmouseout="this.style.background='var(--tbg)';this.style.color='var(--teal)'">
+          + Add files
+          <input type="file" multiple style="display:none" onchange="addSampleFiles(this.files)"/>
+        </label>
+        <label style="display:flex;align-items:center;gap:6px;padding:5px 12px;background:var(--bg3);border:1.5px solid var(--border);border-radius:6px;cursor:pointer;font-size:11px;color:var(--dim);font-weight:600;" onmouseover="this.style.borderColor='var(--border2)'" onmouseout="this.style.borderColor='var(--border)'">
+          + Add folder
+          <input type="file" multiple webkitdirectory style="display:none" onchange="addSampleFiles(this.files)"/>
+        </label>
+        <div style="font-size:11px;color:var(--dim);margin-left:4px;" id="dataCount">0 files</div>
+        <div style="margin-left:auto;font-size:10px;color:var(--dim);">drag &amp; drop files anywhere in this panel</div>
+      </div>
+
+      <!-- drop zone + file list -->
+      <div style="flex:1;overflow-y:auto;padding:12px 14px;" id="sampleDropZone"
+        ondragover="event.preventDefault();this.style.background='var(--tbg)'"
+        ondragleave="this.style.background=''"
+        ondrop="event.preventDefault();this.style.background='';addSampleFiles(event.dataTransfer.files)">
+
+        <div id="sampleEmptyState" style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:200px;gap:10px;">
+          <div style="font-size:32px;opacity:.2;">⬆</div>
+          <div style="font-size:13px;color:var(--dim);font-weight:600;">Drop files here or click Add files</div>
+          <div style="font-size:11px;color:var(--dim);">Supports raster · shapefile · CSV · GeoJSON · any format your scaffold needs</div>
+        </div>
+
+        <!-- category groups -->
+        <div id="sampleGroups" style="display:none;">
+
+          <div id="grp-raster" style="display:none;margin-bottom:16px;">
+            <div style="font-size:10px;font-weight:700;color:var(--teal);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;display:flex;align-items:center;gap:6px;">
+              Raster files
+              <span id="grp-raster-count" style="font-size:9px;padding:1px 6px;border-radius:10px;background:var(--tbg);border:1px solid var(--tborder);color:var(--teal);"></span>
+            </div>
+            <div id="grp-raster-list" style="display:flex;flex-direction:column;gap:4px;"></div>
+          </div>
+
+          <div id="grp-vector" style="display:none;margin-bottom:16px;">
+            <div style="font-size:10px;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;display:flex;align-items:center;gap:6px;">
+              Vector / shapefile
+              <span id="grp-vector-count" style="font-size:9px;padding:1px 6px;border-radius:10px;background:var(--bbg);border:1px solid var(--bborder);color:var(--blue);"></span>
+            </div>
+            <div id="grp-vector-list" style="display:flex;flex-direction:column;gap:4px;"></div>
+          </div>
+
+          <div id="grp-table" style="display:none;margin-bottom:16px;">
+            <div style="font-size:10px;font-weight:700;color:var(--amber);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;display:flex;align-items:center;gap:6px;">
+              Table / CSV
+              <span id="grp-table-count" style="font-size:9px;padding:1px 6px;border-radius:10px;background:var(--abg);border:1px solid var(--aborder);color:var(--amber);"></span>
+            </div>
+            <div id="grp-table-list" style="display:flex;flex-direction:column;gap:4px;"></div>
+          </div>
+
+          <div id="grp-other" style="display:none;margin-bottom:16px;">
+            <div style="font-size:10px;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;display:flex;align-items:center;gap:6px;">
+              Other
+              <span id="grp-other-count" style="font-size:9px;padding:1px 6px;border-radius:10px;background:var(--bg3);border:1px solid var(--border);color:var(--dim);"></span>
+            </div>
+            <div id="grp-other-list" style="display:flex;flex-direction:column;gap:4px;"></div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- bottom strip -->
+      <div style="padding:8px 14px;background:var(--bg2);border-top:1.5px solid var(--border);font-size:11px;color:var(--dim);display:flex;align-items:center;gap:10px;flex-shrink:0;">
+        <span>These paths are passed to the scaffold's LOAD DATA section at test time.</span>
+        <button onclick="clearAllSampleFiles()" style="margin-left:auto;padding:4px 10px;background:var(--rbg);border:1px solid var(--rborder);color:var(--red);border-radius:5px;font-size:10px;cursor:pointer;font-weight:600;">Clear all</button>
+      </div>
+
+    </div>
+
+    <div id="midtab-scaffold" style="display:none;flex-direction:column;flex:1;overflow:hidden;">
+      <div class="scaf-body" id="scafBody">
+
+        <div class="scaf-intro">
+          <div class="scaf-title">Scaffold template</div>
+          <div class="scaf-sub">Write your library's runnable skeleton once — reused for <strong>every</strong> T2 and T4 test. Leave the LLM sections empty; AIDEAL fills them automatically. Fixed blocks always compile. Drag sections to reorder, click to type, add custom sections for your library's structure.</div>
+        </div>
+
+        <!-- FIXED: imports block -->
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+          <div class="lock-badge">⚿ fixed block — type your imports</div>
+        </div>
+        <div class="code-fixed" contenteditable="true" spellcheck="false" id="importsBlock"
+          style="outline:none;cursor:text;min-height:52px;"
+          onfocus="this.style.borderColor='var(--teal)'"
+          onblur="this.style.borderColor='var(--border)'"
+        >// your library imports — developer writes, always included
+// e.g.  import com.example.mylib._</div>
+
+        <!-- FIXED: entry point block -->
+        <div class="code-fixed" contenteditable="true" spellcheck="false" id="entryBlock"
+          style="outline:none;cursor:text;margin-top:4px;min-height:52px;"
+          onfocus="this.style.borderColor='var(--teal)'"
+          onblur="this.style.borderColor='var(--border)'"
+        >// entry point + framework init — must be runnable as-is
+// e.g.  object ScaffoldTest extends App {
+//         val ctx = MyLib.init()</div>
+
+        <!-- LLM SECTIONS -->
+        <div style="display:flex;align-items:center;justify-content:space-between;margin:12px 0 6px;">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div style="font-size:10px;color:var(--amber);font-weight:700;text-transform:uppercase;letter-spacing:.08em;">LLM-filled sections</div>
+            <div style="font-size:9px;color:var(--dim);">drag ⠿ to reorder · click label to rename · ✕ to remove</div>
+          </div>
+          <button onclick="addSection()" style="font-size:10px;padding:3px 10px;background:var(--pbg);border:1.5px solid var(--pborder);color:var(--purple);border-radius:5px;cursor:pointer;font-weight:600;font-family:var(--mono);">+ add section</button>
+        </div>
+
+        <div class="sections-list" id="sectionsList">
+
+          <div class="scaf-section" draggable="true" data-sec="load">
+            <div class="sec-head">
+              <div class="drag-handle" title="drag to reorder"><span></span><span></span><span></span></div>
+              <div class="sec-label" contenteditable="true" spellcheck="false" style="outline:none;cursor:text;" onfocus="this.style.color='var(--text)'" onblur="this.style.color=''">// ═══ LOAD DATA ═══</div>
+              <div class="sec-badge">T2: 1 fn · T4: multiple</div>
+              <div onclick="removeSection(this)" style="margin-left:8px;font-size:11px;color:var(--dim);cursor:pointer;padding:0 4px;opacity:.6;" title="remove">✕</div>
+            </div>
+            <textarea class="sec-textarea" placeholder="Leave empty — LLM fills this at test time.&#10;Purpose: load inputs, read files, open data sources.&#10;&#10;For your library, this might be:  openDataset(), readFile(), connect()..." rows="4"></textarea>
+          </div>
+
+          <div class="scaf-section" draggable="true" data-sec="comp">
+            <div class="sec-head">
+              <div class="drag-handle" title="drag to reorder"><span></span><span></span><span></span></div>
+              <div class="sec-label" contenteditable="true" spellcheck="false" style="outline:none;cursor:text;" onfocus="this.style.color='var(--text)'" onblur="this.style.color=''">// ═══ COMPUTATION ═══</div>
+              <div class="sec-badge">T2: 1 call · T4: compose K</div>
+              <div onclick="removeSection(this)" style="margin-left:8px;font-size:11px;color:var(--dim);cursor:pointer;padding:0 4px;opacity:.6;" title="remove">✕</div>
+            </div>
+            <textarea class="sec-textarea" placeholder="Leave empty — LLM fills this at test time.&#10;Purpose: main logic, transforms, queries, joins, model calls.&#10;&#10;For your library, this might be:  transform(), compute(), join(), query()..." rows="4"></textarea>
+          </div>
+
+          <div class="scaf-section" draggable="true" data-sec="out">
+            <div class="sec-head">
+              <div class="drag-handle" title="drag to reorder"><span></span><span></span><span></span></div>
+              <div class="sec-label" contenteditable="true" spellcheck="false" style="outline:none;cursor:text;" onfocus="this.style.color='var(--text)'" onblur="this.style.color=''">// ═══ OUTPUT ═══</div>
+              <div class="sec-badge">save · return · assert</div>
+              <div onclick="removeSection(this)" style="margin-left:8px;font-size:11px;color:var(--dim);cursor:pointer;padding:0 4px;opacity:.6;" title="remove">✕</div>
+            </div>
+            <textarea class="sec-textarea" placeholder="Leave empty — LLM fills this at test time.&#10;Purpose: save results, write output, assert correctness.&#10;&#10;For your library, this might be:  save(), write(), assert(), print()..." rows="3"></textarea>
+          </div>
+
+        </div>
+
+        <!-- FIXED: teardown block -->
+        <div class="code-fixed" contenteditable="true" spellcheck="false" id="closeBlock"
+          style="outline:none;cursor:text;margin-top:4px;min-height:40px;"
+          onfocus="this.style.borderColor='var(--teal)'"
+          onblur="this.style.borderColor='var(--border)'"
+        >// teardown — always runs after LLM sections
+// e.g.  ctx.stop()
+// }</div>
+
+        <!-- usage note -->
+        <div style="margin-top:12px;padding:10px 12px;background:var(--gbg);border:1px solid var(--gborder);border-radius:8px;font-size:11px;color:#166534;line-height:1.6;">
+          <strong>How AIDEAL uses this:</strong> For each test, AIDEAL copies this template, replaces each <em>LLM-filled section</em> with generated code for the function(s) under test, then runs your compile + test command. T2 fills one section. T4 fills all sections with K=5 randomly drawn functions. The fixed blocks never change.
+        </div>
+
+      </div>
+
+      <!-- validate strip -->
+      <div class="scaf-validate">
+        <button class="val-btn" onclick="validateScaffold()">✓ Validate structure</button>
+        <div class="val-result" id="valResult"></div>
+        <div style="margin-left:auto;font-size:10px;color:var(--dim);">
+          Sections: <span id="secOrder" style="font-family:var(--mono);color:var(--mid);">LOAD → COMP → OUT</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: Run output -->
+    <div id="midtab-output" style="display:none;flex-direction:column;flex:1;overflow:hidden;">
+
+      <!-- filter bar -->
+      <div style="display:flex;align-items:center;gap:6px;padding:8px 14px;background:var(--bg2);border-bottom:1.5px solid var(--border);flex-shrink:0;flex-wrap:wrap;">
+        <span style="font-size:10px;color:var(--dim);font-weight:700;">filter</span>
+        <div class="fpill active" onclick="filterOutput('all',this)" id="op-all">all runs</div>
+        <div class="fpill" onclick="filterOutput('T2',this)" id="op-t2">T2 comprehension</div>
+        <div class="fpill" onclick="filterOutput('T4',this)" id="op-t4">T4 integration</div>
+        <div class="fpill" onclick="filterOutput('pass',this)" id="op-pass">pass only</div>
+        <div class="fpill" onclick="filterOutput('fail',this)" id="op-fail">fail only</div>
+        <div style="margin-left:auto;font-size:10px;color:var(--dim);" id="outputSummary">Run checks to see output</div>
+      </div>
+
+      <!-- output list -->
+      <div style="flex:1;overflow-y:auto;padding:10px 14px;" id="outputList">
+        <div style="font-size:11px;color:var(--dim);" id="outputPH">
+          Compile + run output for each test will appear here after you click Run checks.
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- ══ RIGHT: LLM FEEDBACK ══ -->
+  <div class="panel" style="border-right:none">
+    <div class="ph"><div class="ph-title">LLM feedback</div></div>
+    <div class="right-tabs">
+      <div class="rtab active" onclick="showTab('err',this)">Error log</div>
+      <div class="rtab" onclick="showTab('alias',this)">Alias track list</div>
+      <div class="rtab" onclick="showTab('doc',this)">Open LLM doc</div>
+    </div>
+
+    <div id="tab-err" style="display:flex;flex-direction:column;flex:1;overflow:hidden;">
+      <div class="efbar">
+        <span class="fl-lbl">filter</span>
+        <div class="fpill active" onclick="filterErr('all',this)">all</div>
+        <div class="fpill" onclick="filterErr('T1',this)">T1 form</div>
+        <div class="fpill" onclick="filterErr('T2',this)">T2 comprehension</div>
+        <div class="fpill" onclick="filterErr('T4',this)">T4 integration</div>
+        <div class="fpill" onclick="filterErr('alias',this)">alias</div>
+      </div>
+      <div class="right-body">
+        <div style="padding:10px 14px;" id="errList">
+          <div style="font-size:11px;color:var(--dim);" id="errPH">Run checks to see accumulated errors with LLM fix solutions.</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="tab-alias" style="display:none;flex:1;overflow:hidden;">
+      <div class="right-body rb" id="aliasList">
+        <div style="font-size:11px;color:var(--dim)">Run checks to see alias suggestions.</div>
+      </div>
+    </div>
+
+    <div id="tab-doc" style="display:none;flex:1;overflow:hidden;">
+      <div class="right-body rb">
+        <div style="font-size:11px;color:var(--dim);margin-bottom:12px;">Field-by-field status of your current LLM doc file.</div>
+        <div id="docFL"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+/* middle tab switch */
+function switchMidTab(tab, el){
+  document.querySelectorAll('.mtab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('midtab-check').style.display   = tab==='check'    ? '' : 'none';
+  document.getElementById('midtab-data').style.display    = tab==='data'     ? 'flex' : 'none';
+  document.getElementById('midtab-scaffold').style.display= tab==='scaffold' ? 'flex' : 'none';
+  document.getElementById('midtab-output').style.display  = tab==='output'   ? 'flex' : 'none';
+}
+
+/* drag-drop reorder */
+let dragSrc=null;
+function initDrag(){
+  const list=document.getElementById('sectionsList');
+  const items=list.querySelectorAll('.scaf-section');
+  items.forEach(item=>{
+    item.addEventListener('dragstart',e=>{
+      dragSrc=item;
+      item.classList.add('dragging');
+      e.dataTransfer.effectAllowed='move';
+    });
+    item.addEventListener('dragend',()=>{
+      item.classList.remove('dragging');
+      list.querySelectorAll('.scaf-section').forEach(i=>i.classList.remove('drag-over'));
+      dragSrc=null;
+      updateSecOrder();
+    });
+    item.addEventListener('dragover',e=>{
+      e.preventDefault();
+      e.dataTransfer.dropEffect='move';
+      if(dragSrc && item!==dragSrc){
+        list.querySelectorAll('.scaf-section').forEach(i=>i.classList.remove('drag-over'));
+        item.classList.add('drag-over');
+      }
+    });
+    item.addEventListener('dragleave',()=>item.classList.remove('drag-over'));
+    item.addEventListener('drop',e=>{
+      e.preventDefault();
+      if(dragSrc && item!==dragSrc){
+        const items=[...list.querySelectorAll('.scaf-section')];
+        const srcIdx=items.indexOf(dragSrc);
+        const tgtIdx=items.indexOf(item);
+        if(srcIdx<tgtIdx) list.insertBefore(dragSrc,item.nextSibling);
+        else list.insertBefore(dragSrc,item);
+      }
+      item.classList.remove('drag-over');
+    });
+  });
+}
+
+function addSection(){
+  const list=document.getElementById('sectionsList');
+  const n=list.querySelectorAll('.scaf-section').length+1;
+  const id='custom-'+Date.now();
+  const div=document.createElement('div');
+  div.className='scaf-section';div.draggable=true;div.dataset.sec=id;
+  div.innerHTML=`<div class="sec-head">
+    <div class="drag-handle" title="drag to reorder"><span></span><span></span><span></span></div>
+    <div class="sec-label" contenteditable="true" spellcheck="false" style="outline:none;cursor:text;" onfocus="this.style.color='var(--text)'" onblur="this.style.color=''">// ═══ CUSTOM SECTION ${n} ═══</div>
+    <div class="sec-badge">LLM fills</div>
+    <div onclick="removeSection(this)" style="margin-left:8px;font-size:11px;color:var(--dim);cursor:pointer;padding:0 4px;opacity:.6;" title="remove">✕</div>
+  </div>
+  <textarea class="sec-textarea" placeholder="Describe what this section does — LLM fills it at test time." rows="3"></textarea>`;
+  list.appendChild(div);
+  initDrag();updateSecOrder();
+  div.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+function removeSection(btn){
+  const sec=btn.closest('.scaf-section');
+  if(document.querySelectorAll('.scaf-section').length<=1){
+    sec.style.borderColor='var(--red)';
+    setTimeout(()=>sec.style.borderColor='',1000);
+    return;
+  }
+  sec.remove();updateSecOrder();
+}
+
+function updateSecOrder(){
+  const list=document.getElementById('sectionsList');
+  const labels={'load':'LOAD','comp':'COMP','out':'OUT'};
+  const order=[...list.querySelectorAll('.scaf-section')]
+    .map(el=>labels[el.dataset.sec]||el.dataset.sec);
+  document.getElementById('secOrder').textContent=order.join(' → ');
+}
+
+function validateScaffold(){
+  const r=document.getElementById('valResult');
+  r.textContent='checking…';r.className='val-result';
+  setTimeout(()=>{
+    const sections=document.querySelectorAll('.sec-textarea');
+    const filled=[...sections].filter(s=>s.value.trim().length>0).length;
+    const total=sections.length;
+    const imports=document.getElementById('importsBlock').textContent.trim();
+    const entry=document.getElementById('entryBlock').textContent.trim();
+    const hasFixed=imports.length>10 && entry.length>10;
+    if(!hasFixed){
+      r.textContent='⚠ Add imports and entry point in the fixed blocks';
+      r.className='val-result err';
+    } else {
+      r.textContent=`✓ ${total} sections · ${filled} with content · structure valid`;
+      r.className='val-result ok';
+    }
+  },600);
+}
+
+/* lang multi */
+let selLangs=new Set(['Scala']);
+function toggleLangMenu(){
+  document.getElementById('langHead').classList.toggle('open');
+  document.getElementById('langOpts').classList.toggle('open');
+}
+function togLang(el,lang){
+  el.classList.toggle('ck');
+  el.querySelector('.lchk').textContent=el.classList.contains('ck')?'✓':'';
+  el.classList.contains('ck')?selLangs.add(lang):selLangs.delete(lang);
+  const tags=document.getElementById('langTags');
+  tags.innerHTML=selLangs.size?[...selLangs].map(l=>`<span class="ltag">${l}</span>`).join(''):'<span style="color:var(--dim);font-size:11px">Select language(s)…</span>';
+}
+document.addEventListener('click',e=>{
+  const m=document.getElementById('langMulti');
+  if(!m.contains(e.target)){document.getElementById('langHead').classList.remove('open');document.getElementById('langOpts').classList.remove('open');}
+});
+
+/* data */
+const ERRORS=[
+  {id:'E1',tier:'T1',fn:'raptorJoinFeature()',summary:'Missing working example field',
+   trace:[{t:'e',s:'FORM CHECK FAIL: raptorJoinFeature()'},{t:'e',s:'  field "example" → MISSING'},{t:'d',s:'  present: name, params, return, description'},{t:'d',s:'  missing: working_example'}],
+   fixTitle:'Add working code example',fixExplain:'The LLM cannot infer correct Spark usage without a concrete example showing local variable capture to avoid serialization errors.',
+   diff:[{t:'ctx',c:'## raptorJoinFeature(raster, features, opts)'},{t:'add',c:'**Example:**'},{t:'add',c:'def run(): Unit = {'},{t:'add',c:'  val r = sc.openRaster[Int](path)'},{t:'add',c:'  val j = RaptorJoin.raptorJoinFeature(r, cities, new Options())'},{t:'add',c:'  j.filter(_.m != 250).saveAsTextFile(out)'},{t:'add',c:'}'}],conf:91,alias:null},
+  {id:'E2',tier:'T2',fn:'raptorJoinFeature()',summary:'Spark serialization — sc closure captured',
+   trace:[{t:'e',s:'Task not serializable:'},{t:'e',s:'  edu.ucr.bdlab.raptor.RaptorJoin$$anon$1'},{t:'a',s:'  → LLM captured outer sc reference in closure'}],
+   fixTitle:'Capture sc locally inside run()',fixExplain:'LLMs follow standard OOP patterns that conflict with Spark serialization. The example must show sc captured as a local val inside run().',
+   diff:[{t:'del',c:'- object A extends App {'},{t:'del',c:'-   val joined = RaptorJoin.raptorJoinFeature(sc.openRaster[Int](p),...)'},{t:'add',c:'+ object A extends App {'},{t:'add',c:'+   def run(): Unit = {'},{t:'add',c:'+     val localSc = sc'},{t:'add',c:'+     val joined  = RaptorJoin.raptorJoinFeature(localSc.openRaster[Int](p),...)'},{t:'add',c:'+   }'},{t:'add',c:'+ }'}],conf:87,
+   alias:{from:'sc.geoTiff()',to:'sc.openRaster()',why:'LLM called openRaster in 94% of failed attempts'}},
+  {id:'E3',tier:'T2',fn:'sc.openRaster[T]()',summary:'Type param T defaulted to AnyVal',
+   trace:[{t:'e',s:'type mismatch: found AnyVal, required Int'},{t:'d',s:'  val raster = sc.openRaster(path)  // T → AnyVal'},{t:'a',s:'  → LLM omitted type parameter'}],
+   fixTitle:'Show concrete type examples per raster type',fixExplain:'Scala type inference does not propagate T through the RDD chain. Docs must show openRaster[Int] for discrete and openRaster[Float] for continuous data explicitly.',
+   diff:[{t:'del',c:'- Opens a raster file as a SpatialRDD.'},{t:'add',c:'+ T must be specified explicitly:'},{t:'add',c:'+ - sc.openRaster[Int](path)   // discrete: NLCD, CDL'},{t:'add',c:'+ - sc.openRaster[Float](path) // continuous: elevation'}],conf:95,
+   alias:{from:'sc.geoTiff()',to:'sc.openRaster()',why:'LLM called openRaster in 94% of attempts'}},
+  {id:'E4',tier:'T4',fn:'Integration test draw #02',summary:'Joint composition fails — 11/50 draws',
+   trace:[{t:'e',s:'INTEGRATION TEST FAIL: draw #02'},{t:'e',s:'  (openRaster + join + groupBy + save)'},{t:'e',s:'  Task not serializable — same root as E2'},{t:'a',s:'  11/50 draws exhibit same pattern'}],
+   fixTitle:'Add multi-function integration example',fixExplain:'Individual T2 passes don\'t prevent joint failures. A full pipeline example with local capture fixes this entire class of integration test failures.',
+   diff:[{t:'add',c:'+ ## Full pipeline (NLCD zonal analysis)'},{t:'add',c:'+ def runZonal(sc: SparkContext): Unit = {'},{t:'add',c:'+   val raster = sc.openRaster[Int](nlcdPath)'},{t:'add',c:'+   val cities = sc.readWKTFile(shpPath,"geom","name")'},{t:'add',c:'+   val joined = RaptorJoin.raptorJoinFeature(raster, cities.reproject(raster.getCRS), new Options())'},{t:'add',c:'+   joined.filter(_.m != 250).saveAsTextFile(out)'},{t:'add',c:'+ }'}],conf:89,alias:null},
+];
+const ALIASES=[
+  {from:'sc.geoTiff()',to:'sc.openRaster()',stat:'94% hallucination',why:'Maps to the universal open() verb — matches how LLMs trained on Python\'s open() think about file loading'},
+  {from:'featureJoin()',to:'joinFeature()',stat:'81% wrong order',why:'Python/pandas idiom: join(feature) not feature(join). LLM assumes noun comes last'},
+  {from:'spatialRead()',to:'sc.readWKTFile()',stat:'67% hallucination',why:'LLM guesses spatialRead from GDAL vocabulary for spatial file reading'},
+];
+const DOC_FNS=[
+  {fn:'sc.openRaster[T]()',hasErr:true,fields:[{k:'name',v:'sc.openRaster[T](path)',ok:true},{k:'params',v:'path: String, T: pixel type',ok:true},{k:'return',v:'SpatialRDD[T]',ok:true},{k:'description',v:'Opens raster as distributed Spark RDD',ok:true},{k:'example',v:'MISSING — type param T unexplained',ok:false}]},
+  {fn:'raptorJoinFeature()',hasErr:true,fields:[{k:'name',v:'raptorJoinFeature(raster, features, opts)',ok:true},{k:'params',v:'raster, features: SpatialRDD, opts: Options',ok:true},{k:'return',v:'RDD[RaptorJoinResult]',ok:true},{k:'description',v:'Joins raster pixels to vector features',ok:true},{k:'example',v:'MISSING — no working code example',ok:false}]},
+  {fn:'sc.readWKTFile()',hasErr:false,fields:[{k:'name',v:'sc.readWKTFile(path, geom, col)',ok:true},{k:'params',v:'path, geomCol, attrCol: String',ok:true},{k:'return',v:'SpatialRDD[Feature]',ok:true},{k:'description',v:'Reads WKT/shapefile as feature RDD',ok:true},{k:'example',v:'sc.readWKTFile(shp, "geometry", "NAME")',ok:true}]},
+  {fn:'SpatialRDD.reproject()',hasErr:false,fields:[{k:'name',v:'reproject(crs: CRS)',ok:true},{k:'params',v:'crs: CRS',ok:true},{k:'return',v:'SpatialRDD[T]',ok:true},{k:'description',v:'Reprojects RDD to target CRS',ok:true},{k:'example',v:'cities.reproject(nlcd.getCRS)',ok:true}]},
+];
+
+let running=false,openE={},activeF='all';
+
+function showTab(t,el){
+  ['err','alias','doc'].forEach(x=>{document.getElementById('tab-'+x).style.display='none';});
+  document.querySelectorAll('.rtab').forEach(r=>r.classList.remove('active'));
+  document.getElementById('tab-'+t).style.display='flex';
+  el.classList.add('active');
+}
+
+function buildErr(filter){
+  document.getElementById('errPH').style.display='none';
+  const list=document.getElementById('errList');list.innerHTML='';
+  const show=ERRORS.filter(e=>filter==='all'?true:filter==='alias'?!!e.alias:e.tier===filter);
+  if(!show.length){list.innerHTML='<div style="font-size:11px;color:var(--dim)">No errors match this filter.</div>';return;}
+  show.forEach((e,i)=>{
+    const d=document.createElement('div');
+    d.className='elog'+(i===0?' open':'');d.id='elog-'+e.id;openE[e.id]=i===0;
+    const al=e.alias?`<div class="abox"><div class="abt">Alias track</div><div class="abr"><span class="ab-f">${e.alias.from}</span><span class="ab-a"> → </span><span class="ab-t">${e.alias.to}</span></div><div class="ab-w">${e.alias.why}</div></div>`:'';
+    const tr=e.trace.map(t=>`<div class="${t.t==='e'?'te':t.t==='a'?'ta':'td'}">${t.s}</div>`).join('');
+    const df=e.diff.map(x=>`<div class="dl ${x.t}"><span class="ds">${x.t==='add'?'+':x.t==='del'?'-':' '}</span><span class="dc">${x.c}</span></div>`).join('');
+    d.innerHTML=`<div class="ehd" onclick="togE('${e.id}')"><div class="eid">${e.id}</div><div><div class="efn">${e.fn}</div><div class="emeta">${e.tier==='T4'?'T4 integration test':e.tier} · ${e.summary}</div></div><div class="earr">▶</div></div>
+    <div class="ebd" id="eb-${e.id}" style="${i===0?'max-height:700px':''}">
+      <div class="esec"><div class="esl err">Error trace</div><div class="trace">${tr}</div></div>
+      <div class="esec"><div class="esl fix">LLM fix suggestion</div><div class="fbox"><div class="ftit">◈ ${e.fixTitle}</div><div class="fexp">${e.fixExplain}</div><div class="cdiff">${df}</div>${al}<div class="fconf"><span>LLM confidence</span><div class="ctrack"><div class="cfill" style="width:${e.conf}%"></div></div><span style="font-family:var(--mono);color:var(--teal);font-weight:700">${e.conf}%</span></div></div></div>
+    </div>`;
+    list.appendChild(d);
+  });
+}
+function buildAlias(){
+  const el=document.getElementById('aliasList');el.innerHTML='';
+  ALIASES.forEach(a=>{
+    el.innerHTML+=`<div class="atcard"><div class="atc"><div><div class="atr"><span class="at-f">${a.from}</span><span class="at-a"> → </span><span class="at-t">${a.to}</span></div><div class="at-why">${a.why}</div></div><div class="at-s">${a.stat}</div></div></div>`;
+  });
+}
+function buildDoc(){
+  const el=document.getElementById('docFL');el.innerHTML='';
+  DOC_FNS.forEach(fn=>{
+    let h=`<div class="dfcard${fn.hasErr?' has-err':''}"><div class="dft">${fn.fn}</div>`;
+    fn.fields.forEach(f=>{h+=`<div class="dfi-row"><div class="dfi ${f.ok?'ok':'no'}">${f.ok?'✓':'✗'}</div><div class="dfk">${f.k}</div><div class="dfv ${f.ok?'':'miss'}">${f.v}</div></div>`;});
+    h+='</div>';el.innerHTML+=h;
+  });
+}
+function togE(id){openE[id]=!openE[id];const el=document.getElementById('elog-'+id),bd=document.getElementById('eb-'+id);if(el)el.classList.toggle('open',openE[id]);if(bd)bd.style.maxHeight=openE[id]?'700px':'0';}
+function filterErr(f,el){activeF=f;document.querySelectorAll('.fpill').forEach(p=>p.classList.remove('active'));if(el)el.classList.add('active');if(document.getElementById('errList').querySelector('.elog'))buildErr(f);}
+
+/* pipeline */
+function setCap(id,state,score){
+  const c=document.getElementById('cap-'+id);
+  c.className='cap-card state-'+state;
+  const icons={doc:'D',eval:'E',alias:'A',errlog:'L'};
+  const si={run:'◌',pass:'✓',fail:'✕'};
+  document.getElementById('cn-'+id).textContent=si[state]||icons[id];
+  const cs=document.getElementById('cs-'+id);
+  if(score){cs.textContent=score;cs.style.display='';}else cs.style.display='none';
+}
+function setChip(id,state){
+  const el=document.getElementById('chip-'+id);
+  if(!el)return;
+  if(id==='t4'){
+    el.className='chip';
+    if(state==='pass')el.style.cssText='border-color:var(--gborder);color:var(--green);background:var(--gbg)';
+    else if(state==='fail')el.style.cssText='border-color:var(--rborder);color:var(--red);background:var(--rbg)';
+    else if(state==='run')el.style.cssText='border-color:var(--aborder);color:var(--amber);background:var(--abg)';
+    else el.style.cssText='border-color:var(--pborder);color:var(--purple);background:var(--pbg)';
+  } else {
+    el.className='chip chip-'+state;
+  }
+}
+function setSum(id,pct,val){document.getElementById('sb-'+id).style.width=pct+'%';document.getElementById('sv-'+id).textContent=val;}
+
+async function runAll(){
+  if(running)return;running=true;
+  const btn=document.getElementById('runBtn');
+  btn.disabled=true;btn.innerHTML='<span style="display:inline-block;width:8px;height:8px;border-radius:50%;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;animation:spin .7s linear infinite;margin-right:7px"></span>Running…';
+  document.getElementById('statusPill').className='tb-pill tp-run';document.getElementById('statusPill').textContent='running';
+  document.getElementById('readyStrip').className='ready-strip';
+  document.getElementById('int-explain').style.display='none';
+  ['t1','t2','t3','t4','alias','log'].forEach(id=>setChip(id,'idle'));
+  ['doc','eval','alias','errlog'].forEach(id=>setCap(id,'idle'));
+  ['t1','t2','t3','t4'].forEach(id=>setSum(id,0,'—'));
+  document.getElementById('errList').innerHTML='';document.getElementById('errPH').style.display='';
+  document.getElementById('errPH').textContent='Running…';
+
+  // 1. Doc scan
+  setCap('doc','run');await sleep(900);
+  setChip('t1','fail');setCap('doc','fail','4/5');setSum('t1',80,'4/5');
+
+  // 2. Doc eval
+  await sleep(300);setCap('eval','run');await sleep(1400);
+  setChip('t2','fail');setChip('t3','fail');setChip('t4','run');await sleep(1800);
+  setChip('t4','fail');setCap('eval','fail','4/5 · 68%');
+  setSum('t2',80,'4/5');setSum('t3',80,'4/5');setSum('t4',68,'68%');
+  document.getElementById('int-explain').style.display='block';
+
+  // 3. Alias
+  await sleep(300);setCap('alias','run');await sleep(700);
+  setChip('alias','fail');setCap('alias','fail','3 found');buildAlias();
+
+  // 4. Error log
+  await sleep(300);setCap('errlog','run');await sleep(600);
+  setChip('log','fail');setCap('errlog','fail','4 errors');
+  buildErr('all');buildDoc();
+  renderOutputLog();
+
+  document.getElementById('readyStrip').className='ready-strip show';
+  document.getElementById('statusPill').className='tb-pill tp-fail';document.getElementById('statusPill').textContent='72% · 4 errors';
+  btn.disabled=false;btn.innerHTML='<span style="border-left:8px solid #fff;border-top:5px solid transparent;border-bottom:5px solid transparent;display:inline-block;margin-right:7px"></span>Re-run checks';
+  running=false;
+}
+
+function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
+initDrag();
+</script>
+</body>
+</html>

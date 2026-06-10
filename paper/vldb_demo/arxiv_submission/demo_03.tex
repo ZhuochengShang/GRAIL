@@ -1,0 +1,35 @@
+% third demo show free=prompt
+% is generate python first then scala
+% or directly scala is better 
+\subsection{Python Script vs. Natural Language as Translation Input}
+In this demo, we compare three generation strategies driven by the same natural language task description. The first task is a raster only land-use summary workflow, while the second task is the same task that calculate land-use category percentages for Boston neighborhoods from NLCD raster data.
+All three modes share the same section-by-section generation loop and validation stack, and the differ exists in how the task representation fed into loop. 
+
+\textit{NL-Scala} takes the natural language description as input, reasons over the text to understand the workflow structure, and matches
+the inferred task intent against the documented API before entering the
+generation loop. Only the resulting structured task description is passed into section generation.
+
+\textit{Python-NL-Scala} first generates an intermediate Python script from the natural language input. The LLM then uses that Python code to understand the task structure, in place of reasoning directly from text. The rest of the pipeline is identical to NL-Scala.
+
+\textit{Python-Scala} also generates a Python reference script, but skips the structured analysis stage entirely. The raw Python source is passed directly into the generation loop with only coarse fallback analysis, and the model is instructed to translate rather than reason about the task. It serves as a baseline to isolate the value of structured task understanding.
+
+\input{demo_03_table}
+
+\paragraph{Raster-Only task.} \textit{``Calculate overall land-use category 
+percentages for the NLCD raster and write a CSV summary. This is a 
+raster-only workflow with no polygon overlay. Compute class counts and 
+percentages for the whole raster and save a tabular CSV output.''}
+\paragraph{Raster-Vector task.} \textit{``Calculate land-use category 
+percentages and summary statistics for Boston neighborhoods from NLCD 
+raster data. Produce tabular CSV 
+outputs with per-neighborhood class percentages and a neighborhood-level 
+dominant class summary.''}
+
+We evaluate success rate and average fix iterations over 5 runs per condition, and the results are reported in Table~\ref{tab:translation-benchmark}.
+NL-Scala achieves perfect success on both tasks with the fewest fix iterations. Python-NL-Scala is competitive but requires more repair. This mode still benefits from structured analysis and section planning, but its reasoning is mediated through a generated Python reference. As
+a result, the program introduce more ambiguities that
+can affect the downstream understanding. Python-Scala
+fails entirely on both tasks, confirming that raw translation without structured task reasoning is insufficient.
+
+These results show that a Python intermediate does not improve
+performance on its own. Natural language is a more direct carrier of task intent, and its value is most apparent when no intermediate artifact obscures the reasoning process.

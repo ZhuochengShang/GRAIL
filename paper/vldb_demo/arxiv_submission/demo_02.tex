@@ -1,0 +1,9 @@
+\subsection{GRAIL Performance Across Different Dataset Sizes}
+\input{demo_02_table2}
+\input{demo_02_table}
+
+We evaluate the scalability of GRAIL-generated code on a raster–vector join task across vector datasets of increasing size and polygon complexity, as shown in table~\ref{tab:datasets}, using Landsat Treecover as the raster input. During the demo, users can express a task such as \textit{``compute the average tree cover for each US census tract''}, and GRAIL automatically translates it into an executable Scala program. The Python baseline, implemented using Rasterio, applies a clip operation over each polygon bounding box for every overlapping raster tile. To ensure correctness across tile boundaries, overlapping tiles are merged into a virtual mosaic per polygon. 
+
+Table~\ref{tab:benchmark} reports the results. Overall, GRAIL-generated code achieves better performance. At census-tract scale, Python performance degrades due to repeated tile reads, as each tile is accessed once per overlapping feature across thousands mask operations. In contrast, the technique used by GRAIL backend reads each tile exactly once and processes all overlapping features in a single streaming pass. This also explains why GRAIL shows similar performance trends across counties, states, and census tracts, since raster I/O dominates and is performed only once per tile.
+
+The distributed execution improves efficiency by emitting compact intermediate results per partition and merging them locally, reducing network shuffles. For world-scale polygons, Python took up to 8 hours, while GRAIL-generated RDPro ran much faster by avoiding repeated raster reopening and masking, demonstrating strong scalability.

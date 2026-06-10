@@ -1,0 +1,10 @@
+\section{Detailed Error Messages}
+In this section, we introduce a third strategy, which is augmenting RDPro with more detailed and prescriptive error messages to support iterative LLM guided code repair. Because LLM generated code cannot be guaranteed to execute successfully, an effective fix loop is essential. In practice, we observed that generic compiler or runtime errors provide insufficient guidance for reliable automated correction. Therefore, we redesigned selected error messages to include more explicit diagnostic information and suggested fixes.
+
+Specifically, since RDPro internally knows both the error type and its source location, we extend error reporting to include actionable repair hints. For example, when a type mismatch error occurs (e.g., \texttt{Int cannot be converted to Float}), the error message can additionally provide a concrete correction template, such as:
+\begin{verbatim}
+Type mismatch detected: expected Float but found Int.
+Suggested fix:
+val raster: RasterRDD[Int] = sc.geoTiff(...)
+\end{verbatim}
+By embedding corrective code patterns directly within the error message, we provide stronger supervision signals to the LLM during the repair phase. This structured feedback improves the likelihood that the model will generate a valid correction in subsequent iterations. 

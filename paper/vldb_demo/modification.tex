@@ -1,0 +1,41 @@
+\section{LLM-Ready Library Modifications}
+\label{sec:mod}
+To improve the reliability of LLM-generated RDPro code, we introduce and demonstrate three complementary modifications: structured documentation, API alias functions, and detailed error logs.
+
+\textbf{Structured Documentation.}
+The original RDPro documentation was written for human readers, with extensive descriptions and loosely organized examples. While readable, this format makes it difficult for an LLM to identify function signatures, input constraints, and expected outputs. We redesign the documentation into a structured and consistent format, where each API entry includes the function name, a description, input parameters with types and constraints, the output type and semantics, and a minimal executable usage example. During both planning and code generation, the pipeline carries relevant API fragments from this documentation and injects them directly into the prompt, ensuring the model reasons over precise specifications rather than general assumptions. As shown in \autoref{fig:grail}, the pipeline explicitly draws from the LLM-ready RDPro README at the API selection stage.
+
+\textbf{API Alias Functions.}
+During our preliminary experiments, we observed that LLMs tend to directly transfer function usage patterns from well-known Python geospatial libraries, such as GDAL and Rasterio. For example, LLMs loading raster data commonly generate names such as \texttt{open} or \texttt{read}, and use \texttt{mask} for raster-vector join operations, following conventions from Python ecosystems they have seen during training. To bridge this gap, we introduce \emph{alias functions} directly in the RDPro library that map these commonly inferred names to their correct RDPro equivalents, so that generated code executes correctly without requiring a repair round. The example below shows a typical case where a Python-style name is 
+transparently redirected to the correct RDPro call, as part of the 
+compile and run stage illustrated in \autoref{fig:grail}.
+
+% \begin{lstlisting}[style=codeStyle]
+% // LLM-generated: Python-style name
+% val raster = sc.read[Int](primaryRasterPath)
+% // Correct RDPro load function
+% val raster = sc.geoTiff[Int](primaryRasterPath)
+% \end{lstlisting}
+
+%The same pattern applies to raster-vector operations. LLMs frequently generate Rasterio-style \texttt{mask} calls, while the correct RDPro operation is \texttt{raptorJoin}. The alias layer accepts the familiar name and redirects it to the appropriate RDPro abstraction.
+
+\begin{lstlisting}[style=codeStyle]
+// LLM-generated: Rasterio-style masking
+val masked = raster.mask(vector)
+// Correct RDPro join via raptorJoin
+val joinedRecords = raster.raptorJoin(vector)
+\end{lstlisting}
+
+%In addition, LLMs often inherit type assumptions from common Python geospatial pipelines, where raster data loaded via GDAL or Rasterio is frequently cast to floating-point during preprocessing. As a result, they incorrectly infer float types by default, despite the underlying data typically being stored in integer formats (e.g., uint16). To mitigate this issue, we introduce alias and helper functions that enforce explicit type checking and safe data loading, providing a standardized interface that reduces type-related errors in generated code.
+
+\textbf{Repair-Oriented Error Reporting.}
+Since LLM-generated code cannot be guaranteed to compile on the first attempt, the quality of repair feedback directly affects how quickly the pipeline converges. Generic runtime errors provide limited guidance for automated correction. For example, they may indicate where an error occurs, but often provide little insight into how to fix it, especially when the issue involves customized internal functions. To address this, we augment selected RDPro error messages with actionable repair hints that indicate both the cause of the failure and a suggested fix. For example, a type mismatch produces:
+
+\begin{lstlisting}[style=codeStyle]
+Type mismatch: expected Float but found Int.
+Suggested fix: val raster: RasterRDD[Int] = sc.geoTiff()
+\end{lstlisting}
+
+When a section fails in compilation or execution, the agent extracts the relevant error, attaches the corresponding repair hint, and injects the combined feedback into the next generation prompt as a repair context block. \autoref{fig:grail} shows how compilation and execution errors 
+are captured in structured logs and fed back into the fix loop for 
+targeted repair. By providing this targeted signal together with the section contract and re-retrieved API documentation, the model receives both diagnosis and corrective guidance without the need to reason over the full error trace.
