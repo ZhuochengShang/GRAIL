@@ -37,6 +37,8 @@ streamlit run ../ui/grail_ui.py                       # demo interface
 python ../../experiments/testbed/runner/puzzle_runner.py --dry-run  # stage-0 baseline puzzles
 ```
 
+**Daily commands, git help, and CLI reference: [`WORKING.md`](WORKING.md)** — open that file every time you come back to the project.
+
 Full setup, commands, and machine-specific path notes: `grail-agent/README.md`.
 
 ## Main Entry Points
