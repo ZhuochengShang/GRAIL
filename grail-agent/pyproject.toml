@@ -7,7 +7,27 @@ dependencies = [
   "langchain-core",
   "langchain-openai",
   "langgraph",
+  "pyyaml",
+]
+
+[project.scripts]
+aideal = "aideal.cli:main"
+aideal-mcp = "aideal.mcp_server:main"
+
+[project.optional-dependencies]
+# extra providers for author/audience model experiments (Claude, Gemini, Kimi/Qwen via Ollama)
+providers = [
+  "langchain-anthropic",
+  "langchain-google-genai",
+  "langchain-ollama",
+]
+# MCP server so coding agents (Claude Code, Cursor, Windsurf) discover AIDEAL as tools
+mcp = [
+  "mcp",
 ]
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.package-data]
+aideal = ["default_prompts/**/*.md"]

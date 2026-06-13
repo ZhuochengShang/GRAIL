@@ -23,6 +23,7 @@ PACKAGE_PARENT = PACKAGE_DIR.parent
 if str(PACKAGE_PARENT) not in sys.path:
     sys.path.insert(0, str(PACKAGE_PARENT))
 
+from rdpro_section_codegen.aideal_bridge import log_failure
 from rdpro_section_codegen.analyzer import analyze_python_script
 from rdpro_section_codegen import AnalysisResult, build_plan, extract_called_apis, render_api_fix_guides
 from rdpro_section_codegen.compile_runner import run_compile_package_submit
@@ -883,6 +884,7 @@ def node_validate_scope(state: AgentState, config: RunnableConfig) -> AgentState
     if not ok:
         retries = state["retries_in_section"] + 1
         too_many = retries >= cfg["max_retries_per_section"]
+        log_failure("validate", section, feedback)
         events = _metrics_with_event(
             state,
             {
@@ -1051,6 +1053,7 @@ def node_semantic_check(state: AgentState, config: RunnableConfig) -> AgentState
     retries = state["retries_in_section"] + 1
     too_many = retries >= cfg["max_retries_per_section"]
     feedback = build_semantic_feedback(section, verdict)
+    log_failure("semantic", section, feedback)
     events = _metrics_with_event(
         state,
         {
@@ -1155,6 +1158,8 @@ def node_evaluate(state: AgentState, config: RunnableConfig) -> AgentState:
     failed_section_apis = extract_called_apis(failed_section_body)
     api_fix_guides = render_api_fix_guides(failed_section_apis)
     failure_excerpt = error_excerpt(err_tail, out_tail, max_chars=3500)
+    log_failure("code-test", section, failure_excerpt,
+                apis=failed_section_apis, fix_hint=api_fix_guides)
     events = _metrics_with_event(
         state,
         {

@@ -1,0 +1,64 @@
+# Experiment target 1: RDPro — starting from its ORIGINAL readme.
+# Paths are relative to experiments/rdpro/.
+
+project:
+  name: RDPro
+  language: Scala
+
+codebase:
+  # fresh upstream clone INSIDE this study (gitignored):
+  #   cd experiments/rdpro && git clone https://bitbucket.org/bdlabucr/beast.git
+  # applied changes are tracked as aideal/* branches in that clone; see
+  # experiments/README.md "Tracking applied changes".
+  source_globs:
+    - "beast/raptor/src/main/scala/**/*.scala"
+  public_def_regex: "def\\s+([a-zA-Z][A-Za-z0-9_]*)"
+  exclude_names: ["main", "apply", "unapply", "toString", "equals", "hashCode"]
+
+files:
+  project_profile: configs/project_profile.yaml
+  prompts_dir: prompts
+  # BASELINE: the project's pre-existing README (thin Beast readme + doc links).
+  # Replace with a richer concatenation later if desired ("input later").
+  original_readme: beast/README.md
+  # TREATMENT: generated/curated AIDEAL-format docs (start absent here;
+  # the curated one already exists at grail-agent/docs/rdpro_api_doc_combined.md
+  # and can be copied in as a "hand-tuned" condition)
+  llm_readme: docs/LLM_readme.md
+  notes_to_self: docs/notes_to_self.md
+  integration_tasks: configs/integration_tasks.yaml
+  aliases: aliases/aliases.json
+  error_log: logs/error_log.jsonl
+
+models:
+  registry:
+    gpt-4o:        { provider: openai,    model: gpt-4o }
+    gpt-4o-mini:   { provider: openai,    model: gpt-4o-mini }
+    claude-sonnet: { provider: anthropic, model: claude-sonnet-4-6 }
+    qwen:          { provider: ollama,    model: qwen3:32b }
+    llama3:        { provider: ollama,    model: llama3 }
+  roles:
+    author: gpt-4o-mini
+    audience: gpt-4o
+
+runtime:
+  target: local
+  local: {}
+
+checks:
+  required_sections:
+    - "Goal"
+    - "Valid Call Patterns|Valid Access Patterns"
+    - "LLM Instruction Prompt"
+    - "Prompt Snippet"
+    - "Common Failure Modes"
+    - "Fix Code Hint"
+  comprehension_apis_sampled: 5
+
+puzzle:
+  cwd: ../../grail-agent/src
+  command: "python -m rdpro_section_codegen.puzzle_eval --api-doc {llm_readme} --num-puzzles {n} --num-functions {k} --seed {seed} --tag exp_rdpro"
+  num_puzzles: 5
+  num_functions: 5
+  seed: 42
+  max_fix_rounds: 2

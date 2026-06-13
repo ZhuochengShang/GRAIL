@@ -1,0 +1,39 @@
+# Benchmark tasks. source: human = curated; generated = author-model from profile.
+tasks:
+- id: ndvi_pipeline
+  language: Scala
+  goal: 'Load Landsat8 B4 and B5 rasters, compute NDVI per pixel, and save the result
+    as a GeoTIFF.
+
+    '
+  apis:
+  - geoTiff
+  - overlay
+  - mapPixels
+  - saveAsGeoTiff
+  source: human
+- id: boston_zonal_stats
+  language: Scala
+  goal: 'Calculate land-cover percentages for each Boston neighborhood polygon from
+    the NLCD raster and write one CSV row per neighborhood.
+
+    '
+  apis:
+  - geoTiff
+  - shapefile
+  - raptorJoin
+  - IFeature
+  source: human
+- id: masked_filter
+  language: Scala
+  goal: 'Mask a raster by vector geometry, keep only pixels above a threshold, and
+    report the surviving pixel count.
+
+    '
+  apis:
+  - geoTiff
+  - shapefile
+  - mask
+  - filterPixels
+  - flatten
+  source: human
