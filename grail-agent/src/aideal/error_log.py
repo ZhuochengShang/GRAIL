@@ -28,7 +28,7 @@ from collections import Counter
 from pathlib import Path
 
 FIELDS = ("run_id", "step", "language", "task", "status",
-          "function", "error", "root_cause", "suggested_fix_code")
+          "function", "error_category", "error", "root_cause", "code", "suggested_fix_code")
 
 HALLUCINATED_NAME_RE = re.compile(
     r"value (\w+) is not a member|not found: value (\w+)|has no attribute '(\w+)'"
@@ -84,6 +84,24 @@ class ErrorLog:
         for (fn, err), n in seen.most_common(max_entries):
             fix = fixes.get((fn, err), "")
             lines.append(f"- {fn}: {err}" + (f" -> {fix}" if fix else "") + (f" (x{n})" if n > 1 else ""))
+        return "\n".join(lines)
+
+    def failures_for(self, function: str, max_items: int = 4) -> str:
+        """Compact render of prior failures for ONE function, to feed back into
+        the next generation/repair attempt. Pairs error -> fix when known."""
+        rows = [e for e in self.entries()
+                if e.get("function") == function and e.get("status") in ("fail", "fixed")]
+        if not rows:
+            return ""
+        lines = [f"Prior failures for `{function}` — avoid repeating these:"]
+        for e in rows[-max_items:]:
+            cat = e.get("error_category", "") or "error"
+            line = f"- [{cat}] {e.get('error','').strip()[:200]}"
+            if e.get("root_cause"):
+                line += f"  (at: {e['root_cause'].strip()[:120]})"
+            if e.get("suggested_fix_code"):
+                line += f"\n  fix that worked: {e['suggested_fix_code'].strip()[:300]}"
+            lines.append(line)
         return "\n".join(lines)
 
     def suggest_aliases(self) -> list[dict]:

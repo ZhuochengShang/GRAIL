@@ -18,6 +18,9 @@ REQUIRED_FIELDS = ("project.description", "target_users", "use_cases", "domain")
 
 TEMPLATE = """\
 # Project profile — fill this in BEFORE running AIDEAL's LLM steps.
+# `role`: the expertise persona the agent should adopt (injected first into
+# every prompt), e.g. "an expert in geospatial raster pipelines on Spark".
+role: "TODO: the expert role the agent should assume for this codebase"
 project:
   name: TODO
   language: TODO
@@ -124,7 +127,10 @@ def project_context(profile: dict) -> str:
     if not profile:
         return ""
     proj = profile.get("project", {})
-    lines = [f"Project: {proj.get('name', '?')} ({proj.get('language', '?')}) - {proj.get('description', '').strip()}"]
+    lines = []
+    if profile.get("role"):
+        lines.append(f"Role: {profile['role'].strip()}")
+    lines.append(f"Project: {proj.get('name', '?')} ({proj.get('language', '?')}) - {proj.get('description', '').strip()}")
     if profile.get("domain"):
         lines.append(f"Domain: {profile['domain']}")
     if profile.get("target_users"):
