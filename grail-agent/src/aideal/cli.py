@@ -35,7 +35,7 @@ from .notes_to_self import NotesToSelf
 from .readme_agent import find_or_create
 
 
-def main(argv: list[str] | None = None) -> int:
+def _run(argv: list[str] | None = None) -> int:
     p = argparse.ArgumentParser(prog="aideal", description="LLM-readiness backend")
     p.add_argument("--config", default=None)
     sub = p.add_subparsers(dest="cmd", required=True)
@@ -44,11 +44,32 @@ def main(argv: list[str] | None = None) -> int:
     sub.add_parser("profile", help="show profile status and missing fields")
     sp = sub.add_parser("readme")
     sp.add_argument("--generate", action="store_true", help="fill entries with the author model")
+    sp.add_argument("--limit", type=int, default=10,
+                    help="max APIs to generate (0 = all; default 10)")
+    sp.add_argument("--force", action="store_true",
+                    help="regenerate/overwrite an existing LLM_readme.md (else exits as 'found')")
+    sp = sub.add_parser("api-surface", help="static: discovered public API surface (Step 1)")
+    sp.add_argument("--json", action="store_true", help="emit structured details instead of plain text")
+    sp.add_argument("--include-nonpublic", action="store_true",
+                    help="also show defs filtered out by the visibility model")
+    sp = sub.add_parser("scaffold", help="auto-generate the execution scaffold from the API surface")
+    sp.add_argument("--generate", action="store_true", help="write the scaffold (else print to stdout)")
+    sp.add_argument("--out", default=None, help="output path (default: comprehension.execute.scaffold)")
+    sp = sub.add_parser("intent", help="static: evidence-based intended-API scores (auditable)")
+    sp.add_argument("--all", action="store_true", help="show every API, not just selected ones")
+    sub.add_parser("intended", help="band-select intended API; LLM adjudicates ambiguous (cached)")
+    sp = sub.add_parser("api-tests", help="static: real usage examples mined from the test suite")
+    sp.add_argument("--api", default=None, help="show examples for one API name")
     sub.add_parser("form")
     sp = sub.add_parser("comprehension")
     sp.add_argument("--sample", type=int, default=None)
     sp.add_argument("--doc", choices=["aideal", "original"], default="aideal",
                     help="original = use the project's pre-existing README as the only context")
+    sp.add_argument("--execute", action="store_true",
+                    help="compile/run each snippet via comprehension.execute (real ground truth; "
+                         "covers all documented APIs unless --sample given)")
+    sp.add_argument("--show-code", action="store_true",
+                    help="include the audience-generated Scala snippet in JSON details")
     sub.add_parser("completeness")
     sp = sub.add_parser("puzzle")
     sp.add_argument("--dry-run", action="store_true")
@@ -99,12 +120,70 @@ def main(argv: list[str] | None = None) -> int:
         prof = load_profile(cfg)
         out = {"path": str(profile_path(cfg)), "missing_fields": missing_fields(prof),
                "ready": not missing_fields(prof), "prompt_context": project_context(prof)}
+    elif args.cmd == "api-surface":
+        from .readme_agent import public_api_details, render_api_surface, visibility_model
+        if args.json:
+            details = public_api_details(cfg)
+            if not args.include_nonpublic:
+                details = [d for d in details if d["visibility"] == "public"]
+            out = {"project": cfg.project_name,
+                   "visibility_mode": visibility_model(cfg).get("mode"),
+                   "public_names": len({d["name"] for d in details}),
+                   "definition_sites": len(details),
+                   "details": details}
+        else:
+            print(render_api_surface(cfg, include_nonpublic=args.include_nonpublic))
+            return 0
+    elif args.cmd == "scaffold":
+        from pathlib import Path as _Path
+        from .readme_agent import generate_scaffold
+        text = generate_scaffold(cfg)
+        if args.generate:
+            dest = args.out or (cfg.comprehension.get("execute", {}) or {}).get("scaffold")
+            if not dest:
+                out = {"error": "no --out and no comprehension.execute.scaffold configured"}
+            else:
+                p = (cfg.root / dest).resolve()
+                p.parent.mkdir(parents=True, exist_ok=True)
+                p.write_text(text, encoding="utf-8")
+                out = {"action": "wrote_scaffold", "path": str(p), "lines": text.count(chr(10)) + 1}
+        else:
+            print(text)
+            return 0
+    elif args.cmd == "intent":
+        from .readme_agent import intent_scores
+        scores = intent_scores(cfg)
+        sel = {k: v for k, v in scores.items() if v["selected"]}
+        shown = scores if args.all else sel
+        out = {"surface_filter": cfg.surface_filter,
+               "threshold": next(iter(scores.values()), {}).get("threshold"),
+               "raw_surface": len(scores), "selected": len(sel),
+               "apis": {k: {"score": v["score"], "selected": v["selected"],
+                            "reasons": v["reasons"]} for k, v in shown.items()}}
+    elif args.cmd == "intended":
+        from .readme_agent import intended_api_llm
+        selected, decisions = intended_api_llm(cfg)
+        from collections import Counter
+        out = {"selected": len(selected), "total": len(decisions),
+               "by": dict(Counter(d.get("by") for d in decisions.values())),
+               "decisions": decisions}
+    elif args.cmd == "api-tests":
+        from .readme_agent import api_test_examples
+        idx = api_test_examples(cfg)
+        if args.api:
+            out = {"api": args.api, "examples": idx.get(args.api, [])}
+        else:
+            out = {"test_globs": cfg.test_globs,
+                   "apis_with_examples": len(idx),
+                   "examples_per_api": {k: len(v) for k, v in sorted(idx.items())}}
     elif args.cmd == "readme":
-        out = find_or_create(cfg, generate=args.generate)
+        out = find_or_create(cfg, generate=args.generate, max_generated=args.limit,
+                             force=args.force)
     elif args.cmd == "form":
         out = form_check(cfg)
     elif args.cmd == "comprehension":
-        out = comprehension_check(cfg, sample=args.sample, doc_source=args.doc)
+        out = comprehension_check(cfg, sample=args.sample, doc_source=args.doc,
+                                 execute=args.execute, show_code=args.show_code)
     elif args.cmd == "completeness":
         out = completeness_check(cfg)
     elif args.cmd == "puzzle":
@@ -151,6 +230,19 @@ def main(argv: list[str] | None = None) -> int:
 
     print(json.dumps(out, indent=2, ensure_ascii=False))
     return 0
+
+
+def main(argv: list[str] | None = None) -> int:
+    """Entry point: exit cleanly when piped into `head`/`less` etc. (the reader
+    closes the pipe early, raising BrokenPipeError)."""
+    try:
+        return _run(argv)
+    except BrokenPipeError:
+        try:
+            sys.stdout.close()
+        except Exception:
+            pass
+        return 0
 
 
 if __name__ == "__main__":

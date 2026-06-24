@@ -26,9 +26,13 @@ class AidealConfig:
     source_globs: list[str]
     public_def_regex: str
     exclude_names: list[str]
+    visibility: dict          # optional override of the per-language visibility model
+    test_globs: list[str]     # where existing unit tests live (real usage examples)
+    surface_filter: str       # intended-API filter: all|documented|non_override|documented_non_override
     # workspace files
     llm_readme: Path
-    original_readme: Path | None      # the project's pre-existing README (baseline)
+    original_readme: Path | None            # first baseline doc (back-compat / existence check)
+    original_readme_files: list[Path]       # all baseline docs (files/dirs/globs expanded)
     notes_to_self: Path
     integration_tasks: Path
     aliases_file: Path
@@ -42,9 +46,23 @@ class AidealConfig:
     # checks
     required_sections: list[str]
     comprehension_apis_sampled: int
+    comprehension: dict           # optional execute-mode config (scaffold, command, sample data)
     # puzzle
     puzzle: dict
     raw: dict = field(default_factory=dict)
+
+    def original_readme_text(self, limit: int | None = None) -> str:
+        """Concatenate all baseline docs (README + extra docs/dirs) with file
+        headers. `limit` caps the total characters."""
+        parts: list[str] = []
+        for p in self.original_readme_files:
+            try:
+                t = p.read_text(encoding="utf-8", errors="ignore")
+            except OSError:
+                continue
+            parts.append(f"===== {p.relative_to(self.root)} =====\n{t}")
+        text = "\n\n".join(parts)
+        return text[:limit] if limit else text
 
     def model_for_role(self, role: str) -> ModelSpec:
         key = self.roles.get(role)
@@ -54,6 +72,27 @@ class AidealConfig:
 
     def model_by_name(self, name: str) -> ModelSpec:
         return self.registry[name]
+
+
+def _resolve_readme_sources(root: Path, sources: list[str]) -> list[Path]:
+    """Expand each baseline-doc source (a file, a directory, or a glob) into a
+    sorted, de-duplicated list of files. Directories pull in their *.md."""
+    import glob as _glob
+    found: list[Path] = []
+    seen: set[Path] = set()
+    for src in sources:
+        base = (root / src)
+        if base.is_dir():
+            matches = sorted(_glob.glob(str(base / "**" / "*.md"), recursive=True))
+        elif any(ch in src for ch in "*?["):
+            matches = sorted(_glob.glob(str(base), recursive=True))
+        else:
+            matches = [str(base)]
+        for m in matches:
+            p = Path(m).resolve()
+            if p.is_file() and p not in seen:
+                seen.add(p); found.append(p)
+    return found
 
 
 def find_config(start: Path | None = None) -> Path | None:
@@ -94,6 +133,12 @@ def load_config(config_path: str | Path | None = None) -> AidealConfig:
     def _file(key: str, default: str) -> Path:
         return (root / files.get(key, default)).resolve()
 
+    # baseline docs: accept a single string or a list of files/dirs/globs
+    _orig_raw = files.get("original_readme")
+    _orig_sources = ([_orig_raw] if isinstance(_orig_raw, str)
+                     else list(_orig_raw) if _orig_raw else [])
+    _orig_files = _resolve_readme_sources(root, _orig_sources)
+
     return AidealConfig(
         root=root,
         project_name=project.get("name", "unknown"),
@@ -101,8 +146,12 @@ def load_config(config_path: str | Path | None = None) -> AidealConfig:
         source_globs=cb.get("source_globs", []),
         public_def_regex=cb.get("public_def_regex", r"def\s+([A-Za-z][A-Za-z0-9_]*)"),
         exclude_names=cb.get("exclude_names", []),
+        visibility=cb.get("visibility", {}) or {},
+        test_globs=cb.get("test_globs", []) or [],
+        surface_filter=cb.get("surface_filter", "all") or "all",
         llm_readme=_file("llm_readme", "docs/LLM_readme.md"),
-        original_readme=(root / files["original_readme"]).resolve() if files.get("original_readme") else None,
+        original_readme=_orig_files[0] if _orig_files else None,
+        original_readme_files=_orig_files,
         notes_to_self=_file("notes_to_self", "docs/notes_to_self.md"),
         integration_tasks=_file("integration_tasks", "configs/integration_tasks.yaml"),
         aliases_file=_file("aliases", "aliases/aliases.json"),
@@ -113,6 +162,7 @@ def load_config(config_path: str | Path | None = None) -> AidealConfig:
         runtime=runtime,
         required_sections=checks.get("required_sections", ["Goal"]),
         comprehension_apis_sampled=int(checks.get("comprehension_apis_sampled", 5)),
+        comprehension=raw.get("comprehension", {}) or {},
         puzzle=raw.get("puzzle", {}),
         raw=raw,
     )
@@ -133,7 +183,7 @@ codebase:
 files:
   project_profile: configs/project_profile.yaml
   prompts_dir: prompts            # optional overrides; package defaults used if absent
-  original_readme: README.md      # the project's pre-existing readme (baseline)
+  original_readme: README.md      # baseline doc(s): a path, or a list of files/dirs/globs
   llm_readme: docs/LLM_readme.md
   notes_to_self: docs/notes_to_self.md
   integration_tasks: configs/integration_tasks.yaml
