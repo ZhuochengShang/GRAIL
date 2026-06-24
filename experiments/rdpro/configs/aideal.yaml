@@ -14,13 +14,58 @@ codebase:
     - "beast/raptor/src/main/scala/**/*.scala"
   public_def_regex: "def\\s+([a-zA-Z][A-Za-z0-9_]*)"
   exclude_names: ["main", "apply", "unapply", "toString", "equals", "hashCode"]
+  # Intended-API filter (GENERAL, codebase-agnostic) over the raw regex surface,
+  # governing documentation/completeness/execution. Modes: all | documented |
+  # tested | documented_or_tested | non_override | documented_non_override |
+  # intent_score. `intent_score` is the evidence-based default: each API scores
+  # on generic signals (docs/tests/doc-mentions/visibility) minus penalties
+  # (override, internal path, boilerplate name); APIs >= threshold are selected.
+  # Inspect/audit with `aideal intent`.
+  surface_filter: intent_score
+  intent:
+    threshold: 5
+    # weights override the generic defaults (documented +2, tested +3,
+    # mentioned_in_docs +4, non_override +1, override -3, internal_path -5,
+    # boilerplate_name -4) — leave empty to use them.
+    weights: {}
+    # transparent, reported human corrections (empty for unbiased runs):
+    manual_include: []
+    manual_exclude: []
+    exclude_name_patterns: []   # e.g. ["^get[A-Z]", "Serializer$"]
+    # OPTIONAL LLM "commonly-used" signal: the author model (with the role
+    # persona) picks the user-facing operations; ONE cached call
+    # (docs/intent_common.json) so scores stay reproducible. Off unless both:
+    use_llm: false
+    # ...and weights.llm_common > 0 (set e.g. 3 in `weights` above to enable).
+    refresh_llm: false          # set true once to re-run the LLM judgment
+
+  # Token-efficient alternative: surface_filter: intended_llm. Static evidence
+  # auto-includes score>=include_threshold and auto-excludes score<=exclude_
+  # threshold; the LLM adjudicates ONLY the ambiguous middle band, batched, from
+  # compact records (no source). Decisions cached with provenance. Offline (no
+  # key) it falls back to the intent threshold.
+  intended_api:
+    static_include_threshold: 8
+    static_exclude_threshold: 1
+    batch_size: 25
+    cache: docs/intended_api_decisions.json
+    refresh: false
+  # existing unit tests = real, compiling usage examples. `readme --generate`
+  # mines `test("...")` blocks that call each API and feeds them as grounding;
+  # inspect with `aideal api-tests`.
+  test_globs:
+    - "beast/raptor/src/test/scala/**/*.scala"
 
 files:
   project_profile: configs/project_profile.yaml
   prompts_dir: prompts
-  # BASELINE: the project's pre-existing README (thin Beast readme + doc links).
-  # Replace with a richer concatenation later if desired ("input later").
-  original_readme: beast/README.md
+  # BASELINE: the project's pre-existing docs. Accepts a single path OR a list
+  # of files / directories / globs (dirs pull in their *.md). Here: the thin
+  # Beast README plus the full beast/doc/ wiki (rdpro.md, raptor-join.md,
+  # input-output.md, ...) for a richer baseline.
+  original_readme:
+    - beast/README.md
+    - beast/doc
   # TREATMENT: generated/curated AIDEAL-format docs (start absent here;
   # the curated one already exists at grail-agent/docs/rdpro_api_doc_combined.md
   # and can be copied in as a "hand-tuned" condition)
@@ -47,13 +92,101 @@ runtime:
 
 checks:
   required_sections:
+    - "Signature"
     - "Goal"
+    - "Parameters"
+    - "Input"
+    - "Output"
     - "Valid Call Patterns|Valid Access Patterns"
     - "LLM Instruction Prompt"
     - "Prompt Snippet"
     - "Common Failure Modes"
     - "Fix Code Hint"
   comprehension_apis_sampled: 5
+
+# Execution-grounded comprehension (`aideal comprehension --execute`): each
+# audience-written snippet is inserted into the scaffold (with the sample-data
+# paths below), compiled, and run. PASS = it actually runs (success_marker
+# present, exit 0); real compile/runtime errors are logged. Covers ALL
+# documented APIs by default. AIDEAL stays generic: it only fills the scaffold
+# and runs `command`; all RDPro/Spark specifics live in the command + scaffold.
+comprehension:
+  execute:
+    scaffold: docs/api_test_scaffold.scala     # generated: `aideal scaffold --generate`
+    # Curated import block (proven job_scaffold set). Overrides auto-derivation,
+    # which over-wildcards and collides (ambiguous RasterRDD, missing jhdf).
+    imports:
+      - "import org.apache.spark.SparkContext"
+      - "import org.apache.spark.sql.SparkSession"
+      - "import org.apache.spark.sql.types.{ArrayType, FloatType, IntegerType, DoubleType}"
+      - "import org.apache.spark.rdd.RDD"
+      - "import edu.ucr.cs.bdlab.beast._"
+      - "import edu.ucr.cs.bdlab.raptor.RaptorMixin._"
+      - "import edu.ucr.cs.bdlab.raptor._"
+      # member wildcards of the operation objects, so methods like zonalStatsLocal,
+      # rasterizePoints, reshapeNN, convolution, raptorJoin* resolve as bare calls:
+      - "import edu.ucr.cs.bdlab.raptor.RasterOperationsLocal._"
+      - "import edu.ucr.cs.bdlab.raptor.RasterOperationsFocal._"
+      - "import edu.ucr.cs.bdlab.raptor.RasterOperationsGlobal._"
+      - "import edu.ucr.cs.bdlab.raptor.ZonalStatistics._"
+      - "import edu.ucr.cs.bdlab.raptor.RaptorJoin._"
+      - "import edu.ucr.cs.bdlab.beast.cg.SpatialDataTypes.{RasterRDD, SpatialRDD}"
+      - "import edu.ucr.cs.bdlab.beast.io._"
+      - "import edu.ucr.cs.bdlab.beast.io.tiff.TiffConstants"
+      - "import edu.ucr.cs.bdlab.beast.common.BeastOptions"
+      - "import edu.ucr.cs.bdlab.beast.geolite.{ITile, Feature, IFeature, RasterFeature, RasterMetadata}"
+      - "import edu.ucr.cs.bdlab.raptor.{GeoTiffWriter, RasterOperationsFocal, RasterOperationsLocal, RasterOperationsGlobal, RaptorJoin, RaptorJoinFeature}"
+      - "import org.locationtech.jts.geom.{Geometry, Envelope}"
+      - "import org.apache.hadoop.fs.Path"
+      - "import scala.collection.JavaConverters._"
+      - "import java.net.URI"
+      - "import java.nio.file.{Paths, Files}"
+    region: ["// TODO API_TEST_START", "// TODO API_TEST_END"]
+    # General execute controls. RDPro's scaffold owns imports, so generated
+    # snippet imports are stripped before insertion; other codebases can leave
+    # this false if snippets must provide imports themselves.
+    strip_snippet_imports: true
+    output_tail_chars: 2000
+    # Typed sample-data catalog: each becomes a `val <name> = "<path>"` in the
+    # scaffold; the audience model picks the input(s) whose TYPE matches the
+    # API's parameters (raster vs vector vs table). Add more as fixtures grow.
+    sample_data:
+      raster_tif:       ../../grail-agent/examples/fixtures/nldas_boston_30m.tif
+      vector_geojson:   ../../grail-agent/examples/fixtures/Boston_Neighborhood_Boundaries_sample_grail.geojson
+      table_csv:        ../../grail-agent/examples/fixtures/boston_land_use_by_neighborhood_sample.csv
+      # vector_shapefile: ../../grail-agent/examples/fixtures/<add a .shp here>
+      output_dir:       /tmp/aideal_apitest_out
+    # Runtime classpath = the built dist lib (beast modules) + GeoTools/JTS/units
+    # pulled by Ivy via --packages from the osgeo --repositories. The uber jar is
+    # NOT self-contained (its shade omits the si.uom/javax.measure units libs, so
+    # CRS decode fails), which is why the proven setup uses lib + packages.
+    build: ""
+    jars: "beast/target/beast-0.10.1-bin/beast-0.10.1/lib/*.jar"   # beast modules
+    uberjar: "target/beast-uber-*.jar"   # added to compile {classpath} for JTS/GeoTools types
+    build_cwd: beast
+    # COMPILED path (proven): scalac -> jar -> spark-submit --class GeoJobMain.
+    # spark-shell -i can't apply RaptorMixin's implicit (sc.geoTiff); compiling can.
+    # {classpath}=Spark+beast+uber (colon, scalac); {jars}=beast (comma, --jars);
+    # {work}=per-API dir; {scala_file}=filled scaffold. Ivy resolves GeoTools 26.1
+    # (+ units) the first time, then caches in ~/.m2.
+    command: >-
+      scalac -classpath "{classpath}" -d {work}/classes {scala_file}
+      && ( cd {work}/classes && jar cf ../app.jar . )
+      && spark-submit --master local[*] --class GeoJobMain
+      --repositories https://repo.osgeo.org/repository/geotools-releases/,https://repo.osgeo.org/repository/release/
+      --packages org.locationtech.jts:jts-core:1.19.0,org.geotools:gt-referencing:26.1,org.geotools:gt-epsg-hsql:26.1,org.geotools:gt-geotiff:26.1,org.geotools:gt-coverage:26.1,it.geosolutions.imageio-ext:imageio-ext-tiff:1.4.14
+      --jars {jars} {work}/app.jar
+    # If geotools 26.1 mismatches, match beast/pom.xml <geotools.version>.
+    success_marker: "__DONE__"
+    error_marker: "__RUN_ERR__"
+    work_dir: .aideal_exec
+    timeout_seconds: 600
+    # on failure, re-generate the snippet with the prior error fed back, up to N
+    # extra rounds. error_log accumulates fail -> fixed (error -> solution) per API.
+    max_fix_rounds: 1
+    # Execution targets = the intended-API surface (codebase.surface_filter),
+    # i.e. whatever ended up documented in LLM_readme. No codebase-specific class
+    # list. Narrow further with `include`/`exclude` (names) if needed.
 
 puzzle:
   cwd: ../../grail-agent/src

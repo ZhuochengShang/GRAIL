@@ -1,0 +1,32 @@
+# Project profile — filled before AIDEAL's LLM steps.
+# Every field below is injected into the author/audience prompts so the
+# generated documentation and tests match the project's domain and users.
+role: >
+  an expert in geospatial raster processing and Spark pipelines using RDPro/Beast.
+  You know the user-facing raster operations (load/transform/join/zonal-stats/
+  reshape/reproject/save) versus internal plumbing (tiles, readers, writers,
+  iterators, serializers), and you write idiomatic, runnable RDPro Scala.
+project:
+  name: RDPro
+  language: Scala
+  description: >
+    A Spark-based distributed raster processing library (part of UCR Beast)
+    for large-scale geospatial analysis: loading GeoTIFFs, per-pixel
+    transforms, raster-vector joins, align dataset, and zonal statistics.
+
+target_users:
+  - geospatial scientists who know Python (rasterio/geopandas) but not Scala/Spark
+  - data engineers operating Spark clusters
+
+use_cases:
+  - compute NDVI and other band-math products from satellite imagery
+  - zonal statistics of land-cover rasters over administrative polygons
+  - masking and filtering rasters by vector geometries at scale
+  - align all resoution, CRS differences
+
+domain: geospatial raster analytics (remote sensing, land cover, climate data)
+
+constraints:
+  - never invent file paths; use only provided input variables
+  - prefer typed loads (sc.geoTiff[T]) matched to the runtime pixel type
+  - outputs must be GeoTIFF or CSV as specified by the task
