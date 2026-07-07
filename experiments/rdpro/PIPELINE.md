@@ -38,39 +38,89 @@ then domain / target users / use cases / constraints.
 Discovers the public API surface from `codebase.source_globs` via
 `public_def_regex`, filtered by a **language visibility model** (Scala = `deny`:
 drop `private`/`protected`). Produces, per API: signature, structured params
-`{name,type,default}`, return type, Scaladoc, `file:line`. RDPro raw surface:
-**113 public names** / 242 definition sites.
+`{name,type,default}`, return type, Scaladoc, `file:line`. RDPro raw surface
+(full beast tree, 2026-07-06): **820 public names** / 1,599 definition sites.
+(Historical note: earlier writeups cited 113/242 — that was a module-scoped
+glob, not the full tree. Scala auxiliary constructors `def this(...)` are now
+excluded in the scala-spark adapter — the regex used to sweep them in as a
+phantom API named `this`, 17 sites.)
 
 **Intended-API filter (`codebase.surface_filter`, GENERAL/codebase-agnostic).**
-The raw 113 is a regex artifact (sweeps in `hasNext`/`compareTo`/`close`/…). A
-reproducible filter narrows it to the *intended* API and governs documentation +
+The raw surface is a regex artifact (sweeps in `hasNext`/`compareTo`/`close`/…).
+A reproducible filter narrows it to the *intended* API and governs documentation +
 completeness + execution. Tightness needs human-intent signals; no single one is
 ideal, so the paper-quality default is **`intent_score`** — an evidence score per
 API, codebase-agnostic:
 
   +documented (2)  +tested (3)  +mentioned_in_docs (4)  +non_override (1)
-  −override (3)  −internal_path (5)  −boilerplate_name (4)        select if ≥ threshold
+  −override (3)  −internal_path (5)  −boilerplate_name (4)
+  −many_impls (3, at ≥5 def sites)                       select if ≥ threshold
+
+Two signal-quality rules (2026-07-06, see `docs/decision_log.json`):
+`mentioned_in_docs` counts only CODE-context mentions (fenced block, backticks,
+call form) — plain prose matching gave English-word APIs (`run`, `close`,
+`write`, `read`, `this`) a spurious +4; and **many_impls** penalizes names
+defined at ≥5 sites (trait/interface methods implemented per class: `run`×29,
+`write`×27, `close`×27 — implementations, not operations). Legacy behavior
+remains A/B-able via `intent.docs_mention_mode: any` and `weights.many_impls: 0`.
 
 Weights/threshold are config (`codebase.intent`), with optional reportable
 `manual_include`/`manual_exclude`/`exclude_name_patterns`. Every decision is
-auditable via `aideal intent` (per-API score + reasons). RDPro: threshold 5 →
-**41** (the real operation surface; raw 113). Simpler modes still exist:
-`all` | `documented` (68) | `tested` (48) | `documented_or_tested` (86) |
-`non_override` (94) | `documented_non_override`; `documented` degrades
+auditable via `aideal intent` (per-API score + reasons + def-site count).
+RDPro: threshold 5 → **205 selected** (static; sweep: thr 3→533, 4→258, 5→205,
+6→194, 7→102 — 5 starts the flat shelf). Simpler modes still exist:
+`all` (820) | `documented` (463) | `tested` (227) | `documented_or_tested` (536) |
+`non_override` | `documented_non_override`; `documented` degrades
 docs→tested→non_override→all. **Framing:** AIDEAL does not assume every public
 symbol is intended for docs — it estimates the intended API from reproducible
-evidence (docs, tests, doc-mentions, visibility) with structural penalties, emits
-per-symbol reasons, and allows small transparent overrides.
+evidence (docs, tests, doc-mentions, visibility, def-site fan-out) with
+structural penalties, emits per-symbol reasons, and allows small transparent
+overrides.
+
+### 3b. `aideal dedup [--out docs/dedup_report.json] [--full]`  (static, no key)
+Redundancy audit of the SELECTED surface (TODO item 1), deterministic:
+
+**Overload collapse — subsumption-aware ("needed longest parameters").** A
+same-file overload whose parameter types are a PREFIX of a longer sibling's is
+the *same function* with convenience defaults (telescoping overload) — the
+catalog documents only the longest form; short forms are recorded as
+`subsumed_overloads`, not variants. RDPro: 19 def sites across 17 names are
+provably telescoping forms (e.g. Java facade `geoTiff(filename)` ⊂
+`geoTiff(filename, layer)` ⊂ `geoTiff(filename, layer, opts)`). Canonical
+election among the surviving maximals: non-deprioritized path → documented →
+longest params → shallowest path. `codebase.dedup.deprioritize_paths`
+(scala-spark adapter default: `Java*.scala`) demotes facade duplicates —
+without it the 3-param `JavaSpatialSparkContext.geoTiff → JavaRasterRDD` would
+beat the documented Scala mixin `RaptorMixin.geoTiff → RDD[ITile[T]]`, the
+exact Java-typed form the pinned preamble exists to avoid. Elected canonicals
+verified: geoTiff/raptorJoin → `RaptorMixin.scala`, shapefile →
+`ReadWriteMixin.scala` — matching the verified preamble call forms. Overall:
+418 selected def sites → 205 canonical entries (213 non-canonical sites, of
+which 19 subsumed-same-function). The readme generator uses the same election:
+entry signature = canonical, `overloads` lists only genuinely distinct
+signatures, and Scaladoc is borrowed from the best-documented family member
+when the maximal form is undocumented.
+
+**Forwarder alias edges** — one-liner `def a(…) = b(…)` where both are
+selected; an edge collapses a catalog entry only when ALL of the name's sites
+forward to the same canonical (`full`: setLong/setBoolean→set; `partial` edges
+like shapefile→spatialFile keep their own entry — the Scala mixin site is the
+documented entry point). **Same-file same-signature twins** (review list,
+often legitimate: compress/decompress). **Alias-registry cross-check** —
+registry aliases (aliases.json + `(alias for \`X\`)` convention in
+`aliases/*.scala`) must target a selected canonical and not shadow a surface
+name. RDPro catalog entries after full-forwarder aliasing: **203**.
 
 ### 4. `aideal api-tests`  (static, no key)
 Mines `codebase.test_globs` (`beast/raptor/src/test/**`): for each API, the
-`test("…"){…}` blocks that call it — real, compiling usage. RDPro: **48/113**
-have examples. These are *grounding* for generation (stage 6), not executed here.
+`test("…"){…}` blocks that call it — real, compiling usage (227/820 names are
+test-called on the full tree). These are *grounding* for generation (stage 6),
+not executed here.
 
 ### 5. `aideal completeness`  (static, no key)
-Intended-API surface (the `surface_filter` set, e.g. 41 with `intent_score`) vs documented entries →
-coverage %. Denominator is the intended API, not the raw 113 (keep 113 as a
-context number for "raw surface").
+Intended-API surface (the `surface_filter` set, 205 with `intent_score`) vs
+documented entries → coverage %. Denominator is the intended API, not the raw
+820 (keep 820 as a context number for "raw surface").
 
 ### 6. `aideal readme --generate [--limit N] [--force]`  (author model)
 Builds `docs/LLM_readme.md`, one `## API Test:` entry per API in the intended-API
@@ -86,6 +136,22 @@ with `[i/total]` progress; reports `generated_ok` / `fallback_to_skeleton`.
 Sections: Signature / Goal / Parameters / Input / Output / Valid Call Patterns /
 LLM Instruction Prompt / Prompt Snippet / Common Failure Modes / Fix Code Hint.
 `--limit 0` = all; `--force` overwrites + re-distils.
+
+Model role is part of the experimental condition. By default the configured
+`author` writes the README and the configured `audience` consumes it during
+comprehension. Same-README backend comparisons keep this file fixed to isolate
+the coding model. A **fresh Codex README** condition deliberately changes the
+author too:
+
+```bash
+aideal readme --generate --limit 0 --force --role author=codex:$BENCH_CODEX_MODEL
+```
+
+Report this separately from same-README OpenAI/Gemini/Codex comparisons,
+because it measures Codex as both documentation author and coding
+audience/fixer. Current command checklist:
+`docs/codex_fresh_comparison_files.md`; runbook section:
+"Codex fresh-README condition".
 
 ### 7. `aideal scaffold --generate`  (static, no key)
 Writes `docs/api_test_scaffold.scala` — the compiled execution frame

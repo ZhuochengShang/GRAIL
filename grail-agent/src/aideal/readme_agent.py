@@ -59,6 +59,481 @@ def parse_readme(path: Path) -> list[ApiEntry]:
     return entries
 
 
+def _replace_section(block: str, header: str, content: str) -> str:
+    """Replace the content under `### {header}` (up to the next ### or block end).
+    Appends the section if it isn't present."""
+    pat = re.compile(rf"(###\s+{re.escape(header)}\s*\n)(.*?)(?=\n###\s|\Z)", re.DOTALL)
+    if pat.search(block):
+        return pat.sub(lambda m: m.group(1) + content.rstrip() + "\n", block, count=1)
+    return block.rstrip() + f"\n\n### {header}\n{content}\n"
+
+
+def _section_has_code(block: str, header: str) -> bool:
+    """True if the `### {header}` section already holds a REAL fenced code example —
+    a ``` block whose content isn't just the skeleton `TODO` placeholder. Drives
+    augment's `only_missing` gap-fill: backfill ONLY entries lacking example/fix code,
+    leaving curated or already-generated code untouched."""
+    body = _section_between(block, header)
+    if not body:
+        return False
+    for m in re.finditer(r"```[^\n]*\n(.*?)```", body, re.DOTALL):
+        inner = m.group(1).strip()
+        if inner and not inner.upper().startswith("TODO"):
+            return True
+    return False
+
+
+def _recency_key(e: dict) -> str:
+    """Sort key for 'newest wins'. Use run_id first: it is set on EVERY entry and
+    has one consistent, lexically-sortable format (%Y%m%d-%H%M%SZ). The newer ISO
+    `timestamp` field is absent on legacy rows and, being a different string shape,
+    would sort inconsistently against run_id if the two were mixed — so run_id is
+    the reliable ordering key and [-1] is truly the most recent."""
+    return e.get("run_id") or e.get("timestamp") or ""
+
+
+def _is_stale(e: dict, current_version: str) -> bool:
+    """A memory entry is stale when it was recorded against a DIFFERENT code
+    version than the one we're documenting now. Entries with no version tag
+    (legacy rows) can't be proven stale, so they're kept."""
+    v = (e.get("library_version") or "").strip()
+    return bool(current_version) and bool(v) and v != current_version
+
+
+def _fresh(entries: list[dict], current_version: str) -> list[dict]:
+    """Drop version-mismatched entries, then sort oldest->newest so callers can
+    take [-1] as the freshest trustworthy one. This is the staleness guard for
+    promoting a verified example: without it, a `pass` snippet from three commits
+    ago could be promoted as the current call pattern purely because it was the
+    last line appended to the log."""
+    return sorted((e for e in entries if not _is_stale(e, current_version)), key=_recency_key)
+
+
+def _augment_block(block: str, fails: list[dict], only_missing: bool = False,
+                   current_version: str = "") -> tuple[str, list[str]]:
+    """Rewrite one entry from real log rows: Common Failure Modes + Fix Code Hint
+    from failures, and a `Verified Example` from the latest PASSING execution — a
+    compiled-and-ran snippet, the strongest possible grounding for the entry.
+
+    `only_missing=True` = GAP-FILL: write the verified example / fix-hint code ONLY
+    when the entry doesn't already have that code (so generated/curated examples are
+    preserved). Common Failure Modes is always refreshed from the log either way.
+    Returns (new_block, sections_added) where sections_added ⊆ {"example", "fix"}."""
+    added: list[str] = []
+    # verified example: the most recent snippet that compiled AND ran (status=pass
+    # rows carry the working snippet in `code`). A proven example beats a written
+    # one, so PROMOTE it into Valid Call Patterns.
+    passed = _fresh([e for e in fails if e.get("status") == "pass" and e.get("code")], current_version)
+    if passed and not (only_missing and _section_has_code(block, "Valid Call Patterns")):
+        _p = passed[-1]
+        _src = _p.get("library_version") or _p.get("timestamp") or "unversioned"
+        block = _replace_section(
+            block, "Valid Call Patterns",
+            f"```\n{_p['code'].strip()}\n```\n_(verified: compiled + ran via `comprehension --execute` / probe; source @ {_src})_")
+        added.append("example")
+    seen: dict[tuple, int] = {}
+    for e in fails:
+        if e.get("status") == "fail":
+            raw = (e.get("error", "") or "").strip().splitlines()[0] if e.get("error") else ""
+            raw = re.sub(r"^\S+\.\w+:\d+:\s*", "", raw)   # drop "/path/File.scala:NN:"
+            key = (e.get("error_category", "") or "error", raw[:200])
+            seen[key] = seen.get(key, 0) + 1
+    lines = [f"- **[{cat}]** {msg}" + (f" _(seen {n}x)_" if n > 1 else "")
+             for (cat, msg), n in sorted(seen.items(), key=lambda kv: -kv[1])[:6]]
+    cfm = "\n".join(lines) if lines else "- (no failures observed yet)"
+    # prefer a real working fix (status=fixed); else fall back to any fix hint
+    fixed = _fresh([e for e in fails if e.get("status") == "fixed" and e.get("suggested_fix_code")], current_version)
+    real_fix = None
+    if fixed:
+        real_fix = ("Observed working code (from the fix loop):\n\n```scala\n"
+                    + fixed[-1]["suggested_fix_code"].strip() + "\n```")
+    else:
+        hints = [e.get("suggested_fix_code", "").strip() for e in fails
+                 if e.get("suggested_fix_code", "").strip()]
+        if hints:
+            real_fix = hints[-1]
+    # Common Failure Modes is observational, not code — always refresh it from the log.
+    block = _replace_section(block, "Common Failure Modes", cfm)
+    # Fix Code Hint: in only_missing mode write ONLY real fix code into an entry that
+    # lacks it (never overwrite existing code, never fill with the "no fix yet" stub).
+    if only_missing:
+        if real_fix and not _section_has_code(block, "Fix Code Hint"):
+            block = _replace_section(block, "Fix Code Hint", real_fix)
+            added.append("fix")
+    else:
+        block = _replace_section(
+            block, "Fix Code Hint",
+            real_fix or "- No confirmed fix yet; avoid the failures above.")
+        if real_fix:
+            added.append("fix")
+    return block, added
+
+
+def _grounding_tiers(cfg: AidealConfig):
+    """Per readme entry, most to least trustworthy:
+      verified (doc-derived code compiled AND ran) > grounded (direct test) >
+      sibling (a tested method on the same class shows the pattern) > guessed.
+    Returns (tiers{name->tier}, class_of{name->class}, test_index)."""
+    import os as _os
+    details = {d["name"]: d for d in public_api_details(cfg)}
+    class_of = {n: (_os.path.basename(details[n].get("file", ""))[:-6]
+                    if details[n].get("file", "").endswith(".scala") else "")
+                for n in details}
+    names = [e.name for e in parse_readme(cfg.llm_readme)]
+    test_index = api_test_examples(cfg)
+    exec_status = _exec_status_map(cfg)
+    tested_classes = {class_of.get(n) for n, ex in test_index.items() if ex and class_of.get(n)}
+    tiers = {}
+    for n in names:
+        if exec_status.get(n) == "pass":              # proven end-to-end in this harness
+            tiers[n] = "verified"
+        elif test_index.get(n):
+            tiers[n] = "grounded"
+        elif class_of.get(n) and class_of.get(n) in tested_classes:
+            tiers[n] = "sibling"
+        else:
+            tiers[n] = "guessed"
+    return tiers, class_of, test_index
+
+
+def _exec_status_map(cfg: AidealConfig) -> dict:
+    """function -> MOST RECENT execution outcome (pass/fail) from error_log.jsonl.
+
+    error_log.jsonl is append-only, so file order IS chronological. Scan in that
+    order and ALWAYS overwrite, so a later failure correctly downgrades an earlier
+    pass.
+
+    Fixes the sticky-pass bug: the old `setdefault` branch meant that once a
+    function was marked pass, no subsequent fail could downgrade it — e.g.
+    `zonalStatsLocal` stayed badged "verified" in readme_index.md while failing
+    every recent run. `fixed` (a retry that produced working code) counts as pass;
+    any other status does not overwrite a real pass/fail outcome."""
+    from .error_log import ErrorLog
+    st: dict[str, str] = {}
+    for e in ErrorLog(cfg.error_log).entries():
+        fn = e.get("function", "")
+        if not fn:
+            continue
+        s = e.get("status", "")
+        if s in ("pass", "fixed"):
+            st[fn] = "pass"
+        elif s == "fail":
+            st[fn] = "fail"
+    return st
+
+
+def grounding_report(cfg: AidealConfig, annotate: bool = False) -> dict:
+    """Which readme entries are TRUSTWORTHY vs SIBLING-backed vs GUESSED."""
+    tiers, class_of, test_index = _grounding_tiers(cfg)
+    if not tiers:
+        return {"error": "no LLM_readme entries — run `aideal readme --generate`"}
+    exec_status = _exec_status_map(cfg)
+    counts = {"verified": 0, "grounded": 0, "sibling": 0, "guessed": 0}
+    for t in tiers.values():
+        counts[t] += 1
+    total = len(tiers)
+    guessed_fail = sorted(n for n, t in tiers.items() if t == "guessed" and exec_status.get(n) == "fail")
+    out = {
+        "total": total,
+        "verified": counts["verified"], "grounded": counts["grounded"],
+        "sibling_grounded": counts["sibling"], "guessed": counts["guessed"],
+        "trusted_pct": round(100 * (counts["verified"] + counts["grounded"]) / total, 1),
+        "guessed_that_failed_execution": guessed_fail[:40],
+        "note": "verified = doc-derived code compiled AND ran (strongest); grounded = direct test; "
+                "sibling = tested method on same class; guessed = signature-only (verify by execution).",
+    }
+    if annotate:
+        badge = {"verified": "VERIFIED — doc-derived code compiled and ran via comprehension --execute.",
+                 "grounded": "test-backed — usage mined from a real, passing test.",
+                 "sibling": "sibling-grounded — a tested method on the same class shows the pattern.",
+                 "guessed": "GUESSED — no test; generated from the signature only. Verify by execution."}
+        text = cfg.llm_readme.read_text(encoding="utf-8")
+        matches = list(API_HEADER_RE.finditer(text))
+        parts = [text[:matches[0].start()]] if matches else [text]
+        for i, m in enumerate(matches):
+            end = matches[i + 1].start() if i + 1 < len(matches) else len(text)
+            block = text[m.start():end]
+            if "_Grounding:" not in block:
+                marker = f"_Grounding: {badge.get(tiers.get(m.group(1), 'guessed'))}_"
+                hdr, _, rest = block.partition("\n")
+                block = f"{hdr}\n{marker}\n{rest}"
+            parts.append(block)
+        cfg.llm_readme.write_text("".join(parts), encoding="utf-8")
+        out["annotated"] = True
+    return out
+
+
+def organize_report(cfg: AidealConfig, write_index: bool = False) -> dict:
+    """Axis 1+2 curation: group intended APIs by defining class, rank each by
+    robustness (grounded > sibling > guessed, tie-broken by execution outcome),
+    and mark the most robust `primary` per group so the agent reaches for it.
+    Optionally writes a categorized, robust-first `docs/readme_index.md`."""
+    from collections import defaultdict
+    tiers, class_of, _ = _grounding_tiers(cfg)
+    if not tiers:
+        return {"error": "no LLM_readme entries — run `aideal readme --generate`"}
+    exec_status = _exec_status_map(cfg)
+    trank = {"verified": 0, "grounded": 1, "sibling": 2, "guessed": 3}
+    erank = {"pass": 0, "": 1, "fail": 2}
+    cats = defaultdict(list)
+    for n, t in tiers.items():
+        cats[class_of.get(n) or "(unknown)"].append((n, t, exec_status.get(n, "")))
+    result = {}
+    for cls, items in cats.items():
+        items.sort(key=lambda it: (trank[it[1]], erank.get(it[2], 1), it[0]))
+        result[cls] = {"primary": items[0][0], "count": len(items),
+                       "apis": [{"name": n, "tier": t, "exec": ex or "not-run"} for n, t, ex in items]}
+    counts = {"verified": 0, "grounded": 0, "sibling": 0, "guessed": 0}
+    for t in tiers.values():
+        counts[t] += 1
+    summary = {"total": len(tiers), "categories": len(result), **counts}
+    if write_index:
+        badge = {"verified": "★", "grounded": "✅", "sibling": "🟡", "guessed": "⚠️"}
+        L = [f"# {cfg.project_name} — organized API index", "",
+             f"{counts['verified']} verified · {counts['grounded']} grounded · "
+             f"{counts['sibling']} sibling · {counts['guessed']} guessed · {len(result)} categories", "",
+             "Legend: ★ verified (compiled + ran) · ✅ grounded (direct test) · 🟡 sibling-grounded · "
+             "⚠️ guessed (verify by execution). **primary** = most robust in its group.", ""]
+        for cls in sorted(result):
+            L.append(f"## {cls}")
+            for a in result[cls]["apis"]:
+                star = " **(primary)**" if a["name"] == result[cls]["primary"] else ""
+                ex = f" · exec {a['exec']}" if a["exec"] != "not-run" else ""
+                L.append(f"- {badge[a['tier']]} `{a['name']}` — {a['tier']}{ex}{star}")
+            L.append("")
+        idx = cfg.llm_readme.parent / "readme_index.md"
+        idx.write_text("\n".join(L), encoding="utf-8")
+        summary["index"] = str(idx)
+    return {"summary": summary,
+            "categories_sample": {k: {"primary": v["primary"], "count": v["count"]}
+                                  for k, v in sorted(result.items())[:12]}}
+
+
+_TIER_BADGE = {"verified": "★", "grounded": "✅", "sibling": "🟡", "guessed": "⚠️"}
+_TIER_RANK = {"verified": 0, "grounded": 1, "sibling": 2, "guessed": 3}
+_EXEC_RANK = {"pass": 0, "": 1, "fail": 2}
+
+
+def _safe_filenames(gkey_label: dict[str, str]) -> dict[str, str]:
+    """Map each group key -> a UNIQUE, filesystem-safe filename stem. Start from the
+    human label (simple class name); when two groups sanitize to the same name (the
+    general collision: same simple name in different packages, so two DISTINCT class
+    files), disambiguate deterministically with trailing key segments, then a short
+    stable hash as a last resort. No collision (e.g. RDPro) -> filename == label, so
+    output is byte-identical to before."""
+    import collections as _c
+    import hashlib as _h
+    san = lambda s: re.sub(r"[^\w.-]", "_", s)
+    desired = {g: san(lbl) for g, lbl in gkey_label.items()}
+    dup = {n for n, c in _c.Counter(desired.values()).items() if c > 1}
+    out: dict[str, str] = {}
+    used: set[str] = set()
+    for g in sorted(gkey_label):                       # deterministic assignment order
+        name = desired[g]
+        if name in dup:                                # qualify with nearest parent segment(s)
+            parts = [p for p in re.split(r"[/\\.]", g) if p]
+            name = san(".".join(parts[-2:])) if len(parts) >= 2 else name
+            while name in used:                        # last resort: stable content hash
+                name = f"{desired[g]}-{_h.sha1(g.encode()).hexdigest()[:6]}"
+        out[g] = name
+        used.add(name)
+    return out
+
+
+def _catalogue_model(entries, tiers: dict, exec_status: dict, class_of: dict, owner: dict,
+                     file_of: dict | None = None) -> dict:
+    """Pure/testable: group README entries by defining class, rank each class's
+    members the SAME way organize_report does (tier, then execution outcome, then
+    name), pick the primary, and take the class purpose from the primary's Goal (no
+    new LLM call). Returns {group_key: {label, safe, primary, purpose, kind,
+    members:[{name,tier,exec}]}}.
+
+    file_of {name -> source file path}: when given, classes are grouped by their
+    DEFINING FILE (collision-safe: two same-named classes in different packages stay
+    separate) and each group carries a human `label` + a unique `safe` filename.
+    Omitted -> grouping falls back to the simple class name (back-compatible)."""
+    from collections import defaultdict
+    import os as _os
+    by_name = {e.name: e for e in entries}
+    groups: dict[str, list] = defaultdict(list)
+    gkey_label: dict[str, str] = {}
+    for e in entries:
+        f = (file_of or {}).get(e.name, "")
+        if f.endswith(".scala"):
+            gkey = f[:-6]                              # path stem — unique per source file
+            label = _os.path.basename(gkey)
+        else:
+            gkey = class_of.get(e.name) or (owner.get(e.name, ("(ungrouped)",))[0] or "(ungrouped)")
+            label = gkey
+        groups[gkey].append(e.name)
+        gkey_label[gkey] = label
+    safe_of = _safe_filenames(gkey_label)
+    out: dict[str, dict] = {}
+    for gkey, names in groups.items():
+        ranked = sorted(names, key=lambda n: (_TIER_RANK.get(tiers.get(n, "guessed"), 3),
+                                              _EXEC_RANK.get(exec_status.get(n, ""), 1), n))
+        primary = ranked[0]
+        pg = (by_name[primary].goal or "").strip()
+        if pg and not pg.upper().startswith("TODO"):
+            first = pg.splitlines()[0].strip()
+            purpose = first if len(first) <= 160 else first[:160].rsplit(" ", 1)[0] + "…"
+        else:
+            purpose = f"{len(names)} operation(s)"
+        out[gkey] = {
+            "label": gkey_label[gkey], "safe": safe_of[gkey],
+            "primary": primary, "purpose": purpose,
+            "kind": owner.get(primary, ("", "instance"))[1],
+            "members": [{"name": n, "tier": tiers.get(n, "guessed"),
+                         "exec": exec_status.get(n, "")} for n in ranked],
+        }
+    return out
+
+
+def _class_context_body(entry, model: dict, name_to_gkey: dict, by_name: dict) -> str:
+    """INDEX-FIRST audience context. Prepend the target API's catalogue class header
+    — how to obtain the receiver + ONE verified/grounded sibling's real call pattern —
+    to the API's own doc, so the audience model stops inventing the receiver / entry
+    point (the ~53% `value X is not a member` / `not found: value` failure class the
+    flat per-API body can't prevent). Pure/testable; returns entry.body unchanged when
+    the class isn't in the model."""
+    gkey = name_to_gkey.get(entry.name)
+    m = model.get(gkey) if gkey else None
+    if not m:
+        return entry.body
+    head = [f"## Class context — `{m['label']}`", f"_{m['purpose']}_", "",
+            f"**Obtaining the receiver:** {_receiver_line(m['label'], m['kind'])}", ""]
+    primary = m["primary"]
+    if primary != entry.name:
+        ptier = next((x["tier"] for x in m["members"] if x["name"] == primary), "guessed")
+        if ptier in ("verified", "grounded") and primary in by_name:
+            pat = _section_between(by_name[primary].body, "Valid Call Patterns")
+            if pat:
+                head += [f"**Proven setup from a {ptier} sibling `{primary}` — reuse its "
+                         f"receiver/imports, then call `{entry.name}` instead:**", pat, ""]
+    head += ["---", ""]
+    return "\n".join(head) + "\n" + entry.body
+
+
+def _receiver_line(cls: str, kind: str) -> str:
+    return (f"static object — call `{cls}.<method>(...)`" if kind == "static"
+            else f"instance — obtain a `{cls}` value, then `<value>.<method>(...)`")
+
+
+def write_catalogue(cfg: AidealConfig) -> dict:
+    """ADDITIVE, non-breaking: export the flat LLM_readme into the two-level shape
+    (catalogue + per-class files) WITHOUT touching LLM_readme.md or the read path.
+
+    Writes next to LLM_readme.md:
+      - LLM_readme_index.md : one section per defining class -> purpose, receiver, and
+                              the class's APIs with tier badges (primary marked),
+                              each linking into api/<Class>.md.
+      - api/<Class>.md      : the actual entries for that class's functions, headed by
+                              the class purpose + how to obtain a receiver.
+
+    Class files are named after the source class (the defining file's stem). Reuses
+    the exact ranking `organize_report` computes; the rest of the pipeline keeps
+    reading the flat file until the read path is switched deliberately (a later step)."""
+    from .doc_checks import _owner_map
+    entries = parse_readme(cfg.llm_readme)
+    if not entries:
+        return {"error": "no LLM_readme.md entries — run `aideal readme --generate` first"}
+    tiers, class_of, _ = _grounding_tiers(cfg)
+    exec_status = _exec_status_map(cfg)
+    owner = _owner_map(cfg)
+    file_of = {d["name"]: d["file"] for d in public_api_details(cfg)}
+    model = _catalogue_model(entries, tiers, exec_status, class_of, owner, file_of=file_of)
+    by_name = {e.name: e for e in entries}
+    api_dir = cfg.llm_readme.parent / "api"
+    api_dir.mkdir(parents=True, exist_ok=True)
+
+    idx = [f"# {cfg.project_name} — API catalogue", "",
+           f"{len(entries)} APIs across {len(model)} classes. Scan here, then open the one "
+           "class file you need (each opens with how to obtain its receiver, then its methods).", "",
+           "Legend: ★ verified · ✅ grounded · 🟡 sibling · ⚠️ guessed", ""]
+    files = 0
+    for gkey in sorted(model, key=lambda g: (model[g]["label"], g)):
+        m = model[gkey]
+        label, safe = m["label"], m["safe"]
+        recv = _receiver_line(label, m["kind"])
+        badged = [f"{_TIER_BADGE.get(x['tier'], '⚠️')} `{x['name']}`"
+                  + (" **(primary)**" if x["name"] == m["primary"] else "") for x in m["members"]]
+        # per-class file: header (purpose + receiver + members) then the real entries
+        body = [f"# {label}", "", f"_{m['purpose']}_", "", f"**Receiver:** {recv}", "",
+                "**Members** (most robust first): " + ", ".join(badged), "", "---", ""]
+        for x in m["members"]:
+            body.append(by_name[x["name"]].body.strip())
+            body.append("")
+        (api_dir / f"{safe}.md").write_text("\n".join(body), encoding="utf-8")
+        files += 1
+        # catalogue section
+        idx += [f"## [{label}](api/{safe}.md)", f"_{m['purpose']}_",
+                f"**Receiver:** {recv}", "**APIs:** " + ", ".join(badged), ""]
+    idx_path = cfg.llm_readme.parent / "LLM_readme_index.md"
+    idx_path.write_text("\n".join(idx), encoding="utf-8")
+    return {"action": "catalogue", "classes": len(model), "apis": len(entries),
+            "index": str(idx_path), "api_dir": str(api_dir), "class_files": files,
+            "note": "additive export; LLM_readme.md and the read path are untouched"}
+
+
+def augment_from_log(cfg: AidealConfig, dry_run: bool = False,
+                     only_missing: bool = False) -> dict:
+    """Fold observed failures/fixes from error_log.jsonl into each LLM_readme
+    entry's `Common Failure Modes` and `Fix Code Hint` sections, plus a verified
+    `Valid Call Patterns` example from a PASSING execution (augment-from-log).
+    Evidence only — never invents. Safe to re-run after more comprehension/puzzle passes.
+
+    only_missing=True = GAP-FILL: add the verified example / fix-hint code ONLY to
+    entries that don't already have that code (curated/generated code is preserved;
+    Common Failure Modes is still refreshed). Use it after a full
+    `comprehension --execute` to backfill exactly the entries missing a proven example."""
+    from .error_log import ErrorLog, git_version
+    if not cfg.llm_readme.exists():
+        return {"error": "no LLM_readme.md — run `aideal readme --generate` first"}
+    log = ErrorLog(cfg.error_log)
+    # tag for staleness: only promote verified examples recorded against the
+    # CURRENT code version (mismatched ones are dropped by _fresh). '' when the
+    # target isn't a git repo -> staleness falls back to timestamp recency only.
+    current_version = git_version(cfg.root)
+    by_fn: dict[str, list[dict]] = {}
+    for e in log.entries():
+        by_fn.setdefault(e.get("function", ""), []).append(e)
+    if not by_fn:
+        return {"action": "noop", "note": "error_log.jsonl is empty; nothing to fold in"}
+
+    text = cfg.llm_readme.read_text(encoding="utf-8")
+    matches = list(API_HEADER_RE.finditer(text))
+    parts = [text[:matches[0].start()]] if matches else [text]
+    updated: list[str] = []
+    example_added: list[str] = []
+    fix_added: list[str] = []
+    for i, m in enumerate(matches):
+        end = matches[i + 1].start() if i + 1 < len(matches) else len(text)
+        block = text[m.start():end]
+        fails = by_fn.get(m.group(1))
+        if fails:
+            block, added = _augment_block(block, fails, only_missing=only_missing,
+                                          current_version=current_version)
+            updated.append(m.group(1))
+            if "example" in added:
+                example_added.append(m.group(1))
+            if "fix" in added:
+                fix_added.append(m.group(1))
+        parts.append(block)
+    new_text = "".join(parts)
+    if not dry_run:
+        cfg.llm_readme.write_text(new_text, encoding="utf-8")
+    return {"action": "augmented" if not dry_run else "dry-run",
+            "mode": "only-missing" if only_missing else "refresh",
+            "path": str(cfg.llm_readme), "entries_updated": len(updated),
+            "verified_examples_added": len(example_added),
+            "fix_hints_added": len(fix_added),
+            "example_apis": example_added[:50],
+            "fix_apis": fix_added[:50],
+            "note": ("gap-fill: added verified example / fix-hint code only where missing; "
+                     "Common Failure Modes refreshed") if only_missing else
+                    "Common Failure Modes + Fix Code Hint + verified example rewritten from error_log"}
+
+
 # --- Visibility models -------------------------------------------------------
 # No single rule works across languages, so each language picks one of four
 # modes. `deny`  = public by default, drop defs carrying a private marker
@@ -168,8 +643,12 @@ _SCAFFOLD_FRAME = """// AIDEAL API-test scaffold — AUTO-GENERATED from the API
 // Compiled form (scalac + spark-submit --class GeoJobMain). This is the proven
 // path: an implicit class like RaptorMixin's sc.geoTiff resolves when compiled
 // inside an object, but NOT in the spark-shell -i REPL.
-object GeoJob {{
-  def run(sc: SparkContext): Unit = {{
+object GeoJob {
+  def run(sc: SparkContext): Unit = {
+    // Alias: LLM-authored snippets frequently reach for `sparkContext` (the
+    // SparkSession accessor name) rather than the harness binding `sc`. Expose
+    // both so a correct call doesn't fail on the binding name alone.
+    val sparkContext = sc
     // Typed sample inputs (from comprehension.execute.sample_data). Use the
     // one(s) whose type matches the API's parameters.
     // AIDEAL_DATA_BINDINGS
@@ -177,24 +656,24 @@ object GeoJob {{
     // TODO API_TEST_START
     // (generated snippet inserted here)
     // TODO API_TEST_END
-  }}
-}}
+  }
+}
 
-object GeoJobMain {{
-  def main(args: Array[String]): Unit = {{
+object GeoJobMain {
+  def main(args: Array[String]): Unit = {
     val spark = SparkSession.builder().appName("ApiTest").master("local[*]").getOrCreate()
-    try {{
+    try {
       GeoJob.run(spark.sparkContext)
       println("__DONE__ object=GeoJob")
-    }} catch {{
+    } catch {
       case t: Throwable =>
         Console.err.println("__RUN_ERR__ " + t.getClass.getName + ": " + t.getMessage)
         t.printStackTrace()
-    }} finally {{
+    } finally {
       spark.stop()
-    }}
-  }}
-}}
+    }
+  }
+}
 """
 
 # Always-needed runtime imports the source files may not declare themselves.
@@ -238,15 +717,270 @@ def _available_packages(cfg: AidealConfig) -> set[str]:
     return pkgs
 
 
+def _import_package(imp: str) -> str:
+    """The enclosing PACKAGE an import resolves against — i.e. exactly what must be on
+    the compile classpath for it to resolve. Relies on the Scala/Java convention that
+    package segments are lowercase and type/object segments are Uppercase: the package
+    is the leading run of segments before the first Uppercase (type/object) segment.
+    This is what makes the classpath check correct for BOTH shapes that look identical
+    syntactically:
+      import edu...dynoviz.raptorhunt.Rectangle          -> package edu...dynoviz.raptorhunt
+      import edu...beast.cg.SpatialDataTypes.RasterRDD    -> package edu...beast.cg
+        (`SpatialDataTypes` is an OBJECT, `RasterRDD` a type member — the real package
+         stops at `cg`, so a member-of-object import isn't mistaken for a missing pkg)
+    Wildcards and brace groups reduce to their package the same way:
+      import a.b.c._            -> a.b.c
+      import a.b.c.Obj._        -> a.b.c
+      import a.b.{X, Y}         -> a.b
+    A checker that instead accepted ANY ancestor would wrongly keep
+    `org.apache.spark.test.ScalaSparkTest` (ancestor `org.apache.spark` is present) even
+    though package `org.apache.spark.test` ships no classes — the bug this replaces."""
+    path = imp[len("import "):].strip() if imp.startswith("import ") else imp.strip()
+    if "{" in path:                       # import a.b.{X, Y} -> drop the brace group
+        path = path[:path.index("{")].rstrip(".")
+    elif path.endswith("._"):             # wildcard -> drop the trailing ._
+        path = path[:-2]
+    pkg: list[str] = []
+    for seg in path.split("."):
+        if seg[:1].isupper():             # first Uppercase segment = type/object -> stop
+            break
+        pkg.append(seg)
+    return ".".join(pkg)
+
+
+def _on_classpath(imp: str, avail: set[str]) -> bool:
+    """True iff the import's enclosing package is present in the compile jars. `avail`
+    is derived from the SAME jars scalac compiles against, so this keeps exactly the
+    imports that resolve and drops exactly the ones that raise
+    `object X is not a member of package Y` — e.g. source-tree-only modules (`dynoviz`,
+    `test`) that are indexed from source but never shipped in the runtime jars. Callers
+    skip the filter entirely when `avail` is empty (jars unresolved), so behavior is
+    unchanged when the classpath can't be determined."""
+    pkg = _import_package(imp)
+    return bool(pkg) and pkg in avail
+
+
+_TEST_FRAMEWORK_IMPORT = re.compile(
+    r"scalatest|junit|scalatestplus|ScalaSparkTest|mockito|\.mock|RunWith|"
+    r"AnyFunSuite|BeforeAndAfter|TestName", re.IGNORECASE)
+
+
+def _imports_from_tests(cfg: AidealConfig) -> list[str]:
+    """Robust import block: the SPECIFIC imports the test suite already uses to
+    exercise the APIs — real, compiling, and made COLLISION-FREE. Braced imports
+    are expanded to one-per-name; any simple name that resolves to two different
+    paths (e.g. two `ByteArrayOutputStream`s) is DROPPED, since including both
+    would make scalac ambiguous. Test-framework imports are filtered out."""
+    from collections import defaultdict
+    imp_re = re.compile(r"^\s*import\s+(\S.*?)\s*$", re.MULTILINE)
+    raw: set[str] = set()
+    for g in cfg.test_globs:
+        for p in globmod.glob(str(cfg.root / g), recursive=True):
+            txt = Path(p).read_text(encoding="utf-8", errors="ignore")
+            for m in imp_re.finditer(txt):
+                t = m.group(1).strip()
+                if t and not _TEST_FRAMEWORK_IMPORT.search(t):
+                    raw.add(t)
+    wildcards: list[str] = []
+    by_name: dict[str, set[str]] = defaultdict(set)   # simple name -> {full import}
+    for t in raw:
+        if t.endswith("._"):                          # package/object wildcard
+            wildcards.append(f"import {t}")
+        elif "{" in t and t.endswith("}"):            # expand braces to one-per-name
+            pkg = t[:t.index("{")]
+            for nm in t[t.index("{") + 1:t.rindex("}")].split(","):
+                nm = nm.strip()
+                if not nm:
+                    continue
+                simple = nm.split("=>")[-1].strip()   # renamed import: keep the alias
+                by_name[simple].add(f"import {pkg}{nm}")
+        else:
+            by_name[t.rsplit('.', 1)[-1]].add(f"import {t}")
+    out = list(dict.fromkeys(wildcards))
+    for simple, imps in by_name.items():
+        if len(imps) == 1:                            # unambiguous -> keep
+            out.append(next(iter(imps)))
+        # else: same simple name from >1 path -> drop (would be ambiguous)
+    # drop imports whose package isn't on the compile classpath (a test-only dep
+    # would fail scalac). Skipped when jars aren't configured/resolvable.
+    avail = _available_packages(cfg)
+    if avail:
+        out = [i for i in out if _on_classpath(i, avail)]
+    return sorted(set(out))
+
+
+def _pkgobject_reexported_wildcards(cfg: AidealConfig) -> dict[str, set[str]]:
+    """Auto-detect wildcard imports made REDUNDANT (and thus ambiguous) by a Scala
+    package object. `package object X extends A with B` means `import <path>.X._`
+    already brings A's/B's implicit classes into scope; a SECOND wildcard
+    `import <pathA>.A._` re-introduces the same implicit at equal priority, so
+    Scala can no longer disambiguate and the conversion silently stops resolving
+    (the `sc.shapefile is not a member` class of bug).
+
+    Returns `{package-object wildcard -> {redundant mixin wildcards it re-exports}}`
+    so the caller can drop the mixin wildcards ONLY when the package-object
+    wildcard is actually present (dropping them otherwise would delete implicits a
+    codebase legitimately imports the narrow way). General: works for any codebase
+    that fronts its implicits with a package object — no per-conflict config."""
+    out: dict[str, set[str]] = {}
+    pkg_re = re.compile(r"^\s*package\s+([\w.]+)\s*$", re.MULTILINE)
+    obj_re = re.compile(r"package\s+object\s+(\w+)\s+extends\s+(.+?)(?:\{|\n\s*\n|\Z)", re.DOTALL)
+    imp_named = re.compile(r"^\s*import\s+([\w.]+)\.(\w+)\s*$", re.MULTILINE)
+    for g in cfg.source_globs:
+        for path in globmod.glob(str(cfg.root / g), recursive=True):
+            text = Path(path).read_text(encoding="utf-8", errors="ignore")
+            mo = obj_re.search(text)
+            if not mo:
+                continue
+            pm = pkg_re.search(text)
+            if not pm:
+                continue
+            pkg_path = f"{pm.group(1)}.{mo.group(1)}"          # e.g. edu...beast
+            # resolve each mixed-in trait's simple name to a full import path using
+            # this file's own imports (traits with no import share the package and
+            # can't collide via a *different* wildcard, so skipping them is safe).
+            named = {simple: f"{owner}.{simple}" for owner, simple in imp_named.findall(text)}
+            mixins: set[str] = set()
+            for part in re.split(r"\bwith\b", mo.group(2)):
+                m = re.match(r"\s*([\w.]+)", part)
+                if not m:
+                    continue
+                full = named.get(m.group(1).split(".")[-1])
+                if full and full != pkg_path:
+                    mixins.add(f"import {full}._")
+            if mixins:
+                out.setdefault(f"import {pkg_path}._", set()).update(mixins)
+    return out
+
+
+def _source_symbol_index(cfg: AidealConfig) -> dict[str, str]:
+    """Index PUBLIC, top-level type/object declarations across the source tree:
+    `{SimpleName -> "import pkg.Name"}`. Top-level = declared at column 0 (Scala
+    convention), which also excludes nested and private/protected declarations
+    (their line starts with indentation or `private`/`protected`, so the anchored
+    pattern won't match). Simple-name collisions across packages are dropped to
+    avoid ambiguous imports. This is the lookup table the scaffold uses to resolve
+    symbols automatically — no hand-maintained import list."""
+    from collections import defaultdict
+    pkg_re = re.compile(r"^\s*package\s+([\w.]+)\s*$", re.MULTILINE)
+    # anchored at line start, optional benign modifiers, then the keyword + an
+    # Uppercase name. `private`/`protected` are NOT in the modifier set, so a
+    # `private object X` line fails to match and is skipped.
+    decl_re = re.compile(
+        r"^(?:(?:final|sealed|abstract|implicit|case)\s+)*(?:class|trait|object)\s+([A-Z]\w*)",
+        re.MULTILINE)
+    by_name: dict[str, set[str]] = defaultdict(set)
+    for g in cfg.source_globs:
+        for path in globmod.glob(str(cfg.root / g), recursive=True):
+            text = Path(path).read_text(encoding="utf-8", errors="ignore")
+            pm = pkg_re.search(text)
+            if not pm:
+                continue
+            pkg = pm.group(1)
+            for nm in decl_re.findall(text):
+                by_name[nm].add(f"import {pkg}.{nm}")
+    return {n: next(iter(s)) for n, s in by_name.items() if len(s) == 1}
+
+
+def _defining_object_imports(cfg: AidealConfig) -> list[str]:
+    """Auto-import the symbols documented APIs need — no per-object/type config:
+      (a) the OBJECT that defines each API (file-stem object), so static call forms
+          `RasterOperationsLocal.mapPixels(...)` / `RaptorJoin.raptorJoinFeature(...)`
+          resolve — these live in the same package as their tests, so `from-tests`
+          mining can't discover them; and
+      (b) every TYPE a documented signature references (return + params), e.g. the
+          `RaptorJoinResult` / `RaptorJoinFeature` case classes used in a raptor
+          result annotation, which are also same-package and mining-invisible.
+    Both are looked up in the source symbol index; anything not defined in this
+    codebase (Spark's `RDD`, generic params `T`/`U`, ...) is simply absent from the
+    index and ignored."""
+    index = _source_symbol_index(cfg)
+    if not index:
+        return []
+    needed: set[str] = set()
+    _ident = re.compile(r"[A-Z]\w*")
+    for d in public_api_details(cfg):
+        if d.get("visibility") != "public":
+            continue
+        f = d.get("file", "")
+        if f.endswith(".scala"):
+            needed.add(Path(f).stem)                       # (a) defining object
+        sig = d.get("signature") or ""
+        ret = d.get("returns") or ""
+        ptypes = " ".join(p.get("type", "") for p in (d.get("params") or []))
+        for blob in (sig, ret, ptypes):                    # (b) referenced types
+            needed.update(_ident.findall(blob))
+    imports = {index[n] for n in needed if n in index}
+    # Same compile-classpath gate the from-tests path uses: a documented API can live
+    # in a source module that ISN'T on the exec classpath (e.g. `dynoviz`, or the
+    # `test` helper modules under src/main/scala). Its defining-object / referenced-type
+    # import is real in the source tree but `object dynoviz is not a member ...` at
+    # scalac time, and — because these imports are shared by EVERY api-test — one such
+    # leak fails the whole suite. Drop them here; skipped when jars are unresolved.
+    avail = _available_packages(cfg)
+    if avail:
+        imports = {i for i in imports if _on_classpath(i, avail)}
+    return sorted(imports)
+
+
 def generate_scaffold(cfg: AidealConfig) -> str:
-    """Build a runnable scaffold. If comprehension.execute.imports is set, use
-    that curated import block verbatim (avoids wildcard collisions like an
-    ambiguous RasterRDD); otherwise auto-derive wildcard imports from the source
-    packages (best-effort, may need curation for collision-prone codebases)."""
+    """Build a runnable scaffold. `comprehension.execute.imports`:
+      - a list      -> use that curated block verbatim,
+      - "from-tests"/"auto" -> mine the SPECIFIC, compiling imports the test suite
+        uses (robust; avoids the ambiguous-RasterRDD wildcard collision),
+      - unset       -> auto-derive wildcard imports from source packages (best-effort)."""
     ex = (cfg.comprehension or {}).get("execute", {}) if cfg.comprehension else {}
+    # the scaffold FRAME is language-specific -> a codebase adapter can override it
+    # (e.g. scala-spark's GeoJobMain harness, or a Python __main__ runner). Core
+    # only fills the {imports} slot + the AIDEAL_DATA_BINDINGS / API_TEST markers.
+    frame = ex.get("scaffold_frame") or _SCAFFOLD_FRAME
     override = ex.get("imports")
-    if override:
-        return _SCAFFOLD_FRAME.format(imports="\n".join(override))
+    # project may declare must-have imports the test suite / source never writes
+    # explicitly (e.g. an object like `RaptorJoin` used only inside its own
+    # package, or a package-object of implicits). Honored in EVERY mode.
+    extra = ex.get("extra_imports", []) or []
+    # ...plus the defining OBJECT of every documented API, so static-method call
+    # forms resolve even when the object lives in the same package as its tests
+    # (which `from-tests` mining can't discover). Opt out with defining_object_imports: false.
+    defining = _defining_object_imports(cfg) if ex.get("defining_object_imports", True) else []
+    # project may drop imports that are REDUNDANT AND AMBIGUOUS: a Scala package
+    # object that `extends` several mixin traits (e.g. `edu.ucr.cs.bdlab.beast._`
+    # re-exports ReadWriteMixin) makes a second wildcard of the same mixin
+    # (`ReadWriteMixin._`) a duplicate implicit at equal priority -> the implicit
+    # conversion becomes ambiguous and silently stops resolving (`sc.shapefile`
+    # "is not a member"). Listing that redundant wildcard here removes the tie.
+    exclude = set(ex.get("exclude_imports", []) or [])
+    # package-object re-export map: {pkgobj wildcard -> redundant mixin wildcards}.
+    # Auto-drops the ambiguous duplicates so common cases need no manual
+    # `exclude_imports`; config stays as an additional override.
+    reexports = _pkgobject_reexported_wildcards(cfg)
+    # ...and GUARANTEE the package-object umbrella wildcard(s) themselves (e.g.
+    # `import edu.ucr.cs.bdlab.beast._`) — the documented entry point for the
+    # sc.* implicits (shapefile/geoTiff/mapPixels-instance-form). Adding them here
+    # means no manual extra_import is needed, and the reexport-drop above keeps the
+    # redundant mixin wildcards from re-introducing the ambiguity.
+    extra = list(extra) + defining + sorted(reexports)
+    def _drop(lines: list[str]) -> list[str]:
+        # remove excluded imports AND de-duplicate (a guaranteed extra_import may
+        # also be mined from tests; two identical wildcards are harmless but noisy)
+        present = set(lines)
+        dyn = set(exclude)
+        for pkgobj, mixins in reexports.items():
+            if pkgobj in present:          # only redundant when the umbrella is there
+                dyn |= mixins
+        out: list[str] = []
+        seen: set[str] = set()
+        for l in lines:
+            if l in dyn or l in seen:
+                continue
+            seen.add(l)
+            out.append(l)
+        return out
+    if isinstance(override, list) and override:
+        return frame.replace("{imports}", "\n".join(_drop(list(extra) + override)))
+    if isinstance(override, str) and override.strip().lower() in ("from-tests", "auto"):
+        mined = _imports_from_tests(cfg)
+        return frame.replace("{imports}", "\n".join(_drop(_SCAFFOLD_BASE_IMPORTS + list(extra) + mined)))
     # Collect source packages (wildcarded) + the packages/objects the source
     # imports from. Collapse every import to a WILDCARD of its package/object so
     # the noisy per-class member lists become a short, clean set. Keep only
@@ -288,12 +1022,10 @@ def generate_scaffold(cfg: AidealConfig) -> str:
     if avail:
         wilds = {w for w in wilds
                  if w in avail or w.rsplit(".", 1)[0] in avail}
-    # project may declare must-have imports a sub-package source never imports
-    # (e.g. the `edu.ucr.cs.bdlab.beast._` package-object implicits).
-    extra = (cfg.comprehension.get("execute", {}) or {}).get("extra_imports", []) or []
+    # extra_imports + defining-object imports (same `extra` assembled above).
     pkg_imports = sorted(f"import {w}._" for w in wilds)
-    imports = "\n".join(_SCAFFOLD_BASE_IMPORTS + list(extra) + pkg_imports)
-    return _SCAFFOLD_FRAME.format(imports=imports)
+    imports = "\n".join(_drop(_SCAFFOLD_BASE_IMPORTS + list(extra) + pkg_imports))
+    return frame.replace("{imports}", imports)
 
 
 def public_api_surface(cfg: AidealConfig, override_filter: str | None = None) -> set[str]:
@@ -368,6 +1100,7 @@ _INTERNAL_PATH_SEGMENTS = ("/internal/", "/impl/", "/detail/", "/private/",
 _DEFAULT_INTENT_WEIGHTS = {
     "documented": 2, "tested": 3, "mentioned_in_docs": 4, "non_override": 1,
     "override": -3, "internal_path": -5, "boilerplate_name": -4,
+    "many_impls": -3,  # interface-method detector: name defined at >= many_impls_threshold sites
     "llm_common": 0,   # off by default; >0 + intent.use_llm enables the LLM signal
 }
 
@@ -381,7 +1114,9 @@ def llm_common_apis(cfg: AidealConfig, candidates: set[str], refresh: bool = Fal
     cache = cfg.llm_readme.parent / "intent_common.json"
     if cache.exists() and not refresh:
         try:
-            return set(_json.loads(cache.read_text(encoding="utf-8"))) & candidates
+            cached = _json.loads(cache.read_text(encoding="utf-8"))
+            if cached:  # an EMPTY cached list is a failed judge run, not a
+                return set(cached) & candidates  # verdict — treat as a miss
         except Exception:
             pass
     from .llm import invoke_text
@@ -391,8 +1126,16 @@ def llm_common_apis(cfg: AidealConfig, candidates: set[str], refresh: bool = Fal
     details = {d["name"]: d for d in public_api_details(cfg)}
     listing = "\n".join(f"- {n}: {details.get(n, {}).get('signature', n)}"
                         for n in sorted(candidates))
-    resp = invoke_text(cfg.model_for_role("author"),
-                       *load_prompt(cfg, "aideal/intent_common", api_list=listing))
+    system, user = load_prompt(cfg, "aideal/intent_common", api_list=listing)
+    # dump the exact rendered prompt + raw response so the LLM step is auditable
+    dump = cache.parent / "intent_common_prompt.txt"
+    dump.parent.mkdir(parents=True, exist_ok=True)
+    resp = invoke_text(cfg.model_for_role("author"), system, user)
+    dump.write_text(
+        f"MODEL: {cfg.model_for_role('author')}\n\n"
+        f"===== SYSTEM =====\n{system}\n\n===== USER =====\n{user}\n\n"
+        f"===== RESPONSE =====\n{resp}\n",
+        encoding="utf-8")
     try:
         picked = set(_json.loads(resp[resp.index("["):resp.rindex("]") + 1]))
     except Exception:
@@ -491,7 +1234,27 @@ def _names_called_in(text: str, names: set[str]) -> set[str]:
             if re.search(rf"\b{re.escape(n)}\s*[\(\[]|\.{re.escape(n)}\b", text)}
 
 
-def intent_scores(cfg: AidealConfig) -> dict[str, dict]:
+def _doc_code_mentions(docs_text: str, names: set[str]) -> set[str]:
+    """Subset of `names` mentioned in a CODE context of the baseline docs:
+    inside a fenced code block, inside inline backticks, or in call form
+    (`.name` / `name(`) anywhere. A bare English-word match in prose does NOT
+    count — with plain `\\b name \\b` matching, common-word APIs (RDPro:
+    `run`, `this`, `close`, `write`, `read`) earned a spurious
+    mentioned_in_docs(+4) just because the README uses those words in
+    sentences."""
+    if not docs_text or not names:
+        return set()
+    code = "\n".join(re.findall(r"```.*?```", docs_text, re.S))
+    code += "\n" + " ".join(re.findall(r"`([^`]+)`", docs_text))
+    out = set()
+    for n in names:
+        pat = re.escape(n)
+        if re.search(rf"\b{pat}\b", code) or re.search(rf"\.{pat}\b|\b{pat}\s*\(", docs_text):
+            out.add(n)
+    return out
+
+
+def intent_scores(cfg: AidealConfig, force_llm: bool | None = None) -> dict[str, dict]:
     """Score each public API by GENERIC evidence of user-facing intent and select
     those at/above a threshold. Codebase-agnostic: signals are documentation,
     tests, original-doc mentions, visibility/override, internal-path and
@@ -505,6 +1268,16 @@ def intent_scores(cfg: AidealConfig) -> dict[str, dict]:
     manual_exc = set(intent.get("manual_exclude", []) or [])
     excl_pats = [re.compile(p) for p in (intent.get("exclude_name_patterns", []) or [])]
     boiler = _BOILERPLATE_NAMES | set(intent.get("boilerplate_names", []) or [])
+    # interface-method detector: a name with many definition sites is (almost
+    # always) a trait/interface method implemented per class, not one operation
+    # (RDPro: run×29, write×27, close×27, read×24). Penalty is evidence-based
+    # and auditable; strong real APIs (documented+tested+code-mentioned)
+    # survive it. Tune via codebase.intent.{weights.many_impls, many_impls_threshold}.
+    many_thr = int(intent.get("many_impls_threshold", 5))
+    # docs_mention_mode: "code" (default) counts a doc mention only in code
+    # context (fenced block / backticks / call form); "any" is the legacy
+    # plain word match — kept for A/B comparison.
+    mention_mode = intent.get("docs_mention_mode", "code")
 
     model = visibility_model(cfg)
     file_cache: dict[str, list[str]] = {}
@@ -512,7 +1285,9 @@ def intent_scores(cfg: AidealConfig) -> dict[str, dict]:
     for name, prefix, path, i, _line in _iter_defs(cfg):
         if name in cfg.exclude_names or not _is_public(name, prefix, model):
             continue
-        r = recs.setdefault(name, {"documented": False, "non_override": False, "internal": False})
+        r = recs.setdefault(name, {"documented": False, "non_override": False,
+                                   "internal": False, "sites": 0})
+        r["sites"] += 1
         if not re.search(r"\boverride\b", prefix):
             r["non_override"] = True
         norm = "/" + path.replace("\\", "/").lower() + "/"
@@ -529,13 +1304,23 @@ def intent_scores(cfg: AidealConfig) -> dict[str, dict]:
         for p in globmod.glob(str(cfg.root / g), recursive=True):
             tested |= _names_called_in(Path(p).read_text(encoding="utf-8", errors="ignore"), names - tested)
     docs_text = cfg.original_readme_text() if cfg.original_readme_files else ""
-    mentioned = {n for n in names if docs_text and re.search(rf"\b{re.escape(n)}\b", docs_text)}
-    # optional LLM "commonly-used" signal (opt-in, cached for reproducibility)
+    if mention_mode == "code":
+        mentioned = _doc_code_mentions(docs_text, names)
+    else:  # "any" — legacy plain word match (A/B baseline)
+        mentioned = {n for n in names if docs_text and re.search(rf"\b{re.escape(n)}\b", docs_text)}
+    # optional LLM "commonly-used" signal (opt-in, cached for reproducibility).
+    # force_llm overrides config: True = run it (default weight 4 if unset),
+    # False = skip it (static-only). None = honor codebase.intent.use_llm.
+    use_llm = intent.get("use_llm") if force_llm is None else force_llm
+    if force_llm and not W.get("llm_common", 0):
+        W["llm_common"] = 4
     common: set[str] = set()
-    if W.get("llm_common", 0) and intent.get("use_llm"):
+    if W.get("llm_common", 0) and use_llm:
+        # opt-in signal: degrade to static on ANY failure (missing key, profile
+        # gate's SystemExit, network) so the score never crashes.
         try:
             common = llm_common_apis(cfg, names, refresh=bool(intent.get("refresh_llm")))
-        except Exception:
+        except (Exception, SystemExit):
             common = set()
 
     out: dict[str, dict] = {}
@@ -549,13 +1334,220 @@ def intent_scores(cfg: AidealConfig) -> dict[str, dict]:
         if r["internal"]:             score += W["internal_path"];   reasons.append(f"internal_path({W['internal_path']})")
         if name in boiler or any(p.search(name) for p in excl_pats):
             score += W["boilerplate_name"]; reasons.append(f"boilerplate_name({W['boilerplate_name']})")
+        if W.get("many_impls", 0) and r["sites"] >= many_thr:
+            score += W["many_impls"]; reasons.append(f"many_impls({r['sites']} sites,{W['many_impls']})")
         if name in common:
             score += W["llm_common"]; reasons.append(f"llm_common(+{W['llm_common']})")
         selected = score >= threshold
         if name in manual_inc: selected = True;  reasons.append("manual_include")
         if name in manual_exc: selected = False; reasons.append("manual_exclude")
-        out[name] = {"score": score, "reasons": reasons, "selected": selected, "threshold": threshold}
+        out[name] = {"score": score, "reasons": reasons, "selected": selected,
+                     "threshold": threshold, "sites": r["sites"]}
     return dict(sorted(out.items(), key=lambda kv: (-kv[1]["score"], kv[0])))
+
+
+def intent_compare(cfg: AidealConfig) -> dict:
+    """Compare intended-API selection WITHOUT the LLM signal vs WITH it.
+
+    Runs intent twice on the same surface: static-only (force_llm=False) and
+    static+LLM (force_llm=True, default weight 4). Reports counts, Jaccard
+    overlap, and the APIs each side adds/drops, so the LLM signal's effect on
+    the coverage denominator is auditable. `llm_signal_fired` is False when the
+    LLM run silently fell back to static (no API key, unfilled profile, etc.)."""
+    static = intent_scores(cfg, force_llm=False)
+    llm = intent_scores(cfg, force_llm=True)
+    s = {k for k, v in static.items() if v["selected"]}
+    l = {k for k, v in llm.items() if v["selected"]}
+    union = s | l
+    jaccard = round(len(s & l) / len(union), 4) if union else 1.0
+    llm_fired = any("llm_common" in "".join(v["reasons"]) for v in llm.values())
+    return {
+        "surface": len(static),
+        "selected_static": len(s),
+        "selected_llm": len(l),
+        "shared": len(s & l),
+        "jaccard": jaccard,
+        "added_by_llm": sorted(l - s),
+        "dropped_with_llm": sorted(s - l),
+        "llm_signal_fired": llm_fired,
+    }
+
+
+def _subsume_overloads(recs: list[dict],
+                       deprioritize: tuple = ()) -> tuple[list[dict], list[tuple[dict, dict]]]:
+    """Telescoping-overload analysis for ONE name's definition sites.
+
+    Same function, different parameter lists: within the SAME file (one class
+    family), an overload whose parameter types are a proper prefix of a longer
+    sibling's is a convenience form of that sibling (it delegates with
+    defaults) — the catalog needs only the LONGEST form ("needed longest
+    parameters"), e.g. `foo(x)` and `foo(x,y)` are one function documented as
+    `foo(x,y)`. Cross-file same-name defs (Java facades, interface
+    implementations) are never subsumed — different receiver contexts.
+
+    Returns (maximals, subsumed): `maximals` sorted longest-params-first (then
+    documented, shallowest path, line — so [0] is the canonical signature);
+    `subsumed` = [(rec, subsumed_by_rec)] pointing at the LONGEST subsumer, so
+    a chain foo(x) ⊂ foo(x,y) ⊂ foo(x,y,z) maps both short forms to the full one.
+    """
+    def _types(r: dict) -> tuple:
+        return tuple((p.get("type") or "?") for p in r["params"])
+
+    by_file: dict[str, list[dict]] = {}
+    for r in recs:
+        by_file.setdefault(r["file"], []).append(r)
+    subsumed: list[tuple[dict, dict]] = []
+    losers: set[int] = set()
+    for group in by_file.values():
+        for a in group:
+            ta = _types(a)
+            best = None
+            for b in group:
+                tb = _types(b)
+                if b is not a and len(tb) > len(ta) and tb[:len(ta)] == ta:
+                    if best is None or len(tb) > len(_types(best)):
+                        best = b
+            if best is not None:
+                subsumed.append((a, best))
+                losers.add(id(a))
+    maximals = [r for r in recs if id(r) not in losers]
+    # Election among the surviving maximals: within one file the longest
+    # already won via subsumption; ACROSS files prefer non-deprioritized
+    # paths (facade duplicates — e.g. Beast's Java* wrappers returning
+    # JavaRasterRDD, the form the pipeline deliberately avoids because it
+    # forced invented .toRDD adapters), then the documented context, then the
+    # longest signature.
+    def _depri(r: dict) -> bool:
+        return any(p.search(r["file"]) for p in deprioritize)
+    maximals.sort(key=lambda r: (_depri(r), not r["description"].strip(),
+                                 -len(r["params"]),
+                                 r["file"].count("/"), r["file"], r["line"]))
+    return maximals, subsumed
+
+
+def _dedup_deprioritize(cfg: AidealConfig) -> tuple:
+    """Compiled `codebase.dedup.deprioritize_paths` patterns (adapter-level
+    default for scala-spark: Java facade files `Java*.scala`)."""
+    pats = ((cfg.raw.get("codebase", {}) or {}).get("dedup", {}) or {}).get(
+        "deprioritize_paths", []) or []
+    return tuple(re.compile(p) for p in pats)
+
+
+def dedup_report(cfg: AidealConfig) -> dict:
+    """Redundancy audit of the SELECTED surface. Deterministic (no LLM).
+
+    Four redundancy classes, each auditable:
+      1. overload collapse — one catalog entry per name; canonical site elected
+         (documented > shallowest path > lowest line), others become variants;
+      2. forwarder alias edges — `def a(...) = b(...)` one-liners where both
+         names are selected: `a` should be catalogued as an alias of `b`, not
+         documented twice;
+      3. same-file same-signature twins — review list (often legitimate pairs
+         like compress/decompress; never auto-dropped);
+      4. alias-registry cross-check — registry aliases (aliases.json + any
+         *.scala alias object using the ``(alias for `X`)`` doc convention)
+         must point at a selected canonical and not shadow a surface name.
+    """
+    import json as _json
+    det = [d for d in public_api_details(cfg) if d["visibility"] == "public"]
+    scores = intent_scores(cfg)
+    sel = {n for n, v in scores.items() if v["selected"]}
+    by_name: dict[str, list[dict]] = {}
+    for d in det:
+        if d["name"] in sel:
+            by_name.setdefault(d["name"], []).append(d)
+
+    # 1. overload collapse — subsumption-aware: canonical = the maximal
+    # telescoping overload ("needed longest parameters"); same-file
+    # prefix-shorter forms are the SAME function with defaults, recorded under
+    # subsumed_overloads, not as distinct variants.
+    collapse: dict[str, dict] = {}
+    subsumed_total = 0
+    _depri_pats = _dedup_deprioritize(cfg)
+    for n, recs in sorted(by_name.items()):
+        maximals, subsumed = _subsume_overloads(recs, _depri_pats)
+        canon = maximals[0]
+        subsumed_total += len(subsumed)
+        collapse[n] = {"sites": len(recs),
+                       "canonical": f"{canon['file']}:{canon['line']}",
+                       "signature": canon["signature"],
+                       "subsumed_overloads": [
+                           {"site": f"{a['file']}:{a['line']}",
+                            "params": len(a["params"]),
+                            "same_function_as": f"{b['file']}:{b['line']}"}
+                           for a, b in subsumed],
+                       "distinct_variants": len(maximals) - 1}
+
+    # 2. forwarder alias edges (same-line `= callee(...)`). An edge only
+    # COLLAPSES a catalog entry when EVERY def site of the name forwards to
+    # the same canonical ("full"); otherwise it is "partial" — e.g. RDPro's
+    # `shapefile` forwards to `spatialFile` in the Java context but is the
+    # documented first-class entry point in the Scala mixin, so it stays.
+    fcache: dict[str, list[str]] = {}
+    forwarders: list[dict] = []
+    for n, recs in sorted(by_name.items()):
+        callees, sites = set(), []
+        for d in recs:
+            try:
+                lines = fcache.setdefault(
+                    d["file"], (cfg.root / d["file"]).read_text(encoding="utf-8", errors="ignore").splitlines())
+                m = re.search(r"=\s*([A-Za-z_][\w.]*)\s*[\(\[]", lines[d["line"] - 1])
+            except (OSError, IndexError):
+                m = None
+            callee = m.group(1).split(".")[-1] if m else None
+            if callee in sel and callee != n:
+                callees.add(callee); sites.append(f"{d['file']}:{d['line']}")
+            else:
+                callees.add(None)  # at least one non-forwarding site
+        real = callees - {None}
+        if real:
+            full = None not in callees and len(real) == 1
+            forwarders.append({"alias": n, "canonical": sorted(real)[0] if full else sorted(real),
+                               "collapse": "full" if full else "partial",
+                               "sites": sites})
+
+    # 3. same-file same-signature twins
+    twin_ix: dict[tuple, set[str]] = {}
+    for n, recs in by_name.items():
+        for d in recs:
+            key = (d["file"], tuple((p.get("type") or "?") for p in d["params"]),
+                   d["returns"] or "?")
+            twin_ix.setdefault(key, set()).add(n)
+    twins = [{"file": k[0], "params": list(k[1]), "returns": k[2], "names": sorted(v)}
+             for k, v in sorted(twin_ix.items()) if len(v) > 1]
+
+    # 4. alias-registry cross-check
+    reg_aliases: list[dict] = []
+    try:
+        if cfg.aliases_file.exists():
+            for r in _json.loads(cfg.aliases_file.read_text(encoding="utf-8")):
+                reg_aliases.append({"alias": r["alias"], "canonical": r["canonical"],
+                                    "status": r.get("status"), "source": cfg.aliases_file.name,
+                                    "shadows_surface": r["alias"] in sel,
+                                    "canonical_in_surface": r["canonical"] in sel})
+    except Exception:
+        pass
+    for sf in sorted(cfg.aliases_file.parent.glob("*.scala")):
+        text = sf.read_text(encoding="utf-8", errors="ignore")
+        for m in re.finditer(r"\(alias for `([\w\[\]]+)`\).*?\bdef\s+(\w+)", text, re.S):
+            reg_aliases.append({"alias": m.group(2), "canonical": m.group(1),
+                                "status": "added", "source": sf.name,
+                                "shadows_surface": m.group(2) in sel,
+                                "canonical_in_surface": m.group(1) in sel})
+
+    sites_total = sum(c["sites"] for c in collapse.values())
+    full_fwd = {f["alias"] for f in forwarders if f["collapse"] == "full"}
+    return {
+        "selected_names": len(by_name),
+        "selected_def_sites": sites_total,
+        "collapsed_variants": sites_total - len(by_name),
+        "subsumed_overload_sites": subsumed_total,
+        "forwarder_alias_edges": forwarders,
+        "catalog_entries_after_aliasing": len(by_name) - len(full_fwd),
+        "same_signature_twins": twins,
+        "registry_aliases": reg_aliases,
+        "collapse": collapse,
+    }
 
 
 def _split_top_level(inner: str) -> list[str]:
@@ -819,6 +1811,36 @@ def distilled_readme_context(cfg: AidealConfig, *, refresh: bool = False) -> str
     return note
 
 
+def _original_readme_snippets(cfg: AidealConfig, names, max_per_api: int = 2,
+                              max_chars: int = 1400) -> dict[str, list[str]]:
+    """Index VERBATIM code blocks from the ORIGINAL readme by the API name(s) they
+    call. `distilled_readme_context` summarizes the docs ONCE and drops per-API
+    snippets, so an entry never sees the project's REAL call form — e.g. the docs'
+    instance-style `raster.mapPixels(f)` gets paraphrased into a non-compiling
+    free-function `mapPixels(raster, f)`. Feeding the exact block back lets the
+    author reproduce the true receiver/qualifier. Returns {name: [code blocks]}."""
+    if not cfg.original_readme_files:
+        return {}
+    from collections import defaultdict
+    raw = cfg.original_readme_text(limit=200000)
+    # tolerant fence match: any info-string after ``` and REQUIRE the closing ```
+    # to start its own line (\n```), so inline `code` / stray backticks in prose
+    # don't desync the open/close pairing across the concatenated docs.
+    blocks = re.findall(r"```[^\n]*\n(.*?)\n```", raw, re.DOTALL)
+    idx: dict[str, list[str]] = defaultdict(list)
+    for b in blocks:
+        b = b.strip()
+        if not b:
+            continue
+        for name in names:
+            if len(idx[name]) >= max_per_api:
+                continue
+            # a real call/use of the name: `name(`, `.name(`, `name[`
+            if re.search(rf"(?:\b|\.){re.escape(name)}\s*[\(\[]", b):
+                idx[name].append(b[:max_chars])
+    return dict(idx)
+
+
 def find_or_create(cfg: AidealConfig, generate: bool = False, max_generated: int = 10,
                    force: bool = False) -> dict:
     """Return status of the LLM readme; create a skeleton if missing.
@@ -854,6 +1876,12 @@ def find_or_create(cfg: AidealConfig, generate: bool = False, max_generated: int
     cfg.llm_readme.parent.mkdir(parents=True, exist_ok=True)
 
     if generate:
+        # the readme is being (re)written -> invalidate readme-DERIVED caches so
+        # io_hints / preamble rebuild from the NEW readme instead of a stale one.
+        for _stale in ("io_hints.txt", "preamble.scala"):
+            _p = cfg.llm_readme.parent / _stale
+            if _p.exists():
+                _p.unlink()
         import json as _json
         import sys as _sys
         from .llm import invoke_text
@@ -867,6 +1895,26 @@ def find_or_create(cfg: AidealConfig, generate: bool = False, max_generated: int
         readme_ctx = distilled_readme_context(cfg, refresh=force)
         # index real usage from the existing test suite ONCE (ground-truth examples)
         test_index = api_test_examples(cfg)
+        # ...and the VERBATIM per-API code blocks from the original readme, so the
+        # entry can reproduce the project's real call form (which the distilled note
+        # summarizes away) instead of paraphrasing it into a non-compiling shape.
+        orig_snippet_index = _original_readme_snippets(cfg, set(by_name))
+        # sibling grounding: map each API to its defining class and index which
+        # classes have tested methods, so an API with NO direct test can borrow
+        # the tested call pattern of a sibling on the same object/class.
+        import os as _os
+        from collections import defaultdict as _dd
+        _class_of = {n: (_os.path.basename(r[0].get("file", ""))[:-6]
+                         if r and r[0].get("file", "").endswith(".scala") else "")
+                     for n, r in by_name.items()}
+        _sibs_by_class = _dd(list)
+        for _n, _exs in test_index.items():
+            if _exs and _class_of.get(_n):
+                _sibs_by_class[_class_of[_n]].append((_n, _exs))
+        # Version B ("try first") toggle: comprehension.execute.probe_on_missing.
+        # When on, a function with no test/sibling is RUN once before its entry is
+        # written, so the author grounds on real execution instead of a blind guess.
+        _probe_on_missing = bool(((cfg.comprehension or {}).get("execute", {}) or {}).get("probe_on_missing"))
         total = len(targets)
         # stream each entry to disk as it completes: progress is visible and a
         # crash mid-run keeps everything generated so far (resumable by hand).
@@ -874,28 +1922,69 @@ def find_or_create(cfg: AidealConfig, generate: bool = False, max_generated: int
             fh.write(header)
             for i, name in enumerate(targets, 1):
                 recs = by_name[name]
-                primary = max(recs, key=lambda r: len(r["params"]))
+                # canonical = the maximal telescoping overload ("needed longest
+                # parameters"): a same-file overload whose param types are a
+                # prefix of a longer sibling's is the SAME function with
+                # defaults — documented once via the longest signature and NOT
+                # listed as a separate overload. Only genuinely distinct
+                # signatures (different types / other receiver contexts)
+                # remain in `overloads`.
+                maximals, _subsumed = _subsume_overloads(recs, _dedup_deprioritize(cfg))
+                primary = maximals[0]
                 skeleton = _entry_skeleton(name, lang, recs)
+                # Scaladoc usually sits on the SHORT base overload; if the
+                # maximal form is undocumented, borrow the family's doc.
+                _doc = primary["description"] or next(
+                    (r["description"] for r in recs if r["description"].strip()), None)
                 facts = {
                     "name": name,
                     "signature": primary["signature"] or name,
                     "params": primary["params"],           # [{name, type, default}]
                     "returns": primary["returns"] or None,
-                    "source_doc": primary["description"] or None,
-                    "overloads": [r["signature"] for r in recs if r is not primary][:5],
+                    "source_doc": _doc,
+                    "overloads": [r["signature"] for r in maximals[1:]][:5],
                 }
                 examples = test_index.get(name, [])
                 if examples:
                     tests_text = "\n\n".join(
                         f"// from {e['file']} — test(\"{e['test']}\")\n{e['code']}" for e in examples)
                 else:
-                    tests_text = "(no existing test found for this API)"
+                    # no direct test -> borrow the tested SIBLING pattern (same class)
+                    _cls = _class_of.get(name, "")
+                    _sibs = [(sn, se) for sn, se in _sibs_by_class.get(_cls, []) if sn != name][:2]
+                    if _sibs:
+                        _blocks = "\n\n".join(
+                            f"// SIBLING `{sn}` on the same object/class `{_cls}` — mirror this call "
+                            f"style (same receiver and argument order)\n// from {se[0]['file']}\n{se[0]['code']}"
+                            for sn, se in _sibs)
+                        tests_text = ("(no direct test for this API; use the tested SIBLING method(s) below "
+                                      "as the authoritative call pattern)\n\n" + _blocks)
+                    else:
+                        tests_text = "(no existing test found for this API)"
+                        # Version B: run the function once and ground the entry on
+                        # the outcome (pass -> real call pattern; fail -> real error
+                        # trace). Opt-in and fully guarded — a probe error keeps the
+                        # default text so generation never breaks.
+                        if _probe_on_missing:
+                            try:
+                                from .probe import run_probe, probe_grounding_block
+                                _pr = run_probe(cfg, name, signature=primary["signature"] or "",
+                                                params=primary["params"], returns=primary["returns"] or "")
+                                if _pr.status in ("pass", "fail"):
+                                    tests_text = probe_grounding_block(_pr, name)
+                                print(f"    [probe] {name}: {_pr.status}", file=_sys.stderr)
+                            except Exception as _pe:
+                                print(f"    [probe] {name}: skipped ({type(_pe).__name__}: {_pe})", file=_sys.stderr)
+                _orig = orig_snippet_index.get(name, [])
+                orig_examples_text = ("\n\n".join(_orig) if _orig
+                                      else "(no verbatim code example for this API in the original readme)")
                 try:
                     entry = invoke_text(
                         cfg.model_for_role("author"),
                         *load_prompt(cfg, "aideal/readme_entry", api_name=name,
                                      api_facts=_json.dumps(facts, ensure_ascii=False, indent=2),
                                      original_readme_context=readme_ctx,
+                                     original_examples=orig_examples_text,
                                      test_examples=tests_text,
                                      template=skeleton),
                     ).strip()
@@ -907,6 +1996,22 @@ def find_or_create(cfg: AidealConfig, generate: bool = False, max_generated: int
                 fh.write(entry + "\n\n")
                 fh.flush()
                 print(f"[{i}/{total}] {name} … {status}", file=_sys.stderr)
+        # eager: build the readme-DERIVED io_hints / preamble now (config value
+        # `auto`), so the readme bundle ships complete and in sync. Best-effort —
+        # failures here never block readme generation.
+        try:
+            from .doc_checks import _resolve_io_hints, _resolve_preamble, _execute_sample_data
+            _ex = (cfg.comprehension or {}).get("execute", {}) or {}
+            _auto = lambda k: str(_ex.get(k, "")).strip().lower() == "auto"
+            if _auto("io_hints") or _auto("preamble"):
+                _sd, _, _ = _execute_sample_data(cfg, _ex)
+                if _auto("io_hints"):
+                    _resolve_io_hints(cfg, _ex, _sd)
+                if _auto("preamble"):
+                    _resolve_preamble(cfg, _ex, _sd)
+                print("[io_hints/preamble] regenerated from the new readme", file=_sys.stderr)
+        except Exception:
+            pass
     else:
         with cfg.llm_readme.open("w", encoding="utf-8") as fh:
             fh.write(header)

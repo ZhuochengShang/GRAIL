@@ -48,6 +48,9 @@ def _run(argv: list[str] | None = None) -> int:
                     help="max APIs to generate (0 = all; default 10)")
     sp.add_argument("--force", action="store_true",
                     help="regenerate/overwrite an existing LLM_readme.md (else exits as 'found')")
+    sp.add_argument("--role", action="append", default=None, metavar="ROLE=MODEL",
+                    help="override a model role for this generation; e.g. "
+                         "--role author=codex:gpt-5.3-codex")
     sp = sub.add_parser("api-surface", help="static: discovered public API surface (Step 1)")
     sp.add_argument("--json", action="store_true", help="emit structured details instead of plain text")
     sp.add_argument("--include-nonpublic", action="store_true",
@@ -57,12 +60,24 @@ def _run(argv: list[str] | None = None) -> int:
     sp.add_argument("--out", default=None, help="output path (default: comprehension.execute.scaffold)")
     sp = sub.add_parser("intent", help="static: evidence-based intended-API scores (auditable)")
     sp.add_argument("--all", action="store_true", help="show every API, not just selected ones")
+    sp = sub.add_parser("dedup", help="surface-redundancy audit: overload collapse, "
+                                      "forwarder aliases, signature twins, alias-registry cross-check")
+    sp.add_argument("--out", default=None,
+                    help="also write the FULL report to this path (e.g. docs/dedup_report.json)")
+    sp.add_argument("--full", action="store_true",
+                    help="print the per-name collapse map and twins too (long)")
+    sp = sub.add_parser("intent-compare",
+                        help="compare intended-API selection with vs without the LLM signal")
+    sp.add_argument("--names", action="store_true",
+                    help="also list the APIs each side adds/drops")
     sub.add_parser("intended", help="band-select intended API; LLM adjudicates ambiguous (cached)")
     sp = sub.add_parser("api-tests", help="static: real usage examples mined from the test suite")
     sp.add_argument("--api", default=None, help="show examples for one API name")
     sub.add_parser("form")
     sp = sub.add_parser("comprehension")
     sp.add_argument("--sample", type=int, default=None)
+    sp.add_argument("--api", default=None,
+                    help="test ONE specific documented API by name (e.g. --api mapPixels)")
     sp.add_argument("--doc", choices=["aideal", "original"], default="aideal",
                     help="original = use the project's pre-existing README as the only context")
     sp.add_argument("--execute", action="store_true",
@@ -70,6 +85,58 @@ def _run(argv: list[str] | None = None) -> int:
                          "covers all documented APIs unless --sample given)")
     sp.add_argument("--show-code", action="store_true",
                     help="include the audience-generated Scala snippet in JSON details")
+    sp.add_argument("--class-context", dest="class_context", choices=["on", "off"], default=None,
+                    help="INDEX-FIRST: prefix each API with its catalogue class header (receiver + "
+                         "verified sibling pattern). Overrides comprehension.class_context. A/B the "
+                         "receiver-failure fix: run --class-context off then on, compare pass rate")
+    sp.add_argument("--rerun-failed", dest="rerun_failed", action="store_true",
+                    help="re-test ONLY functions whose most-recent error_log outcome is fail "
+                         "(skips fixed/pass) — one build, just the last run's failures")
+    sp.add_argument("--max-fix-rounds", dest="max_fix_rounds", type=int, default=None,
+                    help="override comprehension.execute.max_fix_rounds for THIS run "
+                         "(0 = single-shot no-fix baseline; 99 = let the fixer run until it "
+                         "gives up — the 'fix as much as possible' condition)")
+    sp.add_argument("--role", action="append", default=None, metavar="ROLE=MODEL",
+                    help="override a model role for this run; MODEL is a registry key or "
+                         "provider:model. Repeatable. e.g. --role audience=codex:gpt-5.1-codex-max "
+                         "--role fixer=google:gemini-2.5-pro")
+    sp.add_argument("--resume", action="store_true",
+                    help="skip APIs already finished in a previous (killed/crashed) run — "
+                         "reads the per-API checkpoint .aideal_exec/comprehension_progress.jsonl "
+                         "and pre-fills their results; without this flag the checkpoint restarts")
+    sp.add_argument("--timeout", dest="timeout_s", type=int, default=None,
+                    help="per-attempt compile+run timeout in seconds for THIS run "
+                         "(default: comprehension.execute.timeout_seconds, 600). Slow "
+                         "visualization APIs (plotImage etc.) hit this; 300 halves worst-case cost")
+    sp = sub.add_parser("fix-docs",
+                        help="doc-repair fix routing: for each FAILED api — read its real "
+                             "source, senior-engineer diagnosis, rewrite its readme entry, "
+                             "re-run the test (entry kept on pass, reverted on fail)")
+    sp.add_argument("--api", action="append", default=None,
+                    help="fix ONE api's entry (repeatable); default: every most-recent FAIL")
+    sp.add_argument("--max-apis", type=int, default=None, help="cap how many failures to process")
+    sp.add_argument("--retry-rounds", type=int, default=2,
+                    help="fix rounds allowed in the retry run (default 2)")
+    sp.add_argument("--timeout", dest="timeout_s", type=int, default=None,
+                    help="per-attempt compile+run timeout for the retry")
+    sp.add_argument("--role", action="append", default=None, metavar="ROLE=MODEL",
+                    help="model override, e.g. --role fixer=google:gemini-2.5-pro")
+    sp.add_argument("--dry-run", action="store_true", help="list target apis, change nothing")
+    sp = sub.add_parser("augment",
+                        help="fold error-log failures/fixes into readme Common Failure Modes + Fix Code Hint")
+    sp.add_argument("--dry-run", action="store_true", help="show what would change, don't write")
+    sp.add_argument("--only-missing", action="store_true",
+                    help="gap-fill: add a verified example / fix-hint code ONLY to entries that "
+                         "lack it (don't overwrite existing code); Common Failure Modes still refreshed")
+    sp = sub.add_parser("grounding",
+                        help="flag readme entries: grounded / sibling-grounded / guessed")
+    sp.add_argument("--annotate", action="store_true", help="write a Grounding line into each entry")
+    sp = sub.add_parser("organize",
+                        help="group APIs by class, rank by robustness, mark the primary per group")
+    sp.add_argument("--index", action="store_true", help="write docs/readme_index.md")
+    sub.add_parser("catalogue",
+                   help="ADDITIVE: export a per-class catalogue (LLM_readme_index.md + api/<Class>.md) "
+                        "from LLM_readme.md; touches nothing else")
     sub.add_parser("completeness")
     sp = sub.add_parser("puzzle")
     sp.add_argument("--dry-run", action="store_true")
@@ -159,7 +226,28 @@ def _run(argv: list[str] | None = None) -> int:
                "threshold": next(iter(scores.values()), {}).get("threshold"),
                "raw_surface": len(scores), "selected": len(sel),
                "apis": {k: {"score": v["score"], "selected": v["selected"],
+                            "sites": v.get("sites"),
                             "reasons": v["reasons"]} for k, v in shown.items()}}
+    elif args.cmd == "dedup":
+        from .readme_agent import dedup_report
+        rep = dedup_report(cfg)
+        written = None
+        if args.out:
+            p = (cfg.root / args.out).resolve()
+            p.parent.mkdir(parents=True, exist_ok=True)
+            p.write_text(json.dumps(rep, indent=2, ensure_ascii=False), encoding="utf-8")
+            written = str(p)
+        out = rep if args.full else {k: v for k, v in rep.items()
+                                     if k not in ("collapse", "same_signature_twins")}
+        if written:
+            out = {"written": written, **out}
+    elif args.cmd == "intent-compare":
+        from .readme_agent import intent_compare
+        cmp = intent_compare(cfg)
+        if not args.names:
+            cmp = {k: v for k, v in cmp.items()
+                   if k not in ("added_by_llm", "dropped_with_llm")}
+        out = cmp
     elif args.cmd == "intended":
         from .readme_agent import intended_api_llm
         selected, decisions = intended_api_llm(cfg)
@@ -177,13 +265,49 @@ def _run(argv: list[str] | None = None) -> int:
                    "apis_with_examples": len(idx),
                    "examples_per_api": {k: len(v) for k, v in sorted(idx.items())}}
     elif args.cmd == "readme":
+        for spec in (args.role or []):
+            role, _, val = spec.partition("=")
+            if not val:
+                print(json.dumps({"error": f"--role needs ROLE=MODEL, got '{spec}'"})); return 2
+            cfg.override_role(role.strip(), val.strip())
         out = find_or_create(cfg, generate=args.generate, max_generated=args.limit,
                              force=args.force)
     elif args.cmd == "form":
         out = form_check(cfg)
     elif args.cmd == "comprehension":
+        cc = None if args.class_context is None else (args.class_context == "on")
+        for spec in (args.role or []):   # e.g. --role fixer=google:gemini-2.5-pro
+            role, _, val = spec.partition("=")
+            if not val:
+                print(json.dumps({"error": f"--role needs ROLE=MODEL, got '{spec}'"})); return 2
+            cfg.override_role(role.strip(), val.strip())
         out = comprehension_check(cfg, sample=args.sample, doc_source=args.doc,
-                                 execute=args.execute, show_code=args.show_code)
+                                 execute=args.execute, show_code=args.show_code, api=args.api,
+                                 class_context=cc, rerun_failed=args.rerun_failed,
+                                 max_fix_rounds=args.max_fix_rounds,
+                                 resume=args.resume, timeout_s=args.timeout_s)
+    elif args.cmd == "fix-docs":
+        from .docfix import doc_fix_run
+        for spec in (args.role or []):
+            role, _, val = spec.partition("=")
+            if not val:
+                print(json.dumps({"error": f"--role needs ROLE=MODEL, got '{spec}'"})); return 2
+            cfg.override_role(role.strip(), val.strip())
+        out = doc_fix_run(cfg, apis=args.api, max_apis=args.max_apis,
+                          retry_rounds=args.retry_rounds,
+                          timeout_s=args.timeout_s, dry_run=args.dry_run)
+    elif args.cmd == "augment":
+        from .readme_agent import augment_from_log
+        out = augment_from_log(cfg, dry_run=args.dry_run, only_missing=args.only_missing)
+    elif args.cmd == "grounding":
+        from .readme_agent import grounding_report
+        out = grounding_report(cfg, annotate=args.annotate)
+    elif args.cmd == "organize":
+        from .readme_agent import organize_report
+        out = organize_report(cfg, write_index=args.index)
+    elif args.cmd == "catalogue":
+        from .readme_agent import write_catalogue
+        out = write_catalogue(cfg)
     elif args.cmd == "completeness":
         out = completeness_check(cfg)
     elif args.cmd == "puzzle":

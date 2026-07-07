@@ -1,0 +1,78 @@
+# AIDEAL framework defaults (codebase-agnostic).
+#
+# Every project's configs/aideal.yaml is deep-merged ON TOP of this file, with
+# any `extends:` adapters merged in between. Projects therefore only need to
+# state wiring (paths/globs) and codebase-specific execution config; the generic
+# knobs below are inherited and can be overridden key-by-key.
+#
+# Nothing here is meant to be edited per project — override in the project file
+# instead. These are the values that were previously copied into every config.
+
+codebase:
+  # Intended-API estimation. surface_filter + threshold are part of the
+  # EXPERIMENTAL DESIGN and are stated explicitly in each project file; the
+  # generic scoring machinery lives here.
+  intent:
+    weights: {}                 # empty => generic defaults (documented +2, tested +3,
+                                # mentioned_in_docs +4, non_override +1, override -3,
+                                # internal_path -5, boilerplate_name -4)
+    manual_include: []
+    manual_exclude: []
+    exclude_name_patterns: []
+    use_llm: false
+    refresh_llm: false
+  intended_api:                 # token-efficient `intended_llm` filter knobs
+    static_include_threshold: 8
+    static_exclude_threshold: 1
+    batch_size: 25
+    cache: docs/intended_api_decisions.json
+    refresh: false
+
+files:                          # default workspace layout (paths are project-relative)
+  project_profile: configs/project_profile.yaml
+  prompts_dir: prompts
+  llm_readme: docs/LLM_readme.md
+  notes_to_self: docs/notes_to_self.md
+  integration_tasks: configs/integration_tasks.yaml
+  aliases: aliases/aliases.json
+  error_log: logs/error_log.jsonl
+
+models:
+  registry:
+    gpt-4o:        { provider: openai,    model: gpt-4o }
+    gpt-4o-mini:   { provider: openai,    model: gpt-4o-mini }
+    claude-sonnet: { provider: anthropic, model: claude-sonnet-4-6 }
+    qwen:          { provider: ollama,    model: qwen3:32b }
+    llama3:        { provider: ollama,    model: llama3 }
+  roles:
+    author: gpt-4o-mini
+    audience: gpt-4o
+
+runtime:
+  target: local
+  local: {}
+
+checks:
+  required_sections:            # the AIDEAL doc format every API entry must satisfy
+    - "Signature"
+    - "Goal"
+    - "Parameters"
+    - "Input"
+    - "Output"
+    - "Valid Call Patterns|Valid Access Patterns"
+    - "LLM Instruction Prompt"
+    - "Prompt Snippet"
+    - "Common Failure Modes"
+    - "Fix Code Hint"
+  comprehension_apis_sampled: 5
+
+comprehension:
+  execute:                      # framework-generic execute controls (markers, limits)
+    region: ["// TODO API_TEST_START", "// TODO API_TEST_END"]
+    strip_snippet_imports: false
+    output_tail_chars: 2000
+    success_marker: "__DONE__"
+    error_marker: "__RUN_ERR__"
+    work_dir: .aideal_exec
+    timeout_seconds: 600
+    max_fix_rounds: 1

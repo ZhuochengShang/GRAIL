@@ -63,11 +63,14 @@ def completeness_check() -> dict:
 
 
 @mcp.tool()
-def comprehension_check(sample: int = 5, doc: str = "aideal") -> dict:
+def comprehension_check(sample: int = 5, doc: str = "aideal",
+                        class_context: bool | None = None) -> dict:
     """Readme unit test: audience model writes code from the docs alone; author model grades.
-    doc='original' uses the project's pre-existing README as the only context."""
+    doc='original' uses the project's pre-existing README as the only context.
+    class_context=True uses the INDEX-FIRST read path (prefix each API with its catalogue
+    class header: receiver + a verified sibling's call pattern); None -> config default."""
     from .doc_checks import comprehension_check as run
-    return run(_cfg(), sample=sample, doc_source=doc)
+    return run(_cfg(), sample=sample, doc_source=doc, class_context=class_context)
 
 
 @mcp.tool()
