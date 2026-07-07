@@ -1,74 +1,41 @@
-# Experiment target 1: RDPro — starting from its ORIGINAL readme.
-# Paths are relative to experiments/rdpro/.
+# AIDEAL config — RDPro / Beast (Scala + Spark).
+# Inherits framework defaults + the scala-spark adapter (language, public_def_regex,
+# exclude_names, the generic spark-submit command, fixtures auto-discovery).
+# This file holds only what is RDPro-specific.
+extends: [scala-spark]
 
 project:
   name: RDPro
   language: Scala
 
 codebase:
-  # fresh upstream clone INSIDE this study (gitignored):
-  #   cd experiments/rdpro && git clone https://bitbucket.org/bdlabucr/beast.git
-  # applied changes are tracked as aideal/* branches in that clone; see
-  # experiments/README.md "Tracking applied changes".
+  # Relative to this project root (experiments/rdpro) — resolved via cfg.root,
+  # so the config is machine-portable (Mac, sandbox, CI).
   source_globs:
-    - "beast/raptor/src/main/scala/**/*.scala"
-  public_def_regex: "def\\s+([a-zA-Z][A-Za-z0-9_]*)"
-  exclude_names: ["main", "apply", "unapply", "toString", "equals", "hashCode"]
-  # Intended-API filter (GENERAL, codebase-agnostic) over the raw regex surface,
-  # governing documentation/completeness/execution. Modes: all | documented |
-  # tested | documented_or_tested | non_override | documented_non_override |
-  # intent_score. `intent_score` is the evidence-based default: each API scores
-  # on generic signals (docs/tests/doc-mentions/visibility) minus penalties
-  # (override, internal path, boilerplate name); APIs >= threshold are selected.
-  # Inspect/audit with `aideal intent`.
-  surface_filter: intent_score
-  intent:
-    threshold: 5
-    # weights override the generic defaults (documented +2, tested +3,
-    # mentioned_in_docs +4, non_override +1, override -3, internal_path -5,
-    # boilerplate_name -4) — leave empty to use them.
-    weights: {}
-    # transparent, reported human corrections (empty for unbiased runs):
-    manual_include: []
-    manual_exclude: []
-    exclude_name_patterns: []   # e.g. ["^get[A-Z]", "Serializer$"]
-    # OPTIONAL LLM "commonly-used" signal: the author model (with the role
-    # persona) picks the user-facing operations; ONE cached call
-    # (docs/intent_common.json) so scores stay reproducible. Off unless both:
-    use_llm: false
-    # ...and weights.llm_common > 0 (set e.g. 3 in `weights` above to enable).
-    refresh_llm: false          # set true once to re-run the LLM judgment
-
-  # Token-efficient alternative: surface_filter: intended_llm. Static evidence
-  # auto-includes score>=include_threshold and auto-excludes score<=exclude_
-  # threshold; the LLM adjudicates ONLY the ambiguous middle band, batched, from
-  # compact records (no source). Decisions cached with provenance. Offline (no
-  # key) it falls back to the intent threshold.
-  intended_api:
-    static_include_threshold: 8
-    static_exclude_threshold: 1
-    batch_size: 25
-    cache: docs/intended_api_decisions.json
-    refresh: false
-  # existing unit tests = real, compiling usage examples. `readme --generate`
-  # mines `test("...")` blocks that call each API and feeds them as grounding;
-  # inspect with `aideal api-tests`.
+    - "beast/**/src/main/scala/**/*.scala"
   test_globs:
-    - "beast/raptor/src/test/scala/**/*.scala"
+    - "beast/**/src/test/scala/**/*.scala"
+  # keep the project regex (filters private/protected); exclude_names inherited from adapter
+  public_def_regex: "^\\s*(?!private\\b|protected\\b).*\\bdef\\s+([a-zA-Z][A-Za-z0-9_]*)"
+  surface_filter: intent_score   # filter the surface to intended APIs (else: all)
+  intent:
+    threshold: 5                 # min evidence score to count an API as user-intended
+    # RESTART 2026-07-07: static-only selection so the surface is DETERMINISTIC
+    # and matches every recorded number (820 raw -> 205 selected -> 203 catalog
+    # entries). With use_llm:true + a key present, llm_common re-judged and
+    # drifted the surface to 234 mid-experiment. Flip back to true only for the
+    # dedicated llm-arm ablation (aideal intent-compare).
+    use_llm: false
+    weights:
+      llm_common: 4              # weight of the LLM "commonly-used" signal
+    # No key / unfilled profile -> degrades to static scoring automatically.
 
 files:
   project_profile: configs/project_profile.yaml
-  prompts_dir: prompts
-  # BASELINE: the project's pre-existing docs. Accepts a single path OR a list
-  # of files / directories / globs (dirs pull in their *.md). Here: the thin
-  # Beast README plus the full beast/doc/ wiki (rdpro.md, raptor-join.md,
-  # input-output.md, ...) for a richer baseline.
-  original_readme:
+  prompts_dir: prompts            # optional overrides; package defaults used if absent
+  original_readme:                # baseline doc(s): a path, or a list of files/dirs/globs
     - beast/README.md
     - beast/doc
-  # TREATMENT: generated/curated AIDEAL-format docs (start absent here;
-  # the curated one already exists at grail-agent/docs/rdpro_api_doc_combined.md
-  # and can be copied in as a "hand-tuned" condition)
   llm_readme: docs/LLM_readme.md
   notes_to_self: docs/notes_to_self.md
   integration_tasks: configs/integration_tasks.yaml
@@ -77,11 +44,8 @@ files:
 
 models:
   registry:
-    gpt-4o:        { provider: openai,    model: gpt-4o }
-    gpt-4o-mini:   { provider: openai,    model: gpt-4o-mini }
-    claude-sonnet: { provider: anthropic, model: claude-sonnet-4-6 }
-    qwen:          { provider: ollama,    model: qwen3:32b }
-    llama3:        { provider: ollama,    model: llama3 }
+    gpt-4o:      { provider: openai, model: gpt-4o }
+    gpt-4o-mini: { provider: openai, model: gpt-4o-mini }
   roles:
     author: gpt-4o-mini
     audience: gpt-4o
@@ -92,11 +56,7 @@ runtime:
 
 checks:
   required_sections:
-    - "Signature"
     - "Goal"
-    - "Parameters"
-    - "Input"
-    - "Output"
     - "Valid Call Patterns|Valid Access Patterns"
     - "LLM Instruction Prompt"
     - "Prompt Snippet"
@@ -104,89 +64,110 @@ checks:
     - "Fix Code Hint"
   comprehension_apis_sampled: 5
 
-# Execution-grounded comprehension (`aideal comprehension --execute`): each
-# audience-written snippet is inserted into the scaffold (with the sample-data
-# paths below), compiled, and run. PASS = it actually runs (success_marker
-# present, exit 0); real compile/runtime errors are logged. Covers ALL
-# documented APIs by default. AIDEAL stays generic: it only fills the scaffold
-# and runs `command`; all RDPro/Spark specifics live in the command + scaffold.
+# Execution-grounded comprehension. The generic scalac -> jar -> spark-submit
+# command + fixtures auto-discovery come from the scala-spark adapter; RDPro only
+# supplies the build wiring, the geotools packages, and the curated import block
+# (auto-derivation over-wildcards and collides on Beast's ambiguous RasterRDD).
 comprehension:
+  # INDEX-FIRST read path. When true, each tested API's body is prefixed with its
+  # catalogue class header (how to obtain the receiver + one verified sibling's real
+  # call pattern) instead of the bare per-API body — targets the ~53% receiver /
+  # entry-point failure class ("value X is not a member", "not found: value X").
+  # Left off so it stays A/B-able; override per run with `--class-context on|off`.
+  class_context: false
   execute:
-    scaffold: docs/api_test_scaffold.scala     # generated: `aideal scaffold --generate`
-    # Curated import block (proven job_scaffold set). Overrides auto-derivation,
-    # which over-wildcards and collides (ambiguous RasterRDD, missing jhdf).
-    imports:
-      - "import org.apache.spark.SparkContext"
-      - "import org.apache.spark.sql.SparkSession"
-      - "import org.apache.spark.sql.types.{ArrayType, FloatType, IntegerType, DoubleType}"
-      - "import org.apache.spark.rdd.RDD"
-      - "import edu.ucr.cs.bdlab.beast._"
-      - "import edu.ucr.cs.bdlab.raptor.RaptorMixin._"
-      - "import edu.ucr.cs.bdlab.raptor._"
-      # member wildcards of the operation objects, so methods like zonalStatsLocal,
-      # rasterizePoints, reshapeNN, convolution, raptorJoin* resolve as bare calls:
-      - "import edu.ucr.cs.bdlab.raptor.RasterOperationsLocal._"
-      - "import edu.ucr.cs.bdlab.raptor.RasterOperationsFocal._"
-      - "import edu.ucr.cs.bdlab.raptor.RasterOperationsGlobal._"
-      - "import edu.ucr.cs.bdlab.raptor.ZonalStatistics._"
-      - "import edu.ucr.cs.bdlab.raptor.RaptorJoin._"
-      - "import edu.ucr.cs.bdlab.beast.cg.SpatialDataTypes.{RasterRDD, SpatialRDD}"
-      - "import edu.ucr.cs.bdlab.beast.io._"
-      - "import edu.ucr.cs.bdlab.beast.io.tiff.TiffConstants"
-      - "import edu.ucr.cs.bdlab.beast.common.BeastOptions"
-      - "import edu.ucr.cs.bdlab.beast.geolite.{ITile, Feature, IFeature, RasterFeature, RasterMetadata}"
-      - "import edu.ucr.cs.bdlab.raptor.{GeoTiffWriter, RasterOperationsFocal, RasterOperationsLocal, RasterOperationsGlobal, RaptorJoin, RaptorJoinFeature}"
-      - "import org.locationtech.jts.geom.{Geometry, Envelope}"
-      - "import org.apache.hadoop.fs.Path"
-      - "import scala.collection.JavaConverters._"
-      - "import java.net.URI"
-      - "import java.nio.file.{Paths, Files}"
-    region: ["// TODO API_TEST_START", "// TODO API_TEST_END"]
-    # General execute controls. RDPro's scaffold owns imports, so generated
-    # snippet imports are stripped before insertion; other codebases can leave
-    # this false if snippets must provide imports themselves.
-    strip_snippet_imports: true
-    output_tail_chars: 2000
-    # Typed sample-data catalog: each becomes a `val <name> = "<path>"` in the
-    # scaffold; the audience model picks the input(s) whose TYPE matches the
-    # API's parameters (raster vs vector vs table). Add more as fixtures grow.
+    scaffold: docs/api_test_scaffold.scala     # `aideal scaffold --generate`
+    # Per-API isolation: pre-load typed inputs so a comprehension test writes ONLY
+    # the API call. `auto` = the author model generates the load code ONCE from the
+    # codebase's own documented readers (cached to docs/preamble.scala) — the USER
+    # writes no Scala. (A literal Scala block is still accepted if you want to pin it.)
+    # PINNED: `auto` grounded on the Java readers (SpatialReader.readInput ->
+    # JavaSpatialRDD, geoTiff -> JavaRasterRDD), forcing snippets to invent
+    # nonexistent .toRDD/.toRasterRDD adapters. These load at the Scala mixin
+    # types raptor/zonal APIs expect: RasterRDD[T]=RDD[ITile[T]], SpatialRDD=RDD[IFeature].
+    # Uses ONLY the paths declared in `sample_data` below — no fixtures-folder
+    # auto-discovery, no io_hints reader. `raster_tif` + `vector_shapefile` are
+    # the sole sources for these two typed inputs.
+    preamble: |
+      // Pinned: pre-load at the SCALA mixin types the raptor/zonal APIs expect
+      // (RasterRDD[T]=RDD[ITile[T]], SpatialRDD=RDD[IFeature]) — NOT the Java readers
+      // (JavaRasterRDD/JavaSpatialRDD) that `auto` grounded on, which forced snippets
+      // to invent nonexistent .toRDD/.toRasterRDD adapters. Forms verified by passing
+      // rows in logs/error_log.jsonl. Change [Float] if this raster is not 32-bit float.
+      val rasterRDD: RasterRDD[Float] = sc.geoTiff[Float](raster_tif)
+      val featuresRDD: RDD[IFeature] = sc.shapefile(vector_shapefile)
+    # Sample inputs auto-discovered from this folder (.tif/.geojson/.csv -> typed):
+    fixtures_dir: ../../grail-agent/examples/fixtures
+    # ...with explicit per-binding overrides (these win over the fixtures folder):
     sample_data:
-      raster_tif:       ../../grail-agent/examples/fixtures/nldas_boston_30m.tif
-      vector_geojson:   ../../grail-agent/examples/fixtures/Boston_Neighborhood_Boundaries_sample_grail.geojson
-      table_csv:        ../../grail-agent/examples/fixtures/boston_land_use_by_neighborhood_sample.csv
-      # vector_shapefile: ../../grail-agent/examples/fixtures/<add a .shp here>
-      output_dir:       /tmp/aideal_apitest_out
-    # Runtime classpath = the built dist lib (beast modules) + GeoTools/JTS/units
-    # pulled by Ivy via --packages from the osgeo --repositories. The uber jar is
-    # NOT self-contained (its shade omits the si.uom/javax.measure units libs, so
-    # CRS decode fails), which is why the proven setup uses lib + packages.
-    build: ""
-    jars: "beast/target/beast-0.10.1-bin/beast-0.10.1/lib/*.jar"   # beast modules
-    uberjar: "target/beast-uber-*.jar"   # added to compile {classpath} for JTS/GeoTools types
+      # Boston-region raster so it overlaps the Boston neighborhood polygons
+      # (needed for raptorJoin / zonal stats to return non-empty results):
+      raster_tif: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/grail-agent/examples/fixtures/nldas_boston_30m.tif
+      # Boston neighborhood polygons (.shp) — the vector input the raptor/zonal
+      # APIs join against. Pinned so the shapefile (not the auto-discovered
+      # geojson) is the vector binding, and it overlaps the raster above:
+      vector_shapefile: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/grail-agent/examples/fixtures/Boston_Neighborhood_Boundaries_sample_grail.shp
+    # write outputs to a real, existing project folder (not /tmp):
+    output_dir: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/exec_out
+    # incremental fix loop: attempts = 1 + max_fix_rounds (each retry sees the
+    # prior error + fix hint from error_log). Default 3.
+    max_fix_rounds: 3
+    # Phase-A correctness gate: a run passes only if the snippet emitted the
+    # `__CHECK__` witness from its require(...) assertion — so a wrong pixel type
+    # that silently misreads (instead of throwing) is caught, not passed as "ran".
+    require_correctness: true
+    # I/O cheat-sheet injected into the comprehension prompt (every fix-loop round).
+    # DISABLED (empty): `auto` was an LLM guess truncated to the first 12 reader
+    # doc entries, so `shapefile` (#27) never made the cut and it always suggested
+    # geojson — biasing snippets toward the wrong reader. It's now unnecessary:
+    #   (1) the pinned `preamble` deterministically pre-loads every input, so the
+    #       model doesn't need to be told how to read them, and
+    #   (2) the fix loop already feeds back REAL compile/runtime errors + the fix
+    #       that worked (error_log.failures_for), which is execution-grounded and
+    #       self-correcting — strictly better than a static guessed cheat-sheet.
+    # Set to `auto` or a literal string only if you want hints for APIs the
+    # preamble doesn't pre-load.
+    io_hints: ""
+    # Build wiring: prebuilt dist lib jars (modules) + uber jar (JTS/GeoTools types).
+    jars: "beast/target/beast-0.10.1-bin/beast-0.10.1/lib/*.jar"
+    uberjar: "target/beast-uber-*.jar"
     build_cwd: beast
-    # COMPILED path (proven): scalac -> jar -> spark-submit --class GeoJobMain.
-    # spark-shell -i can't apply RaptorMixin's implicit (sc.geoTiff); compiling can.
-    # {classpath}=Spark+beast+uber (colon, scalac); {jars}=beast (comma, --jars);
-    # {work}=per-API dir; {scala_file}=filled scaffold. Ivy resolves GeoTools 26.1
-    # (+ units) the first time, then caches in ~/.m2.
-    command: >-
-      scalac -classpath "{classpath}" -d {work}/classes {scala_file}
-      && ( cd {work}/classes && jar cf ../app.jar . )
-      && spark-submit --master local[*] --class GeoJobMain
-      --repositories https://repo.osgeo.org/repository/geotools-releases/,https://repo.osgeo.org/repository/release/
-      --packages org.locationtech.jts:jts-core:1.19.0,org.geotools:gt-referencing:26.1,org.geotools:gt-epsg-hsql:26.1,org.geotools:gt-geotiff:26.1,org.geotools:gt-coverage:26.1,it.geosolutions.imageio-ext:imageio-ext-tiff:1.4.14
-      --jars {jars} {work}/app.jar
-    # If geotools 26.1 mismatches, match beast/pom.xml <geotools.version>.
-    success_marker: "__DONE__"
-    error_marker: "__RUN_ERR__"
-    work_dir: .aideal_exec
-    timeout_seconds: 600
-    # on failure, re-generate the snippet with the prior error fed back, up to N
-    # extra rounds. error_log accumulates fail -> fixed (error -> solution) per API.
-    max_fix_rounds: 1
-    # Execution targets = the intended-API surface (codebase.surface_filter),
-    # i.e. whatever ended up documented in LLM_readme. No codebase-specific class
-    # list. Narrow further with `include`/`exclude` (names) if needed.
+    # Runtime deps resolved by Ivy (kept off the shaded uber jar):
+    repositories:
+      - "https://repo.osgeo.org/repository/geotools-releases/"
+      - "https://repo.osgeo.org/repository/release/"
+    packages:
+      - "org.locationtech.jts:jts-core:1.19.0"
+      - "org.geotools:gt-referencing:26.1"
+      - "org.geotools:gt-epsg-hsql:26.1"
+      - "org.geotools:gt-geotiff:26.1"
+      - "org.geotools:gt-coverage:26.1"
+      - "it.geosolutions.imageio-ext:imageio-ext-tiff:1.4.14"
+    # Curated import block (proven set) — overrides auto-derivation.
+    imports: from-tests
+    # Must-have imports the test suite never writes explicitly: the RaptorJoin
+    # object + its result case classes are used only inside the raptor package,
+    # so `from-tests` mining misses them and raptor* API tests fail to resolve.
+    extra_imports:
+      # JAVA-DEFINED types are invisible to import mining (source_globs only
+      # sweep *.scala): Collector/Statistics/IRasterReader live in
+      # beast/raptor/src/main/JAVA. zonalStatsLocal failed 3 rounds with
+      # "not found: type Collector" on a CORRECT snippet (2026-07-07,
+      # run 20260707-064228Z). The package wildcard imports Scala AND Java
+      # members; not re-exported by beast._ so the auto-dedup keeps it.
+      - "import edu.ucr.cs.bdlab.raptor._"
+      # the documented Beast entry point: its package object re-exports every
+      # sc.* implicit (shapefile/geojsonFile/readCSVPoint/geoTiff, ...). Pinned so
+      # `sc.shapefile` always has a provider regardless of what mining finds.
+      # - "import edu.ucr.cs.bdlab.beast._"
+      # - "import edu.ucr.cs.bdlab.raptor.RaptorJoin"
+      # - "import edu.ucr.cs.bdlab.raptor.RaptorJoinResult"
+      # - "import edu.ucr.cs.bdlab.raptor.RaptorJoinResultTile"
+      # - "import edu.ucr.cs.bdlab.raptor.RaptorJoinFeature"
+    # NOTE: redundant mixin wildcards (e.g. `ReadWriteMixin._`, already re-exported
+    # by the `beast._` package object) are now dropped AUTOMATICALLY by
+    # generate_scaffold's package-object detection — no manual `exclude_imports`
+    # needed. Add one here only to override a case the auto-detector can't see.
 
 puzzle:
   cwd: ../../grail-agent/src

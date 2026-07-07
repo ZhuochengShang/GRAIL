@@ -1,0 +1,26 @@
+ROOT CAUSE:
+The documentation is misleading by suggesting `area` is a general method on any geometric shape. The source code shows `area` is an instance method on the concrete class `edu.ucr.cs.bdlab.davinci.LiteList`, not its abstract parent `LiteGeometry`. A user cannot call this method without first constructing a `LiteList` instance, which requires providing coordinate arrays of type `Array[Short]`, a critical detail omitted from the documentation.
+
+CORRECT USAGE:
+```scala
+// area is a method on LiteList, which holds coordinate arrays of type Short.
+val xs: Array[Short] = Array(0, 100, 100, 0, 0) // A 100x50 square, closed
+val ys: Array[Short] = Array(0, 0, 50, 50, 0)
+
+// Construct the required receiver object, an instance of LiteList.
+val polygonRing = new edu.ucr.cs.bdlab.davinci.LiteList(xs, ys)
+
+// The area method can now be called on the LiteList instance.
+val calculatedArea: Double = polygonRing.area
+// calculatedArea will be 5000.0
+```
+
+REQUIRED TYPES & IMPORTS:
+- `edu.ucr.cs.bdlab.davinci.LiteList` (Scala-defined class)
+
+DOC MUST SAY:
+*   This method is defined on the `LiteList` class, which represents a single sequence of vertices (e.g., a line or a polygon ring).
+*   To call `.area`, you must first create an instance of `LiteList`.
+*   The `LiteList` constructor is `new LiteList(xs: Array[Short], ys: Array[Short])`. Note that the coordinate values must be of type `Short`.
+*   The method requires the `LiteList` to contain at least three points.
+*   The area is calculated using the Shoelace formula. For a polygon, the `LiteList` should represent a closed ring where the first and last points are identical.
