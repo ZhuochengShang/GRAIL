@@ -1,11 +1,14 @@
-"""Provider abstraction with author/audience role separation.
+"""Provider abstraction with author/audience/fixer role separation.
 
 Author models WRITE documentation and tests (small/cheap is fine).
 Audience models CONSUME documentation to write code (the coding agent).
+Fixer models repair failing snippets in the fix loop (defaults to audience;
+map `roles: fixer` to compare e.g. Gemini-as-fixer vs the audience model).
 
-Supported providers: openai, anthropic, google, ollama (for Kimi/Qwen/local
-open-source models). Imports are lazy so only the used provider's package
-is required.
+Supported providers: openai (chat completions), openai-responses/codex (the
+Responses API — Codex-style endpoint), anthropic, google, ollama (for
+Kimi/Qwen/local open-source models). Imports are lazy so only the used
+provider's package is required.
 """
 
 from __future__ import annotations
@@ -19,6 +22,12 @@ def get_chat_model(spec: ModelSpec, temperature: float = 0.0):
     if provider == "openai":
         from langchain_openai import ChatOpenAI
         return ChatOpenAI(model=spec.model, temperature=temperature)
+    if provider in ("openai-responses", "codex"):
+        # OpenAI Responses API — the Codex-style endpoint, the "codex api" arm
+        # of the backend micro-benchmark (vs plain chat-completions "openai").
+        # Codex/reasoning models reject non-default temperature, so none is set.
+        from langchain_openai import ChatOpenAI
+        return ChatOpenAI(model=spec.model, use_responses_api=True)
     if provider == "anthropic":
         from langchain_anthropic import ChatAnthropic
         return ChatAnthropic(model=spec.model, temperature=temperature)
@@ -31,8 +40,69 @@ def get_chat_model(spec: ModelSpec, temperature: float = 0.0):
     raise ValueError(f"Unknown provider: {spec.provider}")
 
 
+# ---------------------------------------------------------------------------
+# Token accounting. Every invoke_text() adds the PROVIDER-REPORTED usage
+# (LangChain usage_metadata, not a local tokenizer) to a module accumulator;
+# benchmark code snapshots it before/after a unit of work (one API's
+# comprehension loop) and stores the delta.
+_USAGE: dict = {"calls": 0, "input_tokens": 0, "output_tokens": 0, "by_model": {}}
+
+
+def reset_usage() -> None:
+    _USAGE.update({"calls": 0, "input_tokens": 0, "output_tokens": 0, "by_model": {}})
+
+
+def usage_snapshot() -> dict:
+    """Copy of the running usage totals (safe to keep across further calls)."""
+    return {"calls": _USAGE["calls"], "input_tokens": _USAGE["input_tokens"],
+            "output_tokens": _USAGE["output_tokens"],
+            "by_model": {k: dict(v) for k, v in _USAGE["by_model"].items()}}
+
+
+def usage_delta(before: dict) -> dict:
+    """Usage accumulated since `before` (a usage_snapshot()), incl. per-model
+    split — in a mixed-role run (writer=openai, fixer=gemini) the split shows
+    who spent what."""
+    now = usage_snapshot()
+    by_model = {}
+    for k, v in now["by_model"].items():
+        b = before.get("by_model", {}).get(k, {})
+        d = {kk: v[kk] - b.get(kk, 0) for kk in ("calls", "input_tokens", "output_tokens")}
+        if any(d.values()):
+            by_model[k] = d
+    return {"calls": now["calls"] - before["calls"],
+            "input_tokens": now["input_tokens"] - before["input_tokens"],
+            "output_tokens": now["output_tokens"] - before["output_tokens"],
+            "by_model": by_model}
+
+
 def invoke_text(spec: ModelSpec, system: str, user: str) -> str:
-    """One-shot text completion; returns the model's text content."""
+    """One-shot text completion; returns the model's text content and adds the
+    provider-reported token usage to the module accumulator."""
     llm = get_chat_model(spec)
     resp = llm.invoke([("system", system), ("user", user)])
-    return resp.content if isinstance(resp.content, str) else str(resp.content)
+    u = getattr(resp, "usage_metadata", None) or {}
+    _USAGE["calls"] += 1
+    _USAGE["input_tokens"] += int(u.get("input_tokens") or 0)
+    _USAGE["output_tokens"] += int(u.get("output_tokens") or 0)
+    m = _USAGE["by_model"].setdefault(
+        f"{spec.provider}:{spec.model}",
+        {"calls": 0, "input_tokens": 0, "output_tokens": 0})
+    m["calls"] += 1
+    m["input_tokens"] += int(u.get("input_tokens") or 0)
+    m["output_tokens"] += int(u.get("output_tokens") or 0)
+    c = resp.content
+    if isinstance(c, str):
+        return c
+    if isinstance(c, list):
+        # Responses-API (codex) and some providers return CONTENT BLOCKS —
+        # [{'type':'text','text':...}, ...]. str(list) here poisoned codex
+        # snippets ("[{'type': 'text', ...") — join the text blocks instead.
+        parts = []
+        for b in c:
+            if isinstance(b, dict):
+                parts.append(b.get("text") or b.get("content") or "")
+            elif isinstance(b, str):
+                parts.append(b)
+        return "".join(parts)
+    return str(c)

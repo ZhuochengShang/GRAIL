@@ -23,12 +23,18 @@ from __future__ import annotations
 
 import json
 import re
+import subprocess
 import time
 from collections import Counter
 from pathlib import Path
 
 FIELDS = ("run_id", "step", "language", "task", "status",
-          "function", "error_category", "error", "root_cause", "code", "suggested_fix_code")
+          "function", "error_category", "error", "root_cause", "code", "suggested_fix_code",
+          # staleness tags: a verified example can go stale when the code moves
+          # underneath it. `library_version` catches a KNOWN change (commit/tag
+          # differs -> invalidate); `timestamp` catches an UNKNOWN one (too old to
+          # trust when no version is tracked). Both optional; old logs stay valid.
+          "library_version", "timestamp")
 
 HALLUCINATED_NAME_RE = re.compile(
     r"value (\w+) is not a member|not found: value (\w+)|has no attribute '(\w+)'"
@@ -37,6 +43,18 @@ HALLUCINATED_NAME_RE = re.compile(
 
 def new_run_id() -> str:
     return time.strftime("%Y%m%d-%H%M%SZ", time.gmtime())
+
+
+def git_version(root) -> str:
+    """Short git commit of the target codebase, used to tag memory entries so a
+    verified example can be invalidated when the code moves underneath it. Returns
+    '' when `root` isn't a git repo (staleness then falls back to timestamp)."""
+    try:
+        r = subprocess.run(["git", "-C", str(root), "rev-parse", "--short", "HEAD"],
+                           capture_output=True, text=True, timeout=10)
+        return r.stdout.strip() if r.returncode == 0 else ""
+    except Exception:
+        return ""
 
 
 class ErrorLog:
@@ -48,6 +66,8 @@ class ErrorLog:
             record["run_id"] = new_run_id()
         if not record.get("status"):
             record["status"] = "fail"
+        if not record.get("timestamp"):
+            record["timestamp"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
         entry = {k: record.get(k, "") for k in FIELDS}
         self.path.parent.mkdir(parents=True, exist_ok=True)
         with self.path.open("a", encoding="utf-8") as f:
@@ -100,7 +120,11 @@ class ErrorLog:
             if e.get("root_cause"):
                 line += f"  (at: {e['root_cause'].strip()[:120]})"
             if e.get("suggested_fix_code"):
-                line += f"\n  fix that worked: {e['suggested_fix_code'].strip()[:300]}"
+                # `fixed` rows carry real working code; `fail` rows carry a
+                # FIX_GUIDE hint (what kind of fix). Label accordingly so the model
+                # isn't told a hint is proven code.
+                label = "fix that worked" if e.get("status") == "fixed" else "suggested fix"
+                line += f"\n  {label}: {e['suggested_fix_code'].strip()[:300]}"
             lines.append(line)
         return "\n".join(lines)
 
