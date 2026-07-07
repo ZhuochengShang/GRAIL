@@ -1,6 +1,8 @@
 # Worktree Role: Experiment Runner
 
-Branch: `exp/experiment-runner`
+Base branch: `exp/experiment-runner`
+
+Current active branch: `exp/run-codex-fresh-5.3`
 
 Purpose: run quantified experiments only. Keep feature/code changes out of this branch unless they are imported from a feature branch/commit for measurement.
 
@@ -27,6 +29,13 @@ python gemini_suite.py --stages g1,g4
 python gemini_suite.py --stages g2,g4
 python bench_conditions.py --table > docs/backend_comparison_table.txt
 ```
+
+Current Codex 5.3 fresh-README run:
+
+- command log and checklist: `docs/codex_5_3_next_moves.md`
+- frozen README: `docs/LLM_readme.codex_fresh.md`
+- active README under test: `docs/LLM_readme.md`
+- generation report: `docs/readme_generate_codex_fresh.json`
 
 For a feature comparison:
 
