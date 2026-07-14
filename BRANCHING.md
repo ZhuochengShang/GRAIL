@@ -12,7 +12,13 @@ Two kinds of branches, two repos:
   branch inside that repo per WORKING.md. Condition branches are NEVER merged —
   they exist to be diffed, re-run, and cited.
 
-## Step 0 — do this first: baseline-commit the current tree
+## Step 0 — baseline-commit the current tree  ✅ DONE 2026-07-13
+
+**STATUS: completed.** `exp/aideal-state-2026-07-13` was pushed and merged
+into `main` via PR #3 (with PRs #1–#2 before it), so **`origin/main` @
+`a00b164` is now the integration branch** — every condition branch below
+forks from `main`, and the "Behind 3" GitHub shows for the state branch is
+just the three merge commits (no lost work). Recipe kept for the record:
 
 Repo reality (verified 2026-07-13): you are on **`exp/root-before-api-cards`**
 @ `6cffc2c` (tracks origin); `main` is back at `424e6fc` (06-13); several
@@ -73,6 +79,38 @@ aideal/<study>-<cond>   condition          (aideal/rdpro-a-original, aideal/tsl-
                                             aideal/tsl-c-catalog)
 ```
 
+## Branch creation order — a condition branch is born WITH its state
+
+None of the six condition branches exist yet, and that is correct: do NOT
+pre-create empty placeholders (they only drift). Create each branch at the
+moment you start producing its state:
+
+1. **A branches — can start now.** `aideal/rdpro-a-original` and
+   `aideal/tsl-a-original` fork from `origin/main` right when you launch the
+   `--doc original` run (tslearn additionally needs the clone + pip install
+   first, per its RUNBOOK).
+2. **B branches — born at the setup commit.** `aideal/<study>-b-readme`
+   forks from `origin/main`; its FIRST commit is the `readme --generate`
+   output alone. **Tag that commit** (`git tag <study>-readme-setup-2026-07-13`)
+   — it is the shared fork point B and C must have in common. Then B's
+   fix-pipeline runs continue on the branch.
+3. **C branches — fork from the TAG, never from B's tip.**
+   `git checkout -b aideal/<study>-c-catalog <study>-readme-setup-2026-07-13`
+   so C differs from B only by the catalogue index, not by B's fix-loop
+   history.
+
+Target topology (matches the check of 2026-07-13):
+
+```
+origin/main
+├── aideal/rdpro-a-original
+├── [tag rdpro-readme-setup] ── aideal/rdpro-b-readme
+│                             └─ aideal/rdpro-c-catalog
+├── aideal/tsl-a-original
+└── [tag tsl-readme-setup]   ── aideal/tsl-b-readme
+                              └─ aideal/tsl-c-catalog
+```
+
 ## The condition ladder (per study) — first baseline = LLM + original repo
 
 Per Zoe 2026-07-13: condition **A is always "just the LLM on the original
@@ -87,16 +125,17 @@ treatment changed.
 
 ```bash
 # A — original-readme floor (run BEFORE generating any catalog)
-git checkout -b aideal/rdpro-a-original exp/aideal-state-2026-07-13
+git checkout -b aideal/rdpro-a-original origin/main
 cd experiments/rdpro
 aideal comprehension --execute --doc original > docs/comprehension_A_original.json
 git add -A && git commit -m "A: original-readme baseline: <pass>/<n> (<pct>)"
 
 # B — generated README + FULL fix pipeline, no index (class-context off).
 #     "readme fix loop, deep dive, code error log" all inside this arm.
-git checkout -b aideal/rdpro-b-readme exp/aideal-state-2026-07-13
+git checkout -b aideal/rdpro-b-readme origin/main
 aideal readme --generate --limit 0 --force
-git add -A && git commit -m "B/C shared setup: generated readme"   # C branches from here
+git add -A && git commit -m "B/C shared setup: generated readme"
+git tag rdpro-readme-setup-2026-07-13                    # C forks from THIS tag
 aideal comprehension --execute --class-context off > docs/comprehension_B0.json
 aideal fix-docs --from-results docs/comprehension_B0.json --deep-dive-first --retry-rounds 3 --report docs/docfix_B.json
 aideal comprehension --execute --class-context off > docs/comprehension_B_final.json
@@ -105,7 +144,7 @@ git add -A && git commit -m "B: readme+fixloop: <pass>/<n>; delta vs A: +<pp>"
 
 # C — SAME pipeline as B + the catalogue index (the ADVANCED step; branch from
 #     B's generated-readme commit so the arms differ ONLY in the index).
-git checkout -b aideal/rdpro-c-catalog <B-setup-commit>
+git checkout -b aideal/rdpro-c-catalog rdpro-readme-setup-2026-07-13
 # configs/aideal.yaml: comprehension.class_context: true  (docfix retries too)
 aideal catalogue
 aideal comprehension --execute --class-context on > docs/comprehension_C0.json
@@ -123,12 +162,12 @@ git add -A && git commit -m "C: +catalogue index: <pass>/<n>; delta vs B: +<pp>"
 ## Per-fix workflow (tool branches)
 
 ```bash
-git checkout -b aideal/fix-<slug> <integration-branch>   # today: exp/aideal-state-2026-07-13
+git checkout -b aideal/fix-<slug> origin/main
 # edit grail-agent/...
 python3 -m pytest grail-agent/tests -q          # must pass (30 tests)
 cd experiments/rdpro && aideal surface-audit    # or the check the fix targets
 git add -A && git commit -m "fix: <what> — <evidence number before -> after>"
-git switch <integration-branch> && git merge --no-ff aideal/fix-<slug>
+git switch main && git merge --no-ff aideal/fix-<slug>
 ```
 
 Rules of thumb: commit messages carry the measured number (pass rate, count
