@@ -584,7 +584,7 @@ def _is_public(name: str, prefix: str, model: dict) -> bool:
 # Container declarations for brace-scoped languages (Scala/Java/Kotlin/C#/...).
 # `mods` = everything before the container keyword on that line (modifiers).
 _CONTAINER_DECL_RE = re.compile(
-    r"^(?P<mods>[^={}]*?)\b(?:case\s+)?(?:class|object|trait|interface|enum)\s+\w+")
+    r"^(?P<mods>[^={}]*?)\b(?:case\s+)?(?:class|object|trait|interface|enum|record)\s+\w+")
 # Scoped Scala modifiers too: `private[raptor]`, `protected[davinci]`.
 _NONPUBLIC_MOD_RE = re.compile(r"\b(?:private|protected)\b(?:\[[^\]]*\])?")
 
@@ -692,11 +692,46 @@ def _iter_test_blocks_py(text: str):
         yield m.group(2), "\n".join(body)
 
 
+_JAVA_TEST_RE = re.compile(
+    r"@(?:Test|ParameterizedTest)\b[\s\S]*?\b(?:void|public\s+void)\s+(\w+)\s*\([^)]*\)\s*(?:throws\s+[\w., ]+)?\{")
+
+
+def _iter_test_blocks_java(text: str):
+    """JUnit style: yield (method_name, body) for each @Test/@ParameterizedTest
+    method (brace-balanced from its opening `{`)."""
+    for m in _JAVA_TEST_RE.finditer(text):
+        open_brace = text.index("{", m.end() - 1)
+        depth = 0
+        for k in range(open_brace, len(text)):
+            if text[k] == "{":
+                depth += 1
+            elif text[k] == "}":
+                depth -= 1
+                if depth == 0:
+                    yield m.group(1), text[open_brace:k + 1]
+                    break
+
+
+#: per-language test-block miners; default = ScalaTest-style `test("..."){}`.
+#: Extend for new languages (the `tested` intent signal + example mining
+#: both flow through this table).
+_TEST_MINERS = {
+    "python": _iter_test_blocks_py,
+    "java": _iter_test_blocks_java,
+}
+
+
 def _test_blocks_for(cfg: AidealConfig, text: str):
-    """Language-aware test-block iterator (ScalaTest braces vs pytest defs)."""
-    if cfg.language.lower() == "python":
-        return _iter_test_blocks_py(text)
-    return _iter_test_blocks(text)
+    """Language-aware test-block iterator (see _TEST_MINERS)."""
+    miner = _TEST_MINERS.get(cfg.language.lower(), _iter_test_blocks)
+    blocks = list(miner(text))
+    # graceful fallback: a Scala repo with JUnit-style tests (or vice versa)
+    # still yields examples rather than silently zero.
+    if not blocks and miner is not _iter_test_blocks:
+        blocks = list(_iter_test_blocks(text))
+    if not blocks and miner is not _iter_test_blocks_java:
+        blocks = list(_iter_test_blocks_java(text))
+    return blocks
 
 
 def _iter_test_blocks(text: str):
@@ -1774,10 +1809,16 @@ def _doc_below_py(lines: list[str], idx: int) -> str:
     return " ".join(p for p in parts if p).strip()
 
 
+#: where each language's API docs live relative to the definition line.
+#: "above" = comment block above (Scala/Java javadoc, Kotlin KDoc, Rust ///,
+#: Go doc comments, C# XML docs...); "below" = docstring under the def
+#: (Python). Extend here (or teach _doc_at a new style) for new languages.
+_DOC_POSITION: dict[str, str] = {"python": "below"}
+
+
 def _doc_at(cfg: AidealConfig, lines: list[str], idx: int) -> str:
-    """Language-aware doc extraction for the def at line idx: Python docstrings
-    live BELOW the def; every other supported language documents ABOVE it."""
-    if cfg.language.lower() == "python":
+    """Language-aware doc extraction for the def at line idx (see _DOC_POSITION)."""
+    if _DOC_POSITION.get(cfg.language.lower(), "above") == "below":
         return _doc_below_py(lines, idx) or _doc_above(lines, idx)
     return _doc_above(lines, idx)
 
@@ -2240,3 +2281,41 @@ def surface_audit(cfg: AidealConfig) -> dict:
             "counts": counts,
             "prune_candidates": prune,
             "verdicts": {n: v for n, v in verdicts.items() if v["status"] != "ok"}}
+
+
+# --- coverage: which APIs does each documentation set actually document? ----
+
+def api_coverage(cfg: AidealConfig) -> dict:
+    """Coverage artifact for the 2x2 experiment (design 2026-07-13):
+
+      S = frozen runnable public surface (visibility-correct + intent filter)
+      O = APIs documented in the ORIGINAL bundle (evidence-based: code block /
+          backticks / call-form via _doc_code_mentions — bare prose words do
+          not count), resolved against S
+      G = APIs with a generated LLM_readme entry, resolved against S
+      T = S ∩ O ∩ G — the SHARED manifest every pass-rate cell must consume
+
+    Coverage (|S∩O|/|S| vs |S∩G|/|S|) is a first-class result on its own;
+    pass rates are only causally comparable on T."""
+    S = set(public_api_surface(cfg))
+    docs_text = cfg.original_readme_text(limit=None) if cfg.original_readme_files else ""
+    O = _doc_code_mentions(docs_text, S)
+    G = ({e.name for e in parse_readme(cfg.llm_readme)} & S
+         if cfg.llm_readme.exists() else set())
+    T = S & O & G
+    def pct(x):
+        return round(100.0 * len(x) / len(S), 1) if S else 0.0
+    return {
+        "surface_S": sorted(S), "n_surface": len(S),
+        "original_documented_O": sorted(O),
+        "generated_documented_G": sorted(G),
+        "shared_T": sorted(T),
+        "coverage": {"original_pct_of_S": pct(O),
+                     "generated_pct_of_S": pct(G),
+                     "shared_pct_of_S": pct(T)},
+        "undocumented_in_original": sorted(S - O),
+        "undocumented_in_generated": sorted(S - G),
+        "original_doc_files": [str(x.relative_to(cfg.root))
+                               for x in cfg.original_readme_files],
+        "original_doc_chars": len(docs_text),
+    }

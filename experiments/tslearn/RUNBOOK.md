@@ -33,6 +33,15 @@ like `GLOBAL_CONSTRAINT_CODE`), internal mixins, and `_`-prefixed exports —
 document this as the static-selection error profile. Docstring coverage
 (below-def extraction): 76% of sites. pytest usage examples mined for 116 APIs.
 
+> **2x2 PLAN (2026-07-13):** run the same four-cell table as rdpro —
+> A1 = original readme, 0 rounds (`aideal/tsl-a-original`); B1 = original +
+> deep-dive fix with `--create-missing` (`aideal/tsl-a-original-fix`, catalog
+> starts empty); A2 = generated readme, 0 rounds (`aideal/tsl-b-readme`);
+> B2 = A2 + deep-dive fix (same branch). All read the entire flat readme;
+> the catalogue arm (old condition C) is postponed. Table:
+> `python ../rdpro/compare_2x2.py --a1 ... --a2 ... --b1 ... --b2 ...`.
+> Commands below map: §1→A1, §2→A2+B2; B1 mirrors rdpro's B1 block.
+
 ## 1. CONDITION A — first baseline: LLM + original repo only  ⟵ branch `aideal/tsl-a-original`
 
 No AIDEAL artifacts at all: the audience model sees the ORIGINAL README/docs
@@ -58,12 +67,23 @@ catalogue index in this arm.
 aideal readme --generate --limit 0 --force        # the entire generated doc
 # commit here — B and C both branch from THIS state (same doc, same seed)
 
-aideal comprehension --execute --class-context off \
-  > docs/comprehension_B0.json                     # pass 0 + code error log
+# 1. comprehension = per-API "LLM run — pass or not" (0 snippet-fix rounds:
+#    all iteration budget goes to DOC repair, so attribution stays clean)
+aideal comprehension --execute --class-context off --max-fix-rounds 0 \
+  > docs/comprehension_B0.json
+
+# 2. ITERATIVE deep-dive doc repair — up to 5 rounds per failing API, each:
+#    deep-dive (sees newest failure + current draft) → diagnose → rewrite
+#    entry → run the API against the NEW doc (pass-or-not). Rounds must show
+#    improved understanding (new diagnosis OR error moved) or the API stops
+#    early (--doc-stuck 2). Live log after EVERY round:
+#    docs/fix_report_latest.md + per-round audit in docs/docfix_changes/.
 aideal fix-docs --from-results docs/comprehension_B0.json \
-  --deep-dive-first --retry-rounds 3 --report docs/docfix_B.json
-aideal comprehension --execute --class-context off \
-  > docs/comprehension_B_final.json                # B's headline number
+  --deep-dive-first --doc-rounds 5 --report docs/docfix_B.json
+
+# 3. B's headline number: full pass-or-not run on the repaired doc
+aideal comprehension --execute --class-context off --max-fix-rounds 0 \
+  > docs/comprehension_B_final.json
 aideal fix-report --run docs/comprehension_B_final.json \
   --baseline docs/comprehension_A_original.json
 ```
@@ -80,14 +100,14 @@ full doc exists, read INDEX-FIRST. Branch from the same post-`readme
 
 ```bash
 # in configs/aideal.yaml set:  comprehension.class_context: true
-# (so docfix's single-API retries read index-first too, not just the full runs)
+# (so docfix's single-API runs read index-first too, not just the full runs)
 aideal catalogue                                   # per-class index from the doc
 
-aideal comprehension --execute --class-context on \
+aideal comprehension --execute --class-context on --max-fix-rounds 0 \
   > docs/comprehension_C0.json
 aideal fix-docs --from-results docs/comprehension_C0.json \
-  --deep-dive-first --retry-rounds 3 --report docs/docfix_C.json
-aideal comprehension --execute --class-context on \
+  --deep-dive-first --doc-rounds 5 --report docs/docfix_C.json
+aideal comprehension --execute --class-context on --max-fix-rounds 0 \
   > docs/comprehension_C_final.json                # C's headline number
 aideal fix-report --run docs/comprehension_C_final.json \
   --baseline docs/comprehension_B_final.json

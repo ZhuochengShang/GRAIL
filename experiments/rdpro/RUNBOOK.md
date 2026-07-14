@@ -1,23 +1,71 @@
 # AIDEAL / GRAIL — full pipeline (rdpro)
 
-> **CURRENT EXPERIMENT LADDER (2026-07-13) — supersedes the g1/g2 condition
-> naming below.** One branch per condition, default models
-> `google:gemini-3.2-pro-preview` (configs/aideal.yaml roles):
+> **CURRENT EXPERIMENT: the 2x2 doc-effect table (protocol v2, 2026-07-13 —
+> corrected per review; supersedes everything below for this sprint).**
 >
-> - **A `aideal/rdpro-a-original`** — pure original repo/README, no AIDEAL
->   artifacts: `aideal comprehension --execute --doc original` (never run yet).
-> - **B `aideal/rdpro-b-readme`** — generated ENTIRE readme + full fix
->   pipeline (comprehension code fix loop + error log + `fix-docs
->   --deep-dive-first`), class-context OFF.
-> - **C `aideal/rdpro-c-catalog`** — exactly B + the catalogue index
->   (`aideal catalogue`, `class_context: true`); branch from B's
->   post-`readme --generate` commit so C−B isolates the index.
+> Invariants every cell must satisfy: (1) the audience receives the ENTIRE
+> selected document (`--full-doc on`, no truncation — size recorded in the
+> run JSON); (2) zero snippet-fix rounds (`--max-fix-rounds 0`); (3) ONE
+> frozen manifest `docs/api_manifest_shared.json` (T = S ∩ O ∩ G) in every
+> cell; (4) B-cells are FRESH FULL RERUNS on the repaired document, never
+> A-passes ∪ recoveries. The original bundle is TEXT-ONLY: beast/README.md +
+> beast/doc/**/*.md, sorted, filename headers, image bytes excluded.
 >
-> Exact commands: `GRAIL/BRANCHING.md`. Hygiene: `aideal surface-audit`
-> (34/205 current entries flagged non-callable/deselected after the
-> 2026-07-13 visibility fix), `aideal fix-report --run <json> [--baseline
-> <json>]` for the readable per-run analysis. The older g1/g2/g3/g4 suites
-> below remain valid as scripted primitives inside these arms.
+> |  | 0 fix rounds | after 5-round deep-dive doc repair |
+> |---|---|---|
+> | **original bundle** | **A1** `aideal/rdpro-a-original` | **B1** `aideal/rdpro-a-original-fix` |
+> | **generated README** | **A2** `aideal/rdpro-b-readme` | **B2** same branch, after A2 |
+>
+> ```bash
+> # STEP 0 — freeze denominators + coverage (a first-class result by itself):
+> #   S = runnable public surface · O = evidence-documented in original bundle
+> #   G = documented in LLM_readme · T = S∩O∩G  ->  api_manifest_shared.json
+> aideal manifest        # writes docs/api_coverage.json + docs/api_manifest_shared.json
+> M=docs/api_manifest_shared.json
+>
+> # A1 — original bundle, whole, pass-or-not      (branch: aideal/rdpro-a-original)
+> aideal comprehension --execute --doc original --full-doc on --manifest $M \
+>   --max-fix-rounds 0 > docs/comprehension_A1_original.json
+>
+> # B1 — original + iterative deep-dive repair    (branch: aideal/rdpro-a-original-fix,
+> #      forked from A1's results commit; catalog starts EMPTY)
+> git rm -q docs/LLM_readme.md && git commit -m "B1: catalog starts empty"
+> aideal fix-docs --from-results docs/comprehension_A1_original.json \
+>   --create-missing --deep-dive-first --doc-rounds 5 \
+>   --doc original+aideal --full-doc on --manifest $M \
+>   --report docs/docfix_B1.json
+> # FINAL B1 = fresh full run on the repaired state (original + created entries):
+> aideal comprehension --execute --doc original+aideal --full-doc on --manifest $M \
+>   --max-fix-rounds 0 > docs/comprehension_B1_final.json
+>
+> # A2 — generated README, whole, pass-or-not     (branch: aideal/rdpro-b-readme)
+> aideal readme --generate --limit 0 --force      # + commit + tag rdpro-readme-setup
+> aideal comprehension --execute --doc aideal --full-doc on --manifest $M \
+>   --max-fix-rounds 0 > docs/comprehension_A2_generated.json
+>
+> # B2 — + iterative deep-dive repair             (same branch, continues)
+> aideal fix-docs --from-results docs/comprehension_A2_generated.json \
+>   --deep-dive-first --doc-rounds 5 --doc aideal --full-doc on --manifest $M \
+>   --report docs/docfix_B2.json
+> # FINAL B2 = fresh full run on the repaired README:
+> aideal comprehension --execute --doc aideal --full-doc on --manifest $M \
+>   --max-fix-rounds 0 > docs/comprehension_B2_final.json
+>
+> # the table (validates the invariants, refuses unlike cells):
+> python compare_2x2.py --a1 docs/comprehension_A1_original.json \
+>   --a2 docs/comprehension_A2_generated.json \
+>   --b1 docs/comprehension_B1_final.json --b2 docs/comprehension_B2_final.json \
+>   -o docs/compare_2x2.md
+> ```
+>
+> Report COVERAGE alongside (from docs/api_coverage.json): original x/|S| vs
+> generated y/|S| — unequal-denominator pass rates are descriptive only,
+> never the causal comparison. COST WARNING: full-doc mode sends the whole
+> bundle per call (original ≈ size printed at run start; generated ≈ 650KB ≈
+> 165K tokens) × |T| calls per cell — pilot with `--sample`/`--max-apis`
+> first. Live docfix log: docs/fix_report_latest.md refreshes EVERY round.
+> GIT HYGIENE: tool changes live on `aideal/feat-2x2-docfix` and merge to
+> main BEFORE condition branches run — condition branches hold ONLY runs.
 
 Run from `experiments/rdpro/`. Static steps need no key; LLM/execution steps need
 a model key (`GOOGLE_API_KEY` for the gemini-3.2 defaults; `OPENAI_API_KEY` for

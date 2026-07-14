@@ -73,9 +73,28 @@ checks:
 docfix:
   # Safety guard for source-aware README repair. Rewrites are rejected if their
   # snippets call members that are neither on the project API surface nor in
-  # these generic language/ecosystem categories. Adapters/projects extend this
-  # instead of hardcoding one codebase's helpers in Python.
+  # the allowed vocabulary below.
+  #
+  # PRIMARY (general, no curation): allow_repo_called_members mines every
+  # `.name(` the TARGET CODEBASE itself calls in its sources/tests — the
+  # repo's own usage vocabulary is the ecosystem allowlist, for any language.
+  allow_repo_called_members: true
+  # SECONDARY (escape hatches): named category sets whose CONTENTS live here
+  # and in adapter/project layers (deep-merged) — no more editing Python to
+  # onboard an ecosystem. Projects choose which categories apply:
   allowed_member_categories: [language_core]
+  member_categories:
+    language_core: [println, print, require, assert, format, mkString, toString,
+      map, flatMap, filter, foreach, collect, count, take, first, reduce, fold,
+      foldLeft, sum, min, max, size, length, nonEmpty, isEmpty, head, headOption,
+      last, getOrElse, get, exists, forall, contains, indexOf, sortBy, sorted,
+      zip, zipWithIndex, toArray, toList, toSeq, toSet, toMap, distinct, sliding,
+      grouped, apply, update, close, cache, persist, coalesce, repartition, keys,
+      values, trim, split, replace, startsWith, endsWith, toDouble, toInt, toLong,
+      toFloat, abs, floor, ceil, round, find, getPath, getName, getClass,
+      asInstanceOf, isInstanceOf, mkdirs, listFiles, delete, getConstructor,
+      newInstance, getFileSystem, resolve, isNaN, isInfinite, isFinite, toRadians,
+      toDegrees, sqrt, pow, sin, cos, tan, atan2, fill, range, empty, ofDim]
   allowed_members: []
 
 comprehension:
