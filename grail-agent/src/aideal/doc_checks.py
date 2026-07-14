@@ -903,6 +903,7 @@ def _comprehension_execute(cfg: AidealConfig, inventory, sample, seed, doc_sourc
     import time as _time
 
     ex = cfg.comprehension.get("execute", {}) if cfg.comprehension else {}
+    manifest_inventory_n = len(inventory)
     cmd_template = ex.get("command", "")
     scaffold_path = ex.get("scaffold", "")
     if not cmd_template or not scaffold_path:
@@ -1080,6 +1081,12 @@ def _comprehension_execute(cfg: AidealConfig, inventory, sample, seed, doc_sourc
         inventory = [e for e in inventory if e.name not in exclude]
     if sample and sample < len(inventory):
         inventory = random.Random(seed).sample(inventory, sample)
+    import sys as _count_sys
+    _count_sys.stderr.write(
+        f"[comprehension] APIs to execute: {len(inventory)} of "
+        f"{manifest_inventory_n} (doc_source={doc_source}, doc_scope={doc_scope})\n"
+    )
+    _count_sys.stderr.flush()
 
     io_hints_text = _resolve_io_hints(cfg, ex, sample_data)   # 'auto' -> LLM-generated, cached
 
@@ -1363,6 +1370,8 @@ def _comprehension_execute(cfg: AidealConfig, inventory, sample, seed, doc_sourc
         "doc_source": doc_source,
         "run": {   # micro-benchmark header: everything a condition needs to be comparable
             "run_id": run_id,
+            "api_count": n,
+            "manifest_api_count": manifest_inventory_n,
             "models": {"audience": f"{writer_spec.provider}:{writer_spec.model}",
                        "fixer": f"{fixer_spec.provider}:{fixer_spec.model}"},
             "max_fix_rounds": max_fix_rounds,
