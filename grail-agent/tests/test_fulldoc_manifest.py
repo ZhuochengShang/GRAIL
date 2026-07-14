@@ -50,13 +50,16 @@ def test_bundle_is_text_only_and_deterministic(tmp_path):
     d = tmp_path / "doc"; d.mkdir()
     (d / "b.md").write_text("bee")
     (d / "a.md").write_text("ay")
+    (d / "guide.rst").write_text("guide")
+    (d / "gallery.py").write_text("print('documented example')")
+    (d / "notes.txt").write_text("notes")
     (d / "img.png").write_bytes(b"\x89PNG\r\n\x1a\nBINARY")
     (d / "chart.tiff").write_bytes(b"II*\x00BINARY")
     (d / "run.sh").write_text("#!/bin/sh")
     (tmp_path / "R.md").write_text("readme")
     files = _resolve_readme_sources(tmp_path, ["R.md", "doc"])
     names = [f.name for f in files]
-    assert names == ["R.md", "a.md", "b.md"]          # sorted, text-only
+    assert names == ["R.md", "a.md", "b.md", "gallery.py", "guide.rst", "notes.txt"]
     # explicit binary path is ALSO rejected
     files2 = _resolve_readme_sources(tmp_path, ["doc/img.png", "R.md"])
     assert [f.name for f in files2] == ["R.md"]
