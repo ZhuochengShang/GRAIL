@@ -13,7 +13,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 from aideal.config import AidealConfig, ModelSpec, _resolve_readme_sources  # noqa: E402
 from aideal.doc_checks import (_comprehension_inventory,  # noqa: E402
                                _load_manifest, _shared_doc_text)
-from aideal.readme_agent import api_coverage  # noqa: E402
+from aideal.readme_agent import api_coverage, _doc_code_mentions  # noqa: E402
 
 
 def _cfg(tmp_path) -> AidealConfig:
@@ -78,6 +78,25 @@ def test_full_doc_generated_is_whole_catalog(tmp_path):
     assert "foo entry." in shared and "baz entry." in shared   # ENTIRE readme
 
 
+def test_relevant_scope_retrieves_only_api_sections_with_equal_cap(tmp_path):
+    cfg = _cfg(tmp_path)
+    cfg.comprehension = {"relevant_doc_chars": 180}
+    cfg.original_readme_files[0].write_text(
+        "# Intro\nGeneral material.\n\n## Foo\nCall `foo` using lib.foo(1).\n" +
+        ("foo detail " * 30) +
+        "\n## Unrelated\nOnly `baz` appears here.\n")
+    inv_o, shared_o, err_o = _comprehension_inventory(
+        cfg, "original", manifest=["foo"], doc_scope="relevant")
+    inv_g, shared_g, err_g = _comprehension_inventory(
+        cfg, "aideal", manifest=["foo"], doc_scope="relevant")
+    assert err_o is err_g is None
+    assert shared_o is shared_g is None
+    assert "lib.foo(1)" in inv_o[0].body
+    assert "Unrelated" not in inv_o[0].body
+    assert "foo entry." in inv_g[0].body
+    assert len(inv_o[0].body) <= 180 and len(inv_g[0].body) <= 180
+
+
 def test_original_plus_aideal_combines_both(tmp_path):
     cfg = _cfg(tmp_path)
     shared = _shared_doc_text(cfg, "original+aideal")
@@ -122,6 +141,16 @@ def test_documented_api_syntax_is_project_configurable(tmp_path):
     assert cov["original_documented_O"] == ["baz"]
 
 
+def test_code_mentions_do_not_span_markdown_fences_or_count_plain_prose():
+    text = """The area is discussed in prose.
+```scala
+lib.foo(1)
+```
+Later we build an index and call a method.
+"""
+    assert _doc_code_mentions(text, {"foo", "area", "build", "call"}) == {"foo"}
+
+
 def test_generic_prompts_do_not_embed_scala_or_rdpro_syntax():
     root = Path(__file__).resolve().parents[1] / "src" / "aideal" / "default_prompts" / "aideal"
     texts = "\n".join((root / name).read_text() for name in (
@@ -142,18 +171,19 @@ def test_execution_prompt_rejects_tautological_correctness_checks():
     assert "deliberately fail the assertion" in prompt
 
 
-def test_2x2_guard_requires_explicit_full_doc_zero_rounds_and_hashes():
+def test_2x2_guard_requires_matching_scope_zero_rounds_and_hashes():
     script = Path(__file__).resolve().parents[2] / "experiments" / "rdpro" / "compare_2x2.py"
     spec = importlib.util.spec_from_file_location("compare_2x2", script)
     mod = importlib.util.module_from_spec(spec); spec.loader.exec_module(mod)
-    base = {"names": {"foo"}, "full_doc": True, "max_fix_rounds": 0,
+    base = {"names": {"foo"}, "full_doc": False, "doc_scope": "relevant",
+            "max_fix_rounds": 0,
             "manifest_sha256": "manifest", "document_sha256": "doc"}
     runs = {k: dict(base) for k in ("a1", "a2", "b1", "b2")}
     assert mod.check_design(runs) == []
-    runs["a1"]["full_doc"] = None
+    runs["a1"]["doc_scope"] = "full"
     runs["a2"]["max_fix_rounds"] = None
     runs["b1"]["manifest_sha256"] = None
     problems = mod.check_design(runs)
-    assert any("full_doc" in p for p in problems)
+    assert any("scope" in p for p in problems)
     assert any("max_fix_rounds" in p for p in problems)
     assert any("manifest hash" in p for p in problems)

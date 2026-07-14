@@ -1386,8 +1386,15 @@ def _doc_code_mentions(docs_text: str, names: set[str],
     sentences."""
     if not docs_text or not names:
         return set()
-    code = "\n".join(re.findall(r"```.*?```", docs_text, re.S))
-    code += "\n" + " ".join(re.findall(r"`([^`]+)`", docs_text))
+    # Parse fenced and inline code separately. The old `` `([^`]+)` `` also
+    # matched pieces of triple-backtick fences and could span prose between
+    # them, turning ordinary words such as "area" or "build" into false code
+    # evidence. Inline spans may not touch another backtick or cross a line.
+    fenced = re.findall(r"```[^\n]*\n(.*?)\n```", docs_text, re.S)
+    without_fences = re.sub(r"```[^\n]*\n.*?\n```", "", docs_text,
+                            flags=re.S)
+    inline = re.findall(r"(?<!`)`([^`\n]+)`(?!`)", without_fences)
+    code = "\n".join(fenced) + "\n" + " ".join(inline)
     out = set()
     # Patterns are format strings containing ``{name}``; adapters/projects may
     # add syntax such as Rust ``{name}!`` or Ruby ``:{name}`` without changing
