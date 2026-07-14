@@ -1139,7 +1139,8 @@ def _comprehension_execute(cfg: AidealConfig, inventory, sample, seed, doc_sourc
             row = done_rows[entry.name]
             metrics[entry.name] = {k: row.get(k) for k in (
                 "status", "attempts", "pass_round", "wall_s", "llm_calls",
-                "input_tokens", "output_tokens", "by_model", "error_category")}
+                "input_tokens", "output_tokens", "by_model", "error_category",
+                "doc_chars", "document_sha256")}
             per_api[entry.name] = f"resumed: {row.get('status')}"
             if row.get("status") == "pass":
                 passed_n += 1
@@ -1311,6 +1312,10 @@ def _comprehension_execute(cfg: AidealConfig, inventory, sample, seed, doc_sourc
             "output_tokens": u["output_tokens"],
             "by_model": u["by_model"],
             "error_category": None if ran else last.get("cat", ""),
+            "doc_chars": len(shared_doc if shared_doc is not None else entry.body),
+            "document_sha256": _hashlib.sha256(
+                (shared_doc if shared_doc is not None else entry.body).encode("utf-8")
+            ).hexdigest(),
             # which RDPro definition this API targets (canonical file:line,
             # same election as `aideal dedup`) …
             "source": site_of.get(entry.name, {}).get("source"),
