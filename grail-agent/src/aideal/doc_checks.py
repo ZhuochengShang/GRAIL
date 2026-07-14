@@ -101,14 +101,89 @@ def _shared_doc_text(cfg: AidealConfig, doc_source: str) -> str:
     return "\n\n".join(p for p in parts if p.strip())
 
 
+def _markdown_chunks(text: str) -> list[str]:
+    """Stable file/heading chunks for deterministic, non-LLM retrieval."""
+    chunks: list[str] = []
+    file_header = ""
+    current: list[str] = []
+    for line in text.splitlines():
+        if line.startswith("===== ") and line.endswith(" ====="):
+            if current:
+                chunks.append("\n".join(([file_header] if file_header else []) + current).strip())
+            file_header, current = line, []
+        elif re.match(r"^#{1,6}\s+", line) and current:
+            chunks.append("\n".join(([file_header] if file_header else []) + current).strip())
+            current = [line]
+        else:
+            current.append(line)
+    if current:
+        chunks.append("\n".join(([file_header] if file_header else []) + current).strip())
+    return [c for c in chunks if c]
+
+
+def _relevant_original_text(cfg: AidealConfig, api_name: str, limit: int) -> str:
+    """Retrieve only code-evidenced Markdown sections for one API, without an LLM."""
+    from .readme_agent import _doc_code_mentions
+    raw = cfg.original_readme_text(limit=None)
+    matches: list[tuple[int, int, str]] = []
+    for pos, chunk in enumerate(_markdown_chunks(raw)):
+        if api_name not in _doc_code_mentions(chunk, {api_name}):
+            continue
+        # Prefer explicit calls over inline-code/name-only evidence; retain source order.
+        escaped = re.escape(api_name)
+        calls = len(re.findall(rf"\.{escaped}\b|\b{escaped}\s*[\(\[]", chunk))
+        mentions = len(re.findall(rf"\b{escaped}\b", chunk))
+        matches.append((calls * 100 + mentions, pos, chunk))
+    matches.sort(key=lambda item: (-item[0], item[1]))
+    selected: list[str] = []
+    used = 0
+    for _, _, chunk in matches:
+        separator = 2 if selected else 0
+        remaining = limit - used - separator
+        if remaining <= 0:
+            break
+        selected.append(chunk[:remaining])
+        used += separator + min(len(chunk), remaining)
+    if not selected:
+        return (f"No code-context section for `{api_name}` was found in the configured "
+                "original documentation.")
+    return "\n\n".join(selected)
+
+
+def _relevant_doc_inventory(cfg: AidealConfig, doc_source: str, names: list[str]):
+    """Per-API relevant documentation with one equal character ceiling per source."""
+    from .readme_agent import ApiEntry
+    limit = int((cfg.comprehension or {}).get("relevant_doc_chars", 12000) or 12000)
+    generated = {e.name: e for e in parse_readme(cfg.llm_readme)} if cfg.llm_readme.exists() else {}
+    inventory = []
+    for name in names:
+        parts: list[str] = []
+        part_limit = limit // 2 if doc_source == "original+aideal" else limit
+        if doc_source in ("original", "original+aideal"):
+            parts.append(_relevant_original_text(cfg, name, part_limit))
+        if doc_source in ("aideal", "original+aideal"):
+            entry = generated.get(name)
+            if entry:
+                parts.append((f"## API Test: `{name}`\n\n{entry.body}")[:part_limit])
+        body = "\n\n===== RELATED DOCUMENTATION =====\n\n".join(parts)[:limit]
+        inventory.append(ApiEntry(name=name, goal="", snippet="", body=body))
+    return inventory
+
+
 def _comprehension_inventory(cfg: AidealConfig, doc_source: str,
                              manifest: list[str] | None = None,
-                             full_doc: bool = False):
+                             full_doc: bool = False,
+                             doc_scope: str | None = None):
     """Build (inventory, shared_doc, error_dict). shared_doc is None unless
     full_doc — then every entry's audience context = shared_doc + target line
     (built late in the execute loop; bodies stay empty to avoid duplicating a
     multi-MB document per entry)."""
     from .readme_agent import ApiEntry
+    if doc_scope == "relevant":
+        names = manifest or (sorted(public_api_surface(cfg)) if doc_source.startswith("original")
+                             else [e.name for e in parse_readme(cfg.llm_readme)
+                                   if "TODO" not in e.body])
+        return _relevant_doc_inventory(cfg, doc_source, names), None, None
     if full_doc:
         # denominator: the frozen manifest if given, else the doc's own names
         if manifest:
@@ -202,6 +277,7 @@ def comprehension_check(cfg: AidealConfig, sample: int | None = None, seed: int 
                         resume: bool = False,
                         timeout_s: int | None = None,
                         full_doc: bool | None = None,
+                        doc_scope: str | None = None,
                         manifest: str | None = None) -> dict:
     """Given only the documentation, the audience model writes code; the author
     model grades strictly against the doc. Failures go to the error log.
@@ -233,15 +309,26 @@ def comprehension_check(cfg: AidealConfig, sample: int | None = None, seed: int 
     require_profile(cfg)  # user must have entered project/target-user/domain fields
     if full_doc is None:
         full_doc = bool((cfg.comprehension or {}).get("full_doc", False))
+    doc_scope = doc_scope or ("full" if full_doc else "entry")
+    if doc_scope not in {"full", "relevant", "entry"}:
+        raise ValueError(f"unknown doc_scope={doc_scope!r}")
+    if doc_scope == "full":
+        full_doc = True
+    elif doc_scope == "relevant":
+        full_doc = False
     manifest_names = _load_manifest(cfg, manifest)
     inventory, shared_doc, err = _comprehension_inventory(
-        cfg, doc_source, manifest=manifest_names, full_doc=full_doc)
+        cfg, doc_source, manifest=manifest_names, full_doc=full_doc,
+        doc_scope=doc_scope)
     if err:
         return err
     if full_doc and not execute:
         return {"check": "comprehension", "passed": False, "score": 0.0,
                 "details": {"error": "--full-doc requires --execute (the LLM-graded "
                             "path would duplicate the whole document per entry)"}}
+    if doc_scope == "relevant" and not execute:
+        return {"check": "comprehension", "passed": False, "score": 0.0,
+                "details": {"error": "--doc-scope relevant requires --execute"}}
     if api:  # test ONE specific documented API (covers both LLM-graded and --execute)
         names = [e.name for e in inventory]
         inventory = [e for e in inventory if e.name == api]
@@ -263,10 +350,12 @@ def comprehension_check(cfg: AidealConfig, sample: int | None = None, seed: int 
                                      show_code=show_code, class_context=cc,
                                      max_fix_rounds=max_fix_rounds,
                                      resume=resume, timeout_s=timeout_s,
-                                     shared_doc=shared_doc)
+                                     shared_doc=shared_doc, doc_scope=doc_scope)
         if isinstance(out, dict) and isinstance(out.get("run"), dict):
             out["run"]["full_doc"] = bool(shared_doc is not None)
-            out["run"]["doc_chars"] = len(shared_doc) if shared_doc else None
+            out["run"]["doc_scope"] = doc_scope
+            out["run"]["doc_chars"] = (len(shared_doc) if shared_doc else
+                                         sum(len(e.body) for e in inventory))
             out["run"]["manifest"] = {"path": manifest,
                                       "apis": len(manifest_names)} if manifest_names else None
         return out
@@ -776,7 +865,8 @@ def _comprehension_execute(cfg: AidealConfig, inventory, sample, seed, doc_sourc
                            show_code: bool = False, class_context: bool = False,
                            max_fix_rounds: int | None = None,
                            resume: bool = False, timeout_s: int | None = None,
-                           shared_doc: str | None = None) -> dict:
+                           shared_doc: str | None = None,
+                           doc_scope: str = "entry") -> dict:
     """Compile/run each API's audience snippet via the configured command.
     PASS = the program runs (success_marker present, exit 0). Real failures
     (compile/runtime) are logged with the actual error text.
@@ -920,11 +1010,12 @@ def _comprehension_execute(cfg: AidealConfig, inventory, sample, seed, doc_sourc
     import hashlib as _hashlib
     _manifest_payload = "\n".join(e.name for e in inventory).encode("utf-8")
     manifest_sha256 = _hashlib.sha256(_manifest_payload).hexdigest()
-    doc_sha256 = (_hashlib.sha256(shared_doc.encode("utf-8")).hexdigest()
-                  if shared_doc is not None else None)
-    _fp_payload = "\0".join((doc_source, str(bool(shared_doc is not None)),
+    _doc_payload = (shared_doc if shared_doc is not None else
+                    "\n\0\n".join(f"{e.name}\n{e.body}" for e in inventory))
+    doc_sha256 = _hashlib.sha256(_doc_payload.encode("utf-8")).hexdigest()
+    _fp_payload = "\0".join((doc_source, doc_scope,
                               str(max_fix_rounds), manifest_sha256,
-                              doc_sha256 or "per-entry")).encode("utf-8")
+                              doc_sha256)).encode("utf-8")
     experiment_fingerprint = _hashlib.sha256(_fp_payload).hexdigest()
 
     # Crash-proof progress: one JSONL row per finished API, flushed as it
@@ -1263,6 +1354,7 @@ def _comprehension_execute(cfg: AidealConfig, inventory, sample, seed, doc_sourc
             "manifest_sha256": manifest_sha256,
             "document_sha256": doc_sha256,
             "experiment_fingerprint": experiment_fingerprint,
+            "doc_scope": doc_scope,
         },
         "passed": bool(scored_n) and passed_n == scored_n,
         "score": round(passed_n / scored_n, 3) if scored_n else 0.0,
