@@ -82,7 +82,8 @@ def test_relevant_scope_retrieves_only_api_sections_with_equal_cap(tmp_path):
     cfg = _cfg(tmp_path)
     cfg.comprehension = {"relevant_doc_chars": 180}
     cfg.original_readme_files[0].write_text(
-        "# Intro\nGeneral material.\n\n## Foo\nCall `foo` using lib.foo(1).\n" +
+        "# Intro\nGeneral material.\n\n## Foo\n```text\n# not a Markdown heading\n```\n"
+        "Call `foo` using lib.foo(1).\n" +
         ("foo detail " * 30) +
         "\n## Unrelated\nOnly `baz` appears here.\n")
     inv_o, shared_o, err_o = _comprehension_inventory(
@@ -92,6 +93,7 @@ def test_relevant_scope_retrieves_only_api_sections_with_equal_cap(tmp_path):
     assert err_o is err_g is None
     assert shared_o is shared_g is None
     assert "lib.foo(1)" in inv_o[0].body
+    assert "not a Markdown heading" in inv_o[0].body
     assert "Unrelated" not in inv_o[0].body
     assert "foo entry." in inv_g[0].body
     assert len(inv_o[0].body) <= 180 and len(inv_g[0].body) <= 180
