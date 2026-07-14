@@ -324,6 +324,7 @@ def doc_fix_run(cfg: AidealConfig, apis: list[str] | None = None,
                 create_missing: bool = False,
                 doc_source: str = "aideal",
                 full_doc: bool | None = None,
+                doc_scope: str | None = None,
                 manifest: str | None = None) -> dict:
     """Doc-repair routing over failed APIs. Returns a report dict.
 
@@ -378,6 +379,7 @@ def doc_fix_run(cfg: AidealConfig, apis: list[str] | None = None,
                    "create_missing": create_missing,
                    "retry_doc_source": doc_source,
                    "retry_full_doc": full_doc,
+                   "retry_doc_scope": doc_scope,
                    "manifest": manifest,
                    "attempted": len(targets),
                    "not_in_catalog": missing,
@@ -590,6 +592,7 @@ def doc_fix_run(cfg: AidealConfig, apis: list[str] | None = None,
                                         timeout_s=timeout_s,
                                         doc_source=doc_source,
                                         full_doc=full_doc,
+                                        doc_scope=doc_scope,
                                         manifest=manifest)
             m = (retry.get("metrics") or {}).get(name, {}) or {}
             rrec["retry_status"] = m.get("status", "fail")
