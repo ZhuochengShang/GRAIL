@@ -24,12 +24,12 @@ No dataset download is needed. Both conditions load deterministic small slices
 from `tslearn/tslearn/.cached_datasets/Trace.npz`, which is bundled in the target
 repository.
 
-Static sanity (no key needed) — expected numbers from the 2026-07-13
-sandbox validation (tslearn @ 0.9.0 head):
+Static sanity (no key needed) — verified on the pinned 2026-07-14 checkout
+(`f8f13dd`, package version `0.10.0.dev0`):
 
 ```bash
 aideal api-surface | head -8   # raw public names ≈ 245 (sites ≈ 355)
-aideal intent | head -8        # intent-selected ≈ 123 (threshold 5)
+aideal intent | head -8        # intent-selected = 122 (threshold 5)
 ```
 
 Cross-check vs the library's own `__all__` (128 exports): overlap 90
