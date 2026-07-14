@@ -148,6 +148,9 @@ def _run(argv: list[str] | None = None) -> int:
                          "original docs + the entries this loop has created so far)")
     sp.add_argument("--full-doc", dest="full_doc", choices=["on", "off"], default=None,
                     help="retry runs deliver the ENTIRE document (2x2 mode). Default: config")
+    sp.add_argument("--doc-scope", choices=["full", "relevant", "entry"], default=None,
+                    help="documentation scope for every post-repair retry; use the same scope "
+                         "as the baseline comprehension run")
     sp.add_argument("--manifest", default=None,
                     help="frozen API manifest — retries stay inside the experiment denominator")
     sp.add_argument("--create-missing", action="store_true",
@@ -459,6 +462,7 @@ def _run(argv: list[str] | None = None) -> int:
                           doc_source=args.doc,
                           full_doc=(None if args.full_doc is None
                                     else args.full_doc == "on"),
+                          doc_scope=args.doc_scope,
                           manifest=args.manifest)
         if not args.dry_run and isinstance(out, dict):
             from .fixreport import auto_report
