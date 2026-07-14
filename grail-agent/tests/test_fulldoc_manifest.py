@@ -132,6 +132,16 @@ def test_generic_prompts_do_not_embed_scala_or_rdpro_syntax():
         assert forbidden not in texts
 
 
+def test_execution_prompt_rejects_tautological_correctness_checks():
+    prompt = (Path(__file__).resolve().parents[1] / "src" / "aideal" /
+              "default_prompts" / "aideal" / "comprehension_write_exec.md").read_text()
+    assert "FALSIFIABLE" in prompt
+    assert "TAUTOLOGIES" in prompt
+    assert "Boolean value is either true or false" in prompt
+    assert "count, size, offset, or index is merely non-negative" in prompt
+    assert "deliberately fail the assertion" in prompt
+
+
 def test_2x2_guard_requires_explicit_full_doc_zero_rounds_and_hashes():
     script = Path(__file__).resolve().parents[2] / "experiments" / "rdpro" / "compare_2x2.py"
     spec = importlib.util.spec_from_file_location("compare_2x2", script)
