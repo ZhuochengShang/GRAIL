@@ -24,6 +24,21 @@ No dataset download is needed. Both conditions load deterministic small slices
 from `tslearn/tslearn/.cached_datasets/Trace.npz`, which is bundled in the target
 repository.
 
+Freeze the rendered original documentation before either condition. This is a
+deterministic, no-LLM conversion of the official Read the Docs single-page HTML
+archive; the script rejects any archive whose SHA-256 differs from the recorded
+2026-06-30 snapshot:
+
+```bash
+curl -L --fail https://tslearn.readthedocs.io/_/downloads/en/latest/htmlzip/ \
+  -o /tmp/tslearn-readthedocs-latest.zip
+python prepare_hosted_docs.py /tmp/tslearn-readthedocs-latest.zip
+```
+
+The resulting gitignored file is
+`tslearn/.aideal_hosted_docs/rendered_readthedocs.md`. Provenance and hashes are
+tracked in `docs/original_docs_snapshot.json`.
+
 Static sanity (no key needed) — verified on the pinned 2026-07-14 checkout
 (`f8f13dd`, package version `0.10.0.dev0`):
 
