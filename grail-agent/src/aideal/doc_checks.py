@@ -69,7 +69,14 @@ def _load_manifest(cfg: AidealConfig, manifest: str | None) -> list[str] | None:
     p = Path(manifest) if str(manifest).startswith("/") else (cfg.root / manifest)
     data = _json.loads(p.read_text(encoding="utf-8"))
     names = data["apis"] if isinstance(data, dict) else data
-    return list(dict.fromkeys(names))
+    if not isinstance(names, list) or not all(isinstance(n, str) and n for n in names):
+        raise ValueError(f"manifest {p} must contain a non-empty-string API list")
+    names = list(dict.fromkeys(names))
+    unknown = sorted(set(names) - set(public_api_surface(cfg)))
+    if unknown:
+        raise ValueError(f"manifest {p} contains APIs outside the configured public surface: "
+                         f"{', '.join(unknown[:10])}")
+    return names
 
 
 def _shared_doc_text(cfg: AidealConfig, doc_source: str) -> str:
@@ -907,6 +914,19 @@ def _comprehension_execute(cfg: AidealConfig, inventory, sample, seed, doc_sourc
     work_dir = (cfg.root / ex.get("work_dir", ".aideal_exec")).resolve()
     work_dir.mkdir(parents=True, exist_ok=True)
 
+    # A resume checkpoint is valid only for the exact experimental treatment.
+    # Hash both the ordered denominator and the delivered document so A2 rows
+    # can never leak into a repaired B2 run merely because both say "aideal".
+    import hashlib as _hashlib
+    _manifest_payload = "\n".join(e.name for e in inventory).encode("utf-8")
+    manifest_sha256 = _hashlib.sha256(_manifest_payload).hexdigest()
+    doc_sha256 = (_hashlib.sha256(shared_doc.encode("utf-8")).hexdigest()
+                  if shared_doc is not None else None)
+    _fp_payload = "\0".join((doc_source, str(bool(shared_doc is not None)),
+                              str(max_fix_rounds), manifest_sha256,
+                              doc_sha256 or "per-entry")).encode("utf-8")
+    experiment_fingerprint = _hashlib.sha256(_fp_payload).hexdigest()
+
     # Crash-proof progress: one JSONL row per finished API, flushed as it
     # completes. A killed/crashed full run loses NOTHING: rerun with --resume
     # and already-finished APIs are skipped and pre-filled into the results
@@ -919,7 +939,7 @@ def _comprehension_execute(cfg: AidealConfig, inventory, sample, seed, doc_sourc
         for line in ckpt.read_text(encoding="utf-8").splitlines():
             try:
                 row = _json.loads(line)
-                if row.get("doc_source") == doc_source:
+                if row.get("experiment_fingerprint") == experiment_fingerprint:
                     done_rows[row["name"]] = row
             except Exception:
                 continue
@@ -1209,6 +1229,7 @@ def _comprehension_execute(cfg: AidealConfig, inventory, sample, seed, doc_sourc
         }
         with ckpt.open("a", encoding="utf-8") as _ck:   # flush per API — crash-safe
             _ck.write(_json.dumps({"name": entry.name, "doc_source": doc_source,
+                                   "experiment_fingerprint": experiment_fingerprint,
                                    **metrics[entry.name]}, ensure_ascii=False) + "\n")
     n = len(inventory)
     # Doc-quality denominator excludes infra-only failures (missing-dependency runs
@@ -1237,6 +1258,9 @@ def _comprehension_execute(cfg: AidealConfig, inventory, sample, seed, doc_sourc
             "usage": usage_delta(run_u0),
             "checkpoint": str(ckpt),
             "resumed_apis": len([k for k in done_rows if k in metrics]),
+            "manifest_sha256": manifest_sha256,
+            "document_sha256": doc_sha256,
+            "experiment_fingerprint": experiment_fingerprint,
         },
         "passed": bool(scored_n) and passed_n == scored_n,
         "score": round(passed_n / scored_n, 3) if scored_n else 0.0,

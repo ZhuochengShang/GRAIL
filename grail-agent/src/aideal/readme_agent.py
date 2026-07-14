@@ -1375,7 +1375,8 @@ def _names_called_in(text: str, names: set[str]) -> set[str]:
             if re.search(rf"\b{re.escape(n)}\s*[\(\[]|\.{re.escape(n)}\b", text)}
 
 
-def _doc_code_mentions(docs_text: str, names: set[str]) -> set[str]:
+def _doc_code_mentions(docs_text: str, names: set[str],
+                       call_patterns: list[str] | None = None) -> set[str]:
     """Subset of `names` mentioned in a CODE context of the baseline docs:
     inside a fenced code block, inside inline backticks, or in call form
     (`.name` / `name(`) anywhere. A bare English-word match in prose does NOT
@@ -1388,9 +1389,15 @@ def _doc_code_mentions(docs_text: str, names: set[str]) -> set[str]:
     code = "\n".join(re.findall(r"```.*?```", docs_text, re.S))
     code += "\n" + " ".join(re.findall(r"`([^`]+)`", docs_text))
     out = set()
+    # Patterns are format strings containing ``{name}``; adapters/projects may
+    # add syntax such as Rust ``{name}!`` or Ruby ``:{name}`` without changing
+    # tool code. Backticks/fenced code remain language-neutral evidence.
+    patterns = call_patterns or [r"\.{name}\b", r"\b{name}\s*\(",
+                                 r"\b{name}\s*\["]
     for n in names:
         pat = re.escape(n)
-        if re.search(rf"\b{pat}\b", code) or re.search(rf"\.{pat}\b|\b{pat}\s*\(", docs_text):
+        syntax_hit = any(re.search(p.format(name=pat), docs_text) for p in patterns)
+        if re.search(rf"\b{pat}\b", code) or syntax_hit:
             out.add(n)
     return out
 
@@ -2299,7 +2306,9 @@ def api_coverage(cfg: AidealConfig) -> dict:
     pass rates are only causally comparable on T."""
     S = set(public_api_surface(cfg))
     docs_text = cfg.original_readme_text(limit=None) if cfg.original_readme_files else ""
-    O = _doc_code_mentions(docs_text, S)
+    coverage_cfg = ((cfg.raw or {}).get("coverage") or {})
+    call_patterns = coverage_cfg.get("documentation_call_patterns")
+    O = _doc_code_mentions(docs_text, S, call_patterns=call_patterns)
     G = ({e.name for e in parse_readme(cfg.llm_readme)} & S
          if cfg.llm_readme.exists() else set())
     T = S & O & G

@@ -241,16 +241,18 @@ _TYPE_SKIP = {"String", "Int", "Long", "Float", "Double", "Boolean", "Unit",
               "Array", "Option", "Some", "None", "Seq", "List", "Map", "Set",
               "Class", "Any", "AnyRef", "AnyVal", "T", "K", "V", "ClassTag",
               "Iterator", "Iterable", "Tuple2", "Tuple3", "RDD", "JavaRDD",
-              "SparkContext", "SparkSession", "DataFrame"}
+              "SparkContext", "SparkSession", "DataFrame", "NoneType", "True", "False"}
 
 
 def _type_context(cfg: AidealConfig, name: str, max_types: int = 4,
                   lines_per_type: int = 35) -> str:
-    """DEEP-DIVE context: the definitions of the RECEIVER/PARAMETER/RETURN
-    types in `name`'s canonical signature, located across the WHOLE codebase —
-    Scala AND Java sources. This is what the wrong-receiver / unknown-member /
-    Java-defined-type failure classes need and a single def window cannot
-    show. Generic: works from cfg.source_globs, no project names hardcoded."""
+    """Definitions of receiver/parameter/return types found in configured source.
+
+    This intentionally follows ``source_globs`` rather than assuming a language
+    pair.  The declaration pattern covers common class/type constructs; projects
+    with unusual syntax still get an explicit "not found" instead of a fabricated
+    definition.
+    """
     import glob as _glob
     from .readme_agent import public_api_details, _subsume_overloads, _dedup_deprioritize
     recs = [d for d in public_api_details(cfg)
@@ -264,11 +266,13 @@ def _type_context(cfg: AidealConfig, name: str, max_types: int = 4,
              if t not in _TYPE_SKIP][:max_types]
     if not types:
         return "(signature uses only primitive/collection types)"
-    pats = {t: re.compile(rf"\b(?:case\s+class|abstract\s+class|class|trait|object|interface|enum)\s+{t}\b")
+    pats = {t: re.compile(rf"\b(?:case\s+class|abstract\s+class|class|trait|object|"
+                              rf"interface|enum|struct|record|type)\s+{t}\b")
             for t in types}
     found: dict[str, str] = {}
-    globs = list(cfg.source_globs) + [g.replace(".scala", ".java") for g in cfg.source_globs]
-    for g in globs:
+    extra_globs = (((cfg.raw or {}).get("codebase") or {})
+                   .get("type_context_globs") or [])
+    for g in dict.fromkeys([*cfg.source_globs, *extra_globs]):
         if len(found) == len(types):
             break
         for p in _glob.glob(str(cfg.root / g), recursive=True):
@@ -287,8 +291,8 @@ def _type_context(cfg: AidealConfig, name: str, max_types: int = 4,
                     ln = text[:m.start()].count("\n")
                     seg = "\n".join(lines[ln:ln + lines_per_type])
                     rel = str(Path(p).relative_to(cfg.root))
-                    kind = "JAVA" if p.endswith(".java") else "Scala"
-                    found[t] = f"// type {t} ({kind}-defined) — {rel}:{ln + 1}\n{seg}"
+                    suffix = Path(p).suffix.lstrip(".") or cfg.language
+                    found[t] = f"// type {t} ({suffix} source) — {rel}:{ln + 1}\n{seg}"
     return "\n\n".join(found.get(t, f"// type {t}: definition NOT found in sources")
                        for t in types)
 
@@ -384,12 +388,15 @@ def doc_fix_run(cfg: AidealConfig, apis: list[str] | None = None,
         return out
 
     raw_docfix = (cfg.raw or {}).get("docfix", {}) or {}
-    ctx_chars = int(raw_docfix.get("context_chars", 12000) or 12000)
+    ctx_chars = int(raw_docfix.get("context_chars", 12000))
 
     def _clip(text: str, n: int | None = None) -> str:
-        n = n or ctx_chars
+        # In full-document experimental mode, repair must receive the same
+        # documentation exposure as the audience. Outside that mode, projects
+        # can cap context; context_chars=0 also explicitly means unlimited.
+        n = (0 if full_doc else ctx_chars) if n is None else n
         t = text or ""
-        return t if len(t) <= n else t[:n] + f"\n[... truncated at {n} chars — full text in repo]"
+        return t if not n or len(t) <= n else t[:n] + f"\n[... truncated at {n} chars — full text in repo]"
 
     log = ErrorLog(cfg.error_log)
     owner_map = _owner_map(cfg)
@@ -435,14 +442,12 @@ def doc_fix_run(cfg: AidealConfig, apis: list[str] | None = None,
         u0 = usage_snapshot()
         created = name not in entries
         if created:
-            # what the audience actually read: in full-doc mode it saw the
-            # ENTIRE original documentation; the diagnosis gets a config-sized
-            # excerpt with an explicit truncation marker (deep-dive + source
-            # window carry the code-side truth — the doc head is orientation).
+            # What the audience actually read. Full-doc mode deliberately keeps
+            # the entire bundle here; legacy mode may use the configured cap.
             original_body = ("(No catalog entry exists. The audience read the "
                              "ORIGINAL project documentation"
                              + (" IN FULL (full-doc mode)" if full_doc else "")
-                             + "; excerpt below.)\n"
+                             + "; content below.)\n"
                              + _clip(cfg.original_readme_text(limit=None))
                              + f"\n\nTarget function: `{name}`")
         else:

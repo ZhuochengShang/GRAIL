@@ -48,8 +48,8 @@ Other definition sites for this name: {other_sites}
 Receiver/owner type hint: {receiver}
 
 == DEFINITIONS OF THE SIGNATURE/RECEIVER TYPES (located across the whole
-codebase, Scala AND Java — use these to state exact members, packages, and
-how to obtain each type) ==
+codebase in the project's configured source languages — use these to state
+exact members, modules/packages/namespaces, and how to obtain each type) ==
 {type_context}
 
 == OPTIONAL PRINCIPAL-ENGINEER DEEP-DIVE REPORT ==
@@ -78,8 +78,8 @@ in advanced/internal bucket / exclude from scored denominator.
 
 ROOT CAUSE:
 (1-3 sentences: why this failed — doc gap / doc error / snippet misread /
-environment. Name the exact missing fact, e.g. "Collector is a Java class in
-edu.ucr.cs.bdlab.raptor and is not imported by default".)
+environment. Name the exact missing fact, including its defining
+module/package/namespace and import/access form when relevant.)
 
 CORRECT USAGE:
 ```{language_lower}
@@ -88,8 +88,8 @@ source — the statements only, no imports/object wrapper)
 ```
 
 REQUIRED TYPES & IMPORTS:
-(each fully-qualified type the caller must know about, one per line, with the
-package it lives in and whether it is Scala- or Java-defined)
+(each fully-qualified type the caller must know about, one per line, with its
+module/package/namespace and source language when that information is available)
 
 DOC MUST SAY:
 (bullet list: the specific sentences/facts the documentation entry MUST

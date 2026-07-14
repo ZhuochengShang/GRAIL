@@ -2,8 +2,11 @@
 text-only original bundle, coverage sets (reviewer findings #1/#2/#5)."""
 
 import json
+import importlib.util
 import sys
 from pathlib import Path
+
+import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
@@ -84,11 +87,19 @@ def test_original_plus_aideal_combines_both(tmp_path):
 def test_manifest_gives_identical_denominator_across_sources(tmp_path):
     cfg = _cfg(tmp_path)
     mp = tmp_path / "docs" / "api_manifest_shared.json"
-    mp.write_text(json.dumps({"apis": ["bar", "foo", "ghost"]}))
+    mp.write_text(json.dumps({"apis": ["bar", "foo"]}))
     man = _load_manifest(cfg, str(mp))
     inv_o, _, _ = _comprehension_inventory(cfg, "original", manifest=man, full_doc=True)
     inv_g, _, _ = _comprehension_inventory(cfg, "aideal", manifest=man, full_doc=True)
-    assert [e.name for e in inv_o] == [e.name for e in inv_g] == ["bar", "foo", "ghost"]
+    assert [e.name for e in inv_o] == [e.name for e in inv_g] == ["bar", "foo"]
+
+
+def test_manifest_rejects_names_outside_surface(tmp_path):
+    cfg = _cfg(tmp_path)
+    mp = tmp_path / "docs" / "bad.json"
+    mp.write_text(json.dumps({"apis": ["foo", "ghost"]}))
+    with pytest.raises(ValueError, match="outside the configured public surface"):
+        _load_manifest(cfg, str(mp))
 
 
 def test_api_coverage_sets_and_shared_T(tmp_path):
@@ -101,3 +112,38 @@ def test_api_coverage_sets_and_shared_T(tmp_path):
     assert set(cov["generated_documented_G"]) == {"foo", "baz"}
     assert cov["shared_T"] == ["foo"]                 # S ∩ O ∩ G
     assert cov["coverage"]["shared_pct_of_S"] == round(100 / 3, 1)
+
+
+def test_documented_api_syntax_is_project_configurable(tmp_path):
+    cfg = _cfg(tmp_path)
+    cfg.original_readme_files[0].write_text("Invoke the Rust-style `baz!` macro.")
+    cfg.raw = {"coverage": {"documentation_call_patterns": [r"\b{name}!"]}}
+    cov = api_coverage(cfg)
+    assert cov["original_documented_O"] == ["baz"]
+
+
+def test_generic_prompts_do_not_embed_scala_or_rdpro_syntax():
+    root = Path(__file__).resolve().parents[1] / "src" / "aideal" / "default_prompts" / "aideal"
+    texts = "\n".join((root / name).read_text() for name in (
+        "comprehension_write_exec.md", "docfix_diagnose.md",
+        "docfix_rewrite.md", "deep_dive.md"))
+    for forbidden in ("edu.ucr", "Scala AND Java", "classOf[", "require(n > 0",
+                      'println("__CHECK__'):
+        assert forbidden not in texts
+
+
+def test_2x2_guard_requires_explicit_full_doc_zero_rounds_and_hashes():
+    script = Path(__file__).resolve().parents[2] / "experiments" / "rdpro" / "compare_2x2.py"
+    spec = importlib.util.spec_from_file_location("compare_2x2", script)
+    mod = importlib.util.module_from_spec(spec); spec.loader.exec_module(mod)
+    base = {"names": {"foo"}, "full_doc": True, "max_fix_rounds": 0,
+            "manifest_sha256": "manifest", "document_sha256": "doc"}
+    runs = {k: dict(base) for k in ("a1", "a2", "b1", "b2")}
+    assert mod.check_design(runs) == []
+    runs["a1"]["full_doc"] = None
+    runs["a2"]["max_fix_rounds"] = None
+    runs["b1"]["manifest_sha256"] = None
+    problems = mod.check_design(runs)
+    assert any("full_doc" in p for p in problems)
+    assert any("max_fix_rounds" in p for p in problems)
+    assert any("manifest hash" in p for p in problems)

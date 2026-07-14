@@ -13,6 +13,11 @@ codebase:
   # so the config is machine-portable (Mac, sandbox, CI).
   source_globs:
     - "beast/**/src/main/scala/**/*.scala"
+  # Additional implementation languages searched when doc-fix resolves the
+  # receiver/parameter/return type definitions. This is project configuration,
+  # not a Scala/Java assumption in the generic tool.
+  type_context_globs:
+    - "beast/**/src/main/java/**/*.java"
   test_globs:
     - "beast/**/src/test/scala/**/*.scala"
   # NOTE 2026-07-13: the old project override

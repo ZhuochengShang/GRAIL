@@ -17,10 +17,17 @@
 > | **generated README** | **A2** `aideal/rdpro-b-readme` | **B2** same branch, after A2 |
 >
 > ```bash
-> # STEP 0 — freeze denominators + coverage (a first-class result by itself):
+> # STEP 0 — create/freeze the generated treatment FIRST, then denominators.
+> # Run on aideal/rdpro-b-readme and commit/tag this exact generated README;
+> # copy the two frozen JSON artifacts unchanged to the other condition branches.
+> aideal readme --generate --limit 0 --force
+> git add docs/LLM_readme.md && git commit -m "A2 setup: freeze generated README"
+> git tag rdpro-readme-setup-2026-07-13
 > #   S = runnable public surface · O = evidence-documented in original bundle
 > #   G = documented in LLM_readme · T = S∩O∩G  ->  api_manifest_shared.json
 > aideal manifest        # writes docs/api_coverage.json + docs/api_manifest_shared.json
+> git add docs/api_coverage.json docs/api_manifest_shared.json
+> git commit -m "experiment: freeze coverage and shared API manifest"
 > M=docs/api_manifest_shared.json
 >
 > # A1 — original bundle, whole, pass-or-not      (branch: aideal/rdpro-a-original)
@@ -38,8 +45,8 @@
 > aideal comprehension --execute --doc original+aideal --full-doc on --manifest $M \
 >   --max-fix-rounds 0 > docs/comprehension_B1_final.json
 >
-> # A2 — generated README, whole, pass-or-not     (branch: aideal/rdpro-b-readme)
-> aideal readme --generate --limit 0 --force      # + commit + tag rdpro-readme-setup
+> # A2 — generated README, whole, pass-or-not     (branch: aideal/rdpro-b-readme;
+> #      use the exact tagged README from STEP 0; DO NOT regenerate here)
 > aideal comprehension --execute --doc aideal --full-doc on --manifest $M \
 >   --max-fix-rounds 0 > docs/comprehension_A2_generated.json
 >
