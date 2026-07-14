@@ -87,11 +87,19 @@ checks:
   comprehension_apis_sampled: 5
 
 docfix:
-  # RDPro/Beast is a Scala-Spark geospatial/raster library. These categories are
-  # reusable across similar codebases and prevent the docfix guard from rejecting
-  # normal ecosystem helpers such as GeometryFactory.createPoint or tile pixel
-  # accessors as if they were hallucinated RDPro APIs.
+  # Geospatial DOMAIN vocabulary is project-level (JTS geometry + tile pixel
+  # accessors) — defined HERE, not in tool code. Note the primary allowlist is
+  # already the repo's own call vocabulary (docfix.allow_repo_called_members,
+  # inherited true), so these sets are a safety margin, not the mechanism.
   allowed_member_categories: [language_core, spark, geometry_common, raster_common]
+  member_categories:
+    geometry_common: [createPoint, createLineString, createPolygon,
+      createMultiPolygon, createGeometryCollection, createLinearRing, setSRID,
+      getSRID, getCoordinate, getCoordinates, getEnvelopeInternal, getArea,
+      getLength, intersects, contains, covers, within, touches, buffer, union,
+      intersection, difference, getX, getY, decode, encode]
+    raster_common: [getPixelValueAsFloat, getPixelValueAsDouble,
+      getPixelValueAsInt, getPixelValueAsLong]
 
 # Execution-grounded comprehension. The generic scalac -> jar -> spark-submit
 # command + fixtures auto-discovery come from the scala-spark adapter; RDPro only
