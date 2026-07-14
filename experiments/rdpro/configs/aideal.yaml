@@ -15,8 +15,18 @@ codebase:
     - "beast/**/src/main/scala/**/*.scala"
   test_globs:
     - "beast/**/src/test/scala/**/*.scala"
-  # keep the project regex (filters private/protected); exclude_names inherited from adapter
-  public_def_regex: "^\\s*(?!private\\b|protected\\b).*\\bdef\\s+([a-zA-Z][A-Za-z0-9_]*)"
+  # NOTE 2026-07-14: the old project override
+  #   "^\\s*(?!private\\b|protected\\b).*\\bdef\\s+..."
+  # NEVER filtered indented private/protected defs — `\\s*` backtracks one space
+  # and the lookahead passes (" protected... "). 142 private/protected names
+  # leaked into the 820 surface this way (compress, createRingsForOccupiedPixels,
+  # decompress, ...). Visibility now lives in the visibility model (def-line
+  # modifiers incl. private[pkg]/protected[pkg] + enclosing-container modifiers),
+  # so the adapter's plain regex is correct here.
+  # Module-level cleanup: commontest/ is test scaffolding compiled under
+  # src/main (copyResource & co) — source-visible but not user API.
+  exclude_path_patterns:
+    - "(^|/)commontest/"
   surface_filter: intent_score   # filter the surface to intended APIs (else: all)
   intent:
     threshold: 5                 # min evidence score to count an API as user-intended
@@ -33,6 +43,11 @@ codebase:
 files:
   project_profile: configs/project_profile.yaml
   prompts_dir: prompts            # optional overrides; package defaults used if absent
+  # `--doc agents` baseline arm: a HOLISTIC agent guide (how to work in this repo),
+  # the industry-standard single file. RDPro's real AGENTS.md is a META one that
+  # points at aideal tooling (archived as AGENTS.aideal-meta.md) — not a fair
+  # control — so the experiment points at a neutral hand-written guide.
+  agents_doc: AGENTS.baseline.md
   original_readme:                # baseline doc(s): a path, or a list of files/dirs/globs
     - beast/README.md
     - beast/doc
@@ -44,11 +59,18 @@ files:
 
 models:
   registry:
-    gpt-4o:      { provider: openai, model: gpt-4o }
-    gpt-4o-mini: { provider: openai, model: gpt-4o-mini }
+    gpt-4o:         { provider: openai, model: gpt-4o }
+    gpt-4o-mini:    { provider: openai, model: gpt-4o-mini }
+    codex-5.3:      { provider: codex,  model: gpt-5.3-codex }
+    gemini-2.5-pro: { provider: google, model: gemini-2.5-pro }
+    gemini-3.1-pro: { provider: google, model: gemini-3.1-pro-preview }
+    gemini-3.2-pro: { provider: google, model: gemini-3.2-pro-preview }
+  # DEFAULT CONDITION (2026-07-14, per Zoe): everything on gemini-3.2-pro.
+  # Override per run with --role role=provider:model (never needs a yaml edit).
   roles:
-    author: gpt-4o-mini
-    audience: gpt-4o
+    author: gemini-3.2-pro
+    audience: gemini-3.2-pro
+    fixer: gemini-3.2-pro
 
 runtime:
   target: local
@@ -63,6 +85,13 @@ checks:
     - "Common Failure Modes"
     - "Fix Code Hint"
   comprehension_apis_sampled: 5
+
+docfix:
+  # RDPro/Beast is a Scala-Spark geospatial/raster library. These categories are
+  # reusable across similar codebases and prevent the docfix guard from rejecting
+  # normal ecosystem helpers such as GeometryFactory.createPoint or tile pixel
+  # accessors as if they were hallucinated RDPro APIs.
+  allowed_member_categories: [language_core, spark, geometry_common, raster_common]
 
 # Execution-grounded comprehension. The generic scalac -> jar -> spark-submit
 # command + fixtures auto-discovery come from the scala-spark adapter; RDPro only

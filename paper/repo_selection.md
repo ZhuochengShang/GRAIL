@@ -150,6 +150,82 @@ transfer with zero harness cost) then **pymatgen** or **MDAnalysis** (new
 stack AND new domain, once Python signals are fixed). Sedona stays as the
 configured Python debug target but not as the generalization claim.
 
+## 6b. Why these domains and languages — and why not totally random
+
+**Why not random sampling of GitHub.** Three reasons, one honesty mechanism.
+(1) Yield: the population we study (solid, niche, API-shaped domain
+libraries) is a tiny fraction of GitHub; even our TARGETED genomics query
+returned 3 candidates of which 2 were rejected — a uniform random sample
+would be almost entirely apps, tutorials, forks and abandonware, and stage-A
+yield would collapse. (2) The claim being tested is not "GRAIL works on the
+average repo"; it is "GRAIL generalizes across domains and stacks FOR THE
+CLASS IT TARGETS". Claims about a class are tested by sampling that class —
+stratified/purposive sampling with pre-registered gates, standard practice
+when the class is rare in the frame. (3) Comparability: candidates must be
+buildable ≤30 min with obtainable fixtures, or "GRAIL failed" confounds with
+"repo unbuildable". **The honesty mechanism** that separates this from
+cherry-picking: gates (R1–R7) are fixed BEFORE outcomes are seen, the sweep
+enumerates EVERY match per domain query (no hand-picking within results),
+and every rejection is logged with its reason — the whole selection is
+reproducible from the script + a GitHub token.
+
+**Why these 14 domains.** Chosen where (a) rich TYPED domain data models
+exist — sequences, molecules, spectra, circuits, time series — the analogue
+of rasters/geometries, because our genericity analysis shows domain-typed
+receivers are exactly where LLMs fail; (b) the 100–5K-star mid-tail is
+actually populated by maintained libraries; (c) non-geospatial by decision
+(RDPro + Sedona already cover geo; cross-domain transfer is the stronger
+claim).
+
+**Why bioinformatics/genomics FIRST.** Minimal-change experiment design:
+ADAM and Glow are Spark/Scala pipelines over big typed scientific data —
+RDPro's exact architecture and build stack. Holding the STACK constant while
+changing the DOMAIN isolates the domain-transfer variable at zero harness
+cost. Chemistry/quantum/etc. come after because they change stack AND domain
+at once.
+
+**Why Scala, Python, Java.** Two grounds. (1) Harness cost: Scala's
+execution adapter exists and is proven (RDPro) — zero engineering; Python is
+the cross-LANGUAGE arm (Sedona configured, two signal fixes pending — the
+670→7 lesson); Java shares the JVM toolchain and the visibility model is
+implemented (CDK is the candidate). (2) RESEARCHER VERIFIABILITY: these are
+the languages the experimenter reads fluently, which matters because every
+LLM output in this study is human-auditable — failure classifications,
+doc-repair diffs, and NOT-TESTABLE verdicts must be CHECKED, not trusted. An
+unfamiliar language would make the audit itself unreliable. C++/Rust/Go are
+deferred (adapter cost + audit cost), explicitly recorded as scope, not as a
+claim about the method.
+
+## 6c. Stage-A results (measured 2026-07-08) + Stage-B shortlist
+
+Full sweep: 22 domains × {Scala, Python, Java} = 66 queries → **141 unique
+repos across 17 populated domains** (RANKED_BY_DOMAIN.md / RANKED.md). Drop
+rate per language: Scala 20/22 domains empty (2 candidates: cromwell, glow) —
+niche Scala domain libs are RARE, the evidence for targeted-not-random
+sampling; Python dense (bioinformatics alone total 154) → ~90 candidates;
+Java ~50. Every match enumerated and finder-scored; every rejection logged
+(e.g. `bigdatagenomics/adam` REJECTED on the 12-month activity gate —
+development moved to the repo; `apache/incubator-kie-optaplanner` REJECTED,
+active fork is `TimefoldAI/timefold-solver`).
+
+**Stage-B shortlist (primary trio — 3 languages × 3 unrelated domains):**
+
+| repo | lang | domain | ★ | APIs | score | rationale |
+|---|---|---|---|---|---|---|
+| projectglow/glow | Scala | genomics | 305 | 194 | 66 | zero harness cost (RDPro Spark stack); real library |
+| materialsproject/pymatgen | Python | materials science | 1,920 | 577 | 93 | top score; rich typed surface (crystal structures) |
+| cdk/cdk | Java | cheminformatics | 590 | 469 | 68 | big API, molecular types, no AGENTS.md |
+
+Two calls that override raw finder score (which rewards stars/activity, not
+library-shape-for-our-purpose): **glow over cromwell** (score 84) — cromwell
+is a workflow ENGINE (app-shaped, orchestration APIs); glow is a Spark
+LIBRARY on RDPro's exact stack, zero adapter cost. **cdk over gatk** (score
+83) — gatk is genomics again (overlaps glow); cdk is a distinct domain with a
+richer surface. Alternates: MDAnalysis (Py/MD), BoofCV (Java/CV), tslearn
+(Py/time-series). Prerequisite before ANY Python target: the two Python
+signal fixes (docstring-below extraction, pytest mining) from the Sedona
+670→7 lesson — Scala (glow) + Java (cdk) need none, run those first.
+
 ## 7. Combined selection→baseline protocol (readme-eval × SWE-bench-Verified × our finder)
 
 The funnel merges the three methods: readme-eval's **automated breadth
@@ -226,3 +302,206 @@ Cost envelope per adopted repo: stage B ≈ 1 h machine time; stage C ≤ 30 min
 human; stage D ≈ 2 full comprehension runs ≈ 2 h + ~$10 (gpt-4o-class) plus
 the regen. RDPro numbers to beat/compare: 60–64/218 pass, ±2pp repeat
 variance, 27.5% score, 129-compile-dominated failure mix.
+
+## 8. Concrete baseline plan from `tools/repo_finder`
+
+### What is ready now
+
+`tools/repo_finder/sedona_shape_repo_finder.py` is the current finder to use.
+Despite the historic "Sedona-shaped" name, it is now a general niche-library
+finder: it searches GitHub, filters out templates/apps/tutorials/hardware,
+checks package/test/docs structure, estimates public API count from source,
+checks recent non-trivial source commits, and scores adoption plus library
+shape. `run_grail_domains.sh` is the preferred driver because it sweeps
+non-geospatial domains and applies the geo exclusion regex. There are no saved
+finder outputs in the repo yet, so Stage A must be run fresh.
+
+Avoid `run_all_languages.sh` for the paper run. It is an older broad language
+sweep, does not encode the non-geospatial domain plan, and still has the
+legacy `TOKEN=YOUR_TOKEN_HERE` interface. Keep it only as a scratch tool.
+
+### First baselines to try
+
+Use two adopted repos after the screen, not one:
+
+| role | candidate | why it is useful | risk |
+|---|---|---|---|
+| B0 sanity baseline | RDPro/beast | already wired; establishes current pipeline behavior and failure taxonomy | same-domain only |
+| B1 same-stack transfer | Glow (`projectglow/glow`) | Scala/Spark like RDPro, but genomics; isolates domain transfer without new harness work | may be too small or stale; verify |
+| B2 new-stack transfer | pymatgen or MDAnalysis | non-geospatial scientific domain with real users and complex APIs | needs Python signal/execution quality |
+| B3 optional hard transfer | QuTiP, pydicom, python-control, lifelines, arch | smaller domain APIs; good if B2 is too big or over-documented | may have too much existing usage in model memory |
+
+Do not use SWE-bench repos as primary baselines. They are intentionally
+mainstream, heavily benchmarked, and contamination-prone. Do not use
+Generate-README-Eval repos directly either; that dataset admits app/tutorial
+repos and evaluates similarity to original README, while GRAIL evaluates
+whether docs let an LLM write executable API code.
+
+### Fresh Stage A run
+
+Run the finder from the repo root, sequentially. Do not run this in the same
+experiment directory while an AIDEAL comprehension/docfix job is writing logs.
+
+```bash
+cd /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL
+export GITHUB_TOKEN=...
+
+LANGS="Scala Python Java" tools/repo_finder/run_grail_domains.sh
+```
+
+For a fast first pass, start with Scala only:
+
+```bash
+cd /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL
+export GITHUB_TOKEN=...
+
+LANGS="Scala" tools/repo_finder/run_grail_domains.sh
+```
+
+Merge/rank after the run:
+
+```bash
+python3 - <<'EOF'
+import json, glob
+rows = {}
+for f in glob.glob('tools/repo_finder/results_grail/*.json'):
+    for r in json.load(open(f)):
+        rows[r['repo']] = r
+top = sorted(rows.values(), key=lambda r: -r.get('final_score', 0))[:40]
+for r in top:
+    print(f"{r.get('final_score',0):6.1f}  {r['repo']:45s} "
+          f"{r.get('stars','?'):>6}★  api={r.get('public_api_count','?'):>4}  "
+          f"tests={r.get('has_tests')}  docs={r.get('has_docs')}  "
+          f"{(r.get('description') or '')[:70]}")
+EOF
+```
+
+### Stage B command template per candidate
+
+For each top candidate, clone shallowly outside the RDPro experiment and make
+a minimal AIDEAL config. Keep all generated artifacts inside that candidate's
+own experiment directory.
+
+```bash
+cd /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL
+mkdir -p experiments/external
+git clone --depth 1 https://github.com/<org>/<repo>.git experiments/external/<repo>/source
+mkdir -p experiments/external/<repo>/configs experiments/external/<repo>/docs
+```
+
+Then create `experiments/external/<repo>/configs/aideal.yaml` with relative
+paths. Example for a Scala/Spark candidate:
+
+```yaml
+project_name: <repo>
+language: scala
+extends: [scala-spark]
+repo_root: source
+llm_readme: docs/LLM_readme.md
+source_globs:
+  - source/**/*.scala
+  - source/**/*.java
+test_globs:
+  - source/**/src/test/**/*.scala
+  - source/**/src/test/**/*.java
+original_readme: source/README.md
+```
+
+Run the static gates:
+
+```bash
+cd /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/external/<repo>
+aideal api-surface
+aideal intent
+aideal dedup --out docs/dedup_report.json
+```
+
+Accept for baseline only if the static screen is healthy: raw surface roughly
+300-2,000 names, selected surface at least 50 names, and both documented and
+tested signals are nonzero. If documented/tested are zero, fix the adapter or
+config before judging the repo.
+
+### Stage D baseline sequence per adopted repo
+
+For each adopted repo, freeze three baselines:
+
+1. Original-doc baseline: model uses the repo's original README only.
+2. AIDEAL catalog baseline: generated `LLM_readme.md`, no repair.
+3. Repair-aware baseline: source-aware `fix-docs` from the g1 failed set,
+   then full all-API comprehension rerun.
+
+Record for every baseline: pass rate, scored denominator, excluded infra and
+fixture-infeasible APIs, tokens, cost, wall time, and attempts-to-fix
+histogram. The adopted repo is only defensible if upstream tests still match
+the pre-treatment result after any AIDEAL-generated docs/aliases are added.
+
+## 6d. Two added gates (2026-07-08): avoid frameworks; prefer bundled/generated data
+
+**R8 — library, NOT framework/orchestration engine.** A workflow engine
+(cromwell, galaxy-as-app, nextflow-like) mostly WIRES other tools together;
+you cannot write a standalone snippet that exercises ONE of its APIs and get
+a meaningful pass/fail — the "API" is orchestration, its execution needs
+external backends. GRAIL's comprehension test requires an importable library
+whose APIs transform typed data in-process. → cromwell REMOVED from the pool
+(it was already flagged app-shaped; R8 makes the removal a rule, not a
+judgment). Scala therefore has effectively ONE strong candidate (glow) —
+further evidence of Scala domain-library scarcity, not a pipeline failure.
+
+**R9 — data + reproducibility ease (Stage-C, now explicit & tiered).**
+Rank candidates by how the comprehension harness obtains inputs:
+  T0 GENERATED — API computes its own data (no fixture at all): best.
+  T1 BUNDLED — sample data ships inside the package/test suite: trivial.
+  T2 SMALL DOWNLOAD — a few MB, one command: fine.
+  T3 LARGE/EXTERNAL — GBs, registration, or a live service: descope.
+Plus install/runtime: pip/maven one-liner + no heavy runtime = green;
+needs a cluster/DB/GPU = amber (dockerize or descope).
+
+Applied to the pool (verify specifics at Stage C):
+
+| repo | shape | data tier | install / runtime | verdict |
+|---|---|---|---|---|
+| pennylane | library | T0 generated (circuits/state-vectors) | pip, CPU | BEST — zero fixture |
+| tslearn | library | T0/T1 synthetic + bundled datasets | pip, CPU | BEST |
+| MDAnalysis | library | T1 bundled (MDAnalysisTests) | pip, CPU | excellent |
+| pymatgen | library | T1 bundled test structures | pip, CPU | excellent |
+| cdk | library | T1 bundled test molecules | maven, JVM | excellent |
+| BoofCV | library | T1 any image / bundled | maven, JVM | excellent |
+| pyroomacoustics | library | T0/T1 synthetic rooms + WAV | pip, CPU | excellent |
+| glow | library | T1 small VCF | needs SPARK runtime | good (RDPro stack; dockerize) |
+| mne-python | library | T2/T3 mne.datasets download (~GB) | pip, CPU | ok — pin a SMALL dataset |
+| cromwell | FRAMEWORK | n/a (orchestrator) | needs backends/DB | EXCLUDED (R8) |
+
+Priority insight: **T0/T1 candidates (generated or in-package data) are the
+ideal GRAIL targets** — the fixture-feasibility risk that produces
+`retile`-class runtime failures on RDPro disappears when the library ships or
+computes its own data. pennylane, tslearn, MDAnalysis, pymatgen, cdk, BoofCV
+all qualify.
+
+## 6e. R10 — select BOTH AGENTS.md types, domain-matched (baseline selection)
+
+The AGENTS.md comparison needs both flavors of baseline IN THE SELECTION
+(not just at compare time):
+  • NO-AGENTS.md repo → baseline = README-only / no-doc (weak-doc premise, R5).
+  • HAS-AGENTS.md repo → baseline = the repo's OWN author-written AGENTS.md
+    (the strong industry-standard control GRAIL must beat).
+R10 refines R5: R5 keeps picking no/weak-doc repos as the PRIMARY intervention
+targets, but the candidate set must ALSO include has-AGENTS.md repos so the
+"GRAIL vs a real agent guide" arm exists — ideally as SAME-DOMAIN pairs so
+domain difficulty is held constant across the two baseline types. (If no
+same-domain has-AGENTS.md repo exists, an unpaired one is fine — the user's
+call.)
+
+Cleanest library↔library, same-domain pairs (both pass R8; from the sweep):
+
+| domain | NO-AGENTS.md (baseline=README) | HAS-AGENTS.md (baseline=its AGENTS.md) | note |
+|---|---|---|---|
+| molecular dynamics | MDAnalysis (Py, 245 API) | deepmd-kit (Py, 252 API, score 95) | both libraries |
+| time series | tslearn (Py, 166 API) | skforecast (Py, 275 API) | both libraries |
+| audio/signal | pyroomacoustics (Py, 273 API) | TarsosDSP (Java, 249 API) | bonus: cross-LANGUAGE too |
+
+Each pair yields a clean 2×2: {GRAIL, baseline-doc} × {no-agent repo,
+has-agent repo}, same domain. Excluded as has-agent candidates (R8 fail —
+platforms/apps, not libraries): galaxy, hail, geti, nomad. RDPro itself has
+no natural AGENTS.md (its real one is a meta-doc pointing at aideal, archived
+as AGENTS.aideal-meta.md); a neutral hand-written AGENTS.baseline.md supplies
+the synthesized has-agent arm for RDPro.

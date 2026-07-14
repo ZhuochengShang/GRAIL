@@ -9,43 +9,47 @@ _Source: beast/io/src/main/scala/edu/ucr/cs/bdlab/beast/io/shapefilev2/DBFWriter
 _Source doc:_ Number of attributes in the file
 
 ### Goal
-`numFields` retrieves the number of attributes present in a given file, which is essential for understanding the structure of the data being processed in geospatial analysis.
+Return how many attributes (columns/fields) are present in the current record schema being read (for example, a GPX record in Beast I/O tests).
 
 ### Parameters
 _None._
 
 ### Input
-The caller must provide a valid file that has been read into an appropriate object that supports the `numFields` method. This typically involves loading a shapefile or similar data format that contains attributes.
+Call this on a record-like value that exposes `numFields` (authoritatively shown as `r.numFields` in tests while iterating a `GPXReader2`).  
+From the provided sources, this is used with GPX input records; no additional arguments are required.
+
+Preconditions from available facts:
+- The receiver object must be a valid row/record instance from the reader iteration (e.g., `for (r <- gpxReader)`).
+- This API has no type parameter and no file-path argument.
 
 ### Output
-Returns `Int` — the number of attributes in the file, which indicates how many distinct pieces of information are available for each record in the dataset.
+Returns `Int` — the number of attributes/fields in the record (schema width), e.g., `8` in the provided GPX test.
 
 ### Valid Call Patterns
 ```scala
-val input = getClass.getResourceAsStream("/001005279.gpx")
-val gpxReader = new GPXReader2(input, "001005279.gpx")
-val attributeCount = gpxReader.numFields
+assertResult(8)(r.numFields)
 ```
 
 ### LLM Instruction Prompt
-- Ensure that the object on which `numFields` is called has been properly initialized and contains data. The method should only be called on objects that represent files with attributes.
+- Call this as an instance member exactly in the form `r.numFields` (no parentheses needed).
+- Do not add arguments; the method takes none.
+- Use it on an existing record object from a Beast reader iteration (as in GPXReader2 tests).
+- Treat the result as schema field count, not row count.
 
 ### Prompt Snippet
 ```text
-To get the number of attributes in the file, use the `numFields` method on the initialized reader object.
+Given a Beast record `r` from reader iteration, get its attribute count with `r.numFields` and compare it to the expected schema width.
 ```
 
 ### Common Failure Modes
-- Calling `numFields` on an uninitialized or improperly loaded object may result in a runtime error.
-- If the file does not contain any attributes, `numFields` may return zero, which could lead to confusion if the user expects attributes to be present.
+- Calling `numFields` as a standalone function instead of on a record instance.
+- Expecting it to return number of records in a file (it returns number of fields in one record/schema).
+- Trying to pass parameters to `numFields` (it accepts none).
 
 ### Fix Code Hint
 ```scala
-// Ensure the file is loaded correctly before calling numFields
-val gpxReader = new GPXReader2(input, "001005279.gpx")
-if (gpxReader != null) {
-  val attributeCount = gpxReader.numFields
-} else {
-  throw new IllegalArgumentException("The GPXReader2 object is not initialized.")
+for (r <- gpxReader) {
+  val n: Int = r.numFields
+  // use n as the number of attributes in this record/schema
 }
 ```

@@ -70,6 +70,31 @@ require(r.count() > 0, "empty")
     assert _fabricated_members(clean, {"geoTiff"}, "geoTiff") == []
 
 
+def test_fabricated_members_allows_ecosystem_helpers():
+    from aideal.docfix import _ALLOWED_MEMBER_CATEGORIES, _fabricated_members
+    entry = """## API Test: `area`
+```scala
+val spark = SparkSession.builder().appName("x").master("local[*]").getOrCreate()
+val geom = factory.createPoint(coord)
+val arr = Array.fill[Double](2)(0.0)
+val ok = !arr(0).isNaN && !arr(0).isInfinite
+val angle = Math.toRadians(42.0)
+val df = spark.read.format("geojson").load(path)
+import spark.implicits._
+val df2 = rdd.toDF()
+val n = df.rdd.getNumPartitions
+val px = tile.getPixelValueAsFloat(0, 0)
+```
+"""
+    allowed = set().union(
+        _ALLOWED_MEMBER_CATEGORIES["language_core"],
+        _ALLOWED_MEMBER_CATEGORIES["spark"],
+        _ALLOWED_MEMBER_CATEGORIES["geometry_common"],
+        _ALLOWED_MEMBER_CATEGORIES["raster_common"],
+    )
+    assert _fabricated_members(entry, {"area"}, "area", allowed) == []
+
+
 def test_replace_entry_text_swaps_one_section():
     from aideal.docfix import _replace_entry_text
     text = ("# Catalog\n\n## API Test: `foo`\n\nold foo body\n\n"
@@ -83,6 +108,29 @@ def test_replace_entry_text_swaps_one_section():
         _replace_entry_text(text, "nope", "x"); raise AssertionError("should raise")
     except KeyError:
         pass
+
+
+def test_failed_apis_from_results_targets_specific_run(tmp_path):
+    from aideal.docfix import _failed_apis_from_results
+    p = tmp_path / "g1.json"
+    p.write_text("""{
+      "metrics": {
+        "okApi": {"status": "pass"},
+        "badApi": {"status": "fail"},
+        "missingApi": {"status": "fail"},
+        "infraApi": {"status": "fail", "error_category": "infra"}
+      }
+    }""")
+    targets, missing = _failed_apis_from_results(p, {"okApi", "badApi", "infraApi"})
+    assert targets == ["badApi", "infraApi"]
+    assert missing == ["missingApi"]
+
+
+def test_write_report_creates_incremental_json(tmp_path):
+    from aideal.docfix import _write_report
+    p = tmp_path / "nested" / "docfix.json"
+    _write_report(p, {"check": "fix-docs", "processed": 1})
+    assert '"processed": 1' in p.read_text()
 
 
 def test_codebase_frames_maps_only_repo_files():

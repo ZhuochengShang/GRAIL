@@ -30,6 +30,10 @@ from pathlib import Path
 
 FIELDS = ("run_id", "step", "language", "task", "status",
           "function", "error_category", "error", "root_cause", "code", "suggested_fix_code",
+          # fix-loop provenance: which retry round produced this row (0 = first
+          # attempt). Lets `aideal fix-report` reconstruct the round-by-round
+          # error evolution per API without guessing from line order.
+          "round",
           # staleness tags: a verified example can go stale when the code moves
           # underneath it. `library_version` catches a KNOWN change (commit/tag
           # differs -> invalidate); `timestamp` catches an UNKNOWN one (too old to

@@ -195,6 +195,26 @@ The retry reuses Routing A's `comprehension_write_exec.md` unchanged — by
 design: the ONLY thing that changed between the failing run and the retry is
 the documentation entry, so a pass is attributable to the doc repair.
 
+## Model choice — use the SWE-optimized text model, NOT the tool-calling variant
+
+The doc-repair runs use `google:gemini-3.1-pro-preview` (verified in every
+`docfix_*.json` `model` field). This is the correct coding model for GRAIL:
+
+- GRAIL's harness is TEXT-IN / TEXT-OUT. `invoke_text` does
+  `llm.invoke([system, user]) -> text`; there is NO `bind_tools`, no
+  function-calling, anywhere in the pipeline. The diagnose step returns
+  prose+code as text; the retry step returns a code snippet as text.
+- Therefore `gemini-3.1-pro-preview` (described as "optimized for software
+  engineering") is the right pick. The `-customtools` endpoint is tuned for
+  models that CALL bash/custom tools — a capability GRAIL never invokes;
+  using it wastes the specialization and can bias output toward tool-call
+  JSON instead of clean code.
+- Verify the model your account actually served: every report carries
+  `"model": "google:gemini-3.1-pro-preview"`; the per-API `by_model` token
+  split in the run header confirms which model wrote each snippet/diagnosis.
+  Pin it explicitly with `--role fixer=google:gemini-3.1-pro-preview`
+  (and `--role audience=...` if the RETRY should also use it).
+
 ## Usage & the experiment it enables
 
 ```bash

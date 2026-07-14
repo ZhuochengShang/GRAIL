@@ -78,8 +78,9 @@ def _run(argv: list[str] | None = None) -> int:
     sp.add_argument("--sample", type=int, default=None)
     sp.add_argument("--api", default=None,
                     help="test ONE specific documented API by name (e.g. --api mapPixels)")
-    sp.add_argument("--doc", choices=["aideal", "original"], default="aideal",
-                    help="original = use the project's pre-existing README as the only context")
+    sp.add_argument("--doc", choices=["aideal", "original", "agents"], default="aideal",
+                    help="aideal = per-API catalog (GRAIL) · original = repo README only · "
+                         "agents = repo AGENTS.md only (baseline: holistic agent guide vs per-API docs)")
     sp.add_argument("--execute", action="store_true",
                     help="compile/run each snippet via comprehension.execute (real ground truth; "
                          "covers all documented APIs unless --sample given)")
@@ -114,14 +115,57 @@ def _run(argv: list[str] | None = None) -> int:
                              "re-run the test (entry kept on pass, reverted on fail)")
     sp.add_argument("--api", action="append", default=None,
                     help="fix ONE api's entry (repeatable); default: every most-recent FAIL")
+    sp.add_argument("--from-results", default=None,
+                    help="target failed APIs from a specific comprehension/bench JSON "
+                         "(e.g. g1), instead of the mutable latest error_log state")
     sp.add_argument("--max-apis", type=int, default=None, help="cap how many failures to process")
     sp.add_argument("--retry-rounds", type=int, default=2,
                     help="fix rounds allowed in the retry run (default 2)")
     sp.add_argument("--timeout", dest="timeout_s", type=int, default=None,
                     help="per-attempt compile+run timeout for the retry")
+    sp.add_argument("--report", default=None,
+                    help="write the docfix JSON report here incrementally after each API; "
+                         "prevents empty redirected output if the run is interrupted")
+    sp.add_argument("--deep-dive-first", action="store_true",
+                    help="for each target API, first run the principal-engineer deep-dive "
+                         "(source + types + call sites + failure history), feed that report "
+                         "into the doc repair prompt, then rewrite and re-test the README entry")
+    sp.add_argument("--deep-dive-out", default="docs/deepdive",
+                    help="directory for deep-dive reports when --deep-dive-first is used")
     sp.add_argument("--role", action="append", default=None, metavar="ROLE=MODEL",
                     help="model override, e.g. --role fixer=google:gemini-2.5-pro")
     sp.add_argument("--dry-run", action="store_true", help="list target apis, change nothing")
+    sp = sub.add_parser("fix-report",
+                        help="READABLE markdown analysis of a fix-loop run: improvement "
+                             "verdict vs a baseline, same-issue-not-solved list, failure "
+                             "clusters, chronic cross-run failures, per-API why-failed "
+                             "with round-by-round error evolution")
+    sp.add_argument("--run", required=True,
+                    help="comprehension/bench or fix-docs result JSON to analyze")
+    sp.add_argument("--baseline", default=None,
+                    help="previous run JSON of the same kind to diff against")
+    sp.add_argument("--out", default=None,
+                    help="output .md (default docs/fix_report_<run-stem>.md; "
+                         "docs/fix_report_latest.md is always refreshed)")
+    sp.add_argument("--top-clusters", type=int, default=12)
+    sp.add_argument("--max-api-detail", type=int, default=80)
+    sp = sub.add_parser("surface-audit",
+                        help="cross-check catalog entries against the CURRENT visibility-"
+                             "correct surface: non-public (private/protected incl. "
+                             "containers), path-excluded, or intent-deselected entries "
+                             "that can never pass and should be pruned/excluded")
+    sp.add_argument("--out", default=None, help="also write the full JSON here")
+    sp = sub.add_parser("deep-dive",
+                        help="principal-engineer deep review of ONE API: max grounded context "
+                             "(source + type defs + real call sites + failure history) -> layered "
+                             "report incl. self-assessment; saved to docs/deepdive/<api>.md")
+    sp.add_argument("--api", required=True, action="append",
+                    help="API name (repeatable for several reports in one go)")
+    sp.add_argument("--out", default="docs/deepdive", help="output directory")
+    sp.add_argument("--context-only", action="store_true",
+                    help="assemble and show the context, no LLM call (sanity check)")
+    sp.add_argument("--role", action="append", default=None, metavar="ROLE=MODEL",
+                    help="e.g. --role fixer=google:gemini-3.1-pro-preview")
     sp = sub.add_parser("augment",
                         help="fold error-log failures/fixes into readme Common Failure Modes + Fix Code Hint")
     sp.add_argument("--dry-run", action="store_true", help="show what would change, don't write")
@@ -286,6 +330,35 @@ def _run(argv: list[str] | None = None) -> int:
                                  class_context=cc, rerun_failed=args.rerun_failed,
                                  max_fix_rounds=args.max_fix_rounds,
                                  resume=args.resume, timeout_s=args.timeout_s)
+        if args.execute and isinstance(out, dict):
+            from .fixreport import auto_report
+            rep = auto_report(cfg, out)   # readable log; never raises
+            if rep:
+                out["report_md"] = rep
+    elif args.cmd == "fix-report":
+        from .fixreport import write_report
+        out = write_report(cfg, args.run, baseline_path=args.baseline,
+                           out_path=args.out, top_clusters=args.top_clusters,
+                           max_api_detail=args.max_api_detail)
+    elif args.cmd == "surface-audit":
+        from .readme_agent import surface_audit
+        out = surface_audit(cfg)
+        if args.out:
+            from pathlib import Path as _P
+            _p = (cfg.root / args.out).resolve()
+            _p.parent.mkdir(parents=True, exist_ok=True)
+            _p.write_text(json.dumps(out, indent=2, ensure_ascii=False), encoding="utf-8")
+            out = {"written": str(_p), **out}
+    elif args.cmd == "deep-dive":
+        from .deepdive import deep_dive_run
+        for spec in (args.role or []):
+            role, _, val = spec.partition("=")
+            if not val:
+                print(json.dumps({"error": f"--role needs ROLE=MODEL, got '{spec}'"})); return 2
+            cfg.override_role(role.strip(), val.strip())
+        out = [deep_dive_run(cfg, a, out_dir=args.out, context_only=args.context_only)
+               for a in args.api]
+        out = out[0] if len(out) == 1 else {"reports": out}
     elif args.cmd == "fix-docs":
         from .docfix import doc_fix_run
         for spec in (args.role or []):
@@ -295,7 +368,16 @@ def _run(argv: list[str] | None = None) -> int:
             cfg.override_role(role.strip(), val.strip())
         out = doc_fix_run(cfg, apis=args.api, max_apis=args.max_apis,
                           retry_rounds=args.retry_rounds,
-                          timeout_s=args.timeout_s, dry_run=args.dry_run)
+                          timeout_s=args.timeout_s, dry_run=args.dry_run,
+                          from_results=args.from_results,
+                          report_path=args.report,
+                          deep_dive_first=args.deep_dive_first,
+                          deep_dive_out=args.deep_dive_out)
+        if not args.dry_run and isinstance(out, dict):
+            from .fixreport import auto_report
+            rep = auto_report(cfg, out)   # readable log; never raises
+            if rep:
+                out["report_md"] = rep
     elif args.cmd == "augment":
         from .readme_agent import augment_from_log
         out = augment_from_log(cfg, dry_run=args.dry_run, only_missing=args.only_missing)

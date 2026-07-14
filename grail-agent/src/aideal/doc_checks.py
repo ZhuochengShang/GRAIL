@@ -71,6 +71,23 @@ def _comprehension_inventory(cfg: AidealConfig, doc_source: str):
                          body=f"(Original project README — the only documentation available)\n"
                               f"{text}\n\nTarget function: `{n}`")
                 for n in names], None
+    if doc_source == "agents":
+        # BASELINE ARM: the repo's holistic agent guide (AGENTS.md) as the ONLY
+        # context — the industry-standard single-file "how to work in this repo"
+        # doc. Path from files.agents_doc (default AGENTS.md at project root).
+        from pathlib import Path
+        rel = (cfg.raw.get("files", {}) or {}).get("agents_doc", "AGENTS.md")
+        p = (cfg.root / rel)
+        if not p.exists():
+            return None, {"check": "comprehension", "passed": False, "score": 0.0,
+                          "details": {"error": f"agents doc not found at {rel} "
+                                      "(set files.agents_doc, or drop an AGENTS.md at project root)"}}
+        text = p.read_text(encoding="utf-8", errors="ignore")[:12000]
+        names = sorted(public_api_surface(cfg))
+        return [ApiEntry(name=n, goal="", snippet="",
+                         body=f"(Project AGENTS.md — the only agent guidance available)\n"
+                              f"{text}\n\nTarget function: `{n}`")
+                for n in names], None
     inventory = [e for e in parse_readme(cfg.llm_readme) if "TODO" not in e.body]
     if not inventory:
         return None, {"check": "comprehension", "doc_source": doc_source, "passed": False,
@@ -223,7 +240,13 @@ def _fill_scaffold(scaffold: str, snippet: str, region: list[str], placeholders:
     if region and len(region) == 2 and region[0] in text and region[1] in text:
         pre, _, rest = text.partition(region[0])
         _, _, post = rest.partition(region[1])
-        text = f"{pre}{region[0]}\n{snippet}\n{region[1]}{post}"
+        # match the marker's indentation (required for Python scaffolds, where the
+        # region sits inside a function body; harmless formatting for brace languages)
+        indent = pre.rpartition("\n")[2]
+        if indent.strip() == "":
+            snippet = "\n".join((indent + l) if l.strip() else l
+                                for l in snippet.splitlines())
+        text = f"{pre}{region[0]}\n{snippet}\n{indent}{region[1]}{post}"
     else:                                  # no region markers: append the snippet
         text = text + "\n" + snippet
     for key, val in (placeholders or {}).items():
@@ -241,7 +264,8 @@ def _strip_fences(text: str, *, strip_imports: bool = False) -> str:
         # keep the content of the first fenced block if present, else strip fences
         import re as _re
         m = _re.search(r"```[a-zA-Z]*\n(.*?)```", t, _re.DOTALL)
-        t = m.group(1) if m else t.replace("```scala", "").replace("```", "")
+        t = (m.group(1) if m else
+             t.replace("```scala", "").replace("```python", "").replace("```", ""))
     if strip_imports:
         t = "\n".join(
             line for line in t.strip().splitlines()
@@ -525,12 +549,40 @@ def _execute_sample_data(cfg: AidealConfig, ex: dict) -> tuple[dict[str, str], s
     return sample_data, available_inputs, warnings
 
 
-def _classify_error(merged: str, rc: int, error_marker: str) -> tuple[str, str, str]:
+def _classify_error_py(merged: str, rc: int, error_marker: str) -> tuple[str, str, str]:
+    """Python flavor of _classify_error. compile = SyntaxError/IndentationError
+    (the file never ran); infra = missing third-party module (env problem, not a
+    doc problem — excluded from the doc-quality denominator like JVM
+    NoClassDefFoundError); runtime = everything raised while running."""
+    import re as _re
+    m = _re.search(r"(?:ModuleNotFoundError|ImportError)[:\s]+(.+)", merged)
+    if m:
+        return "infra", f"missing module/import: {m.group(1).strip()[:200]}", ""
+    m = _re.search(r"^(?:SyntaxError|IndentationError|TabError)[:\s]+(.+)$", merged, _re.M)
+    if m:
+        loc = _re.search(r'File "([^"]+)", line (\d+)', merged)
+        return "compile", m.group(0).strip()[:300], (f"{loc.group(1)}:{loc.group(2)}" if loc else "")
+    if error_marker and error_marker in merged:
+        line = next((l for l in merged.splitlines() if error_marker in l), "").strip()
+        msg = line.split(error_marker, 1)[-1].strip()
+        frames = _re.findall(r'File "([^"]+\.py)", line (\d+)', merged)
+        locus = f"{frames[-1][0]}:{frames[-1][1]}" if frames else ""
+        return "runtime", msg or "runtime error", locus
+    m = _re.search(r"^(\w*(?:Error|Exception)\b.*)$", merged, _re.M)
+    if m:
+        return "runtime", m.group(1).strip()[:300], ""
+    return "unknown", (merged.strip()[-300:] or f"exit {rc}"), ""
+
+
+def _classify_error(merged: str, rc: int, error_marker: str,
+                    language: str = "scala") -> tuple[str, str, str]:
     """Return (category, message, locus) from the run output.
     category: compile | runtime | timeout | infra | unknown; locus = the failing call."""
     import re as _re
     if rc == 124:
         return "timeout", "execution timed out", ""
+    if language.lower() == "python":
+        return _classify_error_py(merged, rc, error_marker)
     # infra/environment: a dependency missing from the HARNESS classpath (the real
     # test suite has it; spark-submit local[*] may not). NoClassDefFoundError /
     # ClassNotFoundException are never a documentation problem — no doc fix resolves
@@ -607,7 +659,8 @@ def _receiver_hint(entry_name: str, owner_map: dict) -> str:
             f"constructs a `{typ}`), then call `.{entry_name}` on it. Do NOT call it on an unrelated type.")
 
 
-_FRAME_RE = re.compile(r"\(([A-Za-z0-9_$]+\.(?:scala|java)):(\d+)\)")
+_FRAME_RE = re.compile(r"\(([A-Za-z0-9_$]+\.(?:scala|java)):(\d+)\)"
+                       r"|File \"[^\"]*?([A-Za-z0-9_]+\.py)\", line (\d+)")
 
 
 def _codebase_frames(merged: str, file_index: dict[str, str], limit: int = 5) -> list[str]:
@@ -618,10 +671,11 @@ def _codebase_frames(merged: str, file_index: dict[str, str], limit: int = 5) ->
     out: list[str] = []
     seen: set[str] = set()
     for m in _FRAME_RE.finditer(merged):
-        rel = file_index.get(m.group(1))
+        base, ln = (m.group(1), m.group(2)) if m.group(1) else (m.group(3), m.group(4))
+        rel = file_index.get(base)
         if not rel:
             continue
-        key = f"{rel}:{m.group(2)}"
+        key = f"{rel}:{ln}"
         if key not in seen:
             seen.add(key)
             out.append(key)
@@ -725,16 +779,22 @@ def _comprehension_execute(cfg: AidealConfig, inventory, sample, seed, doc_sourc
     # Typed sample-data catalog: name -> resolved path. Each becomes a `val` in
     # the scaffold; the model picks the one(s) matching the API's param types.
     sample_data, available_inputs, sample_data_warnings = _execute_sample_data(cfg, ex)
-    bindings = "\n    ".join(f'val {k} = "{p}"' for k, p in sample_data.items())
+    _is_py = cfg.language.lower() == "python"
+    bindings = "\n    ".join((f'{k} = r"{p}"' if _is_py else f'val {k} = "{p}"')
+                             for k, p in sample_data.items())
     # Option-2 isolation: a codebase-specific `preamble` pre-loads typed inputs
     # (e.g. rasterRDD, featuresRDD) right after the path vals, so a per-API test
     # writes ONLY the API call — I/O can no longer fail the test. The model is
     # then shown the pre-loaded typed vars instead of raw paths.
     preamble = _resolve_preamble(cfg, ex, sample_data)   # 'auto' -> LLM-generated, cached
     if preamble:
-        bindings += ("\n\n    // pre-loaded typed inputs (comprehension.execute.preamble)\n    "
+        _cmt = "#" if _is_py else "//"
+        bindings += (f"\n\n    {_cmt} pre-loaded typed inputs (comprehension.execute.preamble)\n    "
                      + "\n    ".join(preamble.splitlines()))
-        preloaded = re.findall(r"val\s+(\w+)\s*:\s*([^=]+?)\s*=", preamble)
+        preloaded = (re.findall(r"^\s*(\w+)\s*(?::\s*\w+)?\s*=\s*(?:.*?#\s*type:\s*(.+))?", preamble, re.M)
+                     if _is_py else
+                     re.findall(r"val\s+(\w+)\s*:\s*([^=]+?)\s*=", preamble))
+        preloaded = [(n, (t or "(see preamble)").strip()) for n, t in preloaded if n]
         if preloaded:
             available_inputs = (
                 "Pre-loaded and already in scope — use these directly, do NOT re-load:\n"
@@ -885,8 +945,9 @@ def _comprehension_execute(cfg: AidealConfig, inventory, sample, seed, doc_sourc
         api_u0 = usage_snapshot()
         work_api = work_dir / f"run_{entry.name}"
         (work_api / "classes").mkdir(parents=True, exist_ok=True)
-        scala_file = work_api / "ApiTest.scala"
+        scala_file = work_api / str(ex.get("test_filename", "ApiTest.scala"))
         cmd = (cmd_template.replace("{scala_file}", str(scala_file))
+               .replace("{test_file}", str(scala_file))
                .replace("{uberjar}", uberjar).replace("{jars}", jars)
                .replace("{classpath}", classpath).replace("{work}", str(work_api))
                .replace("{packages}", packages_flag)
@@ -910,6 +971,7 @@ def _comprehension_execute(cfg: AidealConfig, inventory, sample, seed, doc_sourc
                                  available_inputs=available_inputs,
                                  receiver=receiver or "(receiver type not resolved)",
                                  known_failures=known or "(none yet)",
+                                 execution_context=ex.get("execution_context", ""),
                                  exec_hints=ex.get("exec_hints", ""),
                                  io_hints=io_hints_text),
                 ), strip_imports=strip_snippet_imports)
@@ -925,9 +987,10 @@ def _comprehension_execute(cfg: AidealConfig, inventory, sample, seed, doc_sourc
                 _sys.stderr.flush()
                 log.append(run_id=run_id, step="readme-exec-test", language=cfg.language,
                            task=task, status="fail", function=entry.name,
-                           error_category=cat, error=msg[:500])
+                           error_category=cat, error=msg[:500], round=attempt)
                 break
-            scala = _fill_scaffold(scaffold.replace("// AIDEAL_DATA_BINDINGS", bindings),
+            scala = _fill_scaffold(scaffold.replace("// AIDEAL_DATA_BINDINGS", bindings)
+                                   .replace("# AIDEAL_DATA_BINDINGS", bindings),
                                    snippet, region, placeholders)
             scala_file.write_text(scala, encoding="utf-8")
             try:
@@ -954,16 +1017,17 @@ def _comprehension_execute(cfg: AidealConfig, inventory, sample, seed, doc_sourc
                 # strongest grounding -> `aideal augment` folds it into the entry.
                 log.append(run_id=run_id, step="readme-exec-test", language=cfg.language,
                            task=task, status="pass", function=entry.name,
-                           code=snippet.strip()[:1500])
+                           code=snippet.strip()[:1500], round=attempt)
                 # if this took a retry, also log the fix (error -> working code)
                 if attempt > 0 and last:
                     log.append(run_id=run_id, step="readme-exec-test", language=cfg.language,
                                task=task, status="fixed", function=entry.name,
                                error_category=last.get("cat", ""), error=last.get("msg", ""),
                                root_cause=last.get("locus", ""), code=last.get("code", ""),
-                               suggested_fix_code=snippet.strip()[:1000])
+                               suggested_fix_code=snippet.strip()[:1000], round=attempt)
                 break
-            cat, msg, locus = _classify_error(merged, rc, error_marker)
+            cat, msg, locus = _classify_error(merged, rc, error_marker,
+                                              language=cfg.language)
             # coarse cat (compile/runtime/timeout) drives metrics/report; the shared
             # FIX_GUIDE adds a FINER, actionable hint (e.g. type-mismatch -> "pick the
             # geoTiff[T] that matches the raster"). Stored so failures_for replays it
@@ -989,7 +1053,8 @@ def _comprehension_execute(cfg: AidealConfig, inventory, sample, seed, doc_sourc
             log.append(run_id=run_id, step="readme-exec-test", language=cfg.language,
                        task=task, status="fail", function=entry.name,
                        error_category=cat, error=msg, root_cause=locus,
-                       code=snippet.strip()[:1000], suggested_fix_code=fix_hint)
+                       code=snippet.strip()[:1000], suggested_fix_code=fix_hint,
+                       round=attempt)
             # infra (missing jar) won't be fixed by rewriting the snippet — stop
             # retrying and don't spam the log with identical dependency failures.
             if cat == "infra":
