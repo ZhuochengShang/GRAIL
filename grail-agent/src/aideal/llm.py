@@ -35,8 +35,14 @@ def get_chat_model(spec: ModelSpec, temperature: float = 0.0):
         from langchain_google_genai import ChatGoogleGenerativeAI
         return ChatGoogleGenerativeAI(model=spec.model, temperature=temperature)
     if provider == "ollama":
+        import os as _os
         from langchain_ollama import ChatOllama
-        return ChatOllama(model=spec.model, temperature=temperature)
+        # Ollama's DEFAULT context (~4K) silently truncates AIDEAL's prompts
+        # (entry + source window + type context ≈ 6-10K tokens) — the local
+        # arm would fail for truncation, not model quality. 16K default;
+        # override with AIDEAL_OLLAMA_NUM_CTX (raise for 32B models w/ RAM).
+        return ChatOllama(model=spec.model, temperature=temperature,
+                          num_ctx=int(_os.environ.get("AIDEAL_OLLAMA_NUM_CTX", 16384)))
     raise ValueError(f"Unknown provider: {spec.provider}")
 
 

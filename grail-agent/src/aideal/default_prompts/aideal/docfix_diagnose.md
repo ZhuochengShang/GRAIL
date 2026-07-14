@@ -17,9 +17,23 @@ HARD RULES:
   Do NOT redirect to a different or "more public" API, do NOT invent wrapper
   or convenience methods (`.convolve`, `.build`, …) that you cannot see
   defined in the source window — a fabricated member is worse than no fix.
-- If `{api_name}` genuinely cannot be exercised in a standalone harness (needs
-  unavailable state, is a framework callback, requires inputs the harness
-  does not provide), reply with a first line of exactly
+- First classify the API's caller audience:
+  USER-FACING = normal library users are expected to call it directly;
+  ADVANCED/LOW-LEVEL = public but requires explicit construction of framework
+  state, readers, handles, accumulators, partitions, callbacks, or type
+  plumbing;
+  INTERNAL/FRAMEWORK = public by language/package mechanics but mainly intended
+  for framework code, tests, or implementers.
+- Separately classify whether it is executable in this harness. Do NOT reply
+  NOT-TESTABLE merely because the API requires a low-level receiver or
+  initialized helper object. If the source, type definitions, call sites, or
+  failure history show how to construct the required object from public inputs
+  or harness bindings, provide that construction in CORRECT USAGE and classify
+  it as ADVANCED/LOW-LEVEL.
+- If `{api_name}` genuinely cannot be exercised in a standalone harness because
+  required state cannot be constructed from any provided/public inputs, is a
+  framework callback only, or depends on unavailable infrastructure, reply with
+  a first line of exactly
   `VERDICT: NOT-TESTABLE — <one-line reason>` and stop.
 
 {project_context}
@@ -32,6 +46,14 @@ API under test: `{api_name}`
 
 Other definition sites for this name: {other_sites}
 Receiver/owner type hint: {receiver}
+
+== DEFINITIONS OF THE SIGNATURE/RECEIVER TYPES (located across the whole
+codebase, Scala AND Java — use these to state exact members, packages, and
+how to obtain each type) ==
+{type_context}
+
+== OPTIONAL PRINCIPAL-ENGINEER DEEP-DIVE REPORT ==
+{deep_dive_report}
 
 == CURRENT DOCUMENTATION ENTRY (what the snippet-writer saw) ==
 {entry_body}
@@ -46,6 +68,13 @@ Codebase stack frames reached (empty = failed before entering library code):
 {frames}
 
 Respond in EXACTLY this structure:
+
+AUDIENCE & TESTABILITY:
+API audience: USER-FACING / ADVANCED-LOW-LEVEL / INTERNAL-FRAMEWORK.
+Harness testability: TESTABLE / TESTABLE-WITH-LOW-LEVEL-CONSTRUCTION /
+NOT-TESTABLE.
+Scoring recommendation: include in main user-facing denominator / include only
+in advanced/internal bucket / exclude from scored denominator.
 
 ROOT CAUSE:
 (1-3 sentences: why this failed — doc gap / doc error / snippet misread /

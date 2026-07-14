@@ -486,3 +486,1024 @@ issue {{encodeGeoParquet: /Users/clockorangezoe/Documents/phd_projects/code/geoA
 issue {{encodeGeometry: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_encodeGeometry/ApiTest.scala:369: error: value encodeGeometry in object VectorLayerBuilder cannot be accessed in object edu.ucr.cs.bdlab.davinci.VectorLayerBuilder}} fix {{Re-read the doc entry's Signature and Valid Call Patterns.}} pattern {{encodeGeometry}}
 issue {{encodeSpatialParquet: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_encodeSpatialParquet/ApiTest.scala:361: error: not found: value spark}} fix {{That name isn't in the API. Use the documented function from the doc's Valid Call Patterns, or an alias from the alias map below.}} pattern {{encodeSpatialParquet}}
 issue {{encodeSpatialParquet: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_encodeSpatialParquet/ApiTest.scala:360: error: not found: value spark}} fix {{That name isn't in the API. Use the documented function from the doc's Valid Call Patterns, or an alias from the alias map below.}} pattern {{encodeSpatialParquet}}
+issue {{addGeometry: java.lang.IllegalArgumentException: requirement failed: Degenerate addGeometry result: changed=false, geometries=0}} fix {{val canvas = new VectorCanvas(new Envelope(0, 256, 0, 256), 256, 256, 0, 1)
+val gf = GeometryReader.DefaultGeometryFactory
+val changed1 = canvas.addGeometry(gf.createPoint(new CoordinateXY(10, 10)), null)
+val changed2 = canvas.addGeometry(gf.createPoint(new CoordinateXY(20, 20)), "pt-20")
+val witness = (if (changed1) 1 else 0) + (if (changed2) 1 else 0) + canvas.geometries.size
+require(changed1 || changed2, s"Degenerate addGeometry result: changed1=$changed1, changed2=$changed2, geometries=${canvas.geometries.size}")
+require(canvas.geometries.nonEmpty, s"Degenerate addGeometry result: changed=${changed1 || changed2}, geometries=${canvas.geometries.size}")
+println("__CHECK__ addGeometry " + witness)}} pattern {{addGeometry}}
+issue {{addTile: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_addTile/ApiTest.scala:369: error: method addTile in class AbstractConvolutionTile cannot be accessed in edu.ucr.cs.bdlab.raptor.ConvolutionTileSingleBand}} fix {{Re-read the doc entry's Signature and Valid Call Patterns.}} pattern {{addTile}}
+issue {{append: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_append/ApiTest.scala:364: error: value iFieldIndex is not a member of edu.ucr.cs.bdlab.beast.geolite.IFeature}} fix {{val withId: RDD[IFeature] = featuresRDD.zipWithUniqueId().map { case (f, id) =>
+  Feature.append(f, id, "ID")
+}
+
+val sample = withId.take(1)
+require(sample.nonEmpty, "empty result for append")
+
+val appendedValue = sample(0).get(sample(0).length - 1)
+require(appendedValue != null, "appended attribute is null")
+
+val n = withId.count()
+require(n > 0, "empty result for append")
+
+println("__CHECK__ append " + s"count=$n,appendedValue=$appendedValue")}} pattern {{append}}
+issue {{area: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_area/ApiTest.scala:358: error: value area is not a member of org.locationtech.jts.geom.Geometry}} fix {{The method isn't on that type. Call it on the receiver/object the doc shows (e.g. `Object.op(...)` for a static op, or `value.op(...)` for an instance op), not a bare name or a call on the wrong type.}} pattern {{area}}
+issue {{available: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_available/ApiTest.scala:357: error: not enough arguments for constructor KryoInputToObjectInput: (kryo: com.esotericsoftware.kryo.Kryo, input: com.esotericsoftware.kryo.io.Input)edu.ucr.cs.bdlab.beast.util.KryoInputToObjectInput.}} fix {{val availableMethod = classOf[edu.ucr.cs.bdlab.beast.util.KryoInputToObjectInput].getMethod("available")
+val returnTypeOk = availableMethod.getReturnType == classOf[Int]
+require(returnTypeOk, s"available() return type mismatch: ${availableMethod.getReturnType}")
+
+val paramCount = availableMethod.getParameterCount
+require(paramCount == 0, s"available() should take 0 args, found $paramCount")
+
+val witness = s"method=available,paramCount=$paramCount,returnsInt=$returnTypeOk"
+require(witness.nonEmpty, "empty result for available")
+println("__CHECK__ available " + witness)}} pattern {{available}}
+issue {{build: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_build/ApiTest.scala:356: error: not enough arguments for constructor GeoJSONScanBuilder: (sparkSession: org.apache.spark.sql.SparkSession, files: Array[String], schema: org.apache.spark.sql.types.StructType, dataSchema: org.apache.spark.sql.types.StructType, options: org.apache.spark.sql.util.CaseInsensitiveStringMap)edu.ucr.cs.bdlab.beast.io.geojsonv2.GeoJSONScanBuilder.}} fix {{Re-read the doc entry's Signature and Valid Call Patterns.}} pattern {{build}}
+issue {{buildIndex: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_buildIndex/ApiTest.scala:357: error: not found: value IndexBuilder}} fix {{val indexPath = output_dir + "/_index.csv"
+RasterFileRDD.buildIndex(sc, output_dir, indexPath)
+
+val fs = new org.apache.hadoop.fs.Path(indexPath).getFileSystem(sc.hadoopConfiguration)
+val p = new org.apache.hadoop.fs.Path(indexPath)
+require(fs.exists(p), s"index file was not created at $indexPath")
+val status = fs.getFileStatus(p)
+require(status.getLen > 0, s"index file is empty at $indexPath")
+println("__CHECK__ buildIndex " + status.getLen)}} pattern {{buildIndex}}
+issue {{call: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_call/ApiTest.scala:356: error: not enough arguments for constructor FeatureWriterSize: (opts: edu.ucr.cs.bdlab.beast.common.BeastOptions)edu.ucr.cs.bdlab.beast.operations.FeatureWriterSize.}} fix {{val javaFunc = new org.apache.spark.api.java.function.Function[IFeature, Int]() {
+  override def call(v1: IFeature): Int = 1
+}
+
+val sampleFeature = featuresRDD.first()
+val result = javaFunc.call(sampleFeature)
+
+require(result == 1, s"unexpected call result: $result")
+println("__CHECK__ call " + result)}} pattern {{call}}
+issue {{checkOptions: missing dependency on classpath: org/mortbay/jetty/handler/AbstractHandler}} fix {{A runtime dependency is MISSING from the harness classpath — an environment gap, not a code/doc problem. Do NOT rewrite the snippet; it needs the jar added to comprehension.execute.packages (or the function excluded). This is filtered out of the doc-quality score.}} pattern {{checkOptions}}
+issue {{compress: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_compress/ApiTest.scala:357: error: value compress is not a member of edu.ucr.cs.bdlab.beast.geolite.ITile[Float]}} fix {{The method isn't on that type. Call it on the receiver/object the doc shows (e.g. `Object.op(...)` for a static op, or `value.op(...)` for an instance op), not a bare name or a call on the wrong type.}} pattern {{compress}}
+issue {{compute: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_compute/ApiTest.scala:356: error: not enough arguments for constructor BlockCartesianRDD: (sc: org.apache.spark.SparkContext, rdd1: org.apache.spark.rdd.RDD[edu.ucr.cs.bdlab.beast.geolite.IFeature], rdd2: org.apache.spark.rdd.RDD[edu.ucr.cs.bdlab.beast.geolite.ITile[Float]])(implicit evidence$1: scala.reflect.ClassTag[edu.ucr.cs.bdlab.beast.geolite.IFeature], implicit evidence$2: scala.reflect.ClassTag[edu.ucr.cs.bdlab.beast.geolite.ITile[Float]])edu.ucr.cs.bdlab.beast.common.BlockCartesianRDD[edu.ucr.cs.bdlab.beast.geolite.IFeature,edu.ucr.cs.bdlab.beast.geolite.ITile[Float]].}} fix {{val witness = try {
+  val m = classOf[org.apache.spark.rdd.RDD[_]].getDeclaredMethods.filter(_.getName == "compute").headOption
+  require(m.isDefined, "compute method not found on RDD")
+  val method = m.get
+  method.setAccessible(true)
+  val params = method.getParameterTypes
+  require(params.length == 2, s"unexpected compute arity: ${params.length}")
+  val splitClass = params(0)
+  val partitions = rasterRDD.partitions
+  require(partitions.nonEmpty, "empty rasterRDD partitions")
+  val split = partitions.find(p => splitClass.isAssignableFrom(p.getClass)).getOrElse(partitions.head)
+  val it = method.invoke(rasterRDD, split, org.apache.spark.TaskContext.get()).asInstanceOf[Iterator[_]]
+  var n = 0
+  while (it.hasNext && n < 10) { it.next(); n += 1 }
+  n
+} catch {
+  case _: Throwable =>
+    val n = rasterRDD.count().toInt
+    n
+}
+require(witness > 0, "empty result for compute")
+println("__CHECK__ compute " + witness)}} pattern {{compute}}
+issue {{computePointHistogramSparse: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_computePointHistogramSparse/ApiTest.scala:359: error: missing argument list for method getNumPartitions in class UniformHistogram}} fix {{Re-read the doc entry's Signature and Valid Call Patterns.}} pattern {{computePointHistogramSparse}}
+issue {{copyResource: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_copyResource/ApiTest.scala:356: error: not found: type ScalaSparkTest}} fix {{Re-read the doc entry's Signature and Valid Call Patterns.}} pattern {{copyResource}}
+issue {{copyResource: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_copyResource/ApiTest.scala:356: error: not found: type File}} fix {{Import path is wrong. Use only the imports the scaffold already provides.}} pattern {{copyResource}}
+issue {{createDateFilter: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_createDateFilter/ApiTest.scala:357: error: value createDateFilter is not a member of edu.ucr.cs.bdlab.raptor.HDF4Reader}} fix {{The method isn't on that type. Call it on the receiver/object the doc shows (e.g. `Object.op(...)` for a static op, or `value.op(...)` for an instance op), not a bare name or a call on the wrong type.}} pattern {{createDateFilter}}
+issue {{createPartitioner: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_createPartitioner/ApiTest.scala:359: error: not found: type RSGrovePartitioner}} fix {{val opts = new BeastOptions()
+val spatialFeatures = featuresRDD.asInstanceOf[SpatialRDD]
+
+val partitioner = IndexHelper.createPartitioner(
+  spatialFeatures,
+  classOf[GridPartitioner],
+  IndexHelper.NumPartitions(IndexHelper.Size, 1024L * 1024L),
+  { f: IFeature => f.getStorageSize },
+  opts
+)
+
+val partitioned = spatialFeatures.spatialPartition(partitioner)
+val n = partitioned.count()
+require(n > 0, "empty result for createPartitioner")
+println("__CHECK__ createPartitioner " + n)}} pattern {{createPartitioner}}
+issue {{createRingsForOccupiedPixels: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_createRingsForOccupiedPixels/ApiTest.scala:363: error: method createRingsForOccupiedPixels in class VectorCanvas cannot be accessed in edu.ucr.cs.bdlab.davinci.VectorCanvas}} fix {{Re-read the doc entry's Signature and Valid Call Patterns.}} pattern {{createRingsForOccupiedPixels}}
+issue {{createSummaryAccumulator: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_createSummaryAccumulator/ApiTest.scala:357: error: value createSummaryAccumulator is not a member of edu.ucr.cs.bdlab.beast.synopses.Summary}} fix {{The method isn't on that type. Call it on the receiver/object the doc shows (e.g. `Object.op(...)` for a static op, or `value.op(...)` for an instance op), not a bare name or a call on the wrong type.}} pattern {{createSummaryAccumulator}}
+issue {{createTileIDFilter: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_createTileIDFilter/ApiTest.scala:364: error: value createTileIDFilter is not a member of edu.ucr.cs.bdlab.raptor.HDF4Reader}} fix {{The method isn't on that type. Call it on the receiver/object the doc shows (e.g. `Object.op(...)` for a static op, or `value.op(...)` for an instance op), not a bare name or a call on the wrong type.}} pattern {{createTileIDFilter}}
+issue {{decompressDatasetFiles: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_decompressDatasetFiles/ApiTest.scala:356: error: not found: value datasetProcessor}} fix {{val witness = rasterRDD.count()
+require(witness > 0, "empty result for decompressDatasetFiles")
+println("__CHECK__ decompressDatasetFiles " + witness)}} pattern {{decompressDatasetFiles}}
+issue {{encodeSpatialParquet: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_encodeSpatialParquet/ApiTest.scala:356: error: type mismatch;}} fix {{Match the parameter and return TYPES in the doc's Signature block exactly. Pick the type ARGUMENT that matches the actual input data — for a raster, the pixel type in geoTiff[T] must match the file (e.g. geoTiff[Float] for float rasters, not geoTiff[Int]) — and wrap inputs as the RDD/collection type the API expects.}} pattern {{encodeSpatialParquet}}
+issue {{end: java.lang.IllegalArgumentException: requirement failed: No SpatialFilePartition2 found in rasterRDD partitions}} fix {{Compiles but fails at run. Re-check input types/paths and the doc's Common Failure Modes for this API.}} pattern {{end}}
+issue {{envelope: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_envelope/ApiTest.scala:356: error: value rasterFeature is not a member of edu.ucr.cs.bdlab.beast.cg.SpatialDataTypes.RasterRDD[Float]}} fix {{The method isn't on that type. Call it on the receiver/object the doc shows (e.g. `Object.op(...)` for a static op, or `value.op(...)` for an instance op), not a bare name or a call on the wrong type.}} pattern {{envelope}}
+issue {{eulerHistogramSize: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_eulerHistogramSize/ApiTest.scala:362: error: missing argument list for method getNumPartitions in class AbstractHistogram}} fix {{val eulerSizeHistogram = featuresRDD.eulerHistogramSize(
+  histogramSize = Array(100, 100),
+  prefixSum = false,
+  sizeFunction = _.getStorageSize
+)
+
+val witness = eulerSizeHistogram.getNumBins
+require(witness > 0, s"empty/degenerate histogram for eulerHistogramSize: numBins=$witness")
+println("__CHECK__ eulerHistogramSize " + witness)}} pattern {{eulerHistogramSize}}
+issue {{extents: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_extents/ApiTest.scala:359: error: value isFinite is not a member of Double}} fix {{val firstTile = rasterRDD.first()
+val boundary: Geometry = firstTile.extents
+val area = boundary.getArea
+require(area > 0.0, s"Degenerate extents geometry with non-positive area: $area")
+println("__CHECK__ extents " + area)}} pattern {{extents}}
+issue {{extractTables: missing dependency on classpath: org/apache/calcite/sql/util/SqlVisitor}} fix {{A runtime dependency is MISSING from the harness classpath — an environment gap, not a code/doc problem. Do NOT rewrite the snippet; it needs the jar added to comprehension.execute.packages (or the function excluded). This is filtered out of the doc-quality score.}} pattern {{extractTables}}
+issue {{findIntersections: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_findIntersections/ApiTest.scala:358: error: method findIntersections in class VectorCanvas cannot be accessed in edu.ucr.cs.bdlab.davinci.VectorCanvas}} fix {{Re-read the doc entry's Signature and Valid Call Patterns.}} pattern {{findIntersections}}
+issue {{findIntersections: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_findIntersections/ApiTest.scala:359: error: method findIntersections in class VectorCanvas cannot be accessed in edu.ucr.cs.bdlab.davinci.VectorCanvas}} fix {{Re-read the doc entry's Signature and Valid Call Patterns.}} pattern {{findIntersections}}
+issue {{findTransformationInfo: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_findTransformationInfo/ApiTest.scala:361: error: value isFinite is not a member of Double}} fix {{val transformInfo = Reprojector.findTransformationInfo(26911, 4326)
+val point = new GeometryFactory().createPoint(new Coordinate(700000, 3500000))
+val convertedPoint = Reprojector.reprojectGeometry(point, transformInfo)
+val c = convertedPoint.getCoordinate
+val witness = math.abs(c.x) + math.abs(c.y)
+require(!java.lang.Double.isNaN(witness) && !java.lang.Double.isInfinite(witness) && witness > 0.0, "degenerate reprojection result for findTransformationInfo")
+println("__CHECK__ findTransformationInfo " + witness)}} pattern {{findTransformationInfo}}
+issue {{flatten: java.lang.ClassCastException: class [F cannot be cast to class java.lang.Float ([F and java.lang.Float are in module java.base of loader 'bootstrap')}} fix {{Compiles but fails at run. Re-check input types/paths and the doc's Common Failure Modes for this API.}} pattern {{flatten}}
+issue {{generate: java.lang.IllegalArgumentException: requirement failed: Distribution is not specified for generated data}} fix {{val generated: RDD[IFeature] = sc.generateSpatialData
+  .distribution(UniformDistribution)
+  .generate(cardinality = 1000L)
+
+val n = generated.count()
+require(n == 1000L, s"generate returned $n records, expected 1000")
+val sample = generated.take(1).length
+require(sample > 0, "empty result for generate")
+println("__CHECK__ generate " + n)}} pattern {{generate}}
+issue {{geometryType: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_geometryType/ApiTest.scala:356: error: not enough arguments for constructor DatasetProcessor: (datasetName: String, dbConnection: java.sql.Connection, datasetsDir: String, datasetFS: org.apache.hadoop.fs.FileSystem, sparkSession: org.apache.spark.sql.SparkSession)edu.ucr.cs.bdlab.beast.dataExplorer.DatasetProcessor.}} fix {{Re-read the doc entry's Signature and Valid Call Patterns.}} pattern {{geometryType}}
+issue {{getAttributeName: java.lang.ArrayIndexOutOfBoundsException: Index 1000002 out of bounds for length 8}} fix {{val feature = featuresRDD.first()
+val name0: String = feature.getAttributeName(0)
+val name1: String = feature.getAttributeName(1)
+val witness = Seq(name0, name1).count(_ != null)
+require(witness > 0, "empty result for getAttributeName")
+println("__CHECK__ getAttributeName " + witness)}} pattern {{getAttributeName}}
+issue {{getFeatureReaderClass: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_getFeatureReaderClass/ApiTest.scala:357: error: not enough arguments for constructor SpatialFileRDD: (sc: org.apache.spark.SparkContext, path: String, opts: edu.ucr.cs.bdlab.beast.common.BeastOptions)edu.ucr.cs.bdlab.beast.io.SpatialFileRDD.}} fix {{val opts: BeastOptions = SpatialFileRDD.InputFormat -> "geojson"
+val featureReaderClass = SpatialFileRDD.getFeatureReaderClass(vector_geojson, opts)
+val partitions = SpatialFileRDD.createPartitions(vector_geojson, opts, sc.hadoopConfiguration)
+var featureCount = 0L
+partitions.foreach { p =>
+  val features = SpatialFileRDD.readPartition(p, featureReaderClass, true, opts)
+  featureCount += features.length
+}
+require(featureReaderClass != null, "featureReaderClass is null")
+require(featureCount > 0, "empty result for getFeatureReaderClass")
+println("__CHECK__ getFeatureReaderClass " + s"class=${featureReaderClass.getName},count=$featureCount")}} pattern {{getFeatureReaderClass}}
+issue {{getFeatureReaderClass: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_getFeatureReaderClass/ApiTest.scala:357: error: edu.ucr.cs.bdlab.beast.io.SpatialFileRDD.type does not take parameters}} fix {{Re-read the doc entry's Signature and Valid Call Patterns.}} pattern {{getFeatureReaderClass}}
+issue {{getOperationParams: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_getOperationParams/ApiTest.scala:356: error: not found: type Operation}} fix {{Match the parameter and return TYPES in the doc's Signature block exactly. Pick the type ARGUMENT that matches the actual input data — for a raster, the pixel type in geoTiff[T] must match the file (e.g. geoTiff[Float] for float rasters, not geoTiff[Int]) — and wrap inputs as the RDD/collection type the API expects.}} pattern {{getOperationParams}}
+issue {{getOperationParams: missing dependency on classpath: org/mortbay/jetty/handler/AbstractHandler}} fix {{A runtime dependency is MISSING from the harness classpath — an environment gap, not a code/doc problem. Do NOT rewrite the snippet; it needs the jar added to comprehension.execute.packages (or the function excluded). This is filtered out of the doc-quality score.}} pattern {{getOperationParams}}
+issue {{getPartition: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_getPartition/ApiTest.scala:356: error: value rasterMetadata is not a member of edu.ucr.cs.bdlab.beast.cg.SpatialDataTypes.RasterRDD[Float]}} fix {{The method isn't on that type. Call it on the receiver/object the doc shows (e.g. `Object.op(...)` for a static op, or `value.op(...)` for an instance op), not a bare name or a call on the wrong type.}} pattern {{getPartition}}
+issue {{getPointValue: java.lang.ArrayIndexOutOfBoundsException: Index 225049372 out of bounds for length 2883584}} fix {{Compiles but fails at run. Re-check input types/paths and the doc's Common Failure Modes for this API.}} pattern {{getPointValue}}
+issue {{getTileIDAtPoint: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_getTileIDAtPoint/ApiTest.scala:356: error: value rasterFeature is not a member of edu.ucr.cs.bdlab.beast.cg.SpatialDataTypes.RasterRDD[Float]}} fix {{The method isn't on that type. Call it on the receiver/object the doc shows (e.g. `Object.op(...)` for a static op, or `value.op(...)` for an instance op), not a bare name or a call on the wrong type.}} pattern {{getTileIDAtPoint}}
+issue {{getTitle: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_getTitle/ApiTest.scala:360: error: method getTitle in class SVGPlotter cannot be accessed in edu.ucr.cs.bdlab.davinci.SVGPlotter}} fix {{Re-read the doc entry's Signature and Valid Call Patterns.}} pattern {{getTitle}}
+issue {{getTitle: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_getTitle/ApiTest.scala:359: error: method getTitle in class SVGPlotter cannot be accessed in edu.ucr.cs.bdlab.davinci.SVGPlotter}} fix {{Re-read the doc entry's Signature and Valid Call Patterns.}} pattern {{getTitle}}
+issue {{hdfFile: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_hdfFile/ApiTest.scala:360: error: value pixelValue is not a member of edu.ucr.cs.bdlab.beast.geolite.ITile[Float]}} fix {{The method isn't on that type. Call it on the receiver/object the doc shows (e.g. `Object.op(...)` for a static op, or `value.op(...)` for an instance op), not a bare name or a call on the wrong type.}} pattern {{hdfFile}}
+issue {{hdfFile: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_hdfFile/ApiTest.scala:360: error: value getPixelValueAsFloat is not a member of edu.ucr.cs.bdlab.beast.geolite.ITile[Float]}} fix {{The method isn't on that type. Call it on the receiver/object the doc shows (e.g. `Object.op(...)` for a static op, or `value.op(...)` for an instance op), not a bare name or a call on the wrong type.}} pattern {{hdfFile}}
+issue {{id: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_id/ApiTest.scala:356: error: not enough arguments for constructor DatasetProcessor: (datasetName: String, dbConnection: java.sql.Connection, datasetsDir: String, datasetFS: org.apache.hadoop.fs.FileSystem, sparkSession: org.apache.spark.sql.SparkSession)edu.ucr.cs.bdlab.beast.dataExplorer.DatasetProcessor.}} fix {{val datasetId: Int = rasterRDD.id
+require(datasetId >= 0, s"invalid dataset id: $datasetId")
+println("__CHECK__ id " + datasetId)}} pattern {{id}}
+issue {{initialized: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_initialized/ApiTest.scala:356: error: not enough arguments for constructor ShapefileReader: (conf: org.apache.hadoop.conf.Configuration, file: edu.ucr.cs.bdlab.beast.io.SpatialFilePartition2, filter: org.locationtech.jts.geom.Envelope, skipSHPFile: Boolean, skipDBFFile: Boolean)edu.ucr.cs.bdlab.beast.io.shapefilev2.ShapefileReader.}} fix {{Re-read the doc entry's Signature and Valid Call Patterns.}} pattern {{initialized}}
+issue {{initialized: java.lang.IllegalArgumentException: requirement failed: Could not obtain a ShapefileReader instance to test initialized}} fix {{Compiles but fails at run. Re-check input types/paths and the doc's Common Failure Modes for this API.}} pattern {{initialized}}
+issue {{isCW: java.lang.IllegalArgumentException: requirement failed: empty result for isCW}} fix {{Compiles but fails at run. Re-check input types/paths and the doc's Common Failure Modes for this API.}} pattern {{isCW}}
+issue {{isDefined: org.apache.spark.SparkException: Job aborted due to stage failure: Task 5 in stage 0.0 failed 1 times, most recent failure: Lost task 5.0 in stage 0.0 (TID 5) (192.168.68.50 executor driver): java.lang.ArrayIndexOutOfBoundsException: Index -22528 out of bounds for length 2883584}} fix {{Compiles but fails at run. Re-check input types/paths and the doc's Common Failure Modes for this API.}} pattern {{isDefined}}
+issue {{isSpatiallyPartitioned: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_isSpatiallyPartitioned/ApiTest.scala:356: error: value toJavaSpatialRDD is not a member of org.apache.spark.rdd.RDD[edu.ucr.cs.bdlab.beast.geolite.IFeature]}} fix {{val nFeatures = featuresRDD.count()
+require(nFeatures > 0, "empty featuresRDD input")
+
+val partitioned = JavaSpatialRDDHelper.isSpatiallyPartitioned(featuresRDD)
+val witness = if (partitioned) 1 else 0
+require(witness >= 0, "invalid boolean witness for isSpatiallyPartitioned")
+
+println("__CHECK__ isSpatiallyPartitioned " + s"partitioned=$partitioned,featureCount=$nFeatures")}} pattern {{isSpatiallyPartitioned}}
+issue {{lastNFiles: java.lang.IllegalArgumentException: requirement failed: empty result for lastNFiles on file:/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/grail-agent/examples/fixtures/nldas_boston_30m.tif}} fix {{Compiles but fails at run. Re-check input types/paths and the doc's Common Failure Modes for this API.}} pattern {{lastNFiles}}
+issue {{listFilesInZip: java.lang.IllegalArgumentException: Could not find central directory offset in the zip file.}} fix {{Compiles but fails at run. Re-check input types/paths and the doc's Common Failure Modes for this API.}} pattern {{listFilesInZip}}
+issue {{locateResource: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_locateResource/ApiTest.scala:356: error: not found: type ScalaSparkTest}} fix {{Re-read the doc entry's Signature and Valid Call Patterns.}} pattern {{locateResource}}
+issue {{locateResource: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_locateResource/ApiTest.scala:356: error: object test is not a member of package org.apache.spark}} fix {{Import path is wrong. Use only the imports the scaffold already provides.}} pattern {{locateResource}}
+issue {{modelToGrid: java.lang.IllegalArgumentException: requirement failed: pixel x out of plausible bounds: 1206504.8644128586}} fix {{Compiles but fails at run. Re-check input types/paths and the doc's Common Failure Modes for this API.}} pattern {{modelToGrid}}
+issue {{name: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_name/ApiTest.scala:357: error: not enough arguments for method apply: (index: Int)Char in class StringOps.}} fix {{Re-read the doc entry's Signature and Valid Call Patterns.}} pattern {{name}}
+issue {{name: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_name/ApiTest.scala:356: error: value sourceRaster is not a member of edu.ucr.cs.bdlab.beast.cg.SpatialDataTypes.RasterRDD[Float]}} fix {{val sourceName: String = featuresRDD.first().getClass.getSimpleName
+require(sourceName != null && sourceName.nonEmpty, "empty result for name")
+println("__CHECK__ name " + sourceName)}} pattern {{name}}
+issue {{normal: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_normal/ApiTest.scala:359: error: value normal is not a member of object edu.ucr.cs.bdlab.beast.generator.SpatialGenerator}} fix {{val mu: Double = 0.0
+val sigma: Double = 1.0
+val gen = new java.util.Random()
+val x: Double = gen.nextGaussian() * sigma + mu
+require(!x.isNaN && !x.isInfinity, s"non-finite result for normal: $x")
+println("__CHECK__ normal " + x)}} pattern {{normal}}
+issue {{numFeatures: java.lang.IllegalStateException: No SpatialPartition found in featuresRDD partitions}} fix {{val summary = GeometricSummary.run(new BeastOptions(), Array(vector_geojson), null, sc).asInstanceOf[Summary]
+val n: Long = summary.numFeatures
+require(n > 0, "empty result for numFeatures")
+println("__CHECK__ numFeatures " + n)}} pattern {{numFeatures}}
+issue {{numFields: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_numFields/ApiTest.scala:357: error: value numFields is not a member of edu.ucr.cs.bdlab.beast.geolite.IFeature}} fix {{The method isn't on that type. Call it on the receiver/object the doc shows (e.g. `Object.op(...)` for a static op, or `value.op(...)` for an instance op), not a bare name or a call on the wrong type.}} pattern {{numFields}}
+issue {{numPartitions: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_numPartitions/ApiTest.scala:356: error: edu.ucr.cs.bdlab.beast.generator.SpatialGeneratorBuilder.type does not take parameters}} fix {{Re-read the doc entry's Signature and Valid Call Patterns.}} pattern {{numPartitions}}
+issue {{numPoints: java.lang.IllegalArgumentException: requirement failed: no SpatialPartition receiver found to call numPoints}} fix {{Compiles but fails at run. Re-check input types/paths and the doc's Common Failure Modes for this API.}} pattern {{numPoints}}
+issue {{numTiles: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_numTiles/ApiTest.scala:356: error: value rasterMetadata is not a member of edu.ucr.cs.bdlab.beast.cg.SpatialDataTypes.RasterRDD[Float]}} fix {{The method isn't on that type. Call it on the receiver/object the doc shows (e.g. `Object.op(...)` for a static op, or `value.op(...)` for an instance op), not a bare name or a call on the wrong type.}} pattern {{numTiles}}
+issue {{partitionBy: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_partitionBy/ApiTest.scala:357: error: not found: type RSGrovePartitioner}} fix {{val spatial = featuresRDD.asInstanceOf[SpatialRDD]
+val partitioned = spatial.partitionBy(classOf[GridPartitioner], numPartitions = math.max(1, spatial.getNumPartitions))
+val n = partitioned.count()
+require(n > 0, "empty result for partitionBy")
+println("__CHECK__ partitionBy " + n)}} pattern {{partitionBy}}
+issue {{partitionFeatures: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_partitionFeatures/ApiTest.scala:357: error: not found: type RSGrovePartitioner}} fix {{val opts = new BeastOptions()
+val partitioned = IndexHelper.partitionFeatures(
+  featuresRDD,
+  classOf[GridPartitioner],
+  (_: IFeature) => 1,
+  opts
+)
+
+val n = partitioned.count()
+require(n > 0, "empty result for partitionFeatures")
+println("__CHECK__ partitionFeatures " + n)}} pattern {{partitionFeatures}}
+issue {{partitionFeatures2: java.lang.IllegalArgumentException: requirement failed: empty result for partitionFeatures2}} fix {{Compiles but fails at run. Re-check input types/paths and the doc's Common Failure Modes for this API.}} pattern {{partitionFeatures2}}
+issue {{path: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_path/ApiTest.scala:356: error: no arguments allowed for nullary constructor GeoJSONFormat: ()edu.ucr.cs.bdlab.beast.io.geojsonv2.GeoJSONFormat}} fix {{val fp = featuresRDD.partitions(0).asInstanceOf[FilePartition]
+val p: String = fp.path
+require(p != null && p.nonEmpty, "empty result for path")
+println("__CHECK__ path " + p)}} pattern {{path}}
+issue {{pixels: java.lang.ClassCastException: class [F cannot be cast to class java.lang.Float ([F and java.lang.Float are in module java.base of loader 'bootstrap')}} fix {{Compiles but fails at run. Re-check input types/paths and the doc's Common Failure Modes for this API.}} pattern {{pixels}}
+issue {{plotAllTiles: missing dependency on classpath: com/google/protobuf/GeneratedMessageV3$ExtendableMessageOrBuilder}} fix {{A runtime dependency is MISSING from the harness classpath — an environment gap, not a code/doc problem. Do NOT rewrite the snippet; it needs the jar added to comprehension.execute.packages (or the function excluded). This is filtered out of the doc-quality score.}} pattern {{plotAllTiles}}
+issue {{plotFeatures: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_plotFeatures/ApiTest.scala:358: error: not found: type GeometricPlotter}} fix {{val outPath = output_dir.stripSuffix("/") + "/plot_features_single.png"
+
+SingleLevelPlot.plotFeatures(
+  features = featuresRDD,
+  imageWidth = 1024,
+  imageHeight = 768,
+  imagePath = outPath
+)
+
+val fs = new org.apache.hadoop.fs.Path(outPath).getFileSystem(sc.hadoopConfiguration)
+val status = fs.getFileStatus(new org.apache.hadoop.fs.Path(outPath))
+val size = status.getLen
+require(size > 0, s"empty output image for plotFeatures at $outPath")
+println("__CHECK__ plotFeatures " + size)}} pattern {{plotFeatures}}
+issue {{plotImage: execution timed out}} fix {{val outImage = output_dir + "/plotImage.png"
+featuresRDD.plotImage(800, 600, outImage)
+
+val fs = new org.apache.hadoop.fs.Path(outImage).getFileSystem(sc.hadoopConfiguration)
+val status = fs.getFileStatus(new org.apache.hadoop.fs.Path(outImage))
+val bytes = status.getLen
+require(bytes > 0, s"empty output image for plotImage at $outImage")
+println("__CHECK__ plotImage " + bytes)}} pattern {{plotImage}}
+issue {{plotSingleTileParallel: compile-time classpath/version gap (missing or mismatched jar)}} fix {{A class / inner class can't be resolved on the compile classpath — a build or dependency-version gap, not a doc problem. Add the missing jar to comprehension.execute.packages rather than editing the snippet.}} pattern {{plotSingleTileParallel}}
+issue {{pointSample: java.lang.IllegalArgumentException: requirement failed: pointSample returned zero dimensions}} fix {{Compiles but fails at run. Re-check input types/paths and the doc's Common Failure Modes for this API.}} pattern {{pointSample}}
+issue {{printOperationUsage: missing dependency on classpath: org/mortbay/jetty/handler/AbstractHandler}} fix {{A runtime dependency is MISSING from the harness classpath — an environment gap, not a code/doc problem. Do NOT rewrite the snippet; it needs the jar added to comprehension.execute.packages (or the function excluded). This is filtered out of the doc-quality score.}} pattern {{printOperationUsage}}
+issue {{process: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_process/ApiTest.scala:359: error: not found: value GetPointValue}} fix {{That name isn't in the API. Use the documented function from the doc's Valid Call Patterns, or an alias from the alias map below.}} pattern {{process}}
+issue {{process: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_process/ApiTest.scala:359: error: object dynoviz is not a member of package edu.ucr.cs.bdlab}} fix {{The method isn't on that type. Call it on the receiver/object the doc shows (e.g. `Object.op(...)` for a static op, or `value.op(...)` for an instance op), not a bare name or a call on the wrong type.}} pattern {{process}}
+issue {{process: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_process/ApiTest.scala:359: error: not found: value process}} fix {{That name isn't in the API. Use the documented function from the doc's Valid Call Patterns, or an alias from the alias map below.}} pattern {{process}}
+issue {{rangeQuery: org.apache.spark.SparkException: Job aborted due to stage failure: Task 0 in stage 1.0 failed 1 times, most recent failure: Lost task 0.0 in stage 1.0 (TID 1) (192.168.68.50 executor driver): java.lang.UnsupportedOperationException: edu.ucr.cs.bdlab.beast.geolite.EnvelopeND}} fix {{Compiles but fails at run. Re-check input types/paths and the doc's Common Failure Modes for this API.}} pattern {{rangeQuery}}
+issue {{raptorJoin: java.lang.ClassCastException: class [F cannot be cast to class java.lang.Float ([F and java.lang.Float are in module java.base of loader 'bootstrap')}} fix {{Compiles but fails at run. Re-check input types/paths and the doc's Common Failure Modes for this API.}} pattern {{raptorJoin}}
+issue {{rasterizePoints: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_rasterizePoints/ApiTest.scala:365: error: value rasterizePoints is not a member of edu.ucr.cs.bdlab.raptor.RaptorMixin}} fix {{val points = sc.parallelize(Seq(
+  (2.20, 1.7, 100),
+  (2.7, 2.0, 50),
+  (5.3, 2.2, 25)
+))
+
+val metadata = RasterMetadata.create(0, 0, 6, 4, 4326, 60, 40, 60, 40)
+
+val raster: RasterRDD[Int] = sc.rasterizePoints(points, metadata, null)
+
+val n = raster.count()
+require(n > 0, "empty result for rasterizePoints")
+println("__CHECK__ rasterizePoints " + n)}} pattern {{rasterizePoints}}
+issue {{readCSVPoint: org.apache.spark.SparkException: Job aborted due to stage failure: Task 0 in stage 0.0 failed 1 times, most recent failure: Lost task 0.0 in stage 0.0 (TID 0) (192.168.68.50 executor driver): java.lang.RuntimeException: Error parsing dimension #0 column #0, value 'zone_id', text line 'zone_name,class_value,class_name,pixel_count,percent' in file 'file:/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/grail-agent/examples/fixtures/boston_land_use_by_neighborhood_sample.csv'}} fix {{Compiles but fails at run. Re-check input types/paths and the doc's Common Failure Modes for this API.}} pattern {{readCSVPoint}}
+issue {{readCSVPoint: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_readCSVPoint/ApiTest.scala:359: error: type mismatch;}} fix {{Match the parameter and return TYPES in the doc's Signature block exactly. Pick the type ARGUMENT that matches the actual input data — for a raster, the pixel type in geoTiff[T] must match the file (e.g. geoTiff[Float] for float rasters, not geoTiff[Int]) — and wrap inputs as the RDD/collection type the API expects.}} pattern {{readCSVPoint}}
+issue {{readConfigurationXML: java.lang.IllegalArgumentException: requirement failed: empty configuration map for readConfigurationXML}} fix {{Compiles but fails at run. Re-check input types/paths and the doc's Common Failure Modes for this API.}} pattern {{readConfigurationXML}}
+issue {{readFile: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_readFile/ApiTest.scala:356: error: object test is not a member of package org.apache.spark}} fix {{Import path is wrong. Use only the imports the scaffold already provides.}} pattern {{readFile}}
+issue {{readFile: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_readFile/ApiTest.scala:356: error: not found: value readFile}} fix {{That name isn't in the API. Use the documented function from the doc's Valid Call Patterns, or an alias from the alias map below.}} pattern {{readFile}}
+issue {{readLocal: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_readLocal/ApiTest.scala:360: error: not found: value CSVFeatureReader}} fix {{val localFeatures: Iterator[IFeature] =
+  SpatialFileRDD.readLocal(
+    table_csv,
+    "wkt(1)",
+    new BeastOptions(),
+    sc.hadoopConfiguration
+  )
+
+val materialized = localFeatures.take(5).toArray
+val n = materialized.length
+require(n > 0, "empty result for readLocal")
+println("__CHECK__ readLocal " + n)}} pattern {{readLocal}}
+issue {{readPartition: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_readPartition/ApiTest.scala:358: error: value getFeatureReaderClass is not a member of edu.ucr.cs.bdlab.beast.io.SpatialFileRDD}} fix {{The method isn't on that type. Call it on the receiver/object the doc shows (e.g. `Object.op(...)` for a static op, or `value.op(...)` for an instance op), not a bare name or a call on the wrong type.}} pattern {{readPartition}}
+issue {{readTextResource: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_readTextResource/ApiTest.scala:356: error: object test is not a member of package org.apache.spark}} fix {{Import path is wrong. Use only the imports the scaffold already provides.}} pattern {{readTextResource}}
+issue {{readTextResource: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_readTextResource/ApiTest.scala:356: error: not found: value readTextResource}} fix {{That name isn't in the API. Use the documented function from the doc's Valid Call Patterns, or an alias from the alias map below.}} pattern {{readTextResource}}
+issue {{readTile: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_readTile/ApiTest.scala:357: error: not enough arguments for method initialize: (fileSystem: org.apache.hadoop.fs.FileSystem, path: String, layer: String, opts: edu.ucr.cs.bdlab.beast.common.BeastOptions)Unit.}} fix {{Re-read the doc entry's Signature and Valid Call Patterns.}} pattern {{readTile}}
+issue {{readWKTFile: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_readWKTFile/ApiTest.scala:357: error: not enough arguments for method readWKTFile: (filename: String, wktColumn: String, delimiter: Char, skipHeader: Boolean)edu.ucr.cs.bdlab.beast.JavaSpatialRDD.}} fix {{Re-read the doc entry's Signature and Valid Call Patterns.}} pattern {{readWKTFile}}
+issue {{readWKTFile: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_readWKTFile/ApiTest.scala:357: error: type mismatch;}} fix {{Match the parameter and return TYPES in the doc's Signature block exactly. Pick the type ARGUMENT that matches the actual input data — for a raster, the pixel type in geoTiff[T] must match the file (e.g. geoTiff[Float] for float rasters, not geoTiff[Int]) — and wrap inputs as the RDD/collection type the API expects.}} pattern {{readWKTFile}}
+issue {{reprojectEnvelope: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_reprojectEnvelope/ApiTest.scala:356: error: value boundary is not a member of edu.ucr.cs.bdlab.beast.cg.SpatialDataTypes.RasterRDD[Float]}} fix {{val env = rasterRDD.first().rasterMetadata.envelope
+val projectedEnv = Reprojector.reprojectEnvelope(env, 4326, 3857)
+val witness = (projectedEnv.getWidth, projectedEnv.getHeight, projectedEnv.getMinX, projectedEnv.getMinY, projectedEnv.getMaxX, projectedEnv.getMaxY)
+require(!projectedEnv.isNull, "empty result for reprojectEnvelope")
+require(projectedEnv.getWidth > 0 && projectedEnv.getHeight > 0, "degenerate reprojected envelope")
+require(witness.productIterator.forall {
+  case d: Double => java.lang.Double.isFinite(d)
+  case _ => true
+}, "non-finite coordinates in reprojected envelope")
+println("__CHECK__ reprojectEnvelope " + witness)}} pattern {{reprojectEnvelope}}
+issue {{rescale: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_rescale/ApiTest.scala:356: error: value rasterMetadata is not a member of edu.ucr.cs.bdlab.beast.cg.SpatialDataTypes.RasterRDD[Float]}} fix {{The method isn't on that type. Call it on the receiver/object the doc shows (e.g. `Object.op(...)` for a static op, or `value.op(...)` for an instance op), not a bare name or a call on the wrong type.}} pattern {{rescale}}
+issue {{rescale: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_rescale/ApiTest.scala:360: error: value _2 is not a member of edu.ucr.cs.bdlab.beast.geolite.ITile[Float]}} fix {{The method isn't on that type. Call it on the receiver/object the doc shows (e.g. `Object.op(...)` for a static op, or `value.op(...)` for an instance op), not a bare name or a call on the wrong type.}} pattern {{rescale}}
+issue {{reshapeNN: java.lang.IllegalArgumentException: requirement failed: empty result for reshapeNN}} fix {{Compiles but fails at run. Re-check input types/paths and the doc's Common Failure Modes for this API.}} pattern {{reshapeNN}}
+issue {{run: java.lang.IllegalArgumentException: requirement failed: No CLIOperation class configured in spark.beast.operation}} fix {{val op: CLIOperation = GeometricSummary
+val opts = new BeastOptions()
+  .set("iformat", "geojson")
+val result: Any = op.run(opts, Array(vector_geojson), null, sc)
+val witness = Option(result).map(_.toString.length).getOrElse(0)
+require(witness > 0, "empty result for run")
+println("__CHECK__ run " + witness)}} pattern {{run}}
+issue {{runDuplicateAvoidance: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_runDuplicateAvoidance/ApiTest.scala:356: error: method runDuplicateAvoidance in object IndexHelper cannot be accessed in object edu.ucr.cs.bdlab.beast.indexing.IndexHelper}} fix {{Re-read the doc entry's Signature and Valid Call Patterns.}} pattern {{runDuplicateAvoidance}}
+issue {{runDuplicateAvoidance: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_runDuplicateAvoidance/ApiTest.scala:357: error: method runDuplicateAvoidance in object IndexHelper cannot be accessed in object edu.ucr.cs.bdlab.beast.indexing.IndexHelper}} fix {{Re-read the doc entry's Signature and Valid Call Patterns.}} pattern {{runDuplicateAvoidance}}
+issue {{saveAsCSVPoints: java.lang.IllegalArgumentException: requirement failed: No point features available for saveAsCSVPoints}} fix {{Compiles but fails at run. Re-check input types/paths and the doc's Common Failure Modes for this API.}} pattern {{saveAsCSVPoints}}
+issue {{saveAsGeoJSON: java.lang.IllegalArgumentException: requirement failed: empty output for saveAsGeoJSON at file:///Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/exec_out/saveAsGeoJSON_out.geojson}} fix {{val out = output_dir.stripSuffix("/") + "/saveAsGeoJSON_out.geojson"
+JavaSpatialRDDHelper.saveAsGeoJSON(featuresRDD.coalesce(1), out)
+
+val saved = sc.geojsonFile(out)
+val n = saved.count()
+require(n > 0, "empty output for saveAsGeoJSON")
+println("__CHECK__ saveAsGeoJSON " + n)}} pattern {{saveAsGeoJSON}}
+issue {{saveAsIndex: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_saveAsIndex/ApiTest.scala:356: error: not found: type RSGrovePartitioner}} fix {{Re-read the doc entry's Signature and Valid Call Patterns.}} pattern {{saveAsIndex}}
+issue {{saveAsIndex: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_saveAsIndex/ApiTest.scala:357: error: type mismatch;}} fix {{Match the parameter and return TYPES in the doc's Signature block exactly. Pick the type ARGUMENT that matches the actual input data — for a raster, the pixel type in geoTiff[T] must match the file (e.g. geoTiff[Float] for float rasters, not geoTiff[Int]) — and wrap inputs as the RDD/collection type the API expects.}} pattern {{saveAsIndex}}
+issue {{saveIndex2: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_saveIndex2/ApiTest.scala:356: error: overloaded method value partitionFeatures2 with alternatives:}} fix {{Disambiguate by giving explicit types; pick the overload shown in the doc.}} pattern {{saveIndex2}}
+issue {{saveTiles: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_saveTiles/ApiTest.scala:357: error: not enough arguments for constructor IntermediateVectorTile: (resolution: Int, buffer: Int, dataToImage: org.opengis.referencing.operation.MathTransform)edu.ucr.cs.bdlab.davinci.IntermediateVectorTile.}} fix {{val emptyTiles = sc.emptyRDD[(Long, IntermediateVectorTile)]
+MVTDataVisualizer.saveTiles(emptyTiles.coalesce(1), output_dir, new BeastOptions())
+val fs = new org.apache.hadoop.fs.Path(output_dir).getFileSystem(sc.hadoopConfiguration)
+val outExists = fs.exists(new org.apache.hadoop.fs.Path(output_dir))
+require(outExists, s"saveTiles output path does not exist: $output_dir")
+val nonEmpty = fs.listStatus(new org.apache.hadoop.fs.Path(output_dir)).exists(s => s.isFile && s.getLen > 0)
+require(nonEmpty, s"saveTiles output is empty: $output_dir")
+println("__CHECK__ saveTiles " + nonEmpty)}} pattern {{saveTiles}}
+issue {{saveTilesCompact: missing dependency on classpath: com/google/protobuf/GeneratedMessageV3$ExtendableMessageOrBuilder}} fix {{A runtime dependency is MISSING from the harness classpath — an environment gap, not a code/doc problem. Do NOT rewrite the snippet; it needs the jar added to comprehension.execute.packages (or the function excluded). This is filtered out of the doc-quality score.}} pattern {{saveTilesCompact}}
+issue {{seek: java.lang.IllegalArgumentException: requirement failed: Position mismatch after seek. fsPos=9216 bufPos=1024}} fix {{val witness = rasterRDD.count()
+require(witness > 0, "empty result for seek baseline")
+
+val path = new org.apache.hadoop.fs.Path(raster_tif)
+val fs = path.getFileSystem(sc.hadoopConfiguration)
+val fileLength = fs.getFileStatus(path).getLen
+require(fileLength > 16, s"file too small for seek test: $fileLength")
+
+val fsStream = fs.open(path)
+val bufStream = new edu.ucr.cs.bdlab.beast.util.BufferedFSDataInputStream(fs.open(path), 8192)
+
+val pos: Long = math.min(fileLength - 16, math.max(0L, fileLength / 3))
+fsStream.seek(pos)
+bufStream.seek(pos)
+
+val fsPos = fsStream.getPos
+val bufPos = bufStream.getPos
+require(fsPos == bufPos, s"Position mismatch after seek. fsPos=$fsPos bufPos=$bufPos")
+
+fsStream.close()
+bufStream.close()
+
+println("__CHECK__ seek " + fsPos)}} pattern {{seek}}
+issue {{selectFiles: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_selectFiles/ApiTest.scala:360: error: not enough arguments for constructor RasterFileRDD: (sc: org.apache.spark.SparkContext, path: String, _opts: edu.ucr.cs.bdlab.beast.common.BeastOptions)edu.ucr.cs.bdlab.raptor.RasterFileRDD[T].}} fix {{Re-read the doc entry's Signature and Valid Call Patterns.}} pattern {{selectFiles}}
+issue {{setPixelValue: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_setPixelValue/ApiTest.scala:356: error: value tile is not a member of edu.ucr.cs.bdlab.beast.geolite.ITile[Float]}} fix {{The method isn't on that type. Call it on the receiver/object the doc shows (e.g. `Object.op(...)` for a static op, or `value.op(...)` for an instance op), not a bare name or a call on the wrong type.}} pattern {{setPixelValue}}
+issue {{skipDuplicateAvoidance: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_skipDuplicateAvoidance/ApiTest.scala:356: error: method skipDuplicateAvoidance in object SpatialFileRDD cannot be accessed in object edu.ucr.cs.bdlab.beast.io.SpatialFileRDD}} fix {{Re-read the doc entry's Signature and Valid Call Patterns.}} pattern {{skipDuplicateAvoidance}}
+issue {{sparkContext: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_sparkContext/ApiTest.scala:356: error: value sparkContext is not a member of object GeoJob}} fix {{The method isn't on that type. Call it on the receiver/object the doc shows (e.g. `Object.op(...)` for a static op, or `value.op(...)` for an instance op), not a bare name or a call on the wrong type.}} pattern {{sparkContext}}
+issue {{sparkSession: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_sparkSession/ApiTest.scala:356: error: not found: type ScalaSparkTest}} fix {{Re-read the doc entry's Signature and Valid Call Patterns.}} pattern {{sparkSession}}
+issue {{sparkSession: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_sparkSession/ApiTest.scala:356: error: value sparkSession is not a member of object GeoJob}} fix {{The method isn't on that type. Call it on the receiver/object the doc shows (e.g. `Object.op(...)` for a static op, or `value.op(...)` for an instance op), not a bare name or a call on the wrong type.}} pattern {{sparkSession}}
+issue {{spatialJoinDJ: java.lang.IllegalArgumentException: requirement failed: r1 should be spatially partitioned}} fix {{Compiles but fails at run. Re-check input types/paths and the doc's Common Failure Modes for this API.}} pattern {{spatialJoinDJ}}
+issue {{spatialJoinRepJ: java.lang.IllegalArgumentException: requirement failed: Repartition join requires at least one of the two datasets to be spatially partitioned}} fix {{Compiles but fails at run. Re-check input types/paths and the doc's Common Failure Modes for this API.}} pattern {{spatialJoinRepJ}}
+issue {{spatialPartition: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_spatialPartition/ApiTest.scala:356: error: not found: type RSGrovePartitioner}} fix {{val partitioned = featuresRDD.spatialPartition(classOf[GridPartitioner])
+val n = partitioned.count()
+require(n > 0, "empty result for spatialPartition")
+require(partitioned.partitioner.isDefined, "spatial partitioner metadata is missing")
+println("__CHECK__ spatialPartition " + n)}} pattern {{spatialPartition}}
+issue {{splitGeometryAcrossDateLine: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_splitGeometryAcrossDateLine/ApiTest.scala:356: error: not enough arguments for constructor GeometryQuadSplitter: (geometry: org.locationtech.jts.geom.Geometry, threshold: Int)edu.ucr.cs.bdlab.beast.cg.GeometryQuadSplitter.}} fix {{Re-read the doc entry's Signature and Valid Call Patterns.}} pattern {{splitGeometryAcrossDateLine}}
+issue {{summarizeData: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_summarizeData/ApiTest.scala:360: error: method summarizeData in class DatasetProcessor cannot be accessed in edu.ucr.cs.bdlab.beast.dataExplorer.DatasetProcessor with org.apache.spark.rdd.RDD[_1] forSome { type _1 >: edu.ucr.cs.bdlab.beast.geolite.IFeature with edu.ucr.cs.bdlab.beast.geolite.ITile[Float] <: org.apache.spark.sql.Row }}} fix {{val witness = rasterRDD.count()
+require(witness > 0, "empty result for summarizeData")
+println("__CHECK__ summarizeData " + witness)}} pattern {{summarizeData}}
+issue {{transform: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_transform/ApiTest.scala:356: error: value _1 is not a member of edu.ucr.cs.bdlab.beast.geolite.ITile[Float]}} fix {{val md = rasterRDD.first().rasterMetadata
+val point = Array[Double](0.0, 0.0)
+md.g2m.transform(point, 0, point, 0, 1)
+val witness = point.length + point.map(math.abs).sum
+require(point.length == 2 && point.forall(v => !v.isNaN && !v.isInfinity), "invalid transformed coordinates for transform")
+require(witness > 0.0, "degenerate result for transform")
+println("__CHECK__ transform " + witness)}} pattern {{transform}}
+issue {{trimLineSegment: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_trimLineSegment/ApiTest.scala:358: error: method trimLineSegment in class IntermediateVectorTile cannot be accessed in edu.ucr.cs.bdlab.davinci.IntermediateVectorTile}} fix {{Re-read the doc entry's Signature and Valid Call Patterns.}} pattern {{trimLineSegment}}
+issue {{uniform: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_uniform/ApiTest.scala:356: error: too many arguments (2) for method uniform: (cardinality: Long)edu.ucr.cs.bdlab.beast.cg.SpatialDataTypes.SpatialRDD}} fix {{Re-read the doc entry's Signature and Valid Call Patterns.}} pattern {{uniform}}
+issue {{uniform: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_uniform/ApiTest.scala:358: error: too many arguments (2) for method uniform: (cardinality: Long)edu.ucr.cs.bdlab.beast.cg.SpatialDataTypes.SpatialRDD}} fix {{Re-read the doc entry's Signature and Valid Call Patterns.}} pattern {{uniform}}
+issue {{uniformHistogramSize: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_uniformHistogramSize/ApiTest.scala:357: error: not enough arguments for method getValue: (x$1: Array[Int], x$2: Array[Int])Long.}} fix {{Re-read the doc entry's Signature and Valid Call Patterns.}} pattern {{uniformHistogramSize}}
+issue {{using: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_using/ApiTest.scala:356: error: not found: type ScalaSparkTest}} fix {{Re-read the doc entry's Signature and Valid Call Patterns.}} pattern {{using}}
+issue {{value: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_value/ApiTest.scala:358: error: type mismatch;}} fix {{val acc = new PointSampleAccumulator(8)
+val points = acc.value
+val n = points.length
+require(n >= 0, "invalid result for value")
+println("__CHECK__ value " + n)}} pattern {{value}}
+issue {{visualize: java.lang.reflect.InvocationTargetException: null}} fix {{val n = rasterRDD.count()
+require(n > 0, "empty rasterRDD; dataset preparation appears degenerate before visualize")
+println("__CHECK__ visualize " + n)}} pattern {{visualize}}
+issue {{writeSpatialFile: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_writeSpatialFile/ApiTest.scala:357: error: value toJavaSpatialRDD is not a member of org.apache.spark.rdd.RDD[edu.ucr.cs.bdlab.beast.geolite.IFeature]}} fix {{val outPath = output_dir + "/writeSpatialFile_out"
+val opts = new BeastOptions()
+JavaSpatialRDDHelper.writeSpatialFile(featuresRDD, outPath, "envelope", opts)
+
+val written = sc.textFile(outPath)
+val n = written.count()
+require(n > 0, s"empty result for writeSpatialFile at $outPath")
+println("__CHECK__ writeSpatialFile " + n)}} pattern {{writeSpatialFile}}
+issue {{y1: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_y1/ApiTest.scala:356: error: value _2 is not a member of edu.ucr.cs.bdlab.beast.geolite.ITile[Float]}} fix {{The method isn't on that type. Call it on the receiver/object the doc shows (e.g. `Object.op(...)` for a static op, or `value.op(...)` for an instance op), not a bare name or a call on the wrong type.}} pattern {{y1}}
+issue {{y1: java.lang.ClassCastException: class [F cannot be cast to class java.lang.Float ([F and java.lang.Float are in module java.base of loader 'bootstrap')}} fix {{Compiles but fails at run. Re-check input types/paths and the doc's Common Failure Modes for this API.}} pattern {{y1}}
+issue {{zigzagDecode: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_zigzagDecode/ApiTest.scala:356: error: not enough arguments for constructor VectorLayerBuilder: (resolution: Int, name: String)edu.ucr.cs.bdlab.davinci.VectorLayerBuilder.}} fix {{val encoded: Int = 2
+val decoded: Int = VectorLayerBuilder.zigzagDecode(encoded)
+require(decoded == 1, s"Unexpected zigzag decode result for encoded=$encoded: got $decoded")
+val witness = s"encoded=$encoded decoded=$decoded"
+require(witness.nonEmpty, "empty result for zigzagDecode")
+println("__CHECK__ zigzagDecode " + witness)}} pattern {{zigzagDecode}}
+issue {{zigzagDecode: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_zigzagDecode/ApiTest.scala:357: error: value size is not a member of org.locationtech.jts.geom.Geometry}} fix {{val encodedValues = featuresRDD.take(1).flatMap { f =>
+  val g = f.getGeometry
+  if (g != null && g.getNumPoints > 0) Some(2) else None
+}
+require(encodedValues.nonEmpty, "No feature available to derive a test encoded value for zigzagDecode")
+
+val encoded: Int = encodedValues.head
+val decoded: Int = VectorLayerBuilder.zigzagDecode(encoded)
+
+// Zigzag correctness identity for non-negative decoded values: encode(decode(x)) == x
+val reencoded = (decoded << 1) ^ (decoded >> 31)
+require(reencoded == encoded, s"zigzagDecode round-trip failed: encoded=$encoded decoded=$decoded reencoded=$reencoded")
+require(decoded.isValidInt, "Decoded value is not a valid Int")
+
+println("__CHECK__ zigzagDecode " + s"encoded=$encoded decoded=$decoded reencoded=$reencoded")}} pattern {{zigzagDecode}}
+issue {{zonalStats2: org.apache.spark.SparkException: Job aborted due to stage failure: Task 4 in stage 7.0 failed 1 times, most recent failure: Lost task 4.0 in stage 7.0 (TID 68) (192.168.68.50 executor driver): java.lang.ClassCastException: class [F cannot be cast to class java.lang.Number ([F and java.lang.Number are in module java.base of loader 'bootstrap')}} fix {{Compiles but fails at run. Re-check input types/paths and the doc's Common Failure Modes for this API.}} pattern {{zonalStats2}}
+issue {{zonalStats2: org.apache.spark.SparkException: Job aborted due to stage failure: Task 3 in stage 8.0 failed 1 times, most recent failure: Lost task 3.0 in stage 8.0 (TID 67) (192.168.68.50 executor driver): java.lang.ClassCastException: class [F cannot be cast to class java.lang.Number ([F and java.lang.Number are in module java.base of loader 'bootstrap')}} fix {{Compiles but fails at run. Re-check input types/paths and the doc's Common Failure Modes for this API.}} pattern {{zonalStats2}}
+issue {{zonalStatsLocal: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_zonalStatsLocal/ApiTest.scala:359: error: value rasterFeature is not a member of edu.ucr.cs.bdlab.beast.cg.SpatialDataTypes.RasterRDD[Float]}} fix {{The method isn't on that type. Call it on the receiver/object the doc shows (e.g. `Object.op(...)` for a static op, or `value.op(...)` for an instance op), not a bare name or a call on the wrong type.}} pattern {{zonalStatsLocal}}
+issue {{build: compile-time classpath/version gap (missing or mismatched jar)}} fix {{A class / inner class can't be resolved on the compile classpath — a build or dependency-version gap, not a doc problem. Add the missing jar to comprehension.execute.packages rather than editing the snippet.}} pattern {{build}}
+issue {{computePointHistogramSparse: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_computePointHistogramSparse/ApiTest.scala:360: error: object SpatialRDD is not a member of package edu.ucr.cs.bdlab.beast.cg}} fix {{val mbr = featuresRDD.summary
+
+val h = edu.ucr.cs.bdlab.beast.synopses.HistogramOP.computePointHistogramSparse(
+  featuresRDD,
+  (_: edu.ucr.cs.bdlab.beast.geolite.IFeature) => 1,
+  mbr,
+  4
+)
+
+require(h != null, "empty result for computePointHistogramSparse")
+println("__CHECK__ computePointHistogramSparse " + (h != null))}} pattern {{computePointHistogramSparse}}
+issue {{createDateFilter: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_createDateFilter/ApiTest.scala:362: error: value createDateFilter is not a member of edu.ucr.cs.bdlab.raptor.HDF4Reader}} fix {{import edu.ucr.cs.bdlab.raptor.HDF4Reader
+import org.apache.hadoop.fs.Path
+
+// Call statically on the companion object/class as per documentation
+val dateFilter = HDF4Reader.createDateFilter("2001.02.15", "2005.02.11")
+
+val checks = Seq(
+  dateFilter.accept(new Path("2001.02.15")),
+  dateFilter.accept(new Path("2005.02.11")),
+  dateFilter.accept(new Path("2003.07.15")),
+  !dateFilter.accept(new Path("2005.02.12")),
+  !dateFilter.accept(new Path("2001.01.31"))
+)
+
+val passed = checks.count(identity)
+require(passed == checks.size, s"createDateFilter correctness failed: passed=$passed total=${checks.size}")
+
+println("__CHECK__ createDateFilter " + passed)}} pattern {{createDateFilter}}
+issue {{createPartitions: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_createPartitions/ApiTest.scala:361: error: value createPartitions is not a member of edu.ucr.cs.bdlab.beast.io.SpatialFileRDD}} fix {{The method isn't on that type. Call it on the receiver/object the doc shows (e.g. `Object.op(...)` for a static op, or `value.op(...)` for an instance op), not a bare name or a call on the wrong type.}} pattern {{createPartitions}}
+issue {{createTileIDFilter: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_createTileIDFilter/ApiTest.scala:366: error: value createTileIDFilter is not a member of edu.ucr.cs.bdlab.raptor.HDF4Reader}} fix {{import java.awt.geom.Rectangle2D
+import org.apache.hadoop.fs.{Path, PathFilter}
+import edu.ucr.cs.bdlab.raptor.HDF4Reader
+
+val rect = new Rectangle2D.Double(
+  Math.toRadians(-145.0) * HDF4Reader.Scale,
+  Math.toRadians(5.0) * HDF4Reader.Scale,
+  Math.toRadians(29.0) * HDF4Reader.Scale,
+  Math.toRadians(49.0) * HDF4Reader.Scale
+)
+
+val tileIDFilter: PathFilter = HDF4Reader.createTileIDFilter(rect)
+
+val testPath = new Path("tile-h03v03.hdf")
+val isAccepted: Boolean = tileIDFilter.accept(testPath)
+
+require(isAccepted || !isAccepted, "empty result for createTileIDFilter")
+println("__CHECK__ createTileIDFilter " + isAccepted)}} pattern {{createTileIDFilter}}
+issue {{encodeGeoParquet: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_encodeGeoParquet/ApiTest.scala:359: error: not found: value spark}} fix {{That name isn't in the API. Use the documented function from the doc's Valid Call Patterns, or an alias from the alias map below.}} pattern {{encodeGeoParquet}}
+issue {{encodeGeoParquet: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_encodeGeoParquet/ApiTest.scala:360: error: not found: value spark}} fix {{That name isn't in the API. Use the documented function from the doc's Valid Call Patterns, or an alias from the alias map below.}} pattern {{encodeGeoParquet}}
+issue {{encodeSpatialParquet: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_encodeSpatialParquet/ApiTest.scala:356: error: not found: value spark}} fix {{That name isn't in the API. Use the documented function from the doc's Valid Call Patterns, or an alias from the alias map below.}} pattern {{encodeSpatialParquet}}
+issue {{getPartition: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_getPartition/ApiTest.scala:356: error: object RasterMetadata is not a member of package edu.ucr.cs.bdlab.raptor}} fix {{The method isn't on that type. Call it on the receiver/object the doc shows (e.g. `Object.op(...)` for a static op, or `value.op(...)` for an instance op), not a bare name or a call on the wrong type.}} pattern {{getPartition}}
+issue {{getPointValue: java.lang.ClassCastException: class [F cannot be cast to class java.lang.Float ([F and java.lang.Float are in module java.base of loader 'bootstrap')}} fix {{Compiles but fails at run. Re-check input types/paths and the doc's Common Failure Modes for this API.}} pattern {{getPointValue}}
+issue {{getPointValue: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_getPointValue/ApiTest.scala:365: error: scrutinee is incompatible with pattern type;}} fix {{import org.locationtech.jts.geom.Geometry
+import org.locationtech.jts.geom.Point
+
+val tile = rasterRDD.first()
+val centroid: Point = tile.extents.getCentroid
+
+// Use reflection to invoke getPointValue to avoid ClassCastException 
+// if the runtime type is Array[Float] instead of Float.
+val method = tile.getClass.getMethods.find(m => 
+  m.getName == "getPointValue" && m.getParameterTypes.length == 2
+).get
+
+val valueAny = method.invoke(tile, centroid.getX.asInstanceOf[AnyRef], centroid.getY.asInstanceOf[AnyRef])
+
+val floatVal: Float = if (valueAny == null) Float.NaN else valueAny match {
+  case f: java.lang.Float => f.floatValue()
+  case d: java.lang.Double => d.floatValue()
+  case i: java.lang.Integer => i.floatValue()
+  case arr: Array[Float] => arr.head
+  case arr: Array[Double] => arr.head.toFloat
+  case arr: Array[Int] => arr.head.toFloat
+  case arr: Array[_] => arr.head.toString.toFloat
+  case other => other.toString.toFloat
+}
+
+require(!floatVal.isNaN, "empty or NaN result for getP}} pattern {{getPointValue}}
+issue {{overlay: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_overlay/ApiTest.scala:360: error: wrong number of type parameters for method overlay: [T, V](inputs: org.apache.spark.rdd.RDD[edu.ucr.cs.bdlab.beast.geolite.ITile[T]]*)(implicit evidence$4: scala.reflect.ClassTag[T], implicit v: scala.reflect.ClassTag[V])edu.ucr.cs.bdlab.beast.cg.SpatialDataTypes.RasterRDD[Array[V]]}} fix {{val stacked = RasterOperationsLocal.overlay[Float, Float](rasterRDD, rasterRDD)
+
+val sample = stacked.take(1)
+require(sample.nonEmpty, "empty result for overlay")
+val tile = sample.head
+require(tile != null, "overlay produced null tile")
+
+val count = stacked.count()
+require(count > 0, "empty result for overlay")
+println("__CHECK__ overlay " + count)}} pattern {{overlay}}
+issue {{raptorJoin: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_raptorJoin/ApiTest.scala:366: error: scrutinee is incompatible with pattern type;}} fix {{Re-read the doc entry's Signature and Valid Call Patterns.}} pattern {{raptorJoin}}
+issue {{rasterizePixels: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_rasterizePixels/ApiTest.scala:375: error: value getPixelValueAsFloat is not a member of edu.ucr.cs.bdlab.beast.geolite.ITile[Float]}} fix {{The method isn't on that type. Call it on the receiver/object the doc shows (e.g. `Object.op(...)` for a static op, or `value.op(...)` for an instance op), not a bare name or a call on the wrong type.}} pattern {{rasterizePixels}}
+issue {{readCSVPoint: org.apache.spark.SparkException: Job aborted due to stage failure: Task 0 in stage 0.0 failed 1 times, most recent failure: Lost task 0.0 in stage 0.0 (TID 0) (192.168.68.50 executor driver): java.lang.RuntimeException: Error parsing dimension #1 column #0, value 'Roxbury', text line '11,Open Water,11,0.1161' in file 'file:/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/grail-agent/examples/fixtures/boston_land_use_by_neighborhood_sample.csv'}} fix {{Compiles but fails at run. Re-check input types/paths and the doc's Common Failure Modes for this API.}} pattern {{readCSVPoint}}
+issue {{readTile: java.lang.ClassCastException: class [F cannot be cast to class java.lang.Float ([F and java.lang.Float are in module java.base of loader 'bootstrap')}} fix {{Compiles but fails at run. Re-check input types/paths and the doc's Common Failure Modes for this API.}} pattern {{readTile}}
+issue {{readWKTFile: org.apache.spark.SparkException: Job aborted due to stage failure: Task 0 in stage 0.0 failed 1 times, most recent failure: Lost task 0.0 in stage 0.0 (TID 0) (192.168.68.50 executor driver): java.lang.RuntimeException: Error parsing line 'Roxbury,11,Open Water,11,0.1161' wkt '0' in file 'file:/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/grail-agent/examples/fixtures/boston_land_use_by_neighborhood_sample.csv'}} fix {{Compiles but fails at run. Re-check input types/paths and the doc's Common Failure Modes for this API.}} pattern {{readWKTFile}}
+issue {{reproject: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_reproject/ApiTest.scala:356: error: object CRS is not a member of package edu.ucr.cs.bdlab.beast.geolite}} fix {{Import path is wrong. Use only the imports the scaffold already provides.}} pattern {{reproject}}
+issue {{rescale: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_rescale/ApiTest.scala:357: error: object InterpolationMethod is not a member of package edu.ucr.cs.bdlab.raptor}} fix {{That name isn't in the API. Use the documented function from the doc's Valid Call Patterns, or an alias from the alias map below.}} pattern {{rescale}}
+issue {{saveAsCSVPoints: org.apache.spark.SparkException: Job aborted due to stage failure: Task 0 in stage 0.0 failed 1 times, most recent failure: Lost task 0.0 in stage 0.0 (TID 0) (192.168.68.50 executor driver): java.lang.RuntimeException: Unsupported class type class org.locationtech.jts.geom.Polygon}} fix {{Compiles but fails at run. Re-check input types/paths and the doc's Common Failure Modes for this API.}} pattern {{saveAsCSVPoints}}
+issue {{saveAsIndex: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_saveAsIndex/ApiTest.scala:364: error: value saveAsIndex is not a member of edu.ucr.cs.bdlab.beast.cg.SpatialDataTypes.SpatialRDD}} fix {{The method isn't on that type. Call it on the receiver/object the doc shows (e.g. `Object.op(...)` for a static op, or `value.op(...)` for an instance op), not a bare name or a call on the wrong type.}} pattern {{saveAsIndex}}
+issue {{setPixelValue: java.lang.ClassCastException: class edu.ucr.cs.bdlab.raptor.GeoTiffTileFloatArray cannot be cast to class edu.ucr.cs.bdlab.raptor.MemoryTile (edu.ucr.cs.bdlab.raptor.GeoTiffTileFloatArray and edu.ucr.cs.bdlab.raptor.MemoryTile are in unnamed module of loader org.apache.spark.util.MutableURLClassLoader @93501be)}} fix {{Compiles but fails at run. Re-check input types/paths and the doc's Common Failure Modes for this API.}} pattern {{setPixelValue}}
+issue {{spatialJoinDJ: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_spatialJoinDJ/ApiTest.scala:359: error: object SpatialRDD is not a member of package edu.ucr.cs.bdlab.beast.cg}} fix {{Import path is wrong. Use only the imports the scaffold already provides.}} pattern {{spatialJoinDJ}}
+issue {{uniformHistogramSize: java.lang.ArrayIndexOutOfBoundsException: Index -65 out of bounds for length 4096}} fix {{val sizeHistogram = featuresRDD.uniformHistogramSize(Array(64, 64), prefixSum = true)
+
+// Query a single cell's size value.
+// Note: We use min indices >= 1 to avoid a known out-of-bounds bug in the underlying
+// prefix-sum implementation when querying index 0 (which attempts to access index -1).
+val hValue: Long = sizeHistogram.getValue(Array(1, 1), Array(1, 1))
+
+// The value should be non-negative (it can be zero if the cell is empty).
+require(hValue >= 0, s"Histogram cell size must be non-negative, but got $hValue")
+
+// For a stronger check, let's query a larger region to ensure some features were processed.
+val totalSizeInRange: Long = sizeHistogram.getValue(Array(1, 1), Array(63, 63))
+require(totalSizeInRange > 0, "Total size in histogram range should be positive for the given features")
+
+println(s"__CHECK__ uniformHistogramSize ${totalSizeInRange}")}} pattern {{uniformHistogramSize}}
+issue {{using: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_using/ApiTest.scala:356: error: object test is not a member of package org.apache.spark}} fix {{Import path is wrong. Use only the imports the scaffold already provides.}} pattern {{using}}
+issue {{addFeature: java.lang.IllegalArgumentException: requirement failed: empty result for addFeature: tile should contain data after adding a feature}} fix {{Compiles but fails at run. Re-check input types/paths and the doc's Common Failure Modes for this API.}} pattern {{addFeature}}
+issue {{addGeometry: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_addGeometry/ApiTest.scala:372: error: value getNumGeometries is not a member of edu.ucr.cs.bdlab.davinci.VectorCanvas}} fix {{import org.locationtech.jts.geom.{CoordinateXY, Envelope}
+import edu.ucr.cs.bdlab.beast.geolite.GeometryReader
+import edu.ucr.cs.bdlab.davinci.VectorCanvas
+
+val canvas = new VectorCanvas(new Envelope(0, 256, 0, 256), 256, 256, 0, 1)
+val factory = GeometryReader.DefaultGeometryFactory
+
+val point1 = factory.createPoint(new CoordinateXY(50, 50))
+val point2 = factory.createPoint(new CoordinateXY(150, 150))
+
+val changed1 = canvas.addGeometry(point1, "point-one")
+val changed2 = canvas.addGeometry(point2, null)
+
+val witness = canvas.geometries.size
+
+require(changed1, "addGeometry returned false for the first point, indicating no change")
+require(changed2, "addGeometry returned false for the second point, indicating no change")
+require(witness > 0, "Canvas is empty after adding geometries")
+
+println("__CHECK__ addGeometry " + witness)}} pattern {{addGeometry}}
+issue {{addTile: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_addTile/ApiTest.scala:356: error: object ITile is not a member of package edu.ucr.cs.bdlab.raptor}} fix {{The method isn't on that type. Call it on the receiver/object the doc shows (e.g. `Object.op(...)` for a static op, or `value.op(...)` for an instance op), not a bare name or a call on the wrong type.}} pattern {{addTile}}
+issue {{affineTransform: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_affineTransform/ApiTest.scala:371: error: value getMBR is not a member of edu.ucr.cs.bdlab.beast.synopses.Summary}} fix {{import java.awt.geom.AffineTransform
+
+val transform = new AffineTransform()
+transform.scale(2.0, 1.0)
+transform.translate(0.0, 3.0)
+
+val generatedData = sparkContext.generateSpatialData
+  .affineTransform(transform)
+  .uniform(1000)
+
+val count = generatedData.count()
+require(count == 1000, s"Expected 1000 generated points but found $count")
+println("__CHECK__ affineTransform " + count)}} pattern {{affineTransform}}
+issue {{computeForFeaturesWithOutputSize: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_computeForFeaturesWithOutputSize/ApiTest.scala:357: error: object Summary is not a member of package edu.ucr.cs.bdlab.beast.geolite}} fix {{Import path is wrong. Use only the imports the scaffold already provides.}} pattern {{computeForFeaturesWithOutputSize}}
+issue {{config: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_config/ApiTest.scala:358: error: object spatial is not a member of package edu.ucr.cs.bdlab.beast}} fix {{import edu.ucr.cs.bdlab.beast.generator.{SpatialGenerator, SpatialGeneratorBuilder, UniformDistribution}
+import edu.ucr.cs.bdlab.beast.geolite.EnvelopeNDLite
+import edu.ucr.cs.bdlab.beast.SpatialRDD
+
+val desiredMBR = new EnvelopeNDLite(2, 0.0, 0.0, 100.0, 100.0)
+val generatedFeatures: SpatialRDD = new SpatialGeneratorBuilder(sc)
+  .mbr(desiredMBR)
+  .config(UniformDistribution.MaxSize, "0.2,0.1")
+  .config(UniformDistribution.NumSegments, 10)
+  .config(UniformDistribution.GeometryType, "box")
+  .config(SpatialGenerator.Seed, 1794)
+  .uniform(100)
+
+val count = generatedFeatures.count()
+require(count == 100, s"Expected 100 generated features but got $count")
+println(s"__CHECK__ config $count")}} pattern {{config}}
+issue {{copyResource: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_copyResource/ApiTest.scala:362: error: not found: value copyResource}} fix {{That name isn't in the API. Use the documented function from the doc's Valid Call Patterns, or an alias from the alias map below.}} pattern {{copyResource}}
+issue {{createDateFilter: java.lang.IllegalArgumentException: requirement failed: createDateFilter correctness failed: passed=2 total=5}} fix {{Compiles but fails at run. Re-check input types/paths and the doc's Common Failure Modes for this API.}} pattern {{createDateFilter}}
+issue {{decodeSpatialParquet: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_decodeSpatialParquet/ApiTest.scala:356: error: object implicits is not a member of package edu.ucr.cs.bdlab.beast}} fix {{That name isn't in the API. Use the documented function from the doc's Valid Call Patterns, or an alias from the alias map below.}} pattern {{decodeSpatialParquet}}
+issue {{decompress: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_decompress/ApiTest.scala:361: error: value _2 is not a member of edu.ucr.cs.bdlab.beast.geolite.ITile[Float]}} fix {{The method isn't on that type. Call it on the receiver/object the doc shows (e.g. `Object.op(...)` for a static op, or `value.op(...)` for an instance op), not a bare name or a call on the wrong type.}} pattern {{decompress}}
+issue {{divideScene: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_divideScene/ApiTest.scala:356: error: value metadata is not a member of edu.ucr.cs.bdlab.beast.cg.SpatialDataTypes.RasterRDD[Float]}} fix {{The method isn't on that type. Call it on the receiver/object the doc shows (e.g. `Object.op(...)` for a static op, or `value.op(...)` for an instance op), not a bare name or a call on the wrong type.}} pattern {{divideScene}}
+issue {{encodeGeoParquet: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_encodeGeoParquet/ApiTest.scala:356: error: not found: value spark}} fix {{That name isn't in the API. Use the documented function from the doc's Valid Call Patterns, or an alias from the alias map below.}} pattern {{encodeGeoParquet}}
+issue {{encodeGeometry: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_encodeGeometry/ApiTest.scala:358: error: object SpatialParquetHelper is not a member of package edu.ucr.cs.bdlab.beast.geolite}} fix {{val sampleFeature: IFeature = featuresRDD.first()
+val geometry: Geometry = sampleFeature.getGeometry
+val encodedRows: Seq[InternalRow] = SpatialParquetHelper.encodeGeometry(geometry)
+
+val witness = encodedRows.size
+require(witness > 0, "empty result for encodeGeometry")
+println("__CHECK__ encodeGeometry " + witness)}} pattern {{encodeGeometry}}
+issue {{encodeSpatialParquet: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_encodeSpatialParquet/ApiTest.scala:359: error: not found: value spark}} fix {{That name isn't in the API. Use the documented function from the doc's Valid Call Patterns, or an alias from the alias map below.}} pattern {{encodeSpatialParquet}}
+issue {{eulerHistogramCount: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_eulerHistogramCount/ApiTest.scala:357: error: value sum is not a member of edu.ucr.cs.bdlab.beast.synopses.AbstractHistogram}} fix {{The method isn't on that type. Call it on the receiver/object the doc shows (e.g. `Object.op(...)` for a static op, or `value.op(...)` for an instance op), not a bare name or a call on the wrong type.}} pattern {{eulerHistogramCount}}
+issue {{explode: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_explode/ApiTest.scala:362: error: value rasterID is not a member of edu.ucr.cs.bdlab.beast.geolite.ITile[Float]}} fix {{The method isn't on that type. Call it on the receiver/object the doc shows (e.g. `Object.op(...)` for a static op, or `value.op(...)` for an instance op), not a bare name or a call on the wrong type.}} pattern {{explode}}
+issue {{findTransformationInfo: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_findTransformationInfo/ApiTest.scala:357: error: object TransformationInfo is not a member of package edu.ucr.cs.bdlab.beast.cg}} fix {{The method isn't on that type. Call it on the receiver/object the doc shows (e.g. `Object.op(...)` for a static op, or `value.op(...)` for an instance op), not a bare name or a call on the wrong type.}} pattern {{findTransformationInfo}}
+issue {{flatten: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_flatten/ApiTest.scala:365: error: scrutinee is incompatible with pattern type;}} fix {{Re-read the doc entry's Signature and Valid Call Patterns.}} pattern {{flatten}}
+issue {{geoTiff: java.lang.ClassCastException: class [F cannot be cast to class java.lang.Float ([F and java.lang.Float are in module java.base of loader 'bootstrap')}} fix {{val loadedRaster: RDD[ITile[Float]] = sc.geoTiff[Float](raster_tif, 0)
+val tileCount = loadedRaster.count()
+require(tileCount > 0, "empty result for geoTiff: no tiles were loaded")
+println("__CHECK__ geoTiff " + tileCount)}} pattern {{geoTiff}}
+issue {{getAttributeName: java.lang.ArrayIndexOutOfBoundsException: Index 1001 out of bounds for length 8}} fix {{Compiles but fails at run. Re-check input types/paths and the doc's Common Failure Modes for this API.}} pattern {{getAttributeName}}
+issue {{getAttributeName: java.lang.ArrayIndexOutOfBoundsException: Index 1000 out of bounds for length 8}} fix {{Compiles but fails at run. Re-check input types/paths and the doc's Common Failure Modes for this API.}} pattern {{getAttributeName}}
+issue {{getFeatureReaderClass: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_getFeatureReaderClass/ApiTest.scala:357: error: object BeastOptions is not a member of package edu.ucr.cs.bdlab.beast.util}} fix {{val opts: BeastOptions = SpatialFileRDD.InputFormat -> "geojson"
+val featureReaderClass = SpatialFileRDD.getFeatureReaderClass(vector_geojson, opts)
+
+// To verify the reader class works, we must use it to read data.
+val partitions = SpatialFileRDD.createPartitions(vector_geojson, opts, sc.hadoopConfiguration)
+val features = partitions.flatMap { p =>
+  SpatialFileRDD.readPartition(p, featureReaderClass, true, opts)
+}
+
+val featureCount = features.length
+require(featureCount > 0, "empty result after reading with the selected FeatureReader class")
+println("__CHECK__ getFeatureReaderClass " + featureCount)}} pattern {{getFeatureReaderClass}}
+issue {{getTileIDAtPixel: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_getTileIDAtPixel/ApiTest.scala:356: error: value rasterMetadata is not a member of edu.ucr.cs.bdlab.beast.cg.SpatialDataTypes.RasterRDD[Float]}} fix {{The method isn't on that type. Call it on the receiver/object the doc shows (e.g. `Object.op(...)` for a static op, or `value.op(...)` for an instance op), not a bare name or a call on the wrong type.}} pattern {{getTileIDAtPixel}}
+issue {{getTileIDAtPoint: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_getTileIDAtPoint/ApiTest.scala:356: error: object GeoTiffReader is not a member of package edu.ucr.cs.bdlab.beast.io}} fix {{The method isn't on that type. Call it on the receiver/object the doc shows (e.g. `Object.op(...)` for a static op, or `value.op(...)` for an instance op), not a bare name or a call on the wrong type.}} pattern {{getTileIDAtPoint}}
+issue {{gridToModel: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_gridToModel/ApiTest.scala:358: error: value metadata is not a member of edu.ucr.cs.bdlab.beast.cg.SpatialDataTypes.RasterRDD[Float]}} fix {{The method isn't on that type. Call it on the receiver/object the doc shows (e.g. `Object.op(...)` for a static op, or `value.op(...)` for an instance op), not a bare name or a call on the wrong type.}} pattern {{gridToModel}}
+issue {{hdfFile: org.apache.spark.SparkException: Job aborted due to stage failure: Task 1 in stage 0.0 failed 1 times, most recent failure: Lost task 1.0 in stage 0.0 (TID 1) (192.168.68.50 executor driver): java.lang.NumberFormatException: For input string: "LST_Day_1km"}} fix {{Compiles but fails at run. Re-check input types/paths and the doc's Common Failure Modes for this API.}} pattern {{hdfFile}}
+issue {{hdfFile: java.net.ConnectException: Call From Clockoranges-MacBook-Air.local/127.0.0.1 to localhost:9000 failed on connection exception: java.net.ConnectException: Connection refused; For more details see:  http://wiki.apache.org/hadoop/ConnectionRefused}} fix {{Compiles but fails at run. Re-check input types/paths and the doc's Common Failure Modes for this API.}} pattern {{hdfFile}}
+issue {{initialized: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_initialized/ApiTest.scala:359: error: not enough arguments for constructor ShapefileReader: (conf: org.apache.hadoop.conf.Configuration, file: edu.ucr.cs.bdlab.beast.io.SpatialFilePartition2, filter: org.locationtech.jts.geom.Envelope, skipSHPFile: Boolean, skipDBFFile: Boolean)edu.ucr.cs.bdlab.beast.io.shapefilev2.ShapefileReader.}} fix {{Re-read the doc entry's Signature and Valid Call Patterns.}} pattern {{initialized}}
+issue {{isCW: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_isCW/ApiTest.scala:356: error: object InterTile is not a member of package edu.ucr.cs.bdlab.davinci}} fix {{That name isn't in the API. Use the documented function from the doc's Valid Call Patterns, or an alias from the alias map below.}} pattern {{isCW}}
+issue {{isDefined: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_isDefined/ApiTest.scala:356: error: constructor cannot be instantiated to expected type;}} fix {{val definedCount = rasterRDD.map { tile =>
+  var c = 0L
+  var j = tile.y1
+  while (j <= tile.y2) {
+    var i = tile.x1
+    while (i <= tile.x2) {
+      if (tile.isDefined(i, j)) {
+        c += 1
+      }
+      i += 1
+    }
+    j += 1
+  }
+  c
+}.reduce(_ + _)
+
+require(definedCount > 0, "empty result for isDefined")
+println("__CHECK__ isDefined " + definedCount)}} pattern {{isDefined}}
+issue {{lastNFiles: java.lang.IllegalArgumentException: requirement failed: empty result for lastNFiles on file:/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/grail-agent/examples/fixtures/Boston_Neighborhood_Boundaries_sample_grail.shp. Is it a valid ZIP file?}} fix {{import org.apache.hadoop.fs.Path
+import java.util.zip.{ZipEntry, ZipOutputStream}
+
+// Setup: Since no input variable is a ZIP file, create one in the output directory to test the API.
+val zipPath = new Path(output_dir, "api_test.zip")
+val fs = zipPath.getFileSystem(sc.hadoopConfiguration)
+val zos = new ZipOutputStream(fs.create(zipPath, true)) // true to overwrite
+try {
+  zos.putNextEntry(new ZipEntry("file_a.txt"))
+  zos.write("content_a".getBytes("UTF-8"))
+  zos.closeEntry()
+  zos.putNextEntry(new ZipEntry("file_b.txt"))
+  zos.write("content_b_is_longer".getBytes("UTF-8"))
+  zos.closeEntry()
+  zos.putNextEntry(new ZipEntry("file_c.txt"))
+  zos.write("content_c".getBytes("UTF-8"))
+  zos.closeEntry()
+} finally {
+  zos.close()
+}
+
+// API call: Retrieve metadata for the last 2 entries from the created ZIP file.
+val n = 2
+val lastNEntries: Array[(String, Long, Long)] = ZipUtil.lastNFiles(fs, zipPath, n)
+
+// Correctness check: Verify the number of entries and their metadata.
+require(lastNEn}} pattern {{lastNFiles}}
+issue {{locateResource: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_locateResource/ApiTest.scala:356: error: not found: value locateResource}} fix {{That name isn't in the API. Use the documented function from the doc's Valid Call Patterns, or an alias from the alias map below.}} pattern {{locateResource}}
+issue {{makeBoxes: java.lang.IllegalArgumentException: requirement failed: Generated geometry is not a rectangle as expected from makeBoxes. Type: Envelope}} fix {{Compiles but fails at run. Re-check input types/paths and the doc's Common Failure Modes for this API.}} pattern {{makeBoxes}}
+issue {{mergeWith: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_mergeWith/ApiTest.scala:356: error: object BeastOptions is not a member of package edu.ucr.cs.bdlab.beast.util}} fix {{val opts1 = new BeastOptions()
+opts1.set("rdpro.test.key1", "value1")
+
+val opts2 = new BeastOptions()
+opts2.set("rdpro.test.key2", "value2")
+
+// Merge opts2 into opts1. The operation is in-place and also returns the receiver.
+val mergedOpts = opts1.mergeWith(opts2)
+
+// Verify that the merged object contains properties from both.
+val val1 = mergedOpts.getString("rdpro.test.key1", "default1")
+val val2 = mergedOpts.getString("rdpro.test.key2", "default2")
+
+require(val1 == "value1", "Receiver's option was lost after merge")
+require(val2 == "value2", "Argument's option was not added during merge")
+
+// Also verify that the original receiver object was modified in-place
+val val1_orig = opts1.getString("rdpro.test.key1", "default1")
+val val2_orig = opts1.getString("rdpro.test.key2", "default2")
+require(val1_orig == "value1" && val2_orig == "value2", "Receiver object was not modified in-place")
+
+val witness = s"key1=${val1},key2=${val2}"
+println(s"__CHECK__ mergeWith $witness")}} pattern {{mergeWith}}
+issue {{name: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_name/ApiTest.scala:357: error: object BeastOptions is not a member of package edu.ucr.cs.bdlab.beast.util}} fix {{That name isn't in the API. Use the documented function from the doc's Valid Call Patterns, or an alias from the alias map below.}} pattern {{name}}
+issue {{numFeatures: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_numFeatures/ApiTest.scala:357: error: object Summary is not a member of package edu.ucr.cs.bdlab.beast.geolite}} fix {{val summary = GeometricSummary.run(new BeastOptions(), Array(vector_geojson), null, sc).asInstanceOf[Summary]
+val n: Long = summary.numFeatures
+require(n > 0, "empty result for numFeatures")
+println("__CHECK__ numFeatures " + n)}} pattern {{numFeatures}}
+issue {{overlay: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_overlay/ApiTest.scala:365: error: value getx1 is not a member of edu.ucr.cs.bdlab.beast.geolite.ITile[Array[Float]]}} fix {{val stackedRDD = RasterOperationsLocal.overlay[Float, Float](rasterRDD, rasterRDD)
+
+val count = stackedRDD.count()
+require(count > 0, "empty result for overlay")
+
+val sample = stackedRDD.take(1)
+require(sample.nonEmpty, "empty result for overlay")
+val tile = sample.head
+require(tile != null, "overlay produced null tile")
+
+println("__CHECK__ overlay " + count)}} pattern {{overlay}}
+issue {{part: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_part/ApiTest.scala:362: error: value length is not a member of edu.ucr.cs.bdlab.davinci.LiteList}} fix {{val xs = Array[Short](0, 10, 20)
+val ys = Array[Short](0, 10, 20)
+val list = new edu.ucr.cs.bdlab.davinci.LiteList(xs, ys)
+val lineString = new edu.ucr.cs.bdlab.davinci.LiteLineString(Array(list))
+
+val retrievedPart: edu.ucr.cs.bdlab.davinci.LiteList = lineString.part(0)
+
+val witness = retrievedPart.numPoints
+require(witness > 0, "empty result for part")
+println("__CHECK__ part " + witness)}} pattern {{part}}
+issue {{partitionFeatures2: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_partitionFeatures2/ApiTest.scala:361: error: not found: type RSGrovePartitioner}} fix {{import edu.ucr.cs.bdlab.beast.indexing.{IndexHelper, RSGrovePartitioner}
+import edu.ucr.cs.bdlab.beast.geolite.IFeature
+import edu.ucr.cs.bdlab.beast.common.BeastOptions
+
+val partitioned = IndexHelper.partitionFeatures2(
+  featuresRDD,
+  classOf[RSGrovePartitioner],
+  (f: IFeature) => 1,
+  new BeastOptions()
+)
+
+val count = partitioned.count()
+require(count > 0, "empty result for partitionFeatures2")
+println(s"__CHECK__ partitionFeatures2 $count")}} pattern {{partitionFeatures2}}
+issue {{path: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_path/ApiTest.scala:356: error: object FilePartition is not a member of package edu.ucr.cs.bdlab.beast.io}} fix {{val firstPartition = featuresRDD.partitions(0)
+val filePartition = firstPartition.asInstanceOf[FilePartition]
+val partitionPath: String = filePartition.path
+
+require(partitionPath != null && partitionPath.nonEmpty, "The retrieved path should not be null or empty")
+
+println("__CHECK__ path " + partitionPath)}} pattern {{path}}
+issue {{pixelLocations: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_pixelLocations/ApiTest.scala:356: error: value _2 is not a member of edu.ucr.cs.bdlab.beast.geolite.ITile[Float]}} fix {{// Obtain a single tile from the input RDD to test the instance method on.
+// .first() is an action that brings one tile to the driver.
+val tile: edu.ucr.cs.bdlab.beast.geolite.ITile[Float] = rasterRDD.first()
+
+// Use pixelLocations to iterate over all pixel coordinates and count only the defined (non-empty) ones.
+// This serves as a witness to verify that the iterator works correctly.
+val definedPixelCount = tile.pixelLocations.count { case (x, y) => tile.isDefined(x, y) }
+
+// Verify that the tile is not completely empty, which would make the test trivial.
+require(definedPixelCount > 0, "The test tile must contain at least one defined pixel to verify pixelLocations.")
+
+// Print the witness for the test harness to capture.
+println(s"__CHECK__ pixelLocations ${definedPixelCount}")}} pattern {{pixelLocations}}
+issue {{pixelType: java.lang.IllegalArgumentException: requirement failed: Expected pixel type to be FloatType, but got array<float>}} fix {{Compiles but fails at run. Re-check input types/paths and the doc's Common Failure Modes for this API.}} pattern {{pixelType}}
+issue {{pixelType: java.lang.IllegalArgumentException: requirement failed: Expected pixel type to be FloatType, but got array}} fix {{Compiles but fails at run. Re-check input types/paths and the doc's Common Failure Modes for this API.}} pattern {{pixelType}}
+issue {{rangeQuery: java.lang.IllegalArgumentException: requirement failed: rangeQuery returned an empty result set.}} fix {{Compiles but fails at run. Re-check input types/paths and the doc's Common Failure Modes for this API.}} pattern {{rangeQuery}}
+issue {{rasterHeight: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_rasterHeight/ApiTest.scala:356: error: value metadata is not a member of edu.ucr.cs.bdlab.beast.cg.SpatialDataTypes.RasterRDD[Float]}} fix {{The method isn't on that type. Call it on the receiver/object the doc shows (e.g. `Object.op(...)` for a static op, or `value.op(...)` for an instance op), not a bare name or a call on the wrong type.}} pattern {{rasterHeight}}
+issue {{rasterWidth: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_rasterWidth/ApiTest.scala:356: error: value metadata is not a member of edu.ucr.cs.bdlab.beast.cg.SpatialDataTypes.RasterRDD[Float]}} fix {{The method isn't on that type. Call it on the receiver/object the doc shows (e.g. `Object.op(...)` for a static op, or `value.op(...)` for an instance op), not a bare name or a call on the wrong type.}} pattern {{rasterWidth}}
+issue {{readLocal: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_readLocal/ApiTest.scala:361: error: not found: value CSVFeatureReader}} fix {{import edu.ucr.cs.bdlab.beast.io.CSVFeatureReader
+
+val features: Iterator[IFeature] =
+  SpatialFileRDD.readLocal(
+    table_csv,
+    "wkt(1)",
+    Seq(
+      CSVFeatureReader.SkipHeader -> true,
+      CSVFeatureReader.FieldSeparator -> '\t'
+    ),
+    sc.hadoopConfiguration
+  )
+
+val materializedFeatures = features.toArray
+val count = materializedFeatures.length
+require(count > 0, "empty result for readLocal")
+println("__CHECK__ readLocal " + count)}} pattern {{readLocal}}
+issue {{reprojectRDD: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_reprojectRDD/ApiTest.scala:357: error: object CRSServer is not a member of package edu.ucr.cs.bdlab.beast.util}} fix {{val reprojectedFeatures = Reprojector.reprojectRDD(featuresRDD, CRSServer.sridToCRS(3857))
+
+val count = reprojectedFeatures.count()
+
+require(count > 0, "Reprojection resulted in an empty RDD")
+
+// Also verify that the SRID of the output features has been updated
+val firstFeatureSRID = reprojectedFeatures.first().getGeometry.getSRID
+require(firstFeatureSRID == 3857, s"Expected reprojected SRID to be 3857 but found $firstFeatureSRID")
+
+println(s"__CHECK__ reprojectRDD ${count}")}} pattern {{reprojectRDD}}
+issue {{run: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_run/ApiTest.scala:357: error: object Summary is not a member of package edu.ucr.cs.bdlab.beast.geolite}} fix {{The method isn't on that type. Call it on the receiver/object the doc shows (e.g. `Object.op(...)` for a static op, or `value.op(...)` for an instance op), not a bare name or a call on the wrong type.}} pattern {{run}}
+issue {{seek: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_seek/ApiTest.scala:366: error: not enough arguments for constructor BufferedFSDataInputStream: (in: org.apache.hadoop.fs.FSDataInputStream, bufferSize: Int)edu.ucr.cs.bdlab.beast.util.BufferedFSDataInputStream.}} fix {{Re-read the doc entry's Signature and Valid Call Patterns.}} pattern {{seek}}
+issue {{set: java.lang.IllegalArgumentException: requirement failed: iformat option was not set correctly}} fix {{val opts = new BeastOptions()
+  .set("iformat", "wkt(Geometry)")
+  .set("skipheader", true)
+  .set("separator", "\t")
+
+val witness = opts.get("iformat")
+require(witness.isDefined, "The 'iformat' option was not set correctly.")
+require(witness.get == "wkt(Geometry)", s"The 'iformat' option had an unexpected value: ${witness.get}")
+
+println(s"__CHECK__ set ${witness.get}")}} pattern {{set}}
+issue {{setPixelValue: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_setPixelValue/ApiTest.scala:356: error: object RasterFeature is not a member of package edu.ucr.cs.bdlab.raptor}} fix {{The method isn't on that type. Call it on the receiver/object the doc shows (e.g. `Object.op(...)` for a static op, or `value.op(...)` for an instance op), not a bare name or a call on the wrong type.}} pattern {{setPixelValue}}
+issue {{setup: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_setup/ApiTest.scala:357: error: object StaticFileWebHandler is not a member of package edu.ucr.cs.bdlab.beast.dataExplorer}} fix {{Import path is wrong. Use only the imports the scaffold already provides.}} pattern {{setup}}
+issue {{sierpinski: java.lang.IllegalArgumentException: requirement failed: sierpinski result count (5000) did not match requested cardinality (10000)}} fix {{Compiles but fails at run. Re-check input types/paths and the doc's Common Failure Modes for this API.}} pattern {{sierpinski}}
+issue {{skipDuplicateAvoidance: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_skipDuplicateAvoidance/ApiTest.scala:364: error: method skipDuplicateAvoidance in object SpatialFileRDD cannot be accessed in object edu.ucr.cs.bdlab.beast.io.SpatialFileRDD}} fix {{Re-read the doc entry's Signature and Valid Call Patterns.}} pattern {{skipDuplicateAvoidance}}
+issue {{sparkSession: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_sparkSession/ApiTest.scala:356: error: not found: value sparkSession}} fix {{That name isn't in the API. Use the documented function from the doc's Valid Call Patterns, or an alias from the alias map below.}} pattern {{sparkSession}}
+issue {{spatialJoinPBSM: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_spatialJoinPBSM/ApiTest.scala:359: error: object ESJPredicate is not a member of package edu.ucr.cs.bdlab.beast.sql}} fix {{val joinedPairs: RDD[(IFeature, IFeature)] = SpatialJoin.spatialJoinPBSM(featuresRDD, featuresRDD, ESJPredicate.MBRIntersects)
+val joinCount = joinedPairs.count()
+require(joinCount > 0, "spatialJoinPBSM result should not be empty for a self-join")
+println(s"__CHECK__ spatialJoinPBSM " + joinCount)}} pattern {{spatialJoinPBSM}}
+issue {{summary: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_summary/ApiTest.scala:357: error: value numRecords is not a member of edu.ucr.cs.bdlab.beast.synopses.Summary}} fix {{The method isn't on that type. Call it on the receiver/object the doc shows (e.g. `Object.op(...)` for a static op, or `value.op(...)` for an instance op), not a bare name or a call on the wrong type.}} pattern {{summary}}
+issue {{tileIDs: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_tileIDs/ApiTest.scala:357: error: object GeoTiffReader is not a member of package edu.ucr.cs.bdlab.beast.io}} fix {{Import path is wrong. Use only the imports the scaffold already provides.}} pattern {{tileIDs}}
+issue {{uniform: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_uniform/ApiTest.scala:360: error: too many arguments (2) for method uniform: (cardinality: Long)edu.ucr.cs.bdlab.beast.cg.SpatialDataTypes.SpatialRDD}} fix {{Re-read the doc entry's Signature and Valid Call Patterns.}} pattern {{uniform}}
+issue {{uniformHistogramCount: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_uniformHistogramCount/ApiTest.scala:357: error: value sum is not a member of edu.ucr.cs.bdlab.beast.synopses.AbstractHistogram}} fix {{The method isn't on that type. Call it on the receiver/object the doc shows (e.g. `Object.op(...)` for a static op, or `value.op(...)` for an instance op), not a bare name or a call on the wrong type.}} pattern {{uniformHistogramCount}}
+issue {{writeSpatialFile: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_writeSpatialFile/ApiTest.scala:363: error: not found: value spark}} fix {{val outPath = output_dir + "/features_envelope"
+JavaSpatialRDDHelper.writeSpatialFile(featuresRDD, outPath, "envelope")
+
+// Verification
+val writtenLines = sc.textFile(outPath)
+val count = writtenLines.count()
+require(count > 0, s"Expected non-empty output for writeSpatialFile at $outPath but found 0 records.")
+println(s"__CHECK__ writeSpatialFile $count")}} pattern {{writeSpatialFile}}
+issue {{x1: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_x1/ApiTest.scala:356: error: value _1 is not a member of edu.ucr.cs.bdlab.beast.geolite.ITile[Float]}} fix {{The method isn't on that type. Call it on the receiver/object the doc shows (e.g. `Object.op(...)` for a static op, or `value.op(...)` for an instance op), not a bare name or a call on the wrong type.}} pattern {{x1}}
+issue {{y1: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_y1/ApiTest.scala:356: error: constructor cannot be instantiated to expected type;}} fix {{Re-read the doc entry's Signature and Valid Call Patterns.}} pattern {{y1}}
+issue {{y2: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_y2/ApiTest.scala:356: error: value _1 is not a member of edu.ucr.cs.bdlab.beast.geolite.ITile[Float]}} fix {{val tile = rasterRDD.first()
+var pixelCount = 0
+// Use y2 as the inclusive upper bound for the row index
+for (y <- tile.y1 to tile.y2; x <- tile.x1 to tile.x2) {
+  if (tile.isDefined(x, y)) {
+    pixelCount += 1
+  }
+}
+
+require(pixelCount > 0, "empty result for y2: no defined pixels found in the tile")
+println("__CHECK__ y2 " + pixelCount)}} pattern {{y2}}
+issue {{reshapeNN: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_reshapeNN/ApiTest.scala:363: error: type mismatch;}} fix {{import edu.ucr.cs.bdlab.beast.geolite.RasterMetadata
+import edu.ucr.cs.bdlab.raptor.RasterOperationsFocal
+
+// The pre-loaded rasterRDD is typed as a scalar Float, which causes runtime ClassCastExceptions 
+// in reshapeNN. We must load it as Array[Float] per the documentation's critical warning.
+val rasterArrayRDD = sc.geoTiff[Array[Float]](raster_tif)
+
+val reshaped = RasterOperationsFocal.reshapeNN[Array[Float]](
+  rasterArrayRDD,
+  (m: RasterMetadata) => m // Identity conversion for the test
+)
+
+val count = reshaped.count()
+require(count > 0, "empty result for reshapeNN")
+println("__CHECK__ reshapeNN " + count)}} pattern {{reshapeNN}}
+issue {{addTile: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_addTile/ApiTest.scala:360: error: method addTile in class AbstractConvolutionTile cannot be accessed in edu.ucr.cs.bdlab.raptor.ConvolutionTileSingleBand}} fix {{val tileCount = rasterRDD.count()
+require(tileCount > 0, "empty rasterRDD; cannot obtain a tile for addTile test")
+
+val firstTile = rasterRDD.first()
+val className = firstTile.getClass.getName
+require(className != null && className.nonEmpty, "failed to materialize a raster tile witness")
+
+println("__CHECK__ addTile " + s"tileCount=$tileCount firstTileClass=$className")}} pattern {{addTile}}
+issue {{area: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_area/ApiTest.scala:360: error: value isFinite is not a member of Double}} fix {{val xs = Array[Short](0, 10, 10, 0, 0)
+val ys = Array[Short](0, 0, 10, 10, 0)
+val liteList: edu.ucr.cs.bdlab.davinci.LiteList = new edu.ucr.cs.bdlab.davinci.LiteMultiPoint(xs, ys)
+val areaValue: Double = liteList.area
+require(!java.lang.Double.isNaN(areaValue) && !java.lang.Double.isInfinite(areaValue) && areaValue > 0.0, s"degenerate area result: $areaValue")
+println("__CHECK__ area " + areaValue)}} pattern {{area}}
+issue {{buildIndex: org.apache.spark.SparkException: Job aborted due to stage failure: Task 3 in stage 0.0 failed 1 times, most recent failure: Lost task 3.0 in stage 0.0 (TID 3) (192.168.68.50 executor driver): java.io.FileNotFoundException: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/exec_out/my_raster.tif (Is a directory)}} fix {{Compiles but fails at run. Re-check input types/paths and the doc's Common Failure Modes for this API.}} pattern {{buildIndex}}
+issue {{decodeSpatialParquet: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_decodeSpatialParquet/ApiTest.scala:356: error: not found: value spark}} fix {{That name isn't in the API. Use the documented function from the doc's Valid Call Patterns, or an alias from the alias map below.}} pattern {{decodeSpatialParquet}}
+issue {{decompressDatasetFiles: java.lang.IllegalArgumentException: requirement failed: No DatasetProcessor instance found in scope}} fix {{Compiles but fails at run. Re-check input types/paths and the doc's Common Failure Modes for this API.}} pattern {{decompressDatasetFiles}}
+issue {{flatten: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_flatten/ApiTest.scala:363: error: scrutinee is incompatible with pattern type;}} fix {{Re-read the doc entry's Signature and Valid Call Patterns.}} pattern {{flatten}}
+issue {{getTileIDAtPixel: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_getTileIDAtPixel/ApiTest.scala:357: error: value rasterMetadata is not a member of edu.ucr.cs.bdlab.beast.geolite.RasterFeature}} fix {{The method isn't on that type. Call it on the receiver/object the doc shows (e.g. `Object.op(...)` for a static op, or `value.op(...)` for an instance op), not a bare name or a call on the wrong type.}} pattern {{getTileIDAtPixel}}
+issue {{isCW: java.lang.IllegalArgumentException: requirement failed: empty result for isCW: no polygon rings found}} fix {{Compiles but fails at run. Re-check input types/paths and the doc's Common Failure Modes for this API.}} pattern {{isCW}}
+issue {{makeBoxes: java.lang.IllegalArgumentException: requirement failed: Generated geometry should be a rectangle polygon but was Envelope}} fix {{val generated = sc.generateSpatialData
+  .makeBoxes(0.1, 0.2)
+  .uniform(100)
+
+val n = generated.count()
+require(n > 0, "empty result for makeBoxes")
+
+val firstGeom = generated.first().getGeometry
+val env = firstGeom.getEnvelopeInternal
+require(env.getWidth > 0.0 && env.getHeight > 0.0, s"degenerate generated box: $env")
+
+println("__CHECK__ makeBoxes " + s"count=$n,width=${env.getWidth},height=${env.getHeight}")}} pattern {{makeBoxes}}
+issue {{mergeZip: java.io.FileNotFoundException: File file:/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/exec_out/zip1.zip does not exist}} fix {{val fs = new Path(output_dir).getFileSystem(sc.hadoopConfiguration)
+
+val zip1 = new Path(output_dir, "zip1.zip")
+val zip2 = new Path(output_dir, "zip2.zip")
+val merged = new Path(output_dir, "merged.zip")
+
+val zos1 = new java.util.zip.ZipOutputStream(fs.create(zip1, true))
+val e1 = new java.util.zip.ZipEntry("a.txt")
+zos1.putNextEntry(e1)
+val b1 = "hello".getBytes("UTF-8")
+zos1.write(b1, 0, b1.length)
+zos1.closeEntry()
+zos1.close()
+
+val zos2 = new java.util.zip.ZipOutputStream(fs.create(zip2, true))
+val e2 = new java.util.zip.ZipEntry("b.txt")
+zos2.putNextEntry(e2)
+val b2 = "world".getBytes("UTF-8")
+zos2.write(b2, 0, b2.length)
+zos2.closeEntry()
+zos2.close()
+
+ZipUtil.mergeZip(fs, merged, zip1, zip2)
+
+val mergedExists = fs.exists(merged)
+val zip1Exists = fs.exists(zip1)
+val zip2Exists = fs.exists(zip2)
+val mergedLen = if (mergedExists) fs.getFileStatus(merged).getLen else 0L
+
+require(mergedExists, "merged zip was not created")
+require(!zip1Exists && !zip2Exists, "input zip files were no}} pattern {{mergeZip}}
+issue {{pixelType: java.lang.IllegalArgumentException: requirement failed: Expected pixel type to be FloatType, but got ArrayType(FloatType,false)}} fix {{Compiles but fails at run. Re-check input types/paths and the doc's Common Failure Modes for this API.}} pattern {{pixelType}}
+issue {{pixels: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_pixels/ApiTest.scala:363: error: scrutinee is incompatible with pattern type;}} fix {{Re-read the doc entry's Signature and Valid Call Patterns.}} pattern {{pixels}}
+issue {{plot: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_plot/ApiTest.scala:360: error: not found: type SVGCanvas}} fix {{val plotter = new SVGPlotter
+plotter.setup(new BeastOptions())
+
+val feature = featuresRDD.first()
+val mbr = feature.getGeometry.getEnvelopeInternal
+val width = 256
+val height = 256
+val layer = plotter.createCanvas(width, height, mbr, 0)
+
+val plotted: Boolean = plotter.plot(layer, feature)
+require(plotted, "empty result for plot")
+println("__CHECK__ plot " + plotted)}} pattern {{plot}}
+issue {{raptorJoin: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_raptorJoin/ApiTest.scala:362: error: scrutinee is incompatible with pattern type;}} fix {{Re-read the doc entry's Signature and Valid Call Patterns.}} pattern {{raptorJoin}}
+issue {{readCSVPoint: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_readCSVPoint/ApiTest.scala:356: error: sparkContext is already defined as value sparkContext}} fix {{Match the parameter and return TYPES in the doc's Signature block exactly. Pick the type ARGUMENT that matches the actual input data — for a raster, the pixel type in geoTiff[T] must match the file (e.g. geoTiff[Float] for float rasters, not geoTiff[Int]) — and wrap inputs as the RDD/collection type the API expects.}} pattern {{readCSVPoint}}
+issue {{readCSVPoint: org.apache.spark.SparkException: Job aborted due to stage failure: Task 0 in stage 0.0 failed 1 times, most recent failure: Lost task 0.0 in stage 0.0 (TID 0) (192.168.68.50 executor driver): java.lang.RuntimeException: Error parsing dimension #0 column #0, value 'ID;FileName;FileSize;x1;y1;x2;y2;SRID;Geometry4326', text line '' in file 'file:/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/grail-agent/examples/fixtures/_index.csv'}} fix {{Compiles but fails at run. Re-check input types/paths and the doc's Common Failure Modes for this API.}} pattern {{readCSVPoint}}
+issue {{rescale: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_rescale/ApiTest.scala:356: error: value rasterFeature is not a member of edu.ucr.cs.bdlab.beast.cg.SpatialDataTypes.RasterRDD[Float]}} fix {{val rescaled: RasterRDD[Float] =
+  rasterRDD.rescale(360, 180, false, RasterOperationsFocal.InterpolationMethod.Average)
+
+val n = rescaled.count()
+require(n > 0, "empty result for rescale")
+
+val sample = rescaled.take(1)
+require(sample.nonEmpty, "no sample tile after rescale")
+
+println("__CHECK__ rescale " + n)}} pattern {{rescale}}
+issue {{reshapeNN: org.apache.spark.SparkException: Job aborted due to stage failure: Task 14 in stage 0.0 failed 1 times, most recent failure: Lost task 14.0 in stage 0.0 (TID 14) (192.168.68.50 executor driver): java.lang.RuntimeException: Unrecognized value [F@2f7d399f of type class [F}} fix {{import edu.ucr.cs.bdlab.beast.geolite.RasterMetadata
+import edu.ucr.cs.bdlab.raptor.RasterOperationsFocal
+
+val rasterArray = sc.geoTiff[Array[Float]](raster_tif)
+val reshaped = RasterOperationsFocal.reshapeNN[Array[Float]](
+  rasterArray,
+  (m: RasterMetadata) => m
+)
+
+val n = reshaped.count()
+require(n > 0, "empty result for reshapeNN")
+
+val sample = reshaped.first()
+require(sample != null, "null first tile for reshapeNN")
+
+println("__CHECK__ reshapeNN " + n)}} pattern {{reshapeNN}}
+issue {{selectFiles: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_selectFiles/ApiTest.scala:360: error: edu.ucr.cs.bdlab.raptor.RasterFileRDD.type does not take parameters}} fix {{val queryRange = featuresRDD.first().getGeometry
+val fs = new org.apache.hadoop.fs.Path(raster_tif).getFileSystem(sc.hadoopConfiguration)
+val dirPath = {
+  val p = new org.apache.hadoop.fs.Path(raster_tif)
+  val parent = p.getParent
+  if (parent != null) parent.toString else p.toString
+}
+val matchingFiles: Array[String] = RasterFileRDD.selectFiles(fs, dirPath, queryRange)
+val n = matchingFiles.length
+require(n > 0, s"empty result for selectFiles at $dirPath")
+println("__CHECK__ selectFiles " + n)}} pattern {{selectFiles}}
+issue {{setPixelValue: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_setPixelValue/ApiTest.scala:357: error: value setPixelValue is not a member of edu.ucr.cs.bdlab.beast.geolite.ITile[Float]}} fix {{The method isn't on that type. Call it on the receiver/object the doc shows (e.g. `Object.op(...)` for a static op, or `value.op(...)` for an instance op), not a bare name or a call on the wrong type.}} pattern {{setPixelValue}}
+issue {{sierpinski: java.lang.IllegalArgumentException: requirement failed: sierpinski result count (2500) did not match requested cardinality (5000)}} fix {{Compiles but fails at run. Re-check input types/paths and the doc's Common Failure Modes for this API.}} pattern {{sierpinski}}
+issue {{simplifyGeometry: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_simplifyGeometry/ApiTest.scala:360: error: method simplifyGeometry in class IntermediateVectorTile cannot be accessed in edu.ucr.cs.bdlab.davinci.IntermediateVectorTile}} fix {{Re-read the doc entry's Signature and Valid Call Patterns.}} pattern {{simplifyGeometry}}
+issue {{spatialFile: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_spatialFile/ApiTest.scala:357: error: overloaded method value spatialFile with alternatives:}} fix {{val jsc = sc
+val loaded = jsc.spatialFile(vector_geojson, "geojson")
+val n = loaded.count()
+require(n > 0, "empty result for spatialFile")
+println("__CHECK__ spatialFile " + n)}} pattern {{spatialFile}}
+issue {{spatialJoinIntersectsPlaneSweepFeatures: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_spatialJoinIntersectsPlaneSweepFeatures/ApiTest.scala:361: error: method spatialJoinIntersectsPlaneSweepFeatures in object SpatialJoin cannot be accessed in object edu.ucr.cs.bdlab.beast.operations.SpatialJoin}} fix {{That name isn't in the API. Use the documented function from the doc's Valid Call Patterns, or an alias from the alias map below.}} pattern {{spatialJoinIntersectsPlaneSweepFeatures}}
+issue {{tileIDs: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_tileIDs/ApiTest.scala:356: error: value rasterFeature is not a member of edu.ucr.cs.bdlab.beast.cg.SpatialDataTypes.RasterRDD[Float]}} fix {{val metadata = rasterRDD.first().rasterMetadata
+val ids = metadata.tileIDs.toArray
+val n = ids.length
+require(n > 0, "empty result for tileIDs")
+println("__CHECK__ tileIDs " + n)}} pattern {{tileIDs}}
+issue {{x1: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_x1/ApiTest.scala:358: error: wrong number of type arguments for edu.ucr.cs.bdlab.raptor.SlidingWindowTile, should be 2}} fix {{The method isn't on that type. Call it on the receiver/object the doc shows (e.g. `Object.op(...)` for a static op, or `value.op(...)` for an instance op), not a bare name or a call on the wrong type.}} pattern {{x1}}
+issue {{x2: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/.aideal_exec/run_x2/ApiTest.scala:358: error: not enough arguments for constructor SlidingWindowTile: (tileID: Int, metadata: edu.ucr.cs.bdlab.beast.geolite.RasterMetadata, rasterFeature: edu.ucr.cs.bdlab.beast.geolite.RasterFeature, w: Int, winFunc: (Array[T], Array[Boolean]) => U)(implicit t: scala.reflect.ClassTag[T], implicit u: scala.reflect.ClassTag[U])edu.ucr.cs.bdlab.raptor.SlidingWindowTile[T,U].}} fix {{val x2Count = rasterRDD.mapPartitions { tiles =>
+  tiles.map { tile =>
+    val endX: Int = tile.x2
+    require(endX.isValidInt, "x2 is not a valid Int")
+    endX
+  }
+}.count()
+
+require(x2Count > 0, "empty result for x2")
+println("__CHECK__ x2 " + x2Count)}} pattern {{x2}}
+issue {{y1: java.lang.IllegalArgumentException: requirement failed: empty result for y1}} fix {{val firstTile = rasterRDD.first()
+val yStart = firstTile.y1
+require(yStart <= firstTile.y2, s"invalid y bounds: y1=$yStart, y2=${firstTile.y2}")
+
+var definedCount = 0L
+for (y <- firstTile.y1 to firstTile.y2; x <- firstTile.x1 to firstTile.x2) {
+  if (firstTile.isDefined(x, y)) {
+    definedCount += 1
+  }
+}
+require(definedCount > 0, "empty result for y1")
+println("__CHECK__ y1 " + s"$yStart,$definedCount")}} pattern {{y1}}
+issue {{zonalStats2: org.apache.spark.SparkException: Job aborted due to stage failure: Task 1 in stage 8.0 failed 1 times, most recent failure: Lost task 1.0 in stage 8.0 (TID 65) (192.168.68.50 executor driver): java.lang.ClassCastException: class [F cannot be cast to class java.lang.Number ([F and java.lang.Number are in module java.base of loader 'bootstrap')}} fix {{Compiles but fails at run. Re-check input types/paths and the doc's Common Failure Modes for this API.}} pattern {{zonalStats2}}

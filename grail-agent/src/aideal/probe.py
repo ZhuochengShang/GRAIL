@@ -184,6 +184,7 @@ def _llm_probe_snippet(cfg: AidealConfig, name: str, signature: str, params, ret
                                params=pstr, returns=returns or "(unspecified)",
                                available_inputs=available_inputs,
                                known_failures=known_failures or "(none yet)",
+                               execution_context=ex.get("execution_context", ""),
                                exec_hints=ex.get("exec_hints", ""),
                                io_hints="")
     raw = invoke_text(cfg.model_for_role("audience"), system, user)

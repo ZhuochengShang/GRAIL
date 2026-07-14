@@ -81,7 +81,7 @@ PUBLIC_API_PATTERNS = {
 
 EXCLUDE_SIGNALS = [
     "awesome", "template", "boilerplate", "starter", "example", "examples",
-    "demo", "course", "tutorial", "learn", "leetcode", "interview",
+    "demo", "course", "tutorial", "leetcode", "interview",
     "dotfiles", "dataset", "datasets", "paper-list", "curriculum",
     "scaffold", "sample",
 ]
@@ -675,6 +675,9 @@ def build_queries(args: argparse.Namespace) -> list[str]:
 def write_csv(path: str, rows: list[Candidate]) -> None:
     if not rows:
         return
+    parent = os.path.dirname(path)
+    if parent:
+        os.makedirs(parent, exist_ok=True)
     with open(path, "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=list(asdict(rows[0]).keys()))
         w.writeheader()
@@ -683,6 +686,9 @@ def write_csv(path: str, rows: list[Candidate]) -> None:
 
 
 def write_json(path: str, rows: list[Candidate]) -> None:
+    parent = os.path.dirname(path)
+    if parent:
+        os.makedirs(parent, exist_ok=True)
     with open(path, "w", encoding="utf-8") as f:
         json.dump([asdict(r) for r in rows], f, indent=2)
 

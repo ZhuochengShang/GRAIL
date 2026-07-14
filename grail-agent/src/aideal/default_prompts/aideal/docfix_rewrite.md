@@ -14,6 +14,15 @@ Hard rules:
   including any REQUIRED imports/types the caller must reference, stated
   explicitly (e.g. "requires `edu.ucr.cs.bdlab.raptor.Statistics` — a JAVA
   class; reference as `classOf[Statistics]`").
+- If the diagnosis classifies the API as ADVANCED/LOW-LEVEL or
+  INTERNAL/FRAMEWORK, preserve that fact prominently in `Goal`, `Input`, and
+  `Common Failure Modes`. Do not present low-level construction as the normal
+  first-choice user workflow. If it is executable only with explicit low-level
+  construction, show that construction in `Valid Call Patterns` and say which
+  objects are caller-owned.
+- If the diagnosis recommends excluding the API from the main user-facing
+  denominator, include that as a compact note in `Goal` or `Common Failure
+  Modes`; still document the API accurately if it is technically executable.
 - `Common Failure Modes` must list the failure that just happened, phrased so
   a model recognizes it BEFORE writing code.
 - `Fix Code Hint` must show the wrong form and the corrected form.
@@ -28,6 +37,9 @@ API: `{api_name}`
 
 == SENIOR-ENGINEER DIAGNOSIS (authoritative — fold ALL of it in) ==
 {diagnosis}
+
+== OPTIONAL PRINCIPAL-ENGINEER DEEP-DIVE REPORT ==
+{deep_dive_report}
 
 == REAL SOURCE (for signatures/types; do not paraphrase beyond it) ==
 {source_window}
