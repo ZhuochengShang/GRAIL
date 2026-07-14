@@ -87,6 +87,10 @@ def _run(argv: list[str] | None = None) -> int:
                     help="2x2 experiment mode: the audience receives the ENTIRE selected "
                          "documentation (no truncation, no per-entry slicing) + only the "
                          "target API line. Requires --execute. Default: comprehension.full_doc")
+    sp.add_argument("--doc-scope", choices=["full", "relevant", "entry"], default=None,
+                    help="documentation exposure: full = entire selected document; relevant = "
+                         "deterministic API-matching sections with an equal character cap; entry "
+                         "= legacy per-entry behavior. relevant/full require --execute")
     sp.add_argument("--manifest", default=None,
                     help="frozen API manifest (JSON list, from `aideal manifest`): the SAME "
                          "denominator for every experiment cell")
@@ -378,7 +382,8 @@ def _run(argv: list[str] | None = None) -> int:
                                  class_context=cc, rerun_failed=args.rerun_failed,
                                  max_fix_rounds=args.max_fix_rounds,
                                  resume=args.resume, timeout_s=args.timeout_s,
-                                 full_doc=fd, manifest=args.manifest)
+                                 full_doc=fd, doc_scope=args.doc_scope,
+                                 manifest=args.manifest)
         if args.execute and isinstance(out, dict):
             from .fixreport import auto_report
             rep = auto_report(cfg, out)   # readable log; never raises

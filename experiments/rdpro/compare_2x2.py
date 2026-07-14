@@ -5,7 +5,8 @@
   original  | A1                         | B1                                 |
   generated | A2                         | B2                                 |
 
-ALL FOUR cells are FINAL FULL comprehension runs (`--execute --full-doc on
+ALL FOUR cells are FINAL matched-scope comprehension runs (`--execute
+--doc-scope relevant
 --max-fix-rounds 0 --manifest <frozen>`): B-cells are fresh evaluations
 against the repaired document, NOT a union of A-passes with per-API docfix
 recoveries (every repair changes the shared full-document context, so only a
@@ -30,6 +31,7 @@ def load_run(p):
             "infra": {k for k, v in m.items()
                       if (v.get("error_category") or "") == "infra"},
             "full_doc": run.get("full_doc"), "doc_chars": run.get("doc_chars"),
+            "doc_scope": run.get("doc_scope"),
             "manifest": run.get("manifest"),
             "manifest_sha256": run.get("manifest_sha256"),
             "document_sha256": run.get("document_sha256"),
@@ -50,7 +52,7 @@ def fmt(c):
 
 
 def check_design(runs):
-    """Guard the experiment invariants: one denominator, full-doc on,
+    """Guard the experiment invariants: one denominator, one document scope,
     zero snippet-fix rounds — refuse to print a table over unlike cells."""
     problems = []
     names = [r["names"] for r in runs.values()]
@@ -65,9 +67,15 @@ def check_design(runs):
     manifest_hashes = {r["manifest_sha256"] for r in runs.values()}
     if None in manifest_hashes or len(manifest_hashes) != 1:
         problems.append("manifest hash missing or differs across cells")
+    scopes = {r.get("doc_scope") for r in runs.values()}
+    if None in scopes or len(scopes) != 1:
+        problems.append("document scope missing or differs across cells")
     for tag, r in runs.items():
-        if r["full_doc"] is not True:
-            problems.append(f"{tag}: full_doc is not explicitly ON")
+        if r.get("doc_scope") not in {"full", "relevant"}:
+            problems.append(f"{tag}: unsupported doc_scope={r.get('doc_scope')!r}")
+        expected_full = r.get("doc_scope") == "full"
+        if r["full_doc"] is not expected_full:
+            problems.append(f"{tag}: full_doc disagrees with doc_scope")
         if r["max_fix_rounds"] != 0:
             problems.append(f"{tag}: max_fix_rounds={r['max_fix_rounds']} (must be 0)")
         if not r["document_sha256"]:
@@ -103,7 +111,8 @@ def main():
     dc = {t: runs[t]["doc_chars"] for t in runs}
     dc_text = {t: (f"{v:,}" if isinstance(v, int) else "missing")
                for t, v in dc.items()}
-    L += [f"_All cells: full-document audience context, 0 snippet-fix rounds, "
+    scope = runs['a1'].get('doc_scope', 'missing')
+    L += [f"_All cells: {scope} documentation scope, 0 snippet-fix rounds, "
           f"frozen manifest ({runs['a1']['n']} APIs). Doc sizes (chars): "
           f"A1={dc_text['a1']} · A2={dc_text['a2']} · "
           f"B1={dc_text['b1']} · B2={dc_text['b2']}_", "",
