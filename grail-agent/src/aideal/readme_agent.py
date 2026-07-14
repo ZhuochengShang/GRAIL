@@ -566,7 +566,9 @@ def visibility_model(cfg: AidealConfig) -> dict:
 
 
 def _is_public(name: str, prefix: str, model: dict) -> bool:
-    """`prefix` is the text on the def line BEFORE the matched name (the modifiers)."""
+    """`prefix` is the text on the def line BEFORE the matched name (the modifiers),
+    with any NON-PUBLIC enclosing-container modifiers prepended by `_iter_defs`
+    (a def inside `private[pkg] object X` is not callable from outside either)."""
     if name.startswith("_"):          # universal convention rule (Python/JS internals)
         return False
     mode = model.get("mode", "convention")
@@ -579,18 +581,122 @@ def _is_public(name: str, prefix: str, model: dict) -> bool:
     return True                       # convention: only the `_` rule applies
 
 
+# Container declarations for brace-scoped languages (Scala/Java/Kotlin/C#/...).
+# `mods` = everything before the container keyword on that line (modifiers).
+_CONTAINER_DECL_RE = re.compile(
+    r"^(?P<mods>[^={}]*?)\b(?:case\s+)?(?:class|object|trait|interface|enum)\s+\w+")
+# Scoped Scala modifiers too: `private[raptor]`, `protected[davinci]`.
+_NONPUBLIC_MOD_RE = re.compile(r"\b(?:private|protected)\b(?:\[[^\]]*\])?")
+
+
+def _container_context(lines: list[str]) -> list[str]:
+    """Per-line NON-PUBLIC modifier text of the enclosing containers.
+
+    ctx[i] = space-joined private/protected modifiers of every container
+    enclosing line i ('' when the whole chain is public). Members of a
+    `private[pkg] object Helper { ... }` are unreachable from user code even
+    when the def line itself carries no modifier — the observed leak class
+    (docfix not-testable verdicts: compress protected[raptor], createRings
+    private[davinci]). Heuristic brace tracking; braces inside string
+    literals/comments are not parsed (acceptable for surface estimation)."""
+    ctx: list[str] = [""] * len(lines)
+    stack: list[tuple[int, str]] = []   # (depth after the container's `{`, mods)
+    depth = 0
+    pending: tuple[int, str] | None = None   # container decl awaiting its `{`
+    for i, line in enumerate(lines):
+        ctx[i] = " ".join(m for _, m in stack if m)
+        decl = _CONTAINER_DECL_RE.match(line)
+        if decl:
+            mods = " ".join(_NONPUBLIC_MOD_RE.findall(decl.group("mods")))
+            pending = (depth, mods)
+        for ch in line:
+            if ch == "{":
+                if pending is not None and pending[0] == depth:
+                    stack.append((depth + 1, pending[1]))
+                    pending = None
+                else:
+                    stack.append((depth + 1, ""))   # def body / match block / ...
+                depth += 1
+            elif ch == "}":
+                depth = max(0, depth - 1)
+                while stack and stack[-1][0] > depth:
+                    stack.pop()
+    return ctx
+
+
+def _exclude_path_patterns(cfg: AidealConfig) -> list:
+    """codebase.exclude_path_patterns — regexes matched against the project-
+    relative POSIX path of each source file; matches are dropped from the
+    surface entirely. Use for modules that are source-visible but not user
+    API (e.g. a `commontest/` test-scaffolding module)."""
+    pats = (cfg.raw.get("codebase", {}) or {}).get("exclude_path_patterns", []) or []
+    return [re.compile(p) for p in pats]
+
+
 def _iter_defs(cfg: AidealConfig):
-    """Yield (name, prefix, file_path, lineno, line) for every matched def."""
+    """Yield (name, prefix, file_path, lineno, line) for every matched def.
+
+    `prefix` is everything on the line BEFORE the matched NAME (so modifier
+    regexes see `private`/`protected`/`override` even when the project's
+    def-regex is anchored at ^), with any non-public enclosing-container
+    modifiers prepended. NOTE: a lookahead like `^\\s*(?!private\\b)` in the
+    def regex is NOT a reliable visibility filter — `\\s*` backtracks one
+    space and the lookahead passes on any indented def; visibility belongs to
+    the visibility model, not the regex."""
     pattern = re.compile(cfg.public_def_regex)
+    excl = _exclude_path_patterns(cfg)
+    deny_mode = visibility_model(cfg).get("mode") == "deny"
     for g in cfg.source_globs:
         for path in globmod.glob(str(cfg.root / g), recursive=True):
+            rel = str(Path(path).relative_to(cfg.root)).replace("\\", "/") \
+                if str(path).startswith(str(cfg.root)) else str(path).replace("\\", "/")
+            if any(p.search(rel) for p in excl):
+                continue
             lines = Path(path).read_text(encoding="utf-8", errors="ignore").splitlines()
+            ctx = _container_context(lines) if deny_mode else None
             for i, line in enumerate(lines):
                 for m in pattern.finditer(line):
-                    yield m.group(1), line[:m.start()], path, i, line
+                    name = m.group(1)
+                    # text before the NAME (not before the whole match): the
+                    # modifiers survive even under a ^-anchored project regex.
+                    prefix = line[:m.start(1)]
+                    if ctx is not None and ctx[i]:
+                        prefix = ctx[i] + " " + prefix
+                    yield name, prefix, path, i, line
 
 
 _TEST_BLOCK_RE = re.compile(r'\btest\s*\(\s*"([^"]*)"\s*\)\s*\{')
+_PY_TEST_DEF_RE = re.compile(r"^([ \t]*)def\s+(test_\w+)\s*\(", re.M)
+
+
+def _iter_test_blocks_py(text: str):
+    """pytest style: yield (test_name, body) for each `def test_*(...)`, the body
+    being every following line indented deeper than the def (indentation-scoped —
+    Python has no braces). Before this, test-example mining fired 0x on Python
+    codebases (_TEST_BLOCK_RE is ScalaTest-only; Sedona audit 2026-07-06)."""
+    import bisect
+    lines = text.splitlines()
+    starts, off = [], 0
+    for ln in lines:
+        starts.append(off)
+        off += len(ln) + 1
+    for m in _PY_TEST_DEF_RE.finditer(text):
+        indent = len(m.group(1).expandtabs())
+        i = bisect.bisect_right(starts, m.start()) - 1
+        body = [lines[i]]
+        for j in range(i + 1, len(lines)):
+            ln = lines[j]
+            if ln.strip() and (len(ln) - len(ln.lstrip(" \t"))) <= indent:
+                break
+            body.append(ln)
+        yield m.group(2), "\n".join(body)
+
+
+def _test_blocks_for(cfg: AidealConfig, text: str):
+    """Language-aware test-block iterator (ScalaTest braces vs pytest defs)."""
+    if cfg.language.lower() == "python":
+        return _iter_test_blocks_py(text)
+    return _iter_test_blocks(text)
 
 
 def _iter_test_blocks(text: str):
@@ -621,7 +727,7 @@ def api_test_examples(cfg: AidealConfig, max_per_api: int = 2, max_chars: int = 
         for path in sorted(globmod.glob(str(cfg.root / g), recursive=True)):
             text = Path(path).read_text(encoding="utf-8", errors="ignore")
             rel = str(Path(path).relative_to(cfg.root))
-            for tname, block in _iter_test_blocks(text):
+            for tname, block in _test_blocks_for(cfg, text):
                 for name in surface:
                     if len(index.get(name, [])) >= max_per_api:
                         continue
@@ -1056,7 +1162,7 @@ def public_api_surface(cfg: AidealConfig, override_filter: str | None = None) ->
         if flt.startswith("documented"):
             lines = file_cache.setdefault(
                 path, Path(path).read_text(encoding="utf-8", errors="ignore").splitlines())
-            if _doc_above(lines, i).strip():
+            if _doc_at(cfg, lines, i).strip():
                 documented.add(name)
     # Intent signals, in order of preference: documentation, then tests (a unit
     # test exercising an API is also author intent). Structural `non_override`
@@ -1294,7 +1400,7 @@ def intent_scores(cfg: AidealConfig, force_llm: bool | None = None) -> dict[str,
         if any(seg in norm for seg in _INTERNAL_PATH_SEGMENTS):
             r["internal"] = True
         lines = file_cache.setdefault(path, Path(path).read_text(encoding="utf-8", errors="ignore").splitlines())
-        if _doc_above(lines, i).strip():
+        if _doc_at(cfg, lines, i).strip():
             r["documented"] = True
 
     names = set(recs)
@@ -1632,6 +1738,50 @@ def _signature_at(lines: list[str], idx: int, def_pos: int, name_end: int
     return raw, params, ret
 
 
+def _doc_below_py(lines: list[str], idx: int) -> str:
+    """Python: the docstring sits BELOW the def line. Walk past the (possibly
+    multi-line) signature to the line ending with `:`, then capture a
+    triple-quoted docstring if it opens there. Returns '' when absent.
+
+    (Before this existed, the `documented` intent signal fired 0x on Python
+    codebases — Sedona audit 2026-07-06 — because _doc_above looks up.)"""
+    j, n = idx, len(lines)
+    # end of signature: first line at/after idx whose code part ends with ':'
+    while j < n:
+        code = lines[j].split("#", 1)[0].rstrip()
+        if code.endswith(":"):
+            break
+        j += 1
+        if j - idx > 20:                      # runaway guard: not a normal signature
+            return ""
+    j += 1
+    while j < n and not lines[j].strip():
+        j += 1
+    if j >= n:
+        return ""
+    m = re.match(r'^\s*[rRbBuU]{0,2}("""|\'\'\')(.*)$', lines[j])
+    if not m:
+        return ""
+    quote, rest = m.group(1), m.group(2)
+    if quote in rest:                          # one-line docstring
+        return rest.split(quote, 1)[0].strip()
+    parts = [rest.strip()]
+    for k in range(j + 1, min(n, j + 60)):
+        if quote in lines[k]:
+            parts.append(lines[k].split(quote, 1)[0].strip())
+            break
+        parts.append(lines[k].strip())
+    return " ".join(p for p in parts if p).strip()
+
+
+def _doc_at(cfg: AidealConfig, lines: list[str], idx: int) -> str:
+    """Language-aware doc extraction for the def at line idx: Python docstrings
+    live BELOW the def; every other supported language documents ABOVE it."""
+    if cfg.language.lower() == "python":
+        return _doc_below_py(lines, idx) or _doc_above(lines, idx)
+    return _doc_above(lines, idx)
+
+
 def _doc_above(lines: list[str], idx: int) -> str:
     """Capture a doc/comment block (/** */, ///, #) immediately above line idx."""
     out, j = [], idx - 1
@@ -1675,7 +1825,7 @@ def public_api_details(cfg: AidealConfig) -> list[dict]:
             "signature": raw,
             "params": params,
             "returns": ret,
-            "description": _doc_above(lines, i),
+            "description": _doc_at(cfg, lines, i),
             "file": str(Path(path).relative_to(cfg.root)),
             "line": i + 1,
         })
@@ -2033,3 +2183,60 @@ def find_or_create(cfg: AidealConfig, generate: bool = False, max_generated: int
             result["note"] = (f"{len(failures)}/{len(targets)} entries fell back to "
                               f"skeleton — see 'failures' for the error")
     return result
+
+
+# --- surface audit: catalog vs the CURRENT visibility-correct surface --------
+
+def surface_audit(cfg: AidealConfig) -> dict:
+    """Cross-check every LLM_readme catalog entry against the current API
+    surface. Catches the private-function leak class after a visibility-model
+    fix: entries whose canonical definition is non-public (private/protected,
+    incl. scoped `private[pkg]` and non-public enclosing containers), whose
+    file is excluded by `codebase.exclude_path_patterns`, or which fell below
+    the intent threshold. These entries burn fix-loop rounds and can never
+    pass from an external harness — prune or exclude them instead of fixing.
+
+    Returns counts + per-entry verdicts; CLI: `aideal surface-audit`."""
+    entries = [e.name for e in parse_readme(cfg.llm_readme)]
+    det = public_api_details(cfg)
+    by_name: dict[str, list[dict]] = {}
+    for d in det:
+        by_name.setdefault(d["name"], []).append(d)
+    # modifier evidence per non-public site (via the same prefix _is_public saw)
+    mods_of: dict[str, list[str]] = {}
+    for name, prefix, path, i, _line in _iter_defs(cfg):
+        if name not in entries:
+            continue
+        found = _NONPUBLIC_MOD_RE.findall(prefix)
+        if found:
+            rel = str(Path(path).relative_to(cfg.root))
+            mods_of.setdefault(name, []).append(f"{' '.join(found)} @ {rel}:{i + 1}")
+    selected = public_api_surface(cfg)   # respects surface_filter (intent_score...)
+    verdicts: dict[str, dict] = {}
+    for n in entries:
+        recs = by_name.get(n, [])
+        if not recs:
+            verdicts[n] = {"status": "not-on-surface",
+                           "why": "no definition matched (path-excluded via "
+                                  "exclude_path_patterns, moved, or renamed)"}
+        elif all(r["visibility"] != "public" for r in recs):
+            verdicts[n] = {"status": "non-public",
+                           "why": "; ".join(mods_of.get(n, [])[:3]) or
+                                  "private/protected (incl. enclosing container)",
+                           "sites": [f"{r['file']}:{r['line']}" for r in recs[:3]]}
+        elif n not in selected:
+            verdicts[n] = {"status": "deselected",
+                           "why": f"below intent threshold under surface_filter="
+                                  f"{cfg.surface_filter}"}
+        else:
+            verdicts[n] = {"status": "ok"}
+    from collections import Counter
+    counts = dict(Counter(v["status"] for v in verdicts.values()))
+    prune = sorted(n for n, v in verdicts.items() if v["status"] != "ok")
+    return {"check": "surface-audit",
+            "catalog_entries": len(entries),
+            "public_names_on_surface": len({d["name"] for d in det
+                                            if d["visibility"] == "public"}),
+            "counts": counts,
+            "prune_candidates": prune,
+            "verdicts": {n: v for n, v in verdicts.items() if v["status"] != "ok"}}
