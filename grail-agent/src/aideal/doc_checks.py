@@ -1075,8 +1075,10 @@ def _comprehension_execute(cfg: AidealConfig, inventory, sample, seed, doc_sourc
         import sys as _sys
         receiver = _receiver_hint(entry.name, owner_map)
         for attempt in range(1 + max_fix_rounds):
-            # pull prior failures for THIS api (accumulated across rounds/runs)
-            known = log.failures_for(entry.name)
+            # A condition's first attempt must be documentation-only. Historical
+            # error-log feedback would leak earlier treatments into A1/A2 even
+            # with max_fix_rounds=0. Only an actual retry may see failures.
+            known = [] if attempt == 0 else log.failures_for(entry.name)
             try:
                 snippet = _strip_fences(invoke_text(
                     writer_spec if attempt == 0 else fixer_spec,
