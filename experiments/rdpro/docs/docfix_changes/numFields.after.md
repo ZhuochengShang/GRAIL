@@ -2,53 +2,62 @@
 _Grounding: doc-repaired from source (docfix)._
 
 ### Goal
-`numFields` is a property of a `DBFWriter` instance that returns the number of fields (columns) defined in the `org.apache.spark.sql.types.StructType` schema provided to the writer's constructor. The `DBFWriter` class is used to create the attribute file (`.dbf`) for a shapefile.
+Return the number of attributes (fields) defined in the Spark SQL schema passed to a `DBFWriter`.
 
-### Valid Access Patterns
+### Valid Call Patterns
+Requires the following types and imports:
+- `edu.ucr.cs.bdlab.beast.io.shapefilev2.DBFWriter` (Scala class)
+- `java.io.ByteArrayOutputStream` (Java class)
+- `org.apache.spark.sql.types.StructType` (Scala class)
+- `org.apache.spark.sql.types.StringType` (Scala class)
+
 ```scala
-// Accesses the numFields property of a DBFWriter instance.
-// The DBFWriter constructor requires a java.io.OutputStream and an
-// org.apache.spark.sql.types.StructType.
-
 import edu.ucr.cs.bdlab.beast.io.shapefilev2.DBFWriter
-import org.apache.spark.sql.types.{StructType, StructField, StringType, IntegerType}
 import java.io.ByteArrayOutputStream
+import org.apache.spark.sql.types.{StructType, StringType}
 
-// 1. Define the schema using Spark SQL types.
-val schema = StructType(Array(
-  StructField("name", StringType, nullable = true),
-  StructField("value", IntegerType, nullable = true)
-))
+val out = new ByteArrayOutputStream()
+val schema = new StructType().add("name", StringType)
+val writer = new DBFWriter(out, schema)
 
-// 2. Create a java.io.OutputStream.
-val outputStream = new ByteArrayOutputStream()
+val n: Int = writer.numFields
+require(n == 1, s"Expected 1 field, got $n")
 
-// 3. Instantiate the writer with the stream and schema.
-val writer = new DBFWriter(outputStream, schema)
-
-// 4. Access the numFields property.
-val attributeCount: Int = writer.numFields // Returns 2
 writer.close()
 ```
 
 ### LLM Instruction Prompt
-To get the number of fields, first create a `DBFWriter` instance. Its constructor requires two arguments: a `java.io.OutputStream` (e.g., `java.io.FileOutputStream`) as the first argument, and an `org.apache.spark.sql.types.StructType` defining the attribute schema as the second. Then, access the `numFields` property on the created instance.
+- `numFields` is an instance method on `edu.ucr.cs.bdlab.beast.io.shapefilev2.DBFWriter`, NOT on a GPX record or `IFeature`.
+- To call it, you must instantiate a `DBFWriter` using a `java.io.OutputStream` and a Spark SQL `StructType` schema.
+- The method takes no arguments and returns the number of fields (attributes) defined in the schema passed to the writer.
+- Call it exactly as `writer.numFields` (no parentheses).
 
 ### Prompt Snippet
-To get the number of fields, construct a `DBFWriter` with a `java.io.OutputStream` and a Spark SQL `StructType` schema, then access its `numFields` property.
+```text
+Instantiate a DBFWriter with an OutputStream and a StructType schema, then get its attribute count with `writer.numFields` and compare it to the expected schema width.
+```
 
 ### Common Failure Modes
-The `DBFWriter` constructor will fail compilation if called with incorrect argument types. Its signature is `(out: java.io.OutputStream, schema: org.apache.spark.sql.types.StructType)`. Providing a file path `String` for the output stream or a simple `Array` instead of a `StructType` for the schema will cause a type mismatch error.
+- **Assuming `numFields` is on a reader record:** The most common failure is attempting to call `r.numFields` on an `IFeature` or GPX record from a reader iteration. `IFeature` does not have this method; it strictly belongs to `DBFWriter`.
+- **Missing constructor arguments:** Failing to provide both a `java.io.OutputStream` and an `org.apache.spark.sql.types.StructType` when creating the `DBFWriter`.
+- **Adding parentheses:** Calling `writer.numFields()` instead of `writer.numFields`.
 
 ### Fix Code Hint
+**Wrong:**
 ```scala
-// WRONG: Constructor arguments have incorrect types (String, Array).
-val writer = new DBFWriter("path.dbf", Array("ID", "City"))
+// Fails: IFeature/GPX records do not have a numFields method
+for (r <- gpxReader) {
+  val n = r.numFields 
+}
+```
 
-// CORRECT: Provide a java.io.OutputStream and a Spark SQL StructType.
-import org.apache.spark.sql.types._
-import java.io.FileOutputStream
-val schema = StructType(Seq(StructField("ID", IntegerType), StructField("City", StringType)))
-val outStream = new FileOutputStream("path.dbf")
-val writer = new DBFWriter(outStream, schema)
+**Correct:**
+```scala
+// Correct: numFields is an instance method on DBFWriter
+val out = new java.io.ByteArrayOutputStream()
+val schema = new org.apache.spark.sql.types.StructType().add("name", org.apache.spark.sql.types.StringType)
+val writer = new edu.ucr.cs.bdlab.beast.io.shapefilev2.DBFWriter(out, schema)
+
+val n: Int = writer.numFields
+writer.close()
 ```

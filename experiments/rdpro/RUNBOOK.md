@@ -1,7 +1,27 @@
 # AIDEAL / GRAIL — full pipeline (rdpro)
 
+> **CURRENT EXPERIMENT LADDER (2026-07-13) — supersedes the g1/g2 condition
+> naming below.** One branch per condition, default models
+> `google:gemini-3.2-pro-preview` (configs/aideal.yaml roles):
+>
+> - **A `aideal/rdpro-a-original`** — pure original repo/README, no AIDEAL
+>   artifacts: `aideal comprehension --execute --doc original` (never run yet).
+> - **B `aideal/rdpro-b-readme`** — generated ENTIRE readme + full fix
+>   pipeline (comprehension code fix loop + error log + `fix-docs
+>   --deep-dive-first`), class-context OFF.
+> - **C `aideal/rdpro-c-catalog`** — exactly B + the catalogue index
+>   (`aideal catalogue`, `class_context: true`); branch from B's
+>   post-`readme --generate` commit so C−B isolates the index.
+>
+> Exact commands: `GRAIL/BRANCHING.md`. Hygiene: `aideal surface-audit`
+> (34/205 current entries flagged non-callable/deselected after the
+> 2026-07-13 visibility fix), `aideal fix-report --run <json> [--baseline
+> <json>]` for the readable per-run analysis. The older g1/g2/g3/g4 suites
+> below remain valid as scripted primitives inside these arms.
+
 Run from `experiments/rdpro/`. Static steps need no key; LLM/execution steps need
-`OPENAI_API_KEY` (+ scalac / spark-submit for `--execute`).
+a model key (`GOOGLE_API_KEY` for the gemini-3.2 defaults; `OPENAI_API_KEY` for
+gpt/codex arms) + scalac / spark-submit for `--execute`.
 
 ## 0 · Setup (once)
 ```bash

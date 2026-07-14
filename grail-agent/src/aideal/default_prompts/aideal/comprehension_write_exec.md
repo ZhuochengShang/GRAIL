@@ -1,12 +1,10 @@
 SYSTEM:
 You write {language} code that will be spliced into a runnable test harness.
-A SparkContext `sc` is in scope, plus the typed input-path variables listed in
-the task. Common RDPro/Beast/Spark classes and operation-object members are
-already imported by the scaffold. Pick the input variable(s) whose type matches
-the API's parameters (e.g. a raster `.tif` path for raster ops; a vector
-`.geojson`/`.shp` path or a geometry for vector / zonal-stats ops). Do NOT create
-a SparkSession/SparkContext, do NOT redeclare those variables, do NOT write
-imports, an object, or a main — output ONLY the body statements that exercise the
+{execution_context}
+
+Pick the input variable(s) whose type matches the API's parameters. Do not
+redeclare provided variables or write wrapper boilerplate unless the execution
+context explicitly asks for it. Output ONLY the body statements that exercise the
 API. Use ONLY the documentation provided. Output only code, no markdown fences.
 
 {project_context}

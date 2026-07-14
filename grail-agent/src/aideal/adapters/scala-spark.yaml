@@ -25,8 +25,19 @@ codebase:
     # extend per project under codebase.dedup.deprioritize_paths.
     deprioritize_paths: ["(^|/)Java[A-Z][^/]*\\.scala$"]
 
+docfix:
+  allowed_member_categories: [language_core, spark]
+
 comprehension:
   execute:
+    execution_context: >-
+      A SparkContext `sc`, SparkSession `spark`, `output_dir`, and any
+      configured typed input variables are already in scope. The scaffold
+      already imports the project common classes and operation-object members.
+      Do not create a SparkSession/SparkContext, do not redeclare provided
+      variables, and do not write imports/object/main unless the task explicitly
+      requests them.
+
     # Self-healing imports: KEEP the model's imports (they land as LOCAL imports
     # inside run(), so no global collision). The scaffold's global block covers the
     # common ones; if it misses a package the model needs, the model adds it and the

@@ -39,11 +39,15 @@ files:                          # default workspace layout (paths are project-re
 
 models:
   registry:
-    gpt-4o:        { provider: openai,    model: gpt-4o }
-    gpt-4o-mini:   { provider: openai,    model: gpt-4o-mini }
-    claude-sonnet: { provider: anthropic, model: claude-sonnet-4-6 }
-    qwen:          { provider: ollama,    model: qwen3:32b }
-    llama3:        { provider: ollama,    model: llama3 }
+    gpt-4o:         { provider: openai,    model: gpt-4o }
+    gpt-4o-mini:    { provider: openai,    model: gpt-4o-mini }
+    codex-5.3:      { provider: codex,     model: gpt-5.3-codex }
+    gemini-2.5-pro: { provider: google,    model: gemini-2.5-pro }
+    gemini-3.1-pro: { provider: google,    model: gemini-3.1-pro-preview }
+    gemini-3.2-pro: { provider: google,    model: gemini-3.2-pro-preview }
+    claude-sonnet:  { provider: anthropic, model: claude-sonnet-4-6 }
+    qwen:           { provider: ollama,    model: qwen3:32b }
+    llama3:         { provider: ollama,    model: llama3 }
   roles:
     author: gpt-4o-mini
     audience: gpt-4o
@@ -66,8 +70,21 @@ checks:
     - "Fix Code Hint"
   comprehension_apis_sampled: 5
 
+docfix:
+  # Safety guard for source-aware README repair. Rewrites are rejected if their
+  # snippets call members that are neither on the project API surface nor in
+  # these generic language/ecosystem categories. Adapters/projects extend this
+  # instead of hardcoding one codebase's helpers in Python.
+  allowed_member_categories: [language_core]
+  allowed_members: []
+
 comprehension:
   execute:                      # framework-generic execute controls (markers, limits)
+    execution_context: >-
+      A runnable test harness is already in scope. Use only the variables,
+      fixtures, imports, and setup described in the task and project profile.
+      Do not create a new application/session/context unless the task explicitly
+      says one is required.
     region: ["// TODO API_TEST_START", "// TODO API_TEST_END"]
     strip_snippet_imports: false
     output_tail_chars: 2000
@@ -76,3 +93,7 @@ comprehension:
     work_dir: .aideal_exec
     timeout_seconds: 600
     max_fix_rounds: 1
+    # After every --execute / fix-docs run, also write the READABLE analysis
+    # (docs/fix_report_<run>.md + fix_report_latest.md via `aideal fix-report`):
+    # improvement verdict, same-issue-not-solved, clusters, per-API why-failed.
+    auto_report: true
