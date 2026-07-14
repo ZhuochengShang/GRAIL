@@ -100,21 +100,27 @@ class AidealConfig:
 #: (PNG/TIFF/SVG) decoded as errors="ignore" mojibake is NOT documentation
 #: (2x2 review finding, 2026-07-13). Markdown keeps its image REFERENCES;
 #: the bytes stay out.
-_TEXT_DOC_EXTS = {".md", ".markdown", ".mdx", ".txt", ".rst", ".adoc", ".html"}
+_TEXT_DOC_EXTS = {
+    ".md", ".markdown", ".mdx", ".txt", ".rst", ".adoc", ".html",
+    # Documentation galleries commonly store the executable source rendered
+    # by Sphinx-Gallery alongside prose (for example docs/examples/*.py).
+    ".py",
+}
 
 
 def _resolve_readme_sources(root: Path, sources: list[str]) -> list[Path]:
     """Expand each baseline-doc source (a file, a directory, or a glob) into a
     DETERMINISTIC (per-source sorted), de-duplicated, TEXT-ONLY list of files.
-    Directories pull in their *.md recursively; globs and explicit files are
-    filtered to textual documentation extensions."""
+    Directories recursively include every extension in ``_TEXT_DOC_EXTS``;
+    globs and explicit files use the same filter."""
     import glob as _glob
     found: list[Path] = []
     seen: set[Path] = set()
     for src in sources:
         base = (root / src)
         if base.is_dir():
-            matches = sorted(_glob.glob(str(base / "**" / "*.md"), recursive=True))
+            matches = sorted(str(p) for p in base.rglob("*")
+                             if p.is_file() and p.suffix.lower() in _TEXT_DOC_EXTS)
         elif any(ch in src for ch in "*?["):
             matches = sorted(_glob.glob(str(base), recursive=True))
         else:

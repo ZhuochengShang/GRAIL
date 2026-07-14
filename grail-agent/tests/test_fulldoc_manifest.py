@@ -50,13 +50,16 @@ def test_bundle_is_text_only_and_deterministic(tmp_path):
     d = tmp_path / "doc"; d.mkdir()
     (d / "b.md").write_text("bee")
     (d / "a.md").write_text("ay")
+    (d / "guide.rst").write_text("guide")
+    (d / "gallery.py").write_text("print('documented example')")
+    (d / "notes.txt").write_text("notes")
     (d / "img.png").write_bytes(b"\x89PNG\r\n\x1a\nBINARY")
     (d / "chart.tiff").write_bytes(b"II*\x00BINARY")
     (d / "run.sh").write_text("#!/bin/sh")
     (tmp_path / "R.md").write_text("readme")
     files = _resolve_readme_sources(tmp_path, ["R.md", "doc"])
     names = [f.name for f in files]
-    assert names == ["R.md", "a.md", "b.md"]          # sorted, text-only
+    assert names == ["R.md", "a.md", "b.md", "gallery.py", "guide.rst", "notes.txt"]
     # explicit binary path is ALSO rejected
     files2 = _resolve_readme_sources(tmp_path, ["doc/img.png", "R.md"])
     assert [f.name for f in files2] == ["R.md"]
@@ -121,6 +124,17 @@ def test_manifest_rejects_names_outside_surface(tmp_path):
     mp.write_text(json.dumps({"apis": ["foo", "ghost"]}))
     with pytest.raises(ValueError, match="outside the configured public surface"):
         _load_manifest(cfg, str(mp))
+
+
+def test_artifact_manifest_explicitly_allows_generated_entries_outside_surface(tmp_path):
+    cfg = _cfg(tmp_path)
+    mp = tmp_path / "docs" / "artifact.json"
+    mp.write_text(json.dumps({
+        "set": "generated_readme_artifact",
+        "allow_outside_surface": "generated_document_entries",
+        "apis": ["foo", "generated_member"],
+    }))
+    assert _load_manifest(cfg, str(mp)) == ["foo", "generated_member"]
 
 
 def test_api_coverage_sets_and_shared_T(tmp_path):

@@ -73,7 +73,16 @@ def _load_manifest(cfg: AidealConfig, manifest: str | None) -> list[str] | None:
         raise ValueError(f"manifest {p} must contain a non-empty-string API list")
     names = list(dict.fromkeys(names))
     unknown = sorted(set(names) - set(public_api_surface(cfg)))
-    if unknown:
+    # The primary experiment remains strictly source-surface bounded. A
+    # secondary artifact-scale analysis may intentionally evaluate every entry
+    # emitted into a generated README, including names later rejected by the
+    # surface/intent filter. Such a manifest must opt in explicitly so a typo or
+    # arbitrary name can never silently enter an ordinary experiment.
+    allow_artifact_entries = (
+        isinstance(data, dict)
+        and data.get("allow_outside_surface") == "generated_document_entries"
+    )
+    if unknown and not allow_artifact_entries:
         raise ValueError(f"manifest {p} contains APIs outside the configured public surface: "
                          f"{', '.join(unknown[:10])}")
     return names
