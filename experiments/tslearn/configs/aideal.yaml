@@ -1,6 +1,7 @@
 # AIDEAL config — tslearn (Python, time-series ML, sklearn-style).
 # First NON-Scala, NON-geospatial external baseline: tests that the workflow
 # generalizes with a config + adapter only (no code edits per repo).
+# Both conditions pin tslearn commit f8f13ddf4186e2cc99c8ef495aeb46b1254a01f7.
 # Inherits framework defaults + the python adapter (language, def/class regex,
 # pytest test mining, docstring-below extraction, python exec command).
 extends: [python]
@@ -40,12 +41,12 @@ models:
     gpt-4o-mini:    { provider: openai, model: gpt-4o-mini }
     codex-5.3:      { provider: codex,  model: gpt-5.3-codex }
     gemini-2.5-pro: { provider: google, model: gemini-2.5-pro }
-    gemini-3.2-pro: { provider: google, model: gemini-3.2-pro-preview }
-  # DEFAULT CONDITION (2026-07-13): everything on gemini-3.2-pro.
+    gemini-3.1-pro: { provider: google, model: gemini-3.1-pro-preview }
+  # Match the available model used by the RDPro conditions.
   roles:
-    author: gemini-3.2-pro
-    audience: gemini-3.2-pro
-    fixer: gemini-3.2-pro
+    author: gemini-3.1-pro
+    audience: gemini-3.1-pro
+    fixer: gemini-3.1-pro
 
 comprehension:
   class_context: false
@@ -53,16 +54,19 @@ comprehension:
     scaffold: docs/api_test_scaffold.py
     # No jars/build; the harness interpreter must have the library:
     #   pip install tslearn        (or: pip install -e tslearn/)
-    # Pinned preamble: tiny in-memory dataset every API family can use —
-    # (n_ts, sz, d) dataset for estimators, two 1-D series for metrics.
-    # `# type:` comments surface in the audience prompt as the input types.
+    # Repository-bundled Trace data: deterministic, offline and identical in
+    # A1/A2. Small slices keep estimator calls inexpensive.
+    local_uris: false
+    output_dir: /tmp/aideal_tslearn_out
     preamble: |
-      X = random_walks(n_ts=6, sz=40, d=1, random_state=42)  # type: time-series dataset ndarray (6, 40, 1)
-      X2 = random_walks(n_ts=4, sz=32, d=1, random_state=7)  # type: second dataset ndarray (4, 32, 1)
+      _trace = np.load(trace_npz)
+      X = _trace["X_train"][:6, :40, :]  # type: time-series dataset ndarray (6, 40, 1)
+      X2 = _trace["X_test"][:4, :32, :]  # type: second dataset ndarray (4, 32, 1)
       s1 = X[0].ravel()  # type: 1-D series ndarray (40,)
       s2 = X[1].ravel()  # type: 1-D series ndarray (40,)
-      y = np.array([0, 0, 0, 1, 1, 1])  # type: labels for X, ndarray (6,)
-    sample_data: {}
+      y = _trace["y_train"][:6]  # type: labels for X, ndarray (6,)
+    sample_data:
+      trace_npz: tslearn/tslearn/.cached_datasets/Trace.npz
     max_fix_rounds: 3
-    require_correctness: false
+    require_correctness: true
     io_hints: ""

@@ -5,7 +5,7 @@ workflow transfers to a new codebase with **config + adapter only** (zero
 per-repo code edits), and reproduce the doc-effect ladder measured on RDPro.
 
 Everything below runs from `experiments/tslearn/`. Default models are
-`google:gemini-3.2-pro-preview` for author/audience/fixer (set in
+`google:gemini-3.1-pro-preview` for author/audience/fixer (set in
 `configs/aideal.yaml`; override any run with `--role role=provider:model`).
 `aideal` here means `PYTHONPATH=../../grail-agent/src python3 -m aideal.cli`.
 
@@ -13,11 +13,16 @@ Everything below runs from `experiments/tslearn/`. Default models are
 
 ```bash
 cd experiments/tslearn
-git clone https://github.com/tslearn-team/tslearn.git   # pinned working copy
-pip install tslearn numpy scikit-learn                   # harness imports the lib
+git clone https://github.com/tslearn-team/tslearn.git
+git -C tslearn checkout f8f13ddf4186e2cc99c8ef495aeb46b1254a01f7
+python -m pip install -e ./tslearn                       # exact target checkout
 export GOOGLE_API_KEY=...                                # gemini key
 aideal profile                                           # should show ready:true
 ```
+
+No dataset download is needed. Both conditions load deterministic small slices
+from `tslearn/tslearn/.cached_datasets/Trace.npz`, which is bundled in the target
+repository.
 
 Static sanity (no key needed) — expected numbers from the 2026-07-13
 sandbox validation (tslearn @ 0.9.0 head):
