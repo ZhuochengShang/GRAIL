@@ -13,6 +13,8 @@ provider's package is required.
 
 from __future__ import annotations
 
+import os
+
 from .config import ModelSpec
 
 
@@ -33,7 +35,18 @@ def get_chat_model(spec: ModelSpec, temperature: float = 0.0):
         return ChatAnthropic(model=spec.model, temperature=temperature)
     if provider == "google":
         from langchain_google_genai import ChatGoogleGenerativeAI
-        return ChatGoogleGenerativeAI(model=spec.model, temperature=temperature)
+        # A socket waiting for response headers previously blocked an experiment
+        # for >80 minutes. Bound each provider request while retaining retries;
+        # both knobs are environment-overridable and do not change prompts,
+        # scoring, or the logical fix-round treatment.
+        timeout = float(os.environ.get("AIDEAL_GOOGLE_REQUEST_TIMEOUT_S", "300"))
+        retries = int(os.environ.get("AIDEAL_GOOGLE_MAX_RETRIES", "2"))
+        return ChatGoogleGenerativeAI(
+            model=spec.model,
+            temperature=temperature,
+            request_timeout=timeout,
+            retries=retries,
+        )
     if provider == "ollama":
         import os as _os
         from langchain_ollama import ChatOllama
