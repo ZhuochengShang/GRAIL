@@ -106,12 +106,25 @@ def _markdown_chunks(text: str) -> list[str]:
     chunks: list[str] = []
     file_header = ""
     current: list[str] = []
+    fence: tuple[str, int] | None = None
     for line in text.splitlines():
+        stripped = line.lstrip()
+        # Synthetic file boundaries are authoritative and reset malformed or
+        # unclosed Markdown state from the previous source file.
         if line.startswith("===== ") and line.endswith(" ====="):
             if current:
                 chunks.append("\n".join(([file_header] if file_header else []) + current).strip())
-            file_header, current = line, []
-        elif re.match(r"^#{1,6}\s+", line) and current:
+            file_header, current, fence = line, [], None
+            continue
+        fm = re.match(r"^(`{3,}|~{3,})", stripped)
+        if fm:
+            token = fm.group(1)
+            marker = (token[0], len(token))
+            if fence is None:
+                fence = marker
+            elif marker[0] == fence[0] and marker[1] >= fence[1]:
+                fence = None
+        if fence is None and re.match(r"^#{1,6}\s+", line) and current:
             chunks.append("\n".join(([file_header] if file_header else []) + current).strip())
             current = [line]
         else:
@@ -125,9 +138,12 @@ def _relevant_original_text(cfg: AidealConfig, api_name: str, limit: int) -> str
     """Retrieve only code-evidenced Markdown sections for one API, without an LLM."""
     from .readme_agent import _doc_code_mentions
     raw = cfg.original_readme_text(limit=None)
+    coverage_cfg = ((cfg.raw or {}).get("coverage") or {})
+    call_patterns = coverage_cfg.get("documentation_call_patterns")
     matches: list[tuple[int, int, str]] = []
     for pos, chunk in enumerate(_markdown_chunks(raw)):
-        if api_name not in _doc_code_mentions(chunk, {api_name}):
+        if api_name not in _doc_code_mentions(
+                chunk, {api_name}, call_patterns=call_patterns):
             continue
         # Prefer explicit calls over inline-code/name-only evidence; retain source order.
         escaped = re.escape(api_name)
@@ -164,7 +180,7 @@ def _relevant_doc_inventory(cfg: AidealConfig, doc_source: str, names: list[str]
         if doc_source in ("aideal", "original+aideal"):
             entry = generated.get(name)
             if entry:
-                parts.append((f"## API Test: `{name}`\n\n{entry.body}")[:part_limit])
+                parts.append(entry.body[:part_limit])
         body = "\n\n===== RELATED DOCUMENTATION =====\n\n".join(parts)[:limit]
         inventory.append(ApiEntry(name=name, goal="", snippet="", body=body))
     return inventory

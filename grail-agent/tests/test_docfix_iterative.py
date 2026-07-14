@@ -271,18 +271,19 @@ def test_guard_yaml_categories_override_python_fallback(tmp_path, patched):
 
 def test_retry_is_zero_rounds_and_carries_doc_context(tmp_path, patched):
     """2x2 invariants at the docfix retry: 0 snippet-fix rounds, and the
-    doc_source/full_doc/manifest of the ARM flow through to every retry."""
+    doc_source/doc_scope/full_doc/manifest of the arm flow through to every retry."""
     cfg = _cfg(tmp_path)
     s = Script(diagnoses=["ROOT CAUSE:\nx\n"], rewrites=[_entry("d1")],
                retry_outcomes=[("pass", None, "")])
     patched(s)
     docfix.doc_fix_run(cfg, apis=["foo"], doc_rounds=5, retry_rounds=0,
-                       doc_source="original+aideal", full_doc=True,
+                       doc_source="aideal", full_doc=False, doc_scope="relevant",
                        manifest="docs/api_manifest_shared.json")
     call = s.retry_calls[0]
     assert call["max_fix_rounds"] == 0
-    assert call["doc_source"] == "original+aideal"
-    assert call["full_doc"] is True
+    assert call["doc_source"] == "aideal"
+    assert call["full_doc"] is False
+    assert call["doc_scope"] == "relevant"
     assert call["manifest"] == "docs/api_manifest_shared.json"
 
 
