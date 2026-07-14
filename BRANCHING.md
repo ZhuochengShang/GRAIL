@@ -113,6 +113,12 @@ origin/main
 
 ## The condition ladder (per study) — first baseline = LLM + original repo
 
+> **CURRENT SPRINT (2026-07-13): the 2x2 plan supersedes the plain ladder —
+> {original, generated readme} x {0 rounds, deep-dive fix}, all flat-readme,
+> catalogue arm postponed. Exact commands: experiments/rdpro/RUNBOOK.md
+> header. Extra branch per study: `aideal/<study>-a-original-fix` (B1), forked
+> from the A1 results commit; its first step empties the catalog.**
+
 Per Zoe 2026-07-13: condition **A is always "just the LLM on the original
 codebase/original README"** — no AIDEAL artifacts — and the **catalog (per-
 class index) is the ADVANCED step that comes only after the full generated
@@ -131,14 +137,19 @@ aideal comprehension --execute --doc original > docs/comprehension_A_original.js
 git add -A && git commit -m "A: original-readme baseline: <pass>/<n> (<pct>)"
 
 # B — generated README + FULL fix pipeline, no index (class-context off).
-#     "readme fix loop, deep dive, code error log" all inside this arm.
+#     Pipeline per Zoe 2026-07-13: comprehension = pass-or-not (0 snippet
+#     rounds); ALL iteration budget in the deep-dive DOC-repair loop
+#     (--doc-rounds 5, each round must improve understanding or it stops).
 git checkout -b aideal/rdpro-b-readme origin/main
 aideal readme --generate --limit 0 --force
 git add -A && git commit -m "B/C shared setup: generated readme"
 git tag rdpro-readme-setup-2026-07-13                    # C forks from THIS tag
-aideal comprehension --execute --class-context off > docs/comprehension_B0.json
-aideal fix-docs --from-results docs/comprehension_B0.json --deep-dive-first --retry-rounds 3 --report docs/docfix_B.json
-aideal comprehension --execute --class-context off > docs/comprehension_B_final.json
+# Freeze coverage/manifest only AFTER this exact treatment README exists;
+# use the resulting JSON files unchanged in every 2x2 condition branch.
+aideal manifest
+aideal comprehension --execute --class-context off --max-fix-rounds 0 > docs/comprehension_B0.json
+aideal fix-docs --from-results docs/comprehension_B0.json --deep-dive-first --doc-rounds 5 --report docs/docfix_B.json
+aideal comprehension --execute --class-context off --max-fix-rounds 0 > docs/comprehension_B_final.json
 aideal fix-report --run docs/comprehension_B_final.json --baseline docs/comprehension_A_original.json
 git add -A && git commit -m "B: readme+fixloop: <pass>/<n>; delta vs A: +<pp>"
 
@@ -147,9 +158,9 @@ git add -A && git commit -m "B: readme+fixloop: <pass>/<n>; delta vs A: +<pp>"
 git checkout -b aideal/rdpro-c-catalog rdpro-readme-setup-2026-07-13
 # configs/aideal.yaml: comprehension.class_context: true  (docfix retries too)
 aideal catalogue
-aideal comprehension --execute --class-context on > docs/comprehension_C0.json
-aideal fix-docs --from-results docs/comprehension_C0.json --deep-dive-first --retry-rounds 3 --report docs/docfix_C.json
-aideal comprehension --execute --class-context on > docs/comprehension_C_final.json
+aideal comprehension --execute --class-context on --max-fix-rounds 0 > docs/comprehension_C0.json
+aideal fix-docs --from-results docs/comprehension_C0.json --deep-dive-first --doc-rounds 5 --report docs/docfix_C.json
+aideal comprehension --execute --class-context on --max-fix-rounds 0 > docs/comprehension_C_final.json
 aideal fix-report --run docs/comprehension_C_final.json --baseline docs/comprehension_B_final.json
 git add -A && git commit -m "C: +catalogue index: <pass>/<n>; delta vs B: +<pp>"
 

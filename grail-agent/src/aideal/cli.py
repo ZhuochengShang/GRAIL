@@ -78,14 +78,23 @@ def _run(argv: list[str] | None = None) -> int:
     sp.add_argument("--sample", type=int, default=None)
     sp.add_argument("--api", default=None,
                     help="test ONE specific documented API by name (e.g. --api mapPixels)")
-    sp.add_argument("--doc", choices=["aideal", "original", "agents"], default="aideal",
-                    help="aideal = per-API catalog (GRAIL) · original = repo README only · "
-                         "agents = repo AGENTS.md only (baseline: holistic agent guide vs per-API docs)")
+    sp.add_argument("--doc", choices=["aideal", "original", "agents", "original+aideal"],
+                    default="aideal",
+                    help="aideal = generated catalog · original = repo README/docs only · "
+                         "agents = repo AGENTS.md only · original+aideal = original docs "
+                         "PLUS the (repaired) catalog (the B1 arm)")
+    sp.add_argument("--full-doc", dest="full_doc", choices=["on", "off"], default=None,
+                    help="2x2 experiment mode: the audience receives the ENTIRE selected "
+                         "documentation (no truncation, no per-entry slicing) + only the "
+                         "target API line. Requires --execute. Default: comprehension.full_doc")
+    sp.add_argument("--manifest", default=None,
+                    help="frozen API manifest (JSON list, from `aideal manifest`): the SAME "
+                         "denominator for every experiment cell")
     sp.add_argument("--execute", action="store_true",
                     help="compile/run each snippet via comprehension.execute (real ground truth; "
                          "covers all documented APIs unless --sample given)")
     sp.add_argument("--show-code", action="store_true",
-                    help="include the audience-generated Scala snippet in JSON details")
+                    help="include the audience-generated code snippet in JSON details")
     sp.add_argument("--class-context", dest="class_context", choices=["on", "off"], default=None,
                     help="INDEX-FIRST: prefix each API with its catalogue class header (receiver + "
                          "verified sibling pattern). Overrides comprehension.class_context. A/B the "
@@ -119,8 +128,34 @@ def _run(argv: list[str] | None = None) -> int:
                     help="target failed APIs from a specific comprehension/bench JSON "
                          "(e.g. g1), instead of the mutable latest error_log state")
     sp.add_argument("--max-apis", type=int, default=None, help="cap how many failures to process")
-    sp.add_argument("--retry-rounds", type=int, default=2,
-                    help="fix rounds allowed in the retry run (default 2)")
+    sp.add_argument("--retry-rounds", type=int, default=None,
+                    help="snippet-fix rounds in each retry run. Default: 2 for the "
+                         "classic single pass; 0 when --doc-rounds > 1 (iterative "
+                         "mode measures the DOC — the retry is pass-or-not, and the "
+                         "iteration budget goes to doc repair, not snippet fixing)")
+    sp.add_argument("--doc-rounds", type=int, default=1,
+                    help="ITERATIVE deep-dive repair: up to N rounds per API of "
+                         "deep-dive -> diagnose -> rewrite -> run-against-new-doc, "
+                         "with a per-round understanding check (diagnosis changed / "
+                         "error progressed). 1 = classic single pass")
+    sp.add_argument("--doc", choices=["aideal", "original", "original+aideal"],
+                    default="aideal",
+                    help="doc context for the per-API RETRY runs (B1 uses original+aideal: "
+                         "original docs + the entries this loop has created so far)")
+    sp.add_argument("--full-doc", dest="full_doc", choices=["on", "off"], default=None,
+                    help="retry runs deliver the ENTIRE document (2x2 mode). Default: config")
+    sp.add_argument("--manifest", default=None,
+                    help="frozen API manifest — retries stay inside the experiment denominator")
+    sp.add_argument("--create-missing", action="store_true",
+                    help="ORIGINAL-README ARM: also target failed APIs that have NO "
+                         "catalog entry — the loop CREATES the entry (round-0 doc = "
+                         "the original README the audience saw); all-rounds-fail "
+                         "removes it again. Use with --from-results of a "
+                         "`--doc original` run")
+    sp.add_argument("--doc-stuck", type=int, default=2,
+                    help="stop an API's doc-rounds early after N consecutive rounds "
+                         "with NO improvement (diagnosis unchanged AND error "
+                         "signature unchanged). 0 disables")
     sp.add_argument("--timeout", dest="timeout_s", type=int, default=None,
                     help="per-attempt compile+run timeout for the retry")
     sp.add_argument("--report", default=None,
@@ -135,6 +170,18 @@ def _run(argv: list[str] | None = None) -> int:
     sp.add_argument("--role", action="append", default=None, metavar="ROLE=MODEL",
                     help="model override, e.g. --role fixer=google:gemini-2.5-pro")
     sp.add_argument("--dry-run", action="store_true", help="list target apis, change nothing")
+    sp = sub.add_parser("manifest",
+                        help="freeze the experiment denominators: writes docs/api_coverage.json "
+                             "(S/O/G sets + coverage percentages — a first-class result) and "
+                             "docs/api_manifest_shared.json (T = S∩O∩G, consumed by EVERY 2x2 "
+                             "cell). --set surface freezes all of S instead of T")
+    sp.add_argument("--set", choices=["shared", "surface"], default="shared",
+                    help="which set the manifest freezes: shared T (default; fair "
+                         "quality comparison) or the whole surface S (coverage-style runs)")
+    sp.add_argument("--coverage-out", default="docs/api_coverage.json")
+    sp.add_argument("--out", default=None,
+                    help="manifest path (default docs/api_manifest_shared.json or "
+                         "docs/api_manifest.json per --set)")
     sp = sub.add_parser("fix-report",
                         help="READABLE markdown analysis of a fix-loop run: improvement "
                              "verdict vs a baseline, same-issue-not-solved list, failure "
@@ -325,16 +372,42 @@ def _run(argv: list[str] | None = None) -> int:
             if not val:
                 print(json.dumps({"error": f"--role needs ROLE=MODEL, got '{spec}'"})); return 2
             cfg.override_role(role.strip(), val.strip())
+        fd = None if args.full_doc is None else (args.full_doc == "on")
         out = comprehension_check(cfg, sample=args.sample, doc_source=args.doc,
                                  execute=args.execute, show_code=args.show_code, api=args.api,
                                  class_context=cc, rerun_failed=args.rerun_failed,
                                  max_fix_rounds=args.max_fix_rounds,
-                                 resume=args.resume, timeout_s=args.timeout_s)
+                                 resume=args.resume, timeout_s=args.timeout_s,
+                                 full_doc=fd, manifest=args.manifest)
         if args.execute and isinstance(out, dict):
             from .fixreport import auto_report
             rep = auto_report(cfg, out)   # readable log; never raises
             if rep:
                 out["report_md"] = rep
+    elif args.cmd == "manifest":
+        from .readme_agent import api_coverage
+        import time as _t
+        cov = api_coverage(cfg)
+        cov["frozen_at"] = _t.strftime("%Y-%m-%d %H:%M")
+        cov["surface_filter"] = cfg.surface_filter
+        cpath = (cfg.root / args.coverage_out).resolve()
+        cpath.parent.mkdir(parents=True, exist_ok=True)
+        cpath.write_text(json.dumps(cov, indent=1), encoding="utf-8")
+        names = cov["shared_T"] if args.set == "shared" else cov["surface_S"]
+        mdefault = ("docs/api_manifest_shared.json" if args.set == "shared"
+                    else "docs/api_manifest.json")
+        mpath = (cfg.root / (args.out or mdefault)).resolve()
+        mpath.write_text(json.dumps({"frozen_at": cov["frozen_at"],
+                                     "set": args.set,
+                                     "apis": names}, indent=1), encoding="utf-8")
+        out = {"coverage_written": str(cpath), "manifest_written": str(mpath),
+               "surface_S": cov["n_surface"],
+               "original_documented": len(cov["original_documented_O"]),
+               "generated_documented": len(cov["generated_documented_G"]),
+               "shared_T": len(cov["shared_T"]),
+               "coverage_pct": cov["coverage"],
+               "manifest_apis": len(names),
+               "note": "pass --manifest to every comprehension/fix-docs run of the experiment"}
     elif args.cmd == "fix-report":
         from .fixreport import write_report
         out = write_report(cfg, args.run, baseline_path=args.baseline,
@@ -366,13 +439,22 @@ def _run(argv: list[str] | None = None) -> int:
             if not val:
                 print(json.dumps({"error": f"--role needs ROLE=MODEL, got '{spec}'"})); return 2
             cfg.override_role(role.strip(), val.strip())
+        _retry = (args.retry_rounds if args.retry_rounds is not None
+                  else (0 if args.doc_rounds > 1 else 2))
         out = doc_fix_run(cfg, apis=args.api, max_apis=args.max_apis,
-                          retry_rounds=args.retry_rounds,
+                          retry_rounds=_retry,
                           timeout_s=args.timeout_s, dry_run=args.dry_run,
                           from_results=args.from_results,
                           report_path=args.report,
                           deep_dive_first=args.deep_dive_first,
-                          deep_dive_out=args.deep_dive_out)
+                          deep_dive_out=args.deep_dive_out,
+                          doc_rounds=args.doc_rounds,
+                          doc_stuck=args.doc_stuck,
+                          create_missing=args.create_missing,
+                          doc_source=args.doc,
+                          full_doc=(None if args.full_doc is None
+                                    else args.full_doc == "on"),
+                          manifest=args.manifest)
         if not args.dry_run and isinstance(out, dict):
             from .fixreport import auto_report
             rep = auto_report(cfg, out)   # readable log; never raises
