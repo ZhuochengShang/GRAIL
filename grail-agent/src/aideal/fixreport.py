@@ -101,23 +101,51 @@ def load_run(path: str | Path) -> dict:
         for name, r in (obj.get("apis") or {}).items():
             retry = r.get("retry") or {}
             status = (r.get("status") or "").split(" ")[0]
+            # iterative mode: map the doc_rounds trail (deep-dive -> rewrite ->
+            # run per round, with understanding flags) onto the generic rounds
+            # shape so the per-API timeline renders like any fix loop.
+            rounds = []
+            last_cat, last_err = retry.get("error_category") or "", ""
+            for dr in (r.get("doc_rounds") or []):
+                flags = []
+                if "diagnosis_changed" in dr:
+                    flags.append("new diagnosis" if dr["diagnosis_changed"]
+                                 else "diagnosis UNCHANGED")
+                if "error_progressed" in dr:
+                    flags.append("error moved" if dr["error_progressed"]
+                                 else "error SAME")
+                note = f"[{'; '.join(flags)}] " if flags else ""
+                if dr.get("outcome"):          # rejected / not-testable rounds
+                    rounds.append({"round": dr.get("round"), "status": "fail",
+                                   "category": "doc-repair",
+                                   "error": note + dr["outcome"]})
+                    continue
+                ok = dr.get("retry_status") == "pass"
+                rounds.append({"round": dr.get("round"),
+                               "status": "pass" if ok else "fail",
+                               "category": dr.get("error_category") or "",
+                               "error": note + (dr.get("error_head") or "")})
+                if not ok:
+                    last_cat = dr.get("error_category") or last_cat
+                    last_err = dr.get("error_head") or last_err
             apis[name] = {
-                "status": "pass" if status == "doc-fixed" else "fail",
+                "status": "pass" if status in ("doc-fixed", "doc-created") else "fail",
                 "outcome": r.get("status", ""),
-                "attempts": retry.get("attempts"),
+                "attempts": r.get("rounds_used") or retry.get("attempts"),
                 "pass_round": retry.get("pass_round"),
-                "error_category": retry.get("error_category") or "",
-                "error": "",
+                "error_category": last_cat,
+                "error": last_err,
                 "source": retry.get("source"),
                 "frames": retry.get("codebase_frames") or [],
-                "rounds": [],
+                "rounds": rounds,
                 "diagnosis_head": r.get("diagnosis_head", ""),
                 "tokens": r.get("tokens"),
                 "wall_s": r.get("wall_s"),
             }
         meta = {k: obj.get(k) for k in ("model", "target_source", "attempted",
                                         "doc_fixed", "fix_rate", "outcomes",
-                                        "deep_dive_first")}
+                                        "deep_dive_first", "doc_rounds",
+                                        "retry_rounds")}
         return {"kind": kind, "run_id": None, "models": {"fixer": obj.get("model")},
                 "apis": apis, "meta": meta, "raw": obj}
     metrics = obj.get("metrics") or {}
@@ -295,7 +323,10 @@ def render_markdown(run: dict, baseline: dict | None = None,
     if kind == "fix-docs":
         L.append(f"- outcomes: `{meta.get('outcomes')}`  ·  doc_fixed **{meta.get('doc_fixed')}"
                  f"/{meta.get('attempted')}**  ·  targets from `{meta.get('target_source')}`"
-                 f"{'  ·  deep-dive-first' if meta.get('deep_dive_first') else ''}")
+                 f"{'  ·  deep-dive-first' if meta.get('deep_dive_first') else ''}"
+                 + (f"  ·  iterative x{meta.get('doc_rounds')} doc-rounds "
+                    f"(retry={meta.get('retry_rounds')})"
+                    if (meta.get('doc_rounds') or 1) > 1 else ""))
     else:
         L.append(f"- pass **{passed}/{n}** raw ({_pct(passed, n)})  ·  scored "
                  f"**{scored_p}/{scored_n}** ({_pct(scored_p, scored_n)}) after excluding "

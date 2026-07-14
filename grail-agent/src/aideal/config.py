@@ -95,9 +95,19 @@ class AidealConfig:
         return self.registry[name]
 
 
+#: extensions accepted into the ORIGINAL-DOCUMENTATION bundle. The bundle is
+#: what the audience model reads whole in full-doc mode — binary imagery
+#: (PNG/TIFF/SVG) decoded as errors="ignore" mojibake is NOT documentation
+#: (2x2 review finding, 2026-07-13). Markdown keeps its image REFERENCES;
+#: the bytes stay out.
+_TEXT_DOC_EXTS = {".md", ".markdown", ".mdx", ".txt", ".rst", ".adoc", ".html"}
+
+
 def _resolve_readme_sources(root: Path, sources: list[str]) -> list[Path]:
     """Expand each baseline-doc source (a file, a directory, or a glob) into a
-    sorted, de-duplicated list of files. Directories pull in their *.md."""
+    DETERMINISTIC (per-source sorted), de-duplicated, TEXT-ONLY list of files.
+    Directories pull in their *.md recursively; globs and explicit files are
+    filtered to textual documentation extensions."""
     import glob as _glob
     found: list[Path] = []
     seen: set[Path] = set()
@@ -111,7 +121,8 @@ def _resolve_readme_sources(root: Path, sources: list[str]) -> list[Path]:
             matches = [str(base)]
         for m in matches:
             p = Path(m).resolve()
-            if p.is_file() and p not in seen:
+            if (p.is_file() and p not in seen
+                    and p.suffix.lower() in _TEXT_DOC_EXTS):
                 seen.add(p); found.append(p)
     return found
 

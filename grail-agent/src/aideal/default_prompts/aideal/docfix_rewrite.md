@@ -12,8 +12,8 @@ Hard rules:
 - Keep these section headings (same order, same names): {required_sections}
 - `Valid Call Patterns` must contain the corrected, compilable call sketch —
   including any REQUIRED imports/types the caller must reference, stated
-  explicitly (e.g. "requires `edu.ucr.cs.bdlab.raptor.Statistics` — a JAVA
-  class; reference as `classOf[Statistics]`").
+  explicitly with the correct module/package/namespace and the access/import
+  form appropriate for {language}.
 - If the diagnosis classifies the API as ADVANCED/LOW-LEVEL or
   INTERNAL/FRAMEWORK, preserve that fact prominently in `Goal`, `Input`, and
   `Common Failure Modes`. Do not present low-level construction as the normal

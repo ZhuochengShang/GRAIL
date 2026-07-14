@@ -58,19 +58,87 @@ def form_check(cfg: AidealConfig) -> dict:
 # 2. Comprehension check = README unit test
 # ---------------------------------------------------------------------------
 
-def _comprehension_inventory(cfg: AidealConfig, doc_source: str):
-    """Build the list of ApiEntry to test, or return (None, error_dict)."""
+def _load_manifest(cfg: AidealConfig, manifest: str | None) -> list[str] | None:
+    """Frozen API manifest: ONE list of names used by every experiment cell, so
+    pass-rate deltas can never come from denominator drift (2x2 requirement).
+    Accepts a JSON array or {"apis": [...]}; paths resolve against cfg.root."""
+    if not manifest:
+        return None
+    import json as _json
+    from pathlib import Path
+    p = Path(manifest) if str(manifest).startswith("/") else (cfg.root / manifest)
+    data = _json.loads(p.read_text(encoding="utf-8"))
+    names = data["apis"] if isinstance(data, dict) else data
+    if not isinstance(names, list) or not all(isinstance(n, str) and n for n in names):
+        raise ValueError(f"manifest {p} must contain a non-empty-string API list")
+    names = list(dict.fromkeys(names))
+    unknown = sorted(set(names) - set(public_api_surface(cfg)))
+    if unknown:
+        raise ValueError(f"manifest {p} contains APIs outside the configured public surface: "
+                         f"{', '.join(unknown[:10])}")
+    return names
+
+
+def _shared_doc_text(cfg: AidealConfig, doc_source: str) -> str:
+    """FULL-DOCUMENT audience context (no truncation — the experiment requires
+    the audience to receive the ENTIRE selected documentation; the size is
+    recorded in the run JSON so exposure is auditable).
+
+      original         -> every configured baseline doc, whole
+      aideal           -> the whole generated LLM_readme.md
+      original+aideal  -> both (the B1 arm: original docs + entries the
+                          doc-repair loop has created so far)
+    """
+    parts: list[str] = []
+    if doc_source in ("original", "original+aideal"):
+        parts.append(cfg.original_readme_text(limit=None))
+    if doc_source in ("aideal", "original+aideal"):
+        if cfg.llm_readme.exists():
+            parts.append("===== GENERATED / REPAIRED API ENTRIES =====\n"
+                         + cfg.llm_readme.read_text(encoding="utf-8", errors="ignore"))
+        elif doc_source == "aideal":
+            raise FileNotFoundError(f"{cfg.llm_readme} missing (doc_source=aideal)")
+    return "\n\n".join(p for p in parts if p.strip())
+
+
+def _comprehension_inventory(cfg: AidealConfig, doc_source: str,
+                             manifest: list[str] | None = None,
+                             full_doc: bool = False):
+    """Build (inventory, shared_doc, error_dict). shared_doc is None unless
+    full_doc — then every entry's audience context = shared_doc + target line
+    (built late in the execute loop; bodies stay empty to avoid duplicating a
+    multi-MB document per entry)."""
     from .readme_agent import ApiEntry
+    if full_doc:
+        # denominator: the frozen manifest if given, else the doc's own names
+        if manifest:
+            names = manifest
+        elif doc_source in ("original", "original+aideal"):
+            names = sorted(public_api_surface(cfg))
+        else:
+            names = [e.name for e in parse_readme(cfg.llm_readme)
+                     if "TODO" not in e.body]
+        try:
+            shared = _shared_doc_text(cfg, doc_source)
+        except FileNotFoundError as exc:
+            return None, None, {"check": "comprehension", "passed": False, "score": 0.0,
+                                "details": {"error": str(exc)}}
+        if not shared.strip():
+            return None, None, {"check": "comprehension", "passed": False, "score": 0.0,
+                                "details": {"error": f"no documentation text for "
+                                            f"doc_source={doc_source}"}}
+        return [ApiEntry(name=n, goal="", snippet="", body="") for n in names], \
+            shared, None
     if doc_source == "original":
         if not cfg.original_readme_files:
-            return None, {"check": "comprehension", "passed": False, "score": 0.0,
-                          "details": {"error": "files.original_readme not configured or missing"}}
-        text = cfg.original_readme_text(limit=12000)
-        names = sorted(public_api_surface(cfg))
+            return None, None, {"check": "comprehension", "passed": False, "score": 0.0,
+                                "details": {"error": "files.original_readme not configured or missing"}}
+        text = cfg.original_readme_text(limit=12000)   # legacy (non-full-doc) mode
+        names = manifest or sorted(public_api_surface(cfg))
         return [ApiEntry(name=n, goal="", snippet="",
                          body=f"(Original project README — the only documentation available)\n"
                               f"{text}\n\nTarget function: `{n}`")
-                for n in names], None
+                for n in names], None, None
     if doc_source == "agents":
         # BASELINE ARM: the repo's holistic agent guide (AGENTS.md) as the ONLY
         # context — the industry-standard single-file "how to work in this repo"
@@ -79,22 +147,25 @@ def _comprehension_inventory(cfg: AidealConfig, doc_source: str):
         rel = (cfg.raw.get("files", {}) or {}).get("agents_doc", "AGENTS.md")
         p = (cfg.root / rel)
         if not p.exists():
-            return None, {"check": "comprehension", "passed": False, "score": 0.0,
-                          "details": {"error": f"agents doc not found at {rel} "
-                                      "(set files.agents_doc, or drop an AGENTS.md at project root)"}}
+            return None, None, {"check": "comprehension", "passed": False, "score": 0.0,
+                                "details": {"error": f"agents doc not found at {rel} "
+                                            "(set files.agents_doc, or drop an AGENTS.md at project root)"}}
         text = p.read_text(encoding="utf-8", errors="ignore")[:12000]
-        names = sorted(public_api_surface(cfg))
+        names = manifest or sorted(public_api_surface(cfg))
         return [ApiEntry(name=n, goal="", snippet="",
                          body=f"(Project AGENTS.md — the only agent guidance available)\n"
                               f"{text}\n\nTarget function: `{n}`")
-                for n in names], None
+                for n in names], None, None
     inventory = [e for e in parse_readme(cfg.llm_readme) if "TODO" not in e.body]
+    if manifest:
+        by = {e.name: e for e in inventory}
+        inventory = [by[n] for n in manifest if n in by]
     if not inventory:
-        return None, {"check": "comprehension", "doc_source": doc_source, "passed": False,
-                      "score": 0.0,
-                      "details": {"error": "LLM_readme has no filled entries (skeleton TODOs "
-                                           "don't count) - run `readme --generate` or fill them"}}
-    return inventory, None
+        return None, None, {"check": "comprehension", "doc_source": doc_source, "passed": False,
+                            "score": 0.0,
+                            "details": {"error": "LLM_readme has no filled entries (skeleton TODOs "
+                                                 "don't count) - run `readme --generate` or fill them"}}
+    return inventory, None, None
 
 
 def _build_catalogue_context(cfg: AidealConfig):
@@ -129,7 +200,9 @@ def comprehension_check(cfg: AidealConfig, sample: int | None = None, seed: int 
                         rerun_failed: bool = False,
                         max_fix_rounds: int | None = None,
                         resume: bool = False,
-                        timeout_s: int | None = None) -> dict:
+                        timeout_s: int | None = None,
+                        full_doc: bool | None = None,
+                        manifest: str | None = None) -> dict:
     """Given only the documentation, the audience model writes code; the author
     model grades strictly against the doc. Failures go to the error log.
 
@@ -158,9 +231,17 @@ def comprehension_check(cfg: AidealConfig, sample: int | None = None, seed: int 
     from .readme_agent import _class_context_body
 
     require_profile(cfg)  # user must have entered project/target-user/domain fields
-    inventory, err = _comprehension_inventory(cfg, doc_source)
+    if full_doc is None:
+        full_doc = bool((cfg.comprehension or {}).get("full_doc", False))
+    manifest_names = _load_manifest(cfg, manifest)
+    inventory, shared_doc, err = _comprehension_inventory(
+        cfg, doc_source, manifest=manifest_names, full_doc=full_doc)
     if err:
         return err
+    if full_doc and not execute:
+        return {"check": "comprehension", "passed": False, "score": 0.0,
+                "details": {"error": "--full-doc requires --execute (the LLM-graded "
+                            "path would duplicate the whole document per entry)"}}
     if api:  # test ONE specific documented API (covers both LLM-graded and --execute)
         names = [e.name for e in inventory]
         inventory = [e for e in inventory if e.name == api]
@@ -178,10 +259,17 @@ def comprehension_check(cfg: AidealConfig, sample: int | None = None, seed: int 
                     "error_log — nothing to rerun (fixed/pass are skipped)"}}
     cc = _resolve_class_context(cfg, class_context)
     if execute:
-        return _comprehension_execute(cfg, inventory, sample, seed, doc_source,
-                                      show_code=show_code, class_context=cc,
-                                      max_fix_rounds=max_fix_rounds,
-                                      resume=resume, timeout_s=timeout_s)
+        out = _comprehension_execute(cfg, inventory, sample, seed, doc_source,
+                                     show_code=show_code, class_context=cc,
+                                     max_fix_rounds=max_fix_rounds,
+                                     resume=resume, timeout_s=timeout_s,
+                                     shared_doc=shared_doc)
+        if isinstance(out, dict) and isinstance(out.get("run"), dict):
+            out["run"]["full_doc"] = bool(shared_doc is not None)
+            out["run"]["doc_chars"] = len(shared_doc) if shared_doc else None
+            out["run"]["manifest"] = {"path": manifest,
+                                      "apis": len(manifest_names)} if manifest_names else None
+        return out
     k = len(inventory) if sample == 0 else (sample or cfg.comprehension_apis_sampled)
     if k < len(inventory):
         inventory = random.Random(seed).sample(inventory, k)
@@ -687,7 +775,8 @@ def _codebase_frames(merged: str, file_index: dict[str, str], limit: int = 5) ->
 def _comprehension_execute(cfg: AidealConfig, inventory, sample, seed, doc_source: str,
                            show_code: bool = False, class_context: bool = False,
                            max_fix_rounds: int | None = None,
-                           resume: bool = False, timeout_s: int | None = None) -> dict:
+                           resume: bool = False, timeout_s: int | None = None,
+                           shared_doc: str | None = None) -> dict:
     """Compile/run each API's audience snippet via the configured command.
     PASS = the program runs (success_marker present, exit 0). Real failures
     (compile/runtime) are logged with the actual error text.
@@ -825,6 +914,19 @@ def _comprehension_execute(cfg: AidealConfig, inventory, sample, seed, doc_sourc
     work_dir = (cfg.root / ex.get("work_dir", ".aideal_exec")).resolve()
     work_dir.mkdir(parents=True, exist_ok=True)
 
+    # A resume checkpoint is valid only for the exact experimental treatment.
+    # Hash both the ordered denominator and the delivered document so A2 rows
+    # can never leak into a repaired B2 run merely because both say "aideal".
+    import hashlib as _hashlib
+    _manifest_payload = "\n".join(e.name for e in inventory).encode("utf-8")
+    manifest_sha256 = _hashlib.sha256(_manifest_payload).hexdigest()
+    doc_sha256 = (_hashlib.sha256(shared_doc.encode("utf-8")).hexdigest()
+                  if shared_doc is not None else None)
+    _fp_payload = "\0".join((doc_source, str(bool(shared_doc is not None)),
+                              str(max_fix_rounds), manifest_sha256,
+                              doc_sha256 or "per-entry")).encode("utf-8")
+    experiment_fingerprint = _hashlib.sha256(_fp_payload).hexdigest()
+
     # Crash-proof progress: one JSONL row per finished API, flushed as it
     # completes. A killed/crashed full run loses NOTHING: rerun with --resume
     # and already-finished APIs are skipped and pre-filled into the results
@@ -837,7 +939,7 @@ def _comprehension_execute(cfg: AidealConfig, inventory, sample, seed, doc_sourc
         for line in ckpt.read_text(encoding="utf-8").splitlines():
             try:
                 row = _json.loads(line)
-                if row.get("doc_source") == doc_source:
+                if row.get("experiment_fingerprint") == experiment_fingerprint:
                     done_rows[row["name"]] = row
             except Exception:
                 continue
@@ -896,8 +998,20 @@ def _comprehension_execute(cfg: AidealConfig, inventory, sample, seed, doc_sourc
     # INDEX-FIRST: build the catalogue model once; prefix each body with its class
     # header (receiver + a verified sibling's proven call pattern). Off -> bare body.
     from .readme_agent import _class_context_body
-    ctx = _build_catalogue_context(cfg) if class_context else None
-    body_for = (lambda e: _class_context_body(e, *ctx)) if ctx else (lambda e: e.body)
+    if shared_doc is not None:
+        # FULL-DOCUMENT mode (2x2 experiment): every audience attempt receives
+        # the ENTIRE selected documentation; only the target line differs.
+        # No truncation — exposure is total and identical across the manifest.
+        import sys as _s
+        _s.stderr.write(f"[full-doc] audience context = {len(shared_doc):,} chars "
+                        f"per API x {len(inventory)} APIs "
+                        f"(~{len(shared_doc) // 4:,} tokens/call)\n")
+        body_for = (lambda e: shared_doc
+                    + f"\n\n===== TARGET =====\nWrite a snippet that calls `{e.name}`.")
+        ctx = None
+    else:
+        ctx = _build_catalogue_context(cfg) if class_context else None
+        body_for = (lambda e: _class_context_body(e, *ctx)) if ctx else (lambda e: e.body)
     # source attribution: which codebase definition each tested name targets
     # (canonical site = same election as `aideal dedup`), plus a basename→path
     # index so runtime stack frames can be mapped back to repo source lines.
@@ -1115,6 +1229,7 @@ def _comprehension_execute(cfg: AidealConfig, inventory, sample, seed, doc_sourc
         }
         with ckpt.open("a", encoding="utf-8") as _ck:   # flush per API — crash-safe
             _ck.write(_json.dumps({"name": entry.name, "doc_source": doc_source,
+                                   "experiment_fingerprint": experiment_fingerprint,
                                    **metrics[entry.name]}, ensure_ascii=False) + "\n")
     n = len(inventory)
     # Doc-quality denominator excludes infra-only failures (missing-dependency runs
@@ -1143,6 +1258,9 @@ def _comprehension_execute(cfg: AidealConfig, inventory, sample, seed, doc_sourc
             "usage": usage_delta(run_u0),
             "checkpoint": str(ckpt),
             "resumed_apis": len([k for k in done_rows if k in metrics]),
+            "manifest_sha256": manifest_sha256,
+            "document_sha256": doc_sha256,
+            "experiment_fingerprint": experiment_fingerprint,
         },
         "passed": bool(scored_n) and passed_n == scored_n,
         "score": round(passed_n / scored_n, 3) if scored_n else 0.0,
