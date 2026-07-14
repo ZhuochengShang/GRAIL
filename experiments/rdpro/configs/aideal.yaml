@@ -69,13 +69,15 @@ models:
     codex-5.3:      { provider: codex,  model: gpt-5.3-codex }
     gemini-2.5-pro: { provider: google, model: gemini-2.5-pro }
     gemini-3.1-pro: { provider: google, model: gemini-3.1-pro-preview }
-    gemini-3.2-pro: { provider: google, model: gemini-3.2-pro-preview }
-  # DEFAULT CONDITION (2026-07-13, per Zoe): everything on gemini-3.2-pro.
+  # DEFAULT CONDITION (2026-07-13, per Zoe): everything on the latest Pro
+  # model. NOTE 2026-07-14: 'gemini-3.2-pro-preview' does NOT exist on the
+  # API (404 NOT_FOUND) — the newest Pro-class id is gemini-3.1-pro-preview
+  # (already proven on this key in the 07-08 docfix runs).
   # Override per run with --role role=provider:model (never needs a yaml edit).
   roles:
-    author: gemini-3.2-pro
-    audience: gemini-3.2-pro
-    fixer: gemini-3.2-pro
+    author: gemini-3.1-pro
+    audience: gemini-3.1-pro
+    fixer: gemini-3.1-pro
 
 runtime:
   target: local
