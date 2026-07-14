@@ -31,6 +31,8 @@ def load_run(p):
                       if (v.get("error_category") or "") == "infra"},
             "full_doc": run.get("full_doc"), "doc_chars": run.get("doc_chars"),
             "manifest": run.get("manifest"),
+            "manifest_sha256": run.get("manifest_sha256"),
+            "document_sha256": run.get("document_sha256"),
             "max_fix_rounds": run.get("max_fix_rounds")}
 
 
@@ -60,11 +62,16 @@ def check_design(runs):
                     problems.append(f"{a} vs {b}: {len(d)} differing APIs "
                                     f"(e.g. {sorted(d)[:5]})")
                     break
+    manifest_hashes = {r["manifest_sha256"] for r in runs.values()}
+    if None in manifest_hashes or len(manifest_hashes) != 1:
+        problems.append("manifest hash missing or differs across cells")
     for tag, r in runs.items():
-        if r["full_doc"] is False:
-            problems.append(f"{tag}: full_doc was OFF (audience did not get the entire doc)")
-        if r["max_fix_rounds"] not in (0, None):
+        if r["full_doc"] is not True:
+            problems.append(f"{tag}: full_doc is not explicitly ON")
+        if r["max_fix_rounds"] != 0:
             problems.append(f"{tag}: max_fix_rounds={r['max_fix_rounds']} (must be 0)")
+        if not r["document_sha256"]:
+            problems.append(f"{tag}: document hash is missing")
     return problems
 
 
@@ -94,9 +101,12 @@ def main():
         L += ["**WARNING (--force): invariants violated:** "
               + "; ".join(problems), ""]
     dc = {t: runs[t]["doc_chars"] for t in runs}
+    dc_text = {t: (f"{v:,}" if isinstance(v, int) else "missing")
+               for t, v in dc.items()}
     L += [f"_All cells: full-document audience context, 0 snippet-fix rounds, "
           f"frozen manifest ({runs['a1']['n']} APIs). Doc sizes (chars): "
-          f"A1={dc['a1']:,} · A2={dc['a2']:,} · B1={dc['b1']:,} · B2={dc['b2']:,}_", "",
+          f"A1={dc_text['a1']} · A2={dc_text['a2']} · "
+          f"B1={dc_text['b1']} · B2={dc_text['b2']}_", "",
           "| doc \\\\ fix | 0 rounds | after deep-dive doc repair |",
           "|---|---|---|",
           f"| **original** | {fmt(A1)} | {fmt(B1)} |",

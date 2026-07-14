@@ -27,18 +27,19 @@ Write minimal body statements that use `{api_name}` correctly per the docs,
 reading from the appropriate input variable(s) above.
 {io_hints}
 The snippet MUST EXECUTE the operation AND VERIFY the result is correct — not just
-that it ran (some frameworks defer/lazily evaluate, and a wrong pixel TYPE can read
-garbage without throwing). End with a CORRECTNESS CHECK:
+that it ran (some frameworks defer/lazily evaluate, and incorrectly interpreted
+data can produce plausible output without throwing). End with a CORRECTNESS CHECK
+written in valid {language} syntax:
 - force the result to materialize and compute a small witness of it — a count, a
   size, or a sampled element;
-- assert the witness is NON-DEGENERATE with `require(...)`, so a wrong type or an
-  empty output fails loudly instead of silently passing. E.g.
-  `require(n > 0, "empty result for {api_name}")`, or for a sampled numeric value
-  require it is finite (not NaN/Inf) and in a plausible range;
-- then print it as a STRUCTURED line exactly like:
-  `println("__CHECK__ {api_name} " + <witness>)`.
-If `{api_name}` is itself the writer/output API, write to `output_dir`, then
-`require` the output exists / is non-empty and print the same `__CHECK__` line.
+- use the language's normal assertion mechanism so an empty, invalid, non-finite,
+  or otherwise degenerate witness fails loudly;
+- print a STRUCTURED line whose literal prefix is exactly
+  `__CHECK__ {api_name} ` followed by the witness, using the language's normal
+  output function and formatting syntax.
+If `{api_name}` is itself a writer/output API, use an output binding only when one
+is listed among the available inputs or execution context; then assert that the
+output exists/is non-empty and print the same structured line.
 Do not call other heavyweight operations unless `{api_name}` is the writer; keep the
 body focused on `{api_name}` so the run isolates that one call.
 {exec_hints}

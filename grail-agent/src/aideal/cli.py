@@ -94,7 +94,7 @@ def _run(argv: list[str] | None = None) -> int:
                     help="compile/run each snippet via comprehension.execute (real ground truth; "
                          "covers all documented APIs unless --sample given)")
     sp.add_argument("--show-code", action="store_true",
-                    help="include the audience-generated Scala snippet in JSON details")
+                    help="include the audience-generated code snippet in JSON details")
     sp.add_argument("--class-context", dest="class_context", choices=["on", "off"], default=None,
                     help="INDEX-FIRST: prefix each API with its catalogue class header (receiver + "
                          "verified sibling pattern). Overrides comprehension.class_context. A/B the "

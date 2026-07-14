@@ -18,7 +18,7 @@ Other definition sites: {other_sites}
 == DEFINITION + SURROUNDING SOURCE ==
 {source_window}
 
-== DEFINITIONS OF SIGNATURE/RECEIVER TYPES (Scala AND Java) ==
+== DEFINITIONS OF SIGNATURE/RECEIVER TYPES (configured project languages) ==
 {type_context}
 
 == REAL CALL SITES FROM THIS REPOSITORY (tests included) ==

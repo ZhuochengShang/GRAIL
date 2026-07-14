@@ -144,6 +144,9 @@ git checkout -b aideal/rdpro-b-readme origin/main
 aideal readme --generate --limit 0 --force
 git add -A && git commit -m "B/C shared setup: generated readme"
 git tag rdpro-readme-setup-2026-07-13                    # C forks from THIS tag
+# Freeze coverage/manifest only AFTER this exact treatment README exists;
+# use the resulting JSON files unchanged in every 2x2 condition branch.
+aideal manifest
 aideal comprehension --execute --class-context off --max-fix-rounds 0 > docs/comprehension_B0.json
 aideal fix-docs --from-results docs/comprehension_B0.json --deep-dive-first --doc-rounds 5 --report docs/docfix_B.json
 aideal comprehension --execute --class-context off --max-fix-rounds 0 > docs/comprehension_B_final.json
