@@ -42,6 +42,7 @@ def _run(argv: list[str] | None = None) -> int:
 
     sub.add_parser("init", help="create project_profile.yaml (user fills target users, domain, use cases)")
     sub.add_parser("profile", help="show profile status and missing fields")
+    sub.add_parser("prepare-docs", help="snapshot configured hosted documentation archives")
     sp = sub.add_parser("readme")
     sp.add_argument("--generate", action="store_true", help="fill entries with the author model")
     sp.add_argument("--limit", type=int, default=10,
@@ -285,6 +286,9 @@ def _run(argv: list[str] | None = None) -> int:
         prof = load_profile(cfg)
         out = {"path": str(profile_path(cfg)), "missing_fields": missing_fields(prof),
                "ready": not missing_fields(prof), "prompt_context": project_context(prof)}
+    elif args.cmd == "prepare-docs":
+        from .doc_snapshot import prepare_original_docs
+        out = prepare_original_docs(cfg)
     elif args.cmd == "api-surface":
         from .readme_agent import public_api_details, render_api_surface, visibility_model
         if args.json:
@@ -350,7 +354,14 @@ def _run(argv: list[str] | None = None) -> int:
         from .readme_agent import intended_api_llm
         selected, decisions = intended_api_llm(cfg)
         from collections import Counter
+        selected_decisions = [decisions[n] for n in selected]
+        families = {d.get("capability_family") for d in selected_decisions
+                    if d.get("capability_family")}
+        summaries = [d.get("selection_summary") for d in decisions.values()
+                     if d.get("selection_summary")]
         out = {"selected": len(selected), "total": len(decisions),
+               "represented_capability_families": len(families),
+               "selection_summary": summaries[0] if summaries else None,
                "by": dict(Counter(d.get("by") for d in decisions.values())),
                "decisions": decisions}
     elif args.cmd == "api-tests":
