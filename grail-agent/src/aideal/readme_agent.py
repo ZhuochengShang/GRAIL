@@ -18,6 +18,7 @@ AUTHOR model with --generate).
 from __future__ import annotations
 
 import glob as globmod
+import ast
 import re
 from dataclasses import dataclass
 from pathlib import Path
@@ -1299,15 +1300,34 @@ def intended_api_llm(cfg: AidealConfig) -> tuple[set[str], dict]:
     inc_t = int(ia.get("static_include_threshold", 8))
     exc_t = int(ia.get("static_exclude_threshold", 1))
     batch = int(ia.get("batch_size", 25))
+    selection_limit = int(ia.get("selection_limit", 0) or 0)
+    rubric_version = int(ia.get("rubric_version", 2))
     refresh = bool(ia.get("refresh", False))
     cache_path = (cfg.root / ia.get("cache", "docs/intended_api_decisions.json")).resolve()
 
     scores = intent_scores(cfg)
-    details = {d["name"]: d for d in public_api_details(cfg)}
+    identity = str(ia.get("identity", "bare"))
+    all_details = [d for d in public_api_details(cfg) if d["visibility"] == "public"]
+    if identity == "qualified" and cfg.language.lower() == "python":
+        # Exact qualified duplicates can arise from conditional definitions;
+        # elect one canonical record deterministically. Distinct owners remain
+        # distinct (RMSD.run != AnalysisBase.run).
+        details = {}
+        for d in sorted(all_details, key=lambda r: (
+                r["qualified_name"], not bool(r["description"]),
+                -len(r["params"]), r["file"], r["line"])):
+            details.setdefault(d["qualified_name"], d)
+        if ia.get("candidate_filter", "static_selected") == "static_selected":
+            details = {q: d for q, d in details.items()
+                       if scores.get(d["name"], {}).get("selected")}
+        candidate_scores = {q: scores[d["name"]] for q, d in details.items()}
+    else:
+        details = {d["name"]: d for d in all_details}
+        candidate_scores = scores
     selected: set[str] = set()
     decisions: dict[str, dict] = {}
     ambiguous: list[str] = []
-    for name, info in scores.items():
+    for name, info in candidate_scores.items():
         s = info["score"]
         if s >= inc_t:
             selected.add(name); decisions[name] = {"decision": "include", "by": "static", "score": s}
@@ -1322,9 +1342,14 @@ def intended_api_llm(cfg: AidealConfig) -> tuple[set[str], dict]:
             cache = _json.loads(cache_path.read_text(encoding="utf-8"))
         except Exception:
             cache = {}
-    todo = [n for n in ambiguous if n not in cache]
+    # A cached judgment is reusable only when it was produced with the same
+    # rubric.  This prevents an older binary include/exclude pilot from being
+    # silently mixed with a later scored ranking experiment.
+    todo = [n for n in ambiguous
+            if n not in cache or cache[n].get("rubric_version") != rubric_version]
     if todo:
         try:
+            import hashlib as _hashlib
             from .llm import invoke_text
             from .prompts import load as load_prompt
             from .profile import require_profile
@@ -1333,12 +1358,22 @@ def intended_api_llm(cfg: AidealConfig) -> tuple[set[str], dict]:
             for i in range(0, len(todo), batch):
                 chunk = todo[i:i + batch]
                 recs = [{"name": n,
+                         "bare_name": details.get(n, {}).get("name", n),
+                         "module": details.get(n, {}).get("module", ""),
+                         "owner": details.get(n, {}).get("owner", ""),
+                         "kind": details.get(n, {}).get("definition_kind", ""),
                          "signature": details.get(n, {}).get("signature", n),
-                         "doc": (details.get(n, {}).get("description", "") or "")[:120],
-                         "static_score": scores[n]["score"],
-                         "signals": scores[n]["reasons"]} for n in chunk]
-                resp = invoke_text(model, *load_prompt(cfg, "aideal/intended_review",
-                                                       records=_json.dumps(recs, ensure_ascii=False, indent=2)))
+                         "doc": (details.get(n, {}).get("description", "") or "")[:240],
+                         "static_score": candidate_scores[n]["score"],
+                         "signals": candidate_scores[n]["reasons"],
+                         "available_receiver_types": ia.get("available_receiver_types", [])}
+                        for n in chunk]
+                system, user = load_prompt(
+                    cfg, "aideal/intended_review",
+                    records=_json.dumps(recs, ensure_ascii=False, indent=2))
+                prompt_sha = _hashlib.sha256(
+                    (system + "\0" + user).encode("utf-8")).hexdigest()
+                resp = invoke_text(model, system, user)
                 parsed = []
                 try:
                     parsed = _json.loads(resp[resp.index("["):resp.rindex("]") + 1])
@@ -1347,25 +1382,126 @@ def intended_api_llm(cfg: AidealConfig) -> tuple[set[str], dict]:
                 bydec = {d.get("name"): d for d in parsed if isinstance(d, dict)}
                 for n in chunk:
                     d = bydec.get(n, {})
+                    ratings = d.get("ratings", {}) if isinstance(d.get("ratings"), dict) else {}
+                    clean_ratings = {
+                        key: max(0, min(3, int(ratings.get(key, 0) or 0)))
+                        for key in ("user_facing", "fixture_runnable",
+                                    "oracle_strength", "domain_relevance")
+                    }
+                    family = str(d.get("capability_family", "")).strip().lower()
+                    family = re.sub(r"[^a-z0-9_.:/+-]+", "-", family).strip("-")
+                    if not family:
+                        # Deterministic fallback: a missing model label cannot
+                        # erase the symbol from family-coverage accounting.
+                        family = (details[n].get("module", "unknown") + "/" +
+                                  details[n].get("name", n)).lower()
                     cache[n] = {"decision": d.get("decision", "uncertain"),
                                 "reason": d.get("reason", ""), "by": "llm",
-                                "score": scores[n]["score"], "model": model.model}
-            cache_path.parent.mkdir(parents=True, exist_ok=True)
-            cache_path.write_text(_json.dumps(cache, indent=2, ensure_ascii=False), encoding="utf-8")
+                                "score": candidate_scores[n]["score"], "model": model.model,
+                                "provider": model.provider, "identity": identity,
+                                "ratings": clean_ratings,
+                                "capability_family": family,
+                                "rubric_version": rubric_version,
+                                "prompt_sha256": prompt_sha,
+                                "source": f"{details[n]['file']}:{details[n]['line']}"}
+                # Crash-safe intent progress: each paid batch is durable.
+                cache_path.parent.mkdir(parents=True, exist_ok=True)
+                cache_path.write_text(
+                    _json.dumps(cache, indent=2, ensure_ascii=False), encoding="utf-8")
         except Exception:
+            if ia.get("require_llm", False):
+                raise
             pass  # LLM unavailable -> fall back to the static threshold below
 
-    thr = scores and next(iter(scores.values())).get("threshold", 5)
+    thr = candidate_scores and next(iter(candidate_scores.values())).get("threshold", 5)
     for n in ambiguous:
         d = cache.get(n)
         if d is None:                       # LLM unavailable: fall back to intent threshold
-            inc = scores[n]["score"] >= (thr or 5)
+            inc = candidate_scores[n]["score"] >= (thr or 5)
             decisions[n] = {"decision": "include" if inc else "exclude",
-                            "by": "static_fallback", "score": scores[n]["score"]}
+                            "by": "static_fallback", "score": candidate_scores[n]["score"]}
         else:
             decisions[n] = d
         if decisions[n]["decision"] == "include":
             selected.add(n)
+
+    # Optional fixed-budget selection.  The LLM supplies auditable semantic
+    # ratings; the tool performs the final ranking deterministically.  Static
+    # evidence is deliberately a small tie-breaker rather than the main score,
+    # because large libraries often give hundreds of symbols the same static
+    # score.  Soft owner/module caps improve breadth; if they prevent filling
+    # the requested budget, the remaining highest-ranked symbols fill it.
+    if selection_limit and len(selected) > selection_limit:
+        weights = {"user_facing": 4, "fixture_runnable": 4,
+                   "oracle_strength": 3, "domain_relevance": 2,
+                   "static_score": 1}
+        weights.update(ia.get("ranking_weights", {}) or {})
+
+        def _rank_score(name: str) -> int:
+            ratings = decisions[name].get("ratings", {}) or {}
+            value = sum(int(weights[k]) * int(ratings.get(k, 0) or 0)
+                        for k in ("user_facing", "fixture_runnable",
+                                  "oracle_strength", "domain_relevance"))
+            # Bound the legacy score so it cannot dominate semantic quality.
+            static = max(-5, min(10, int(candidate_scores[name]["score"])))
+            return value + int(weights["static_score"]) * static
+
+        ranked = sorted(selected, key=lambda n: (
+            -_rank_score(n), details[n].get("module", ""),
+            details[n].get("owner", ""), n))
+        max_owner = int(ia.get("max_per_owner", 0) or 0)
+        max_module = int(ia.get("max_per_module", 0) or 0)
+        owner_counts: dict[str, int] = {}
+        module_counts: dict[str, int] = {}
+        chosen: list[str] = []
+        deferred: list[str] = []
+        # First take the strongest representative of every capability family.
+        # If there are more families than budget, their strongest members
+        # compete on the same global score. Remaining slots then return to the
+        # ordinary global ranking. This prevents a dense family of near-aliases
+        # from crowding an entire operation family out of the experiment.
+        family_heads: list[str] = []
+        seen_families: set[str] = set()
+        for n in ranked:
+            family = decisions[n].get("capability_family", "unknown")
+            if family not in seen_families:
+                family_heads.append(n)
+                seen_families.add(family)
+        family_head_set = set(family_heads[:selection_limit])
+        ordered = family_heads[:selection_limit] + [n for n in ranked if n not in family_head_set]
+        for n in ordered:
+            owner = details[n].get("owner", "") or "<module>"
+            module = details[n].get("module", "") or "<unknown>"
+            if ((max_owner and owner_counts.get(owner, 0) >= max_owner) or
+                    (max_module and module_counts.get(module, 0) >= max_module)):
+                deferred.append(n)
+                continue
+            chosen.append(n)
+            owner_counts[owner] = owner_counts.get(owner, 0) + 1
+            module_counts[module] = module_counts.get(module, 0) + 1
+            if len(chosen) == selection_limit:
+                break
+        if len(chosen) < selection_limit:
+            chosen.extend(deferred[:selection_limit - len(chosen)])
+        selected = set(chosen)
+        rank_by_name = {n: i + 1 for i, n in enumerate(ranked)}
+        for n in ranked:
+            decisions[n]["ranking_score"] = _rank_score(n)
+            decisions[n]["rank"] = rank_by_name[n]
+            decisions[n]["selected_in_budget"] = n in selected
+            if n not in selected:
+                decisions[n]["adjudication"] = decisions[n]["decision"]
+                decisions[n]["decision"] = "exclude"
+                decisions[n]["reason"] = "outside fixed selection budget; " + decisions[n].get("reason", "")
+        represented = {decisions[n].get("capability_family", "unknown") for n in selected}
+        eligible_families = {decisions[n].get("capability_family", "unknown") for n in ranked}
+        for n in ranked:
+            decisions[n]["selection_summary"] = {
+                "budget": selection_limit,
+                "eligible_apis": len(ranked),
+                "eligible_families": len(eligible_families),
+                "represented_families": len(represented),
+            }
     return selected, decisions
 
 
@@ -1863,6 +1999,7 @@ def public_api_details(cfg: AidealConfig) -> list[dict]:
     description, visibility, file, line. One record per definition site (not
     collapsed), so overloads across classes stay distinct."""
     model = visibility_model(cfg)
+    py_identities = _python_qualified_identities(cfg) if cfg.language.lower() == "python" else {}
     file_cache: dict[str, list[str]] = {}
     out: list[dict] = []
     for name, prefix, path, i, line in _iter_defs(cfg):
@@ -1874,16 +2011,97 @@ def public_api_details(cfg: AidealConfig) -> list[dict]:
         m = re.compile(cfg.public_def_regex).search(line)
         raw, params, ret = _signature_at(lines, i, m.start() if m else 0,
                                          m.end() if m else 0)
+        rel = str(Path(path).relative_to(cfg.root))
+        identity = py_identities.get((rel, i + 1, name), {})
+        if cfg.language.lower() == "python" and not identity:
+            continue
         out.append({
             "name": name,
+            "qualified_name": identity.get("qualified_name", name),
+            "module": identity.get("module", ""),
+            "owner": identity.get("owner", ""),
+            "definition_kind": identity.get("kind", ""),
             "visibility": "public" if public else "non-public",
             "signature": raw,
             "params": params,
             "returns": ret,
             "description": _doc_at(cfg, lines, i),
-            "file": str(Path(path).relative_to(cfg.root)),
+            "file": rel,
             "line": i + 1,
         })
+    return out
+
+
+def _python_module_name(path: Path) -> str:
+    """Return the importable module path for a Python source file.
+
+    Walk upward while ``__init__.py`` files make parents part of the package.
+    This is source-layout agnostic: ``src/pkg/a.py`` and ``package/pkg/a.py``
+    both become ``pkg.a`` without project-specific configuration.
+    """
+    stem = path.stem
+    parts = [] if stem == "__init__" else [stem]
+    parent = path.parent
+    while (parent / "__init__.py").is_file():
+        parts.append(parent.name)
+        parent = parent.parent
+    return ".".join(reversed(parts)) or stem
+
+
+def _python_qualified_identities(cfg: AidealConfig) -> dict[tuple[str, int, str], dict]:
+    """AST-derived identity for each importable Python API definition.
+
+    Keys match the existing regex scanner by ``(relative file, line, bare
+    name)``. Nested local functions are deliberately absent: they are not
+    addressable public APIs. Nested classes remain addressable through their
+    owner chain. No domain/package names are hard-coded.
+    """
+    out: dict[tuple[str, int, str], dict] = {}
+    seen: set[Path] = set()
+    for pattern in cfg.source_globs:
+        for raw in globmod.glob(str(cfg.root / pattern), recursive=True):
+            path = Path(raw)
+            if path in seen or path.suffix != ".py" or not path.is_file():
+                continue
+            seen.add(path)
+            try:
+                tree = ast.parse(path.read_text(encoding="utf-8", errors="ignore"),
+                                 filename=str(path))
+            except (OSError, SyntaxError):
+                continue
+            rel = str(path.relative_to(cfg.root)).replace("\\", "/")
+            module = _python_module_name(path)
+
+            def visit(body, classes: tuple[str, ...] = (), inside_function: bool = False):
+                for node in body:
+                    if isinstance(node, ast.ClassDef) and not inside_function:
+                        owners = classes + (node.name,)
+                        qn = ".".join(filter(None, (module, *owners)))
+                        out[(rel, node.lineno, node.name)] = {
+                            "qualified_name": qn, "module": module,
+                            "owner": ".".join(classes), "kind": "class",
+                        }
+                        visit(node.body, owners, False)
+                    elif isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                        if not inside_function:
+                            qn = ".".join(filter(None, (module, *classes, node.name)))
+                            out[(rel, node.lineno, node.name)] = {
+                                "qualified_name": qn, "module": module,
+                                "owner": ".".join(classes),
+                                "kind": "method" if classes else "function",
+                            }
+                        # Do not expose definitions local to a function/method.
+                    elif not inside_function:
+                        # Definitions can appear under module/class conditionals.
+                        nested = []
+                        for attr in ("body", "orelse"):
+                            value = getattr(node, attr, None)
+                            if isinstance(value, list):
+                                nested.extend(value)
+                        if nested:
+                            visit(nested, classes, False)
+
+            visit(tree.body)
     return out
 
 

@@ -722,6 +722,17 @@ def _execute_sample_data(cfg: AidealConfig, ex: dict) -> tuple[dict[str, str], s
     (see _validate_sample_data); they're also echoed to stderr so a mis-pinned input is
     obvious on the console, not buried in a downstream compile/runtime failure."""
     def _resolve(v):
+        if isinstance(v, dict):
+            package = v.get("package")
+            resource = v.get("resource")
+            if not package or not resource:
+                raise ValueError("sample_data mapping requires both 'package' and 'resource'")
+            from importlib.resources import files
+            target = files(str(package)).joinpath(str(resource))
+            if not target.is_file():
+                raise FileNotFoundError(
+                    f"package resource not found: {package}:{resource}")
+            return str(target)
         v = str(v)
         return str((cfg.root / v).resolve()) if (not v.startswith("/") and "/" in v) else v
 

@@ -1,0 +1,94 @@
+extends: [python]
+
+project:
+  name: MDAnalysis
+  language: Python
+
+codebase:
+  source_globs:
+    - "mdanalysis/package/MDAnalysis/**/*.py"
+  test_globs:
+    - "mdanalysis/testsuite/MDAnalysisTests/**/*.py"
+  surface_filter: intent_score
+  intent:
+    threshold: 5
+    use_llm: false
+    weights:
+      llm_common: 4
+  intended_api:
+    identity: qualified
+    require_llm: true
+    candidate_filter: static_selected
+    # Fixed execution budget for direct comparability with RDPro. This is a
+    # ranked study sample, not the claimed size of MDAnalysis's public surface.
+    selection_limit: 171
+    rubric_version: 2
+    ranking_weights:
+      user_facing: 4
+      fixture_runnable: 4
+      oracle_strength: 3
+      domain_relevance: 2
+      static_score: 1
+    # Soft breadth constraints; the ranker fills from deferred candidates if
+    # these caps would leave fewer than 171 APIs.
+    max_per_owner: 18
+    max_per_module: 30
+    static_include_threshold: 999
+    static_exclude_threshold: -999
+    batch_size: 25
+    cache: docs/qualified_intent_rankings.json
+    available_receiver_types:
+      - MDAnalysis.Universe
+      - MDAnalysis.core.groups.AtomGroup
+      - MDAnalysis.coordinates.base.ReaderBase
+      - MDAnalysis.coordinates.base.Timestep
+
+files:
+  project_profile: configs/project_profile.yaml
+  original_readme:
+    - mdanalysis/README.rst
+    - mdanalysis/package/doc/sphinx/source
+    - .aideal_original_docs/hosted_docs.md
+  original_doc_archives:
+    - label: MDAnalysis User Guide 2.9.0
+      url: https://mdanalysisuserguide.readthedocs.io/_/downloads/en/latest/htmlzip/
+  original_doc_snapshot: .aideal_original_docs/hosted_docs.md
+  original_doc_manifest: docs/original_docs_snapshot.json
+  llm_readme: docs/LLM_readme.md
+  notes_to_self: docs/notes_to_self.md
+  integration_tasks: configs/integration_tasks.yaml
+  aliases: aliases/aliases.json
+  error_log: logs/error_log.jsonl
+
+models:
+  registry:
+    gemini-3.1-pro: { provider: google, model: gemini-3.1-pro-preview }
+  roles:
+    author: gemini-3.1-pro
+    audience: gemini-3.1-pro
+    fixer: gemini-3.1-pro
+
+comprehension:
+  class_context: false
+  execute:
+    scaffold: docs/api_test_scaffold.py
+    local_uris: false
+    output_dir: /tmp/aideal_mdanalysis_out
+    preamble: |
+      universe = mda.Universe(psf_path, dcd_path)  # type: MDAnalysis.Universe
+      atoms = universe.atoms  # type: MDAnalysis.core.groups.AtomGroup
+      protein = universe.select_atoms("protein")  # type: MDAnalysis.core.groups.AtomGroup
+      backbone = universe.select_atoms("protein and backbone")  # type: MDAnalysis.core.groups.AtomGroup
+      trajectory = universe.trajectory  # type: MDAnalysis.coordinates.base.ReaderBase
+      timestep = trajectory[0]  # type: MDAnalysis.coordinates.base.Timestep
+    sample_data:
+      psf_path:
+        package: MDAnalysisTests
+        resource: data/adk.psf
+      dcd_path:
+        package: MDAnalysisTests
+        resource: data/adk_dims.dcd
+    max_fix_rounds: 0
+    require_correctness: true
+    timeout_seconds: 300
+    io_hints: ""
