@@ -12,8 +12,15 @@ def run():
     # Typed sample inputs (comprehension.execute.sample_data):
     # AIDEAL_DATA_BINDINGS
 
-    # TODO API_TEST_START
-    # TODO API_TEST_END
+    # Isolate audience imports/assignments from the fixture preamble. In
+    # particular, `import numpy as np` inside this nested scope must not make
+    # `np` local to run() before the preamble has loaded Trace.npz.
+    def api_test():
+        # TODO API_TEST_START
+        # TODO API_TEST_END
+        pass
+
+    api_test()
     pass
 
 
