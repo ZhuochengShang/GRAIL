@@ -1324,6 +1324,10 @@ def intended_api_llm(cfg: AidealConfig) -> tuple[set[str], dict]:
     else:
         details = {d["name"]: d for d in all_details}
         candidate_scores = scores
+        if ia.get("candidate_filter", "static_selected") == "static_selected":
+            candidate_scores = {n: info for n, info in scores.items()
+                                if info.get("selected") and n in details}
+            details = {n: details[n] for n in candidate_scores}
     selected: set[str] = set()
     decisions: dict[str, dict] = {}
     ambiguous: list[str] = []
