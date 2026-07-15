@@ -71,6 +71,10 @@ comprehension:
   class_context: false
   execute:
     scaffold: docs/api_test_scaffold.py
+    # The default OpenMP threading layer segfaults inside tslearn's Numba
+    # distance kernels on this macOS environment. The deterministic workqueue
+    # backend preserves computation while preventing an infrastructure crash.
+    command: env NUMBA_THREADING_LAYER=workqueue NUMBA_NUM_THREADS=1 OMP_NUM_THREADS=1 python3 {test_file}
     # No jars/build; the harness interpreter must have the library:
     #   pip install tslearn        (or: pip install -e tslearn/)
     # Pinned preamble: tiny in-memory dataset every API family can use —
