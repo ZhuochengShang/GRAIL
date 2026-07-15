@@ -23,8 +23,13 @@ codebase:
   intent:
     threshold: 5
     use_llm: false            # deterministic static selection (same as rdpro restart)
+    many_impls_threshold: 4
     weights:
       llm_common: 4
+      # With bare identities, a method implemented by many estimator owners
+      # (`fit`, `predict`, `transform`) is not an unambiguous callable target.
+      # Estimator classes remain eligible and exercise those methods naturally.
+      many_impls: -10
   intended_api:
     identity: bare
     candidate_filter: static_selected
