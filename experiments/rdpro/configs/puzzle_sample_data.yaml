@@ -1,0 +1,46 @@
+schema_version: 1
+manifest_id: rdpro-aideal-small-fixtures-v1
+
+# Paths resolve from experiments/rdpro. These files are intentionally small,
+# repository-owned fixtures so a frozen plan can hash every input.
+datasets:
+  boston_neighborhoods:
+    path: ../../grail-agent/examples/fixtures/boston_neighborhoods.shp
+    companions:
+      - ../../grail-agent/examples/fixtures/boston_neighborhoods.dbf
+      - ../../grail-agent/examples/fixtures/boston_neighborhoods.shx
+      - ../../grail-agent/examples/fixtures/boston_neighborhoods.prj
+      - ../../grail-agent/examples/fixtures/boston_neighborhoods.cpg
+    kind: vector
+    format: ESRI Shapefile
+    description: Small Boston neighborhood polygon subset in EPSG:4326.
+
+  boston_neighborhoods_geojson:
+    path: ../../grail-agent/examples/fixtures/Boston_Neighborhood_Boundaries_sample_grail.geojson
+    kind: vector
+    format: GeoJSON
+    description: Portable Boston neighborhood polygons for vector-only cases.
+
+  boston_nlcd_float:
+    path: ../../grail-agent/examples/fixtures/boston_nlcd_2024_float.tif
+    kind: raster
+    format: GeoTIFF
+    pixel_type: Float32
+    units: NLCD class code
+    description: Small Boston 2024 NLCD subset converted to Float32 for RDPro.
+
+  prism_temperature:
+    path: ../../grail-agent/examples/fixtures/prism_tmax_geographic_clip.tif
+    kind: raster
+    format: GeoTIFF
+    pixel_type: Float32
+    units: degrees Celsius
+    description: Small geographic PRISM maximum-temperature raster.
+
+  prism_reference_grid:
+    path: ../../grail-agent/examples/fixtures/prism_reference_dem_1km.tif
+    kind: raster
+    format: GeoTIFF
+    pixel_type: Float32
+    units: meters
+    description: Reference DEM whose CRS, extent, resolution, and grid define alignment.

@@ -237,8 +237,42 @@ def _run(argv: list[str] | None = None) -> int:
                    help="ADDITIVE: export a per-class catalogue (LLM_readme_index.md + api/<Class>.md) "
                         "from LLM_readme.md; touches nothing else")
     sub.add_parser("completeness")
-    sp = sub.add_parser("puzzle")
+    sp = sub.add_parser("puzzle",
+                        help="run a frozen integration-puzzle plan through the app runner")
     sp.add_argument("--dry-run", action="store_true")
+    sp.add_argument("--doc", choices=["aideal", "original", "original+aideal"],
+                    default="aideal", help="documentation arm exposed to the puzzle agent")
+    sp.add_argument("--api-doc", default=None,
+                    help="explicit documentation snapshot; overrides --doc (use for initial vs repaired)")
+    sp.add_argument("--bank", default=None,
+                    help="test-bank JSON/YAML (default: puzzle.test_bank)")
+    sp.add_argument("--sample-data", default=None,
+                    help="sample-data JSON/YAML (default: puzzle.sample_data)")
+    sp.add_argument("--plan", default=None,
+                    help="existing frozen plan; preferred when comparing ablation arms")
+    sp.add_argument("--plan-out", default=None,
+                    help="where to write the auto-frozen plan")
+    sp.add_argument("--mode", choices=["composition", "discovery"], default=None,
+                    help="bank mode; inferred from --plan when omitted")
+    sp.add_argument("--case", action="append", default=None,
+                    help="run one stable case ID (repeatable)")
+    sp.add_argument("--sample", type=int, default=None,
+                    help="deterministically sample N eligible bank cases")
+    sp.add_argument("--seed", type=int, default=None)
+    sp.add_argument("--tag", default=None, help="ablation/run label stored in the report")
+    sp.add_argument("--memory", choices=["on", "off"], default=None,
+                    help="inject notes/error-log history; freeze this choice across an arm")
+    sp.add_argument("--role", action="append", default=None, metavar="ROLE=MODEL",
+                    help="override the puzzle audience model, e.g. audience=google:gemini-3.1-pro-preview")
+    sp = sub.add_parser("puzzle-plan",
+                        help="validate a test bank + sample data and freeze exact cases/hashes")
+    sp.add_argument("--bank", default=None)
+    sp.add_argument("--sample-data", default=None)
+    sp.add_argument("--mode", choices=["composition", "discovery"], default="composition")
+    sp.add_argument("--case", action="append", default=None)
+    sp.add_argument("--sample", type=int, default=None)
+    sp.add_argument("--seed", type=int, default=None)
+    sp.add_argument("--out", default="docs/puzzle_plan.json")
     sp = sub.add_parser("all")
     sp.add_argument("--static-only", action="store_true")
     sp.add_argument("--dry-run", action="store_true")
@@ -494,8 +528,62 @@ def _run(argv: list[str] | None = None) -> int:
         out = write_catalogue(cfg)
     elif args.cmd == "completeness":
         out = completeness_check(cfg)
+    elif args.cmd == "puzzle-plan":
+        from pathlib import Path as _Path
+        from .puzzle_bank import freeze_puzzle_plan, write_plan
+        from .readme_agent import parse_readme
+        pz = cfg.puzzle or {}
+        bank = args.bank or pz.get("test_bank")
+        sample_data = args.sample_data or pz.get("sample_data")
+        if not bank or not sample_data:
+            out = {"check": "puzzle-plan", "passed": False,
+                   "error": "configure puzzle.test_bank and puzzle.sample_data or pass both flags"}
+        else:
+            bank_path = _Path(bank) if _Path(bank).is_absolute() else (cfg.root / bank)
+            data_path = (_Path(sample_data) if _Path(sample_data).is_absolute()
+                         else (cfg.root / sample_data))
+            seed = args.seed if args.seed is not None else int(pz.get("seed", 42))
+            plan = freeze_puzzle_plan(
+                root=cfg.root,
+                bank_path=bank_path,
+                sample_data_path=data_path,
+                mode=args.mode,
+                case_ids=args.case,
+                sample=args.sample,
+                seed=seed,
+                documented_apis={entry.name for entry in parse_readme(cfg.llm_readme)},
+            )
+            destination = _Path(args.out)
+            if not destination.is_absolute():
+                destination = cfg.root / destination
+            write_plan(plan, destination.resolve())
+            out = {"check": "puzzle-plan", "passed": True,
+                   "plan": str(destination.resolve()), "mode": plan["mode"],
+                   "case_ids": plan["case_ids"], "cases": len(plan["cases"]),
+                   "bank_sha256": plan["bank_sha256"],
+                   "sample_data_sha256": plan["sample_data_sha256"]}
     elif args.cmd == "puzzle":
-        out = puzzle_check(cfg, dry_run=args.dry_run)
+        for spec in (args.role or []):
+            role, _, val = spec.partition("=")
+            if not val:
+                print(json.dumps({"error": f"--role needs ROLE=MODEL, got '{spec}'"})); return 2
+            cfg.override_role(role.strip(), val.strip())
+        out = puzzle_check(
+            cfg,
+            dry_run=args.dry_run,
+            doc_source=args.doc,
+            api_doc=args.api_doc,
+            bank=args.bank,
+            sample_data=args.sample_data,
+            plan_path=args.plan,
+            plan_out=args.plan_out,
+            mode=args.mode,
+            case_ids=args.case,
+            sample=args.sample,
+            seed=args.seed,
+            tag=args.tag,
+            memory=args.memory,
+        )
     elif args.cmd == "all":
         reports = [find_or_create(cfg), form_check(cfg), completeness_check(cfg)]
         if not args.static_only:

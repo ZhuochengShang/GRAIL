@@ -1,0 +1,13 @@
+# Backend-only overlay for the RDPro alias ablation. Load this file with
+# `--config configs/aideal.puzzle_alias.yaml`; keep the frozen plan, docs,
+# model, memory setting, and repair budget identical to the upstream arm.
+extends: [scala-spark, aideal.yaml]
+
+puzzle:
+  runner_args:
+    - --spark-submit
+    - /Users/clockorangezoe/miniconda3/envs/geo_llm_spark/bin/spark-submit
+    - --env-bin
+    - /Users/clockorangezoe/miniconda3/envs/geo_llm_spark/bin
+    - --rdpro-lib-dir
+    - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/RDPro_alias/target/beast-0.10.2-SNAPSHOT-bin/beast-0.10.2-SNAPSHOT/lib

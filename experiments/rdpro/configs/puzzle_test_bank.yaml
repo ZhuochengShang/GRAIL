@@ -1,0 +1,113 @@
+schema_version: 1
+bank_id: rdpro-aideal-puzzles-v1
+selection_policy:
+  fixed_case_ids: true
+  sample_without_replacement: true
+  exact_same_plan_required_across_ablations: true
+  execution_and_semantic_results_reported_separately: true
+
+cases:
+  - id: boston_raster_vector_join
+    modes: [composition, discovery]
+    tags: [raster, vector, join, level-3]
+    api_policy: exact
+    user_prompt: >
+      Calculate a deterministic land-cover class count for each supplied Boston
+      neighborhood and save the tabular result.
+    goal: >
+      Load the Float32 NLCD GeoTIFF and Boston neighborhood shapefile, associate
+      raster pixels with neighborhoods, aggregate counts by neighborhood and
+      class, and write boston_zonal_counts.csv.
+    apis:
+      - {name: geoTiff, stage: load, receiver: SparkContext}
+      - {name: shapefile, stage: load, receiver: SparkContext}
+      - {name: raptorJoin, stage: analytics, receiver: "RasterRDD[Float]"}
+    datasets: [boston_nlcd_float, boston_neighborhoods]
+    output:
+      format: CSV
+      file: boston_zonal_counts.csv
+      columns: [zone_id, class_value, pixel_count]
+      ordering: [zone_id, class_value]
+
+  - id: prism_align_reference_grid
+    modes: [composition, discovery]
+    tags: [raster, alignment, level-3]
+    api_policy: exact
+    user_prompt: >
+      Align the supplied temperature raster to the exact reference terrain grid
+      and save a Float32 GeoTIFF.
+    goal: >
+      Load the PRISM temperature raster and reference raster as Float values,
+      align temperature to the reference grid with nearest-neighbor reshaping,
+      and write prism_aligned.tif.
+    apis:
+      - {name: geoTiff, stage: load, receiver: SparkContext}
+      - {name: reshapeNN, stage: transform, receiver: "RasterRDD[Float]"}
+      - {name: saveAsGeoTiff, stage: output, receiver: "RasterRDD[Float]"}
+    datasets: [prism_temperature, prism_reference_grid]
+    output:
+      format: GeoTIFF
+      file: prism_aligned.tif
+      pixel_type: Float32
+      grid: exact prism_reference_grid
+
+  - id: prism_celsius_to_kelvin
+    modes: [composition, discovery]
+    tags: [raster, local-transform, level-2]
+    api_policy: exact
+    user_prompt: >
+      Convert all defined temperature pixels from Celsius to Kelvin and save a
+      Float32 GeoTIFF while preserving undefined pixels.
+    goal: >
+      Load the PRISM Float32 raster, add 273.15 to each defined pixel with a
+      typed local raster transformation, and write prism_kelvin.tif.
+    apis:
+      - {name: geoTiff, stage: load, receiver: SparkContext}
+      - {name: mapPixels, stage: transform, receiver: "RasterRDD[Float]"}
+      - {name: saveAsGeoTiff, stage: output, receiver: "RasterRDD[Float]"}
+    datasets: [prism_temperature]
+    output:
+      format: GeoTIFF
+      file: prism_kelvin.tif
+      pixel_type: Float32
+      units: Kelvin
+
+  - id: boston_vector_roundtrip
+    modes: [composition, discovery]
+    tags: [vector, io, level-2]
+    api_policy: exact
+    user_prompt: >
+      Load the supplied neighborhood features, report the feature count, and
+      write an equivalent GeoJSON dataset.
+    goal: >
+      Read the Boston GeoJSON, compute and print its feature count, and write
+      boston_neighborhoods_roundtrip.geojson.
+    apis:
+      - {name: geojsonFile, stage: load, receiver: SparkContext}
+      - {name: numFeatures, stage: analytics, receiver: SpatialRDD}
+      - {name: saveAsGeoJSON, stage: output, receiver: SpatialRDD}
+    datasets: [boston_neighborhoods_geojson]
+    output:
+      format: GeoJSON
+      file: boston_neighborhoods_roundtrip.geojson
+      geometry: Polygon or MultiPolygon
+
+  - id: boston_raster_inventory
+    modes: [composition, discovery]
+    tags: [raster, metadata, level-1]
+    api_policy: exact
+    user_prompt: >
+      Inspect the supplied land-cover raster and write a one-row inventory of
+      its pixel type and tile count.
+    goal: >
+      Load the Float32 NLCD raster, obtain its pixel type and number of tiles,
+      and write boston_raster_inventory.csv.
+    apis:
+      - {name: geoTiff, stage: load, receiver: SparkContext}
+      - {name: pixelType, stage: analytics, receiver: "ITile[Float]"}
+      - {name: numTiles, stage: analytics, receiver: RasterMetadata}
+    datasets: [boston_nlcd_float]
+    output:
+      format: CSV
+      file: boston_raster_inventory.csv
+      columns: [pixel_type, tile_count]

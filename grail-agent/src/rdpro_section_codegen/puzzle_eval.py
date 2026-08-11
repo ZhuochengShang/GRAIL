@@ -1,8 +1,9 @@
 """Puzzle-game LLM-readiness evaluator.
 
-Measures how "LLM-ready" a target codebase is: randomly sample N public APIs
-from the API documentation, compose them into a small task ("puzzle"), run the
-existing GRAIL pipeline on it, and score compile/run success.
+Measures how "LLM-ready" a target codebase is. It can consume an AIDEAL frozen
+test-bank plan (recommended for ablations) or randomly sample N public APIs
+from structured documentation, compose them into a small task, and run the
+existing GRAIL pipeline.
 
 The aggregate success rate over many puzzles is the LLM-readiness score.
 Run the same puzzles against ablated docs (no aliases, no fix guides) to get
@@ -26,6 +27,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import hashlib
 import json
 import os
 import random
@@ -94,6 +96,10 @@ class Puzzle:
     api_names: list[str]
     task_text: str
     scoped_api_doc: str  # only the sampled APIs' doc sections
+    mode: str = "composition"
+    api_policy: str = "exact"
+    output_file: str = ""
+    datasets: list[dict] = field(default_factory=list)
 
 
 def compose_puzzle(entries: list[ApiEntry], puzzle_id: str) -> Puzzle:
@@ -163,6 +169,87 @@ def load_task_puzzles(tasks_path: Path, inventory: list[ApiEntry]) -> list[Puzzl
     return puzzles
 
 
+def load_plan_puzzles(plan_path: Path, api_doc_path: Path) -> tuple[list[Puzzle], dict]:
+    """Load AIDEAL's frozen bank/data plan.
+
+    Structured generated docs can still be scoped to the selected APIs.  A
+    baseline README bundle has no API headers, so it is passed whole; this is
+    what enables original-vs-generated documentation ablations on one plan.
+    """
+    plan = json.loads(plan_path.read_text(encoding="utf-8"))
+    if plan.get("kind") != "aideal_frozen_puzzle_plan":
+        raise ValueError(f"{plan_path} is not an AIDEAL frozen puzzle plan")
+    doc_text = api_doc_path.read_text(encoding="utf-8", errors="ignore")
+    try:
+        inventory = load_api_inventory(api_doc_path)
+    except ValueError:
+        inventory = []
+    by_name = {entry.name: entry for entry in inventory}
+    puzzles: list[Puzzle] = []
+    for case in plan.get("cases") or []:
+        mode = str(case.get("mode") or plan.get("mode") or "composition")
+        apis = [str(item.get("name", "")) for item in case.get("apis") or []
+                if item.get("name")]
+        dataset_lines = []
+        for dataset in case.get("datasets") or []:
+            detail = ", ".join(
+                part for part in (
+                    str(dataset.get("kind", "")).strip(),
+                    str(dataset.get("format", "")).strip(),
+                    str(dataset.get("description", "")).strip(),
+                ) if part
+            )
+            dataset_lines.append(
+                f"- `{dataset.get('id')}` = {dataset.get('uri')}"
+                + (f" ({detail})" if detail else "")
+            )
+        output = case.get("output") or {}
+        output_file = str(output.get("file", "")).strip()
+        task = str(case.get("user_prompt") if mode == "discovery" else case.get("goal") or "").strip()
+        lines = [
+            task,
+            "",
+            "Use only these frozen sample datasets; do not invent or substitute paths:",
+            *(dataset_lines or ["- (no input dataset configured)"]),
+            "",
+        ]
+        if mode == "composition":
+            lines.extend([
+                "Compose these documented APIs in one runnable workflow; call each at least once:",
+                *(f"- `{name}`" for name in apis),
+                "",
+            ])
+        else:
+            lines.extend([
+                "Select compatible public APIs from the supplied documentation. Do not assume "
+                "undocumented convenience functions exist.",
+                "",
+            ])
+        if output_file:
+            lines.extend([
+                f"Write the required {output.get('format', 'output')} artifact to "
+                f"`{{{{OUTPUT_DIR}}}}/{output_file}`.",
+                "The output contract is: " + json.dumps(output, sort_keys=True),
+                "",
+            ])
+        lines.append("Print one line of evidence for each major operation and a final success marker.")
+        selected_bodies = [by_name[name].body for name in apis if name in by_name]
+        scoped_doc = "\n\n".join(selected_bodies) if selected_bodies else doc_text
+        puzzles.append(Puzzle(
+            puzzle_id=str(case["id"]),
+            api_names=apis,
+            task_text="\n".join(lines),
+            scoped_api_doc=scoped_doc,
+            mode=mode,
+            api_policy=str(case.get("api_policy", "exact")),
+            output_file=output_file,
+            datasets=list(case.get("datasets") or []),
+        ))
+    if not puzzles:
+        raise ValueError(f"{plan_path} has no cases")
+    return puzzles, plan
+
+
 def read_hints() -> str:
     """Fix-loop memory: PUZZLE_HINTS env var points at a hints file rendered
     from notes_to_self + the error log. Injected into every puzzle prompt."""
@@ -191,12 +278,18 @@ class PuzzleResult:
     events_count: int = 0  # generate/repair turns; higher = more repair effort
     wall_seconds: float = 0.0
     error: str = ""
+    execution_success: bool = False
+    missing_apis: list[str] = field(default_factory=list)
+    output_path: str = ""
+    output_exists: bool | None = None
+    semantic_status: str = "not_evaluated"
 
 
 def run_puzzle(puzzle: Puzzle, args: argparse.Namespace, run_root: Path) -> PuzzleResult:
     pdir = run_root / puzzle.puzzle_id
     pdir.mkdir(parents=True, exist_ok=True)
-    (pdir / "task.md").write_text(puzzle.task_text, encoding="utf-8")
+    rendered_task = puzzle.task_text.replace("{{OUTPUT_DIR}}", str(pdir.resolve()))
+    (pdir / "task.md").write_text(rendered_task, encoding="utf-8")
     scoped_doc_path = pdir / "scoped_api_doc.md"
     scoped_doc_path.write_text(puzzle.scoped_api_doc, encoding="utf-8")
     api_doc_for_run = scoped_doc_path if args.scoped_docs else Path(args.api_doc).resolve()
@@ -204,7 +297,7 @@ def run_puzzle(puzzle: Puzzle, args: argparse.Namespace, run_root: Path) -> Puzz
     cmd = [
         sys.executable, str(AGENT_SCRIPT),
         "--translation-mode", "direct",
-        "--free-text", puzzle.task_text,
+        "--free-text", rendered_task,
         "--api-doc", str(api_doc_for_run),
         "--scaffold", str(Path(args.scaffold).resolve()),
         "--output-scala", str(pdir / "generated.scala"),
@@ -228,7 +321,8 @@ def run_puzzle(puzzle: Puzzle, args: argparse.Namespace, run_root: Path) -> Puzz
         summaries = sorted(pdir.glob("summary_*.json"))
         if summaries:
             s = json.loads(summaries[-1].read_text(encoding="utf-8"))
-            result.success = bool(s.get("success"))
+            result.execution_success = bool(s.get("success"))
+            result.success = result.execution_success
             result.fail_reason = s.get("fail_reason", "")
             result.completed_sections = s.get("completed_sections", [])
             result.planned_sections = s.get("planned_sections", [])
@@ -242,6 +336,24 @@ def run_puzzle(puzzle: Puzzle, args: argparse.Namespace, run_root: Path) -> Puzz
         result.error = f"timeout after {args.puzzle_timeout_seconds}s"
     except Exception as exc:  # noqa: BLE001 - record and continue the batch
         result.error = repr(exc)
+    generated = pdir / "generated.scala"
+    if generated.is_file() and puzzle.mode == "composition" and puzzle.api_policy == "exact":
+        source = generated.read_text(encoding="utf-8", errors="ignore")
+        code = re.sub(r"/\*.*?\*/|//[^\n]*", "", source, flags=re.DOTALL)
+        result.missing_apis = [
+            name for name in puzzle.api_names
+            if not re.search(rf"\b{re.escape(name)}\b", code)
+        ]
+        if result.missing_apis:
+            result.success = False
+            result.fail_reason = "required APIs not used: " + ", ".join(result.missing_apis)
+    if puzzle.output_file:
+        expected = pdir / puzzle.output_file
+        result.output_path = str(expected)
+        result.output_exists = expected.exists()
+        if result.success and not result.output_exists:
+            result.success = False
+            result.fail_reason = f"required output not created: {expected}"
     result.wall_seconds = round(time.time() - t0, 2)
     return result
 
@@ -253,16 +365,26 @@ def run_puzzle(puzzle: Puzzle, args: argparse.Namespace, run_root: Path) -> Puzz
 def write_report(results: list[PuzzleResult], run_root: Path, tag: str, meta: dict) -> dict:
     n = len(results)
     successes = sum(1 for r in results if r.success)
+    execution_successes = sum(1 for r in results if r.execution_success)
+    semantic_scored = sum(1 for r in results if r.semantic_status in {"pass", "fail"})
+    semantic_successes = sum(1 for r in results if r.semantic_status == "pass")
     section_progress = [
         len(r.completed_sections) / len(r.planned_sections)
         for r in results
         if r.planned_sections
     ]
     report = {
+        "schema_version": 2,
         "tag": tag,
+        "score_kind": "execution_and_output_contract",
         "readiness_score": round(successes / n, 3) if n else 0.0,
         "puzzles": n,
         "successes": successes,
+        "execution_successes": execution_successes,
+        "semantic_scored": semantic_scored,
+        "semantic_successes": semantic_successes,
+        "semantic_score": (round(semantic_successes / semantic_scored, 3)
+                           if semantic_scored else None),
         "mean_section_progress": round(sum(section_progress) / len(section_progress), 3)
         if section_progress
         else 0.0,
@@ -274,10 +396,14 @@ def write_report(results: list[PuzzleResult], run_root: Path, tag: str, meta: di
     (run_root / "puzzle_report.json").write_text(json.dumps(report, indent=2), encoding="utf-8")
     with (run_root / "puzzle_report.csv").open("w", newline="", encoding="utf-8") as f:
         w = csv.writer(f)
-        w.writerow(["puzzle_id", "apis", "success", "fail_reason", "turns", "tokens", "wall_s", "error"])
+        w.writerow(["puzzle_id", "apis", "success", "execution_success",
+                    "semantic_status", "missing_apis", "output_exists",
+                    "fail_reason", "turns", "tokens", "wall_s", "error"])
         for r in results:
             w.writerow([
-                r.puzzle_id, ";".join(r.api_names), r.success, r.fail_reason,
+                r.puzzle_id, ";".join(r.api_names), r.success,
+                r.execution_success, r.semantic_status, ";".join(r.missing_apis),
+                r.output_exists, r.fail_reason,
                 r.events_count, r.total_tokens, r.wall_seconds, r.error,
             ])
     return report
@@ -296,12 +422,14 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     p.add_argument("--tag", default="default", help="label for this configuration (e.g. no_aliases)")
     p.add_argument("--tasks", default="",
                    help="integration_tasks.yaml: run these benchmark tasks instead of random puzzles")
+    p.add_argument("--plan", default="",
+                   help="AIDEAL frozen puzzle plan (preferred for comparable ablations)")
     p.add_argument("--num-puzzles", type=int, default=5)
     p.add_argument("--num-functions", type=int, default=5)
     p.add_argument("--seed", type=int, default=42, help="same seed = same puzzles across ablations")
     p.add_argument("--scoped-docs", action="store_true",
                    help="give the agent only the sampled APIs' docs instead of the full doc")
-    p.add_argument("--provider", choices=["openai", "google"], default="openai")
+    p.add_argument("--provider", default="openai")
     p.add_argument("--model", default="gpt-4o")
     p.add_argument("--max-retries-per-section", type=int, default=5)
     p.add_argument("--puzzle-timeout-seconds", type=int, default=1800)
@@ -315,13 +443,23 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
 def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
     api_doc_path = Path(args.api_doc).resolve()
-    inventory = load_api_inventory(api_doc_path)
-    if args.tasks:
+    plan = None
+    if args.plan:
+        puzzles, plan = load_plan_puzzles(Path(args.plan).resolve(), api_doc_path)
+        if args.scoped_docs and not API_HEADER_RE.search(
+            api_doc_path.read_text(encoding="utf-8", errors="ignore")
+        ):
+            print("--scoped-docs needs structured API entries; baseline docs have none", file=sys.stderr)
+            return 2
+        inventory = []
+    else:
+        inventory = load_api_inventory(api_doc_path)
+    if args.tasks and not args.plan:
         puzzles = load_task_puzzles(Path(args.tasks).resolve(), inventory)
         if not puzzles:
             print("no runnable tasks in tasks file (apis not found in api doc?)", file=sys.stderr)
             return 2
-    else:
+    elif not args.plan:
         puzzles = sample_puzzles(inventory, args.num_puzzles, args.num_functions, args.seed)
 
     hints = read_hints()
@@ -329,8 +467,9 @@ def main(argv: list[str] | None = None) -> int:
         for pz in puzzles:
             pz.task_text += hints
 
-    print(f"inventory: {len(inventory)} APIs from {api_doc_path.name}")
-    print(f"puzzles: {len(puzzles)} ({'tasks file' if args.tasks else f'{args.num_functions} random fns'}, "
+    print(f"inventory: {len(inventory)} structured APIs from {api_doc_path.name}")
+    selection = "frozen plan" if args.plan else ("tasks file" if args.tasks else f"{args.num_functions} random fns")
+    print(f"puzzles: {len(puzzles)} ({selection}, "
           f"seed={args.seed}, tag={args.tag}, hints={'yes' if hints else 'no'})")
 
     if args.dry_run:
@@ -353,11 +492,20 @@ def main(argv: list[str] | None = None) -> int:
 
     meta = {
         "api_doc": str(api_doc_path),
+        "api_doc_sha256": hashlib.sha256(api_doc_path.read_bytes()).hexdigest(),
+        "api_doc_bytes": api_doc_path.stat().st_size,
         "guide": args.guide,
         "scoped_docs": args.scoped_docs,
+        "provider": args.provider,
         "model": args.model,
         "seed": args.seed,
         "num_functions": args.num_functions,
+        "max_retries_per_section": args.max_retries_per_section,
+        "agent_args": args.agent_args,
+        "plan": str(Path(args.plan).resolve()) if args.plan else None,
+        "plan_case_ids": plan.get("case_ids", []) if plan else [],
+        "plan_bank_sha256": plan.get("bank_sha256") if plan else None,
+        "plan_sample_data_sha256": plan.get("sample_data_sha256") if plan else None,
     }
     report = write_report(results, run_root, args.tag, meta)
     print(json.dumps({k: report[k] for k in

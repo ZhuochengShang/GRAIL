@@ -60,7 +60,13 @@ class AidealConfig:
                 t = p.read_text(encoding="utf-8", errors="ignore")
             except OSError:
                 continue
-            parts.append(f"===== {p.relative_to(self.root)} =====\n{t}")
+            try:
+                label = p.relative_to(self.root)
+            except ValueError:
+                # External codebases/docs are valid project inputs; retain an
+                # auditable absolute label when the file is outside cfg.root.
+                label = p
+            parts.append(f"===== {label} =====\n{t}")
         text = "\n\n".join(parts)
         return text[:limit] if limit else text
 

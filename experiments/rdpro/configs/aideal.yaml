@@ -54,8 +54,11 @@ files:
   # control — so the experiment points at a neutral hand-written guide.
   agents_doc: AGENTS.baseline.md
   original_readme:                # baseline doc(s): a path, or a list of files/dirs/globs
-    - beast/README.md
-    - beast/doc
+    # The clean GRAIL worktree does not vendor the RDPro repository. Pin the
+    # local upstream checkout used by the backend arm; `--api-doc SNAPSHOT` can
+    # override this with a checked-in/frozen bundle on another machine.
+    - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/RDPro/README.md
+    - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/RDPro/doc
   llm_readme: docs/LLM_readme.md
   notes_to_self: docs/notes_to_self.md
   integration_tasks: configs/integration_tasks.yaml
@@ -220,8 +223,34 @@ comprehension:
 
 puzzle:
   cwd: ../../grail-agent/src
-  command: "python -m rdpro_section_codegen.puzzle_eval --api-doc {llm_readme} --num-puzzles {n} --num-functions {k} --seed {seed} --tag exp_rdpro"
+  command: >-
+    {python} -m rdpro_section_codegen.puzzle_eval
+    --api-doc {api_doc}
+    --plan {plan}
+    --scaffold {scaffold}
+    --work-dir {work_dir}
+    --tag {tag}
+    --provider {provider}
+    --model {model}
+    --max-retries-per-section {max_retries_per_section}
+    {dry_run}
+    -- {runner_args}
+  test_bank: configs/puzzle_test_bank.yaml
+  sample_data: configs/puzzle_sample_data.yaml
+  scaffold: ../../grail-agent/outputs/generated_scala/job_scaffold.scala
+  work_dir: results/puzzle_runs
   num_puzzles: 5
   num_functions: 5
   seed: 42
-  max_fix_rounds: 2
+  # The section agent already performs bounded direct repair. Re-running the
+  # entire bank would change cost without adding an independent observation.
+  max_fix_rounds: 0
+  max_retries_per_section: 2
+  # Baseline backend. Override only this list for the RDPro_alias ablation.
+  runner_args:
+    - --spark-submit
+    - /Users/clockorangezoe/miniconda3/envs/geo_llm_spark/bin/spark-submit
+    - --env-bin
+    - /Users/clockorangezoe/miniconda3/envs/geo_llm_spark/bin
+    - --rdpro-lib-dir
+    - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/RDPro/target/beast-0.10.2-SNAPSHOT-bin/beast-0.10.2-SNAPSHOT/lib
