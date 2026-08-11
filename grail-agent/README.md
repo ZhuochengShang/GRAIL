@@ -19,7 +19,7 @@ This folder contains the main GRAIL agent implementation.
 - Full pipeline (NL/Python → RDPro Scala): `src/rdpro_section_codegen/langgraph_section_agent.py` (argparse CLI, see Main Script below).
 - Analyze + plan only: `python -m rdpro_section_codegen.cli <python_script>` — prints the section plan as JSON.
 - Baseline (raw via-Python, no sectioning): `src/rdpro_section_codegen/langgraph_section_agent_via_python_raw_baseline.py`.
-- LLM-readiness puzzle evaluator: `python -m rdpro_section_codegen.puzzle_eval` — samples N random APIs from the docs, composes them into a task, runs the pipeline, and scores compile/run success (`--dry-run` to preview puzzles; same `--seed` reproduces puzzles across ablation tags).
+- LLM-readiness puzzle process: `aideal puzzle-plan` freezes test-bank cases and sample-data hashes; `aideal puzzle` reuses that plan across documentation/model/memory/backend ablations. RDPro's application adapter is `python -m rdpro_section_codegen.puzzle_eval`. See [docs/puzzle_process.md](docs/puzzle_process.md) for the general/app-specific boundary.
 - AIDEAL CLI: `cd src && python -m aideal.cli {readme|form|comprehension|completeness|puzzle|all|tasks|alias-report|alias-overlap|alias-suggest|alias-add|log-add|log-prompt|notes-add|notes-distill|notes-prompt}` — every command prints JSON, so coding agents can invoke it repeatedly. `readme`, `form`, `completeness`, `tasks`, and all alias/log/notes commands need no LLM/API key.
 - GRAIL demo UI (Streamlit, the interface in the paper figures): `streamlit run ui/grail_ui.py` — see `ui/README.md`.
 - AIDEAL UI mock (static HTML): `outputs/aideal_v4.html`.
@@ -101,7 +101,8 @@ python -m aideal.cli form                # required sections present?
 python -m aideal.cli completeness        # all public functions documented?
 python -m aideal.cli all --static-only   # the above in one run
 python -m aideal.cli comprehension       # readme unit test (needs API key)
-python -m aideal.cli puzzle --dry-run    # integration puzzles + fix loop
+python -m aideal.cli puzzle-plan --out docs/puzzle_plan.json  # freeze cases + fixture hashes
+python -m aideal.cli puzzle --plan docs/puzzle_plan.json --dry-run  # preview, no model/Spark
 
 # memory loop: errors -> notes -> aliases
 python -m aideal.cli log-add --step code-test --task ndvi_pipeline \
