@@ -1,0 +1,79 @@
+project_name: tslearn
+role: >-
+  An expert Python time-series machine-learning engineer using tslearn and
+  scikit-learn conventions. Write small deterministic executable checks for
+  every discovered public API identity, including low-level backend helpers.
+project:
+  name: tslearn
+  language: Python
+  description: >-
+    A scientific machine-learning toolkit for time-series data, including
+    distance and alignment metrics, clustering, classification, forecasting,
+    barycenters, preprocessing, shapelets, serialization, and backend helpers.
+domain: time-series machine learning
+domain_query_provenance: >-
+  Pre-existing AIDEAL study target; not selected by the 2026-09-06
+  cross-domain GitHub query sweep.
+target_users:
+  - time-series researchers and data scientists
+  - ML engineers familiar with NumPy and scikit-learn
+  - coding agents generating executable time-series workflows
+use_cases:
+  - Compute time-series distances, similarities, alignments, and barycenters.
+  - Train compact clustering, classification, and forecasting estimators.
+  - Convert, normalize, resample, serialize, and inspect time-series datasets.
+  - Exercise public NumPy and PyTorch backend helpers with small arrays.
+constraints:
+  - Test every name in the frozen 235-name corrected raw public surface; never sample.
+  - Use only the checked-in Trace fixture and deterministic in-memory derivatives.
+  - Do not download datasets, plot interactively, or access the network.
+  - Keep estimator sizes, iteration counts, and thread counts small.
+  - Import the target explicitly; the shared scaffold does not pre-import tested APIs.
+  - Assert a falsifiable property and print the configured correctness witness.
+knowledge:
+  repository:
+    upstream_url: https://github.com/tslearn-team/tslearn
+    pinned_commit: f8f13ddf4186e2cc99c8ef495aeb46b1254a01f7
+    package_version: 0.10.0.dev0
+    source_path: tslearn
+  api_scope:
+    discovery_mode: corrected AST-backed Python public definitions
+    identity: bare unique API name
+    public_definition_sites: 343
+    unique_public_names: 235
+    manifest_path: docs/eval/api_manifest.json
+    manifest_file_sha256: 42dd31265d4fd753eab37f00ea636b5e06bdd2b2203e48be45dc0be6569b967f
+    ordered_names_sha256: f32b60b9ce1415415e60f7ff285bde2efb0f62a6e0aaf33622590486fd8bf907
+    sampling: none
+    reconciliation: >-
+      The historical scanner reported 245 names. The corrected scanner removes
+      ten nested/local false positives and finds no new names, yielding 235.
+    excluded_historical_false_positives:
+      - cb_
+      - f
+      - format_to_tslearn
+      - metric_fun
+      - of
+      - sklearn_metric
+      - transpose_or_expand
+      - transpose_or_flatten
+      - wrapper
+      - y
+  fixture:
+    path: tslearn/tslearn/.cached_datasets/Trace.npz
+    repository_checked_in: true
+    sha256: 0de0b7fa727cfabaf8481552db2b95fcccd12e54b67058aea79ff05b483cf807
+    arrays: [X_train, X_test, y_train, y_test]
+  original_documentation:
+    paths: [tslearn/README.md, tslearn/docs]
+    policy: documentation checked out at the pinned source commit
+    resolved_text_files: 116
+    resolved_bundle_chars: 7054921
+    resolved_bundle_sha256: b976fddc2e1e140db76b55d7e8a11137e26521a829e59ce7ab5cc6d13b448f15
+  runtime:
+    python: /Users/clockorangezoe/miniconda3/envs/geo_llm_spark/bin/python
+    python_version: "3.10"
+    threading: single-threaded with NUMBA_THREADING_LAYER=workqueue
+    optional_dependency_policy: >-
+      Missing optional dependencies are recorded as infrastructure and remain
+      visible in per-function analysis; they are not repaired with substitute APIs.

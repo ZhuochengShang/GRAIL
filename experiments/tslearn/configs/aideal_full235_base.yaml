@@ -1,0 +1,91 @@
+# Shared, immutable basis for all four full-surface cells. Condition files
+# extend this after historical aideal.yaml; the July 99-name experiment remains
+# untouched and is not an input to this rerun.
+codebase:
+  surface_filter: all
+
+provenance:
+  protocol: tslearn-full235-2x2-v1
+  source_commit: f8f13ddf4186e2cc99c8ef495aeb46b1254a01f7
+  surface: corrected complete raw public surface
+  identity: bare unique name
+  public_definition_sites: 343
+  public_names: 235
+  manifest_file_sha256: 42dd31265d4fd753eab37f00ea636b5e06bdd2b2203e48be45dc0be6569b967f
+  ordered_names_sha256: f32b60b9ce1415415e60f7ff285bde2efb0f62a6e0aaf33622590486fd8bf907
+  historical_raw_count: 245
+  removed_nested_local_false_positives:
+    - cb_
+    - f
+    - format_to_tslearn
+    - metric_fun
+    - of
+    - sklearn_metric
+    - transpose_or_expand
+    - transpose_or_flatten
+    - wrapper
+    - y
+  manifest: docs/eval/api_manifest.json
+  fixture: tslearn/tslearn/.cached_datasets/Trace.npz
+  fixture_sha256: 0de0b7fa727cfabaf8481552db2b95fcccd12e54b67058aea79ff05b483cf807
+  scaffold: docs/api_test_scaffold_full235.py
+  scaffold_sha256: 45d3de8bc5de86ea8814fa9350e2695f06945a6bcae6b23528feef97dd2f1c99
+  scaffold_policy: infrastructure-only; target API imports are audience-generated
+  interpreter: /Users/clockorangezoe/miniconda3/envs/geo_llm_spark/bin/python
+  source_tree: f8e64d3e0869bc042bdd727cf877829b584aec27
+  original_document_bundle_sha256: b976fddc2e1e140db76b55d7e8a11137e26521a829e59ce7ab5cc6d13b448f15
+  historical_results_policy: never overwrite July artifacts
+
+files:
+  project_profile: configs/project_profile_full235.yaml
+  original_readme:
+    - tslearn/README.md
+    - tslearn/docs
+
+comprehension:
+  class_context: false
+  relevant_doc_chars: 12000
+  execute:
+    scaffold: docs/api_test_scaffold_full235.py
+    test_filename: api_test.py
+    region: ["# TODO API_TEST_START", "# TODO API_TEST_END"]
+    # Every condition work_dir is .aideal_exec/<condition>. From there,
+    # ../../tslearn is this worktree's nested pinned checkout. This prevents the
+    # historical cross-worktree editable-import leak.
+    command: >-
+      env PYTHONPATH=../../tslearn PYTHONHASHSEED=0 MPLBACKEND=Agg
+      NUMBA_THREADING_LAYER=workqueue NUMBA_NUM_THREADS=1 OMP_NUM_THREADS=1
+      OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1
+      /Users/clockorangezoe/miniconda3/envs/geo_llm_spark/bin/python {test_file}
+    local_uris: false
+    preamble: |
+      Path(output_dir).mkdir(parents=True, exist_ok=True)
+      _trace = np.load(trace_npz)
+      _balanced = np.array([0, 4, 1, 17, 3, 13, 2, 5], dtype=int)
+      X = _trace["X_train"][_balanced, :40, :]  # type: balanced time-series dataset ndarray (8, 40, 1)
+      X2 = _trace["X_test"][:4, :32, :]  # type: second dataset ndarray (4, 32, 1)
+      s1 = X[0].ravel()  # type: 1-D series ndarray (40,)
+      s2 = X[1].ravel()  # type: 1-D series ndarray (40,)
+      y = _trace["y_train"][_balanced]  # type: four balanced labels, two examples per class
+      tiny_matrix = np.arange(12.0).reshape(3, 4)  # type: deterministic numeric matrix
+    sample_data:
+      trace_npz: tslearn/tslearn/.cached_datasets/Trace.npz
+    max_fix_rounds: 0
+    require_correctness: true
+    timeout_seconds: 300
+    success_marker: __DONE__
+    error_marker: __RUN_ERR__
+    output_tail_chars: 4000
+    execution_context: >-
+      A headless Python harness, balanced eight-series training data, a second
+      series set, one-dimensional signals, labels, a small numeric matrix,
+      repository fixture paths, and a pre-created condition-specific output
+      directory are already in scope. Import the target explicitly.
+    exec_hints: >-
+      Use small deterministic parameters. For file-writing APIs, write only
+      below output_dir. Optional-dependency failures must remain explicit
+      infrastructure outcomes. End with a meaningful assertion and print a
+      compact __CHECK__ witness.
+
+docfix:
+  allowed_member_categories: [language_core, python_core]
