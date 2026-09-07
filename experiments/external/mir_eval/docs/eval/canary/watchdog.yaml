@@ -1,0 +1,38 @@
+version: 1
+max_parallel: 1
+retry_delay_seconds: 60
+env:
+  PYTHONPATH: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_setup/grail-agent/src
+  AIDEAL_GOOGLE_MIN_INTERVAL_S: "3"
+  AIDEAL_GOOGLE_RATE_STATE: /tmp/aideal_google_rate_gate.txt
+  AIDEAL_GOOGLE_REQUEST_TIMEOUT_S: "300"
+  AIDEAL_GOOGLE_MAX_RETRIES: "2"
+jobs:
+  - id: mir_eval_execution_canary
+    cwd: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_setup
+    branch: aideal/mir_eval-freeze
+    environment_inventory: experiments/external/mir_eval/docs/eval/setup/environment_inventory.txt
+    command:
+      - /Users/clockorangezoe/miniconda3/envs/geo_llm_spark/bin/python
+      - -m
+      - aideal.cli
+      - --config
+      - experiments/external/mir_eval/configs/aideal_canary.yaml
+      - comprehension
+      - --execute
+      - --show-code
+      - --doc
+      - original
+      - --doc-scope
+      - relevant
+      - --manifest
+      - docs/eval/canary/api_manifest.json
+      - --max-fix-rounds
+      - "0"
+      - --resume
+      - --timeout
+      - "300"
+    result: experiments/external/mir_eval/docs/eval/canary/comprehension.json
+    complete: {kind: json_metrics_no_transient}
+    max_runtime_seconds: 900
+    max_restarts: 0
