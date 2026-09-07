@@ -1,0 +1,296 @@
+codebase:
+  intent:
+    weights: {}
+    manual_include: []
+    manual_exclude: []
+    exclude_name_patterns: []
+    use_llm: false
+    refresh_llm: false
+  intended_api:
+    static_include_threshold: 8
+    static_exclude_threshold: 1
+    batch_size: 25
+    cache: docs/intended_api_decisions.json
+    refresh: false
+  public_def_regex: ^\s*(?:(?:(?:public|protected|private|static|final|abstract|synchronized|native|strictfp|default)\s+)+(?:<[^>{};]+>\s+)?(?:[A-Za-z_$][A-Za-z0-9_$.?]*(?:<[^>{};]+>)?(?:\[\])*\s+)?|(?!(?:if|for|while|switch|return|throw|new|assert)\b)(?:<[^>{};]+>\s+)?[A-Za-z_$][A-Za-z0-9_$.?]*(?:<[^>{};]+>)?(?:\[\])*\s+)([A-Za-z_$][A-Za-z0-9_$]*)\s*(?=\()
+  exclude_names:
+  - main
+  - toString
+  - equals
+  - hashCode
+  - clone
+  - finalize
+  source_globs:
+  - source/src/main/java/**/*.java
+  test_globs:
+  - source/src/test/java/**/*.java
+  surface_filter: all
+files:
+  project_profile: configs/project_profile.yaml
+  prompts_dir: prompts
+  llm_readme: docs/eval/A1/LLM_readme.md
+  notes_to_self: docs/notes_to_self.md
+  integration_tasks: configs/integration_tasks.yaml
+  aliases: aliases/aliases.json
+  error_log: logs/A1/error_log.jsonl
+  original_readme:
+  - source/README.md
+  - source/target/site/apidocs
+models:
+  registry:
+    gpt-4o:
+      provider: openai
+      model: gpt-4o
+    gpt-4o-mini:
+      provider: openai
+      model: gpt-4o-mini
+    codex-5.3:
+      provider: codex
+      model: gpt-5.3-codex
+    gemini-2.5-pro:
+      provider: google
+      model: gemini-2.5-pro
+    gemini-3.1-pro:
+      provider: google
+      model: gemini-3.1-pro-preview
+    gemini-3.2-pro:
+      provider: google
+      model: gemini-3.2-pro-preview
+    claude-sonnet:
+      provider: anthropic
+      model: claude-sonnet-4-6
+    qwen:
+      provider: ollama
+      model: qwen3:32b
+    llama3:
+      provider: ollama
+      model: llama3
+  roles:
+    author: gemini-3.1-pro
+    audience: gemini-3.1-pro
+    fixer: gemini-3.1-pro
+runtime:
+  target: local
+  local: {}
+checks:
+  required_sections:
+  - Signature
+  - Goal
+  - Parameters
+  - Input
+  - Output
+  - Valid Call Patterns|Valid Access Patterns
+  - LLM Instruction Prompt
+  - Prompt Snippet
+  - Common Failure Modes
+  - Fix Code Hint
+  comprehension_apis_sampled: 5
+docfix:
+  allow_repo_called_members: true
+  allowed_member_categories:
+  - language_core
+  - java_core
+  member_categories:
+    language_core:
+    - println
+    - print
+    - require
+    - assert
+    - format
+    - mkString
+    - toString
+    - map
+    - flatMap
+    - filter
+    - foreach
+    - collect
+    - count
+    - take
+    - first
+    - reduce
+    - fold
+    - foldLeft
+    - sum
+    - min
+    - max
+    - size
+    - length
+    - nonEmpty
+    - isEmpty
+    - head
+    - headOption
+    - last
+    - getOrElse
+    - get
+    - exists
+    - forall
+    - contains
+    - indexOf
+    - sortBy
+    - sorted
+    - zip
+    - zipWithIndex
+    - toArray
+    - toList
+    - toSeq
+    - toSet
+    - toMap
+    - distinct
+    - sliding
+    - grouped
+    - apply
+    - update
+    - close
+    - cache
+    - persist
+    - coalesce
+    - repartition
+    - keys
+    - values
+    - trim
+    - split
+    - replace
+    - startsWith
+    - endsWith
+    - toDouble
+    - toInt
+    - toLong
+    - toFloat
+    - abs
+    - floor
+    - ceil
+    - round
+    - find
+    - getPath
+    - getName
+    - getClass
+    - asInstanceOf
+    - isInstanceOf
+    - mkdirs
+    - listFiles
+    - delete
+    - getConstructor
+    - newInstance
+    - getFileSystem
+    - resolve
+    - isNaN
+    - isInfinite
+    - isFinite
+    - toRadians
+    - toDegrees
+    - sqrt
+    - pow
+    - sin
+    - cos
+    - tan
+    - atan2
+    - fill
+    - range
+    - empty
+    - ofDim
+    java_core:
+    - of
+    - valueOf
+    - parse
+    - builder
+    - build
+    - create
+    - add
+    - addAll
+    - remove
+    - clear
+    - put
+    - putAll
+    - get
+    - set
+    - contains
+    - containsKey
+    - containsValue
+    - iterator
+    - stream
+    - collect
+    - map
+    - filter
+    - forEach
+    - size
+    - length
+    - isEmpty
+    - toArray
+    - toList
+    - toSet
+    - toMap
+    - orElse
+    - orElseGet
+    - getAsInt
+    - getAsLong
+    - getAsDouble
+    - close
+    - flush
+    - read
+    - write
+  allowed_members: []
+comprehension:
+  execute:
+    execution_context: A Java 8 headless harness is already in scope. Write statements
+      only for the marked region. Reuse the in-memory images, output stream/path,
+      and checked-in image paths. Exercise the target public API, assert a stable
+      dimension/pixel/byte/file property, and print a compact witness.
+    region:
+    - // TODO API_TEST_START
+    - // TODO API_TEST_END
+    strip_snippet_imports: false
+    output_tail_chars: 2000
+    success_marker: __DONE__
+    error_marker: __RUN_ERR__
+    work_dir: .aideal_exec/A1
+    timeout_seconds: 300
+    max_fix_rounds: 0
+    auto_report: true
+    test_filename: ApiTest.java
+    exec_hints: Use Java 8 syntax. Prefer BufferedImage and the provided tiny PNG/JPEG
+      fixtures. Do not open windows, URLs, cameras, or network resources. Close streams
+      you create and avoid overwriting repository fixtures.
+    scaffold: docs/api_test_scaffold.java
+    build_cwd: source
+    uberjar: target/thumbnailator-0.4.21.jar
+    local_uris: false
+    output_dir: .aideal_exec/A1/output
+    preamble: 'BufferedImage sourceImage = new BufferedImage(32, 24, BufferedImage.TYPE_INT_RGB);
+
+      Graphics2D graphics = sourceImage.createGraphics();
+
+      graphics.setColor(Color.BLUE);
+
+      graphics.fillRect(0, 0, 32, 24);
+
+      graphics.setColor(Color.YELLOW);
+
+      graphics.fillRect(8, 6, 16, 12);
+
+      graphics.dispose();
+
+      BufferedImage destinationImage = new BufferedImage(16, 12, BufferedImage.TYPE_INT_RGB);
+
+      ByteArrayOutputStream imageBytes = new ByteArrayOutputStream();
+
+      Path outputPath = Paths.get(output_dir, "thumbnail.png");
+
+      Files.createDirectories(outputPath.getParent());
+
+      '
+    sample_data:
+      grid_png: source/src/test/resources/Thumbnailator/grid.png
+      grid_jpeg: source/src/test/resources/Thumbnailator/grid.jpg
+      exif_jpeg: source/src/test/resources/Exif/original.jpg
+    require_correctness: true
+    command: mkdir -p {work}/classes && /Library/Java/JavaVirtualMachines/jdk-1.8.jdk/Contents/Home/bin/javac
+      -cp "{classpath}" -d {work}/classes {test_file} && /Library/Java/JavaVirtualMachines/jdk-1.8.jdk/Contents/Home/bin/java
+      -Djava.awt.headless=true -cp "{work}/classes:{classpath}" ApiTest
+  class_context: false
+  relevant_doc_chars: 12000
+project:
+  language: Java
+  name: Thumbnailator
+extends:
+- java
+- aideal.yaml

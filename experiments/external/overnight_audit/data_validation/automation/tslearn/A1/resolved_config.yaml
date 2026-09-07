@@ -1,0 +1,341 @@
+codebase:
+  intent:
+    weights:
+      llm_common: 4
+      many_impls: -10
+    manual_include: []
+    manual_exclude: []
+    exclude_name_patterns: []
+    use_llm: false
+    refresh_llm: false
+    threshold: 5
+    many_impls_threshold: 4
+  intended_api:
+    static_include_threshold: 999
+    static_exclude_threshold: -999
+    batch_size: 25
+    cache: docs/intended_api_rankings.json
+    refresh: false
+    identity: bare
+    candidate_filter: static_selected
+    require_llm: true
+    rubric_version: 2
+    available_receiver_types:
+    - numpy.ndarray
+    - tslearn estimator constructed from configured small hyperparameters
+  public_def_regex: ^\s*(?:def|class)\s+([A-Za-z][A-Za-z0-9_]*)
+  exclude_names:
+  - main
+  - setup
+  source_globs:
+  - tslearn/tslearn/**/*.py
+  test_globs:
+  - tslearn/tests/**/*.py
+  surface_filter: all
+files:
+  project_profile: configs/project_profile_full235.yaml
+  prompts_dir: prompts
+  llm_readme: docs/eval/A1/LLM_readme.md
+  notes_to_self: docs/eval/A1/notes_to_self.md
+  integration_tasks: configs/integration_tasks.yaml
+  aliases: aliases/aliases.json
+  error_log: logs/eval/A1/error_log.jsonl
+  original_readme:
+  - tslearn/README.md
+  - tslearn/docs
+models:
+  registry:
+    gpt-4o:
+      provider: openai
+      model: gpt-4o
+    gpt-4o-mini:
+      provider: openai
+      model: gpt-4o-mini
+    codex-5.3:
+      provider: codex
+      model: gpt-5.3-codex
+    gemini-2.5-pro:
+      provider: google
+      model: gemini-2.5-pro
+    gemini-3.1-pro:
+      provider: google
+      model: gemini-3.1-pro-preview
+    gemini-3.2-pro:
+      provider: google
+      model: gemini-3.2-pro-preview
+    claude-sonnet:
+      provider: anthropic
+      model: claude-sonnet-4-6
+    qwen:
+      provider: ollama
+      model: qwen3:32b
+    llama3:
+      provider: ollama
+      model: llama3
+  roles:
+    author: gemini-3.1-pro
+    audience: gemini-3.1-pro
+    fixer: gemini-3.1-pro
+runtime:
+  target: local
+  local: {}
+checks:
+  required_sections:
+  - Signature
+  - Goal
+  - Parameters
+  - Input
+  - Output
+  - Valid Call Patterns|Valid Access Patterns
+  - LLM Instruction Prompt
+  - Prompt Snippet
+  - Common Failure Modes
+  - Fix Code Hint
+  comprehension_apis_sampled: 5
+docfix:
+  allow_repo_called_members: true
+  allowed_member_categories:
+  - language_core
+  - python_core
+  member_categories:
+    language_core:
+    - println
+    - print
+    - require
+    - assert
+    - format
+    - mkString
+    - toString
+    - map
+    - flatMap
+    - filter
+    - foreach
+    - collect
+    - count
+    - take
+    - first
+    - reduce
+    - fold
+    - foldLeft
+    - sum
+    - min
+    - max
+    - size
+    - length
+    - nonEmpty
+    - isEmpty
+    - head
+    - headOption
+    - last
+    - getOrElse
+    - get
+    - exists
+    - forall
+    - contains
+    - indexOf
+    - sortBy
+    - sorted
+    - zip
+    - zipWithIndex
+    - toArray
+    - toList
+    - toSeq
+    - toSet
+    - toMap
+    - distinct
+    - sliding
+    - grouped
+    - apply
+    - update
+    - close
+    - cache
+    - persist
+    - coalesce
+    - repartition
+    - keys
+    - values
+    - trim
+    - split
+    - replace
+    - startsWith
+    - endsWith
+    - toDouble
+    - toInt
+    - toLong
+    - toFloat
+    - abs
+    - floor
+    - ceil
+    - round
+    - find
+    - getPath
+    - getName
+    - getClass
+    - asInstanceOf
+    - isInstanceOf
+    - mkdirs
+    - listFiles
+    - delete
+    - getConstructor
+    - newInstance
+    - getFileSystem
+    - resolve
+    - isNaN
+    - isInfinite
+    - isFinite
+    - toRadians
+    - toDegrees
+    - sqrt
+    - pow
+    - sin
+    - cos
+    - tan
+    - atan2
+    - fill
+    - range
+    - empty
+    - ofDim
+    python_core:
+    - fit
+    - predict
+    - transform
+    - fit_transform
+    - fit_predict
+    - score
+    - ravel
+    - reshape
+    - astype
+    - tolist
+    - copy
+    - mean
+    - sum
+    - std
+    - var
+    - argmin
+    - argmax
+    - cumsum
+    - squeeze
+    - flatten
+    - array
+    - asarray
+    - zeros
+    - ones
+    - arange
+    - linspace
+    - allclose
+    - isclose
+    - seed
+    - rand
+    - randn
+    - randint
+    - normal
+    - shuffle
+    - append
+    - extend
+    - join
+    - format
+    - items
+    - keys
+    - values
+    - get
+    - strip
+    - lower
+    - upper
+    - round
+    - set_params
+    - get_params
+  allowed_members: []
+comprehension:
+  execute:
+    execution_context: A headless Python harness, balanced eight-series training data,
+      a second series set, one-dimensional signals, labels, a small numeric matrix,
+      repository fixture paths, and a pre-created condition-specific output directory
+      are already in scope. Import the target explicitly.
+    region:
+    - '# TODO API_TEST_START'
+    - '# TODO API_TEST_END'
+    strip_snippet_imports: false
+    output_tail_chars: 4000
+    success_marker: __DONE__
+    error_marker: __RUN_ERR__
+    work_dir: .aideal_exec/A1
+    timeout_seconds: 300
+    max_fix_rounds: 0
+    auto_report: true
+    test_filename: api_test.py
+    command: env PYTHONPATH=../../tslearn PYTHONHASHSEED=0 MPLBACKEND=Agg NUMBA_THREADING_LAYER=workqueue
+      NUMBA_NUM_THREADS=1 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1
+      /Users/clockorangezoe/miniconda3/envs/geo_llm_spark/bin/python {test_file}
+    exec_hints: Use small deterministic parameters. For file-writing APIs, write only
+      below output_dir. Optional-dependency failures must remain explicit infrastructure
+      outcomes. End with a meaningful assertion and print a compact __CHECK__ witness.
+    scaffold: docs/api_test_scaffold_full235.py
+    preamble: 'Path(output_dir).mkdir(parents=True, exist_ok=True)
+
+      _trace = np.load(trace_npz)
+
+      _balanced = np.array([0, 4, 1, 17, 3, 13, 2, 5], dtype=int)
+
+      X = _trace["X_train"][_balanced, :40, :]  # type: balanced time-series dataset
+      ndarray (8, 40, 1)
+
+      X2 = _trace["X_test"][:4, :32, :]  # type: second dataset ndarray (4, 32, 1)
+
+      s1 = X[0].ravel()  # type: 1-D series ndarray (40,)
+
+      s2 = X[1].ravel()  # type: 1-D series ndarray (40,)
+
+      y = _trace["y_train"][_balanced]  # type: four balanced labels, two examples
+      per class
+
+      tiny_matrix = np.arange(12.0).reshape(3, 4)  # type: deterministic numeric matrix
+
+      '
+    sample_data:
+      trace_npz: tslearn/tslearn/.cached_datasets/Trace.npz
+    require_correctness: true
+    io_hints: ''
+    local_uris: false
+    output_dir: .aideal_exec/A1/output
+  class_context: false
+  relevant_doc_chars: 12000
+project:
+  language: Python
+  name: tslearn
+extends:
+- python
+- aideal.yaml
+- aideal_full235_base.yaml
+provenance:
+  protocol: tslearn-full235-2x2-v1
+  source_commit: f8f13ddf4186e2cc99c8ef495aeb46b1254a01f7
+  surface: corrected complete raw public surface
+  identity: bare unique name
+  public_definition_sites: 343
+  public_names: 235
+  manifest_file_sha256: 42dd31265d4fd753eab37f00ea636b5e06bdd2b2203e48be45dc0be6569b967f
+  ordered_names_sha256: f32b60b9ce1415415e60f7ff285bde2efb0f62a6e0aaf33622590486fd8bf907
+  historical_raw_count: 245
+  removed_nested_local_false_positives:
+  - cb_
+  - f
+  - format_to_tslearn
+  - metric_fun
+  - of
+  - sklearn_metric
+  - transpose_or_expand
+  - transpose_or_flatten
+  - wrapper
+  - y
+  manifest: docs/eval/api_manifest.json
+  fixture: tslearn/tslearn/.cached_datasets/Trace.npz
+  fixture_sha256: 0de0b7fa727cfabaf8481552db2b95fcccd12e54b67058aea79ff05b483cf807
+  scaffold: docs/api_test_scaffold_full235.py
+  scaffold_sha256: 45d3de8bc5de86ea8814fa9350e2695f06945a6bcae6b23528feef97dd2f1c99
+  scaffold_policy: infrastructure-only; target API imports are audience-generated
+  interpreter: /Users/clockorangezoe/miniconda3/envs/geo_llm_spark/bin/python
+  source_tree: f8e64d3e0869bc042bdd727cf877829b584aec27
+  original_document_bundle_sha256: b976fddc2e1e140db76b55d7e8a11137e26521a829e59ce7ab5cc6d13b448f15
+  historical_results_policy: never overwrite July artifacts
+  condition: A1
+  document_treatment: pinned original repository documentation
