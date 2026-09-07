@@ -76,7 +76,7 @@ FIXTURE_HASHES = {
     "../../../GRAIL/grail-agent/examples/fixtures/nldas_boston_30m.tif":
         "d1583296084ff5511743f4b3c0cf6307313e436410771503e42e097c94e8f407",
     "../../../GRAIL/grail-agent/examples/fixtures/Boston_Neighborhood_Boundaries_sample_grail.shp":
-        "2595d72266b1b3decdb8989e679d093996240cf4b891b3c09f37d9372a6a6cd6b",
+        "2595d72266b1b3decdb8989e679d093996240cf4b891b3c09f37d9372a6a6cd6",
     "../../../GRAIL/grail-agent/examples/fixtures/Boston_Neighborhood_Boundaries_sample_grail.dbf":
         "9ce6ca2e7cd0f94cf68b3cdf676071a22d402bea980cb5997354afd08bd41b47",
     "../../../GRAIL/grail-agent/examples/fixtures/Boston_Neighborhood_Boundaries_sample_grail.shx":
