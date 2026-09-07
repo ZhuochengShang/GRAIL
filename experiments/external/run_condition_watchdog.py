@@ -81,6 +81,14 @@ def completion(job: dict, candidate: Path, plan_dir: Path) -> tuple[bool, str]:
         ok = expected > 0 and len(metrics) == expected and not transient and fingerprinted
         return ok, (f"metrics={len(metrics)}/{expected}, transient={len(transient)}, "
                     f"fingerprinted={fingerprinted}")
+    if kind == "readme_generation":
+        expected = int(data.get("api_entries", 0) or 0)
+        generated = int(data.get("generated_ok", 0) or 0)
+        fallback = int(data.get("fallback_to_skeleton", 0) or 0)
+        fingerprinted = bool(data.get("generation_fingerprint"))
+        ok = expected > 0 and generated == expected and fallback == 0 and fingerprinted
+        return ok, (f"generated={generated}/{expected}, fallback={fallback}, "
+                    f"fingerprinted={fingerprinted}")
     if kind == "docfix":
         apis = data.get("apis") or {}
         unfinished = [name for name, row in apis.items()

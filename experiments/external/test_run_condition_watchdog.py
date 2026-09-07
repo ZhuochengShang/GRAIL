@@ -24,6 +24,21 @@ def test_completion_rejects_transient_and_unfingerprinted_results(tmp_path):
     assert not completion(job, result, tmp_path)[0]
 
 
+def test_generation_completion_requires_every_entry_without_fallback(tmp_path):
+    job = {"cwd": str(tmp_path), "complete": {"kind": "readme_generation"}}
+    result = tmp_path / "generation.json.tmp"
+    result.write_text(json.dumps({
+        "api_entries": 148, "generated_ok": 147, "fallback_to_skeleton": 1,
+        "generation_fingerprint": "fingerprint",
+    }))
+    assert not completion(job, result, tmp_path)[0]
+    result.write_text(json.dumps({
+        "api_entries": 148, "generated_ok": 148, "fallback_to_skeleton": 0,
+        "generation_fingerprint": "fingerprint",
+    }))
+    assert completion(job, result, tmp_path)[0]
+
+
 def test_supervisor_runs_dependencies_and_persists_success(tmp_path):
     inventory = tmp_path / "environment.txt"
     inventory.write_text("python=test\n")
