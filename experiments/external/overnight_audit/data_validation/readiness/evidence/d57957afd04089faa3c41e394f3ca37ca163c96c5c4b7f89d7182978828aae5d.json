@@ -1,0 +1,14 @@
+{
+  "fingerprint": "ea2bfacf7be649de61c9ef34386a0c1981e61766f231e06367304ff9caa25571",
+  "manifest_sha256": "67bc70f983ed92137ff2a9c49240abbe57ad0e8e5fdc72a93f4ae56e53623a9e",
+  "api": "load_ragged_time_series",
+  "status": "fail",
+  "native_category": "runtime",
+  "error": "ValueError: Couldn't convert value timestamp using float found at /var/folders/83/6ly5xs5j5ns3gmwbqgjqd7rw0000gn/T/tmppufke0_n.csv:1:",
+  "source": "source/mir_eval/io.py:594",
+  "review_evidence": {
+    "primary_category": "doc-wrong",
+    "reason": "The generated entry says header=True skips the first row. In io.py:594 the implementation uses enumerate(input_file, start_row), which changes line numbering but never skips the header. The snippet correctly used header=True; this is a pinned upstream implementation/doc mismatch, not merely a missing argument."
+  },
+  "script_sha256": "aed34edf324953c67de9a116780d73d2692660a9a622b8be82a27eeeb027a830"
+}

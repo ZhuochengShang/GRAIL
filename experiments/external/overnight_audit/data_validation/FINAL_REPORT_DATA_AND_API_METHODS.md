@@ -7,6 +7,7 @@ is complete. The deadline covers mir_eval, Thumbnailator, and tslearn.
 In the delivered report package, this appendix resides under `data_validation/`:
 
 - [Measured results and release decisions](../FINAL_REPORT_WITH_DATA_CHECKS.md)
+- [Central readiness assessment and improvement queue](readiness/ASSESSMENT.md)
 - [Detailed results, failures, attempts, and repair rounds](../DETAILED_PRIORITY_REPORT.md)
 - [Live input validation](DATA_VALIDATION.md)
 - [Automation health, forecasts, configuration bundles, and review queue](automation/AUTOMATION_STATUS.md)

@@ -4,6 +4,43 @@ Updated September 7, 2026. This note describes the existing priority study and
 labels the new, staged components separately. It is an architecture record,
 not evidence that every planned stage has completed.
 
+## Central output: readiness assessment and reviewed improvements
+
+AIDEAL evaluates observed agent usability, explains barriers with evidence,
+and supports reviewed improvements. The central entry point is the generated
+`AIDEAL_REPORT.md`, linking `data_validation/readiness/ASSESSMENT.md` and a
+machine-readable improvement queue. Native 2×2 results remain its experimental
+foundation. No composite score is assigned to unmeasured capabilities.
+
+```mermaid
+flowchart TD
+  EV[Versioned execution and input evidence] --> AS[Readiness assessment by capability]
+  AS --> QU[Evidence-backed suggestions and validation criteria]
+  QU --> PR[Human or agent proposes a concrete plan]
+  PR --> HR[Human reviews and selects executor]
+  HR --> HU[Human implements in isolation]
+  HR --> AG[Agent implements in isolation]
+  HU --> VA[Submit change, validation and comparison evidence]
+  AG --> VA
+  VA --> AC[Human accepts, rejects or requests changes]
+  AC --> RE[Separate matched re-evaluation]
+  RE --> EV
+```
+
+The new report distinguishes discovery, setup/inputs, API execution, workflow
+completion, and verification/recovery. Only the current protocol's observed
+capabilities are scored. Suggestions have stable IDs and evidence versions;
+changed evidence makes old review decisions stale. Human/agent assignment is
+recorded but does not launch processes. Acceptance records a reviewer decision,
+not an automatically verified improvement or altered baseline score.
+
+`experiments/external/readiness` separates pure assessment, review-state logic,
+rendering, and CLI/locking. The current publisher writes a new namespace and
+never restarts existing workers or observers. The decision log survives report
+refreshes; submitted artifacts are copied by content hash. See the
+[review workflow](readiness/WORKFLOW.md) for exact commands
+and the distinction between audit actor labels and authenticated authorization.
+
 ## End-to-end experiment
 
 ```mermaid
