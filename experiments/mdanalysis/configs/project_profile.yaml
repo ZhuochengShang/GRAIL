@@ -5,7 +5,7 @@ project:
   name: MDAnalysis
   language: Python
   description: >-
-    An object-oriented scientific Python library for reading molecular
+    MDAnalysis 2.9.0, an object-oriented scientific Python library for reading molecular
     structures and trajectories, selecting atoms, transforming coordinates,
     and running molecular-dynamics analyses.
 domain: >-
@@ -24,5 +24,8 @@ constraints:
   - A Universe owns topology and trajectory state.
   - AtomGroup methods operate on selected atoms at the current trajectory frame.
   - Analysis classes generally require construction followed by run().
-  - Use only the version-matched local MDAnalysisTests PSF/DCD fixture.
+  - Use only fixtures from the pinned, checked-in MDAnalysisTests 2.9.0 testsuite data directory; never substitute downloaded data.
+  - The PSF/DCD pair is preloaded for general trajectory analysis; format-specific APIs may use the matching PDB, GRO, XTC, or another checked-in file exposed through mdanalysis_fixture_dir.
+  - Some readers and converters require optional dependencies; a missing optional package is an infrastructure outcome, not evidence that the documentation is wrong.
+  - The adk_dims.dcd trajectory has no periodic box dimensions; use a checked-in periodic fixture when an API requires periodic boundaries.
   - Do not download data, invoke a GUI, or write large trajectories.

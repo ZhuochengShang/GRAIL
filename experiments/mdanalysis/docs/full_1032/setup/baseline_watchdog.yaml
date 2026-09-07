@@ -1,0 +1,69 @@
+version: 1
+max_parallel: 2
+retry_delay_seconds: 300
+env:
+  AIDEAL_GOOGLE_MIN_INTERVAL_S: "3"
+  AIDEAL_GOOGLE_RATE_STATE: /tmp/aideal_google_rate_gate.txt
+  AIDEAL_GOOGLE_REQUEST_TIMEOUT_S: "300"
+  AIDEAL_GOOGLE_MAX_RETRIES: "2"
+jobs:
+  - id: mdanalysis_A1_zero
+    cwd: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mdanalysis_full1032_A1
+    branch: aideal/mdanalysis-full1032-A1
+    environment_inventory: experiments/mdanalysis/docs/full_1032/setup/environment_A1.txt
+    env:
+      PYTHONPATH: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mdanalysis_full1032_A1/grail-agent/src
+    command:
+      - /Users/clockorangezoe/miniconda3/envs/geo_llm_spark/bin/python
+      - -m
+      - aideal.cli
+      - --config
+      - experiments/mdanalysis/configs/aideal.full1032.A1.yaml
+      - comprehension
+      - --execute
+      - --show-code
+      - --doc
+      - original
+      - --doc-scope
+      - relevant
+      - --manifest
+      - docs/full_1032/api_manifest.json
+      - --max-fix-rounds
+      - "0"
+      - --resume
+      - --timeout
+      - "600"
+    result: experiments/mdanalysis/docs/full_1032/A1/comprehension.json
+    complete: {kind: json_metrics_no_transient}
+    max_runtime_seconds: 259200
+    max_restarts: 0
+  - id: mdanalysis_A2_zero
+    cwd: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mdanalysis_full1032_A2
+    branch: aideal/mdanalysis-full1032-A2
+    environment_inventory: experiments/mdanalysis/docs/full_1032/setup/environment_A2.txt
+    env:
+      PYTHONPATH: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mdanalysis_full1032_A2/grail-agent/src
+    command:
+      - /Users/clockorangezoe/miniconda3/envs/geo_llm_spark/bin/python
+      - -m
+      - aideal.cli
+      - --config
+      - experiments/mdanalysis/configs/aideal.full1032.A2.yaml
+      - comprehension
+      - --execute
+      - --show-code
+      - --doc
+      - aideal
+      - --doc-scope
+      - relevant
+      - --manifest
+      - docs/full_1032/api_manifest.json
+      - --max-fix-rounds
+      - "0"
+      - --resume
+      - --timeout
+      - "600"
+    result: experiments/mdanalysis/docs/full_1032/A2/comprehension.json
+    complete: {kind: json_metrics_no_transient}
+    max_runtime_seconds: 259200
+    max_restarts: 0
