@@ -12,7 +12,7 @@ a measured result. Pending cells remain pending at the Wednesday deadline.
 The design is:
 
 ```text
-                         zero fix rounds       after deep repair
+                         before doc repair     after source-informed doc repair
 original documentation       A1                      B1
 generated documentation      A2                      B2
 ```
@@ -20,6 +20,11 @@ generated documentation      A2                      B2
 `B1` and `B2` must be fresh comprehension reruns against the repaired shared
 document. They must not be assembled by adding individual repair successes to
 the A-cell results.
+
+All four final evaluations use **zero snippet/code-fix rounds**. Document
+repair is the B treatment; its budget is a separate column. The staged
+`recovery/README.md` extension measures snippet recovery after these cells,
+under a separate protocol and result namespace.
 
 ## 1. Reproducibility and scope
 
@@ -43,15 +48,20 @@ scope, and evaluation protocol. If not, mark the comparison **invalid**.
 
 ## 2. Cell results
 
-| Cell | Document | Repair rounds allowed | APIs evaluated | Pass | Infra/provider excluded | Raw pass % | Scored pass % | Runtime | Attempts/restarts |
-|---|---|---:|---:|---:|---:|---:|---:|---:|---:|
-| A1 | original | 0 | `<...>` | `<...>` | `<...>` | `<...>` | `<...>` | `<...>` | `<...>` |
-| A2 | generated | 0 | `<...>` | `<...>` | `<...>` | `<...>` | `<...>` | `<...>` | `<...>` |
-| B1 | repaired original | `<max>` | `<...>` | `<...>` | `<...>` | `<...>` | `<...>` | `<...>` | `<...>` |
-| B2 | repaired generated | `<max>` | `<...>` | `<...>` | `<...>` | `<...>` | `<...>` | `<...>` | `<...>` |
+| Cell | Document | Doc rounds before final test | Code-fix rounds in final test | APIs evaluated | Pass | Infra excluded | Raw pass % | Scored pass % | Runtime | Attempts/restarts |
+|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| A1 | original | 0 | 0 | `<...>` | `<...>` | `<...>` | `<...>` | `<...>` | `<...>` | `<...>` |
+| A2 | generated | 0 | 0 | `<...>` | `<...>` | `<...>` | `<...>` | `<...>` | `<...>` | `<...>` |
+| B1 | original + repaired supplemental entries | ≤5/API | 0 | `<...>` | `<...>` | `<...>` | `<...>` | `<...>` | `<...>` | `<...>` |
+| B2 | repaired generated document | ≤5/API | 0 | `<...>` | `<...>` | `<...>` | `<...>` | `<...>` | `<...>` | `<...>` |
 
 Report both raw percentage (`pass / all APIs`) and scored percentage
-(`pass / (all APIs − provider/infra exclusions)`). Never silently drop an API.
+(`pass / (all APIs − native infra exclusions)`). Unresolved provider failures
+keep a cell partial and ineligible for the final comparison. Report their
+attempt counts separately. Never silently drop an API. Because infra exclusions
+can differ by cell, use the common manifest for raw effects and additionally
+report paired effects on the common evaluable API intersection; do not treat
+different scored denominators as the same paired population.
 
 ## 3. Effects
 
@@ -68,8 +78,10 @@ effect is raw or scored and include the denominator.
 
 ## 4. Failure taxonomy
 
-Every non-pass API must have exactly one primary failure category and may have
-secondary tags.
+Every non-pass API retains its native execution category. Assign one primary
+review category (or `unknown`) and optional secondary tags with evidence and
+confidence. A compiler/runtime symptom alone cannot establish a documentation
+cause.
 
 | Category | Definition | Count A1 | A2 | B1 | B2 | Treatment |
 |---|---|---:|---:|---:|---:|---|
@@ -79,7 +91,7 @@ secondary tags.
 | `example-invalid` | Example cannot execute with repository fixtures | `<...>` | `<...>` | `<...>` | `<...>` | replace with fixture-backed example |
 | `api-identity` | Wrong overload/name/module selected | `<...>` | `<...>` | `<...>` | `<...>` | use manifest primary signature |
 | `test/scaffold` | Harness, import, fixture, or command failure | `<...>` | `<...>` | `<...>` | `<...>` | classify as infrastructure |
-| `llm-error` | Timeout, 504, quota, DNS, or provider failure | `<...>` | `<...>` | `<...>` | `<...>` | retry; exclude only from scored metric |
+| `llm-error` | Timeout, 504, quota, DNS, or provider failure | `<...>` | `<...>` | `<...>` | `<...>` | retry; final cell remains partial while unresolved |
 | `unknown` | Insufficient evidence | `<...>` | `<...>` | `<...>` | `<...>` | manual review |
 
 Provider failures are not documentation failures. Report them separately and
@@ -100,8 +112,9 @@ Record separately:
 - watchdog restarts;
 - APIs skipped because of infrastructure failure.
 
-Do not count a retry as a repair round. A repair round changes the shared
-document; a retry repeats the same evaluation request.
+Distinguish a transport retry from a changed snippet and from a candidate
+document rewrite. Count rejected/reverted document proposals as attempted doc
+rounds too. Provider events can occur inside either repair workflow.
 
 ## 6. Failure analysis narrative
 
@@ -126,7 +139,7 @@ the change improved B1, B2, both, or neither.
 
 - [ ] All four cells use the same manifest SHA-256 and API set.
 - [ ] Public/local-wrapper and duplicate-name policies are recorded.
-- [ ] A-cells use zero fix rounds.
+- [ ] All four headline cells use zero snippet-fix rounds.
 - [ ] B-cells are fresh reruns after shared-document repair.
 - [ ] PASS_TO_PASS checks exist before and after treatment.
 - [ ] Repository-contained fixtures are listed and available.
@@ -196,6 +209,14 @@ invariants. A numerical utility API may correctly require no dataset file.
 | Wall time | First actual computation start to final completion, with queue and retry waits separately reported |
 | Model usage | Recorded per-attempt calls/tokens; a resumed final JSON alone omits prior invocations |
 
+The current documentation loop has two stagnation paths: a member-validator
+rejection increments the counter without execution; an executed candidate
+increments it only if neither the normalized diagnosis nor error signature
+changes. Progress resets it. `doc_stuck=2` is a registered cost-control heuristic,
+not an empirically established optimum or proof that the API is unfixable.
+Record the rejection reason, diagnosis-change/error-progress flags and stop
+reason. A third round's outcome is unknown when the run stopped at two.
+
 ## 11. Cross-repository summary and deadline snapshot
 
 | Repository | APIs per cell | Four matched final cells? | A1 | A2 | B1 | B2 | Generation effect (pp) | Repair effect (pp) | Main failure mechanism | Data validity |
@@ -212,3 +233,28 @@ Record the snapshot timestamp, report commit, completed cells, remaining
 provider/validation blockers, and exact missing artifacts. The scheduled
 10:45 AM Wednesday snapshot provides a reviewable package before 11:00 AM;
 the live report continues to fill as additional validated results finish.
+
+## 12. Separate source-informed snippet recovery (staged)
+
+Use `recovery/protocol.yaml` and `recovery/README.md`. Run both modes on the same
+eligible failures from each completed baseline cell: feedback-only snippet
+repair and source-deep-dive-assisted snippet repair. Freeze documents, fixtures,
+scaffolds, source, model, timeout, maximum code rounds and stopping threshold.
+Never fold recovery successes into A1/A2/B1/B2. B-only recovery cannot establish
+how recovery interacts with all four document treatments.
+
+| Repository / baseline cell | Eligible failures | Mode | Max code rounds / stuck threshold | Native recoveries | Independently validated recoveries | Provider blocked | Exhausted / stopped | Calls / tokens / time |
+|---|---:|---|---|---:|---:|---:|---|---|
+| `<repo>/<cell>` | `<...>` | feedback | `<5 / 2 or preregistered alternative>` | `<...>` | `<...>` | `<...>` | `<...>` | `<...>` |
+| `<same repo/cell>` | `<same set>` | source | `<same limits>` | `<...>` | `<...>` | `<...>` | `<...>` | `<...>` |
+
+Recovery rate uses the fixed eligible-failure denominator. Show blocked and
+missing outcomes rather than dropping them. Source mode includes one additional
+diagnosis call, so a difference is the effect of the **source-assisted package**,
+not source access alone under an equal token/call budget. Record diagnosis cost
+separately. A source-only causal claim needs a matched analysis-call control.
+
+Report thresholds 2 and 3 as a sensitivity question, not an optimization claim.
+Replay only observed histories; mark unobserved continuations censored. Do not
+combine different thresholds into one matched comparison. The recovery rule
+(equal category/error prefix) differs from the documentation rule above.

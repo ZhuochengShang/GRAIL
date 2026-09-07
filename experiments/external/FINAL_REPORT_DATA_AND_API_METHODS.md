@@ -4,6 +4,13 @@ Evidence reviewed September 7, 2026, America/Los_Angeles. This is the data and
 methods appendix of the Wednesday report, not a declaration that the study
 is complete. The deadline covers mir_eval, Thumbnailator, and tslearn.
 
+The separate recovery addendum in the delivered package is
+`recovery/README.md`. It records the consistency audit, source-informed snippet
+repair design, and the limits of the two-stuck-round heuristic. This extension
+is staged, not a completed experiment; no recovery count belongs in the four
+headline cells. The comparison template records document rounds and code rounds
+in distinct columns and requires separate recovery costs and semantic review.
+
 In the delivered report package, this appendix resides under `data_validation/`:
 
 - [Measured results and release decisions](../FINAL_REPORT_WITH_DATA_CHECKS.md)

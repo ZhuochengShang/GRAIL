@@ -186,7 +186,14 @@ quota transport integration are staged for a separately versioned protocol.
 | Input contracts | Tested metadata validator, staged next-protocol example | Explicit shapes/dtypes/units/formats; no claim of complete contracts for all APIs. |
 | Shared quota admission | Tested local SQLite reservation core; disabled in `next_protocol.yaml` | Requires provider adapter, actual account limits, token bounds, retry visibility and any spend controls before deployment. No active client is wired to it. |
 | Prompt supplements | Versioned proposal only | Requires matched protocol treatment before use in scored runs. |
+| Source-informed snippet recovery | Implemented and staged; no live provider/API run | `experiments/external/recovery` compares feedback-only and source-assisted snippet repairs after completed baselines; documents, inputs and headline scores stay fixed. Threshold two is configurable and provisional, not an optimized finding. |
 | Operator skill | Reusable conversational workflow | Uses scripts and evidence; has no autonomous runtime of its own. |
+
+The [recovery extension](experiments/external/recovery/README.md) records its
+distinct code-fix loop and historical RDPro evidence. It does not redefine B2:
+the current B2 treatment remains documentation repair followed by a fresh
+zero-snippet-fix evaluation. Its diagram, protocol YAML, candidate queue and
+preflight/runner functions are linked in that note.
 
 ## Portability and code structure
 

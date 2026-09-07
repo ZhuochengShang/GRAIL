@@ -14,6 +14,12 @@ measured by the priority study; there is no overall readiness score.
 
 For a presentation-friendly figure, the verbatim conversation memo, and the paper literature review, open the [design and research package](docs/paper/README.md).
 
+September 7 extension: [source-informed snippet recovery](experiments/external/recovery/README.md)
+is implemented and staged outside the running study. Its diagram and function
+map distinguish feedback-only repair, source-assisted repair, configurable
+stagnation limits, and independent human review. It adds no headline B2 code-fix
+rounds and has not yet had a live provider/API validation run.
+
 ## 1. Legend and system boundary
 
 | Label | Meaning | Does it require an LLM? |
