@@ -1,0 +1,30 @@
+version: 1
+max_parallel: 1
+retry_delay_seconds: 300
+env:
+  PYTHONPATH: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_2x2_runner
+  AIDEAL_GOOGLE_MIN_INTERVAL_S: "4"
+  AIDEAL_GOOGLE_RATE_STATE: /tmp/aideal_rdpro_google_rate_gate.txt
+  AIDEAL_GOOGLE_REQUEST_TIMEOUT_S: "300"
+  AIDEAL_GOOGLE_MAX_RETRIES: "8"
+jobs:
+  - id: rdpro_after_four_complete
+    cwd: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_2x2_runner
+    branch: aideal/rdpro-2x2-runner
+    environment_inventory: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_final_A1/experiments/rdpro/docs/eval/setup/environment_A1.json
+    command:
+      - /Users/clockorangezoe/miniconda3/envs/geo_llm_spark/bin/python
+      - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/experiments/external/wait_then_run.py
+      - --state
+      - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/experiments/external/mdanalysis_pipeline_watchdog.state.json
+      - --job
+      - mdanalysis_complete_full1032
+      - --
+      - /Users/clockorangezoe/miniconda3/envs/geo_llm_spark/bin/python
+      - experiments/rdpro/run_rdpro_2x2_pipeline.py
+      - run
+      - --confirm-paid-llm
+    result: .aideal_exec/rdpro_after_four.stdout
+    complete: {kind: exit_zero}
+    max_runtime_seconds: 1209600
+    max_restarts: 0
