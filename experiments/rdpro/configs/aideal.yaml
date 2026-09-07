@@ -54,8 +54,11 @@ files:
   # control — so the experiment points at a neutral hand-written guide.
   agents_doc: AGENTS.baseline.md
   original_readme:                # baseline doc(s): a path, or a list of files/dirs/globs
-    - beast/README.md
-    - beast/doc
+    # The clean GRAIL worktree does not vendor the RDPro repository. Pin the
+    # local upstream checkout used by the backend arm; `--api-doc SNAPSHOT` can
+    # override this with a checked-in/frozen bundle on another machine.
+    - "beast/README.md"
+    - "beast/doc"
   llm_readme: docs/LLM_readme.md
   notes_to_self: docs/notes_to_self.md
   integration_tasks: configs/integration_tasks.yaml
@@ -69,10 +72,8 @@ models:
     codex-5.3:      { provider: codex,  model: gpt-5.3-codex }
     gemini-2.5-pro: { provider: google, model: gemini-2.5-pro }
     gemini-3.1-pro: { provider: google, model: gemini-3.1-pro-preview }
-  # DEFAULT CONDITION (2026-07-13, per Zoe): everything on the latest Pro
-  # model. NOTE 2026-07-14: 'gemini-3.2-pro-preview' does NOT exist on the
-  # API (404 NOT_FOUND) — the newest Pro-class id is gemini-3.1-pro-preview
-  # (already proven on this key in the 07-08 docfix runs).
+  # gemini-3.2-pro-preview is not available through generateContent (404).
+  # Pin every experimental role to the same available Pro model.
   # Override per run with --role role=provider:model (never needs a yaml edit).
   roles:
     author: gemini-3.1-pro
@@ -113,6 +114,19 @@ docfix:
 # supplies the build wiring, the geotools packages, and the curated import block
 # (auto-derivation over-wildcards and collides on Beast's ambiguous RasterRDD).
 comprehension:
+  # Frozen protocol for the remaining matched RDPro 2x2 cells.  The CLI
+  # supervisor must still pass both `--doc-scope relevant` and
+  # `--manifest docs/api_manifest_shared.json`; these values make that contract
+  # explicit in the condition YAML and keep accidental full/entry-scope runs
+  # out of the paper table.
+  full_doc: false
+  protocol:
+    id: rdpro-2x2-v2-shared88-relevant
+    manifest: docs/api_manifest_shared.json
+    manifest_api_count: 88
+    manifest_inventory_sha256: 1dc1f1c758ae9829c2654e853899603f12f1d7174afdfeffd9edd1f29dde14e1
+    doc_scope: relevant
+    final_snippet_fix_rounds: 0
   # INDEX-FIRST read path. When true, each tested API's body is prefixed with its
   # catalogue class header (how to obtain the receiver + one verified sibling's real
   # call pattern) instead of the bare per-API body — targets the ~53% receiver /
@@ -120,6 +134,10 @@ comprehension:
   # Left off so it stays A/B-able; override per run with `--class-context on|off`.
   class_context: false
   execute:
+    # Work/output state is relative to this condition worktree.  This is
+    # required for A1/A2/B1/B2 workers to run concurrently without sharing a
+    # checkpoint or deleting one another's Spark outputs.
+    work_dir: .aideal_exec/rdpro
     scaffold: docs/api_test_scaffold.scala     # `aideal scaffold --generate`
     # Per-API isolation: pre-load typed inputs so a comprehension test writes ONLY
     # the API call. `auto` = the author model generates the load code ONCE from the
@@ -141,22 +159,29 @@ comprehension:
       val rasterRDD: RasterRDD[Float] = sc.geoTiff[Float](raster_tif)
       val featuresRDD: RDD[IFeature] = sc.shapefile(vector_shapefile)
     # Sample inputs auto-discovered from this folder (.tif/.geojson/.csv -> typed):
-    fixtures_dir: ../../grail-agent/examples/fixtures
+    # The Boston pair is the historical frozen input used by the completed A1
+    # cell.  It currently lives in the canonical GRAIL checkout rather than the
+    # condition branches, so use a machine-independent sibling-worktree path.
+    # Inputs are read-only and their hashes are pinned in project_profile.yaml.
+    fixtures_dir: ../../../GRAIL/grail-agent/examples/fixtures
     # ...with explicit per-binding overrides (these win over the fixtures folder):
     sample_data:
       # Boston-region raster so it overlaps the Boston neighborhood polygons
       # (needed for raptorJoin / zonal stats to return non-empty results):
-      raster_tif: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/grail-agent/examples/fixtures/nldas_boston_30m.tif
+      raster_tif: ../../../GRAIL/grail-agent/examples/fixtures/nldas_boston_30m.tif
       # Boston neighborhood polygons (.shp) — the vector input the raptor/zonal
       # APIs join against. Pinned so the shapefile (not the auto-discovered
       # geojson) is the vector binding, and it overlaps the raster above:
-      vector_shapefile: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/grail-agent/examples/fixtures/Boston_Neighborhood_Boundaries_sample_grail.shp
+      vector_shapefile: ../../../GRAIL/grail-agent/examples/fixtures/Boston_Neighborhood_Boundaries_sample_grail.shp
       # RDPro-owned HDF4 fixture used by HDF4ReaderTest with layer
       # `LST_Day_1km` (pixel 0,0 has the test oracle 15240 / 50.0f).
       # Relative to experiments/rdpro, so it works in every experiment worktree.
+      # This infrastructure worktree does not carry the gitignored Beast clone;
+      # resolve the same pinned upstream test resource through the clean A1
+      # worktree until each new condition provisions its own Beast checkout.
       hdf_file: beast/raptor/src/test/resources/rasters/MYD11A1.A2002185.h09v06.006.2015146150958.hdf
     # write outputs to a real, existing project folder (not /tmp):
-    output_dir: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/exec_out
+    output_dir: .aideal_exec/rdpro/output
     # incremental fix loop: attempts = 1 + max_fix_rounds (each retry sees the
     # prior error + fix hint from error_log). Default 3.
     max_fix_rounds: 3
@@ -222,8 +247,34 @@ comprehension:
 
 puzzle:
   cwd: ../../grail-agent/src
-  command: "python -m rdpro_section_codegen.puzzle_eval --api-doc {llm_readme} --num-puzzles {n} --num-functions {k} --seed {seed} --tag exp_rdpro"
+  command: >-
+    {python} -m rdpro_section_codegen.puzzle_eval
+    --api-doc {api_doc}
+    --plan {plan}
+    --scaffold {scaffold}
+    --work-dir {work_dir}
+    --tag {tag}
+    --provider {provider}
+    --model {model}
+    --max-retries-per-section {max_retries_per_section}
+    {dry_run}
+    -- {runner_args}
+  test_bank: configs/puzzle_test_bank.yaml
+  sample_data: configs/puzzle_sample_data.yaml
+  scaffold: ../../grail-agent/outputs/generated_scala/job_scaffold.scala
+  work_dir: results/puzzle_runs
   num_puzzles: 5
   num_functions: 5
   seed: 42
-  max_fix_rounds: 2
+  # The section agent already performs bounded direct repair. Re-running the
+  # entire bank would change cost without adding an independent observation.
+  max_fix_rounds: 0
+  max_retries_per_section: 2
+  # Baseline backend. Override only this list for the RDPro_alias ablation.
+  runner_args:
+    - --spark-submit
+    - /Users/clockorangezoe/miniconda3/envs/geo_llm_spark/bin/spark-submit
+    - --env-bin
+    - /Users/clockorangezoe/miniconda3/envs/geo_llm_spark/bin
+    - --rdpro-lib-dir
+    - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/RDPro/target/beast-0.10.2-SNAPSHOT-bin/beast-0.10.2-SNAPSHOT/lib
