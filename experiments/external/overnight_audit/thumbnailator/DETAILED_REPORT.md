@@ -13,7 +13,7 @@ Exact result paths, branches, commits, environment hashes and PASS_TO_PASS evide
 | Cell | State | Pass | APIs | Infra/provider excluded | Raw % | Scored % |
 |---|---|---:|---:|---:|---:|---:|
 | A1 | pending/partial | — | 149 | — | — | — |
-| A2 | pending/partial | — | 149 | — | — | — |
+| A2 | complete | 127 | 149 | 0 | 85.23 | 85.23 |
 | B1 | pending/partial | — | 149 | — | — | — |
 | B2 | pending/partial | — | 149 | — | — | — |
 
@@ -27,9 +27,9 @@ Effects withheld until all four matched final cells and their repair/test eviden
 
 ### A1
 
-Primary failure categories: {"llm-error": 7, "unknown": 18}.
+Primary failure categories: {"llm-error": 8, "unknown": 21}.
 
-Recorded provider-error attempts across all checkpoint fingerprints: 7. Provider-internal retries are not recorded by the existing client and cannot be inferred from the configured limit. Watchdog logs retain process attempts; checkpoint attempts and document-fix rounds are separate ledger fields.
+Recorded provider-error attempts across all checkpoint fingerprints: 8. Provider-internal retries are not recorded by the existing client and cannot be inferred from the configured limit. Watchdog logs retain process attempts; checkpoint attempts and document-fix rounds are separate ledger fields.
 
 - `ConsecutivelyNumberedFilenames`: unknown; native=runtime; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `source/src/main/java/net/coobird/thumbnailator/name/ConsecutivelyNumberedFilenames.java:295`. Error: `IOException: Specified path is not a directory or does not exist.`. Review: Observed runtime; doc attribution requires source, document, and snippet review.
 - `FileImageSink`: unknown; native=runtime; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `source/src/main/java/net/coobird/thumbnailator/tasks/io/FileImageSink.java:127`. Error: `FileNotFoundException: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A1/experiments/external/thumbnailator/.aideal_exec/A1/output/thumbnail.png/test_sink_no_ext.png (No such file or directory)`. Review: Observed runtime; doc attribution requires source, document, and snippet review.
@@ -56,6 +56,10 @@ Recorded provider-error attempts across all checkpoint fingerprints: 7. Provider
 - `iterator`: unknown; native=runtime; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `source/src/main/java/net/coobird/thumbnailator/name/ConsecutivelyNumberedFilenames.java:343`. Error: `IOException: Specified path is not a directory or does not exist.`. Review: Observed runtime; doc attribution requires source, document, and snippet review.
 - `keepAspectRatio`: unknown; native=runtime; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `source/src/main/java/net/coobird/thumbnailator/Thumbnails.java:1491`. Error: `IllegalStateException: Maker not ready to make thumbnail.`. Review: Observed runtime; doc attribution requires source, document, and snippet review.
 - `make`: unknown; native=runtime; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `source/src/main/java/net/coobird/thumbnailator/makers/ThumbnailMaker.java:179`. Error: `IllegalStateException: Maker not ready to make thumbnail.`. Review: Observed runtime; doc attribution requires source, document, and snippet review.
+- `region`: llm-error; native=llm-error; checkpoint attempts=1; provider-error attempts=1; document rounds=None; repair=None. Source: `source/src/main/java/net/coobird/thumbnailator/builders/ThumbnailParameterBuilder.java:200`. Error: `ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}`. Review: Provider outcome; retry, never count as a documentation failure.
+- `toFile`: unknown; native=runtime; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `source/src/main/java/net/coobird/thumbnailator/Thumbnails.java:2652`. Error: `FileNotFoundException: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A1/experiments/external/thumbnailator/.aideal_exec/A1/output/thumbnail.png/thumb.png (Not a directory)`. Review: Observed runtime; doc attribution requires source, document, and snippet review.
+- `useOriginalFormat`: unknown; native=runtime; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `source/src/main/java/net/coobird/thumbnailator/Thumbnails.java:1680`. Error: `IllegalStateException: outputFormat is already set.`. Review: Observed runtime; doc attribution requires source, document, and snippet review.
+- `write`: unknown; native=compile; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `source/src/main/java/net/coobird/thumbnailator/tasks/ThumbnailTask.java:102`. Error: `/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A1/experiments/external/thumbnailator/.aideal_exec/A1/run_write/ApiTest.java:54: error: cannot find symbol`. Review: Observed compile; doc attribution requires source, document, and snippet review.
 
 ### A2
 
@@ -102,6 +106,7 @@ Recorded provider-error attempts across all checkpoint fingerprints: 0. Provider
 
 ## Validity and remaining review
 
+- The nested watchdog inherited the outer freeze environment fingerprint. Per-cell inventories are retained separately; the final comparison checks their normalized runtime/dependency content. This provenance limitation must remain visible.
 - Recorded PASS_TO_PASS result/exit-status markers and per-cell fixture fingerprints are checked before effects are released.
 - Unknown primary categories require source/document review; do not relabel provider errors as documentation failures.
 - Report runtime from the first start through completion, including watchdog waits, rather than the last resumed invocation alone.

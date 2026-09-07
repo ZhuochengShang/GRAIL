@@ -5,7 +5,7 @@ Deadline: 2026-09-09T11:00:00-07:00. Values below come from recorded final resul
 | Repository | A1 pass/total | A2 pass/total | B1 pass/total | B2 pass/total | Release decision |
 |---|---|---|---|---|---|
 | mir_eval | pending | 135/148 | pending | pending | WITHHELD/PARTIAL |
-| thumbnailator | pending | pending | pending | pending | WITHHELD/PARTIAL |
+| thumbnailator | pending | 127/149 | pending | pending | WITHHELD/PARTIAL |
 | tslearn | pending | pending | pending | pending | WITHHELD/PARTIAL |
 
 Release requires all four complete matched results, the result observer's validity checks, and matching input provenance for all four cells. COMPLETE_WITH_LIMITATIONS is not a claim that every generated assertion or API/data pairing has been independently verified.
