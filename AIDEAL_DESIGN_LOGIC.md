@@ -4,6 +4,10 @@ Updated September 7, 2026. This note describes the existing priority study and
 labels the new, staged components separately. It is an architecture record,
 not evidence that every planned stage has completed.
 
+For component-by-component function links, detailed execution diagrams, prompt
+boundaries and the human review state machine, see the
+[AIDEAL code and logic guide](AIDEAL_CODE_GUIDE.md).
+
 ## Central output: readiness assessment and reviewed improvements
 
 AIDEAL evaluates observed agent usability, explains barriers with evidence,
