@@ -1,0 +1,31 @@
+# Proposed configuration only. No current worker reads this file.
+schema_version: 1
+enabled: false
+protocol: aideal-next-input-contracts-v1
+quota:
+  enabled: false
+  # Populate from the actual provider project before integration; never infer
+  # limits from a model name or number of API keys.
+  rpm: null
+  input_tpm: null
+  rpd: null
+  max_inflight: null
+  database: null
+  scope: null
+  adapter_requirements:
+    - Reserve separately for every actual transport attempt, including retries.
+    - Supply an input-token upper bound and reconcile actual usage.
+    - Disable hidden SDK retries or route them through the same admission gate.
+    - Respect shared provider cooldowns and bounded retries.
+    - Check any applicable spend limits before activation.
+    - Reconcile abandoned active leases against real process ownership.
+contracts:
+  schema_version: 1
+  api: mir_eval.io.load_events
+  inputs:
+    beat_reference_file:
+      exists: true
+      format: text
+      columns: 1
+      units: seconds
+  # This example is not a declaration of coverage for all manifest APIs.
