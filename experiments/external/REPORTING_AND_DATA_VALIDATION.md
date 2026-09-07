@@ -34,6 +34,14 @@ The report directory is:
 
 Start with `FINAL_REPORT_WITH_DATA_CHECKS.md`, `DETAILED_PRIORITY_REPORT.md`, the per-repository
 `DETAILED_REPORT.md` files and `data_validation/DATA_VALIDATION.md`.
+The populated data/methods appendix is
+`data_validation/FINAL_REPORT_DATA_AND_API_METHODS.md`, maintained from
+`experiments/external/FINAL_REPORT_DATA_AND_API_METHODS.md`. It records exact
+fixtures, decoded formats, actual sample sizes, constructed inputs, example
+API calls and assertions, configuration inheritance, package evidence, and
+known mismatches. The current observers leave this appendix intact and include
+it through the existing recursive data-directory deadline copy; no observer
+or experiment restart is required.
 The result observer freezes a deadline package at or after 10:45 AM Wednesday,
 September 9, before the 11:00 AM deadline. The data observer independently
 copies its evidence into `deadline_snapshot/data_validation`. Both continue

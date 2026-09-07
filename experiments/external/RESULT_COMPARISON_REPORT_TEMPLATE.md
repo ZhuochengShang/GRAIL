@@ -143,6 +143,13 @@ the change improved B1, B2, both, or neither.
 
 ## 9. Data identity and API-test suitability
 
+Include the populated `FINAL_REPORT_DATA_AND_API_METHODS.md` appendix in the
+delivered package, not just this blank table. For each repository, report exact
+fixture paths and formats, full fixture size versus the sample actually used,
+construction/slicing parameters, and examples connecting inputs to API calls
+and assertions. Include resolved YAML layers, runtime/package evidence, and
+known input or oracle mismatches. Keep deferred repositories explicitly deferred.
+
 Identity checks prove which bytes were supplied. API suitability requires an
 additional check of shapes, types, units, API ownership, and assertion meaning.
 An upstream test-suite pass does not validate every generated test's oracle.
