@@ -2,7 +2,7 @@
 
 ID: `adc087f3d3411a0addaa` · thumbnailator/A2 · **open**
 
-Evidence version: `923b945253c56fda838d2796c22075a5b83a69c7fbeb5c75d93ae4b45dc4a258`
+Evidence version: `4f030bee2da9ad233fb926a8079c584fb239e2615624b27b6481eb0b937ef246`
 
 Candidate category: **unknown**. Confidence: **low**.
 
@@ -16,7 +16,7 @@ Source: `source/src/main/java/net/coobird/thumbnailator/ThumbnailParameter.java:
 /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/.aideal_exec/A2/run_getSourceRegion/ApiTest.java:52: error: constructor Region in class Region cannot be applied to given types;
 ```
 
-[Evidence ledger](../../../thumbnailator/A2/ledger.json) · [Saved evidence](../evidence/923b945253c56fda838d2796c22075a5b83a69c7fbeb5c75d93ae4b45dc4a258.json)
+[Evidence ledger](../../../thumbnailator/A2/ledger.json) · [Saved evidence](../evidence/4f030bee2da9ad233fb926a8079c584fb239e2615624b27b6481eb0b937ef246.json)
 
 Recorded attempts: 1; provider errors: 0; document rounds: None.
 
