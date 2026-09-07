@@ -17,6 +17,7 @@ import io
 import json
 import os
 from pathlib import Path
+import re
 import subprocess
 import time
 from zoneinfo import ZoneInfo
@@ -284,7 +285,7 @@ def watchdogs(main: Path, out: Path) -> dict:
         # from reports so a stable waiting queue does not generate commits.
         log = path.with_suffix(".log")
         if log.is_file():
-            atomic(out / "watchdog_logs" / (digest(str(path).encode())[:12] + ".log"), log.read_text())
+            atomic(out / "watchdog_logs" / (digest(str(path).encode())[:12] + ".txt"), log.read_text())
     return result
 
 
@@ -305,9 +306,22 @@ def comparison_report(base: Path, repo: str, cells: dict, out: Path) -> None:
         if inventory.is_file():
             raw = inventory.read_text()
             evidence[cell]["inventory_sha256"] = digest(raw.encode())
+            comparable = raw
+            if repo == "thumbnailator":
+                # ZIP timestamps make independently built JAR byte hashes differ.
+                # Verify the inventory's raw hash before comparing entry payloads.
+                import zipfile
+                jar = wt / relative / "source/target/thumbnailator-0.4.21.jar"
+                if jar.is_file() and f"jar_sha256={digest(jar.read_bytes())}" in raw:
+                    with zipfile.ZipFile(jar) as archive:
+                        content_hash = hashlib.sha256()
+                        for entry in sorted(archive.namelist()):
+                            content_hash.update(entry.encode() + b"\0" + archive.read(entry))
+                    evidence[cell]["jar_payload_sha256"] = content_hash.hexdigest()
+                    comparable = re.sub(r"(?m)^jar_sha256=.*$", "jar_payload_sha256=" + content_hash.hexdigest(), raw)
             # Cell identity, experiment commit, and condition config are recorded
             # separately. Everything describing packages/runtime remains strict.
-            normalized = "\n".join(line for line in raw.replace(str(wt), "<WORKTREE>").splitlines()
+            normalized = "\n".join(line for line in comparable.replace(str(wt), "<WORKTREE>").splitlines()
                                    if not line.startswith(("cell=", "grail_commit=", "config_sha256=")))
             evidence[cell]["comparable_environment_sha256"] = digest(normalized.encode())
             if result:
@@ -320,21 +334,39 @@ def comparison_report(base: Path, repo: str, cells: dict, out: Path) -> None:
                 if p2p.suffix in (".md", ".json"):
                     tests.append(str(p2p))
         evidence[cell]["pass_to_pass"] = tests
+        evidence[cell]["verified_test_phases"] = {}
+        for phase in ("BEFORE", "AFTER"):
+            evidence[cell]["verified_test_phases"][phase] = any(
+                phase in Path(test).name and Path(test).suffix == ".md" and re.search(
+                    r"(?m)^- (?:Exit code: 0|Result: PASS)\s*$", Path(test).read_text()) is not None
+                for test in tests)
     all_complete = all(cells.get(c, {}).get("status") == "complete" for c in CELLS)
     if all_complete:
         first = results["A1"]["run"]
         for cell, result in results.items():
             run = result["run"]
-            for key in ("manifest_sha256", "doc_scope", "models", "max_fix_rounds"):
+            expected_doc = {"A1": "original", "A2": "aideal", "B1": "original+aideal", "B2": "aideal"}
+            if result.get("doc_source") != expected_doc[cell]:
+                problems.append(f"{cell}: wrong document treatment")
+            for key in ("manifest_sha256", "doc_scope", "models", "max_fix_rounds", "class_context", "timeout_s"):
                 if run.get(key) != first.get(key):
                     problems.append(f"{cell}: {key} differs from A1")
             for key in ("source", "fixtures", "scaffold", "engine"):
                 if run.get("fingerprint_components", {}).get(key) != first.get("fingerprint_components", {}).get(key):
                     problems.append(f"{cell}: {key} differs from A1")
+            def execution_spec(value):
+                cfg = dict(value.get("fingerprint_components", {}).get("execute_config") or {})
+                for path_key in ("work_dir", "output_dir"):
+                    cfg.pop(path_key, None)
+                return cfg
+            if execution_spec(run) != execution_spec(first):
+                problems.append(f"{cell}: execution protocol differs beyond isolated output paths")
             if set(result["metrics"]) != set(results["A1"]["metrics"]):
                 problems.append(f"{cell}: API identities differ")
             if not evidence[cell].get("comparable_environment_sha256"):
                 problems.append(f"{cell}: missing per-cell environment inventory")
+            if not evidence[cell]["verified_test_phases"]["BEFORE"]:
+                problems.append(f"{cell}: passing upstream-before evidence missing")
         envs = {e.get("comparable_environment_sha256") for e in evidence.values()}
         if len(envs) != 1:
             problems.append("per-cell dependency/runtime inventories differ after path normalization")
@@ -343,9 +375,9 @@ def comparison_report(base: Path, repo: str, cells: dict, out: Path) -> None:
             repair = read_json(out / repo / cell / "ledger.json").get("repair_summary", {})
             if repair.get("attempted") is None or repair.get("processed") != repair.get("attempted"):
                 problems.append(f"{cell}: repair completion evidence missing")
-            if not any("AFTER" in p for p in evidence[cell]["pass_to_pass"]):
-                problems.append(f"{cell}: PASS_TO_PASS after evidence missing")
-    status = "PARTIAL" if not all_complete else "INVALID" if problems else "COMPLETE; final validity review required"
+            if not evidence[cell]["verified_test_phases"]["AFTER"]:
+                problems.append(f"{cell}: passing upstream-after evidence missing")
+    status = "PARTIAL" if not all_complete else "INVALID" if problems else "VALID WITH RECORDED LIMITATIONS"
     lines = [f"# {repo} detailed A1/A2/B1/B2 report", "", f"**Comparison status: {status}.**", "",
              f"Frozen denominator: {count} public API names. Final evaluations allow zero code-fix rounds. "
              "B cells are fresh evaluations following at most five document-repair rounds, with two stuck rounds and no separate retry rounds.", "",
@@ -400,7 +432,7 @@ def comparison_report(base: Path, repo: str, cells: dict, out: Path) -> None:
     if any(e.get("fingerprint_matches_cell_inventory") is False for e in evidence.values()):
         lines += ["- The nested watchdog inherited the outer freeze environment fingerprint. Per-cell inventories are retained separately; "
                   "the final comparison checks their normalized runtime/dependency content. This provenance limitation must remain visible."]
-    lines += ["- Confirm PASS_TO_PASS exit statuses and fixture provenance before signing off the final comparison.",
+    lines += ["- Recorded PASS_TO_PASS result/exit-status markers and per-cell fixture fingerprints are checked before effects are released.",
               "- Unknown primary categories require source/document review; do not relabel provider errors as documentation failures.",
               "- Report runtime from the first start through completion, including watchdog waits, rather than the last resumed invocation alone.", ""]
     dump(out / repo / "provenance.json", evidence)
