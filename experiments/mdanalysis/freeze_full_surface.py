@@ -49,6 +49,25 @@ def build(config: Path) -> dict:
             f"surface drift: names={len(names)}/{EXPECTED_NAMES}, "
             f"sites={len(sites)}/{EXPECTED_SITES}"
         )
+    by_name: dict[str, list[dict]] = {}
+    for row in sites:
+        by_name.setdefault(row["name"], []).append(row)
+    # One manifest identity per bare public name.  When several public
+    # definition sites share that name (for example overloaded methods or
+    # same-named classes), the generated entry's factual primary signature is
+    # the one with the most parameters; ties are deterministic.
+    primary = {
+        name: max(
+            rows,
+            key=lambda row: (
+                len(row.get("params") or []),
+                len(row.get("signature") or ""),
+                str(row.get("file", "")),
+                -int(row.get("line", 0)),
+            ),
+        )
+        for name, rows in by_name.items()
+    }
     compact_names = json.dumps(
         names, ensure_ascii=False, separators=(",", ":")
     ).encode("utf-8")
@@ -59,6 +78,15 @@ def build(config: Path) -> dict:
         "schema": 1,
         "frozen_at": datetime.now(timezone.utc).isoformat(),
         "set": "complete_visibility_correct_public_name_surface",
+        "visibility_policy": (
+            "Python AST identities; public names exclude underscore-prefixed "
+            "and function-local definitions"
+        ),
+        "deduplication_policy": (
+            "one bare public name per manifest; duplicate definition sites are "
+            "retained in provenance and the primary signature uses the most "
+            "parameters, with deterministic tie-breaks"
+        ),
         "project": "MDAnalysis",
         "project_version": "2.9.0",
         "source_commit": source_head,
@@ -72,6 +100,16 @@ def build(config: Path) -> dict:
             "\n".join(names).encode("utf-8")
         ),
         "public_definition_sites_sha256": sha256_bytes(compact_sites),
+        "primary_definition_by_name": {
+            name: {
+                "qualified_name": row.get("qualified_name", ""),
+                "file": row.get("file", ""),
+                "line": row.get("line", 0),
+                "parameter_count": len(row.get("params") or []),
+                "signature": row.get("signature", ""),
+            }
+            for name, row in sorted(primary.items())
+        },
         "config_sha256": sha256_bytes(config.read_bytes()),
         "apis": names,
     }

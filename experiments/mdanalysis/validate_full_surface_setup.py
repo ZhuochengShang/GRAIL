@@ -60,6 +60,9 @@ def main() -> int:
     newline_sha = hashlib.sha256("\n".join(names).encode("utf-8")).hexdigest()
     require(newline_sha == manifest.get("comprehension_manifest_sha256"),
             "manifest comprehension hash mismatch")
+    primary = manifest.get("primary_definition_by_name") or {}
+    require(set(primary) == set(names),
+            "primary-definition map does not cover exactly the manifest names")
 
     # The un-suffixed file is a shared YAML layer, not a fifth experimental
     # condition.  Include only the four cell overlays in collision checks so
@@ -72,6 +75,18 @@ def main() -> int:
         sites = [row for row in public_api_details(cfg) if row.get("visibility") == "public"]
         require(raw_names == names, f"{path.name}: surface differs from manifest")
         require(len(sites) == EXPECTED_SITES, f"{path.name}: definition-site drift")
+        grouped = {}
+        for row in sites:
+            grouped.setdefault(row["name"], []).append(row)
+        for name, rows in grouped.items():
+            chosen = max(rows, key=lambda row: (
+                len(row.get("params") or []), len(row.get("signature") or ""),
+                str(row.get("file", "")), -int(row.get("line", 0))))
+            saved = primary.get(name) or {}
+            require(saved.get("file") == chosen.get("file")
+                    and saved.get("line") == chosen.get("line")
+                    and saved.get("parameter_count") == len(chosen.get("params") or []),
+                    f"{path.name}: primary signature rule drift for {name}")
         require(cfg.surface_filter == "all", f"{path.name}: surface_filter is not all")
         require("class" in cfg.public_def_regex, f"{path.name}: Python class regex missing")
         execute = cfg.comprehension.get("execute") or {}
