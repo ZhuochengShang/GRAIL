@@ -199,12 +199,32 @@ def copy_result(src: Path, dst: Path) -> None:
     shutil.copy2(src, dst)
 
 
+def wait_for_priority_repositories(priority_dir: Path) -> None:
+    required = {"mir_eval": "mir_eval_complete_2x2",
+                "thumbnailator": "thumbnailator_complete_2x2",
+                "tslearn": "tslearn_complete_full235"}
+    while True:
+        pending = [repo for repo, job in required.items()
+                   if (read_json(priority_dir / f"{repo}_pipeline_watchdog.state.json")
+                       .get("jobs", {}).get(job, {}).get("status")) != "succeeded"]
+        if not pending:
+            return
+        print(f"MDAnalysis deferred behind priority repositories: {', '.join(pending)}", flush=True)
+        time.sleep(30)
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--freeze-worktree", required=True, type=Path)
     parser.add_argument("--source-seed", required=True, type=Path)
     parser.add_argument("--prepare-only", action="store_true")
     args = parser.parse_args()
+    if not args.prepare_only:
+        # Priority repositories are now admitted concurrently. The old outer
+        # waiter checks tslearn only; retain it and add the full admission gate
+        # here, before any MDAnalysis build, test, or paid generation starts.
+        priority_dir = Path(__file__).resolve().parents[2].parent / "GRAIL_rdpro_puzzle_aideal/experiments/external"
+        wait_for_priority_repositories(priority_dir)
     freeze = args.freeze_worktree.resolve()
     seed = args.source_seed.resolve()
     if git(freeze, "branch", "--show-current").stdout.strip() != FREEZE_BRANCH:
