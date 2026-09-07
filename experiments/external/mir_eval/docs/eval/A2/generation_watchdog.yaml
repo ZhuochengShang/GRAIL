@@ -1,0 +1,27 @@
+version: 1
+max_parallel: 1
+retry_delay_seconds: 300
+env:
+  PYTHONPATH: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_setup/grail-agent/src
+  AIDEAL_GOOGLE_MIN_INTERVAL_S: "3"
+  AIDEAL_GOOGLE_RATE_STATE: /tmp/aideal_google_rate_gate.txt
+  AIDEAL_GOOGLE_REQUEST_TIMEOUT_S: "300"
+  AIDEAL_GOOGLE_MAX_RETRIES: "2"
+jobs:
+  - id: mir_eval_full_readme_148
+    cwd: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_setup
+    branch: aideal/mir_eval-freeze
+    environment_inventory: experiments/external/mir_eval/docs/eval/setup/environment_inventory.txt
+    command:
+      - /Users/clockorangezoe/miniconda3/envs/geo_llm_spark/bin/python
+      - experiments/external/run_resumable_readme.py
+      - --config
+      - experiments/external/mir_eval/configs/aideal_A2.yaml
+      - --limit
+      - "0"
+      - --role
+      - author=gemini-3.1-pro
+    result: experiments/external/mir_eval/docs/eval/A2/generation_result.json
+    complete: {kind: readme_generation}
+    max_runtime_seconds: 10800
+    max_restarts: 0
