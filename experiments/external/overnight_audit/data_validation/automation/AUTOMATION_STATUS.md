@@ -1,6 +1,6 @@
 # Automation status and deadline forecast
 
-Updated: 2026-09-07T14:52:37.439108-07:00. Hours to Wednesday 11 AM: 44.12.
+Updated: 2026-09-07T15:06:25.412866-07:00. Hours to Wednesday 11 AM: 43.89.
 
 **Whole-pipeline completion time remains unverified.** Estimates below cover remaining comprehension only; generation, document repair, and final validation are additional. Scenarios are not confidence intervals.
 
@@ -10,18 +10,18 @@ Updated: 2026-09-07T14:52:37.439108-07:00. Hours to Wednesday 11 AM: 44.12.
 | mir_eval/A2 | 0 | complete | 0.00 / 0.00 / 0.00 |
 | mir_eval/B1 | 148 | insufficient_observations | unknown |
 | mir_eval/B2 | 148 | insufficient_observations | unknown |
-| thumbnailator/A1 | 103 | estimated | 0.46 / 1.33 / 2.65 |
-| thumbnailator/A2 | 86 | estimated | 0.34 / 0.48 / 1.54 |
+| thumbnailator/A1 | 99 | estimated | 0.40 / 2.55 / 5.09 |
+| thumbnailator/A2 | 55 | estimated | 0.22 / 0.33 / 0.80 |
 | thumbnailator/B1 | 149 | insufficient_observations | unknown |
 | thumbnailator/B2 | 149 | insufficient_observations | unknown |
-| tslearn/A1 | 204 | estimated | 0.80 / 4.01 / 8.02 |
+| tslearn/A1 | 196 | estimated | 0.63 / 5.68 / 40.10 |
 | tslearn/A2 | 235 | insufficient_observations | unknown |
 | tslearn/B1 | 235 | insufficient_observations | unknown |
 | tslearn/B2 | 235 | insufficient_observations | unknown |
 
-Failure review queue: 130 entries. Mutable cross-condition path conflicts: 0.
+Failure review queue: 141 entries. Mutable cross-condition path conflicts: 0.
 Deadline risks: mir_eval/A1: estimated
-Observation errors: 0. Observer health: `{"results": {"age_seconds": 19.4, "stale": false}, "data": {"age_seconds": 6.5, "stale": false}}`.
+Observation errors: 0. Observer health: `{"results": {"age_seconds": 1.7, "stale": false}, "data": {"age_seconds": 32.5, "stale": false}}`.
 
 - [Failure review queue](failure_review_queue.json): suggested causes, evidence, confidence, attempts and repair rounds.
 - [Resolved configuration bundles](config_bundles.json): actual profile, direct YAML layers, fixture bindings and recorded environments.

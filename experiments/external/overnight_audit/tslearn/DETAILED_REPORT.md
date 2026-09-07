@@ -27,9 +27,9 @@ Effects withheld until all four matched final cells and their repair/test eviden
 
 ### A1
 
-Primary failure categories: {"api-identity": 4, "llm-error": 2, "test/scaffold": 8, "unknown": 3}.
+Primary failure categories: {"api-identity": 5, "llm-error": 3, "test/scaffold": 8, "unknown": 5}.
 
-Recorded provider-error attempts across all checkpoint fingerprints: 2. Provider-internal retries are not recorded by the existing client and cannot be inferred from the configured limit. Watchdog logs retain process attempts; checkpoint attempts and document-fix rounds are separate ledger fields.
+Recorded provider-error attempts across all checkpoint fingerprints: 3. Provider-internal retries are not recorded by the existing client and cannot be inferred from the configured limit. Watchdog logs retain process attempts; checkpoint attempts and document-fix rounds are separate ledger fields.
 
 - `Backend`: test/scaffold; native=infra; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `tslearn/tslearn/backend/backend.py:55`. Error: `missing module/import: No module named 'tslearn.backends'`. Review: Runner classified this as infrastructure.
 - `BaseModelPackage`: unknown; native=runtime; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `tslearn/tslearn/bases/bases.py:78`. Error: `AttributeError: 'DummyModel' object has no attribute 'to_dict'`. Review: Observed runtime; doc attribution requires source, document, and snippet review.
@@ -48,6 +48,10 @@ Recorded provider-error attempts across all checkpoint fingerprints: 2. Provider
 - `SoftDTW`: unknown; native=runtime; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `tslearn/tslearn/metrics/softdtw_variants.py:1068`. Error: `AttributeError: type object 'SoftDTW' has no attribute 'apply'`. Review: Observed runtime; doc attribution requires source, document, and snippet review.
 - `SquaredEuclidean`: llm-error; native=llm-error; checkpoint attempts=1; provider-error attempts=1; document rounds=None; repair=None. Source: `tslearn/tslearn/metrics/softdtw_variants.py:1176`. Error: `ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}`. Review: Provider outcome; retry, never count as a documentation failure.
 - `TimeSeriesCentroidBasedClusteringMixin`: unknown; native=runtime; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `tslearn/tslearn/clustering/utils.py:225`. Error: `AssertionError: The documented contract is insufficient to verify the result.`. Review: Observed runtime; doc attribution requires source, document, and snippet review.
+- `TimeSeriesDBSCAN`: llm-error; native=llm-error; checkpoint attempts=1; provider-error attempts=1; document rounds=None; repair=None. Source: `tslearn/tslearn/clustering/dbscan.py:19`. Error: `ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}`. Review: Provider outcome; retry, never count as a documentation failure.
+- `TimeSeriesMixin`: unknown; native=runtime; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `tslearn/tslearn/bases/bases.py:53`. Error: `AssertionError: The documented contract is insufficient to verify the result of TimeSeriesMixin.`. Review: Observed runtime; doc attribution requires source, document, and snippet review.
+- `TimeSeriesSVMMixin`: unknown; native=runtime; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `tslearn/tslearn/svm/svm.py:20`. Error: `AttributeError: 'TimeSeriesSVC' object has no attribute 'support_vectors_time_series_'`. Review: Observed runtime; doc attribution requires source, document, and snippet review.
+- `TsLearnTags`: api-identity; native=infra; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `tslearn/tslearn/bases/bases.py:29`. Error: `missing module/import: cannot import name 'TsLearnTags' from 'tslearn.bases' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/bases/__init__.py)`. Review: Import/member selection failed; the runner's infrastructure label needs review.
 
 ### A2
 
