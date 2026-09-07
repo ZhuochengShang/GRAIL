@@ -205,3 +205,5 @@ triage; `contracts.py` checks input metadata and AST evidence; `quota.py` admits
 future transport attempts; `observe.py` reads and writes passive reports.
 See [automation usage and limitations](automation/README.md)
 and [report data methods](FINAL_REPORT_DATA_AND_API_METHODS.md).
+
+Detailed diagrams and exact implementation references: [AIDEAL code guide](AIDEAL_CODE_GUIDE.md).
