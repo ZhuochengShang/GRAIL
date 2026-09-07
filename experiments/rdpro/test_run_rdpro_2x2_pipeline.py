@@ -58,6 +58,14 @@ class RDProPipelineTests(unittest.TestCase):
                              "docs/api_manifest_shared.json")
             self.assertIn("--resume", command)
 
+    def test_docfix_outputs_are_rooted_from_worker_cwd(self):
+        jobs = {job["id"]: job for job in pipeline.build_plan()["jobs"]}
+        for cell in ("b1", "b2"):
+            command = jobs[f"rdpro_{cell}_repair"]["command"]
+            for option in ("--from-results", "--report", "--deep-dive-out"):
+                value = command[command.index(option) + 1]
+                self.assertTrue(value.startswith("experiments/rdpro/"), (option, value))
+
     def test_run_requires_explicit_paid_confirmation(self):
         with self.assertRaisesRegex(SystemExit, "confirm-paid-llm"):
             pipeline.run_watchdog(Path("unused.yaml"), False)

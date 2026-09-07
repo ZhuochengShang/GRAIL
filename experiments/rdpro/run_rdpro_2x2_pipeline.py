@@ -366,12 +366,12 @@ def docfix_job(cell: str, depends: list[str]) -> dict:
     command = [
         str(PYTHON), "-m", "aideal.cli", "--config",
         "experiments/rdpro/configs/aideal.yaml", "fix-docs", "--from-results",
-        f"docs/eval/{source_cell}/comprehension.json", "--deep-dive-first",
+        f"experiments/rdpro/docs/eval/{source_cell}/comprehension.json", "--deep-dive-first",
         "--doc-rounds", "5", "--doc-stuck", "2", "--retry-rounds", "0",
         "--doc", CELLS[cell]["doc"], "--doc-scope", "relevant", "--full-doc", "off",
         "--manifest", "docs/api_manifest_shared.json", "--report",
-        f"docs/eval/{cell}/docfix.json", "--deep-dive-out",
-        f"docs/eval/{cell}/deepdive", "--timeout", "600",
+        f"experiments/rdpro/docs/eval/{cell}/docfix.json", "--deep-dive-out",
+        f"experiments/rdpro/docs/eval/{cell}/deepdive", "--timeout", "600",
     ]
     if cell == "B1":
         command.append("--create-missing")
