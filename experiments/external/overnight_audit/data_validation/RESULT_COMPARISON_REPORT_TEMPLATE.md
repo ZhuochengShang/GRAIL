@@ -245,7 +245,7 @@ how recovery interacts with all four document treatments.
 
 | Repository / baseline cell | Eligible failures | Mode | Max code rounds / stuck threshold | Native recoveries | Independently validated recoveries | Provider blocked | Exhausted / stopped | Calls / tokens / time |
 |---|---:|---|---|---:|---:|---:|---|---|
-| `<repo>/<cell>` | `<...>` | feedback | `<5 / 2 or preregistered alternative>` | `<...>` | `<...>` | `<...>` | `<...>` | `<...>` |
+| `<repo>/<cell>` | `<...>` | feedback | `5 / 2 (accepted study policy)` | `<...>` | `<...>` | `<...>` | `<...>` | `<...>` |
 | `<same repo/cell>` | `<same set>` | source | `<same limits>` | `<...>` | `<...>` | `<...>` | `<...>` | `<...>` |
 
 Recovery rate uses the fixed eligible-failure denominator. Show blocked and
@@ -254,7 +254,9 @@ diagnosis call, so a difference is the effect of the **source-assisted package**
 not source access alone under an equal token/call budget. Record diagnosis cost
 separately. A source-only causal claim needs a matched analysis-call control.
 
-Report thresholds 2 and 3 as a sensitivity question, not an optimization claim.
+This study fixes the stagnation threshold at **2**. Alternative thresholds
+belong to a separate protocol. Report thresholds 2 and 3 only as a future
+sensitivity question, not an optimization claim or extra scheduled experiment.
 Replay only observed histories; mark unobserved continuations censored. Do not
 combine different thresholds into one matched comparison. The recovery rule
 (equal category/error prefix) differs from the documentation rule above.

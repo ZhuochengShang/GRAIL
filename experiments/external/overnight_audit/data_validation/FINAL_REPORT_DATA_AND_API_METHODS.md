@@ -161,3 +161,7 @@ statement must not be read as certifying unfinished cells.
 ## Recovery and stopping-policy addendum
 
 See [the staged recovery extension](recovery/README.md) and its [consistency review](recovery/CONSISTENCY_REVIEW_2026-09-07.md). No live recovery run has started. The two-round stagnation default is a configurable cost-control heuristic, not a demonstrated optimum. Document, code, provider and deep-dive rounds remain separate in the [comparison template](RESULT_COMPARISON_REPORT_TEMPLATE.md).
+
+## Accepted study limits and RDPro parity
+
+The user confirmed the stagnation threshold remains **2** consistently. See the [current RDPro alignment note](recovery_study_locked/RDPRO_PROTOCOL_ALIGNMENT_2026-09-07.md) and [locked recovery protocol](recovery_study_locked/README.md). This supersedes the earlier addendum's suggestion of alternative thresholds for this study. The corrected RDPro/priority/queued MDAnalysis static parity check passed; retained older RDPro engine differences remain recorded. Twenty tests passed. No new recovery worker was launched.
