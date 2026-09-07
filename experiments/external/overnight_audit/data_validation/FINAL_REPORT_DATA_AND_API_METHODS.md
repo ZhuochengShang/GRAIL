@@ -157,3 +157,7 @@ statement must not be read as certifying unfinished cells.
 | MDAnalysis 2.9.0 | `adk.psf` topology with `adk_dims.dcd` binary trajectory; `adk_open.pdb`; `adk_oplsaa.gro` with `adk_oplsaa.xtc`; upstream `MDAnalysisTests/data` directory | Prepared full1032 configuration constructs a Universe, atom groups, trajectory, and first timestep. It is outside the priority data observer's three-repository audit. Do not describe all 1,032 API/data pairings as verified. |
 | RDPro | Retained historical spatial-fixture experiments | Reuse only. This appendix does not newly certify the historical cells' fixture equivalence or a matched four-cell design. |
 | Apache Sedona | Existing placeholder configuration lacks a validated full-public-API fixture setup | Preparation and data selection are deferred; no completed API experiment or validated dataset is claimed. |
+
+## Recovery and stopping-policy addendum
+
+See [the staged recovery extension](recovery/README.md) and its [consistency review](recovery/CONSISTENCY_REVIEW_2026-09-07.md). No live recovery run has started. The two-round stagnation default is a configurable cost-control heuristic, not a demonstrated optimum. Document, code, provider and deep-dive rounds remain separate in the [comparison template](RESULT_COMPARISON_REPORT_TEMPLATE.md).
