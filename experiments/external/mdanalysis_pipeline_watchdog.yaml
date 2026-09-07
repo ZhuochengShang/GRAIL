@@ -1,0 +1,32 @@
+version: 1
+max_parallel: 1
+retry_delay_seconds: 300
+env:
+  PYTHONPATH: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mdanalysis_full1032_freeze/grail-agent/src:/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mdanalysis_full1032_freeze
+  AIDEAL_GOOGLE_MIN_INTERVAL_S: "3"
+  AIDEAL_GOOGLE_RATE_STATE: /tmp/aideal_google_rate_gate.txt
+  AIDEAL_GOOGLE_REQUEST_TIMEOUT_S: "300"
+  AIDEAL_GOOGLE_MAX_RETRIES: "2"
+jobs:
+  - id: mdanalysis_complete_full1032
+    cwd: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mdanalysis_full1032_freeze
+    branch: aideal/mdanalysis-full1032-freeze
+    environment_inventory: experiments/mdanalysis/docs/full_1032/setup/environment_freeze.txt
+    command:
+      - /Users/clockorangezoe/miniconda3/envs/geo_llm_spark/bin/python
+      - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/experiments/external/wait_then_run.py
+      - --state
+      - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/experiments/external/tslearn_pipeline_watchdog.state.json
+      - --job
+      - tslearn_complete_full235
+      - --
+      - /Users/clockorangezoe/miniconda3/envs/geo_llm_spark/bin/python
+      - experiments/mdanalysis/run_full_2x2_pipeline.py
+      - --freeze-worktree
+      - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mdanalysis_full1032_freeze
+      - --source-seed
+      - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mdanalysis_setup/experiments/mdanalysis/mdanalysis
+    result: .aideal_exec/mdanalysis_pipeline.stdout
+    complete: {kind: exit_zero}
+    max_runtime_seconds: 2592000
+    max_restarts: 0
