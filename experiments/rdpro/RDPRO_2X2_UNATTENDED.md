@@ -21,12 +21,12 @@ historical dirty worktrees and without silently starting paid model calls.
 ## Isolation and flow
 
 ```text
-A1 PASS_TO_PASS -> validate/copy historical A1 -> failure analysis -> PASS_TO_PASS -> push A1
+A1 PASS_TO_PASS -> validate/copy historical A1 -> checkpoint push -> failure analysis -> PASS_TO_PASS -> push A1
                                       |
                                       v
 B1 PASS_TO_PASS -> empty catalog -> repair/checkpoint push -> zero88 -> analysis -> PASS_TO_PASS -> push B1
 
-A2 PASS_TO_PASS -> fresh zero88 -> failure analysis -> PASS_TO_PASS -> push A2
+A2 PASS_TO_PASS -> fresh zero88 -> checkpoint push -> failure analysis -> PASS_TO_PASS -> push A2
                          |
                          v
 B2 PASS_TO_PASS -> copy exact A2 baseline -> repair/checkpoint push -> zero88 -> analysis -> PASS_TO_PASS -> push B2
@@ -49,9 +49,9 @@ resumes these checkpoints. `caffeinate` keeps the Mac awake while it runs.
 
 Each branch gets its own Beast clone, execution/output directory, error log,
 comprehension checkpoint, upstream test evidence, result, repair evidence, and
-per-function failure analysis. Repair completion is committed and pushed before
-the final zero-round measurement; the finalized cell is committed and pushed
-again only after both upstream gates pass.
+per-function failure analysis. Both matched baselines and repair completion are
+committed and pushed before a downstream cell consumes them; the finalized cell
+is committed and pushed again only after both upstream gates pass.
 
 ## Commands
 

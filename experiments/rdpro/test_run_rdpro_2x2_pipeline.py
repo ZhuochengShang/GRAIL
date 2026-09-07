@@ -43,7 +43,9 @@ class RDProPipelineTests(unittest.TestCase):
 
     def test_dependency_graph_enforces_matched_b2_baseline(self):
         jobs = {job["id"]: job for job in pipeline.build_plan()["jobs"]}
-        self.assertIn("rdpro_a2_zero", jobs["rdpro_b2_sync"]["depends_on"])
+        self.assertIn("rdpro_a2_baseline_checkpoint", jobs["rdpro_b2_sync"]["depends_on"])
+        self.assertIn("rdpro_a2_zero", jobs["rdpro_a2_baseline_checkpoint"]["depends_on"])
+        self.assertIn("rdpro_a1_import", jobs["rdpro_a1_baseline_checkpoint"]["depends_on"])
         self.assertIn("rdpro_b2_repair_checkpoint", jobs["rdpro_b2_zero"]["depends_on"])
         self.assertEqual(pipeline.build_plan()["max_parallel"], 2)
 

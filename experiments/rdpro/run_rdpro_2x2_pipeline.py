@@ -391,9 +391,14 @@ def build_plan() -> dict:
     jobs.append(base_job("A1", "import", self_command("import-a1"),
                          "experiments/rdpro/docs/eval/A1/import.json",
                          depends=["rdpro_a1_p2p_before"]))
+    jobs.append(base_job("A1", "baseline_checkpoint",
+                         self_command("checkpoint", "A1", "baseline",
+                                      "Save validated RDPro A1 shared-88 baseline"),
+                         "experiments/rdpro/docs/eval/A1/baseline_checkpoint.json",
+                         depends=["rdpro_a1_import"]))
     jobs.append(base_job("A1", "analyze", self_command("analyze", "A1"),
                          "experiments/rdpro/docs/eval/A1/failure_analysis/summary.json",
-                         depends=["rdpro_a1_import"]))
+                         depends=["rdpro_a1_baseline_checkpoint"]))
     jobs.append(base_job("A1", "p2p_after", self_command("p2p", "A1", "after"),
                          "experiments/rdpro/docs/eval/A1/PASS_TO_PASS_AFTER.json",
                          depends=["rdpro_a1_analyze"], max_runtime=7200))
@@ -402,9 +407,14 @@ def build_plan() -> dict:
                          depends=["rdpro_a1_p2p_after"]))
 
     jobs.append(comprehension_job("A2", ["rdpro_a2_p2p_before"]))
+    jobs.append(base_job("A2", "baseline_checkpoint",
+                         self_command("checkpoint", "A2", "baseline",
+                                      "Save fresh RDPro A2 shared-88 baseline"),
+                         "experiments/rdpro/docs/eval/A2/baseline_checkpoint.json",
+                         depends=["rdpro_a2_zero"]))
     jobs.append(base_job("A2", "analyze", self_command("analyze", "A2"),
                          "experiments/rdpro/docs/eval/A2/failure_analysis/summary.json",
-                         depends=["rdpro_a2_zero"]))
+                         depends=["rdpro_a2_baseline_checkpoint"]))
     jobs.append(base_job("A2", "p2p_after", self_command("p2p", "A2", "after"),
                          "experiments/rdpro/docs/eval/A2/PASS_TO_PASS_AFTER.json",
                          depends=["rdpro_a2_analyze"], max_runtime=7200))
@@ -417,7 +427,8 @@ def build_plan() -> dict:
                          depends=["rdpro_b1_p2p_before", "rdpro_a1_import"]))
     jobs.append(docfix_job("B1", ["rdpro_b1_clean"]))
     jobs.append(base_job("B1", "repair_checkpoint",
-                         self_command("checkpoint", "B1", "RDPro B1 repair checkpoint"),
+                         self_command("checkpoint", "B1", "repair",
+                                      "RDPro B1 repair checkpoint"),
                          "experiments/rdpro/docs/eval/B1/repair_checkpoint.json",
                          depends=["rdpro_b1_repair"]))
     jobs.append(comprehension_job("B1", ["rdpro_b1_repair_checkpoint"]))
@@ -433,10 +444,11 @@ def build_plan() -> dict:
 
     jobs.append(base_job("B2", "sync", self_command("sync-a2"),
                          "experiments/rdpro/docs/eval/B2/baseline_import.json",
-                         depends=["rdpro_b2_p2p_before", "rdpro_a2_zero"]))
+                         depends=["rdpro_b2_p2p_before", "rdpro_a2_baseline_checkpoint"]))
     jobs.append(docfix_job("B2", ["rdpro_b2_sync"]))
     jobs.append(base_job("B2", "repair_checkpoint",
-                         self_command("checkpoint", "B2", "RDPro B2 repair checkpoint"),
+                         self_command("checkpoint", "B2", "repair",
+                                      "RDPro B2 repair checkpoint"),
                          "experiments/rdpro/docs/eval/B2/repair_checkpoint.json",
                          depends=["rdpro_b2_repair"]))
     jobs.append(comprehension_job("B2", ["rdpro_b2_repair_checkpoint"]))
@@ -647,9 +659,9 @@ def checkpoint(cell: str, message: str) -> dict:
             "created_commit": committed, "pushed": True}
 
 
-def internal_checkpoint(cell: str, message: str) -> int:
+def internal_checkpoint(cell: str, stage: str, message: str) -> int:
     worktree = CELLS[cell]["path"]
-    out = worktree / f"experiments/rdpro/docs/eval/{cell}/repair_checkpoint.json"
+    out = worktree / f"experiments/rdpro/docs/eval/{cell}/{stage}_checkpoint.json"
     # Write evidence before committing so it is part of the checkpoint itself.
     result = {"cell": cell, "status": "repair checkpoint complete",
               "branch": CELLS[cell]["branch"]}
@@ -730,7 +742,7 @@ def internal_main(args: argparse.Namespace) -> int:
     if args.action == "analyze":
         return internal_analyze(args.cell)
     if args.action == "checkpoint":
-        return internal_checkpoint(args.cell, args.message)
+        return internal_checkpoint(args.cell, args.stage, args.message)
     if args.action == "finalize":
         return internal_finalize(args.cell)
     raise AssertionError(args.action)
@@ -760,6 +772,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     analyze.add_argument("cell", choices=CELLS)
     checkpoint_parser = actions.add_parser("checkpoint")
     checkpoint_parser.add_argument("cell", choices=CELLS)
+    checkpoint_parser.add_argument("stage", choices=("baseline", "repair"))
     checkpoint_parser.add_argument("message")
     finalize = actions.add_parser("finalize")
     finalize.add_argument("cell", choices=CELLS)
