@@ -1,5 +1,17 @@
 # AIDEAL + GRAIL
 
+**AIDEAL's central output is an evidence-backed agent-readiness assessment and
+a reviewable improvement queue.** It measures observed API usability, explains
+barriers with evidence, and records human-reviewed plans that a human or agent
+can implement and validate. The current executable A1/A2/B1/B2 study measures
+documentation-conditioned API use; broader discovery, setup, workflow, and
+recovery capabilities remain separately identified evaluation needs.
+
+Start with the generated report's `AIDEAL_REPORT.md`, the
+[review workflow](experiments/external/readiness/WORKFLOW.md), and
+[design diagrams](AIDEAL_DESIGN_LOGIC.md). This reporting layer preserves
+running experiments and native results; it performs no automatic code changes.
+
 Two-part research artifact:
 
 **AIDEAL is the base — the general method** (`grail-agent/src/aideal`). A codebase-agnostic system that tests and improves how LLM-ready any codebase is. Start point on any codebase: `python -m aideal.cli --config <target>/configs/aideal.yaml init` (user enters project description, target users, domain, use cases), then the pipeline: find/create `LLM_readme.md` → form check → comprehension check (readme unit test: write correct code from the doc alone) → completeness check → puzzle integration tests with a fix loop. LLM mistakes feed back into the codebase: structured `error_log.jsonl` → `notes_to_self.md` distilled memory → alias proposals → added aliases. One YAML config controls models (Claude / Kimi / Qwen / llama3 registry, author vs. audience roles), paths, languages, tasks, prompts, and runtime (local / HPCC / Jetstream / cloud). AIDEAL knows nothing about geospatial.
