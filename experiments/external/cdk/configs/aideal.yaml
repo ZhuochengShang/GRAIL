@@ -1,0 +1,65 @@
+extends: [java]
+
+project:
+  name: CDK
+  language: Java
+
+codebase:
+  source_globs:
+    # Representative in-process chemistry surface: object model, common
+    # implementations/algorithms, SMILES/SMARTS, formulas, and descriptors.
+    # The full multi-module repository exposes 3,501 unique method names and
+    # exceeds the pre-registered 2,000-name screen, so app/UI/legacy and
+    # specialized integration modules are deliberately outside this study.
+    - "source/base/interfaces/src/main/java/**/*.java"
+    - "source/base/data/src/main/java/**/*.java"
+    - "source/base/silent/src/main/java/**/*.java"
+    - "source/base/standard/src/main/java/**/*.java"
+    - "source/storage/smiles/src/main/java/**/*.java"
+    - "source/tool/smarts/src/main/java/**/*.java"
+    - "source/tool/formula/src/main/java/**/*.java"
+    - "source/descriptor/fingerprint/src/main/java/**/*.java"
+    - "source/descriptor/qsar/src/main/java/**/*.java"
+    - "source/descriptor/qsarmolecular/src/main/java/**/*.java"
+  test_globs:
+    - "source/base/interfaces/src/test/java/**/*.java"
+    - "source/base/data/src/test/java/**/*.java"
+    - "source/base/silent/src/test/java/**/*.java"
+    - "source/base/standard/src/test/java/**/*.java"
+    - "source/storage/smiles/src/test/java/**/*.java"
+    - "source/tool/smarts/src/test/java/**/*.java"
+    - "source/tool/formula/src/test/java/**/*.java"
+    - "source/descriptor/fingerprint/src/test/java/**/*.java"
+    - "source/descriptor/qsar/src/test/java/**/*.java"
+    - "source/descriptor/qsarmolecular/src/test/java/**/*.java"
+  exclude_path_patterns:
+    - "/internal/"
+    - "/legacy/"
+  surface_filter: intent_score
+  intent:
+    threshold: 5
+    use_llm: false
+    many_impls_threshold: 4
+
+files:
+  project_profile: configs/project_profile.yaml
+  original_readme:
+    - source/README.md
+  llm_readme: docs/LLM_readme.md
+  notes_to_self: docs/notes_to_self.md
+  integration_tasks: configs/integration_tasks.yaml
+  aliases: aliases/aliases.json
+  error_log: logs/error_log.jsonl
+
+models:
+  roles:
+    author: gemini-3.1-pro
+    audience: gemini-3.1-pro
+    fixer: gemini-3.1-pro
+
+comprehension:
+  class_context: false
+  execute:
+    max_fix_rounds: 0
+    require_correctness: true
+    timeout_seconds: 600

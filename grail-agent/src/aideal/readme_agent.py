@@ -1189,9 +1189,14 @@ def public_api_surface(cfg: AidealConfig, override_filter: str | None = None) ->
     all_names: set[str] = set()
     documented: set[str] = set()
     non_override: set[str] = set()
+    py_identities = _python_qualified_identities(cfg) if cfg.language.lower() == "python" else None
     for name, prefix, path, i, _line in _iter_defs(cfg):
         if name in cfg.exclude_names or not _is_public(name, prefix, model):
             continue
+        if py_identities is not None:
+            rel = str(Path(path).relative_to(cfg.root)).replace("\\", "/")
+            if (rel, i + 1, name) not in py_identities:
+                continue
         all_names.add(name)
         if not re.search(r"\boverride\b", prefix):
             non_override.add(name)
@@ -1575,11 +1580,19 @@ def intent_scores(cfg: AidealConfig, force_llm: bool | None = None) -> dict[str,
     mention_mode = intent.get("docs_mention_mode", "code")
 
     model = visibility_model(cfg)
+    # Python's regex scanner sees nested local functions as well as importable
+    # module/class APIs. Keep the intent denominator aligned with
+    # public_api_details(), which uses AST-derived identities to reject locals.
+    py_identities = _python_qualified_identities(cfg) if cfg.language.lower() == "python" else None
     file_cache: dict[str, list[str]] = {}
     recs: dict[str, dict] = {}
     for name, prefix, path, i, _line in _iter_defs(cfg):
         if name in cfg.exclude_names or not _is_public(name, prefix, model):
             continue
+        if py_identities is not None:
+            rel = str(Path(path).relative_to(cfg.root)).replace("\\", "/")
+            if (rel, i + 1, name) not in py_identities:
+                continue
         r = recs.setdefault(name, {"documented": False, "non_override": False,
                                    "internal": False, "sites": 0})
         r["sites"] += 1
@@ -1874,6 +1887,54 @@ def _param_record(raw: str) -> dict:
     return {"name": left, "type": "", "default": default}
 
 
+def _java_param_record(raw: str) -> dict:
+    """Parse a Java parameter into the common structured form.
+
+    Java places the type before the name rather than using Scala/Python's
+    ``name: type`` form. Keep annotations/modifiers in the type evidence; the
+    final whitespace-delimited token is the declared parameter name.
+    """
+    value = raw.strip()
+    parts = value.rsplit(None, 1)
+    if len(parts) == 1:
+        return {"name": parts[0], "type": "", "default": ""}
+    typ, name = parts
+    # Java also permits ``String value[]``. Normalize the brackets onto the
+    # type so downstream prompts see the actual identifier as ``value``.
+    brackets = ""
+    while name.endswith("[]"):
+        brackets += "[]"
+        name = name[:-2]
+    return {"name": name, "type": typ + brackets, "default": ""}
+
+
+_JAVA_MEMBER_MODIFIERS = {
+    "public", "protected", "private", "static", "final", "abstract",
+    "synchronized", "native", "strictfp", "default",
+}
+
+
+def _java_return_type(raw_signature: str, name: str) -> str:
+    """Recover a Java method return type; constructors intentionally have none."""
+    head = raw_signature.split("(", 1)[0].rstrip()
+    if not head.endswith(name):
+        return ""
+    before = head[:-len(name)].strip()
+    tokens = before.split()
+    while tokens and tokens[0] in _JAVA_MEMBER_MODIFIERS:
+        tokens.pop(0)
+    if tokens and tokens[0].startswith("<"):
+        # Generic method type parameters may contain spaces; consume through
+        # the token whose angle brackets balance.
+        depth = 0
+        while tokens:
+            token = tokens.pop(0)
+            depth += token.count("<") - token.count(">")
+            if depth <= 0:
+                break
+    return " ".join(tokens)
+
+
 def _signature_at(lines: list[str], idx: int, def_pos: int, name_end: int
                   ) -> tuple[str, list[dict], str]:
     """From the def line return (raw_signature, params, return_type).
@@ -2013,12 +2074,24 @@ def public_api_details(cfg: AidealConfig) -> list[dict]:
         lines = file_cache.setdefault(
             path, Path(path).read_text(encoding="utf-8", errors="ignore").splitlines())
         m = re.compile(cfg.public_def_regex).search(line)
-        raw, params, ret = _signature_at(lines, i, m.start() if m else 0,
-                                         m.end() if m else 0)
         rel = str(Path(path).relative_to(cfg.root))
         identity = py_identities.get((rel, i + 1, name), {})
         if cfg.language.lower() == "python" and not identity:
             continue
+        if cfg.language.lower() == "python":
+            # Python signatures come from AST, not the Scala-style colon
+            # parser: in ``class X(Base): \"\"\"doc\"\"\"`` the colon starts
+            # the body, not a return type, and Base is inheritance rather than
+            # a constructor parameter.
+            raw = identity.get("signature", name)
+            params = identity.get("params", [])
+            ret = identity.get("returns", "")
+        else:
+            raw, params, ret = _signature_at(lines, i, m.start() if m else 0,
+                                             m.end(1) if m else 0)
+            if cfg.language.lower() == "java":
+                params = [_java_param_record(p["name"]) for p in params]
+                ret = _java_return_type(raw, name)
         out.append({
             "name": name,
             "qualified_name": identity.get("qualified_name", name),
@@ -2076,6 +2149,24 @@ def _python_qualified_identities(cfg: AidealConfig) -> dict[tuple[str, int, str]
             rel = str(path.relative_to(cfg.root)).replace("\\", "/")
             module = _python_module_name(path)
 
+            def function_signature(node) -> tuple[str, list[dict], str]:
+                args_text = ast.unparse(node.args)
+                parts = [p for p in _split_top_level(args_text)
+                         if p.strip() not in ("/", "*")]
+                params = [_param_record(p) for p in parts]
+                returns = ast.unparse(node.returns) if node.returns is not None else ""
+                prefix = "async def" if isinstance(node, ast.AsyncFunctionDef) else "def"
+                suffix = f" -> {returns}" if returns else ""
+                return f"{prefix} {node.name}({args_text}){suffix}", params, returns
+
+            def class_signature(node: ast.ClassDef) -> str:
+                bases = [ast.unparse(base) for base in node.bases]
+                bases.extend(
+                    f"{kw.arg}={ast.unparse(kw.value)}" if kw.arg else f"**{ast.unparse(kw.value)}"
+                    for kw in node.keywords
+                )
+                return f"class {node.name}" + (f"({', '.join(bases)})" if bases else "")
+
             def visit(body, classes: tuple[str, ...] = (), inside_function: bool = False):
                 for node in body:
                     if isinstance(node, ast.ClassDef) and not inside_function:
@@ -2084,15 +2175,20 @@ def _python_qualified_identities(cfg: AidealConfig) -> dict[tuple[str, int, str]
                         out[(rel, node.lineno, node.name)] = {
                             "qualified_name": qn, "module": module,
                             "owner": ".".join(classes), "kind": "class",
+                            "signature": class_signature(node),
+                            "params": [], "returns": "",
                         }
                         visit(node.body, owners, False)
                     elif isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
                         if not inside_function:
                             qn = ".".join(filter(None, (module, *classes, node.name)))
+                            signature, params, returns = function_signature(node)
                             out[(rel, node.lineno, node.name)] = {
                                 "qualified_name": qn, "module": module,
                                 "owner": ".".join(classes),
                                 "kind": "method" if classes else "function",
+                                "signature": signature,
+                                "params": params, "returns": returns,
                             }
                         # Do not expose definitions local to a function/method.
                     elif not inside_function:

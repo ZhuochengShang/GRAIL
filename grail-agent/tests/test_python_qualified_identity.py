@@ -4,7 +4,8 @@ import yaml
 
 from aideal.config import load_config
 from aideal.doc_checks import _execute_sample_data
-from aideal.readme_agent import intended_api_llm, public_api_details
+from aideal.readme_agent import (intended_api_llm, intent_scores,
+                                 public_api_details, public_api_surface)
 
 
 def test_python_qualified_identity_and_local_exclusion(tmp_path: Path):
@@ -21,7 +22,8 @@ def test_python_qualified_identity_and_local_exclusion(tmp_path: Path):
         "        return 1\n\n"
         "class Contacts:\n"
         "    def run(self):\n"
-        "        return 2\n",
+        "        return 2\n\n"
+        "class Mode(int): \"\"\"An integer mode.\"\"\"\n",
         encoding="utf-8",
     )
     (tmp_path / "configs").mkdir()
@@ -38,7 +40,12 @@ def test_python_qualified_identity_and_local_exclusion(tmp_path: Path):
     assert "sciencepkg.analysis.RMSD" in by_qualified
     assert "sciencepkg.analysis.RMSD.run" in by_qualified
     assert "sciencepkg.analysis.Contacts.run" in by_qualified
+    assert by_qualified["sciencepkg.analysis.Mode"]["signature"] == "class Mode(int)"
+    assert by_qualified["sciencepkg.analysis.Mode"]["params"] == []
+    assert by_qualified["sciencepkg.analysis.Mode"]["returns"] == ""
     assert not any(d["name"] == "local_helper" for d in details)
+    assert "local_helper" not in intent_scores(cfg)
+    assert "local_helper" not in public_api_surface(cfg, override_filter="all")
     assert by_qualified["sciencepkg.analysis.RMSD.run"]["owner"] == "RMSD"
     assert by_qualified["sciencepkg.analysis.RMSD.run"]["definition_kind"] == "method"
 

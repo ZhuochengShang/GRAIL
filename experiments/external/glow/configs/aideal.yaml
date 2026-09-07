@@ -1,0 +1,48 @@
+extends: [scala-spark]
+
+project:
+  name: Glow
+  language: Scala
+
+codebase:
+  source_globs:
+    - "source/core/src/main/scala/**/*.scala"
+    - "source/core/src/main/scala-2.13+/**/*.scala"
+    - "source/core/src/main/scala-2.13-/**/*.scala"
+    - "source/core/src/main/shim/**/*.scala"
+    - "source/core/src/main/java/**/*.java"
+  test_globs:
+    - "source/core/src/test/scala/**/*.scala"
+    - "source/core/src/test/shim/**/*.scala"
+    - "source/core/src/test/java/**/*.java"
+  exclude_path_patterns:
+    - "/internal/"
+    - "/shim/"
+  surface_filter: intent_score
+  intent:
+    threshold: 5
+    use_llm: false
+    many_impls_threshold: 4
+
+files:
+  project_profile: configs/project_profile.yaml
+  original_readme:
+    - source/README.md
+  llm_readme: docs/LLM_readme.md
+  notes_to_self: docs/notes_to_self.md
+  integration_tasks: configs/integration_tasks.yaml
+  aliases: aliases/aliases.json
+  error_log: logs/error_log.jsonl
+
+models:
+  roles:
+    author: gemini-3.1-pro
+    audience: gemini-3.1-pro
+    fixer: gemini-3.1-pro
+
+comprehension:
+  class_context: false
+  execute:
+    max_fix_rounds: 0
+    require_correctness: true
+    timeout_seconds: 600
