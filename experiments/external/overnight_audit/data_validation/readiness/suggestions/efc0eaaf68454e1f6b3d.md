@@ -1,8 +1,8 @@
-# overseg: Investigate provider failures and recorded retry behavior
+# baseline_accuracy: Investigate provider failures and recorded retry behavior
 
-ID: `6e74d2f73232d8dff637` · mir_eval/A1 · **open**
+ID: `efc0eaaf68454e1f6b3d` · tslearn/A1 · **open**
 
-Evidence version: `8f36268876aeaa105c5d025515b77b054fd2412239dfd5982470abc35c8b28f8`
+Evidence version: `531b57b84c3ee452a3790acaa03bcdb000b7b7e04e94c53630c9bc0db67ce43e`
 
 Candidate category: **provider**. Confidence: **high**.
 
@@ -10,15 +10,15 @@ Candidate category: **provider**. Confidence: **high**.
 
 Recorded provider failure; preserve and retry under existing policy.
 
-Source: `source/mir_eval/chord.py:1409`. Native category: `llm-error`.
+Source: `tslearn/tslearn/datasets/ucr_uea.py:121`. Native category: `llm-error`.
 
 ```text
 ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}
 ```
 
-[Evidence ledger](../../../mir_eval/A1/ledger.json) · [Saved evidence](../evidence/8f36268876aeaa105c5d025515b77b054fd2412239dfd5982470abc35c8b28f8.json)
+[Evidence ledger](../../../tslearn/A1/ledger.json) · [Saved evidence](../evidence/531b57b84c3ee452a3790acaa03bcdb000b7b7e04e94c53630c9bc0db67ce43e.json)
 
-Recorded attempts: 3; provider errors: 3; document rounds: None.
+Recorded attempts: 1; provider errors: 1; document rounds: None.
 
 ## Proposed action
 

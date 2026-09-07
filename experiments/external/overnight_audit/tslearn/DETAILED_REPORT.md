@@ -27,9 +27,9 @@ Effects withheld until all four matched final cells and their repair/test eviden
 
 ### A1
 
-Primary failure categories: {"api-identity": 5, "llm-error": 5, "test/scaffold": 8, "unknown": 5}.
+Primary failure categories: {"api-identity": 5, "llm-error": 7, "test/scaffold": 9, "unknown": 6}.
 
-Recorded provider-error attempts across all checkpoint fingerprints: 5. Provider-internal retries are not recorded by the existing client and cannot be inferred from the configured limit. Watchdog logs retain process attempts; checkpoint attempts and document-fix rounds are separate ledger fields.
+Recorded provider-error attempts across all checkpoint fingerprints: 7. Provider-internal retries are not recorded by the existing client and cannot be inferred from the configured limit. Watchdog logs retain process attempts; checkpoint attempts and document-fix rounds are separate ledger fields.
 
 - `Backend`: test/scaffold; native=infra; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `tslearn/tslearn/backend/backend.py:55`. Error: `missing module/import: No module named 'tslearn.backends'`. Review: Runner classified this as infrastructure.
 - `BaseModelPackage`: unknown; native=runtime; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `tslearn/tslearn/bases/bases.py:78`. Error: `AttributeError: 'DummyModel' object has no attribute 'to_dict'`. Review: Observed runtime; doc attribution requires source, document, and snippet review.
@@ -54,6 +54,10 @@ Recorded provider-error attempts across all checkpoint fingerprints: 5. Provider
 - `TsLearnTags`: api-identity; native=infra; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `tslearn/tslearn/bases/bases.py:29`. Error: `missing module/import: cannot import name 'TsLearnTags' from 'tslearn.bases' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/bases/__init__.py)`. Review: Import/member selection failed; the runner's infrastructure label needs review.
 - `accumulated_matrix`: llm-error; native=llm-error; checkpoint attempts=1; provider-error attempts=1; document rounds=None; repair=None. Source: `tslearn/tslearn/metrics/_dtw.py:286`. Error: `ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}`. Review: Provider outcome; retry, never count as a documentation failure.
 - `accumulated_matrix_from_dist_matrix`: llm-error; native=llm-error; checkpoint attempts=1; provider-error attempts=1; document rounds=None; repair=None. Source: `tslearn/tslearn/metrics/dtw_variants.py:456`. Error: `ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}`. Review: Provider outcome; retry, never count as a documentation failure.
+- `baseline_accuracy`: llm-error; native=llm-error; checkpoint attempts=1; provider-error attempts=1; document rounds=None; repair=None. Source: `tslearn/tslearn/datasets/ucr_uea.py:121`. Error: `ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}`. Review: Provider outcome; retry, never count as a documentation failure.
+- `belongs_to_backend`: llm-error; native=llm-error; checkpoint attempts=1; provider-error attempts=1; document rounds=None; repair=None. Source: `tslearn/tslearn/backend/numpy_backend.py:86`. Error: `ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}`. Review: Provider outcome; retry, never count as a documentation failure.
+- `build`: test/scaffold; native=infra; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `tslearn/tslearn/shapelets/shapelets.py:188`. Error: `missing module/import: No module named 'keras'`. Review: Runner classified this as infrastructure.
+- `cache_all`: unknown; native=runtime; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `tslearn/tslearn/datasets/ucr_uea.py:376`. Error: `AttributeError: <tslearn.datasets.ucr_uea.UCR_UEA_datasets object at 0x104204f70> does not have the attribute 'cache_dataset'`. Review: Observed runtime; doc attribution requires source, document, and snippet review.
 
 ### A2
 

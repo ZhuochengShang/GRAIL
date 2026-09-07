@@ -1,6 +1,6 @@
 # Automation status and deadline forecast
 
-Updated: 2026-09-07T15:36:53.058150-07:00. Hours to Wednesday 11 AM: 43.39.
+Updated: 2026-09-07T15:52:06.674008-07:00. Hours to Wednesday 11 AM: 43.13.
 
 **Whole-pipeline completion time remains unverified.** Estimates below cover remaining comprehension only; generation, document repair, and final validation are additional. Scenarios are not confidence intervals.
 
@@ -10,18 +10,18 @@ Updated: 2026-09-07T15:36:53.058150-07:00. Hours to Wednesday 11 AM: 43.39.
 | mir_eval/A2 | 0 | complete | 0.00 / 0.00 / 0.00 |
 | mir_eval/B1 | 148 | insufficient_observations | unknown |
 | mir_eval/B2 | 148 | insufficient_observations | unknown |
-| thumbnailator/A1 | 73 | estimated | 0.29 / 1.37 / 2.74 |
-| thumbnailator/A2 | 129 | estimated | 0.61 / 0.78 / 2.28 |
+| thumbnailator/A1 | 59 | estimated | 0.26 / 0.56 / 1.49 |
+| thumbnailator/A2 | 89 | estimated | 0.35 / 0.53 / 1.67 |
 | thumbnailator/B1 | 149 | insufficient_observations | unknown |
 | thumbnailator/B2 | 149 | insufficient_observations | unknown |
-| tslearn/A1 | 186 | estimated | 0.58 / 6.78 / 71.41 |
+| tslearn/A1 | 184 | estimated | 0.59 / 9.82 / 76.64 |
 | tslearn/A2 | 235 | insufficient_observations | unknown |
 | tslearn/B1 | 235 | insufficient_observations | unknown |
 | tslearn/B2 | 235 | insufficient_observations | unknown |
 
-Failure review queue: 134 entries. Mutable cross-condition path conflicts: 0.
+Failure review queue: 148 entries. Mutable cross-condition path conflicts: 0.
 Deadline risks: mir_eval/A1: stalled_no_recent_terminal_outcomes
-Observation errors: 0. Observer health: `{"results": {"age_seconds": 16.0, "stale": false}, "data": {"age_seconds": 8.5, "stale": false}}`.
+Observation errors: 0. Observer health: `{"results": {"age_seconds": 23.1, "stale": false}, "data": {"age_seconds": 58.1, "stale": false}}`.
 
 - [Failure review queue](failure_review_queue.json): suggested causes, evidence, confidence, attempts and repair rounds.
 - [Resolved configuration bundles](config_bundles.json): actual profile, direct YAML layers, fixture bindings and recorded environments.

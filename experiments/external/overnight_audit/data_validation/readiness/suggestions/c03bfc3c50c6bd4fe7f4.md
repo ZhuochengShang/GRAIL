@@ -2,7 +2,7 @@
 
 ID: `c03bfc3c50c6bd4fe7f4` · thumbnailator/A2 · **open**
 
-Evidence version: `ea7195d0ff5a112a97435bdac9fa6c261038efa2976d584016d8d60118c7b9d5`
+Evidence version: `7b32df2c8c365c6d0a5761984a8433afe42e20d94f7147c0f4edb5892ef1bfc9`
 
 Candidate category: **unknown**. Confidence: **low**.
 
@@ -16,7 +16,7 @@ Source: `source/src/main/java/net/coobird/thumbnailator/makers/ThumbnailMaker.ja
 /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/.aideal_exec/A2/run_ThumbnailMaker/ApiTest.java:51: error: ThumbnailMaker is abstract; cannot be instantiated
 ```
 
-[Evidence ledger](../../../thumbnailator/A2/ledger.json) · [Saved evidence](../evidence/ea7195d0ff5a112a97435bdac9fa6c261038efa2976d584016d8d60118c7b9d5.json)
+[Evidence ledger](../../../thumbnailator/A2/ledger.json) · [Saved evidence](../evidence/7b32df2c8c365c6d0a5761984a8433afe42e20d94f7147c0f4edb5892ef1bfc9.json)
 
 Recorded attempts: 1; provider errors: 0; document rounds: None.
 
