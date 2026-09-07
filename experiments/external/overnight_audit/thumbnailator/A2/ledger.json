@@ -2,14 +2,14 @@
   "status": "partial",
   "expected": 149,
   "counts": {
-    "pass": 10,
-    "fail": 1,
-    "pending": 138
+    "pass": 13,
+    "fail": 2,
+    "pending": 134
   },
   "fingerprint": "d971d2e35fa95d00383ed681a422e3e9be0e9c50f413fbd5b4f138cab53335d5",
   "errors": [],
   "failure_categories": {
-    "unknown": 1
+    "unknown": 2
   },
   "recorded_provider_errors_all_fingerprints": 0,
   "observed_fingerprints": [
@@ -323,6 +323,118 @@
       "source_other_sites": 3,
       "codebase_frames": null,
       "checkpoint_line": 11
+    },
+    {
+      "name": "FileImageSource",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "d971d2e35fa95d00383ed681a422e3e9be0e9c50f413fbd5b4f138cab53335d5",
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 13.5,
+      "llm_calls": 1,
+      "input_tokens": 2037,
+      "output_tokens": 1462,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2037,
+          "output_tokens": 1462
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3575,
+      "document_sha256": "8e0a102037ac46ff67653c82b1e40a5d982bb2fb8e05b94edd59a5d24abf2a58",
+      "source": "source/src/main/java/net/coobird/thumbnailator/tasks/io/FileImageSource.java:86",
+      "source_other_sites": 1,
+      "codebase_frames": null,
+      "checkpoint_line": 12
+    },
+    {
+      "name": "FileThumbnailTask",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "d971d2e35fa95d00383ed681a422e3e9be0e9c50f413fbd5b4f138cab53335d5",
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 34.2,
+      "llm_calls": 1,
+      "input_tokens": 2133,
+      "output_tokens": 4110,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2133,
+          "output_tokens": 4110
+        }
+      },
+      "error_category": "runtime",
+      "error": "FileNotFoundException: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/.aideal_exec/A2/output/thumbnail.png/task_out.png (No such file or directory)",
+      "locus": "FileOutputStream.java:270",
+      "doc_chars": 4003,
+      "document_sha256": "4ab909c9eb598f3e029a60db48c41129c360d9da7462d61eeb71906d77a2a03e",
+      "source": "source/src/main/java/net/coobird/thumbnailator/tasks/FileThumbnailTask.java:61",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 13
+    },
+    {
+      "name": "FixedResizerFactory",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "d971d2e35fa95d00383ed681a422e3e9be0e9c50f413fbd5b4f138cab53335d5",
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 13.0,
+      "llm_calls": 1,
+      "input_tokens": 1905,
+      "output_tokens": 1496,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1905,
+          "output_tokens": 1496
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 2886,
+      "document_sha256": "2ad8c75e42a44fcf8ccd54fc347b93ba2957364e1217754e75f7ba115f98c94c",
+      "source": "source/src/main/java/net/coobird/thumbnailator/resizers/FixedResizerFactory.java:49",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 14
+    },
+    {
+      "name": "FixedSizeThumbnailMaker",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "d971d2e35fa95d00383ed681a422e3e9be0e9c50f413fbd5b4f138cab53335d5",
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 10.9,
+      "llm_calls": 1,
+      "input_tokens": 2166,
+      "output_tokens": 1016,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2166,
+          "output_tokens": 1016
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 4185,
+      "document_sha256": "42afc102afd99f4c0103cfbf974612dda4fd23d8d1bcd142fdd05aae27bc2ddc",
+      "source": "source/src/main/java/net/coobird/thumbnailator/makers/FixedSizeThumbnailMaker.java:158",
+      "source_other_sites": 3,
+      "codebase_frames": null,
+      "checkpoint_line": 15
     }
   ],
   "repair_summary": {
@@ -689,18 +801,31 @@
     },
     {
       "api": "FileImageSource",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "source/src/main/java/net/coobird/thumbnailator/tasks/io/FileImageSource.java:86",
+      "doc_chars": 3575,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 12,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 13.5,
+          "llm_calls": 1,
+          "input_tokens": 2037,
+          "output_tokens": 1462,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -708,18 +833,31 @@
     },
     {
       "api": "FileThumbnailTask",
-      "status": "pending",
-      "primary_category": "pending",
-      "runner_category": null,
-      "category_reason": "Not yet observed.",
-      "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "status": "fail",
+      "primary_category": "unknown",
+      "runner_category": "runtime",
+      "category_reason": "Observed runtime; doc attribution requires source, document, and snippet review.",
+      "error": "FileNotFoundException: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/.aideal_exec/A2/output/thumbnail.png/task_out.png (No such file or directory)",
+      "source": "source/src/main/java/net/coobird/thumbnailator/tasks/FileThumbnailTask.java:61",
+      "doc_chars": 4003,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 13,
+          "status": "fail",
+          "error_category": "runtime",
+          "error": "FileNotFoundException: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/.aideal_exec/A2/output/thumbnail.png/task_out.png (No such file or directory)",
+          "attempts": 1,
+          "wall_s": 34.2,
+          "llm_calls": 1,
+          "input_tokens": 2133,
+          "output_tokens": 4110,
+          "pass_round": null
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -727,18 +865,31 @@
     },
     {
       "api": "FixedResizerFactory",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "source/src/main/java/net/coobird/thumbnailator/resizers/FixedResizerFactory.java:49",
+      "doc_chars": 2886,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 14,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 13.0,
+          "llm_calls": 1,
+          "input_tokens": 1905,
+          "output_tokens": 1496,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -746,18 +897,31 @@
     },
     {
       "api": "FixedSizeThumbnailMaker",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "source/src/main/java/net/coobird/thumbnailator/makers/FixedSizeThumbnailMaker.java:158",
+      "doc_chars": 4185,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 15,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 10.9,
+          "llm_calls": 1,
+          "input_tokens": 2166,
+          "output_tokens": 1016,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],

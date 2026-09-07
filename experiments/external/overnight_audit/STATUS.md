@@ -8,11 +8,11 @@ Deadline: 2026-09-09T11:00:00-07:00. This observer never starts, stops, or resta
 | mir_eval | A2 | complete | 135 | 13 | 0 | 1 |
 | mir_eval | B1 | pending | 0 | 0 | 148 | 0 |
 | mir_eval | B2 | pending | 0 | 0 | 148 | 0 |
-| thumbnailator | A1 | partial | 10 | 2 | 137 | 0 |
-| thumbnailator | A2 | partial | 10 | 1 | 138 | 0 |
+| thumbnailator | A1 | partial | 12 | 4 | 133 | 0 |
+| thumbnailator | A2 | partial | 13 | 2 | 134 | 0 |
 | thumbnailator | B1 | pending | 0 | 0 | 149 | 0 |
 | thumbnailator | B2 | pending | 0 | 0 | 149 | 0 |
-| tslearn | A1 | partial | 10 | 7 | 218 | 0 |
+| tslearn | A1 | partial | 12 | 10 | 213 | 0 |
 | tslearn | A2 | pending | 0 | 0 | 235 | 0 |
 | tslearn | B1 | pending | 0 | 0 | 235 | 0 |
 | tslearn | B2 | pending | 0 | 0 | 235 | 0 |

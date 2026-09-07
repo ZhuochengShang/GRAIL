@@ -27,20 +27,23 @@ Effects withheld until all four matched final cells and their repair/test eviden
 
 ### A1
 
-Primary failure categories: {"unknown": 2}.
+Primary failure categories: {"unknown": 4}.
 
 Recorded provider-error attempts across all checkpoint fingerprints: 0. Provider-internal retries are not recorded by the existing client and cannot be inferred from the configured limit. Watchdog logs retain process attempts; checkpoint attempts and document-fix rounds are separate ledger fields.
 
 - `ConsecutivelyNumberedFilenames`: unknown; native=runtime; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `source/src/main/java/net/coobird/thumbnailator/name/ConsecutivelyNumberedFilenames.java:295`. Error: `IOException: Specified path is not a directory or does not exist.`. Review: Observed runtime; doc attribution requires source, document, and snippet review.
 - `FileImageSink`: unknown; native=runtime; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `source/src/main/java/net/coobird/thumbnailator/tasks/io/FileImageSink.java:127`. Error: `FileNotFoundException: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A1/experiments/external/thumbnailator/.aideal_exec/A1/output/thumbnail.png/test_sink_no_ext.png (No such file or directory)`. Review: Observed runtime; doc attribution requires source, document, and snippet review.
+- `FileThumbnailTask`: unknown; native=compile; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `source/src/main/java/net/coobird/thumbnailator/tasks/FileThumbnailTask.java:61`. Error: `/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A1/experiments/external/thumbnailator/.aideal_exec/A1/run_FileThumbnailTask/ApiTest.java:61: error: variable args is already defined in method main(String[])`. Review: Observed compile; doc attribution requires source, document, and snippet review.
+- `FixedSizeThumbnailMaker`: unknown; native=runtime; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `source/src/main/java/net/coobird/thumbnailator/makers/FixedSizeThumbnailMaker.java:158`. Error: `IllegalStateException: Maker not ready to make thumbnail.`. Review: Observed runtime; doc attribution requires source, document, and snippet review.
 
 ### A2
 
-Primary failure categories: {"unknown": 1}.
+Primary failure categories: {"unknown": 2}.
 
 Recorded provider-error attempts across all checkpoint fingerprints: 0. Provider-internal retries are not recorded by the existing client and cannot be inferred from the configured limit. Watchdog logs retain process attempts; checkpoint attempts and document-fix rounds are separate ledger fields.
 
 - `FileImageSink`: unknown; native=runtime; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `source/src/main/java/net/coobird/thumbnailator/tasks/io/FileImageSink.java:127`. Error: `FileNotFoundException: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/.aideal_exec/A2/output/thumbnail.png/test_sink2.png (No such file or directory)`. Review: Observed runtime; doc attribution requires source, document, and snippet review.
+- `FileThumbnailTask`: unknown; native=runtime; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `source/src/main/java/net/coobird/thumbnailator/tasks/FileThumbnailTask.java:61`. Error: `FileNotFoundException: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/.aideal_exec/A2/output/thumbnail.png/task_out.png (No such file or directory)`. Review: Observed runtime; doc attribution requires source, document, and snippet review.
 
 ### B1
 
@@ -58,6 +61,6 @@ Recorded provider-error attempts across all checkpoint fingerprints: 0. Provider
 
 ## Validity and remaining review
 
-- Confirm PASS_TO_PASS exit statuses and fixture provenance before signing off the final comparison.
+- Recorded PASS_TO_PASS result/exit-status markers and per-cell fixture fingerprints are checked before effects are released.
 - Unknown primary categories require source/document review; do not relabel provider errors as documentation failures.
 - Report runtime from the first start through completion, including watchdog waits, rather than the last resumed invocation alone.

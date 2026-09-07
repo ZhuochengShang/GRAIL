@@ -55,6 +55,6 @@ Recorded provider-error attempts across all checkpoint fingerprints: 0. Provider
 
 ## Validity and remaining review
 
-- Confirm PASS_TO_PASS exit statuses and fixture provenance before signing off the final comparison.
+- Recorded PASS_TO_PASS result/exit-status markers and per-cell fixture fingerprints are checked before effects are released.
 - Unknown primary categories require source/document review; do not relabel provider errors as documentation failures.
 - Report runtime from the first start through completion, including watchdog waits, rather than the last resumed invocation alone.
