@@ -16,7 +16,7 @@ For a presentation-friendly figure, the verbatim conversation memo, and the pape
 
 September 7 extension: [source-informed snippet recovery](experiments/external/recovery/README.md)
 is implemented and staged outside the running study. Its diagram and function
-map distinguish feedback-only repair, source-assisted repair, configurable
+map distinguish feedback-only repair, source-assisted repair, fixed study
 stagnation limits, and independent human review. It adds no headline B2 code-fix
 rounds and has not yet had a live provider/API validation run.
 

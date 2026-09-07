@@ -89,6 +89,22 @@ def test_rejects_shared_worktree_before_reading_sources(tmp_path):
         validate(cfg, cfg, baseline(), 'target', 'manifest.json')
 
 
+def test_study_runner_rejects_unmatched_threshold_before_any_input_or_model_call():
+    from .runner import run
+    with pytest.raises(ValueError, match='study limits are fixed'):
+        run(None, None, {}, 'target', 'source', 'manifest.json', execute=True, stuck=3)
+
+
+@pytest.mark.parametrize('threshold,expected', [('2', True), ('3', False)])
+def test_static_parity_check_detects_changed_limit_without_importing_driver(tmp_path, threshold, expected):
+    from experiments.external.check_rdpro_protocol import launch_flags
+    path = tmp_path/'driver.py'
+    path.write_text('raise RuntimeError("must never execute this driver")\ncommand = '
+        + repr(['--max-fix-rounds', '0', '--doc-rounds', '5', '--doc-stuck', threshold,
+                '--retry-rounds', '0', '--doc-scope', 'relevant', '--deep-dive-first']))
+    assert launch_flags([path])['matches_registered_limits'] is expected
+
+
 @pytest.mark.parametrize('changed', [None, 'source/target.py', 'fixture.txt', 'scaffold.py', 'doc.md'])
 def test_file_identity_gate(tmp_path, monkeypatch, changed):
     from . import validation as v

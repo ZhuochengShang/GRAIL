@@ -21,7 +21,8 @@ flowchart TD
 ```
 
 For **each** baseline cell, both modes use its identical eligible failure set.
-Default limit: five new code proposals, with a configurable stagnation threshold.
+Accepted study limit: five new code proposals, with a stagnation threshold of two.
+The runner rejects command-line overrides that disagree with the protocol YAML.
 The baseline attempt is round zero and does not consume that new proposal budget.
 Documents, source, fixtures and scaffold are fixed. The source mode reads a
 bounded canonical source window, types and repository call sites through
@@ -39,12 +40,13 @@ semantic correctness merely from a passing exit code and marker.
 
 ## Why two stuck rounds?
 
-Two is inherited as a **provisional cost-control default**, not selected by a
+Two is the **user-accepted study setting**, not selected by a
 threshold optimization experiment. Three permits one more attempt at the same
 error; it can recover additional APIs and can also spend more on persistent
 failures. Use the same threshold in both compared modes and freeze it before
-launch. `--stuck-rounds 3` changes this extension only; `0` disables early stopping
-within the five-round cap. Changing it creates a different recovery fingerprint.
+launch. Alternative thresholds belong to a separately registered protocol, not
+this study. The generic engine supports them for future experiments, but the
+study runner enforces the accepted five-round/two-stagnant-round policy.
 
 The two rules are different:
 
@@ -68,7 +70,7 @@ them. Validator rejection itself is not proof that the referenced member is
 actually nonexistent. The July-8 `zonalStats2` 31-attempt fixture mismatch is
 historical evidence about one failure, not evidence for an optimal global limit.
 
-For a pilot, allow the full five-round cap on a fixed sample and replay the
+For a separately registered future pilot, allow the full five-round cap and replay the
 observed histories under thresholds two and three, counting recoveries lost
 and calls saved. Histories already stopped early are censored. Randomized,
 repeated matched runs are needed for a stronger comparison of stochastic policies.
@@ -103,7 +105,7 @@ env PYTHONPATH=grail-agent/src:. python -m experiments.external.recovery.runner 
   --baseline-config /baseline/configs/aideal_B2.yaml \
   --baseline-result /baseline/docs/eval/B2/comprehension.json \
   --config /isolated/configs/aideal_B2.yaml \
-  --api target_api --mode source --stuck-rounds 3
+  --api target_api --mode source --stuck-rounds 2
 ```
 
 Without `--execute`, this reads and validates only. After provisioning and

@@ -37,6 +37,9 @@ def isolated_config(cfg, out, prompt):
 def run(cfg, base, result, api, mode, manifest, *, execute=False, max_rounds=5, stuck=2):
     if mode not in ('feedback', 'source'):
         raise ValueError('mode must be feedback or source')
+    accepted = policy()
+    if (max_rounds != accepted['max_code_fix_rounds'] or stuck != accepted['stuck_rounds']):
+        raise ValueError('study limits are fixed at the protocol YAML values; alternatives require a separate protocol')
     if not 1 <= max_rounds <= 5 or not 0 <= stuck <= max_rounds:
         raise ValueError('require 1..5 code rounds and stuck threshold 0..max_rounds')
     identity, initial = validate(base, cfg, result, api, manifest)
@@ -153,7 +156,7 @@ def main():
     parser.add_argument('--execute', action='store_true', help='otherwise only inspect inputs; no model calls')
     parser.add_argument('--max-rounds', type=int, default=defaults['max_code_fix_rounds'])
     parser.add_argument('--stuck-rounds', type=int, default=defaults['stuck_rounds'],
-                        help='provisional heuristic, not an optimum; 0 disables early stopping')
+                        help='must match the accepted protocol YAML value (2 for this study)')
     args = parser.parse_args()
     result = json.loads(args.baseline_result.read_text())
     print(json.dumps(run(load_config(args.config), load_config(args.baseline_config),
