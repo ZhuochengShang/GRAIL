@@ -12,6 +12,8 @@ measurement is documentation-conditioned API execution under a fixed harness.
 Independent discovery, installation, and held-out workflow success are not yet
 measured by the priority study; there is no overall readiness score.
 
+For a presentation-friendly figure, the verbatim conversation memo, and the paper literature review, open the [design and research package](docs/paper/README.md).
+
 ## 1. Legend and system boundary
 
 | Label | Meaning | Does it require an LLM? |
