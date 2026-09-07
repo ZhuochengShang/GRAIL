@@ -3,6 +3,12 @@
 Use this template once a repository has produced all four **matched** cells.
 Copy it into the repository's analysis branch and replace every `<...>` field.
 
+The live reporting framework is `audit_overnight.py`; input identity and API-test
+data evidence are checked independently by `audit_experiment_data.py`. Follow
+`REPORTING_AND_DATA_VALIDATION.md` for authoritative inputs, field definitions,
+automatic delivery, and evidence limitations. Never enter a predicted value as
+a measured result. Pending cells remain pending at the Wednesday deadline.
+
 The design is:
 
 ```text
@@ -134,3 +140,68 @@ the change improved B1, B2, both, or neither.
 **Primary limitation:** `<...>`  
 **Most important failure mechanism:** `<...>`  
 **Recommended next experiment:** `<...>`
+
+## 9. Data identity and API-test suitability
+
+Identity checks prove which bytes were supplied. API suitability requires an
+additional check of shapes, types, units, API ownership, and assertion meaning.
+An upstream test-suite pass does not validate every generated test's oracle.
+
+| Input | Role | Absolute path or in-memory construction | Source commit / Git blob | SHA-256 | Decoded shape/type/units | Pinned bytes match? |
+|---|---|---|---|---|---|---|
+| `<binding>` | `<input fixture / synthetic input / output>` | `<...>` | `<...>` | `<...>` | `<...>` | `<yes/no/not applicable>` |
+
+Keep generated output paths out of the input-fixture inventory. For synthetic
+inputs, retain the preamble/code hash, construction parameters and expected
+invariants. A numerical utility API may correctly require no dataset file.
+
+| API | Canonical owner/signature | Fixture/preloaded values used | Required shape/type/units | Actual call evidence | Assertion/witness | Suitability decision | Evidence |
+|---|---|---|---|---|---|---|---|
+| `<name>` | `<...>` | `<...>` | `<...>` | `<...>` | `<...>` | `<verified / mismatch / needs review / not applicable>` | `<script/hash/source>` |
+
+- Verify ordered API names against the frozen full manifest, not an older
+  subset or a same-sized result from another experiment.
+- Verify each fixture against the blob at the pinned source commit; record
+  source/config/profile/scaffold hashes and decoded input metadata.
+- Identify the exact documentation treatment and result/checkpoint fingerprint.
+- Confirm the generated snippet actually calls the intended public API and
+  uses valid inputs. A binding declared in the scaffold is not proof of use.
+- Inspect API-specific constraints: array dimensions/dtypes, class coverage,
+  units, coordinate conventions, image modes, file formats, and output paths.
+- Record textual call/assertion detection as preliminary evidence only.
+  Correctness markers and a passing process do not by themselves prove a
+  correct oracle, target ownership or meaningful exercise of the API.
+- Keep diagnostic reruns separate from A1/A2/B1/B2 and from credited repairs.
+
+## 10. Round and time definitions
+
+| Quantity | Definition / authoritative evidence |
+|---|---|
+| Configured provider limit | Literal transport environment/config value; not an observed count |
+| Observed provider-error attempts | Provider failures recorded in the per-API checkpoint |
+| Provider-internal retries | Actual provider-attempt log; `unknown` when the SDK did not expose it |
+| Comprehension attempts | Per-API checkpoint events under one compatible fingerprint |
+| Code-fix rounds | Snippet changes within an invocation; final headline runs must use zero |
+| Document-fix rounds | Shared-document treatment rounds from `docfix.json`, including unsuccessful/reverted rounds |
+| Deep-dive rounds | Recorded deep-dive operations, separate from rewrite and evaluation |
+| Stuck rounds | Consecutive unchanged/no-progress rounds as recorded by the repair loop; not total failures |
+| Watchdog attempts | Process launches from state/logs; identify admission-only waits separately |
+| Wall time | First actual computation start to final completion, with queue and retry waits separately reported |
+| Model usage | Recorded per-attempt calls/tokens; a resumed final JSON alone omits prior invocations |
+
+## 11. Cross-repository summary and deadline snapshot
+
+| Repository | APIs per cell | Four matched final cells? | A1 | A2 | B1 | B2 | Generation effect (pp) | Repair effect (pp) | Main failure mechanism | Data validity |
+|---|---:|---|---:|---:|---:|---:|---:|---:|---|---|
+| mir_eval | 148 | `<...>` | `<...>` | `<...>` | `<...>` | `<...>` | `<...>` | `<B2-A2>` | `<...>` | `<...>` |
+| Thumbnailator | 149 | `<...>` | `<...>` | `<...>` | `<...>` | `<...>` | `<...>` | `<B2-A2>` | `<...>` | `<...>` |
+| tslearn | 235 | `<...>` | `<...>` | `<...>` | `<...>` | `<...>` | `<...>` | `<B2-A2>` | `<...>` | `<...>` |
+
+State whether percentages are raw or scored; do not pool unlike API
+denominators without specifying the weighting. MDAnalysis, Sedona and RDPro
+reruns are deferred from this deadline package.
+
+Record the snapshot timestamp, report commit, completed cells, remaining
+provider/validation blockers, and exact missing artifacts. The scheduled
+10:45 AM Wednesday snapshot provides a reviewable package before 11:00 AM;
+the live report continues to fill as additional validated results finish.
