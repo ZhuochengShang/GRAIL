@@ -714,6 +714,28 @@ def internal_finalize(cell: str) -> int:
 
 
 def run_watchdog(plan_path: Path, confirm: bool) -> int:
+    # The September 7 handoff supersedes the earlier paid-run authorization.
+    # A live wait_then_run process will import this entry point only after its
+    # prerequisite completes, so this gate also protects already queued work
+    # without terminating or restarting that process.
+    policy_path = RUNNER / "experiments/rdpro/reuse_only_policy.json"
+    policy = json.loads(policy_path.read_text(encoding="utf-8"))
+    if policy.get("paid_execution_allowed") is not True:
+        evidence = policy.get("evidence") or []
+        if not evidence:
+            raise RuntimeError("RDPro reuse policy has no retained evidence")
+        for item in evidence:
+            path = Path(item["path"])
+            if not path.is_file() or sha256(path) != item["sha256"]:
+                raise RuntimeError(f"RDPro retained evidence changed or missing: {path}")
+        print(json.dumps({
+            "status": "reused-existing-evidence",
+            "paid_calls_started": False,
+            "policy": str(policy_path),
+            "comparison_status": policy["comparison_status"],
+            "evidence": evidence,
+        }, indent=2))
+        return 0
     if not confirm:
         raise SystemExit("refusing paid LLM execution without --confirm-paid-llm")
     command = [str(PYTHON), str(RUNNER / "experiments/external/run_condition_watchdog.py"),
