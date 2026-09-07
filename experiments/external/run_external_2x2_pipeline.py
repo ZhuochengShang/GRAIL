@@ -72,6 +72,25 @@ def generation_complete(path: Path) -> bool:
             and bool(data.get("generation_fingerprint")))
 
 
+def wait_for_watchdog_job(state_path: Path, job_id: str) -> None:
+    """Wait for a separately supervised prerequisite without duplicating it."""
+    state_path = state_path.resolve()
+    while True:
+        data = read_json(state_path)
+        row = (data.get("jobs") or {}).get(job_id) or {}
+        status = row.get("status")
+        if status == "succeeded":
+            print(f"[{time.strftime('%H:%M:%S')}] prerequisite {job_id} succeeded",
+                  flush=True)
+            return
+        print(
+            f"[{time.strftime('%H:%M:%S')}] waiting for prerequisite "
+            f"{job_id}: status={status or 'not-created'}",
+            flush=True,
+        )
+        time.sleep(30)
+
+
 def wait_for_generation(freeze: Path, repo: str) -> None:
     result = freeze / f"experiments/external/{repo}/docs/eval/A2/generation_result.json"
     plan = freeze / f"experiments/external/{repo}/docs/eval/A2/generation_watchdog.yaml"
@@ -244,10 +263,16 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("repo", choices=sorted(REPOS))
     parser.add_argument("--freeze-worktree", required=True, type=Path)
+    parser.add_argument("--wait-for-watchdog-state", type=Path)
+    parser.add_argument("--wait-for-job")
     args = parser.parse_args()
+    if bool(args.wait_for_watchdog_state) != bool(args.wait_for_job):
+        parser.error("--wait-for-watchdog-state and --wait-for-job are required together")
     repo = args.repo
     meta = REPOS[repo]
     setup = args.freeze_worktree.resolve()
+    if args.wait_for_watchdog_state:
+        wait_for_watchdog_job(args.wait_for_watchdog_state, args.wait_for_job)
     if git(setup, "branch", "--show-current").stdout.strip() != meta["freeze_branch"]:
         raise RuntimeError(f"freeze worktree must be {meta['freeze_branch']}")
 
