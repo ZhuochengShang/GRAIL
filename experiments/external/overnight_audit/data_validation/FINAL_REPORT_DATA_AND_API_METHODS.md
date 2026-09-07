@@ -9,6 +9,8 @@ In the delivered report package, this appendix resides under `data_validation/`:
 - [Measured results and release decisions](../FINAL_REPORT_WITH_DATA_CHECKS.md)
 - [Detailed results, failures, attempts, and repair rounds](../DETAILED_PRIORITY_REPORT.md)
 - [Live input validation](DATA_VALIDATION.md)
+- [Automation health, forecasts, configuration bundles, and review queue](automation/AUTOMATION_STATUS.md)
+- [Complete design logic: LLMs, prompts, skills, and human decisions](AIDEAL_DESIGN_LOGIC.md)
 
 Those links are relative to the delivered package, not this source-template
 directory. The existing data observer copies this whole directory into
