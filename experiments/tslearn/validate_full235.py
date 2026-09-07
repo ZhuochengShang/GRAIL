@@ -17,10 +17,13 @@ from aideal.readme_agent import parse_readme, public_api_details, public_api_sur
 
 
 EXPECTED_SOURCE = "f8f13ddf4186e2cc99c8ef495aeb46b1254a01f7"
+EXPECTED_SOURCE_TREE = "f8e64d3e0869bc042bdd727cf877829b584aec27"
 EXPECTED_MANIFEST_SHA = "42dd31265d4fd753eab37f00ea636b5e06bdd2b2203e48be45dc0be6569b967f"
 EXPECTED_ORDERED_SHA = "f32b60b9ce1415415e60f7ff285bde2efb0f62a6e0aaf33622590486fd8bf907"
 EXPECTED_FIXTURE_SHA = "0de0b7fa727cfabaf8481552db2b95fcccd12e54b67058aea79ff05b483cf807"
 EXPECTED_SCAFFOLD_SHA = "45d3de8bc5de86ea8814fa9350e2695f06945a6bcae6b23528feef97dd2f1c99"
+EXPECTED_DOC_BUNDLE_SHA = "b976fddc2e1e140db76b55d7e8a11137e26521a829e59ce7ab5cc6d13b448f15"
+EXPECTED_MODEL = ("google", "gemini-3.1-pro-preview")
 CONDITIONS = ("A1", "A2", "B1", "B2")
 
 
@@ -59,17 +62,31 @@ def main() -> int:
     source_commit = proc.stdout.strip()
     if proc.returncode or source_commit != EXPECTED_SOURCE:
         problems.append(f"source commit is {source_commit or 'unavailable'}")
+    tree_proc = subprocess.run(
+        ["git", "-C", str(source), "rev-parse", "HEAD^{tree}"],
+        text=True, capture_output=True, check=False)
+    source_tree = tree_proc.stdout.strip()
+    if tree_proc.returncode or source_tree != EXPECTED_SOURCE_TREE:
+        problems.append(f"source tree is {source_tree or 'unavailable'}")
+    dirty_proc = subprocess.run(
+        ["git", "-C", str(source), "status", "--porcelain"],
+        text=True, capture_output=True, check=False)
+    if dirty_proc.returncode or dirty_proc.stdout.strip():
+        problems.append("pinned source checkout is dirty or unavailable")
 
     fixture = source / "tslearn/.cached_datasets/Trace.npz"
     if not fixture.is_file() or sha(fixture) != EXPECTED_FIXTURE_SHA:
         problems.append("Trace fixture missing or hash differs")
 
     scaffold = root / "docs/api_test_scaffold_full235.py"
-    try:
-        ast.parse(scaffold.read_text(encoding="utf-8"))
-    except Exception as exc:
-        problems.append(f"shared scaffold does not parse: {exc}")
-    if not scaffold.is_file() or sha(scaffold) != EXPECTED_SCAFFOLD_SHA:
+    if not scaffold.is_file():
+        problems.append("shared scaffold is missing")
+    else:
+        try:
+            ast.parse(scaffold.read_text(encoding="utf-8"))
+        except Exception as exc:
+            problems.append(f"shared scaffold does not parse: {exc}")
+    if scaffold.is_file() and sha(scaffold) != EXPECTED_SCAFFOLD_SHA:
         problems.append("shared scaffold hash differs")
 
     tags = (args.condition,) if args.condition else CONDITIONS
@@ -89,6 +106,18 @@ def main() -> int:
             problems.append(f"{tag}: surface_filter is not all")
         if missing_fields(load_profile(cfg)):
             problems.append(f"{tag}: project profile is incomplete")
+        docs_text = cfg.original_readme_text(limit=None)
+        docs_sha = hashlib.sha256(docs_text.encode("utf-8")).hexdigest()
+        if len(cfg.original_readme_files) != 116 or docs_sha != EXPECTED_DOC_BUNDLE_SHA:
+            problems.append(
+                f"{tag}: original-doc bundle differs: "
+                f"files={len(cfg.original_readme_files)}, sha256={docs_sha}")
+        for role in ("author", "audience", "fixer"):
+            spec = cfg.model_for_role(role)
+            if (spec.provider, spec.model) != EXPECTED_MODEL:
+                problems.append(
+                    f"{tag}: {role} model is {spec.provider}:{spec.model}, "
+                    f"expected {EXPECTED_MODEL[0]}:{EXPECTED_MODEL[1]}")
         if ex.get("scaffold") != "docs/api_test_scaffold_full235.py":
             problems.append(f"{tag}: does not use the shared scaffold")
         expected_work = f".aideal_exec/{tag}"
@@ -113,6 +142,9 @@ def main() -> int:
             "config": str(cfg_path), "raw_names": len(raw_names),
             "definition_sites": len(details), "work_dir": ex.get("work_dir"),
             "output_dir": ex.get("output_dir"), "llm_readme": str(cfg.llm_readme),
+            "original_doc_files": len(cfg.original_readme_files),
+            "original_doc_sha256": docs_sha,
+            "model": f"{EXPECTED_MODEL[0]}:{EXPECTED_MODEL[1]}",
         }
     if not args.condition and len(path_tuples) != 4:
         problems.append("condition state paths are not all unique")
@@ -124,6 +156,7 @@ def main() -> int:
         "manifest_sha256": sha(manifest_path),
         "ordered_names_sha256": ordered_sha,
         "source_commit": source_commit,
+        "source_tree": source_tree,
         "checks": checks,
         "problems": problems,
     }

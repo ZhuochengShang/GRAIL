@@ -26,6 +26,7 @@ from experiments.external.run_condition_watchdog import Supervisor
 
 PYTHON = Path("/Users/clockorangezoe/miniconda3/envs/geo_llm_spark/bin/python")
 SOURCE_COMMIT = "f8f13ddf4186e2cc99c8ef495aeb46b1254a01f7"
+SOURCE_TREE = "f8e64d3e0869bc042bdd727cf877829b584aec27"
 FREEZE_BRANCH = "aideal/tslearn-full235-freeze"
 BRANCHES = {cell: f"aideal/tslearn-full235-{cell}" for cell in ("A1", "A2", "B1", "B2")}
 WORKTREE_NAMES = {cell: f"GRAIL_tslearn_full235_{cell}" for cell in BRANCHES}
@@ -82,6 +83,11 @@ def ensure_source(setup: Path, worktree: Path) -> Path:
     actual = git(source, "rev-parse", "HEAD").stdout.strip()
     if actual != SOURCE_COMMIT:
         raise RuntimeError(f"{worktree.name}: source {actual}, expected {SOURCE_COMMIT}")
+    actual_tree = git(source, "rev-parse", "HEAD^{tree}").stdout.strip()
+    if actual_tree != SOURCE_TREE:
+        raise RuntimeError(f"{worktree.name}: source tree {actual_tree}, expected {SOURCE_TREE}")
+    if git(source, "status", "--porcelain").stdout.strip():
+        raise RuntimeError(f"{worktree.name}: pinned source checkout is dirty")
     if not (source / "tslearn/.cached_datasets/Trace.npz").is_file():
         raise RuntimeError(f"{worktree.name}: repository Trace fixture missing")
     return source
@@ -93,11 +99,12 @@ def environment_inventory(worktree: Path, cell: str, source: Path) -> Path:
                NUMBA_NUM_THREADS="1", OMP_NUM_THREADS="1",
                OPENBLAS_NUM_THREADS="1", MKL_NUM_THREADS="1")
     versions = run([str(PYTHON), "-c",
-                    "import sys,numpy,scipy,sklearn,numba,tslearn; "
+                    "import sys,numpy,scipy,sklearn,numba,tslearn,aideal; "
                     "print('python='+sys.version.replace('\\n',' ')); "
                     "print('executable='+sys.executable); "
                     "print('tslearn='+tslearn.__version__); "
                     "print('tslearn_file='+tslearn.__file__); "
+                    "print('aideal_file='+aideal.__file__); "
                     "print('numpy='+numpy.__version__); print('scipy='+scipy.__version__); "
                     "print('sklearn='+sklearn.__version__); print('numba='+numba.__version__)"],
                    worktree, env=env).stdout
@@ -108,6 +115,7 @@ def environment_inventory(worktree: Path, cell: str, source: Path) -> Path:
     config = worktree / REL / f"configs/aideal_{cell}_full235.yaml"
     text = (
         f"cell={cell}\nsource_commit={SOURCE_COMMIT}\n"
+        f"grail_commit={git(worktree, 'rev-parse', 'HEAD').stdout.strip()}\n"
         f"source_tree={git(source, 'rev-parse', 'HEAD^{tree}').stdout.strip()}\n"
         f"manifest_sha256={sha(manifest)}\nscaffold_sha256={sha(scaffold)}\n"
         f"config_sha256={sha(config)}\nfixture_sha256={sha(fixture)}\n"
@@ -187,14 +195,15 @@ def generation_job(worktree: Path, inventory: Path) -> dict:
     return job
 
 
-def validation_job(worktree: Path, inventory: Path) -> dict:
-    job = common_job(worktree, "A2", inventory)
+def validation_job(worktree: Path, cell: str, inventory: Path,
+                   depends_on: list[str]) -> dict:
+    job = common_job(worktree, cell, inventory)
     job.update({
-        "id": "tslearn_A2_validate_readme",
-        "depends_on": ["tslearn_A2_generate"],
+        "id": f"tslearn_{cell}_validate_readme",
+        "depends_on": depends_on,
         "command": [str(PYTHON), "experiments/tslearn/validate_full235.py",
-                    "--condition", "A2", "--require-readme"],
-        "result": "experiments/tslearn/docs/eval/A2/static_validation.json",
+                    "--condition", cell, "--require-readme"],
+        "result": f"experiments/tslearn/docs/eval/{cell}/static_validation.json",
         "complete": {"kind": "file_nonempty"},
         "max_runtime_seconds": 1800,
     })
@@ -307,7 +316,8 @@ def main() -> int:
     baseline_plan = write_plan(setup, "full235_baselines", [
         comprehension_job(worktrees["A1"], "A1", inventories["A1"]),
         generation_job(worktrees["A2"], inventories["A2"]),
-        validation_job(worktrees["A2"], inventories["A2"]),
+        validation_job(worktrees["A2"], "A2", inventories["A2"],
+                       ["tslearn_A2_generate"]),
         comprehension_job(worktrees["A2"], "A2", inventories["A2"],
                           ["tslearn_A2_validate_readme"]),
     ])
@@ -318,6 +328,10 @@ def main() -> int:
 
     for cell in ("A1", "A2"):
         analyze(worktrees[cell], cell)
+        post = worktrees[cell] / REL / f"docs/eval/{cell}/PASS_TO_PASS_AFTER.md"
+        if not post.is_file():
+            upstream_tests(worktrees[cell], cell, "after",
+                           ensure_source(setup, worktrees[cell]))
         paths = [REL / f"docs/eval/{cell}", REL / f"logs/eval/{cell}",
                  REL / f"docs/eval/setup/environment_{cell}.txt"]
         commit_push(worktrees[cell], BRANCHES[cell],
@@ -329,6 +343,9 @@ def main() -> int:
         source = ensure_source(setup, wt)
         worktrees[cell] = wt
         inventories[cell] = environment_inventory(wt, cell, source)
+        pre = wt / REL / f"docs/eval/{cell}/PASS_TO_PASS_BEFORE.md"
+        if not pre.is_file():
+            upstream_tests(wt, cell, "before", source)
         if cell == "B2":
             source_doc = wt / REL / "docs/eval/A2/LLM_readme.md"
             target_doc = wt / REL / "docs/eval/B2/LLM_readme.md"
@@ -337,10 +354,15 @@ def main() -> int:
                 shutil.copy2(source_doc, target_doc)
 
     repair_jobs = []
-    for cell in ("B1", "B2"):
-        repair_jobs.append(repair_job(worktrees[cell], cell, inventories[cell]))
-        repair_jobs.append(comprehension_job(
-            worktrees[cell], cell, inventories[cell], [f"tslearn_{cell}_repair"]))
+    repair_jobs.append(repair_job(worktrees["B1"], "B1", inventories["B1"]))
+    repair_jobs.append(comprehension_job(
+        worktrees["B1"], "B1", inventories["B1"], ["tslearn_B1_repair"]))
+    repair_jobs.append(repair_job(worktrees["B2"], "B2", inventories["B2"]))
+    repair_jobs.append(validation_job(
+        worktrees["B2"], "B2", inventories["B2"], ["tslearn_B2_repair"]))
+    repair_jobs.append(comprehension_job(
+        worktrees["B2"], "B2", inventories["B2"],
+        ["tslearn_B2_validate_readme"]))
     repair_plan = write_plan(setup, "full235_repairs", repair_jobs)
     run_plan(repair_plan, execute=True)
 

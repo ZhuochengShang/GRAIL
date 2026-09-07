@@ -1,0 +1,112 @@
+version: 1
+max_parallel: 2
+retry_delay_seconds: 300
+env:
+  AIDEAL_GOOGLE_MIN_INTERVAL_S: '3'
+  AIDEAL_GOOGLE_RATE_STATE: /tmp/aideal_google_rate_gate.txt
+  AIDEAL_GOOGLE_REQUEST_TIMEOUT_S: '300'
+  AIDEAL_GOOGLE_MAX_RETRIES: '2'
+  PYTHONUNBUFFERED: '1'
+jobs:
+- cwd: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1
+  branch: aideal/tslearn-full235-A1
+  environment_inventory: experiments/tslearn/docs/eval/setup/environment_A1.txt
+  env:
+    PYTHONPATH: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/grail-agent/src
+  max_restarts: 0
+  id: tslearn_A1_zero
+  depends_on: []
+  command:
+  - /Users/clockorangezoe/miniconda3/envs/geo_llm_spark/bin/python
+  - -m
+  - aideal.cli
+  - --config
+  - experiments/tslearn/configs/aideal_A1_full235.yaml
+  - comprehension
+  - --execute
+  - --show-code
+  - --doc
+  - original
+  - --doc-scope
+  - relevant
+  - --manifest
+  - docs/eval/api_manifest.json
+  - --max-fix-rounds
+  - '0'
+  - --resume
+  - --timeout
+  - '300'
+  result: experiments/tslearn/docs/eval/A1/comprehension.json
+  complete:
+    kind: json_metrics_no_transient
+  max_runtime_seconds: 172800
+- cwd: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A2
+  branch: aideal/tslearn-full235-A2
+  environment_inventory: experiments/tslearn/docs/eval/setup/environment_A2.txt
+  env:
+    PYTHONPATH: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A2/grail-agent/src
+  max_restarts: 0
+  id: tslearn_A2_generate
+  command:
+  - /Users/clockorangezoe/miniconda3/envs/geo_llm_spark/bin/python
+  - experiments/external/run_resumable_readme.py
+  - --config
+  - experiments/tslearn/configs/aideal_A2_full235.yaml
+  - --limit
+  - '0'
+  result: experiments/tslearn/docs/eval/A2/generation_result.json
+  complete:
+    kind: readme_generation
+  max_runtime_seconds: 172800
+- cwd: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A2
+  branch: aideal/tslearn-full235-A2
+  environment_inventory: experiments/tslearn/docs/eval/setup/environment_A2.txt
+  env:
+    PYTHONPATH: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A2/grail-agent/src
+  max_restarts: 0
+  id: tslearn_A2_validate_readme
+  depends_on:
+  - tslearn_A2_generate
+  command:
+  - /Users/clockorangezoe/miniconda3/envs/geo_llm_spark/bin/python
+  - experiments/tslearn/validate_full235.py
+  - --condition
+  - A2
+  - --require-readme
+  result: experiments/tslearn/docs/eval/A2/static_validation.json
+  complete:
+    kind: file_nonempty
+  max_runtime_seconds: 1800
+- cwd: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A2
+  branch: aideal/tslearn-full235-A2
+  environment_inventory: experiments/tslearn/docs/eval/setup/environment_A2.txt
+  env:
+    PYTHONPATH: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A2/grail-agent/src
+  max_restarts: 0
+  id: tslearn_A2_zero
+  depends_on:
+  - tslearn_A2_validate_readme
+  command:
+  - /Users/clockorangezoe/miniconda3/envs/geo_llm_spark/bin/python
+  - -m
+  - aideal.cli
+  - --config
+  - experiments/tslearn/configs/aideal_A2_full235.yaml
+  - comprehension
+  - --execute
+  - --show-code
+  - --doc
+  - aideal
+  - --doc-scope
+  - relevant
+  - --manifest
+  - docs/eval/api_manifest.json
+  - --max-fix-rounds
+  - '0'
+  - --resume
+  - --timeout
+  - '300'
+  result: experiments/tslearn/docs/eval/A2/comprehension.json
+  complete:
+    kind: json_metrics_no_transient
+  max_runtime_seconds: 172800

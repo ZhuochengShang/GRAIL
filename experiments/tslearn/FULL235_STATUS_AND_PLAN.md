@@ -40,15 +40,15 @@ completion predicate, per-function analysis, and required test gate succeed.
 ```text
 freeze + manifest + common harness
           |
-          +-- A1 PASS_TO_PASS-before -> A1 zero ------------------+
+          +-- A1 tests-before -> A1 zero -> tests-after ----------+
           |                                                       |
           |                                               B1 deep repair
           |                                                       |
           |                                      B1 fresh zero -> tests-after
           |
-          +-- A2 tests-before -> full README generation -> A2 zero+
+          +-- A2 tests-before -> README -> A2 zero -> tests-after-+
                                                                   |
-                                                         B2 deep repair
+                              B1/B2 tests-before -> B2 deep repair
                                                                   |
                                                  B2 fresh zero -> tests-after
 ```
@@ -63,7 +63,7 @@ persist after every API.
 ## Evidence produced per cell
 
 - Environment inventory and its hash
-- PASS_TO_PASS test output and exact exit status
+- PASS_TO_PASS-before and PASS_TO_PASS-after output and exact exit status
 - Generated README state/result where applicable
 - Zero-round comprehension JSON with 235 metrics and no transient LLM errors
 - Per-function CSV, JSON, and Markdown failure analysis
