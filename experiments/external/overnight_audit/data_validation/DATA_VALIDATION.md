@@ -13,7 +13,7 @@ This checks pinned input identity and records test evidence. It does not certify
 | thumbnailator | B1 | pending | none observed |
 | thumbnailator | B2 | pending | none observed |
 | tslearn | A1 | PASS_WITH_LIMITATIONS | none observed |
-| tslearn | A2 | PASS_WITH_LIMITATIONS | supplied output directory does not currently exist; write APIs may fail before the target call |
+| tslearn | A2 | PASS_WITH_LIMITATIONS | none observed |
 | tslearn | B1 | pending | none observed |
 | tslearn | B2 | pending | none observed |
 
