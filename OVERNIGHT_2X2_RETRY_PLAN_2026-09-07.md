@@ -2,6 +2,13 @@
 
 Date: 2026-09-07 (America/Los_Angeles)
 
+**Updated September 7, 14:15:** the user approved parallel execution of
+mir_eval, Thumbnailator and tslearn for the Wednesday 11:00 AM deadline.
+MDAnalysis, Sedona and RDPro reruns may wait. The serial graph below records
+the original plan; the current admission and reporting handoff is
+`STATUS_2026-09-07_PRIORITY_PARALLEL.md`. Measurement and repair limits remain
+unchanged.
+
 ## Measurement rule
 
 Every final A1/A2/B1/B2 comprehension run uses `--max-fix-rounds 0`.

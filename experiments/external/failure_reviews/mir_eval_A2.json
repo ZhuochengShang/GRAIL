@@ -1,0 +1,60 @@
+{
+  "result_sha256": "9cd63bb063ac44bbab577c2862eda88a1cca62af72a4f69804a44b85c8b5a295",
+  "review_date": "2026-09-07",
+  "policy": "Analysis only; do not change native results, frozen documents or paid checkpoints. No repair is credited from these diagnostics.",
+  "diagnostic_summary": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/.aideal_exec/mir_eval_A2_outputdir_diagnostic/summary.json",
+  "apis": {
+    "deprecated": {
+      "primary_category": "unknown",
+      "reason": "Generated assertion requires DeprecationWarning, but the pinned decorator emits FutureWarning (util.py:946). Warning class is not clearly specified in the generated entry; attribution remains ambiguous."
+    },
+    "first_n_three_layer_P": {
+      "primary_category": "test/scaffold",
+      "reason": "The provided output directory was absent. The identical snippet passes in an isolated diagnostic after only binding output_dir to a pre-created directory."
+    },
+    "load_key": {
+      "primary_category": "test/scaffold",
+      "reason": "The provided output directory was absent. With only that directory issue removed, the snippet still fails: it writes C:maj as one column, while io.py:497 requires two columns such as C major. The generated entry omits that format requirement (secondary doc-vague)."
+    },
+    "load_patterns": {
+      "primary_category": "example-invalid",
+      "reason": "The generated snippet refers to source/tests/data/pattern/reference.txt, which is not a checked-in fixture at the pinned source. This is an invalid snippet fixture path; no proof that the README itself specified this path."
+    },
+    "load_ragged_time_series": {
+      "primary_category": "doc-wrong",
+      "reason": "The generated entry says header=True skips the first row. In io.py:594 the implementation uses enumerate(input_file, start_row), which changes line numbering but never skips the header. The snippet correctly used header=True; this is a pinned upstream implementation/doc mismatch, not merely a missing argument."
+    },
+    "load_tempo": {
+      "primary_category": "test/scaffold",
+      "reason": "The identical generated snippet passes after only binding output_dir to a pre-created isolated directory. The recorded headline result remains unchanged."
+    },
+    "load_valued_intervals": {
+      "primary_category": "test/scaffold",
+      "reason": "The identical generated snippet passes after only binding output_dir to a pre-created isolated directory. The recorded headline result remains unchanged."
+    },
+    "load_wav": {
+      "primary_category": "test/scaffold",
+      "reason": "The first failure is the absent supplied output directory. Once removed in isolation, a second failure remains: the snippet expects sample 0.375 and fails its scaling/mixing assertion. Do not count this as a recovered headline pass."
+    },
+    "p_score": {
+      "primary_category": "unknown",
+      "reason": "The generated correctness oracle expects 1.0 and receives 0.0. Input construction and the score definition require further review; an assertion failure alone does not establish defective documentation."
+    },
+    "piano_roll": {
+      "primary_category": "unknown",
+      "reason": "The snippet expects four ax.patches but observes zero. This tests a particular Matplotlib artist representation rather than solely successful piano-roll construction; the oracle requires review."
+    },
+    "reduce_extended_quality": {
+      "primary_category": "unknown",
+      "reason": "The snippet expects maj but receives maj7. chord.py:319 preserves unrecognized reductions via EXTENDED_QUALITY_REDUX.get; verify the specific quality against that mapping before attributing a doc defect."
+    },
+    "ticker_pitch": {
+      "primary_category": "doc-wrong",
+      "reason": "The generated README promises note names. display.py:1095 installs FMT_MIDI_HZ, so MIDI 69 formats as 440; the distinct ticker_notes function at display.py:1077 installs FMT_MIDI_NOTE. The README confuses the two API semantics."
+    },
+    "voicing_recall": {
+      "primary_category": "unknown",
+      "reason": "The generated entry explicitly requires equal-length boolean arrays. The failure is a bitwise_and TypeError from incompatible input types; inspect the generated preprocessing before attributing a documentation defect."
+    }
+  }
+}
