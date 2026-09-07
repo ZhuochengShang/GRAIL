@@ -46,6 +46,7 @@ class RDProPipelineTests(unittest.TestCase):
         self.assertIn("rdpro_a2_baseline_checkpoint", jobs["rdpro_b2_sync"]["depends_on"])
         self.assertIn("rdpro_a2_zero", jobs["rdpro_a2_baseline_checkpoint"]["depends_on"])
         self.assertIn("rdpro_a1_import", jobs["rdpro_a1_baseline_checkpoint"]["depends_on"])
+        self.assertIn("rdpro_a1_import", jobs["rdpro_b1_clean"]["depends_on"])
         self.assertIn("rdpro_b2_repair_checkpoint", jobs["rdpro_b2_zero"]["depends_on"])
         self.assertEqual(pipeline.build_plan()["max_parallel"], 2)
 

@@ -540,6 +540,11 @@ def internal_import_a1() -> int:
 
 def internal_prepare_b1() -> int:
     worktree = CELLS["B1"]["path"]
+    a1_source = CELLS["A1"]["path"] / "experiments/rdpro/docs/eval/A1/comprehension.json"
+    validate_result(a1_source, "original")
+    baseline = worktree / "experiments/rdpro/docs/eval/A1/comprehension.json"
+    baseline.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(a1_source, baseline)
     catalog = worktree / "experiments/rdpro/docs/LLM_readme.md"
     archive = worktree / "experiments/rdpro/docs/eval/B1/LLM_readme_precondition_archive.md"
     archive.parent.mkdir(parents=True, exist_ok=True)
@@ -547,10 +552,11 @@ def internal_prepare_b1() -> int:
         shutil.copy2(catalog, archive)
     if catalog.exists():
         catalog.unlink()
-    baseline = worktree / "experiments/rdpro/docs/eval/A1/comprehension.json"
     seed_error_log(worktree, baseline, "B1")
     result = {"cell": "B1", "catalog_absent": not catalog.exists(),
               "precondition": "original docs only; create_missing enabled",
+              "baseline_source": str(a1_source),
+              "baseline_sha256": sha256(baseline),
               "archive": str(archive.relative_to(worktree)),
               "archive_sha256": sha256(archive) if archive.exists() else None}
     atomic_json(archive.parent / "precondition.json", result)
