@@ -46,9 +46,10 @@ def rubric_flags(r: dict) -> tuple[bool, str]:
     api = r.get("public_api_count", 0)
     notes = []
     ok = True
-    if not (50 <= api <= 3000):
-        ok = False; notes.append(f"API {api} out of 50-3000")
+    if not (50 <= api <= 200):
+        ok = False; notes.append(f"API {api} out of 50-200")
     if not r.get("has_tests"): ok = False; notes.append("no tests")
+    if not r.get("has_sample_data"): ok = False; notes.append("no checked-in sample data")
     if not r.get("has_docs"): notes.append("thin docs")
     if r.get("has_agents"): notes.append("has AGENTS.md (less headroom)")
     if not r.get("source_active"): ok = False; notes.append("stale source")
@@ -73,7 +74,7 @@ def main(top_per_lang: int = 10) -> None:
           f"{len(repos)} unique repos total. Quick-gates = R1/R4/R5/R7 from finder fields; "
           "R3 (builds ≤30 min) + R6 (contamination probe) need local Stage-B/D.", ""]
     csv_rows = [["language", "rank", "repo", "stars", "api", "final_score",
-                 "ready", "domain(s)", "url"]]
+                 "ready", "domain(s)", "sample_data", "url"]]
     # language order = harness cost
     for lang in sorted(by_lang, key=lambda l: {"Scala": 0, "Python": 1, "Java": 2}.get(l, 9)):
         ranked = sorted(by_lang[lang], key=lambda r: -r.get("final_score", 0))[:args.top]
@@ -88,7 +89,8 @@ def main(top_per_lang: int = 10) -> None:
                       f"{'✓' if ok else '—'} | {doms} | {notes[:45]} |")
             csv_rows.append([lang, i, r.get("repo"), r.get("stars"),
                              r.get("public_api_count"), r.get("final_score"),
-                             "yes" if ok else "no", doms, r.get("url")])
+                             "yes" if ok else "no", doms,
+                             r.get("sample_data_file_count", 0), r.get("url")])
         md.append("")
     open(os.path.join(RES, "RANKED.md"), "w").write("\n".join(md) + "\n")
     with open(os.path.join(RES, "RANKED.csv"), "w", newline="") as f:

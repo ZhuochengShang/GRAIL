@@ -363,6 +363,16 @@ def count_public_api(gh: GitHub, full_name: str, src_paths: list[str], max_files
 
 def detect_docs_tests(paths: list[str]) -> dict[str, Any]:
     low = [p.lower() for p in paths]
+    sample_data = [p for p in paths if re.search(
+        r"(^|/)(tests?/data|test[-_]?data|fixtures?|resources?|samples?)(/|$)", p, re.I)
+        and PurePosixPath(p).suffix.lower() in {
+            ".csv", ".tsv", ".txt", ".json", ".xml", ".yaml", ".yml",
+            ".png", ".jpg", ".jpeg", ".gif", ".bmp", ".tif", ".tiff",
+            ".wav", ".flac", ".mp3", ".npy", ".npz", ".h5", ".hdf5",
+            ".pdb", ".gro", ".xtc", ".dcd", ".psf", ".mol", ".sdf",
+            ".cif", ".fits", ".fit", ".obj", ".ply", ".stl", ".pcap",
+            ".fa", ".fasta", ".fq", ".fastq", ".sam", ".bam", ".vcf",
+        }]
     return {
         "has_tests": any(re.search(r"(^|/)tests?/|_test\.|test_|\.spec\.|\.test\.", p) for p in low),
         "has_examples": any(re.search(r"(^|/)examples?/", p) for p in low),
@@ -371,6 +381,9 @@ def detect_docs_tests(paths: list[str]) -> dict[str, Any]:
         "has_agents": any(p.endswith("agents.md") or "copilot-instructions" in p for p in low),
         "has_contributing": any("contributing" in p for p in low),
         "has_changelog": any("changelog" in p or "changes.md" in p for p in low),
+        "has_sample_data": bool(sample_data),
+        "sample_data_files": sample_data[:20],
+        "sample_data_file_count": len(sample_data),
     }
 
 
@@ -433,29 +446,22 @@ def score_candidate(
     lib_score: int,
     pypi: dict[str, Any],
     issue_info: dict[str, Any],
-) -> tuple[int, list[str]]:
+) -> tuple[float, list[str]]:
     stars = repo.get("stargazers_count", 0)
     forks = repo.get("forks_count", 0)
     api_count = api_info.get("public_api_count", 0)
     issue_hits = issue_info.get("usage_issue_hits", 0) or 0
 
-    score = 0
+    score = 0.0
     reasons = []
 
-    adoption = clamp((stars / 2000) * 20, 0, 20) + clamp((forks / 300) * 15, 0, 15)
+    # The published sweep formula is intentionally exact and small. Optional
+    # PyPI/library-likeness metadata may be reported, but never changes rank.
+    adoption = (stars / 2000) * 20 + (forks / 300) * 15
     score += adoption
     reasons.append(f"adoption {adoption:.1f}")
 
-    if pypi.get("pypi_found"):
-        score += 8
-        reasons.append("package registry found")
-    if pypi.get("downloads_total"):
-        dl = pypi["downloads_total"]
-        extra = clamp((dl / 1_000_000) * 10, 0, 10)
-        score += extra
-        reasons.append(f"downloads bonus {extra:.1f}")
-
-    score += clamp(api_count / 80 * 20, 0, 20)
+    score += api_count / 80 * 20
     reasons.append(f"API surface {api_count}")
 
     if activity.get("active"):
@@ -463,9 +469,6 @@ def score_candidate(
         activity_score = 15 if days <= 30 else 10 if days <= 90 else 6
         score += activity_score
         reasons.append(f"source active {days}d")
-
-    score += lib_score * 0.15
-    reasons.append(f"library score {lib_score}")
 
     if structure["has_tests"]:
         score += 8
@@ -486,9 +489,6 @@ def score_candidate(
     if stars > 5000:
         score -= 8
         reasons.append("too popular penalty")
-    if len(paths) > 5000:
-        score -= 5
-        reasons.append("very large repo penalty")
     if not structure["has_tests"]:
         score -= 8
         reasons.append("no tests penalty")
@@ -496,11 +496,12 @@ def score_candidate(
         score -= 15
         reasons.append("small API penalty")
 
-    return int(clamp(score, 0, 100)), reasons
+    return round(clamp(score, 0, 100), 2), reasons
 
 
 @dataclass
 class Candidate:
+    found_by_query: str
     repo: str
     url: str
     description: str
@@ -514,10 +515,13 @@ class Candidate:
     source_active: bool
     last_source_commit_date: str
     library_score: int
-    final_score: int
+    final_score: float
     has_tests: bool
     has_examples: bool
     has_docs: bool
+    has_sample_data: bool
+    sample_data_file_count: int
+    sample_data_files: str
     has_agents: bool
     usage_issue_hits: int
     pypi_found: bool
@@ -530,6 +534,8 @@ def analyze_repo(
     repo: dict[str, Any],
     src_months: int,
     min_api: int,
+    max_api: int,
+    query_label: str,
     count_api: bool,
     check_issues: bool,
     check_pypi: bool,
@@ -570,8 +576,9 @@ def analyze_repo(
     api_info = {"public_api_count": None, "top_api_files": []}
     if count_api:
         api_info = count_public_api(gh, full_name, src)
-        if api_info["public_api_count"] < min_api:
-            print(f"  skip {full_name}: API too small ({api_info['public_api_count']})")
+        if not min_api <= api_info["public_api_count"] <= max_api:
+            print(f"  skip {full_name}: API outside {min_api}..{max_api} "
+                  f"({api_info['public_api_count']})")
             return None
 
     pypi = {"pypi_found": False}
@@ -602,9 +609,11 @@ def analyze_repo(
     if api_info.get("public_api_count", 0) >= 50:
         gaps.append("large composable API surface")
 
-    enough_5 = bool((api_info.get("public_api_count") or 0) >= min_api and structure["has_tests"])
+    enough_5 = bool(min_api <= (api_info.get("public_api_count") or 0) <= max_api
+                    and structure["has_tests"] and structure["has_sample_data"])
 
     return Candidate(
+        found_by_query=query_label,
         repo=full_name,
         url=repo.get("html_url", f"https://github.com/{full_name}"),
         description=(repo.get("description") or "").replace("\n", " ")[:220],
@@ -622,6 +631,9 @@ def analyze_repo(
         has_tests=structure["has_tests"],
         has_examples=structure["has_examples"],
         has_docs=structure["has_docs"],
+        has_sample_data=structure["has_sample_data"],
+        sample_data_file_count=structure["sample_data_file_count"],
+        sample_data_files=" | ".join(structure["sample_data_files"]),
         has_agents=structure["has_agents"],
         usage_issue_hits=issue_info.get("usage_issue_hits", 0) or 0,
         pypi_found=bool(pypi.get("pypi_found")),
@@ -707,6 +719,10 @@ def main() -> int:
     ap.add_argument("--pages", type=int, default=2)
     ap.add_argument("--per-page", type=int, default=20)
     ap.add_argument("--min-api", type=int, default=30, help="Minimum estimated public functions/classes for 5-combo testing")
+    ap.add_argument("--max-api", type=int, default=200,
+                    help="Maximum estimated public functions/classes for deadline feasibility")
+    ap.add_argument("--require-sample-data", action="store_true",
+                    help="require checked-in files under test-data/fixtures/resources/samples")
     ap.add_argument("--no-api-count", action="store_true", help="Skip source file downloads/API counting")
     ap.add_argument("--issues", action="store_true", help="Search issues for usage/docs confusion signals")
     ap.add_argument("--pypi", action="store_true", help="Check PyPI/pepy for Python package usage signal")
@@ -759,11 +775,15 @@ def main() -> int:
                         repo,
                         src_months=args.src_months,
                         min_api=args.min_api,
+                        max_api=args.max_api,
+                        query_label=args.query_extra or q,
                         count_api=not args.no_api_count,
                         check_issues=args.issues,
                         check_pypi=args.pypi,
                     )
-                    if c:
+                    if c and args.require_sample_data and not c.has_sample_data:
+                        print(f"  skip {repo['full_name']}: no checked-in sample/test data")
+                    elif c:
                         candidates.append(c)
                 except KeyboardInterrupt:
                     raise
@@ -782,7 +802,10 @@ def main() -> int:
         print(f"    {c.url}")
         print(f"    ⭐ {c.stars:,}  🍴 {c.forks:,}  src={c.source_files}  api≈{c.public_api_count}")
         print(f"    active source: {c.source_active} last={c.last_source_commit_date}")
-        print(f"    5-combo testable: {c.enough_for_5_combo_tests} | tests={c.has_tests} examples={c.has_examples} docs={c.has_docs}")
+        print(f"    found by query: {c.found_by_query}")
+        print(f"    5-combo testable: {c.enough_for_5_combo_tests} | tests={c.has_tests} "
+              f"sample-data={c.has_sample_data} ({c.sample_data_file_count}) "
+              f"examples={c.has_examples} docs={c.has_docs}")
         print(f"    LLM gaps: {c.llm_gaps}")
         print(f"    {c.description}")
 

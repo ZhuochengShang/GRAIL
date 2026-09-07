@@ -114,6 +114,19 @@ docfix:
 # supplies the build wiring, the geotools packages, and the curated import block
 # (auto-derivation over-wildcards and collides on Beast's ambiguous RasterRDD).
 comprehension:
+  # Frozen protocol for the remaining matched RDPro 2x2 cells.  The CLI
+  # supervisor must still pass both `--doc-scope relevant` and
+  # `--manifest docs/api_manifest_shared.json`; these values make that contract
+  # explicit in the condition YAML and keep accidental full/entry-scope runs
+  # out of the paper table.
+  full_doc: false
+  protocol:
+    id: rdpro-2x2-v2-shared88-relevant
+    manifest: docs/api_manifest_shared.json
+    manifest_api_count: 88
+    manifest_inventory_sha256: 1dc1f1c758ae9829c2654e853899603f12f1d7174afdfeffd9edd1f29dde14e1
+    doc_scope: relevant
+    final_snippet_fix_rounds: 0
   # INDEX-FIRST read path. When true, each tested API's body is prefixed with its
   # catalogue class header (how to obtain the receiver + one verified sibling's real
   # call pattern) instead of the bare per-API body — targets the ~53% receiver /
@@ -121,6 +134,10 @@ comprehension:
   # Left off so it stays A/B-able; override per run with `--class-context on|off`.
   class_context: false
   execute:
+    # Work/output state is relative to this condition worktree.  This is
+    # required for A1/A2/B1/B2 workers to run concurrently without sharing a
+    # checkpoint or deleting one another's Spark outputs.
+    work_dir: .aideal_exec/rdpro
     scaffold: docs/api_test_scaffold.scala     # `aideal scaffold --generate`
     # Per-API isolation: pre-load typed inputs so a comprehension test writes ONLY
     # the API call. `auto` = the author model generates the load code ONCE from the
@@ -142,22 +159,29 @@ comprehension:
       val rasterRDD: RasterRDD[Float] = sc.geoTiff[Float](raster_tif)
       val featuresRDD: RDD[IFeature] = sc.shapefile(vector_shapefile)
     # Sample inputs auto-discovered from this folder (.tif/.geojson/.csv -> typed):
-    fixtures_dir: ../../grail-agent/examples/fixtures
+    # The Boston pair is the historical frozen input used by the completed A1
+    # cell.  It currently lives in the canonical GRAIL checkout rather than the
+    # condition branches, so use a machine-independent sibling-worktree path.
+    # Inputs are read-only and their hashes are pinned in project_profile.yaml.
+    fixtures_dir: ../../../GRAIL/grail-agent/examples/fixtures
     # ...with explicit per-binding overrides (these win over the fixtures folder):
     sample_data:
       # Boston-region raster so it overlaps the Boston neighborhood polygons
       # (needed for raptorJoin / zonal stats to return non-empty results):
-      raster_tif: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/grail-agent/examples/fixtures/nldas_boston_30m.tif
+      raster_tif: ../../../GRAIL/grail-agent/examples/fixtures/nldas_boston_30m.tif
       # Boston neighborhood polygons (.shp) — the vector input the raptor/zonal
       # APIs join against. Pinned so the shapefile (not the auto-discovered
       # geojson) is the vector binding, and it overlaps the raster above:
-      vector_shapefile: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/grail-agent/examples/fixtures/Boston_Neighborhood_Boundaries_sample_grail.shp
+      vector_shapefile: ../../../GRAIL/grail-agent/examples/fixtures/Boston_Neighborhood_Boundaries_sample_grail.shp
       # RDPro-owned HDF4 fixture used by HDF4ReaderTest with layer
       # `LST_Day_1km` (pixel 0,0 has the test oracle 15240 / 50.0f).
       # Relative to experiments/rdpro, so it works in every experiment worktree.
-      hdf_file: beast/raptor/src/test/resources/rasters/MYD11A1.A2002185.h09v06.006.2015146150958.hdf
+      # This infrastructure worktree does not carry the gitignored Beast clone;
+      # resolve the same pinned upstream test resource through the clean A1
+      # worktree until each new condition provisions its own Beast checkout.
+      hdf_file: ../../../GRAIL_rdpro_A1/experiments/rdpro/beast/raptor/src/test/resources/rasters/MYD11A1.A2002185.h09v06.006.2015146150958.hdf
     # write outputs to a real, existing project folder (not /tmp):
-    output_dir: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL/experiments/rdpro/exec_out
+    output_dir: .aideal_exec/rdpro/output
     # incremental fix loop: attempts = 1 + max_fix_rounds (each retry sees the
     # prior error + fix hint from error_log). Default 3.
     max_fix_rounds: 3

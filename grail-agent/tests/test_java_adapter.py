@@ -3,6 +3,7 @@ from pathlib import Path
 import yaml
 
 from aideal.config import load_config
+from aideal.doc_checks import _classify_error, _fill_scaffold
 from aideal.readme_agent import api_test_examples, public_api_details
 
 
@@ -68,3 +69,35 @@ def test_java_adapter_mines_public_javadoc_and_junit(tmp_path: Path):
     examples = api_test_examples(cfg)
     assert "atomCount" in examples
     assert "countsAtoms" in examples["atomCount"][0]["test"]
+
+
+def test_java_scaffold_and_error_classification():
+    scaffold = (
+        "public class ApiTest {\n"
+        "  public static void main(String[] args) {\n"
+        "    // TODO API_TEST_START\n"
+        "    // TODO API_TEST_END\n"
+        "  }\n"
+        "}\n"
+    )
+    filled = _fill_scaffold(
+        scaffold, "System.out.println(1);",
+        ["// TODO API_TEST_START", "// TODO API_TEST_END"], {})
+    assert "    System.out.println(1);" in filled
+
+    category, message, locus = _classify_error(
+        "ApiTest.java:7: error: cannot find symbol\n", 1, "__RUN_ERR__", "Java")
+    assert category == "compile"
+    assert "cannot find symbol" in message
+    assert locus == "ApiTest.java:7"
+
+    category, message, _ = _classify_error(
+        "__RUN_ERR__ IllegalArgumentException: bad molecule\n"
+        "at ApiTest.main(ApiTest.java:12)\n", 1, "__RUN_ERR__", "Java")
+    assert category == "runtime"
+    assert "IllegalArgumentException" in message
+
+    category, _, _ = _classify_error(
+        "java.lang.NoClassDefFoundError: org/openscience/cdk/Atom\n",
+        1, "__RUN_ERR__", "Java")
+    assert category == "infra"

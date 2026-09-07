@@ -1516,8 +1516,13 @@ def intended_api_llm(cfg: AidealConfig) -> tuple[set[str], dict]:
 
 def _names_called_in(text: str, names: set[str]) -> set[str]:
     """Subset of `names` that appear as a call/use in `text`."""
-    return {n for n in names
-            if re.search(rf"\b{re.escape(n)}\s*[\(\[]|\.{re.escape(n)}\b", text)}
+    if not text or not names:
+        return set()
+    alternatives = "|".join(sorted((re.escape(n) for n in names),
+                                     key=len, reverse=True))
+    pattern = re.compile(
+        rf"\b(?P<call>{alternatives})\s*[\(\[]|\.\s*(?P<member>{alternatives})\b")
+    return {m.group("call") or m.group("member") for m in pattern.finditer(text)}
 
 
 def _doc_code_mentions(docs_text: str, names: set[str],
@@ -1540,17 +1545,20 @@ def _doc_code_mentions(docs_text: str, names: set[str],
                             flags=re.S)
     inline = re.findall(r"(?<!`)`([^`\n]+)`(?!`)", without_fences)
     code = "\n".join(fenced) + "\n" + " ".join(inline)
-    out = set()
+    out: set[str] = set()
+    alternatives = "|".join(sorted((re.escape(n) for n in names),
+                                     key=len, reverse=True))
+    code_pattern = re.compile(rf"\b(?P<aideal_code_api>{alternatives})\b")
+    out.update(m.group("aideal_code_api") for m in code_pattern.finditer(code))
     # Patterns are format strings containing ``{name}``; adapters/projects may
     # add syntax such as Rust ``{name}!`` or Ruby ``:{name}`` without changing
     # tool code. Backticks/fenced code remain language-neutral evidence.
     patterns = call_patterns or [r"\.{name}\b", r"\b{name}\s*\(",
                                  r"\b{name}\s*\["]
-    for n in names:
-        pat = re.escape(n)
-        syntax_hit = any(re.search(p.format(name=pat), docs_text) for p in patterns)
-        if re.search(rf"\b{pat}\b", code) or syntax_hit:
-            out.add(n)
+    for i, pattern in enumerate(patterns):
+        group = f"aideal_syntax_api_{i}"
+        rendered = pattern.format(name=f"(?P<{group}>{alternatives})")
+        out.update(m.group(group) for m in re.finditer(rendered, docs_text))
     return out
 
 
@@ -2365,13 +2373,13 @@ def _original_readme_snippets(cfg: AidealConfig, names, max_per_api: int = 2,
 
 
 def find_or_create(cfg: AidealConfig, generate: bool = False, max_generated: int = 10,
-                   force: bool = False) -> dict:
+                   force: bool = False, resume: bool = False) -> dict:
     """Return status of the LLM readme; create a skeleton if missing.
 
     If the readme already exists it is returned as-is, UNLESS `force=True`
     (regenerate/overwrite) — use this to rerun `--generate` over an existing
     file instead of getting an instant "found" no-op."""
-    if cfg.llm_readme.exists() and not force:
+    if cfg.llm_readme.exists() and not force and not resume:
         entries = parse_readme(cfg.llm_readme)
         return {
             "action": "found",
@@ -2399,13 +2407,106 @@ def find_or_create(cfg: AidealConfig, generate: bool = False, max_generated: int
     cfg.llm_readme.parent.mkdir(parents=True, exist_ok=True)
 
     if generate:
+        # Durable generation identity. A partial README is safe to resume only
+        # when its source/config/model inputs still match. This prevents an old
+        # pilot (or a changed knowledge YAML) from being silently mixed into a
+        # production all-API document.
+        import hashlib as _hashlib
+        import json as _json
+        import os as _os
+        import sys as _sysmod
+
+        def _generation_files_hash(paths: list[Path], root: Path) -> dict:
+            digest = _hashlib.sha256()
+            files = sorted(set(p.resolve() for p in paths if p.is_file()), key=str)
+            for path in files:
+                try:
+                    label = path.relative_to(root.resolve())
+                except ValueError:
+                    label = path
+                digest.update(str(label).encode("utf-8"))
+                digest.update(b"\0")
+                digest.update(path.read_bytes())
+                digest.update(b"\0")
+            return {"sha256": digest.hexdigest(), "file_count": len(files)}
+
+        _author = cfg.model_for_role("author")
+        _source_files = [Path(p) for pattern in cfg.source_globs for p in
+                         globmod.glob(str(cfg.root / pattern), recursive=True)]
+        _profile_sub = cfg.raw.get("files", {}).get(
+            "project_profile", "configs/project_profile.yaml")
+        _profile_path = (cfg.root / _profile_sub).resolve()
+        _engine_dir = Path(__file__).resolve().parent
+        _engine_files = [_engine_dir / name for name in (
+            "config.py", "llm.py", "profile.py", "prompts.py", "readme_agent.py")]
+        _generation_payload = {
+            "schema": 2,
+            "project": cfg.project_name,
+            "language": cfg.language,
+            "author": f"{_author.provider}:{_author.model}",
+            "config": cfg.raw,
+            "project_profile": _generation_files_hash([_profile_path], cfg.root),
+            "source": _generation_files_hash(_source_files, cfg.root),
+            "engine": _generation_files_hash(_engine_files, _engine_dir),
+            "interpreter": {
+                "executable": _os.path.realpath(_sysmod.executable),
+                "version": _sysmod.version,
+                "environment_sha256": _os.environ.get("AIDEAL_ENV_FINGERPRINT", ""),
+            },
+            "targets": targets,
+            "definitions": {
+                n: [r.get("signature", "") for r in by_name[n]] for n in targets
+            },
+            "original_document_sha256": _hashlib.sha256(
+                cfg.original_readme_text(limit=None).encode("utf-8")
+            ).hexdigest(),
+        }
+        generation_fingerprint = _hashlib.sha256(
+            _json.dumps(_generation_payload, sort_keys=True, default=str,
+                        ensure_ascii=False).encode("utf-8")
+        ).hexdigest()
+        state_path = cfg.root / ".aideal_exec" / "readme_generation_state.json"
+        state_path.parent.mkdir(parents=True, exist_ok=True)
+
+        existing_complete: dict[str, ApiEntry] = {}
+        if resume:
+            if not state_path.is_file():
+                raise ValueError(
+                    f"cannot resume README generation: missing state file {state_path}; "
+                    "start a fresh run with --force")
+            try:
+                previous_state = _json.loads(state_path.read_text(encoding="utf-8"))
+            except Exception as exc:
+                raise ValueError(f"cannot resume README generation: invalid state: {exc}") from exc
+            if previous_state.get("generation_fingerprint") != generation_fingerprint:
+                raise ValueError(
+                    "cannot resume README generation: source/config/model fingerprint changed; "
+                    "start a fresh run with --force")
+            existing_complete = {
+                e.name: e for e in parse_readme(cfg.llm_readme)
+                if e.name in targets and "TODO" not in e.body
+            }
+        resumed_entries = len(existing_complete)
+
+        def _write_generation_state(*, complete: bool = False) -> None:
+            state = {
+                "generation_fingerprint": generation_fingerprint,
+                "target_count": len(targets),
+                "completed_count": len(existing_complete),
+                "completed_apis": sorted(existing_complete),
+                "complete": complete,
+            }
+            tmp = state_path.with_suffix(".json.tmp")
+            tmp.write_text(_json.dumps(state, indent=2, ensure_ascii=False), encoding="utf-8")
+            tmp.replace(state_path)
+
+        _write_generation_state()
         # the readme is being (re)written -> invalidate readme-DERIVED caches so
         # io_hints / preamble rebuild from the NEW readme instead of a stale one.
         for _stale in ("io_hints.txt", "preamble.scala"):
             _p = cfg.llm_readme.parent / _stale
             if _p.exists():
                 _p.unlink()
-        import json as _json
         import sys as _sys
         from .llm import invoke_text
         from .profile import require_profile
@@ -2444,6 +2545,11 @@ def find_or_create(cfg: AidealConfig, generate: bool = False, max_generated: int
         with cfg.llm_readme.open("w", encoding="utf-8") as fh:
             fh.write(header)
             for i, name in enumerate(targets, 1):
+                if name in existing_complete:
+                    fh.write(existing_complete[name].body.rstrip() + "\n\n")
+                    fh.flush()
+                    print(f"[{i}/{total}] {name} … RESUMED", file=_sys.stderr)
+                    continue
                 recs = by_name[name]
                 # canonical = the maximal telescoping overload ("needed longest
                 # parameters"): a same-file overload whose param types are a
@@ -2511,6 +2617,8 @@ def find_or_create(cfg: AidealConfig, generate: bool = False, max_generated: int
                                      test_examples=tests_text,
                                      template=skeleton),
                     ).strip()
+                    if (f"## API Test: `{name}`" not in entry or "TODO" in entry):
+                        raise ValueError("author returned an incomplete or wrong-API entry")
                     status = "ok"
                 except Exception as e:  # fell back to skeleton — record why, don't hide it
                     failures.append({"api": name, "error": f"{type(e).__name__}: {e}"})
@@ -2518,7 +2626,16 @@ def find_or_create(cfg: AidealConfig, generate: bool = False, max_generated: int
                     status = "FALLBACK"
                 fh.write(entry + "\n\n")
                 fh.flush()
+                if status == "ok":
+                    existing_complete[name] = ApiEntry(
+                        name=name,
+                        goal=_section_between(entry, "Goal"),
+                        snippet=_section_between(entry, "Prompt Snippet"),
+                        body=entry,
+                    )
+                _write_generation_state()
                 print(f"[{i}/{total}] {name} … {status}", file=_sys.stderr)
+        _write_generation_state(complete=(len(existing_complete) == len(targets)))
         # eager: build the readme-DERIVED io_hints / preamble now (config value
         # `auto`), so the readme bundle ships complete and in sync. Best-effort —
         # failures here never block readme generation.
@@ -2549,8 +2666,12 @@ def find_or_create(cfg: AidealConfig, generate: bool = False, max_generated: int
         "note": "fill TODOs or rerun with --generate (uses the author model)",
     }
     if generate:
-        result["generated_ok"] = len(targets) - len(failures)
+        result["generated_ok"] = len(existing_complete)
+        result["resumed_entries"] = resumed_entries
+        result["newly_generated"] = len(existing_complete) - resumed_entries
         result["fallback_to_skeleton"] = len(failures)
+        result["generation_fingerprint"] = generation_fingerprint
+        result["generation_state"] = str(state_path)
         if failures:
             result["failures"] = failures[:5]
             result["note"] = (f"{len(failures)}/{len(targets)} entries fell back to "

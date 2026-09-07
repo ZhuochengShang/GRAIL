@@ -442,7 +442,18 @@ def doc_fix_run(cfg: AidealConfig, apis: list[str] | None = None,
             continue
         t0 = time.time()
         u0 = usage_snapshot()
-        created = name not in entries
+        # If a process dies after inserting a B1 entry but before finalizing
+        # the API, the partial catalog now contains that name. Preserve the
+        # original "created from missing" identity in the incremental report
+        # so resume still knows to remove the entry if all repair rounds fail.
+        prior_result = results.get(name) or {}
+        created = bool(prior_result.get("created_from_missing", name not in entries))
+        results[name] = {
+            "status": "in-progress",
+            "created_from_missing": created,
+            "doc_rounds": prior_result.get("doc_rounds", []),
+        }
+        _flush()
         if created:
             # What the audience actually read. Full-doc mode deliberately keeps
             # the entire bundle here; legacy mode may use the configured cap.
@@ -555,6 +566,7 @@ def doc_fix_run(cfg: AidealConfig, apis: list[str] | None = None,
                 rrec["outcome"] = f"rewrite-rejected (fabricated: {', '.join(fab[:4])})"
                 rounds_trail.append(rrec)
                 results[name] = {"status": "in-progress",
+                                 "created_from_missing": created,
                                  "rounds_used": len(rounds_trail),
                                  "doc_rounds": rounds_trail}
                 log.append(step="doc-fix", language=cfg.language, task="docfix",
@@ -614,6 +626,7 @@ def doc_fix_run(cfg: AidealConfig, apis: list[str] | None = None,
             # finalized (status/tokens) when the api completes; resume re-runs
             # any api left "in-progress" by a kill.
             results[name] = {"status": "in-progress",
+                             "created_from_missing": created,
                              "rounds_used": len(rounds_trail),
                              "doc_rounds": rounds_trail}
             _sys.stderr.write(
@@ -677,6 +690,7 @@ def doc_fix_run(cfg: AidealConfig, apis: list[str] | None = None,
         u = usage_delta(u0)
         results[name] = {
             "status": status,
+            "created_from_missing": created,
             "rounds_used": len(rounds_trail),
             "doc_rounds": rounds_trail,
             "diagnosis_head": rounds_trail[-1].get("diagnosis_head", "") if rounds_trail else "",

@@ -1,0 +1,82 @@
+extends: [java]
+
+project:
+  name: Thumbnailator
+  language: Java
+
+codebase:
+  source_globs:
+    - "source/src/main/java/**/*.java"
+  test_globs:
+    - "source/src/test/java/**/*.java"
+  surface_filter: all
+
+files:
+  project_profile: configs/project_profile.yaml
+  original_readme:
+    - source/README.md
+    - source/target/site/apidocs
+  llm_readme: docs/LLM_readme.md
+  notes_to_self: docs/notes_to_self.md
+  integration_tasks: configs/integration_tasks.yaml
+  aliases: aliases/aliases.json
+  error_log: logs/error_log.jsonl
+
+models:
+  registry:
+    gemini-3.1-pro: { provider: google, model: gemini-3.1-pro-preview }
+  roles:
+    author: gemini-3.1-pro
+    audience: gemini-3.1-pro
+    fixer: gemini-3.1-pro
+
+comprehension:
+  class_context: false
+  relevant_doc_chars: 12000
+  execute:
+    scaffold: docs/api_test_scaffold.java
+    test_filename: ApiTest.java
+    region: ["// TODO API_TEST_START", "// TODO API_TEST_END"]
+    build_cwd: source
+    uberjar: "target/thumbnailator-0.4.21.jar"
+    local_uris: false
+    output_dir: /tmp/aideal_thumbnailator_out
+    preamble: |
+      BufferedImage sourceImage = new BufferedImage(32, 24, BufferedImage.TYPE_INT_RGB);
+      Graphics2D graphics = sourceImage.createGraphics();
+      graphics.setColor(Color.BLUE);
+      graphics.fillRect(0, 0, 32, 24);
+      graphics.setColor(Color.YELLOW);
+      graphics.fillRect(8, 6, 16, 12);
+      graphics.dispose();
+      BufferedImage destinationImage = new BufferedImage(16, 12, BufferedImage.TYPE_INT_RGB);
+      ByteArrayOutputStream imageBytes = new ByteArrayOutputStream();
+      Path outputPath = Paths.get(output_dir, "thumbnail.png");
+      Files.createDirectories(outputPath.getParent());
+    sample_data:
+      grid_png: source/src/test/resources/Thumbnailator/grid.png
+      grid_jpeg: source/src/test/resources/Thumbnailator/grid.jpg
+      exif_jpeg: source/src/test/resources/Exif/original.jpg
+    max_fix_rounds: 0
+    require_correctness: true
+    timeout_seconds: 300
+    success_marker: __DONE__
+    error_marker: __RUN_ERR__
+    command: >-
+      mkdir -p {work}/classes
+      && /Library/Java/JavaVirtualMachines/jdk-1.8.jdk/Contents/Home/bin/javac
+      -cp "{classpath}" -d {work}/classes {test_file}
+      && /Library/Java/JavaVirtualMachines/jdk-1.8.jdk/Contents/Home/bin/java
+      -Djava.awt.headless=true -cp "{work}/classes:{classpath}" ApiTest
+    execution_context: >-
+      A Java 8 headless harness is already in scope. Write statements only for
+      the marked region. Reuse the in-memory images, output stream/path, and
+      checked-in image paths. Exercise the target public API, assert a stable
+      dimension/pixel/byte/file property, and print a compact witness.
+    exec_hints: >-
+      Use Java 8 syntax. Prefer BufferedImage and the provided tiny PNG/JPEG
+      fixtures. Do not open windows, URLs, cameras, or network resources. Close
+      streams you create and avoid overwriting repository fixtures.
+
+docfix:
+  allowed_member_categories: [language_core, java_core]

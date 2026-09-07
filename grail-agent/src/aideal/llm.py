@@ -14,6 +14,8 @@ provider's package is required.
 from __future__ import annotations
 
 import os
+from pathlib import Path
+import time
 
 from .config import ModelSpec
 
@@ -67,6 +69,44 @@ def get_chat_model(spec: ModelSpec, temperature: float = 0.0):
 _USAGE: dict = {"calls": 0, "input_tokens": 0, "output_tokens": 0, "by_model": {}}
 
 
+def _wait_for_provider_slot(spec: ModelSpec) -> None:
+    """Process-shared request-start pacing for Google/Gemini.
+
+    Parallel repository workers use the same small state file.  ``flock`` is
+    released automatically if a worker crashes, and the timestamp makes a
+    restarted worker continue the same minimum-spacing policy.  The gate is
+    intentionally applied immediately before ``invoke``; prompt construction
+    and local execution remain parallel.
+    """
+    if spec.provider.lower() != "google":
+        return
+    interval = float(os.environ.get("AIDEAL_GOOGLE_MIN_INTERVAL_S", "0") or 0)
+    if interval <= 0:
+        return
+
+    import fcntl
+
+    state_path = Path(os.environ.get(
+        "AIDEAL_GOOGLE_RATE_STATE", "/tmp/aideal_google_rate_gate.txt"))
+    state_path.parent.mkdir(parents=True, exist_ok=True)
+    with state_path.open("a+", encoding="utf-8") as state:
+        fcntl.flock(state.fileno(), fcntl.LOCK_EX)
+        state.seek(0)
+        try:
+            last_start = float((state.read() or "0").strip())
+        except ValueError:
+            last_start = 0.0
+        delay = interval - (time.time() - last_start)
+        if 0 < delay <= interval:
+            time.sleep(delay)
+        state.seek(0)
+        state.truncate()
+        state.write(f"{time.time():.9f}\n")
+        state.flush()
+        os.fsync(state.fileno())
+        fcntl.flock(state.fileno(), fcntl.LOCK_UN)
+
+
 def reset_usage() -> None:
     _USAGE.update({"calls": 0, "input_tokens": 0, "output_tokens": 0, "by_model": {}})
 
@@ -99,6 +139,7 @@ def invoke_text(spec: ModelSpec, system: str, user: str) -> str:
     """One-shot text completion; returns the model's text content and adds the
     provider-reported token usage to the module accumulator."""
     llm = get_chat_model(spec)
+    _wait_for_provider_slot(spec)
     resp = llm.invoke([("system", system), ("user", user)])
     u = getattr(resp, "usage_metadata", None) or {}
     _USAGE["calls"] += 1

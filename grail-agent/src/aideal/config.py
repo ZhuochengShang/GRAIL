@@ -108,9 +108,9 @@ class AidealConfig:
 #: the bytes stay out.
 _TEXT_DOC_EXTS = {
     ".md", ".markdown", ".mdx", ".txt", ".rst", ".adoc", ".html",
-    # Documentation galleries commonly store the executable source rendered
-    # by Sphinx-Gallery alongside prose (for example docs/examples/*.py).
-    ".py",
+    # Documentation galleries commonly store executable source rendered
+    # alongside prose (Sphinx-Gallery Python, Java/Scala example galleries).
+    ".py", ".java", ".scala",
 }
 
 

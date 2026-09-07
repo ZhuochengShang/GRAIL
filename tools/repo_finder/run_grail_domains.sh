@@ -82,7 +82,8 @@ for LANG in $LANGS; do
       --query-extra "$D" \
       --min-stars 100 --max-stars 5000 --min-forks 10 \
       --pushed-after 2025-01-01 --src-months 12 \
-      --min-api 50 --top 10 --pages "$PAGES" --per-page "$PER" \
+      --min-api 50 --max-api 200 --require-sample-data \
+      --top 10 --pages "$PAGES" --per-page "$PER" \
       --exclude-regex "$EXCLUDE" \
       --csv "$OUT/${TAG}.csv" --json "$OUT/${TAG}.json"
     sleep 20   # be kind to the search rate limit

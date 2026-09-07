@@ -22,11 +22,100 @@ import re
 import shlex
 import subprocess
 import sys
+from pathlib import Path
 
 from .config import AidealConfig
 from .error_log import ErrorLog, new_run_id
 from .notes_to_self import NotesToSelf
 from .readme_agent import parse_readme, public_api_surface, public_api_details
+
+
+def _sha256_files(paths: list[Path], root: Path | None = None) -> dict:
+    """Hash file names and contents deterministically for run provenance."""
+    import hashlib
+
+    digest = hashlib.sha256()
+    files: list[Path] = []
+    for path in paths:
+        if path.is_file():
+            files.append(path)
+        elif path.is_dir():
+            files.extend(p for p in path.rglob("*") if p.is_file())
+    unique = sorted(set(p.resolve() for p in files), key=str)
+    for path in unique:
+        try:
+            label = path.relative_to(root.resolve()) if root else path
+        except ValueError:
+            label = path
+        digest.update(str(label).encode("utf-8"))
+        digest.update(b"\0")
+        try:
+            with path.open("rb") as src:
+                for chunk in iter(lambda: src.read(1024 * 1024), b""):
+                    digest.update(chunk)
+        except OSError as exc:
+            digest.update(f"<unreadable:{type(exc).__name__}>".encode("utf-8"))
+        digest.update(b"\0")
+    return {"sha256": digest.hexdigest(), "file_count": len(unique)}
+
+
+def _comprehension_fingerprint_components(
+        cfg: AidealConfig, *, ex: dict, doc_source: str, doc_scope: str,
+        max_fix_rounds: int, manifest_sha256: str, document_sha256: str,
+        scaffold_file: Path, sample_data: dict, class_context: bool,
+        timeout: int) -> dict:
+    """Return every material input that makes a checkpoint reusable.
+
+    A checkpoint is experimental evidence, not merely a performance cache. A
+    model, YAML, scaffold, source, fixture, interpreter, or engine change must
+    create a new fingerprint so an overnight watchdog cannot silently mix
+    conditions after a restart.
+    """
+    import glob
+    import os
+
+    source_paths: list[Path] = []
+    for pattern in cfg.source_globs:
+        source_paths.extend(Path(p) for p in glob.glob(
+            str(cfg.root / pattern), recursive=True))
+    fixture_paths = [Path(str(value)) for value in sample_data.values()]
+    engine_dir = Path(__file__).resolve().parent
+    engine_paths = [engine_dir / name for name in (
+        "config.py", "doc_checks.py", "llm.py", "prompts.py", "readme_agent.py")]
+    audience = cfg.model_for_role("audience")
+    fixer = cfg.model_for_role("fixer")
+    return {
+        "schema": 2,
+        "project": cfg.project_name,
+        "language": cfg.language,
+        "doc_source": doc_source,
+        "doc_scope": doc_scope,
+        "max_fix_rounds": max_fix_rounds,
+        "manifest_sha256": manifest_sha256,
+        "document_sha256": document_sha256,
+        "models": {
+            "audience": f"{audience.provider}:{audience.model}",
+            "fixer": f"{fixer.provider}:{fixer.model}",
+        },
+        "class_context": bool(class_context),
+        "timeout_s": timeout,
+        "execute_config": ex,
+        "scaffold": _sha256_files([scaffold_file], cfg.root),
+        "source": _sha256_files(source_paths, cfg.root),
+        "fixtures": _sha256_files(fixture_paths, cfg.root),
+        "engine": _sha256_files(engine_paths, engine_dir),
+        "interpreter": {
+            "executable": sys.executable,
+            "version": sys.version,
+            "environment_sha256": os.environ.get("AIDEAL_ENV_FINGERPRINT", ""),
+        },
+    }
+
+
+def _checkpoint_row_reusable(row: dict, experiment_fingerprint: str) -> bool:
+    """Only stable terminal rows may suppress work after a restart."""
+    return (row.get("experiment_fingerprint") == experiment_fingerprint
+            and row.get("error_category") != "llm-error")
 
 
 # ---------------------------------------------------------------------------
@@ -176,17 +265,57 @@ def _relevant_original_text(cfg: AidealConfig, api_name: str, limit: int) -> str
     return "\n\n".join(selected)
 
 
+def _relevant_original_texts(cfg: AidealConfig, names: list[str], limit: int) -> dict[str, str]:
+    """Index the original bundle for every manifest API in one corpus pass.
+
+    The old per-API implementation re-read and re-split a 15 MB Javadoc bundle
+    more than a thousand times. This preserves the same deterministic ranking
+    and character cap while making all-surface overnight runs practical.
+    """
+    from .readme_agent import _doc_code_mentions
+    raw = cfg.original_readme_text(limit=None)
+    coverage_cfg = ((cfg.raw or {}).get("coverage") or {})
+    call_patterns = coverage_cfg.get("documentation_call_patterns")
+    wanted = set(names)
+    matches: dict[str, list[tuple[int, int, str]]] = {name: [] for name in names}
+    for pos, chunk in enumerate(_markdown_chunks(raw)):
+        for name in _doc_code_mentions(chunk, wanted, call_patterns=call_patterns):
+            escaped = re.escape(name)
+            calls = len(re.findall(rf"\.{escaped}\b|\b{escaped}\s*[\(\[]", chunk))
+            mentions = len(re.findall(rf"\b{escaped}\b", chunk))
+            matches[name].append((calls * 100 + mentions, pos, chunk))
+
+    result: dict[str, str] = {}
+    for name in names:
+        ranked = sorted(matches[name], key=lambda item: (-item[0], item[1]))
+        selected: list[str] = []
+        used = 0
+        for _, _, chunk in ranked:
+            separator = 2 if selected else 0
+            remaining = limit - used - separator
+            if remaining <= 0:
+                break
+            selected.append(chunk[:remaining])
+            used += separator + min(len(chunk), remaining)
+        result[name] = ("\n\n".join(selected) if selected else
+                        f"No code-context section for `{name}` was found in the configured "
+                        "original documentation.")
+    return result
+
+
 def _relevant_doc_inventory(cfg: AidealConfig, doc_source: str, names: list[str]):
     """Per-API relevant documentation with one equal character ceiling per source."""
     from .readme_agent import ApiEntry
     limit = int((cfg.comprehension or {}).get("relevant_doc_chars", 12000) or 12000)
     generated = {e.name: e for e in parse_readme(cfg.llm_readme)} if cfg.llm_readme.exists() else {}
+    part_limit = limit // 2 if doc_source == "original+aideal" else limit
+    original = (_relevant_original_texts(cfg, names, part_limit)
+                if doc_source in ("original", "original+aideal") else {})
     inventory = []
     for name in names:
         parts: list[str] = []
-        part_limit = limit // 2 if doc_source == "original+aideal" else limit
         if doc_source in ("original", "original+aideal"):
-            parts.append(_relevant_original_text(cfg, name, part_limit))
+            parts.append(original[name])
         if doc_source in ("aideal", "original+aideal"):
             entry = generated.get(name)
             if entry:
@@ -788,6 +917,30 @@ def _classify_error_py(merged: str, rc: int, error_marker: str) -> tuple[str, st
     return "unknown", (merged.strip()[-300:] or f"exit {rc}"), ""
 
 
+def _classify_error_java(merged: str, rc: int, error_marker: str) -> tuple[str, str, str]:
+    """Java flavor: distinguish javac diagnostics, missing classpath entries,
+    and exceptions raised by an otherwise runnable harness."""
+    import re as _re
+    im = _re.search(
+        r"(?:NoClassDefFoundError|ClassNotFoundException)[:\s]+([\w/.$]+)", merged)
+    if im:
+        return "infra", f"missing dependency on classpath: {im.group(1)}", ""
+    cm = _re.search(r"^([^\n]+\.java):(\d+): error: (.+)$", merged, _re.M)
+    if cm:
+        return "compile", cm.group(0).strip()[:300], f"{cm.group(1)}:{cm.group(2)}"
+    if error_marker and error_marker in merged:
+        line = next((line for line in merged.splitlines() if error_marker in line), "").strip()
+        msg = line.split(error_marker, 1)[-1].strip()
+        frame = _re.search(r"\bat [\w.$]+\(([^:()]+\.java):(\d+)\)", merged)
+        locus = f"{frame.group(1)}:{frame.group(2)}" if frame else ""
+        return "runtime", msg or "runtime exception", locus
+    exc = _re.search(r"^(?:Exception in thread \"[^\"]+\" )?([\w.$]+(?:Exception|Error): .+)$",
+                     merged, _re.M)
+    if exc:
+        return "runtime", exc.group(1).strip()[:300], ""
+    return "unknown", (merged.strip()[-300:] or f"exit {rc}"), ""
+
+
 def _classify_error(merged: str, rc: int, error_marker: str,
                     language: str = "scala") -> tuple[str, str, str]:
     """Return (category, message, locus) from the run output.
@@ -797,6 +950,8 @@ def _classify_error(merged: str, rc: int, error_marker: str,
         return "timeout", "execution timed out", ""
     if language.lower() == "python":
         return _classify_error_py(merged, rc, error_marker)
+    if language.lower() == "java":
+        return _classify_error_java(merged, rc, error_marker)
     # infra/environment: a dependency missing from the HARNESS classpath (the real
     # test suite has it; spark-submit local[*] may not). NoClassDefFoundError /
     # ClassNotFoundException are never a documentation problem — no doc fix resolves
@@ -981,12 +1136,22 @@ def _comprehension_execute(cfg: AidealConfig, inventory, sample, seed, doc_sourc
     # uber jar (the uber carries JTS/GeoTools types so generated snippets that
     # reference them still compile). Runtime deps come from --packages.
     spark_jars: list[str] = []
-    try:
-        import pyspark as _pyspark
-        _sj = os.path.join(os.path.dirname(_pyspark.__file__), "jars")
-        spark_jars = sorted(_glob.glob(os.path.join(_sj, "*.jar")))
-    except Exception:
-        pass
+    spark_jars_glob = ex.get("spark_jars", "")
+    if spark_jars_glob:
+        sjg = str(spark_jars_glob)
+        spark_jars = sorted(_glob.glob(
+            sjg if sjg.startswith("/") else str(cfg.root / sjg)))
+        if not spark_jars:
+            return {"check": "comprehension", "mode": "execute", "passed": False,
+                    "score": 0.0, "details": {
+                        "error": f"no Spark jars matched comprehension.execute.spark_jars: {sjg}"}}
+    else:
+        try:
+            import pyspark as _pyspark
+            _sj = os.path.join(os.path.dirname(_pyspark.__file__), "jars")
+            spark_jars = sorted(_glob.glob(os.path.join(_sj, "*.jar")))
+        except Exception:
+            pass
     classpath = ":".join(beast_jars_list + spark_jars + uber_list)
 
     def _resolve(v):
@@ -996,9 +1161,14 @@ def _comprehension_execute(cfg: AidealConfig, inventory, sample, seed, doc_sourc
     # Typed sample-data catalog: name -> resolved path. Each becomes a `val` in
     # the scaffold; the model picks the one(s) matching the API's param types.
     sample_data, available_inputs, sample_data_warnings = _execute_sample_data(cfg, ex)
-    _is_py = cfg.language.lower() == "python"
-    bindings = "\n    ".join((f'{k} = r"{p}"' if _is_py else f'val {k} = "{p}"')
-                             for k, p in sample_data.items())
+    _lang = cfg.language.lower()
+    _is_py = _lang == "python"
+    _is_java = _lang == "java"
+    bindings = "\n    ".join(
+        (f'{k} = r"{p}"' if _is_py else
+         f'String {k} = "{p}";' if _is_java else
+         f'val {k} = "{p}"')
+        for k, p in sample_data.items())
     # Option-2 isolation: a codebase-specific `preamble` pre-loads typed inputs
     # (e.g. rasterRDD, featuresRDD) right after the path vals, so a per-API test
     # writes ONLY the API call — I/O can no longer fail the test. The model is
@@ -1008,9 +1178,15 @@ def _comprehension_execute(cfg: AidealConfig, inventory, sample, seed, doc_sourc
         _cmt = "#" if _is_py else "//"
         bindings += (f"\n\n    {_cmt} pre-loaded typed inputs (comprehension.execute.preamble)\n    "
                      + "\n    ".join(preamble.splitlines()))
-        preloaded = (re.findall(r"^\s*(\w+)\s*(?::\s*\w+)?\s*=\s*(?:.*?#\s*type:\s*(.+))?", preamble, re.M)
-                     if _is_py else
-                     re.findall(r"val\s+(\w+)\s*:\s*([^=]+?)\s*=", preamble))
+        if _is_py:
+            preloaded = re.findall(
+                r"^\s*(\w+)\s*(?::\s*\w+)?\s*=\s*(?:.*?#\s*type:\s*(.+))?",
+                preamble, re.M)
+        elif _is_java:
+            preloaded = [(name, typ) for typ, name in re.findall(
+                r"^\s*(?:final\s+)?([\w.$<>?, \[\]]+)\s+(\w+)\s*=", preamble, re.M)]
+        else:
+            preloaded = re.findall(r"val\s+(\w+)\s*:\s*([^=]+?)\s*=", preamble)
         preloaded = [(n, (t or "(see preamble)").strip()) for n, t in preloaded if n]
         if preloaded:
             available_inputs = (
@@ -1046,14 +1222,20 @@ def _comprehension_execute(cfg: AidealConfig, inventory, sample, seed, doc_sourc
     # Hash both the ordered denominator and the delivered document so A2 rows
     # can never leak into a repaired B2 run merely because both say "aideal".
     import hashlib as _hashlib
+    import json as _json
     _manifest_payload = "\n".join(e.name for e in inventory).encode("utf-8")
     manifest_sha256 = _hashlib.sha256(_manifest_payload).hexdigest()
     _doc_payload = (shared_doc if shared_doc is not None else
                     "\n\0\n".join(f"{e.name}\n{e.body}" for e in inventory))
     doc_sha256 = _hashlib.sha256(_doc_payload.encode("utf-8")).hexdigest()
-    _fp_payload = "\0".join((doc_source, doc_scope,
-                              str(max_fix_rounds), manifest_sha256,
-                              doc_sha256)).encode("utf-8")
+    fingerprint_components = _comprehension_fingerprint_components(
+        cfg, ex=ex, doc_source=doc_source, doc_scope=doc_scope,
+        max_fix_rounds=max_fix_rounds, manifest_sha256=manifest_sha256,
+        document_sha256=doc_sha256, scaffold_file=scaffold_file,
+        sample_data=sample_data, class_context=class_context, timeout=timeout)
+    _fp_payload = _json.dumps(
+        fingerprint_components, sort_keys=True, separators=(",", ":"),
+        default=str).encode("utf-8")
     experiment_fingerprint = _hashlib.sha256(_fp_payload).hexdigest()
 
     # Crash-proof progress: one JSONL row per finished API, flushed as it
@@ -1061,14 +1243,16 @@ def _comprehension_execute(cfg: AidealConfig, inventory, sample, seed, doc_sourc
     # and already-finished APIs are skipped and pre-filled into the results
     # (the 2026-07-01 all-API run died ~120/218 in and lost every result).
     # Without --resume the checkpoint restarts with the run.
-    import json as _json
     ckpt = work_dir / "comprehension_progress.jsonl"
     done_rows: dict[str, dict] = {}
     if resume and ckpt.exists():
         for line in ckpt.read_text(encoding="utf-8").splitlines():
             try:
                 row = _json.loads(line)
-                if row.get("experiment_fingerprint") == experiment_fingerprint:
+                # Provider/network failures are transient evidence, not a
+                # completed API. An overnight restart must retry them instead
+                # of silently preserving a quota outage in the final table.
+                if _checkpoint_row_reusable(row, experiment_fingerprint):
                     done_rows[row["name"]] = row
             except Exception:
                 continue
@@ -1184,7 +1368,8 @@ def _comprehension_execute(cfg: AidealConfig, inventory, sample, seed, doc_sourc
             metrics[entry.name] = {k: row.get(k) for k in (
                 "status", "attempts", "pass_round", "wall_s", "llm_calls",
                 "input_tokens", "output_tokens", "by_model", "error_category",
-                "doc_chars", "document_sha256")}
+                "error", "locus", "doc_chars", "document_sha256", "source",
+                "source_other_sites", "codebase_frames")}
             per_api[entry.name] = f"resumed: {row.get('status')}"
             if row.get("status") == "pass":
                 passed_n += 1
@@ -1198,6 +1383,7 @@ def _comprehension_execute(cfg: AidealConfig, inventory, sample, seed, doc_sourc
         scala_file = work_api / str(ex.get("test_filename", "ApiTest.scala"))
         cmd = (cmd_template.replace("{scala_file}", str(scala_file))
                .replace("{test_file}", str(scala_file))
+               .replace("{root}", str(cfg.root))
                .replace("{uberjar}", uberjar).replace("{jars}", jars)
                .replace("{classpath}", classpath).replace("{work}", str(work_api))
                .replace("{packages}", packages_flag)
@@ -1356,6 +1542,8 @@ def _comprehension_execute(cfg: AidealConfig, inventory, sample, seed, doc_sourc
             "output_tokens": u["output_tokens"],
             "by_model": u["by_model"],
             "error_category": None if ran else last.get("cat", ""),
+            "error": None if ran else last.get("msg", ""),
+            "locus": None if ran else last.get("locus", ""),
             "doc_chars": len(shared_doc if shared_doc is not None else entry.body),
             "document_sha256": _hashlib.sha256(
                 (shared_doc if shared_doc is not None else entry.body).encode("utf-8")
@@ -1405,6 +1593,7 @@ def _comprehension_execute(cfg: AidealConfig, inventory, sample, seed, doc_sourc
             "manifest_sha256": manifest_sha256,
             "document_sha256": doc_sha256,
             "experiment_fingerprint": experiment_fingerprint,
+            "fingerprint_components": fingerprint_components,
             "doc_scope": doc_scope,
         },
         "passed": bool(scored_n) and passed_n == scored_n,

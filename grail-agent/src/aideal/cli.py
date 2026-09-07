@@ -49,6 +49,9 @@ def _run(argv: list[str] | None = None) -> int:
                     help="max APIs to generate (0 = all; default 10)")
     sp.add_argument("--force", action="store_true",
                     help="regenerate/overwrite an existing LLM_readme.md (else exits as 'found')")
+    sp.add_argument("--resume", action="store_true",
+                    help="resume an interrupted --generate run, preserving completed entries; "
+                         "refuses stale/mismatched generation state")
     sp.add_argument("--role", action="append", default=None, metavar="ROLE=MODEL",
                     help="override a model role for this generation; e.g. "
                          "--role author=codex:gpt-5.3-codex")
@@ -408,13 +411,17 @@ def _run(argv: list[str] | None = None) -> int:
                    "apis_with_examples": len(idx),
                    "examples_per_api": {k: len(v) for k, v in sorted(idx.items())}}
     elif args.cmd == "readme":
+        if args.force and args.resume:
+            print(json.dumps({"error": "readme --force and --resume are mutually exclusive"})); return 2
+        if args.resume and not args.generate:
+            print(json.dumps({"error": "readme --resume requires --generate"})); return 2
         for spec in (args.role or []):
             role, _, val = spec.partition("=")
             if not val:
                 print(json.dumps({"error": f"--role needs ROLE=MODEL, got '{spec}'"})); return 2
             cfg.override_role(role.strip(), val.strip())
         out = find_or_create(cfg, generate=args.generate, max_generated=args.limit,
-                             force=args.force)
+                             force=args.force, resume=args.resume)
     elif args.cmd == "form":
         out = form_check(cfg)
     elif args.cmd == "comprehension":
