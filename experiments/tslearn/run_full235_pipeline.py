@@ -108,7 +108,7 @@ def environment_inventory(worktree: Path, cell: str, source: Path) -> Path:
     config = worktree / REL / f"configs/aideal_{cell}_full235.yaml"
     text = (
         f"cell={cell}\nsource_commit={SOURCE_COMMIT}\n"
-        f"source_tree={git(source, 'rev-parse', 'HEAD^{{tree}}').stdout.strip()}\n"
+        f"source_tree={git(source, 'rev-parse', 'HEAD^{tree}').stdout.strip()}\n"
         f"manifest_sha256={sha(manifest)}\nscaffold_sha256={sha(scaffold)}\n"
         f"config_sha256={sha(config)}\nfixture_sha256={sha(fixture)}\n"
         f"PYTHONPATH={source}\nNUMBA_THREADING_LAYER=workqueue\nthreads=1\n"
