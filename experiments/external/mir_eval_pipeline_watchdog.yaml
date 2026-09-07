@@ -1,0 +1,24 @@
+version: 1
+max_parallel: 1
+retry_delay_seconds: 300
+env:
+  PYTHONPATH: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/grail-agent/src:/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal
+  AIDEAL_GOOGLE_MIN_INTERVAL_S: "3"
+  AIDEAL_GOOGLE_RATE_STATE: /tmp/aideal_google_rate_gate.txt
+  AIDEAL_GOOGLE_REQUEST_TIMEOUT_S: "300"
+  AIDEAL_GOOGLE_MAX_RETRIES: "2"
+jobs:
+  - id: mir_eval_complete_2x2
+    cwd: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal
+    branch: aideal/external-2x2-infra
+    environment_inventory: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_setup/experiments/external/mir_eval/docs/eval/setup/environment_inventory.txt
+    command:
+      - /Users/clockorangezoe/miniconda3/envs/geo_llm_spark/bin/python
+      - experiments/external/run_external_2x2_pipeline.py
+      - mir_eval
+      - --freeze-worktree
+      - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_setup
+    result: .aideal_exec/mir_eval_pipeline.stdout
+    complete: {kind: exit_zero}
+    max_runtime_seconds: 604800
+    max_restarts: 0
