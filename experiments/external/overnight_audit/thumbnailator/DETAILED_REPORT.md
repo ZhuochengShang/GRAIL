@@ -27,7 +27,7 @@ Effects withheld until all four matched final cells and their repair/test eviden
 
 ### A1
 
-Primary failure categories: {"llm-error": 4, "unknown": 9}.
+Primary failure categories: {"llm-error": 4, "unknown": 12}.
 
 Recorded provider-error attempts across all checkpoint fingerprints: 21. Provider-internal retries are not recorded by the existing client and cannot be inferred from the configured limit. Watchdog logs retain process attempts; checkpoint attempts and document-fix rounds are separate ledger fields.
 
@@ -44,6 +44,9 @@ Recorded provider-error attempts across all checkpoint fingerprints: 21. Provide
 - `defaultResizer`: unknown; native=runtime; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `source/src/main/java/net/coobird/thumbnailator/makers/ThumbnailMaker.java:263`. Error: `IllegalStateException: Maker not ready to make thumbnail.`. Review: Observed runtime; doc attribution requires source, document, and snippet review.
 - `determineOutputFormat`: unknown; native=runtime; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `source/src/main/java/net/coobird/thumbnailator/Thumbnails.java:1720`. Error: `FileNotFoundException: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A1/experiments/external/thumbnailator/.aideal_exec/A1/output/thumbnail.png/test_output.png (Not a directory)`. Review: Observed runtime; doc attribution requires source, document, and snippet review.
 - `format`: llm-error; native=llm-error; checkpoint attempts=1; provider-error attempts=1; document rounds=None; repair=None. Source: `source/src/main/java/net/coobird/thumbnailator/builders/ThumbnailParameterBuilder.java:243`. Error: `ServerError: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'The service is currently unavailable.', 'status': 'UNAVAILABLE'}}`. Review: Provider outcome; retry, never count as a documentation failure.
+- `getDestination`: unknown; native=compile; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `source/src/main/java/net/coobird/thumbnailator/tasks/ThumbnailTask.java:126`. Error: `/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A1/experiments/external/thumbnailator/.aideal_exec/A1/run_getDestination/ApiTest.java:61: error: incompatible types: BufferedImage cannot be converted to ImageSink<BufferedImage>`. Review: Observed compile; doc attribution requires source, document, and snippet review.
+- `getExifOrientation`: unknown; native=runtime; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `source/src/main/java/net/coobird/thumbnailator/util/exif/ExifUtils.java:69`. Error: `IllegalStateException: Input not set`. Review: Observed runtime; doc attribution requires source, document, and snippet review.
+- `getParam`: unknown; native=compile; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `source/src/main/java/net/coobird/thumbnailator/tasks/ThumbnailTask.java:110`. Error: `/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A1/experiments/external/thumbnailator/.aideal_exec/A1/run_getParam/ApiTest.java:52: error: cannot find symbol`. Review: Observed compile; doc attribution requires source, document, and snippet review.
 
 ### A2
 

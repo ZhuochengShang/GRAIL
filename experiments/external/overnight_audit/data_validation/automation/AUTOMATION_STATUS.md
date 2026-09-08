@@ -1,6 +1,6 @@
 # Automation status and deadline forecast
 
-Updated: 2026-09-07T20:09:26.328821-07:00. Hours to Wednesday 11 AM: 38.84.
+Updated: 2026-09-07T20:23:42.413146-07:00. Hours to Wednesday 11 AM: 38.61.
 
 **Whole-pipeline completion time remains unverified.** Estimates below cover remaining comprehension only; generation, document repair, and final validation are additional. Scenarios are not confidence intervals.
 
@@ -10,18 +10,18 @@ Updated: 2026-09-07T20:09:26.328821-07:00. Hours to Wednesday 11 AM: 38.84.
 | mir_eval/A2 | 0 | complete | 0.00 / 0.00 / 0.00 |
 | mir_eval/B1 | 148 | insufficient_observations | unknown |
 | mir_eval/B2 | 148 | insufficient_observations | unknown |
-| thumbnailator/A1 | 88 | estimated | 0.39 / 2.65 / 16.97 |
+| thumbnailator/A1 | 58 | estimated | 0.28 / 0.37 / 1.08 |
 | thumbnailator/A2 | 0 | complete | 0.00 / 0.00 / 0.00 |
 | thumbnailator/B1 | 149 | insufficient_observations | unknown |
 | thumbnailator/B2 | 149 | insufficient_observations | unknown |
-| tslearn/A1 | 121 | estimated | 0.43 / 6.01 / 50.37 |
-| tslearn/A2 | 59 | estimated | 0.16 / 0.40 / 0.87 |
+| tslearn/A1 | 121 | estimated | 0.43 / 7.87 / 54.95 |
+| tslearn/A2 | 33 | estimated | 0.09 / 0.31 / 0.62 |
 | tslearn/B1 | 235 | insufficient_observations | unknown |
 | tslearn/B2 | 235 | insufficient_observations | unknown |
 
-Failure review queue: 249 entries. Mutable cross-condition path conflicts: 0.
+Failure review queue: 262 entries. Mutable cross-condition path conflicts: 0.
 Deadline risks: mir_eval/A1: estimated
-Observation errors: 0. Observer health: `{"results": {"age_seconds": 51.9, "stale": false}, "data": {"age_seconds": 58.7, "stale": false}}`.
+Observation errors: 0. Observer health: `{"results": {"age_seconds": 1.5, "stale": false}, "data": {"age_seconds": 50.4, "stale": false}}`.
 
 - [Failure review queue](failure_review_queue.json): suggested causes, evidence, confidence, attempts and repair rounds.
 - [Resolved configuration bundles](config_bundles.json): actual profile, direct YAML layers, fixture bindings and recorded environments.
