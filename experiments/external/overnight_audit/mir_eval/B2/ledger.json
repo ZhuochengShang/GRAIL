@@ -5,39 +5,39 @@
     "pending": 147,
     "pass": 1
   },
-  "fingerprint": "f5d4de493cdeb5011fb695fc51393b45ed9e2d2a065140bd29badfec2cb2ae49",
+  "fingerprint": "40b33ab90711bf80169b2395546193c877eeaf840678921b3f3cde4cf45115c9",
   "errors": [],
   "failure_categories": {},
   "recorded_provider_errors_all_fingerprints": 0,
   "observed_fingerprints": [
-    "f5d4de493cdeb5011fb695fc51393b45ed9e2d2a065140bd29badfec2cb2ae49"
+    "40b33ab90711bf80169b2395546193c877eeaf840678921b3f3cde4cf45115c9"
   ],
   "all_checkpoint_events": [
     {
-      "name": "first_n_three_layer_P",
+      "name": "p_score",
       "doc_source": "aideal",
-      "experiment_fingerprint": "f5d4de493cdeb5011fb695fc51393b45ed9e2d2a065140bd29badfec2cb2ae49",
+      "experiment_fingerprint": "40b33ab90711bf80169b2395546193c877eeaf840678921b3f3cde4cf45115c9",
       "execution_evidence": "pass",
       "status": "pass",
       "attempts": 1,
       "pass_round": 0,
-      "wall_s": 26.4,
+      "wall_s": 20.3,
       "llm_calls": 1,
-      "input_tokens": 2651,
-      "output_tokens": 3420,
+      "input_tokens": 2355,
+      "output_tokens": 1878,
       "by_model": {
         "google:gemini-3.1-pro-preview": {
           "calls": 1,
-          "input_tokens": 2651,
-          "output_tokens": 3420
+          "input_tokens": 2355,
+          "output_tokens": 1878
         }
       },
       "error_category": null,
       "error": null,
       "locus": null,
-      "doc_chars": 4388,
-      "document_sha256": "48dea6feeb1ea3e2fe166db38271b01e73b60d20583900a4ca4d8ff52f3c3183",
-      "source": "source/mir_eval/pattern.py:509",
+      "doc_chars": 3319,
+      "document_sha256": "99dd04ae05463c87a959d0593aa148ef9089b9a23a7165706e193a596690e1f7",
+      "source": "source/mir_eval/beat.py:329",
       "source_other_sites": 0,
       "codebase_frames": null,
       "checkpoint_line": 1
@@ -45,13 +45,13 @@
   ],
   "repair_summary": {
     "attempted": 13,
-    "processed": 5,
-    "doc_fixed": 2,
+    "processed": 10,
+    "doc_fixed": 4,
     "doc_rounds": 5,
     "retry_rounds": 0,
     "outcomes": {
-      "doc-fixed": 2,
-      "still-failing": 2,
+      "doc-fixed": 4,
+      "still-failing": 5,
       "in-progress": 1
     },
     "blocked": null
@@ -764,31 +764,18 @@
     },
     {
       "api": "first_n_three_layer_P",
-      "status": "pass",
-      "primary_category": "pass",
+      "status": "pending",
+      "primary_category": "pending",
       "runner_category": null,
-      "category_reason": "",
+      "category_reason": "Not yet observed.",
       "error": null,
-      "source": "source/mir_eval/pattern.py:509",
-      "doc_chars": 4388,
-      "checkpoint_attempts": 1,
+      "source": null,
+      "doc_chars": null,
+      "checkpoint_attempts": 0,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 1,
-      "attempt_history": [
-        {
-          "checkpoint_line": 1,
-          "status": "pass",
-          "error_category": null,
-          "error": null,
-          "attempts": 1,
-          "wall_s": 26.4,
-          "llm_calls": 1,
-          "input_tokens": 2651,
-          "output_tokens": 3420,
-          "pass_round": 0
-        }
-      ],
+      "recorded_successful_llm_calls": 0,
+      "attempt_history": [],
       "repair_status": "doc-fixed",
       "doc_rounds_used": 1,
       "doc_rounds": [
@@ -1501,13 +1488,79 @@
       "provider_internal_retries": null,
       "recorded_successful_llm_calls": 0,
       "attempt_history": [],
-      "repair_status": "in-progress",
-      "doc_rounds_used": null,
-      "doc_rounds": [],
+      "repair_status": "still-failing (no-improvement stop)",
+      "doc_rounds_used": 2,
+      "doc_rounds": [
+        {
+          "round": 0,
+          "deep_dive": {
+            "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/deepdive/load_ragged_time_series.md",
+            "tokens": {
+              "in": 4970,
+              "out": 4688
+            },
+            "wall_s": 42.9
+          },
+          "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING.\nHarness testability: TESTABLE.\nScoring recommendation: include in main user-facing denominator.\n\nROOT CAUSE:\nThe snippet fails because of a bug in `mir_eval.io.load_ragged_time_series`: setting `header=True` does not actually skip the first line of ",
+          "diagnosis_changed": true,
+          "outcome": "rewrite-rejected (fabricated: remove)"
+        },
+        {
+          "round": 1,
+          "deep_dive": {
+            "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/deepdive/load_ragged_time_series.md",
+            "tokens": {
+              "in": 4994,
+              "out": 2729
+            },
+            "wall_s": 32.7
+          },
+          "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING.\nHarness testability: TESTABLE.\nScoring recommendation: include in main user-facing denominator.\n\nROOT CAUSE:\nThe documentation implies `header=True` skips the first row, but the source code mistakenly implements this using `enumerate(input_file, sta",
+          "diagnosis_changed": true,
+          "outcome": "rewrite-rejected (fabricated: remove)"
+        }
+      ],
       "repair_evidence": {
-        "status": "in-progress",
+        "status": "still-failing (no-improvement stop)",
         "created_from_missing": false,
-        "doc_rounds": []
+        "rounds_used": 2,
+        "doc_rounds": [
+          {
+            "round": 0,
+            "deep_dive": {
+              "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/deepdive/load_ragged_time_series.md",
+              "tokens": {
+                "in": 4970,
+                "out": 4688
+              },
+              "wall_s": 42.9
+            },
+            "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING.\nHarness testability: TESTABLE.\nScoring recommendation: include in main user-facing denominator.\n\nROOT CAUSE:\nThe snippet fails because of a bug in `mir_eval.io.load_ragged_time_series`: setting `header=True` does not actually skip the first line of ",
+            "diagnosis_changed": true,
+            "outcome": "rewrite-rejected (fabricated: remove)"
+          },
+          {
+            "round": 1,
+            "deep_dive": {
+              "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/deepdive/load_ragged_time_series.md",
+              "tokens": {
+                "in": 4994,
+                "out": 2729
+              },
+              "wall_s": 32.7
+            },
+            "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING.\nHarness testability: TESTABLE.\nScoring recommendation: include in main user-facing denominator.\n\nROOT CAUSE:\nThe documentation implies `header=True` skips the first row, but the source code mistakenly implements this using `enumerate(input_file, sta",
+            "diagnosis_changed": true,
+            "outcome": "rewrite-rejected (fabricated: remove)"
+          }
+        ],
+        "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING.\nHarness testability: TESTABLE.\nScoring recommendation: include in main user-facing denominator.\n\nROOT CAUSE:\nThe documentation implies `header=True` skips the first row, but the source code mistakenly implements this using `enumerate(input_file, sta",
+        "entry_chars": null,
+        "wall_s": 225.6,
+        "tokens": {
+          "in": 32003,
+          "out": 22821
+        }
       }
     },
     {
@@ -1524,10 +1577,80 @@
       "provider_internal_retries": null,
       "recorded_successful_llm_calls": 0,
       "attempt_history": [],
-      "repair_status": null,
-      "doc_rounds_used": null,
-      "doc_rounds": [],
-      "repair_evidence": {}
+      "repair_status": "still-failing (no-improvement stop)",
+      "doc_rounds_used": 2,
+      "doc_rounds": [
+        {
+          "round": 0,
+          "deep_dive": {
+            "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/deepdive/load_tempo.md",
+            "tokens": {
+              "in": 4569,
+              "out": 2747
+            },
+            "wall_s": 26.7
+          },
+          "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING.\nHarness testability: TESTABLE.\nScoring recommendation: include in main user-facing denominator.\n\nROOT CAUSE:\nThe snippet failed due to an environment assumption: it attempted to write a test file to an `output_dir` that did not exist on the filesyst",
+          "diagnosis_changed": true,
+          "outcome": "rewrite-rejected (fabricated: remove)"
+        },
+        {
+          "round": 1,
+          "deep_dive": {
+            "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/deepdive/load_tempo.md",
+            "tokens": {
+              "in": 4593,
+              "out": 3154
+            },
+            "wall_s": 26.8
+          },
+          "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING.\nHarness testability: TESTABLE.\nScoring recommendation: include in main user-facing denominator.\n\nROOT CAUSE:\nThe snippet failed because it assumed the existence of an undefined `output_dir` variable and directory to write its test file, resulting in",
+          "diagnosis_changed": true,
+          "outcome": "rewrite-rejected (fabricated: remove)"
+        }
+      ],
+      "repair_evidence": {
+        "status": "still-failing (no-improvement stop)",
+        "created_from_missing": false,
+        "rounds_used": 2,
+        "doc_rounds": [
+          {
+            "round": 0,
+            "deep_dive": {
+              "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/deepdive/load_tempo.md",
+              "tokens": {
+                "in": 4569,
+                "out": 2747
+              },
+              "wall_s": 26.7
+            },
+            "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING.\nHarness testability: TESTABLE.\nScoring recommendation: include in main user-facing denominator.\n\nROOT CAUSE:\nThe snippet failed due to an environment assumption: it attempted to write a test file to an `output_dir` that did not exist on the filesyst",
+            "diagnosis_changed": true,
+            "outcome": "rewrite-rejected (fabricated: remove)"
+          },
+          {
+            "round": 1,
+            "deep_dive": {
+              "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/deepdive/load_tempo.md",
+              "tokens": {
+                "in": 4593,
+                "out": 3154
+              },
+              "wall_s": 26.8
+            },
+            "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING.\nHarness testability: TESTABLE.\nScoring recommendation: include in main user-facing denominator.\n\nROOT CAUSE:\nThe snippet failed because it assumed the existence of an undefined `output_dir` variable and directory to write its test file, resulting in",
+            "diagnosis_changed": true,
+            "outcome": "rewrite-rejected (fabricated: remove)"
+          }
+        ],
+        "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING.\nHarness testability: TESTABLE.\nScoring recommendation: include in main user-facing denominator.\n\nROOT CAUSE:\nThe snippet failed because it assumed the existence of an undefined `output_dir` variable and directory to write its test file, resulting in",
+        "entry_chars": null,
+        "wall_s": 149.8,
+        "tokens": {
+          "in": 29274,
+          "out": 14710
+        }
+      }
     },
     {
       "api": "load_time_series",
@@ -1562,10 +1685,69 @@
       "provider_internal_retries": null,
       "recorded_successful_llm_calls": 0,
       "attempt_history": [],
-      "repair_status": null,
-      "doc_rounds_used": null,
-      "doc_rounds": [],
-      "repair_evidence": {}
+      "repair_status": "doc-fixed",
+      "doc_rounds_used": 1,
+      "doc_rounds": [
+        {
+          "round": 0,
+          "deep_dive": {
+            "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/deepdive/load_valued_intervals.md",
+            "tokens": {
+              "in": 5450,
+              "out": 2561
+            },
+            "wall_s": 28.1
+          },
+          "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING\nHarness testability: TESTABLE\nScoring recommendation: include in main user-facing denominator\n\nROOT CAUSE:\nThe snippet failed due to an environment assumption: it attempted to write a test file to an `output_dir` variable that was either undefined or",
+          "diagnosis_changed": true,
+          "entry_chars": {
+            "old": 3961,
+            "new": 3551
+          },
+          "retry_status": "pass",
+          "error_category": null,
+          "error_head": "pass",
+          "error_progressed": true
+        }
+      ],
+      "repair_evidence": {
+        "status": "doc-fixed",
+        "created_from_missing": false,
+        "rounds_used": 1,
+        "doc_rounds": [
+          {
+            "round": 0,
+            "deep_dive": {
+              "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/deepdive/load_valued_intervals.md",
+              "tokens": {
+                "in": 5450,
+                "out": 2561
+              },
+              "wall_s": 28.1
+            },
+            "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING\nHarness testability: TESTABLE\nScoring recommendation: include in main user-facing denominator\n\nROOT CAUSE:\nThe snippet failed due to an environment assumption: it attempted to write a test file to an `output_dir` variable that was either undefined or",
+            "diagnosis_changed": true,
+            "entry_chars": {
+              "old": 3961,
+              "new": 3551
+            },
+            "retry_status": "pass",
+            "error_category": null,
+            "error_head": "pass",
+            "error_progressed": true
+          }
+        ],
+        "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING\nHarness testability: TESTABLE\nScoring recommendation: include in main user-facing denominator\n\nROOT CAUSE:\nThe snippet failed due to an environment assumption: it attempted to write a test file to an `output_dir` variable that was either undefined or",
+        "entry_chars": {
+          "old": 3961,
+          "new": 3551
+        },
+        "wall_s": 87.9,
+        "tokens": {
+          "in": 17921,
+          "out": 9192
+        }
+      }
     },
     {
       "api": "load_wav",
@@ -1581,10 +1763,80 @@
       "provider_internal_retries": null,
       "recorded_successful_llm_calls": 0,
       "attempt_history": [],
-      "repair_status": null,
-      "doc_rounds_used": null,
-      "doc_rounds": [],
-      "repair_evidence": {}
+      "repair_status": "still-failing (no-improvement stop)",
+      "doc_rounds_used": 2,
+      "doc_rounds": [
+        {
+          "round": 0,
+          "deep_dive": {
+            "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/deepdive/load_wav.md",
+            "tokens": {
+              "in": 5257,
+              "out": 4711
+            },
+            "wall_s": 43.7
+          },
+          "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING\nHarness testability: TESTABLE\nScoring recommendation: include in main user-facing denominator\n\nROOT CAUSE:\nThe snippet failed with a `FileNotFoundError` because it attempted to write the test `.wav` file to an uninitialized `output_dir` that does not",
+          "diagnosis_changed": true,
+          "outcome": "rewrite-rejected (fabricated: remove)"
+        },
+        {
+          "round": 1,
+          "deep_dive": {
+            "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/deepdive/load_wav.md",
+            "tokens": {
+              "in": 5281,
+              "out": 3079
+            },
+            "wall_s": 28.3
+          },
+          "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING\nHarness testability: TESTABLE\nScoring recommendation: include in main user-facing denominator\n\nROOT CAUSE:\nThe immediate failure is an environment issue: the snippet attempted to write a dummy `.wav` file to an `output_dir` path that did not exist in",
+          "diagnosis_changed": true,
+          "outcome": "rewrite-rejected (fabricated: mkstemp, remove)"
+        }
+      ],
+      "repair_evidence": {
+        "status": "still-failing (no-improvement stop)",
+        "created_from_missing": false,
+        "rounds_used": 2,
+        "doc_rounds": [
+          {
+            "round": 0,
+            "deep_dive": {
+              "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/deepdive/load_wav.md",
+              "tokens": {
+                "in": 5257,
+                "out": 4711
+              },
+              "wall_s": 43.7
+            },
+            "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING\nHarness testability: TESTABLE\nScoring recommendation: include in main user-facing denominator\n\nROOT CAUSE:\nThe snippet failed with a `FileNotFoundError` because it attempted to write the test `.wav` file to an uninitialized `output_dir` that does not",
+            "diagnosis_changed": true,
+            "outcome": "rewrite-rejected (fabricated: remove)"
+          },
+          {
+            "round": 1,
+            "deep_dive": {
+              "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/deepdive/load_wav.md",
+              "tokens": {
+                "in": 5281,
+                "out": 3079
+              },
+              "wall_s": 28.3
+            },
+            "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING\nHarness testability: TESTABLE\nScoring recommendation: include in main user-facing denominator\n\nROOT CAUSE:\nThe immediate failure is an environment issue: the snippet attempted to write a dummy `.wav` file to an `output_dir` path that did not exist in",
+            "diagnosis_changed": true,
+            "outcome": "rewrite-rejected (fabricated: mkstemp, remove)"
+          }
+        ],
+        "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING\nHarness testability: TESTABLE\nScoring recommendation: include in main user-facing denominator\n\nROOT CAUSE:\nThe immediate failure is an environment issue: the snippet attempted to write a dummy `.wav` file to an `output_dir` path that did not exist in",
+        "entry_chars": null,
+        "wall_s": 193.5,
+        "tokens": {
+          "in": 32041,
+          "out": 23023
+        }
+      }
     },
     {
       "api": "majmin",
@@ -1968,22 +2220,94 @@
     },
     {
       "api": "p_score",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "source/mir_eval/beat.py:329",
+      "doc_chars": 3319,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
-      "repair_status": null,
-      "doc_rounds_used": null,
-      "doc_rounds": [],
-      "repair_evidence": {}
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 1,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 20.3,
+          "llm_calls": 1,
+          "input_tokens": 2355,
+          "output_tokens": 1878,
+          "pass_round": 0
+        }
+      ],
+      "repair_status": "doc-fixed",
+      "doc_rounds_used": 1,
+      "doc_rounds": [
+        {
+          "round": 0,
+          "deep_dive": {
+            "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/deepdive/p_score.md",
+            "tokens": {
+              "in": 5562,
+              "out": 3618
+            },
+            "wall_s": 32.0
+          },
+          "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING.\nHarness testability: TESTABLE.\nScoring recommendation: include in main user-facing denominator.\n\nROOT CAUSE:\nThe snippet failed because the test harness provided dummy beat arrays that, when passed through `mir_eval.beat.trim_beats` (which removes b",
+          "diagnosis_changed": true,
+          "entry_chars": {
+            "old": 3662,
+            "new": 3319
+          },
+          "retry_status": "pass",
+          "error_category": null,
+          "error_head": "pass",
+          "error_progressed": true
+        }
+      ],
+      "repair_evidence": {
+        "status": "doc-fixed",
+        "created_from_missing": false,
+        "rounds_used": 1,
+        "doc_rounds": [
+          {
+            "round": 0,
+            "deep_dive": {
+              "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/deepdive/p_score.md",
+              "tokens": {
+                "in": 5562,
+                "out": 3618
+              },
+              "wall_s": 32.0
+            },
+            "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING.\nHarness testability: TESTABLE.\nScoring recommendation: include in main user-facing denominator.\n\nROOT CAUSE:\nThe snippet failed because the test harness provided dummy beat arrays that, when passed through `mir_eval.beat.trim_beats` (which removes b",
+            "diagnosis_changed": true,
+            "entry_chars": {
+              "old": 3662,
+              "new": 3319
+            },
+            "retry_status": "pass",
+            "error_category": null,
+            "error_head": "pass",
+            "error_progressed": true
+          }
+        ],
+        "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING.\nHarness testability: TESTABLE.\nScoring recommendation: include in main user-facing denominator.\n\nROOT CAUSE:\nThe snippet failed because the test harness provided dummy beat arrays that, when passed through `mir_eval.beat.trim_beats` (which removes b",
+        "entry_chars": {
+          "old": 3662,
+          "new": 3319
+        },
+        "wall_s": 96.6,
+        "tokens": {
+          "in": 18516,
+          "out": 10702
+        }
+      }
     },
     {
       "api": "pairwise",
@@ -2056,10 +2380,14 @@
       "provider_internal_retries": null,
       "recorded_successful_llm_calls": 0,
       "attempt_history": [],
-      "repair_status": null,
+      "repair_status": "in-progress",
       "doc_rounds_used": null,
       "doc_rounds": [],
-      "repair_evidence": {}
+      "repair_evidence": {
+        "status": "in-progress",
+        "created_from_missing": false,
+        "doc_rounds": []
+      }
     },
     {
       "api": "pitch",
@@ -3152,8 +3480,8 @@
   "evidence": [
     {
       "path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/docfix.json",
-      "sha256": "1783228c6f037947962a7e8ccf4d5fa56f9e37be43e9304d9d29e25d45e40c97",
-      "snapshot": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_overnight_evidence_audit/experiments/external/overnight_audit/snapshots/1783228c6f037947962a7e8ccf4d5fa56f9e37be43e9304d9d29e25d45e40c97"
+      "sha256": "2e4c26b9bd8cf4f30f479bc2a0b012f345bfad2265c87e810df4326925ab5c63",
+      "snapshot": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_overnight_evidence_audit/experiments/external/overnight_audit/snapshots/2e4c26b9bd8cf4f30f479bc2a0b012f345bfad2265c87e810df4326925ab5c63"
     }
   ]
 }

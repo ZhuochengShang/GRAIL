@@ -1,22 +1,61 @@
 {
-  "status": "pending",
+  "status": "partial",
   "expected": 149,
   "counts": {
-    "pending": 149
+    "pending": 148,
+    "fail": 1
   },
-  "fingerprint": null,
+  "fingerprint": "dd1b683474dd1b5663246800872d6ef5639dd89b3c17a1fd8a48299ec7ccab76",
   "errors": [],
-  "failure_categories": {},
+  "failure_categories": {
+    "unknown": 1
+  },
   "recorded_provider_errors_all_fingerprints": 0,
-  "observed_fingerprints": [],
-  "all_checkpoint_events": [],
+  "observed_fingerprints": [
+    "dd1b683474dd1b5663246800872d6ef5639dd89b3c17a1fd8a48299ec7ccab76"
+  ],
+  "all_checkpoint_events": [
+    {
+      "name": "defaultResizer",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "dd1b683474dd1b5663246800872d6ef5639dd89b3c17a1fd8a48299ec7ccab76",
+      "execution_evidence": "fail [runtime]: IllegalStateException: Maker not ready to make thumbnail.",
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 11.5,
+      "llm_calls": 1,
+      "input_tokens": 1909,
+      "output_tokens": 1141,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1909,
+          "output_tokens": 1141
+        }
+      },
+      "error_category": "runtime",
+      "error": "IllegalStateException: Maker not ready to make thumbnail.",
+      "locus": "ApiTest.java:54",
+      "doc_chars": 3150,
+      "document_sha256": "145c223a9465eadffd21089d2bfad89e9a636438e68f419b78a067d2ada017ee",
+      "source": "source/src/main/java/net/coobird/thumbnailator/makers/ThumbnailMaker.java:263",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 1
+    }
+  ],
   "repair_summary": {
-    "attempted": null,
-    "processed": null,
-    "doc_fixed": null,
-    "doc_rounds": null,
-    "retry_rounds": null,
-    "outcomes": null,
+    "attempted": 22,
+    "processed": 6,
+    "doc_fixed": 3,
+    "doc_rounds": 5,
+    "retry_rounds": 0,
+    "outcomes": {
+      "doc-fixed": 3,
+      "not-testable": 2,
+      "in-progress": 1
+    },
     "blocked": null
   },
   "rows": [
@@ -395,10 +434,69 @@
       "provider_internal_retries": null,
       "recorded_successful_llm_calls": 0,
       "attempt_history": [],
-      "repair_status": null,
-      "doc_rounds_used": null,
-      "doc_rounds": [],
-      "repair_evidence": {}
+      "repair_status": "doc-fixed",
+      "doc_rounds_used": 1,
+      "doc_rounds": [
+        {
+          "round": 0,
+          "deep_dive": {
+            "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/docs/eval/B2/deepdive/Pipeline.md",
+            "tokens": {
+              "in": 4789,
+              "out": 3218
+            },
+            "wall_s": 36.5
+          },
+          "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: ADVANCED/LOW-LEVEL.\nHarness testability: TESTABLE-WITH-LOW-LEVEL-CONSTRUCTION.\nScoring recommendation: include only in advanced/internal bucket.\n\nROOT CAUSE:\nThe documentation's prompt snippet provided an illustrative example using `new Rotation(90)`, but the ex",
+          "diagnosis_changed": true,
+          "entry_chars": {
+            "old": 3744,
+            "new": 4105
+          },
+          "retry_status": "pass",
+          "error_category": null,
+          "error_head": "pass",
+          "error_progressed": true
+        }
+      ],
+      "repair_evidence": {
+        "status": "doc-fixed",
+        "created_from_missing": false,
+        "rounds_used": 1,
+        "doc_rounds": [
+          {
+            "round": 0,
+            "deep_dive": {
+              "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/docs/eval/B2/deepdive/Pipeline.md",
+              "tokens": {
+                "in": 4789,
+                "out": 3218
+              },
+              "wall_s": 36.5
+            },
+            "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: ADVANCED/LOW-LEVEL.\nHarness testability: TESTABLE-WITH-LOW-LEVEL-CONSTRUCTION.\nScoring recommendation: include only in advanced/internal bucket.\n\nROOT CAUSE:\nThe documentation's prompt snippet provided an illustrative example using `new Rotation(90)`, but the ex",
+            "diagnosis_changed": true,
+            "entry_chars": {
+              "old": 3744,
+              "new": 4105
+            },
+            "retry_status": "pass",
+            "error_category": null,
+            "error_head": "pass",
+            "error_progressed": true
+          }
+        ],
+        "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: ADVANCED/LOW-LEVEL.\nHarness testability: TESTABLE-WITH-LOW-LEVEL-CONSTRUCTION.\nScoring recommendation: include only in advanced/internal bucket.\n\nROOT CAUSE:\nThe documentation's prompt snippet provided an illustrative example using `new Rotation(90)`, but the ex",
+        "entry_chars": {
+          "old": 3744,
+          "new": 4105
+        },
+        "wall_s": 105.4,
+        "tokens": {
+          "in": 17341,
+          "out": 9144
+        }
+      }
     },
     {
       "api": "ProgressiveBilinearResizer",
@@ -528,10 +626,69 @@
       "provider_internal_retries": null,
       "recorded_successful_llm_calls": 0,
       "attempt_history": [],
-      "repair_status": null,
-      "doc_rounds_used": null,
-      "doc_rounds": [],
-      "repair_evidence": {}
+      "repair_status": "doc-fixed",
+      "doc_rounds_used": 1,
+      "doc_rounds": [
+        {
+          "round": 0,
+          "deep_dive": {
+            "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/docs/eval/B2/deepdive/ThumbnailMaker.md",
+            "tokens": {
+              "in": 4649,
+              "out": 2809
+            },
+            "wall_s": 23.7
+          },
+          "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: INTERNAL-FRAMEWORK.\nHarness testability: TESTABLE-WITH-LOW-LEVEL-CONSTRUCTION.\nScoring recommendation: include only in advanced/internal bucket.\n\nROOT CAUSE:\nThe documentation contains a direct error in its \"Valid Call Patterns\" section. It suggests instantiatin",
+          "diagnosis_changed": true,
+          "entry_chars": {
+            "old": 2278,
+            "new": 2789
+          },
+          "retry_status": "pass",
+          "error_category": null,
+          "error_head": "pass",
+          "error_progressed": true
+        }
+      ],
+      "repair_evidence": {
+        "status": "doc-fixed",
+        "created_from_missing": false,
+        "rounds_used": 1,
+        "doc_rounds": [
+          {
+            "round": 0,
+            "deep_dive": {
+              "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/docs/eval/B2/deepdive/ThumbnailMaker.md",
+              "tokens": {
+                "in": 4649,
+                "out": 2809
+              },
+              "wall_s": 23.7
+            },
+            "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: INTERNAL-FRAMEWORK.\nHarness testability: TESTABLE-WITH-LOW-LEVEL-CONSTRUCTION.\nScoring recommendation: include only in advanced/internal bucket.\n\nROOT CAUSE:\nThe documentation contains a direct error in its \"Valid Call Patterns\" section. It suggests instantiatin",
+            "diagnosis_changed": true,
+            "entry_chars": {
+              "old": 2278,
+              "new": 2789
+            },
+            "retry_status": "pass",
+            "error_category": null,
+            "error_head": "pass",
+            "error_progressed": true
+          }
+        ],
+        "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: INTERNAL-FRAMEWORK.\nHarness testability: TESTABLE-WITH-LOW-LEVEL-CONSTRUCTION.\nScoring recommendation: include only in advanced/internal bucket.\n\nROOT CAUSE:\nThe documentation contains a direct error in its \"Valid Call Patterns\" section. It suggests instantiatin",
+        "entry_chars": {
+          "old": 2278,
+          "new": 2789
+        },
+        "wall_s": 95.4,
+        "tokens": {
+          "in": 14943,
+          "out": 10365
+        }
+      }
     },
     {
       "api": "ThumbnailParameter",
@@ -623,10 +780,69 @@
       "provider_internal_retries": null,
       "recorded_successful_llm_calls": 0,
       "attempt_history": [],
-      "repair_status": null,
-      "doc_rounds_used": null,
-      "doc_rounds": [],
-      "repair_evidence": {}
+      "repair_status": "doc-fixed",
+      "doc_rounds_used": 1,
+      "doc_rounds": [
+        {
+          "round": 0,
+          "deep_dive": {
+            "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/docs/eval/B2/deepdive/UnsupportedFormatException.md",
+            "tokens": {
+              "in": 3393,
+              "out": 3487
+            },
+            "wall_s": 31.7
+          },
+          "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING.\nHarness testability: TESTABLE.\nScoring recommendation: include in main user-facing denominator.\n\nROOT CAUSE:\nThe documentation incorrectly claims that requesting an unsupported format via `Thumbnails.Builder.outputFormat(String)` will throw an `Unsu",
+          "diagnosis_changed": true,
+          "entry_chars": {
+            "old": 2941,
+            "new": 4111
+          },
+          "retry_status": "pass",
+          "error_category": null,
+          "error_head": "pass",
+          "error_progressed": true
+        }
+      ],
+      "repair_evidence": {
+        "status": "doc-fixed",
+        "created_from_missing": false,
+        "rounds_used": 1,
+        "doc_rounds": [
+          {
+            "round": 0,
+            "deep_dive": {
+              "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/docs/eval/B2/deepdive/UnsupportedFormatException.md",
+              "tokens": {
+                "in": 3393,
+                "out": 3487
+              },
+              "wall_s": 31.7
+            },
+            "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING.\nHarness testability: TESTABLE.\nScoring recommendation: include in main user-facing denominator.\n\nROOT CAUSE:\nThe documentation incorrectly claims that requesting an unsupported format via `Thumbnails.Builder.outputFormat(String)` will throw an `Unsu",
+            "diagnosis_changed": true,
+            "entry_chars": {
+              "old": 2941,
+              "new": 4111
+            },
+            "retry_status": "pass",
+            "error_category": null,
+            "error_head": "pass",
+            "error_progressed": true
+          }
+        ],
+        "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING.\nHarness testability: TESTABLE.\nScoring recommendation: include in main user-facing denominator.\n\nROOT CAUSE:\nThe documentation incorrectly claims that requesting an unsupported format via `Thumbnails.Builder.outputFormat(String)` will throw an `Unsu",
+        "entry_chars": {
+          "old": 2941,
+          "new": 4111
+        },
+        "wall_s": 89.4,
+        "tokens": {
+          "in": 12685,
+          "out": 9052
+        }
+      }
     },
     {
       "api": "Watermark",
@@ -927,10 +1143,52 @@
       "provider_internal_retries": null,
       "recorded_successful_llm_calls": 0,
       "attempt_history": [],
-      "repair_status": null,
-      "doc_rounds_used": null,
-      "doc_rounds": [],
-      "repair_evidence": {}
+      "repair_status": "not-testable (entry unchanged)",
+      "doc_rounds_used": 1,
+      "doc_rounds": [
+        {
+          "round": 0,
+          "deep_dive": {
+            "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/docs/eval/B2/deepdive/clear.md",
+            "tokens": {
+              "in": 2450,
+              "out": 1796
+            },
+            "wall_s": 17.6
+          },
+          "diagnosis_head": "VERDICT: NOT-TESTABLE — Method is package-private and cannot be invoked from an external test harness.",
+          "diagnosis_changed": true,
+          "outcome": "not-testable"
+        }
+      ],
+      "repair_evidence": {
+        "status": "not-testable (entry unchanged)",
+        "created_from_missing": false,
+        "rounds_used": 1,
+        "doc_rounds": [
+          {
+            "round": 0,
+            "deep_dive": {
+              "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/docs/eval/B2/deepdive/clear.md",
+              "tokens": {
+                "in": 2450,
+                "out": 1796
+              },
+              "wall_s": 17.6
+            },
+            "diagnosis_head": "VERDICT: NOT-TESTABLE — Method is package-private and cannot be invoked from an external test harness.",
+            "diagnosis_changed": true,
+            "outcome": "not-testable"
+          }
+        ],
+        "diagnosis_head": "VERDICT: NOT-TESTABLE — Method is package-private and cannot be invoked from an external test harness.",
+        "entry_chars": null,
+        "wall_s": 29.3,
+        "tokens": {
+          "in": 5506,
+          "out": 2249
+        }
+      }
     },
     {
       "api": "copy",
@@ -965,10 +1223,52 @@
       "provider_internal_retries": null,
       "recorded_successful_llm_calls": 0,
       "attempt_history": [],
-      "repair_status": null,
-      "doc_rounds_used": null,
-      "doc_rounds": [],
-      "repair_evidence": {}
+      "repair_status": "not-testable (entry unchanged)",
+      "doc_rounds_used": 1,
+      "doc_rounds": [
+        {
+          "round": 0,
+          "deep_dive": {
+            "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/docs/eval/B2/deepdive/createOutputStream.md",
+            "tokens": {
+              "in": 3037,
+              "out": 3052
+            },
+            "wall_s": 28.4
+          },
+          "diagnosis_head": "VERDICT: NOT-TESTABLE — The method is package-private and explicitly marked \"Visible for testing only\", making it inaccessible from an external test harness package.",
+          "diagnosis_changed": true,
+          "outcome": "not-testable"
+        }
+      ],
+      "repair_evidence": {
+        "status": "not-testable (entry unchanged)",
+        "created_from_missing": false,
+        "rounds_used": 1,
+        "doc_rounds": [
+          {
+            "round": 0,
+            "deep_dive": {
+              "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/docs/eval/B2/deepdive/createOutputStream.md",
+              "tokens": {
+                "in": 3037,
+                "out": 3052
+              },
+              "wall_s": 28.4
+            },
+            "diagnosis_head": "VERDICT: NOT-TESTABLE — The method is package-private and explicitly marked \"Visible for testing only\", making it inaccessible from an external test harness package.",
+            "diagnosis_changed": true,
+            "outcome": "not-testable"
+          }
+        ],
+        "diagnosis_head": "VERDICT: NOT-TESTABLE — The method is package-private and explicitly marked \"Visible for testing only\", making it inaccessible from an external test harness package.",
+        "entry_chars": null,
+        "wall_s": 34.6,
+        "tokens": {
+          "in": 6958,
+          "out": 3461
+        }
+      }
     },
     {
       "api": "createThumbnail",
@@ -1067,22 +1367,84 @@
     },
     {
       "api": "defaultResizer",
-      "status": "pending",
-      "primary_category": "pending",
-      "runner_category": null,
-      "category_reason": "Not yet observed.",
-      "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "status": "fail",
+      "primary_category": "unknown",
+      "runner_category": "runtime",
+      "category_reason": "Observed runtime; doc attribution requires source, document, and snippet review.",
+      "error": "IllegalStateException: Maker not ready to make thumbnail.",
+      "source": "source/src/main/java/net/coobird/thumbnailator/makers/ThumbnailMaker.java:263",
+      "doc_chars": 3150,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
-      "repair_status": null,
-      "doc_rounds_used": null,
-      "doc_rounds": [],
-      "repair_evidence": {}
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 1,
+          "status": "fail",
+          "error_category": "runtime",
+          "error": "IllegalStateException: Maker not ready to make thumbnail.",
+          "attempts": 1,
+          "wall_s": 11.5,
+          "llm_calls": 1,
+          "input_tokens": 1909,
+          "output_tokens": 1141,
+          "pass_round": null
+        }
+      ],
+      "repair_status": "in-progress",
+      "doc_rounds_used": 1,
+      "doc_rounds": [
+        {
+          "round": 0,
+          "deep_dive": {
+            "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/docs/eval/B2/deepdive/defaultResizer.md",
+            "tokens": {
+              "in": 3329,
+              "out": 2719
+            },
+            "wall_s": 27.9
+          },
+          "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: ADVANCED/LOW-LEVEL\nHarness testability: TESTABLE-WITH-LOW-LEVEL-CONSTRUCTION\nScoring recommendation: include only in advanced/internal bucket\n\nROOT CAUSE:\nThe documentation failed to mention that `ThumbnailMaker` uses a readiness tracker that requires all parame",
+          "diagnosis_changed": true,
+          "entry_chars": {
+            "old": 1915,
+            "new": 3150
+          },
+          "retry_status": "fail",
+          "error_category": "runtime",
+          "error_head": "fail [runtime]: IllegalStateException: Maker not ready to make thumbnail.",
+          "error_progressed": true
+        }
+      ],
+      "repair_evidence": {
+        "status": "in-progress",
+        "created_from_missing": false,
+        "rounds_used": 1,
+        "doc_rounds": [
+          {
+            "round": 0,
+            "deep_dive": {
+              "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/docs/eval/B2/deepdive/defaultResizer.md",
+              "tokens": {
+                "in": 3329,
+                "out": 2719
+              },
+              "wall_s": 27.9
+            },
+            "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: ADVANCED/LOW-LEVEL\nHarness testability: TESTABLE-WITH-LOW-LEVEL-CONSTRUCTION\nScoring recommendation: include only in advanced/internal bucket\n\nROOT CAUSE:\nThe documentation failed to mention that `ThumbnailMaker` uses a readiness tracker that requires all parame",
+            "diagnosis_changed": true,
+            "entry_chars": {
+              "old": 1915,
+              "new": 3150
+            },
+            "retry_status": "fail",
+            "error_category": "runtime",
+            "error_head": "fail [runtime]: IllegalStateException: Maker not ready to make thumbnail.",
+            "error_progressed": true
+          }
+        ]
+      }
     },
     {
       "api": "defaultResizerFactory",
@@ -2854,7 +3216,13 @@
   ],
   "worktree": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2",
   "checkpoint": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/comprehension_progress.jsonl",
-  "manifest": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_setup/experiments/external/thumbnailator/docs/eval/api_manifest.json",
+  "manifest": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/docs/eval/api_manifest.json",
   "manifest_file_sha256": "579685342193971274dcfd95e0d95f5a05f5d1ce94c6c57a80d02d715c78873d",
-  "evidence": []
+  "evidence": [
+    {
+      "path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/docs/eval/B2/docfix.json",
+      "sha256": "60637840f2d201944a69f6ba31651a3af9493919fd0377299e2b5fe9bcf8ab60",
+      "snapshot": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_overnight_evidence_audit/experiments/external/overnight_audit/snapshots/60637840f2d201944a69f6ba31651a3af9493919fd0377299e2b5fe9bcf8ab60"
+    }
+  ]
 }

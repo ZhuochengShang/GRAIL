@@ -11,7 +11,7 @@ This checks pinned input identity and records test evidence. It does not certify
 | thumbnailator | A1 | PASS_WITH_LIMITATIONS | none observed |
 | thumbnailator | A2 | PASS_WITH_LIMITATIONS | recorded fixture aggregate differs from input-only aggregate; the runner may include mutable output files |
 | thumbnailator | B1 | pending | none observed |
-| thumbnailator | B2 | pending | none observed |
+| thumbnailator | B2 | PASS_WITH_LIMITATIONS | none observed |
 | tslearn | A1 | PASS_WITH_LIMITATIONS | none observed |
 | tslearn | A2 | PASS_WITH_LIMITATIONS | none observed |
 | tslearn | B1 | pending | none observed |
