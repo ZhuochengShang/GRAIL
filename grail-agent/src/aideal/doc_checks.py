@@ -1389,7 +1389,7 @@ def _comprehension_execute(cfg: AidealConfig, inventory, sample, seed, doc_sourc
                 "error", "locus", "doc_chars", "document_sha256", "source",
                 "source_other_sites", "codebase_frames")}
             metrics[entry.name]["evidence_fingerprint"] = row.get("experiment_fingerprint")
-            per_api[entry.name] = f"resumed: {row.get('status')}"
+            per_api[entry.name] = row.get("execution_evidence") or f"resumed: {row.get('status')}"
             if row.get("status") == "pass":
                 passed_n += 1
             if row.get("error_category") == "infra":
@@ -1579,6 +1579,7 @@ def _comprehension_execute(cfg: AidealConfig, inventory, sample, seed, doc_sourc
         with ckpt.open("a", encoding="utf-8") as _ck:   # flush per API — crash-safe
             _ck.write(_json.dumps({"name": entry.name, "doc_source": doc_source,
                                    "experiment_fingerprint": experiment_fingerprint,
+                                   "execution_evidence": per_api[entry.name],
                                    **metrics[entry.name]}, ensure_ascii=False) + "\n")
     n = len(inventory)
     # Doc-quality denominator excludes infra-only failures (missing-dependency runs
