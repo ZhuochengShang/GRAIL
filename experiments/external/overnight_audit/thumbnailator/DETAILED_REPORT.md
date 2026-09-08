@@ -27,11 +27,12 @@ Effects withheld until all four matched final cells and their repair/test eviden
 
 ### A1
 
-Primary failure categories: {"unknown": 1}.
+Primary failure categories: {"llm-error": 1, "unknown": 1}.
 
-Recorded provider-error attempts across all checkpoint fingerprints: 30. Provider-internal retries are not recorded by the existing client and cannot be inferred from the configured limit. Watchdog logs retain process attempts; checkpoint attempts and document-fix rounds are separate ledger fields.
+Recorded provider-error attempts across all checkpoint fingerprints: 31. Provider-internal retries are not recorded by the existing client and cannot be inferred from the configured limit. Watchdog logs retain process attempts; checkpoint attempts and document-fix rounds are separate ledger fields.
 
 - `build`: unknown; native=compile; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `source/src/main/java/net/coobird/thumbnailator/builders/BufferedImageBuilder.java:110`. Error: `/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A1/experiments/external/thumbnailator/.aideal_exec/A1/run_build/ApiTest.java:52: error: cannot find symbol`. Review: Observed compile; doc attribution requires source, document, and snippet review.
+- `clear`: llm-error; native=llm-error; checkpoint attempts=1; provider-error attempts=1; document rounds=None; repair=None. Source: `source/src/main/java/net/coobird/thumbnailator/util/Configurations.java:130`. Error: `ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}`. Review: Provider outcome; retry, never count as a documentation failure.
 
 ### A2
 
