@@ -1,6 +1,6 @@
 # Automation status and deadline forecast
 
-Updated: 2026-09-07T21:40:03.605230-07:00. Hours to Wednesday 11 AM: 37.33.
+Updated: 2026-09-07T21:54:20.628834-07:00. Hours to Wednesday 11 AM: 37.09.
 
 **Whole-pipeline completion time remains unverified.** Estimates below cover remaining comprehension only; generation, document repair, and final validation are additional. Scenarios are not confidence intervals.
 
@@ -10,18 +10,18 @@ Updated: 2026-09-07T21:40:03.605230-07:00. Hours to Wednesday 11 AM: 37.33.
 | mir_eval/A2 | 0 | complete | 0.00 / 0.00 / 0.00 |
 | mir_eval/B1 | 148 | insufficient_observations | unknown |
 | mir_eval/B2 | 148 | insufficient_observations | unknown |
-| thumbnailator/A1 | 7 | estimated | 0.03 / 0.17 / 0.35 |
+| thumbnailator/A1 | 7 | estimated | 0.03 / 0.22 / 2.69 |
 | thumbnailator/A2 | 0 | complete | 0.00 / 0.00 / 0.00 |
 | thumbnailator/B1 | 149 | insufficient_observations | unknown |
 | thumbnailator/B2 | 149 | insufficient_observations | unknown |
-| tslearn/A1 | 97 | estimated | 0.41 / 4.83 / 40.38 |
-| tslearn/A2 | 57 | estimated | 0.15 / 0.54 / 1.08 |
+| tslearn/A1 | 96 | estimated | 0.40 / 4.79 / 39.97 |
+| tslearn/A2 | 37 | estimated | 0.10 / 0.35 / 0.69 |
 | tslearn/B1 | 235 | insufficient_observations | unknown |
 | tslearn/B2 | 235 | insufficient_observations | unknown |
 
-Failure review queue: 277 entries. Mutable cross-condition path conflicts: 0.
+Failure review queue: 286 entries. Mutable cross-condition path conflicts: 0.
 Deadline risks: mir_eval/A1: estimated
-Observation errors: 0. Observer health: `{"results": {"age_seconds": 48.4, "stale": false}, "data": {"age_seconds": -0.0, "stale": false}}`.
+Observation errors: 0. Observer health: `{"results": {"age_seconds": 58.9, "stale": false}, "data": {"age_seconds": 54.3, "stale": false}}`.
 
 - [Failure review queue](failure_review_queue.json): suggested causes, evidence, confidence, attempts and repair rounds.
 - [Resolved configuration bundles](config_bundles.json): actual profile, direct YAML layers, fixture bindings and recorded environments.

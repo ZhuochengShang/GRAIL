@@ -18,7 +18,7 @@ ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline
 
 [Evidence ledger](../../../thumbnailator/A1/ledger.json) · [Saved evidence](../evidence/e227eeb9dbf5091b0cd66739dde4a290f79555aa5256e04a024fa3e47e9b6081.json)
 
-Recorded attempts: 1; provider errors: 1; document rounds: None.
+Recorded attempts: 2; provider errors: 2; document rounds: None.
 
 ## Proposed action
 
