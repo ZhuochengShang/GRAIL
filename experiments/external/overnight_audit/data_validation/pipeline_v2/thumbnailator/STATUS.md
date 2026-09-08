@@ -1,6 +1,6 @@
 # thumbnailator · A2-only repair pipeline
 
-2026-09-08T12:39:03.548970-07:00
+2026-09-08T12:54:04.768293-07:00
 
 A1 original README → zero fixes. A2 generated README → zero fixes.
 Frozen A2 failures → source-only snippet repair; independently → generated-README repair → fresh B2.
