@@ -2,16 +2,16 @@
   "status": "partial",
   "expected": 149,
   "counts": {
-    "pass": 126,
-    "fail": 23
+    "pass": 127,
+    "fail": 22
   },
   "fingerprint": "6361a90a8d15196e1351e3b191a2908f96c8a6a6a6bdf9b683903311f4c2940e",
   "errors": [],
   "failure_categories": {
     "unknown": 16,
-    "llm-error": 7
+    "llm-error": 6
   },
-  "recorded_provider_errors_all_fingerprints": 28,
+  "recorded_provider_errors_all_fingerprints": 29,
   "observed_fingerprints": [
     "15c376d07a2bd95bed6ae5382e8496d08bd567178ca2809a3dbb968b9c22d900",
     "6361a90a8d15196e1351e3b191a2908f96c8a6a6a6bdf9b683903311f4c2940e",
@@ -12477,6 +12477,56 @@
       "source_other_sites": 0,
       "codebase_frames": null,
       "checkpoint_line": 451
+    },
+    {
+      "name": "getSize",
+      "doc_source": "original",
+      "experiment_fingerprint": "6361a90a8d15196e1351e3b191a2908f96c8a6a6a6bdf9b683903311f4c2940e",
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 1865.3,
+      "llm_calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "by_model": {},
+      "error_category": "llm-error",
+      "error": "ReadTimeout: The read operation timed out",
+      "locus": "",
+      "doc_chars": 12000,
+      "document_sha256": "a2d756c1d5779271f73237a971c6afb27146221fe848d78c72f54491e69d0266",
+      "source": "source/src/main/java/net/coobird/thumbnailator/ThumbnailParameter.java:808",
+      "source_other_sites": 1,
+      "codebase_frames": null,
+      "checkpoint_line": 452
+    },
+    {
+      "name": "isKeepAspectRatio",
+      "doc_source": "original",
+      "experiment_fingerprint": "6361a90a8d15196e1351e3b191a2908f96c8a6a6a6bdf9b683903311f4c2940e",
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 333.7,
+      "llm_calls": 1,
+      "input_tokens": 4627,
+      "output_tokens": 4136,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 4627,
+          "output_tokens": 4136
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 12000,
+      "document_sha256": "d9c4318ca2ce8fd1894a0db780a803ec1489f5b0d5c10dce68c4fab9be832c3c",
+      "source": "source/src/main/java/net/coobird/thumbnailator/ThumbnailParameter.java:861",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 453
     }
   ],
   "repair_summary": {
@@ -15583,11 +15633,11 @@
       "primary_category": "llm-error",
       "runner_category": "llm-error",
       "category_reason": "Provider outcome; retry, never count as a documentation failure.",
-      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "error": "ReadTimeout: The read operation timed out",
       "source": "source/src/main/java/net/coobird/thumbnailator/ThumbnailParameter.java:808",
       "doc_chars": 12000,
-      "checkpoint_attempts": 1,
-      "provider_error_attempts": 1,
+      "checkpoint_attempts": 2,
+      "provider_error_attempts": 2,
       "provider_internal_retries": null,
       "recorded_successful_llm_calls": 0,
       "attempt_history": [
@@ -15598,6 +15648,18 @@
           "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
           "attempts": 1,
           "wall_s": 599.2,
+          "llm_calls": 0,
+          "input_tokens": 0,
+          "output_tokens": 0,
+          "pass_round": null
+        },
+        {
+          "checkpoint_line": 452,
+          "status": "fail",
+          "error_category": "llm-error",
+          "error": "ReadTimeout: The read operation timed out",
+          "attempts": 1,
+          "wall_s": 1865.3,
           "llm_calls": 0,
           "input_tokens": 0,
           "output_tokens": 0,
@@ -15995,17 +16057,17 @@
     },
     {
       "api": "isKeepAspectRatio",
-      "status": "fail",
-      "primary_category": "llm-error",
-      "runner_category": "llm-error",
-      "category_reason": "Provider outcome; retry, never count as a documentation failure.",
-      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "status": "pass",
+      "primary_category": "pass",
+      "runner_category": null,
+      "category_reason": "",
+      "error": null,
       "source": "source/src/main/java/net/coobird/thumbnailator/ThumbnailParameter.java:861",
       "doc_chars": 12000,
-      "checkpoint_attempts": 1,
+      "checkpoint_attempts": 2,
       "provider_error_attempts": 1,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
+      "recorded_successful_llm_calls": 1,
       "attempt_history": [
         {
           "checkpoint_line": 407,
@@ -16018,6 +16080,18 @@
           "input_tokens": 0,
           "output_tokens": 0,
           "pass_round": null
+        },
+        {
+          "checkpoint_line": 453,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 333.7,
+          "llm_calls": 1,
+          "input_tokens": 4627,
+          "output_tokens": 4136,
+          "pass_round": 0
         }
       ],
       "repair_status": null,
