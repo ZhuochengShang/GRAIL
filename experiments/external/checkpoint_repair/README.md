@@ -1,5 +1,16 @@
 # Checkpoint and provider repair, September 7, 2026
 
+**Live activation update, 22:46 PDT:** the existing Thumbnailator watchdog
+launched worker PID 58234 normally at 22:45:22. Its log shows the new 630-second
+wall deadline, and its first new checkpoint row has exactly the expected
+schema-3 fingerprint. It retried `build`, one of the six outstanding provider
+APIs; Gemini returned in 34.2 seconds and the snippet produced a compile failure,
+which is now a terminal execution outcome rather than a provider outage. The
+verified legacy group supplies 143 reusable rows. Final `resumed_apis` awaits
+completion. See `20260907/live_activation_2245.json`. Other existing workers
+still await their normal handoff; the earlier deployment observations below
+remain a record of their times.
+
 ## Cause and implemented repair
 
 The previous schema-2 fingerprint recursively hashed the generated `output_dir`
