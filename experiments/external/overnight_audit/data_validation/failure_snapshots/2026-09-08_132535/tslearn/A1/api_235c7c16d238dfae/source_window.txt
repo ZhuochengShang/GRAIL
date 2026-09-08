@@ -1,0 +1,140 @@
+1: STUFF_cycc = "cycc"
+2: 
+3: import numpy as np
+4: from numba import njit, objmode, prange
+5: 
+6: __author__ = "Romain Tavenard romain.tavenard[at]univ-rennes2.fr"
+7: 
+8: 
+9: @njit(fastmath=True)
+10: def normalized_cc(s1, s2, norm1=-1.0, norm2=-1.0):
+11:     """Normalize cc.
+12: 
+13:     Parameters
+14:     ----------
+15:     s1 : array-like, shape=(sz, d), dtype=float64
+16:         A time series.
+17:     s2 : array-like, shape=(sz, d), dtype=float64
+18:         Another time series.
+19:     norm1 : float64, default=-1.0
+20:     norm2 : float64, default=-1.0
+21: 
+22:     Returns
+23:     -------
+24:     norm_cc : array-like, shape=(2 * sz - 1), dtype=float64
+25:     """
+26:     assert s1.shape[1] == s2.shape[1]
+27:     sz = s1.shape[0]
+28:     n_bits = 1 + int(np.log2(2 * sz - 1))
+29:     fft_sz = 2**n_bits
+30: 
+31:     if norm1 < 0.0:
+32:         norm1 = np.linalg.norm(s1)
+33:     if norm2 < 0.0:
+34:         norm2 = np.linalg.norm(s2)
+35: 
+36:     denom = norm1 * norm2
+37:     if denom < 1e-9:  # To avoid NaNs
+38:         denom = np.inf
+39: 
+40:     with objmode(cc="float64[:, :]"):
+41:         cc = np.real(
+42:             np.fft.ifft(
+43:                 np.fft.fft(s1, fft_sz, axis=0)
+44:                 * np.conj(np.fft.fft(s2, fft_sz, axis=0)),
+45:                 axis=0,
+46:             )
+47:         )
+48:     cc = np.vstack((cc[-(sz - 1) :], cc[:sz]))
+49:     norm_cc = np.real(cc).sum(axis=-1) / denom
+50:     return norm_cc
+51: 
+52: 
+53: @njit(parallel=True, fastmath=True)
+54: def cdist_normalized_cc(dataset1, dataset2, norms1, norms2, self_similarity):
+55:     """Compute the distance matrix between two time series dataset.
+56: 
+57:     Parameters
+58:     ----------
+59:     dataset1 : array-like, shape=(n_ts1, sz, d), dtype=float64
+60:         A dataset of time series.
+61:     dataset2 : array-like, shape=(n_ts2, sz, d), dtype=float64
+62:         Another dataset of time series.
+63:     norms1 : array-like, shape=(n_ts1,), dtype=float64
+64:     norms2 : array-like, shape=(n_ts2,), dtype=float64
+65:     self_similarity : bool
+66: 
+67:     Returns
+68:     -------
+69:     dists : array-like, shape=(n_ts1, n_ts2), dtype=float64
+70:     """
+71:     n_ts1, sz, d = dataset1.shape
+72:     n_ts2 = dataset2.shape[0]
+73:     assert d == dataset2.shape[2]
+74:     dists = np.zeros((n_ts1, n_ts2))
+75: 
+76:     if (norms1 < 0.0).any():
+77:         for i_ts1 in prange(n_ts1):
+78:             norms1[i_ts1] = np.linalg.norm(dataset1[i_ts1, ...])
+79:     if (norms2 < 0.0).any():
+80:         for i_ts2 in prange(n_ts2):
+81:             norms2[i_ts2] = np.linalg.norm(dataset2[i_ts2, ...])
+82:     if self_similarity:
+83:         for i in prange(1, n_ts1):
+84:             for j in range(i):
+85:                 dists[i, j] = normalized_cc(
+86:                     dataset1[i], dataset2[j], norm1=norms1[i], norm2=norms2[j]
+87:                 ).max()
+88:         dists += dists.T
+89:     else:
+90:         for i in prange(n_ts1):
+91:             for j in range(n_ts2):
+92:                 dists[i, j] = normalized_cc(
+93:                     dataset1[i], dataset2[j], norm1=norms1[i], norm2=norms2[j]
+94:                 ).max()
+95:     return dists
+96: 
+97: 
+98: @njit(parallel=True, fastmath=True)
+99: def y_shifted_sbd_vec(ref_ts, dataset, norm_ref, norms_dataset):
+100:     """Shift a time series dataset w.r.t. a time series of reference.
+101: 
+102:     Parameters
+103:     ----------
+104:     ref_ts : array-like, shape=(sz, d), dtype=float64
+105:         Time series of reference.
+106:     dataset : array-like, shape=(n_ts, sz, d), dtype=float64
+107:         Time series dataset.
+108:     norm_ref : float64
+109:     norms_dataset : array-like, shape=(n_ts,), dtype=float64
+110:         Norms of the time series dataset.
+111: 
+112:     Returns
+113:     -------
+114:     dataset_shifted : array-like, shape=(n_ts, sz, d), dtype=float64
+115:         Shifted dataset.
+116:     """
+117:     n_ts = dataset.shape[0]
+118:     sz = dataset.shape[1]
+119:     d = dataset.shape[2]
+120:     assert sz == ref_ts.shape[0] and d == ref_ts.shape[1]
+121:     dataset_shifted = np.zeros((n_ts, sz, d))
+122: 
+123:     if norm_ref < 0:
+124:         norm_ref = np.linalg.norm(ref_ts)
+125:     if (norms_dataset < 0.0).any():
+126:         for i_ts in prange(n_ts):
+127:             norms_dataset[i_ts] = np.linalg.norm(dataset[i_ts, ...])
+128: 
+129:     for i in prange(n_ts):
+130:         cc = normalized_cc(ref_ts, dataset[i], norm1=norm_ref, norm2=norms_dataset[i])
+131:         idx = np.argmax(cc)
+132:         shift = idx + 1 - sz
+133:         if shift > 0:
+134:             dataset_shifted[i, shift:] = dataset[i, :-shift, :]
+135:         elif shift < 0:
+136:             dataset_shifted[i, :shift] = dataset[i, -shift:, :]
+137:         else:
+138:             dataset_shifted[i] = dataset[i]
+139: 
+140:     return dataset_shifted

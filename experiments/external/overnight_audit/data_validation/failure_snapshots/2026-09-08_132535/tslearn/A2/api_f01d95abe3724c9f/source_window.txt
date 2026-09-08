@@ -1,0 +1,39 @@
+228:         def triu(mat, k=0):
+229:             return _torch.triu(mat, diagonal=k)
+230: 
+231:         @staticmethod
+232:         def triu_indices(n, k=0, m=None):
+233:             if m is None:
+234:                 m = n
+235:             x = _torch.triu_indices(row=n, col=m, offset=k)
+236:             return x[0], x[1]
+237: 
+238:     class PyTorchLinalg:
+239:         def __init__(self):
+240:             self.inv = _torch.linalg.inv
+241:             self.norm = _torch.linalg.norm
+242: 
+243:     class PyTorchRandom:
+244:         def __init__(self):
+245:             self.rand = _torch.rand
+246:             self.randint = _torch.randint
+247:             self.randn = _torch.randn
+248: 
+249:         @staticmethod
+250:         def normal(loc=0.0, scale=1.0, size=(1,)):
+251:             if not hasattr(size, "__iter__"):
+252:                 size = (size,)
+253:             return _torch.normal(mean=loc, std=scale, size=size)
+254: 
+255:         @staticmethod
+256:         def uniform(low=0.0, high=1.0, size=(1,), dtype=None):
+257:             if not hasattr(size, "__iter__"):
+258:                 size = (size,)
+259:             if low >= high:
+260:                 raise ValueError("Upper bound must be higher than lower bound")
+261:             return (high - low) * _torch.rand(*size, dtype=dtype) + low
+262: 
+263:     class PyTorchTesting:
+264:         def __init__(self):
+265:             self.assert_allclose = _torch.allclose
+266:             self.assert_equal = _torch.testing.assert_close

@@ -1,0 +1,156 @@
+438:         Parameters
+439:         ----------
+440:         X : array-like of shape (n_series, n_timestamps, n_features)
+441:             Vector to be scored, where `n_series` is the number of time series,
+442:             `n_timestamps` is the number of timestamps in the series
+443:             and `n_features` is the number of features recorded at each
+444:             timestamp.
+445: 
+446:         Returns
+447:         -------
+448:         array, shape (n_series,)
+449:             Predicted classes.
+450:         """
+451:         return self.predict_class_and_earliness(X)[0]
+452: 
+453:     def predict_proba_and_earliness(self, X):
+454:         """
+455:         Provide probability estimates as well as prediction timestamps.
+456: 
+457:         Prediction timestamps are timestamps at which a prediction is made in
+458:         early classification setting.
+459:         The returned estimates for all classes are ordered by the
+460:         label of classes.
+461: 
+462:         Parameters
+463:         ----------
+464:         X : array-like of shape (n_series, n_timestamps, n_features)
+465:             Vector to be scored, where `n_series` is the number of time series,
+466:             `n_timestamps` is the number of timestamps in the series
+467:             and `n_features` is the number of features recorded at each
+468:             timestamp.
+469: 
+470:         Returns
+471:         -------
+472:         array-like of shape (n_series, n_classes)
+473:             Probability of the sample for each class in the model,
+474:             where classes are ordered as they are in ``self.classes_``.
+475:         array-like of shape (n_series, )
+476:             Prediction timestamps.
+477:         """
+478: 
+479:         X = check_array(X, allow_nd=True)
+480:         check_is_fitted(self, '_X_fit_dims')
+481:         X = check_dims(X, X_fit_dims=self._X_fit_dims,
+482:                        check_n_features_only=True)
+483:         y_pred = []
+484:         time_prediction = []
+485:         for i in range(0, X.shape[0]):
+486:             probas, t = self._predict_single_series_proba(X[i])
+487:             y_pred.append(probas)
+488:             time_prediction.append(t)
+489:         return np.array(y_pred), np.array(time_prediction)
+490: 
+491:     def predict_proba(self, X):
+492:         """
+493:         Probability estimates.
+494: 
+495:         The returned estimates for all classes are ordered by the
+496:         label of classes.
+497: 
+498:         Parameters
+499:         ----------
+500:         X : array-like of shape (n_series, n_timestamps, n_features)
+501:             Vector to be scored, where `n_series` is the number of time series,
+502:             `n_timestamps` is the number of timestamps in the series
+503:             and `n_features` is the number of features recorded at each
+504:             timestamp.
+505: 
+506:         Returns
+507:         -------
+508:         array-like of shape (n_series, n_classes)
+509:             Probability of the sample for each class in the model,
+510:             where classes are ordered as they are in ``self.classes_``.
+511:         """
+512:         return self.predict_proba_and_earliness(X)[0]
+513: 
+514:     def _cost_time(self, t):
+515:         return t * self.cost_time_parameter
+516: 
+517:     def early_classification_cost(self, X, y):
+518:         r"""
+519:         Compute early classification score.
+520: 
+521:         The score is computed as:
+522: 
+523:         .. math::
+524: 
+525:             1 - acc + \alpha \frac{1}{n} \sum_i t_i
+526: 
+527:         where :math:`\alpha` is the trade-off parameter
+528:         (`self.cost_time_parameter`) and :math:`t_i` are prediction timestamps.
+529: 
+530:         Parameters
+531:         ----------
+532:         X : array-like of shape (n_series, n_timestamps, n_features)
+533:             Vector to be scored, where `n_series` is the number of time series,
+534:             `n_timestamps` is the number of timestamps in the series
+535:             and `n_features` is the number of features recorded at each
+536:             timestamp.
+537: 
+538:         y : array-like, shape = (n_samples) or (n_samples, n_outputs)
+539:             True labels for X.
+540: 
+541:         Returns
+542:         -------
+543:         float
+544:             Early classification cost (a positive number, the lower the better)
+545: 
+546:         Examples
+547:         --------
+548:         >>> dataset = to_time_series_dataset([[1, 2, 3, 4, 5, 6],
+549:         ...                                   [1, 2, 3, 4, 5, 6],
+550:         ...                                   [1, 2, 3, 4, 5, 6],
+551:         ...                                   [1, 2, 3, 3, 2, 1],
+552:         ...                                   [1, 2, 3, 3, 2, 1],
+553:         ...                                   [1, 2, 3, 3, 2, 1],
+554:         ...                                   [3, 2, 1, 1, 2, 3],
+555:         ...                                   [3, 2, 1, 1, 2, 3]])
+556:         >>> y = [0, 0, 0, 1, 1, 1, 0, 0]
+557:         >>> model = NonMyopicEarlyClassifier(n_clusters=3, lamb=1000.,
+558:         ...                                  cost_time_parameter=.1,
+559:         ...                                  random_state=0)
+560:         >>> model.fit(dataset, y)  # doctest: +ELLIPSIS
+561:         NonMyopicEarlyClassifier(...)
+562:         >>> preds, pred_times = model.predict_class_and_earliness(dataset)
+563:         >>> preds
+564:         array([0, 0, 0, 1, 1, 1, 0, 0])
+565:         >>> pred_times
+566:         array([4, 4, 4, 4, 4, 4, 1, 1])
+567:         >>> float(model.early_classification_cost(dataset, y))
+568:         0.325
+569:         """
+570:         y_pred, pred_times = self.predict_class_and_earliness(X)
+571:         acc = accuracy_score(y, y_pred)
+572:         return (1. - acc) + np.mean(self._cost_time(pred_times))
+573: 
+574:     def early_predict(self, X):
+575:         """
+576:         Provides predicted classes as well as estimated delays before prediction timestamps
+577:         for a dataset of incomplete time series.
+578: 
+579:         Prediction timestamps are timestamps at which a prediction is made in
+580:         early classification setting.
+581: 
+582:         Parameters
+583:         ----------
+584:         X : array-like of shape (n_series, t, n_features)
+585:             A dataset of incomplete time series observed up to time t
+586: 
+587:         Returns
+588:         -------
+589:         array-like, shape (n_series,)
+590:             Predicted classes.
+591:         array-like, shape (n_series,)
+592:             Estimated delays before prediction timestamps.
+593:         """

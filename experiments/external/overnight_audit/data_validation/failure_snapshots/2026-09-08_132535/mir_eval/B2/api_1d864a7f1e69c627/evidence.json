@@ -1,0 +1,57 @@
+{
+  "name": "load_wav",
+  "native_row": {
+    "status": "fail",
+    "attempts": 1,
+    "pass_round": null,
+    "wall_s": 30.7,
+    "llm_calls": 1,
+    "input_tokens": 2403,
+    "output_tokens": 3636,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2403,
+        "output_tokens": 3636
+      }
+    },
+    "error_category": "runtime",
+    "error": "FileNotFoundError: [Errno 2] No such file or directory: '/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/output/test_load.wav'",
+    "locus": "/Users/clockorangezoe/miniconda3/envs/geo_llm_spark/lib/python3.10/site-packages/scipy/io/wavfile.py:793",
+    "doc_chars": 3691,
+    "document_sha256": "53e5ffd075590e40189dad3cf0f40fbdac562e0826e255a4e5b2564fcd813b46",
+    "source": "source/mir_eval/io.py:409",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "name": "load_wav",
+    "execution_evidence": {
+      "status": "fail",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "fail",
+          "category": "runtime",
+          "error": "FileNotFoundError: [Errno 2] No such file or directory: '/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval"
+        }
+      ],
+      "error_category": "runtime",
+      "error": "FileNotFoundError: [Errno 2] No such file or directory: '/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/output/test_load.wav'",
+      "code": "import os\nimport numpy as np\nfrom scipy.io import wavfile\nimport warnings\nimport mir_eval\n\nwav_path = os.path.join(output_dir, \"test_load.wav\")\nfs_expected = 8000\n# Use 16-bit PCM with a full-scale negative value to ensure peak/type normalization yields the same result\naudio_expected = np.array([0, 16384, -16384, 32767, -32768], dtype=np.int16)\nwavfile.write(wav_path, fs_expected, audio_expected)\n\nwith warnings.catch_warnings():\n    warnings.simplefilter(\"ignore\")\n    audio_data, fs = mir_eval.io.load_wav(wav_path, mono=True)\n\nassert fs == fs_expected, f\"Expected fs {fs_expected}, got {fs}\"\nassert audio_data.shape == (5,), f\"Expected shape (5,), got {audio_data.shape}\"\nassert np.allclose(audio_data, audio_expected / 32768.0), \"Audio data not correctly normalized to [-1., 1.]\"\n\nprint(f\"__CHECK__ load_wav {audio_data.shape}, {fs}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_load_wav/api_test.py",
+      "exit_code": 1,
+      "stdout_tail": "",
+      "stderr_tail": "__RUN_ERR__ FileNotFoundError: [Errno 2] No such file or directory: '/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/output/test_load.wav'\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_load_wav/api_test.py\", line 62, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_load_wav/api_test.py\", line 57, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_load_wav/api_test.py\", line 43, in api_test\n    wavfile.write(wav_path, fs_expected, audio_expected)\n  File \"/Users/clockorangezoe/miniconda3/envs/geo_llm_spark/lib/python3.10/site-packages/scipy/io/wavfile.py\", line 793, in write\n    fid = open(filename, 'wb')\nFileNotFoundError: [Errno 2] No such file or directory: '/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/output/test_load.wav'\n"
+    },
+    "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6"
+  },
+  "retained_binding": "recorded_code_prefix_present",
+  "retained_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_load_wav/api_test.py",
+  "retained_sha256": "f66c6ebc249505a53cbb6b8336ee82ceba48899bf8749c0e72c9ed2efa8f5ff2",
+  "source_window": {
+    "path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/source/mir_eval/io.py",
+    "full_file_sha256": "415dab76ac4929cab1db49abb9792f640a1718beb129ca0fa1fbe018f2f2997b",
+    "first_line": 394,
+    "last_line": 549,
+    "other_sites": 0
+  }
+}

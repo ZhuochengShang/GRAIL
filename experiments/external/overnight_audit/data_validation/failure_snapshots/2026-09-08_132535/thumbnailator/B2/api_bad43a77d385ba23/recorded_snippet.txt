@@ -1,0 +1,25 @@
+java.nio.file.Path testFilePath = outputPath.resolve("test_overwrite.png");
+java.nio.file.Files.write(testFilePath, new byte[]{1, 2, 3, 4, 5});
+
+// Test that allowOverwrite(true) successfully overwrites the existing file
+net.coobird.thumbnailator.Thumbnails.of(sourceImage)
+    .size(10, 10)
+    .allowOverwrite(true)
+    .toFile(testFilePath.toFile());
+
+long newSize = java.nio.file.Files.size(testFilePath);
+assert newSize > 5 : "File should have been overwritten with a valid image, but size was " + newSize;
+
+// Test the documented failure mode: calling allowOverwrite multiple times throws IllegalStateException
+boolean threw = false;
+try {
+    net.coobird.thumbnailator.Thumbnails.of(sourceImage)
+        .size(10, 10)
+        .allowOverwrite(true)
+        .allowOverwrite(false);
+} catch (IllegalStateException e) {
+    threw = true;
+}
+assert threw : "Should throw IllegalStateException when allowOverwrite is called multiple times";
+
+System.out.println("__CHECK__ allowOverwrite " + newSize +

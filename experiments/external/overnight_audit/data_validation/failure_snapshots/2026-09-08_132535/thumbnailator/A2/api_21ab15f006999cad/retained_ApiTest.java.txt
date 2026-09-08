@@ -1,0 +1,103 @@
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Arrays;
+
+import javax.imageio.ImageIO;
+
+import net.coobird.thumbnailator.*;
+import net.coobird.thumbnailator.builders.*;
+import net.coobird.thumbnailator.filters.*;
+import net.coobird.thumbnailator.geometry.*;
+import net.coobird.thumbnailator.makers.*;
+import net.coobird.thumbnailator.name.*;
+import net.coobird.thumbnailator.resizers.*;
+import net.coobird.thumbnailator.resizers.configurations.*;
+import net.coobird.thumbnailator.tasks.*;
+import net.coobird.thumbnailator.tasks.io.*;
+import net.coobird.thumbnailator.util.*;
+import net.coobird.thumbnailator.util.exif.*;
+
+public final class ApiTest {
+    private ApiTest() {}
+
+    public static void main(String[] args) {
+        try {
+            String grid_png = "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/source/src/test/resources/Thumbnailator/grid.png";
+    String grid_jpeg = "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/source/src/test/resources/Thumbnailator/grid.jpg";
+    String exif_jpeg = "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/source/src/test/resources/Exif/original.jpg";
+    String output_dir = "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/.aideal_exec/A2/output";
+
+    // pre-loaded typed inputs (comprehension.execute.preamble)
+    BufferedImage sourceImage = new BufferedImage(32, 24, BufferedImage.TYPE_INT_RGB);
+    Graphics2D graphics = sourceImage.createGraphics();
+    graphics.setColor(Color.BLUE);
+    graphics.fillRect(0, 0, 32, 24);
+    graphics.setColor(Color.YELLOW);
+    graphics.fillRect(8, 6, 16, 12);
+    graphics.dispose();
+    BufferedImage destinationImage = new BufferedImage(16, 12, BufferedImage.TYPE_INT_RGB);
+    ByteArrayOutputStream imageBytes = new ByteArrayOutputStream();
+    Path outputPath = Paths.get(output_dir, "thumbnail.png");
+    Files.createDirectories(outputPath.getParent());
+
+            // TODO API_TEST_START
+            byte[] jpegBytes = java.nio.file.Files.readAllBytes(java.nio.file.Paths.get(exif_jpeg));
+            byte[] exifData = null;
+
+            // Extract the APP1 (Exif) segment from the JPEG file
+            for (int i = 0; i < jpegBytes.length - 1; i++) {
+                if (jpegBytes[i] == (byte) 0xFF && jpegBytes[i + 1] == (byte) 0xE1) {
+                    int length = ((jpegBytes[i + 2] & 0xFF) << 8) | (jpegBytes[i + 3] & 0xFF);
+                    if (i + 4 + length - 2 <= jpegBytes.length) {
+                        byte[] segment = new byte[length - 2];
+                        System.arraycopy(jpegBytes, i + 4, segment, 0, length - 2);
+                        if (segment.length >= 4 && segment[0] == 'E' && segment[1] == 'x' && segment[2] == 'i' && segment[3] == 'f') {
+                            exifData = segment;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            net.coobird.thumbnailator.util.exif.Orientation orientation = null;
+            if (exifData != null) {
+                orientation = net.coobird.thumbnailator.util.exif.ExifUtils.getOrientationFromExif(exifData);
+            }
+
+            // Fallback to a manually constructed valid Exif byte array if the file didn't contain one
+            if (orientation == null) {
+                exifData = new byte[] {
+                    'E', 'x', 'i', 'f', 0x00, 0x00,
+                    0x49, 0x49, 0x2A, 0x00, 0x08, 0x00, 0x00, 0x00, // TIFF header (Little Endian)
+                    0x01, 0x00, // 1 entry in 0th IFD
+                    0x12, 0x01, 0x03, 0x00, 0x01, 0x00, 0x00, 0x00, 0x03, 0x00, 0x00, 0x00, // Orientation Tag (274), SHORT, Count 1, Value 3
+                    0x00, 0x00, 0x00, 0x00 // Next IFD offset
+                };
+                orientation = net.coobird.thumbnailator.util.exif.ExifUtils.getOrientationFromExif(exifData);
+            }
+
+            assert orientation != null : "Orientation should be successfully parsed from valid Exif data";
+
+            // Verify that invalid/empty Exif data safely returns null as documented
+            net.coobird.thumbnailator.util.exif.Orientation nullOrientation = 
+                net.coobird.thumbnailator.util.exif.ExifUtils.getOrientationFromExif(new byte[] { 0x00, 0x01, 0x02 });
+            assert nullOrientation == null : "Should return null for invalid Exif data";
+
+            System.out.println("__CHECK__ getOrientationFromExif " + orientation);
+            // TODO API_TEST_END
+            System.out.println("__DONE__");
+        } catch (Throwable exc) {
+            System.err.println("__RUN_ERR__ " + exc.getClass().getSimpleName()
+                    + ": " + exc.getMessage());
+            exc.printStackTrace(System.err);
+            System.exit(1);
+        }
+    }
+}

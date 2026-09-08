@@ -1,0 +1,156 @@
+221:         >>> "PenDigits" in l
+222:         True
+223:         >>> "BeetleFly" in l
+224:         True
+225:         >>> "DatasetThatDoesNotExist" in l
+226:         False
+227: 
+228:         Returns
+229:         -------
+230:         list of str:
+231:             A list of names of all (univariate and multivariate) dataset names.
+232:         """
+233:         return (self.list_univariate_datasets()
+234:                 + self.list_multivariate_datasets())
+235: 
+236:     def list_cached_datasets(self):
+237:         """List datasets from the UCR/UEA archive that are available in cache.
+238: 
+239:         Examples
+240:         --------
+241:         >>> beetlefly = UCR_UEA_datasets().load_dataset("BeetleFly")
+242:         >>> l = UCR_UEA_datasets().list_cached_datasets()
+243:         >>> "BeetleFly" in l
+244:         True
+245:         """
+246:         return [path.name for path in self._data_dir.iterdir()
+247:                 if path.is_dir() and path.name not in self._ignore_list]
+248: 
+249:     def load_dataset(self, dataset_name):
+250:         """Load a dataset from the UCR/UEA archive from its name.
+251: 
+252:         On failure, `None` is returned for each of the four values and a
+253:         `RuntimeWarning` is printed.
+254: 
+255:         Parameters
+256:         ----------
+257:         dataset_name : str
+258:             Name of the dataset. Should be in the list returned by
+259:             `list_datasets`
+260: 
+261:         Returns
+262:         -------
+263:         numpy.ndarray of shape (n_ts_train, sz, d) or None
+264:             Training time series. None if unsuccessful.
+265:         numpy.ndarray of integers or strings with shape (n_ts_train, ) or None
+266:             Training labels. None if unsuccessful.
+267:         numpy.ndarray of shape (n_ts_test, sz, d) or None
+268:             Test time series. None if unsuccessful.
+269:         numpy.ndarray of integers or strings with shape (n_ts_test, ) or None
+270:             Test labels. None if unsuccessful.
+271: 
+272:         Examples
+273:         --------
+274:         >>> data_loader = UCR_UEA_datasets()
+275:         >>> X_train, y_train, X_test, y_test = data_loader.load_dataset(
+276:         ...         "TwoPatterns")
+277:         >>> X_train.shape
+278:         (1000, 128, 1)
+279:         >>> y_train.shape
+280:         (1000,)
+281:         >>> X_train, y_train, X_test, y_test = data_loader.load_dataset(
+282:         ...         "Adiac")
+283:         >>> X_train.shape
+284:         (390, 176, 1)
+285:         >>> X_train, y_train, X_test, y_test = data_loader.load_dataset(
+286:         ...         "PenDigits")
+287:         >>> X_train.shape
+288:         (7494, 8, 2)
+289:         >>> assert (None, None, None, None) == data_loader.load_dataset(
+290:         ...         "DatasetThatDoesNotExist")
+291:         """
+292:         dataset_name = self._filenames.get(dataset_name, dataset_name)
+293:         full_path = self._data_dir / dataset_name
+294: 
+295:         if not self._has_files(dataset_name) or not self.use_cache:
+296:             # completely clear the target directory first, it will be created
+297:             # by extract_from_zip_url if it does not exist
+298:             try:
+299:                 # maybe it is a normal file (not a directory) for some obscure reason
+300:                 full_path.unlink()
+301:             except FileNotFoundError:
+302:                 pass  # nothing to do here, already deleted
+303:             except IsADirectoryError:
+304:                 # we then need this function to recursively remove the directory:
+305:                 shutil.rmtree(full_path, ignore_errors=True)
+306:             # else, actually raise the error!
+307: 
+308:             url = BASE_URL + Path(dataset_name).with_suffix(".zip").name
+309:             success = extract_from_zip_url(url, target_dir=full_path)
+310:             if not success:
+311:                 warnings.warn("dataset \"%s\" could not be downloaded or "
+312:                               "extracted" % dataset_name,
+313:                               category=RuntimeWarning, stacklevel=2)
+314:                 return None, None, None, None
+315: 
+316:         try:
+317:             # if both TXT and ARFF files are provided, the TXT versions are
+318:             # used
+319:             # both training and test data must be available in the same format
+320:             for ext in SUPPORTED_EXT:
+321:                 if self._has_files(dataset_name, ext=ext):
+322:                     load_fn = getattr(utils, f"_load_{ext}_uea")
+323:                     X_train, y_train = load_fn(
+324:                         full_path / (dataset_name + f"_TRAIN.{ext}")
+325:                     )
+326:                     X_test, y_test = load_fn(
+327:                         full_path / (dataset_name + f"_TEST.{ext}")
+328:                     )
+329:                     break
+330:             else:
+331:                 warnings.warn(
+332:                     f'dataset "{dataset_name}" is not provided in supported '
+333:                     f'formats {SUPPORTED_EXT} and thus could not be loaded'
+334:                 )
+335:                 return None, None, None, None
+336: 
+337:             return X_train, y_train, X_test, y_test
+338: 
+339:         except Exception as exception:
+340:             warnings.warn("dataset \"%s\" could be downloaded but not "
+341:                           "parsed: %s" % (dataset_name, str(exception)),
+342:                           category=RuntimeWarning, stacklevel=2)
+343:             return None, None, None, None
+344: 
+345:     def _has_files(self, dataset_name, ext=None):
+346:         """Determines whether some downloaded and unzipped dataset provides
+347:         both training and test data in the given format.
+348: 
+349:         Parameters
+350:         ----------
+351:         dataset_name : str
+352:             the name of the dataset
+353:         ext : str or None
+354:             the file extension without a dot, e.g `"txt"` or `"arff"`;
+355:             if set to None (the default), `True` will be returned if either TXT
+356:             or ARFF files are present
+357: 
+358:         Returns
+359:         -------
+360:         bool
+361:             if there are both training and test files with the specified
+362:             file extension
+363:         """
+364:         if ext is None:
+365:             return any(
+366:                 self._has_files(dataset_name, ext=ext) for ext in SUPPORTED_EXT
+367:             )
+368:         else:
+369:             dataset_name = self._filenames.get(dataset_name, dataset_name)
+370:             full_path = self._data_dir / dataset_name
+371:             return (
+372:                 (full_path / (dataset_name + f"_TRAIN.{ext}")).exists() and
+373:                 (full_path / (dataset_name + f"_TEST.{ext}")).exists()
+374:             )
+375: 
+376:     def cache_all(self):

@@ -1,0 +1,43 @@
+311: 			);
+312: 		}
+313: 
+314: 		OutputStream os = createOutputStream(destinationFile);
+315: 		imageSink = new OutputStreamImageSink(os);
+316: 		imageSink.setThumbnailParameter(param);
+317: 		imageSink.setOutputFormatName(formatName);
+318: 		try {
+319: 			imageSink.write(img);
+320: 		} finally {
+321: 			os.close();
+322: 		}
+323: 	}
+324: 
+325: 	// Visible for testing only.
+326: 	OutputStream createOutputStream(File destinationFile) throws IOException {
+327: 		return new FileOutputStream(destinationFile);
+328: 	}
+329: 
+330: 	/**
+331: 	 * Returns the destination file of the thumbnail image.
+332: 	 * <p>
+333: 	 * If the final destination of the thumbnail changes in the course of
+334: 	 * writing the thumbnail. (For example, if the file extension for the given
+335: 	 * destination did not match the destination file format, then the correct
+336: 	 * file extension could be appended.)
+337: 	 * 
+338: 	 * @return the destinationFile
+339: 	 */
+340: 	public File getSink() {
+341: 		return destinationFile;
+342: 	}
+343: 	
+344: 	public void setOutputFormatName(String format) {
+345: 		this.outputFormat = format;
+346: 		this.imageSink.setOutputFormatName(format);
+347: 	}
+348: 
+349: 	public void setThumbnailParameter(ThumbnailParameter param) {
+350: 		this.param = param;
+351: 		this.imageSink.setThumbnailParameter(param);
+352: 	}
+353: }

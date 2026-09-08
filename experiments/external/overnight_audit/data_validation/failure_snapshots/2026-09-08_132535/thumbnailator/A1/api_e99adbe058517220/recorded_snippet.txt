@@ -1,0 +1,7 @@
+net.coobird.thumbnailator.makers.FixedSizeThumbnailMaker maker = 
+    new net.coobird.thumbnailator.makers.FixedSizeThumbnailMaker.Builder(15, 15).build();
+
+java.awt.image.BufferedImage result = maker.make(sourceImage);
+
+assert result.getWidth() <= 15 && result.getHeight() <= 15 : "Result dimensions should be bounded by 15x15";
+System.out.println("__CHECK__ build " + result.getWidth() + "x" + result.getHeight());

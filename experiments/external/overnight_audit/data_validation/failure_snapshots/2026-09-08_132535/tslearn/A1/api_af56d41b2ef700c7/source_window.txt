@@ -1,0 +1,104 @@
+711:         X : array-like of shape (n_ts, sz, d)
+712:             Time series dataset
+713: 
+714:         Returns
+715:         -------
+716:         numpy.ndarray of integers with shape (n_ts, n_segments, 2 * d)
+717:             1d-SAX-Transformed dataset
+718:         """
+719:         self._is_fitted()
+720:         X = check_array(X, allow_nd=True, dtype=float,
+721:                         force_all_finite=False)
+722:         X = check_dims(X, X_fit_dims=tuple(self._X_fit_dims_),
+723:                        check_n_features_only=True)
+724:         return self._transform(X, y)
+725: 
+726:     def distance_1d_sax(self, sax1, sax2):
+727:         """Compute distance between 1d-SAX representations as defined in [1]_.
+728: 
+729:         Parameters
+730:         ----------
+731:         sax1 : array-like
+732:             1d-SAX representation of a time series
+733:         sax2 : array-like
+734:             1d-SAX representation of another time series
+735: 
+736:         Returns
+737:         -------
+738:         float
+739:             1d-SAX distance
+740: 
+741:         Notes
+742:         -----
+743:             Unlike SAX distance, 1d-SAX distance does not lower bound Euclidean
+744:             distance between original time series.
+745: 
+746:         References
+747:         ----------
+748:         .. [1] S. Malinowski, T. Guyet, R. Quiniou, R. Tavenard. 1d-SAX: a
+749:            Novel Symbolic Representation for Time Series. IDA 2013.
+750:         """
+751:         self._is_fitted()
+752:         return cydist_1d_sax(sax1, sax2, self.breakpoints_avg_middle_,
+753:                              self.breakpoints_slope_middle_,
+754:                              self._X_fit_dims_[1])
+755: 
+756:     def distance(self, ts1, ts2):
+757:         """Compute distance between 1d-SAX representations as defined in [1]_.
+758: 
+759:         Parameters
+760:         ----------
+761:         ts1 : array-like
+762:             A time series
+763:         ts2 : array-like
+764:             Another time series
+765: 
+766:         Returns
+767:         -------
+768:         float
+769:             1d-SAX distance
+770: 
+771:         References
+772:         ----------
+773:         .. [1] S. Malinowski, T. Guyet, R. Quiniou, R. Tavenard. 1d-SAX: a
+774:            Novel Symbolic Representation for Time Series. IDA 2013.
+775:         """
+776:         sax1d = self.transform([ts1, ts2])
+777:         return self.distance_1d_sax(sax1d[0], sax1d[1])
+778: 
+779:     def inverse_transform(self, X):
+780:         """Compute time series corresponding to given 1d-SAX representations.
+781: 
+782:         Parameters
+783:         ----------
+784:         X : array-like of shape (n_ts, sz_sax, 2 * d)
+785:             A dataset of SAX series.
+786: 
+787:         Returns
+788:         -------
+789:         numpy.ndarray of shape (n_ts, sz_original_ts, d)
+790:             A dataset of time series corresponding to the provided
+791:             representation.
+792:         """
+793:         self._is_fitted()
+794:         X = check_array(X, allow_nd=True)
+795:         X = check_dims(X, X_fit_dims=(None, None, 2 * self._X_fit_dims_[-1]),
+796:                        check_n_features_only=True)
+797:         X_orig = inv_transform_1d_sax(
+798:                 X,
+799:                 breakpoints_avg_middle_=self.breakpoints_avg_middle_,
+800:                 breakpoints_slope_middle_=self.breakpoints_slope_middle_,
+801:                 original_size=self._X_fit_dims_[1]
+802:         )
+803:         return self._unscale(X_orig)
+804: 
+805:     def _more_tags(self):
+806:         tags = super()._more_tags()
+807:         tags['_xfail_checks'].update({
+808:             "check_transformer_preserve_dtypes" : "Forces int transform"
+809:         })
+810:         return tags
+811: 
+812:     def __sklearn_tags__(self):
+813:         # Needed for check_estimator_tags_renamed
+814:         return super().__sklearn_tags__()

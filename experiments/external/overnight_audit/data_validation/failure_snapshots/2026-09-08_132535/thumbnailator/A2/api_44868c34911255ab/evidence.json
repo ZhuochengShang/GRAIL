@@ -1,0 +1,57 @@
+{
+  "name": "resizerFactory",
+  "native_row": {
+    "status": "fail",
+    "attempts": 1,
+    "pass_round": null,
+    "wall_s": 14.8,
+    "llm_calls": 1,
+    "input_tokens": 2115,
+    "output_tokens": 1798,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2115,
+        "output_tokens": 1798
+      }
+    },
+    "error_category": "compile",
+    "error": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/.aideal_exec/A2/run_resizerFactory/ApiTest.java:54: error: cannot find symbol",
+    "locus": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/.aideal_exec/A2/run_resizerFactory/ApiTest.java:54",
+    "doc_chars": 3864,
+    "document_sha256": "dabc4ad34e07e707c50ebbe73fe5f7b8331017c930d497c2ae970c62c963c84d",
+    "source": "source/src/main/java/net/coobird/thumbnailator/Thumbnails.java:1348",
+    "source_other_sites": 2,
+    "codebase_frames": null,
+    "name": "resizerFactory",
+    "execution_evidence": {
+      "status": "fail",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "fail",
+          "category": "compile",
+          "error": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/.aideal_exec/A2/run_resizerFactory/ApiTest.jav"
+        }
+      ],
+      "error_category": "compile",
+      "error": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/.aideal_exec/A2/run_resizerFactory/ApiTest.java:54: error: cannot find symbol",
+      "code": "net.coobird.thumbnailator.resizers.ResizerFactory factory = net.coobird.thumbnailator.resizers.DefaultResizerFactory.getInstance();\n\n// 1. Test ThumbnailParameterBuilder overload\nnet.coobird.thumbnailator.ThumbnailParameter param = new net.coobird.thumbnailator.ThumbnailParameterBuilder()\n    .size(100, 100)\n    .resizerFactory(factory)\n    .build();\n\nassert param.getResizerFactory() == factory : \"ResizerFactory was not set correctly on ThumbnailParameter\";\n\n// 2. Test Thumbnails.Builder overload\njava.awt.image.BufferedImage result = net.coobird.thumbnailator.Thumbnails.of(sourceImage)\n    .size(42, 42)\n    .resizerFactory(factory)\n    .asBufferedImage();\n\nassert result.getWidth() <= 42 && result.getHeight() <= 42 : \"Image was not resized correctly using the provided ResizerFactory\";\n\nSystem.out.println(\"__CHECK__ resizerFactory \" + param.getResizerFactory().getClass().getSimpleName() + \"_\" + result.getWidth() + \"x\" + result.getHeight());",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/.aideal_exec/A2/run_resizerFactory/ApiTest.java",
+      "exit_code": 1,
+      "stdout_tail": "",
+      "stderr_tail": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/.aideal_exec/A2/run_resizerFactory/ApiTest.java:54: error: cannot find symbol\n            net.coobird.thumbnailator.ThumbnailParameter param = new net.coobird.thumbnailator.ThumbnailParameterBuilder()\n                                                                                              ^\n  symbol:   class ThumbnailParameterBuilder\n  location: package net.coobird.thumbnailator\n1 error\n"
+    },
+    "experiment_fingerprint": "d0a4b20f3e5d3ea0caf7b1501a9bf2fb4d4f11ac7d844517d7b5d67874427464"
+  },
+  "retained_binding": "recorded_code_prefix_present",
+  "retained_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/.aideal_exec/A2/run_resizerFactory/ApiTest.java",
+  "retained_sha256": "c32f04fdf4e5b4aa3b176ca04564574b636f30de23eb16811713252f4c8a6062",
+  "source_window": {
+    "path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/source/src/main/java/net/coobird/thumbnailator/Thumbnails.java",
+    "full_file_sha256": "3022d2a5ef47254529a7fe5d2ec10c080f3a1eac0551249636fa116b26d7f42e",
+    "first_line": 1333,
+    "last_line": 1488,
+    "other_sites": 2
+  }
+}

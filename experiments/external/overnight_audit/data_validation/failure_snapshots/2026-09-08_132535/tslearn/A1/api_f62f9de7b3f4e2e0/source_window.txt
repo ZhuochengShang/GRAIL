@@ -1,0 +1,156 @@
+6: 
+7: import scipy
+8: 
+9: from sklearn.base import BaseEstimator
+10: from sklearn.utils.validation import check_is_fitted
+11: 
+12: from statsmodels.tools.sm_exceptions import InterpolationWarning
+13: from statsmodels.tsa.stattools import kpss
+14: 
+15: from tslearn.bases import TimeSeriesMixin, BaseModelPackage
+16: from tslearn.bases.bases import ALLOW_VARIABLE_LENGTH
+17: from tslearn.utils import check_array, to_time_series_dataset, check_dims
+18: from tslearn.utils.utils import _ts_size
+19: 
+20: 
+21: def compute_var(p, X, with_constant=False):
+22:     """Compute the VAR parameters associated with a given time series.
+23: 
+24:     Parameters
+25:     ----------
+26:         p : int
+27:             AR order
+28: 
+29:         X : array-like, shape (sz, d)
+30:             time-series data, sz should be greater or equal than p
+31: 
+32:         with_constant : bool (default: False)
+33:             whether to compute an intercept term.
+34: 
+35:     Returns
+36:     -------
+37:         (intercept, ar_coeffs, residuals) tuple
+38: 
+39:     """
+40:     X = check_array(X, ensure_min_samples=p)
+41:     Y = X[p:]
+42:     Z = np.array([X[t - p : t][::-1].ravel() for t in range(p, X.shape[0])])
+43:     if with_constant:
+44:         Z = np.hstack((np.ones((X.shape[0] - p, 1)), Z))
+45: 
+46:     coeffs, *_ = np.linalg.lstsq(Z, Y, rcond=-1)
+47: 
+48:     intercept = np.array([])
+49:     if with_constant:
+50:         intercept = coeffs[0]
+51: 
+52:     ar_coeffs = np.array([])
+53:     if p > 0:
+54:         ar_coeffs = coeffs[1:] if with_constant else coeffs
+55: 
+56:     residuals = Y - np.dot(Z, coeffs)
+57: 
+58:     return intercept, ar_coeffs, residuals
+59: 
+60: 
+61: @njit
+62: def _loss(X, intercept, ar_coeffs, ma_coeffs):
+63:     n_ts, n_samples, n_features_in = X.shape
+64: 
+65:     # Number of valid samples, discarding nans for variable length datasets
+66:     n_valid_samples = np.sum(np.isfinite(np.sum(X, axis=-1)))
+67: 
+68:     p = ar_coeffs.shape[0]
+69:     q = ma_coeffs.shape[0]
+70: 
+71:     sse = 0
+72:     residuals = np.zeros((n_ts, q, n_features_in))
+73:     start = max(p, q)
+74:     for i in range(start, n_samples):
+75:         current_err = X[:, i] - _varma_next(
+76:             X[:, i - start : i],
+77:             residuals,
+78:             ar_coeffs,
+79:             ma_coeffs,
+80:             intercept,
+81:         )
+82:         # Deals with variable length series padded with nan
+83:         sse += np.nansum(current_err * current_err)
+84:         if q > 0:
+85:             for i in range(n_ts):
+86:                 if np.all(np.isfinite(current_err[i])):
+87:                     residuals[i, :-1] = residuals[i, 1:]
+88:                     residuals[i, -1] = current_err[i]
+89: 
+90:     variance = sse / (n_valid_samples - n_ts * start)
+91:     n_loglikelihood = n_valid_samples * (np.log(2 * np.pi) + np.log(variance) + 1) / 2
+92:     return n_loglikelihood, residuals
+93: 
+94: 
+95: @njit
+96: def _varma_next(X, residuals, ar_coeffs, ma_coeffs, intercept):
+97:     n_ts, n_samples, n_features_in = X.shape
+98: 
+99:     ar_forecast = np.zeros((n_ts, n_features_in))
+100:     for k in range(ar_coeffs.shape[0]):
+101:         ar_forecast += np.dot(X[:, n_samples - k - 1], ar_coeffs[k])
+102:     ma_forecast = np.zeros((n_ts, n_features_in))
+103:     for k in range(ma_coeffs.shape[0]):
+104:         ma_forecast += np.dot(residuals[:, k], ma_coeffs[k])
+105: 
+106:     intercept = np.zeros(n_features_in) if intercept.shape[0] == 0 else intercept
+107: 
+108:     return ar_forecast + ma_forecast + np.expand_dims(intercept, axis=0)
+109: 
+110: 
+111: class VARIMA(TimeSeriesMixin, BaseEstimator, BaseModelPackage):
+112:     """
+113:     Vector AutoRegressive Integrated Moving Average (VARIMA) estimator [1]_.
+114: 
+115:     Parameters
+116:     ----------
+117:         p : int, (default: 1)
+118:           AutoRegressive (AR) order of the model.
+119:         d : int (default: 0)
+120:           Differentiation order of the model.
+121:         q : int (default: 0)
+122:           Moving-Average (MA) order of the model.
+123:         with_constant : bool (default: True)
+124:           Whether the model should include an intercept term.
+125:         seasonal_period: int or None (default: None)
+126:           When set to a positive integer :math:`m`, the model includes
+127:           a naïve seasonal integration step where :math:`x'_t = x_t - x_{t-m}`.
+128:         max_iter : int (default: 50)
+129:           The maximum number of iterations used while fitting the model.
+130:         verbose : int (default 0)
+131:           When set to a positive integer, displays logs of the iteration of the optimization.
+132:           Not relevant if q=0.
+133: 
+134:     Attributes
+135:     ----------
+136:         lle_ : float
+137:           Loglikelihood of the fitted model
+138:         intercept_ : array-like of shape=(n_features)
+139:           Intercept term of the fitted model
+140:         ar_coeffs_ : array-like of shape=(p, n_features, n_features)
+141:           AR coefficients of the fitted model
+142:         ma_coeffs_ : array-like of shape=(q, n_features, n_features)
+143:           MA coefficients of the fitted model
+144: 
+145:     Notes
+146:     -----
+147:         This estimator supports variable length time-series
+148: 
+149:     See Also
+150:     --------
+151:         AutoVARIMA: Automatic order selection of a VARIMA model
+152: 
+153:     References
+154:     ----------
+155:     .. [1] R. J. Hyndman and G. Athanasopoulos, Forecasting: Principles and Practice. OTexts, 2014.
+156:       https://otexts.com/fpp3/
+157: 
+158:     """
+159: 
+160:     def __init__(
+161:         self,

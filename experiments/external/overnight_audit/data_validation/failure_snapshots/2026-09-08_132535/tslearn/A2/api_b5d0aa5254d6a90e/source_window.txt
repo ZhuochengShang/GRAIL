@@ -1,0 +1,156 @@
+610:             Shapelet-Transform of the provided time series.
+611:         """
+612:         check_is_fitted(self, '_X_fit_dims')
+613:         X = check_array(X, allow_nd=True, force_all_finite=False)
+614:         X = self._preprocess_series(X)
+615:         X = check_dims(X, X_fit_dims=self._X_fit_dims,
+616:                        check_n_features_only=True)
+617:         self._check_series_length(X)
+618: 
+619:         pred = self.transformer_model_.predict(
+620:             X,
+621:             batch_size=self.batch_size, verbose=self.verbose
+622:         )
+623:         return pred.astype(float)
+624: 
+625:     def locate(self, X):
+626:         """Compute shapelet match location for a set of time series.
+627: 
+628:         Parameters
+629:         ----------
+630:         X : array-like of shape=(n_ts, sz, d)
+631:             Time series dataset.
+632: 
+633:         Returns
+634:         -------
+635:         array of shape=(n_ts, n_shapelets)
+636:             Location of the shapelet matches for the provided time series.
+637: 
+638:         Examples
+639:         --------
+640:         >>> from tslearn.generators import random_walk_blobs
+641:         >>> X = numpy.zeros((3, 10, 1))
+642:         >>> X[0, 4:7, 0] = numpy.array([1, 2, 3])
+643:         >>> y = [1, 0, 0]
+644:         >>> # Data is all zeros except a motif 1-2-3 in the first time series
+645:         >>> clf = LearningShapelets(n_shapelets_per_size={3: 1}, max_iter=1,
+646:         ...                     verbose=0)
+647:         >>> _ = clf.fit(X, y)
+648:         >>> weights_shapelet = [
+649:         ...     numpy.array([[[1], [2], [3]]])
+650:         ... ]
+651:         >>> clf.set_weights(weights_shapelet, layer_name="shapelets_0")
+652:         >>> clf.locate(X)
+653:         array([[4],
+654:                [0],
+655:                [0]])
+656:         """
+657:         check_is_fitted(self, '_X_fit_dims')
+658:         X = check_array(X, allow_nd=True, force_all_finite=False)
+659:         X = self._preprocess_series(X)
+660:         X = check_dims(X, X_fit_dims=self._X_fit_dims,
+661:                        check_n_features_only=True)
+662:         self._check_series_length(X)
+663: 
+664:         locations = self.locator_model_.predict(
+665:             X,
+666:             batch_size=self.batch_size, verbose=self.verbose
+667:         )
+668:         return locations.astype(int)
+669: 
+670:     def _check_series_length(self, X):
+671:         """Ensures that time series in X matches the following requirements:
+672: 
+673:         - their length is greater than the size of the longest shapelet
+674:         - their length is lower than the maximum allowed length,
+675:         as set by max_size or deduced from fitted data.
+676:         """
+677:         self._min_sz_fit = min(_ts_size(Xi) for Xi in X)
+678: 
+679:         if self.n_shapelets_per_size is not None:
+680:             max_sz_shp = max(self.n_shapelets_per_size.keys())
+681:             if max_sz_shp > self._min_sz_fit:
+682:                 raise ValueError("Sizes in X do not match maximum "
+683:                                  "shapelet size: there is at least one "
+684:                                  "series in X that is shorter than one of the "
+685:                                  "shapelets. Shortest time series is of "
+686:                                  "length {} and longest shapelet is of length "
+687:                                  "{}".format(self._min_sz_fit, max_sz_shp))
+688: 
+689:         max_size = self.max_size
+690:         if max_size is None:
+691:             max_size = self._X_fit_dims[1] if hasattr(self, '_X_fit_dims') else X.shape[1]
+692: 
+693:         if X.shape[1] > max_size:
+694:             raise ValueError("Sizes in X do not match maximum allowed "
+695:                              "size as set by max_size or "
+696:                              "computed when fit. "
+697:                              "Longest time series is of "
+698:                              "length {} and maximum allowed size is "
+699:                              "{}".format(X.shape[1], max_size))
+700: 
+701:     def _preprocess_series(self, X):
+702:         """Scale if needed, pad with nans if needed."""
+703:         if self.scale:
+704:             X = TimeSeriesScalerMinMax().fit_transform(X)
+705:         else:
+706:             X = to_time_series_dataset(X)
+707: 
+708:         max_size = self.max_size
+709:         if max_size is None:
+710:             max_size = self._X_fit_dims[1] if hasattr(self, '_X_fit_dims') else X.shape[1]
+711: 
+712:         if max_size > X.shape[1]:
+713:             X_ = numpy.zeros((X.shape[0], max_size, X.shape[2]))
+714:             X_[:, :X.shape[1]] = X
+715:             X_[:, X.shape[1]:] = numpy.nan
+716:             return X_
+717:         else:
+718:             return X
+719: 
+720:     def _preprocess_labels(self, y):
+721:         self.classes_ = unique_labels(y)
+722:         n_labels = len(self.classes_)
+723:         if n_labels == 1:
+724:             raise ValueError("Classifier can't train when only one class "
+725:                              "is present.")
+726:         if self.classes_.dtype in [numpy.int32, numpy.int64]:
+727:             label_to_ind_ = {int(lab): ind
+728:                                   for ind, lab in enumerate(self.classes_)}
+729:         else:
+730:             label_to_ind_ = {lab: ind
+731:                                   for ind, lab in enumerate(self.classes_)}
+732:         y_ind = numpy.array(
+733:             [label_to_ind_[lab] for lab in y]
+734:         )
+735:         y_ = to_categorical(y_ind)
+736:         if n_labels == 2:
+737:             y_ = y_[:, 1:]  # Keep only indicator of positive class
+738:         return y_
+739: 
+740:     def _build_auxiliary_models(self):
+741:         check_is_fitted(self, 'model_')
+742: 
+743:         inputs = self.model_.inputs
+744:         concatenated_features = self.model_.get_layer("classification").input
+745: 
+746:         self.transformer_model_ = Model(inputs=inputs,
+747:                                         outputs=concatenated_features)
+748:         self.transformer_model_.compile(loss="mean_squared_error",
+749:                                         optimizer=self.optimizer)
+750: 
+751:         min_pool_inputs = [self.model_.get_layer("min_pooling_%d" % i).input[0]
+752:                            for i in range(self._n_shapelet_sizes)]
+753:         pool_layers_locations = [
+754:             GlobalArgminPooling1D(name="argmin_pooling_%d" % i)(pool_input)
+755:             for i, pool_input in enumerate(min_pool_inputs)
+756:         ]
+757:         if self._n_shapelet_sizes > 1:
+758:             concatenated_locations = concatenate(pool_layers_locations)
+759:         else:
+760:             concatenated_locations = pool_layers_locations[0]
+761: 
+762:         self.locator_model_ = Model(inputs=inputs,
+763:                                     outputs=concatenated_locations)
+764:         self.locator_model_.compile(loss="mean_squared_error",
+765:                                     optimizer=self.optimizer)

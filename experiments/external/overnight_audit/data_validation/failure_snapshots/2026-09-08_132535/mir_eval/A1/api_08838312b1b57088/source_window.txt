@@ -1,0 +1,156 @@
+527:     )
+528:     if len(scale) != 1:
+529:         raise ValueError("Key file should contain only one line.")
+530:     scale, mode = scale[0], mode[0]
+531:     # Join with a space
+532:     key_string = f"{scale} {mode}"
+533:     # Validate them, but throw a warning in place of an error
+534:     try:
+535:         key.validate_key(key_string)
+536:     except ValueError as error:
+537:         warnings.warn(error.args[0])
+538: 
+539:     return key_string
+540: 
+541: 
+542: def load_tempo(filename, delimiter=r"\s+", comment="#"):
+543:     r"""Load tempo estimates from an annotation file in MIREX format.
+544:     The file should consist of three numeric columns: the first two
+545:     correspond to tempo estimates (in beats-per-minute), and the third
+546:     denotes the relative confidence of the first value compared to the
+547:     second (in the range [0, 1]). The file should contain only one row.
+548: 
+549:     Parameters
+550:     ----------
+551:     filename : str or `os.Pathlike`
+552:         Path to the annotation file
+553: 
+554:     delimiter : str
+555:         Separator regular expression.
+556:         By default, lines will be split by any amount of whitespace.
+557: 
+558:     comment : str or None
+559:         Comment regular expression.
+560:         Any lines beginning with this string or pattern will be ignored.
+561: 
+562:         Setting to `None` disables comments.
+563: 
+564:     Returns
+565:     -------
+566:     tempi : np.ndarray, non-negative
+567:         The two tempo estimates
+568:     weight : float [0, 1]
+569:         The relative importance of ``tempi[0]`` compared to ``tempi[1]``
+570:     """
+571:     # Use our universal function to load the key and mode strings
+572:     t1, t2, weight = load_delimited(
+573:         filename, [float, float, float], delimiter=delimiter, comment=comment
+574:     )
+575: 
+576:     weight = weight[0]
+577:     tempi = np.concatenate([t1, t2])
+578: 
+579:     if len(t1) != 1:
+580:         raise ValueError("Tempo file should contain only one line.")
+581: 
+582:     # Validate them, but throw a warning in place of an error
+583:     try:
+584:         tempo.validate_tempi(tempi)
+585:     except ValueError as error:
+586:         warnings.warn(error.args[0])
+587: 
+588:     if not 0 <= weight <= 1:
+589:         raise ValueError(f"Invalid weight: {weight}")
+590: 
+591:     return tempi, weight
+592: 
+593: 
+594: def load_ragged_time_series(
+595:     filename, dtype=float, delimiter=r"\s+", header=False, comment="#"
+596: ):
+597:     r"""Load data from a delimited time series annotation file with
+598:     a variable number of columns.
+599: 
+600:     This function assumes that column 0 contains time stamps and
+601:     columns 1 through n contain values.
+602:     n may be variable from time stamp to time stamp.
+603: 
+604:     Examples
+605:     --------
+606:     >>> # Load a ragged list of tab-delimited multi-f0 midi notes
+607:     >>> times, vals = load_ragged_time_series('multif0.txt', dtype=int,
+608:                                               delimiter='\t')
+609:     >>> # Load a raggled list of space delimited multi-f0 values with a header
+610:     >>> times, vals = load_ragged_time_series('labeled_events.csv',
+611:                                               header=True)
+612: 
+613:     Parameters
+614:     ----------
+615:     filename : str or `os.Pathlike`
+616:         Path to the annotation file
+617: 
+618:     dtype : function
+619:         Data type to apply to values columns.
+620: 
+621:     delimiter : str
+622:         Separator regular expression.
+623:         By default, lines will be split by any amount of whitespace.
+624: 
+625:     header : bool
+626:         Indicates whether a header row is present or not.
+627:         By default, assumes no header is present.
+628: 
+629:     comment : str or None
+630:         Comment regular expression.
+631:         Any lines beginning with this string or pattern will be ignored.
+632: 
+633:         Setting to `None` disables comments.
+634: 
+635:     Returns
+636:     -------
+637:     times : np.ndarray
+638:         array of timestamps (float)
+639:     values : list of np.ndarray
+640:         list of arrays of corresponding values
+641: 
+642:     """
+643:     # Initialize empty lists
+644:     times = []
+645:     values = []
+646: 
+647:     # Create re object for splitting lines
+648:     splitter = re.compile(delimiter)
+649: 
+650:     # And one for comments
+651:     if comment is None:
+652:         commenter = None
+653:     else:
+654:         commenter = re.compile(f"^{comment}")
+655: 
+656:     if header:
+657:         start_row = 1
+658:     else:
+659:         start_row = 0
+660:     with _open(filename, mode="r") as input_file:
+661:         for row, line in enumerate(input_file, start_row):
+662:             # If this is a comment line, skip it
+663:             if comment is not None and commenter.match(line):
+664:                 continue
+665: 
+666:             # Split each line using the supplied delimiter
+667:             data = splitter.split(line.strip())
+668:             try:
+669:                 converted_time = float(data[0])
+670:             except (TypeError, ValueError) as exe:
+671:                 raise ValueError(
+672:                     "Couldn't convert value {} using {} "
+673:                     "found at {}:{:d}:\n\t{}".format(
+674:                         data[0], float.__name__, filename, row, line
+675:                     )
+676:                 ) from exe
+677:             times.append(converted_time)
+678: 
+679:             # cast values to a numpy array. time stamps with no values are cast
+680:             # to an empty array.
+681:             try:
+682:                 converted_value = np.array(data[1:], dtype=dtype)

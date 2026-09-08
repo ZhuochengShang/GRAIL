@@ -1,0 +1,58 @@
+{
+  "name": "SquaredEuclidean",
+  "native_row": {
+    "name": "SquaredEuclidean",
+    "doc_source": "original",
+    "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+    "execution_evidence": {
+      "status": "fail",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "fail",
+          "category": "runtime",
+          "error": "TypeError: SquaredEuclidean.__init__() missing 2 required positional arguments: 'X' and 'Y'"
+        }
+      ],
+      "error_category": "runtime",
+      "error": "TypeError: SquaredEuclidean.__init__() missing 2 required positional arguments: 'X' and 'Y'",
+      "code": "import torch\nfrom tslearn.metrics import SquaredEuclidean\n\n# SquaredEuclidean is a PyTorch distance function used by SoftDTWLossPyTorch\nse = SquaredEuclidean()\n\n# Prepare small batch of PyTorch tensors from the provided datasets\n# x_t: (batch_size, n_timestamps_x, n_features)\n# y_t: (batch_size, n_timestamps_y, n_features)\nx_t = torch.tensor(X[:2], dtype=torch.float32)\ny_t = torch.tensor(X2[:2], dtype=torch.float32)\n\n# Compute pairwise squared Euclidean distances between timestamps for each batch element\ndist = se(x_t, y_t)\n\n# Verify the output shape is (batch_size, n_timestamps_x, n_timestamps_y)\nexpected_shape = (2, X.shape[1], X2.shape[1])\nassert dist.shape == expected_shape, f\"Expected shape {expected_shape}, got {dist.shape}\"\n\n# Verify the correctness of a specific pairwise distance\nexpected_val = torch.sum((x_t[0, 0] - y_t[0, 0]) ** 2)\nassert torch.isclose(dist[0, 0, 0], expected_val, atol=1e-5), \\\n    f\"Expected distance {expected_val}, got {dist[0, 0, 0]}\"\n\nprint(f\"__CHECK__ Sq",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_SquaredEuclidean/api_test.py",
+      "exit_code": 1,
+      "stdout_tail": "",
+      "stderr_tail": "__RUN_ERR__ TypeError: SquaredEuclidean.__init__() missing 2 required positional arguments: 'X' and 'Y'\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_SquaredEuclidean/api_test.py\", line 67, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_SquaredEuclidean/api_test.py\", line 62, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_SquaredEuclidean/api_test.py\", line 38, in api_test\n    se = SquaredEuclidean()\nTypeError: SquaredEuclidean.__init__() missing 2 required positional arguments: 'X' and 'Y'\n"
+    },
+    "status": "fail",
+    "attempts": 1,
+    "pass_round": null,
+    "wall_s": 330.6,
+    "llm_calls": 1,
+    "input_tokens": 1323,
+    "output_tokens": 3033,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 1323,
+        "output_tokens": 3033
+      }
+    },
+    "error_category": "runtime",
+    "error": "TypeError: SquaredEuclidean.__init__() missing 2 required positional arguments: 'X' and 'Y'",
+    "locus": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_SquaredEuclidean/api_test.py:38",
+    "doc_chars": 98,
+    "document_sha256": "898f3a8edf7ae8d240ab2a94f1d83cdec439c478daa1cadd07778746fe211771",
+    "source": "tslearn/tslearn/metrics/softdtw_variants.py:1176",
+    "source_other_sites": 0,
+    "codebase_frames": null
+  },
+  "retained_binding": "recorded_code_prefix_present",
+  "retained_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_SquaredEuclidean/api_test.py",
+  "retained_sha256": "a8cb5a81260432aa3b5f01654735a19e9bce249199a5780b5bcda4c2ef058aee",
+  "source_window": {
+    "path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/metrics/softdtw_variants.py",
+    "full_file_sha256": "b1fe0d49dd472d80c2185a1ca2c4daba5c1f8dde6964c1f84e7467909b288d1f",
+    "first_line": 1161,
+    "last_line": 1250,
+    "other_sites": 0
+  }
+}

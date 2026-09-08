@@ -1,0 +1,48 @@
+103:             )
+104: 
+105:         else:
+106:             msg = "{} for item: {} not supported by HDF5" \
+107:                   "".format(type(item), item)
+108: 
+109:             if raise_meta_fail:
+110:                 raise TypeError(msg)
+111: 
+112:             else:
+113:                 h5file[path + key] = str(item)
+114:                 warn("{}, storing whatever str(obj) returns"
+115:                      "".format(msg))
+116: 
+117: 
+118: def load_dict(filename, group):
+119:     """
+120:     Recursively load a dict from an hdf5 group in a file.
+121: 
+122:     Parameters
+123:     ----------
+124:     filename : str
+125:         full path to the hdf5 file
+126: 
+127:     group : str
+128:         Name of the group that contains the dict to load
+129: 
+130:     Returns
+131:     -------
+132:     d : dict
+133:         dict loaded from the specified hdf5 group.
+134:     """
+135: 
+136:     with h5py.File(filename, 'r') as h5file:
+137:         return _dicts_from_group(h5file, "{}/".format(group))
+138: 
+139: 
+140: def _dicts_from_group(h5file, path):
+141:     ans = {}
+142:     for key, item in h5file[path].items():
+143:         if isinstance(item, h5py._hl.dataset.Dataset):
+144:             if item.attrs.__contains__('dtype'):
+145:                 ans[key] = item[()].astype(item.attrs['dtype'])
+146:             else:
+147:                 ans[key] = item[()]
+148:         elif isinstance(item, h5py._hl.group.Group):
+149:             ans[key] = _dicts_from_group(h5file, path + key + '/')
+150:     return ans

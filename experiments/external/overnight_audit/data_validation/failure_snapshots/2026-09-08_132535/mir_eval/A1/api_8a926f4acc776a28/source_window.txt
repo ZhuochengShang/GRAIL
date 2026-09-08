@@ -1,0 +1,156 @@
+344:                 labels = labels[: last_idx[0, 0]]
+345:             # Clip to the range (-inf, t_max)
+346:             intervals = intervals[: last_idx[0, 0]]
+347: 
+348:         intervals = np.minimum(t_max, intervals)
+349: 
+350:         if intervals.max() < t_max:
+351:             # Last boundary is below t_max: add a new boundary and label
+352:             intervals = np.vstack((intervals, [intervals.max(), t_max]))
+353:             if labels is not None:
+354:                 labels.append(end_label)
+355: 
+356:     return intervals, labels
+357: 
+358: 
+359: def adjust_events(events, labels=None, t_min=0.0, t_max=None, label_prefix="__"):
+360:     """Adjust the given list of event times to span the range
+361:     ``[t_min, t_max]``.
+362: 
+363:     Any event times outside of the specified range will be removed.
+364: 
+365:     If the times do not span ``[t_min, t_max]``, additional events will be
+366:     added with the prefix ``label_prefix``.
+367: 
+368:     Parameters
+369:     ----------
+370:     events : np.ndarray
+371:         Array of event times (seconds)
+372:     labels : list or None
+373:         List of labels
+374:         (Default value = None)
+375:     t_min : float or None
+376:         Minimum valid event time.
+377:         (Default value = 0.0)
+378:     t_max : float or None
+379:         Maximum valid event time.
+380:         (Default value = None)
+381:     label_prefix : str
+382:         Prefix string to use for synthetic labels
+383:         (Default value = '__')
+384: 
+385:     Returns
+386:     -------
+387:     new_times : np.ndarray
+388:         Event times corrected to the given range.
+389: 
+390:     """
+391:     if t_min is not None:
+392:         first_idx = np.argwhere(events >= t_min)
+393: 
+394:         if len(first_idx) > 0:
+395:             # We have events below t_min
+396:             # Crop them out
+397:             if labels is not None:
+398:                 labels = labels[first_idx[0, 0] :]
+399:             events = events[first_idx[0, 0] :]
+400: 
+401:         if events[0] > t_min:
+402:             # Lowest boundary is higher than t_min:
+403:             # add a new boundary and label
+404:             events = np.concatenate(([t_min], events))
+405:             if labels is not None:
+406:                 labels.insert(0, "%sT_MIN" % label_prefix)
+407: 
+408:     if t_max is not None:
+409:         last_idx = np.argwhere(events > t_max)
+410: 
+411:         if len(last_idx) > 0:
+412:             # We have boundaries above t_max.
+413:             # Trim to only boundaries <= t_max
+414:             if labels is not None:
+415:                 labels = labels[: last_idx[0, 0]]
+416:             events = events[: last_idx[0, 0]]
+417: 
+418:         if events[-1] < t_max:
+419:             # Last boundary is below t_max: add a new boundary and label
+420:             events = np.concatenate((events, [t_max]))
+421:             if labels is not None:
+422:                 labels.append("%sT_MAX" % label_prefix)
+423: 
+424:     return events, labels
+425: 
+426: 
+427: def intersect_files(flist1, flist2):
+428:     """Return the intersection of two sets of filepaths, based on the file name
+429:     (after the final '/') and ignoring the file extension.
+430: 
+431:     Examples
+432:     --------
+433:      >>> flist1 = ['/a/b/abc.lab', '/c/d/123.lab', '/e/f/xyz.lab']
+434:      >>> flist2 = ['/g/h/xyz.npy', '/i/j/123.txt', '/k/l/456.lab']
+435:      >>> sublist1, sublist2 = mir_eval.util.intersect_files(flist1, flist2)
+436:      >>> print sublist1
+437:      ['/e/f/xyz.lab', '/c/d/123.lab']
+438:      >>> print sublist2
+439:      ['/g/h/xyz.npy', '/i/j/123.txt']
+440: 
+441:     Parameters
+442:     ----------
+443:     flist1 : list
+444:         first list of filepaths
+445:     flist2 : list
+446:         second list of filepaths
+447: 
+448:     Returns
+449:     -------
+450:     sublist1 : list
+451:         subset of filepaths with matching stems from ``flist1``
+452:     sublist2 : list
+453:         corresponding filepaths from ``flist2``
+454: 
+455:     """
+456: 
+457:     def fname(abs_path):
+458:         """Return the filename given an absolute path.
+459: 
+460:         Parameters
+461:         ----------
+462:         abs_path
+463: 
+464:         Returns
+465:         -------
+466:         filename
+467: 
+468:         """
+469:         return os.path.splitext(os.path.split(abs_path)[-1])[0]
+470: 
+471:     fmap = {fname(f): f for f in flist1}
+472:     pairs = [list(), list()]
+473:     for f in flist2:
+474:         if fname(f) in fmap:
+475:             pairs[0].append(fmap[fname(f)])
+476:             pairs[1].append(f)
+477: 
+478:     return pairs
+479: 
+480: 
+481: def merge_labeled_intervals(x_intervals, x_labels, y_intervals, y_labels):
+482:     r"""Merge the time intervals of two sequences.
+483: 
+484:     Parameters
+485:     ----------
+486:     x_intervals : np.ndarray
+487:         Array of interval times (seconds)
+488:     x_labels : list or None
+489:         List of labels
+490:     y_intervals : np.ndarray
+491:         Array of interval times (seconds)
+492:     y_labels : list or None
+493:         List of labels
+494: 
+495:     Returns
+496:     -------
+497:     new_intervals : np.ndarray
+498:         New interval times of the merged sequences.
+499:     new_x_labels : list

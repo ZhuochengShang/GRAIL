@@ -1,0 +1,23 @@
+net.coobird.thumbnailator.tasks.UnsupportedFormatException ex1 = 
+    new net.coobird.thumbnailator.tasks.UnsupportedFormatException("webp");
+net.coobird.thumbnailator.tasks.UnsupportedFormatException ex2 = 
+    new net.coobird.thumbnailator.tasks.UnsupportedFormatException("tiff", "No suitable ImageWriter found");
+
+assert ex1 != null;
+assert ex2.getMessage() != null && ex2.getMessage().contains("No suitable ImageWriter found");
+
+boolean caught = false;
+try {
+    net.coobird.thumbnailator.Thumbnails.of(sourceImage)
+        .size(32, 32)
+        .outputFormat("superfakeformat")
+        .toOutputStream(imageBytes);
+} catch (net.coobird.thumbnailator.tasks.UnsupportedFormatException e) {
+    caught = true;
+} catch (java.io.IOException e) {
+    throw new RuntimeException("Unexpected IOException", e);
+}
+
+assert caught : "Expected UnsupportedFormatException to be thrown for an unsupported format";
+
+System.out.println("__CHECK__ UnsupportedFormatException " + caught + ", " + ex2.getMessage())

@@ -1,0 +1,9 @@
+net.coobird.thumbnailator.tasks.io.OutputStreamImageSink sink = 
+    new net.coobird.thumbnailator.tasks.io.OutputStreamImageSink(imageBytes);
+
+java.io.OutputStream dest = sink.getDestination();
+
+assert dest != null : "Destination should not be null";
+assert dest == imageBytes : "Destination should match the provided OutputStream instance";
+
+System.out.println("__CHECK__ getDestination " + (dest == imageBytes));

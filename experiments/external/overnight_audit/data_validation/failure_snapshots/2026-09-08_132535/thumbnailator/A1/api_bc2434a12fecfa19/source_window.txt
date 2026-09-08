@@ -1,0 +1,41 @@
+87: 	 * Future changes note: The public interface of this method may have to be
+88: 	 * changed to support reading images tile-by-tile. This change may be
+89: 	 * required in order to support large images.
+90: 	 */
+91: 	public abstract BufferedImage read() throws IOException;
+92: 	
+93: 	/**
+94: 	 * Writes the thumbnail to the destination.
+95: 	 * 
+96: 	 * @param img			The image to write.
+97: 	 * @throws UnsupportedFormatException	When an image file which is to be
+98: 	 * 										read or written is unsupported.
+99: 	 * @throws IOException	Thrown when an I/O problem occurs when writing the
+100: 	 * 						image.
+101: 	 */
+102: 	public abstract void write(BufferedImage img) throws IOException;
+103: 	
+104: 	/**
+105: 	 * Returns the {@link ThumbnailParameter} for this {@link ThumbnailTask},
+106: 	 * used when performing a thumbnail generation operation.
+107: 	 * 
+108: 	 * @return				The parameters to use when generating thumbnails.
+109: 	 */
+110: 	public ThumbnailParameter getParam() {
+111: 		return param;
+112: 	}
+113: 	
+114: 	/**
+115: 	 * Returns the source from which the source image is retrieved or read.
+116: 	 * 
+117: 	 * @return		The source.
+118: 	 */
+119: 	public abstract S getSource();
+120: 	
+121: 	/**
+122: 	 * Returns the destination to which the thumbnail is stored or written.
+123: 	 * 
+124: 	 * @return		The destination.
+125: 	 */
+126: 	public abstract D getDestination();
+127: }

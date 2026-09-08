@@ -1,0 +1,50 @@
+174:         t_middle = float(t0) + 0.5 * seg_sz
+175:         for di in range(d):
+176:             avg1 = breakpoints_avg_middle_[sax1[t, di]]
+177:             avg2 = breakpoints_avg_middle_[sax2[t, di]]
+178:             slope1 = breakpoints_slope_middle_[sax1[t, di + d]]
+179:             slope2 = breakpoints_slope_middle_[sax2[t, di + d]]
+180:             for tt in range(t0, seg_sz * (t + 1)):
+181:                 s += (
+182:                     avg1 + slope1 * (tt - t_middle) - (avg2 + slope2 * (tt - t_middle))
+183:                 ) ** 2
+184:     dist_1d_sax = np.sqrt(s)
+185:     return dist_1d_sax
+186: 
+187: 
+188: @njit(parallel=True, fastmath=True)
+189: def inv_transform_1d_sax(
+190:     dataset_sax, breakpoints_avg_middle_, breakpoints_slope_middle_, original_size
+191: ):
+192:     """Compute time series corresponding to given 1d-SAX representations.
+193: 
+194:     Parameters
+195:     ----------
+196:     dataset_sax : array-like, shape=(n_ts, sz, 2 * d), dtype=float64 (Linux and MacOS) or float32 (Windows)
+197:         A dataset of SAX series.
+198:     breakpoints_avg_middle_ : array-like, ndim=1, dtype=float64
+199:     breakpoints_slope_middle_ : array-like, ndim=1, dtype=float64
+200:     original_size : int64 (Linux and MacOS) or int32 (Windows)
+201:         Length of the original time series.
+202: 
+203:     Returns
+204:     -------
+205:     dataset_out : array-like, shape=(n_ts, original_size, d), dtype=float64
+206:         A dataset of time series corresponding to the provided
+207:             representation.
+208:     """
+209:     n_ts, sz, d_1d_sax = dataset_sax.shape
+210:     d = d_1d_sax // 2
+211:     seg_sz = original_size // sz
+212:     dataset_out = np.empty((n_ts, original_size, d))
+213: 
+214:     for i in prange(n_ts):
+215:         for t in range(sz):
+216:             t0 = t * seg_sz
+217:             t_middle = float(t0) + 0.5 * (seg_sz - 1)
+218:             for di in range(d):
+219:                 avg = breakpoints_avg_middle_[dataset_sax[i, t, di]]
+220:                 slope = breakpoints_slope_middle_[dataset_sax[i, t, di + d]]
+221:                 for tt in range(t0, seg_sz * (t + 1)):
+222:                     dataset_out[i, tt, di] = avg + slope * (tt - t_middle)
+223:     return dataset_out

@@ -1,0 +1,116 @@
+63:         ----------
+64:         X : array-like of shape (n_ts, sz, d)
+65:             Time series dataset.
+66:         y : Ignored
+67:             Not used, for API consistency by convention.
+68: 
+69:         Returns
+70:         -------
+71:         self
+72:         """
+73:         X_ = check_variable_length_input(X)
+74:         self._X_fit_dims = X_.shape
+75:         self.n_features_in_ = self._X_fit_dims[-1]
+76:         return self
+77: 
+78:     def transform(self, X, y=None, timestamps=None):
+79:         """
+80:         Synchronizes features of each time series with the feature of reference through linear interpolation.
+81:         When timestamps are not provided, constant sampling periods are assumed for all features and identical
+82:         start and stop timestamps are assumed for all features of a given times series.
+83:         When timestamps are provided, features are synchronized on the temporal grid of the reference feature.
+84: 
+85:         Parameters
+86:         ----------
+87:         X : array-like of shape (n_ts, sz, d)
+88:             Time series dataset to be synchronized feature wise.
+89:         y : Ignored
+90:             Not used, for API consistency by convention.
+91:         timestamps : np.datetime64 array-like of shape (n_ts, sz, d) or None (default: None)
+92:             Acquisition timestamps, same shape as X if not None.
+93:             When provided, timestamps should be increasing for each feature and should use
+94:             np.datetime64('nat') for missing values.
+95: 
+96:         Returns
+97:         -------
+98:         numpy.ndarray
+99:             Time series dataset synchronized feature wise.
+100:         """
+101:         check_is_fitted(self, '_X_fit_dims')
+102: 
+103:         X_ = check_variable_length_input(X)
+104:         X_ = check_dims(
+105:             X_,
+106:             X_fit_dims=self._X_fit_dims,
+107:             extend=False,
+108:             check_n_features_only=True
+109:         )
+110: 
+111:         if timestamps is not None:
+112:             timestamps_ = check_variable_length_input(timestamps)
+113:             if timestamps_.shape != X_.shape:
+114:                 raise ValueError("Shape mismatch between incoming data and timestamps")
+115:             masked_timestamps = np.ma.masked_array(timestamps, mask=np.isnan(timestamps))
+116:             if not np.ma.all(np.ma.diff(masked_timestamps, axis=1) > np.timedelta64(0)):
+117:                 # Test that valid timestamps are increasing for all TS
+118:                 raise ValueError("Timestamps must be increasing for each TS")
+119: 
+120:         ref_sizes = [_ts_size(ts[..., self.reference_feature_index]) for ts in X_]
+121:         max_ref_size = max(ref_sizes)
+122: 
+123:         # Resize each feature
+124:         for ts_index, ts in enumerate(X_):
+125: 
+126:             if timestamps is not None:
+127:                 evaluation_coordinates = (
+128:                     timestamps[ts_index, :ref_sizes[ts_index], self.reference_feature_index]
+129:                 ).astype("float64")
+130:             else:
+131:                 evaluation_coordinates = np.linspace(0, 1, ref_sizes[ts_index])
+132: 
+133:             for feature_index in range(ts.shape[-1]):
+134:                 feature_size = _ts_size(ts[..., feature_index])
+135:                 if timestamps is not None:
+136:                     data_points_coordinates = (
+137:                             timestamps[ts_index, :feature_size, feature_index]
+138:                     ).astype("float64")
+139:                 else:
+140:                     data_points_coordinates = np.linspace(0, 1, feature_size)
+141: 
+142:                 ts[:ref_sizes[ts_index], feature_index] = np.interp(
+143:                     evaluation_coordinates,
+144:                     data_points_coordinates,
+145:                     ts[:feature_size, feature_index]
+146:                 )
+147:                 ts[ref_sizes[ts_index]:max_ref_size, feature_index] = np.nan
+148:         return X_[:, :max_ref_size, :]
+149: 
+150:     def fit_transform(self, X, y=None, **transform_params):
+151:         """Fit to data, then transform it.
+152: 
+153:         Parameters
+154:         ----------
+155:         X : array-like of shape (n_ts, sz, d)
+156:             Time series dataset to be synchronized feature wise.
+157:         y : Ignored
+158:             Not used, for API consistency by convention.
+159:         **transform_params : dict
+160:             proxies `timestamps` transform parameter
+161: 
+162:         Returns
+163:         -------
+164:         numpy.ndarray
+165:             Time series dataset synchronized feature wise.
+166:         """
+167:         return self.fit(X, y).transform(X, y,  **transform_params)
+168: 
+169:     def _more_tags(self):
+170:         tags = super()._more_tags()
+171:         tags.update({'allow_nan': True, ALLOW_VARIABLE_LENGTH: True})
+172:         return tags
+173: 
+174:     def __sklearn_tags__(self):
+175:         tags = super().__sklearn_tags__()
+176:         tags.input_tags.allow_nan = True
+177:         tags.allow_variable_length = True
+178:         return tags

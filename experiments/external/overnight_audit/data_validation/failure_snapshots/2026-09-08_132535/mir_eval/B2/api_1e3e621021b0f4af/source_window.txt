@@ -1,0 +1,156 @@
+316:         array of timestamps (float)
+317:     values : np.ndarray
+318:         array of corresponding numeric values (float)
+319: 
+320:     """
+321:     # Use our universal function to load in the events
+322:     times, values = load_delimited(
+323:         filename, [float, float], delimiter=delimiter, comment=comment
+324:     )
+325:     times = np.array(times)
+326:     values = np.array(values)
+327: 
+328:     return times, values
+329: 
+330: 
+331: def load_patterns(filename):
+332:     """Load the patterns contained in the filename and puts them into a list
+333:     of patterns, each pattern being a list of occurrence, and each
+334:     occurrence being a list of (onset, midi) pairs.
+335: 
+336:     The input file must be formatted as described in MIREX 2013:
+337:     http://www.music-ir.org/mirex/wiki/2013:Discovery_of_Repeated_Themes_%26_Sections
+338: 
+339:     Parameters
+340:     ----------
+341:     filename : str or `os.Pathlike`
+342:         The input file path containing the patterns of a given piece using the
+343:         MIREX 2013 format.
+344: 
+345:     Returns
+346:     -------
+347:     pattern_list : list
+348:         The list of patterns, containing all their occurrences,
+349:         using the following format::
+350: 
+351:             onset_midi = (onset_time, midi_number)
+352:             occurrence = [onset_midi1, ..., onset_midiO]
+353:             pattern = [occurrence1, ..., occurrenceM]
+354:             pattern_list = [pattern1, ..., patternN]
+355: 
+356:         where ``N`` is the number of patterns, ``M[i]`` is the number of
+357:         occurrences of the ``i`` th pattern, and ``O[j]`` is the number of
+358:         onsets in the ``j``'th occurrence.  E.g.::
+359: 
+360:             occ1 = [(0.5, 67.0), (1.0, 67.0), (1.5, 67.0), (2.0, 64.0)]
+361:             occ2 = [(4.5, 65.0), (5.0, 65.0), (5.5, 65.0), (6.0, 62.0)]
+362:             pattern1 = [occ1, occ2]
+363: 
+364:             occ1 = [(10.5, 67.0), (11.0, 67.0), (11.5, 67.0), (12.0, 64.0),
+365:                     (12.5, 69.0), (13.0, 69.0), (13.5, 69.0), (14.0, 67.0),
+366:                     (14.5, 76.0), (15.0, 76.0), (15.5, 76.0), (16.0, 72.0)]
+367:             occ2 = [(18.5, 67.0), (19.0, 67.0), (19.5, 67.0), (20.0, 62.0),
+368:                     (20.5, 69.0), (21.0, 69.0), (21.5, 69.0), (22.0, 67.0),
+369:                     (22.5, 77.0), (23.0, 77.0), (23.5, 77.0), (24.0, 74.0)]
+370:             pattern2 = [occ1, occ2]
+371: 
+372:             pattern_list = [pattern1, pattern2]
+373:     """
+374:     # List with all the patterns
+375:     pattern_list = []
+376:     # Current pattern, which will contain all occs
+377:     pattern = []
+378:     # Current occurrence, containing (onset, midi)
+379:     occurrence = []
+380:     with _open(filename, mode="r") as input_file:
+381:         for line in input_file.readlines():
+382:             if "pattern" in line:
+383:                 if occurrence != []:
+384:                     pattern.append(occurrence)
+385:                 if pattern != []:
+386:                     pattern_list.append(pattern)
+387:                 occurrence = []
+388:                 pattern = []
+389:                 continue
+390:             if "occurrence" in line:
+391:                 if occurrence != []:
+392:                     pattern.append(occurrence)
+393:                 occurrence = []
+394:                 continue
+395:             string_values = line.split(",")
+396:             onset_midi = (float(string_values[0]), float(string_values[1]))
+397:             occurrence.append(onset_midi)
+398: 
+399:         # Add last occurrence and pattern to pattern_list
+400:         if occurrence != []:
+401:             pattern.append(occurrence)
+402:         if pattern != []:
+403:             pattern_list.append(pattern)
+404: 
+405:     return pattern_list
+406: 
+407: 
+408: @util.deprecated(version="0.8.1", version_removed="0.9.0")
+409: def load_wav(path, mono=True):
+410:     """Load a .wav file as a numpy array using ``scipy.io.wavfile``.
+411: 
+412:     .. warning:: This function is deprecatred in mir_eval 0.8.1
+413:         and will be removed in 0.9.0.
+414:         We recommend using a dedicated audio IO library such as
+415:         `soundfile` instead.
+416: 
+417:     Parameters
+418:     ----------
+419:     path : str or `os.Pathlike`
+420:         Path to a .wav file
+421:     mono : bool
+422:         If the provided .wav has more than one channel, it will be
+423:         converted to mono if ``mono=True``. (Default value = True)
+424: 
+425:     Returns
+426:     -------
+427:     audio_data : np.ndarray
+428:         Array of audio samples, normalized to the range [-1., 1.]
+429:     fs : int
+430:         Sampling rate of the audio data
+431:     """
+432:     fs, audio_data = scipy.io.wavfile.read(path)
+433:     # Make float in range [-1, 1]
+434:     if audio_data.dtype == "int8":
+435:         audio_data = audio_data / float(2**8)
+436:     elif audio_data.dtype == "int16":
+437:         audio_data = audio_data / float(2**16)
+438:     elif audio_data.dtype == "int32":
+439:         audio_data = audio_data / float(2**24)
+440:     else:
+441:         raise ValueError("Got unexpected .wav data type " "{}".format(audio_data.dtype))
+442:     # Optionally convert to mono
+443:     if mono and audio_data.ndim != 1:
+444:         audio_data = audio_data.mean(axis=1)
+445:     return audio_data, fs
+446: 
+447: 
+448: def load_valued_intervals(filename, delimiter=r"\s+", comment="#"):
+449:     r"""Import valued intervals from an annotation file. The file should
+450:     consist of three columns: Two consisting of numeric values corresponding to
+451:     start and end time of each interval and a third, also of numeric values,
+452:     corresponding to the value of each interval. This is primarily useful for
+453:     processing events which span a duration and have a numeric value, such as
+454:     piano-roll notes which have an onset, offset, and a pitch value.
+455: 
+456:     Parameters
+457:     ----------
+458:     filename : str or `os.Pathlike`
+459:         Path to the annotation file
+460: 
+461:     delimiter : str
+462:         Separator regular expression.
+463:         By default, lines will be split by any amount of whitespace.
+464: 
+465:     comment : str or None
+466:         Comment regular expression.
+467:         Any lines beginning with this string or pattern will be ignored.
+468: 
+469:         Setting to `None` disables comments.
+470: 
+471:     Returns

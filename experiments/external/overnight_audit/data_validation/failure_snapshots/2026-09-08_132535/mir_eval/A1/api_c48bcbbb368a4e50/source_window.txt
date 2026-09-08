@@ -1,0 +1,156 @@
+632:     if N != M:
+633:         raise ValueError(
+634:             "Chord comparison received different length lists: "
+635:             "len(reference)=%d\tlen(estimates)=%d" % (N, M)
+636:         )
+637:     for labels in [reference_labels, estimated_labels]:
+638:         for chord_label in labels:
+639:             validate_chord_label(chord_label)
+640:     # When either label list is empty, warn the user
+641:     if len(reference_labels) == 0:
+642:         warnings.warn("Reference labels are empty")
+643:     if len(estimated_labels) == 0:
+644:         warnings.warn("Estimated labels are empty")
+645: 
+646: 
+647: def weighted_accuracy(comparisons, weights):
+648:     """Compute the weighted accuracy of a list of chord comparisons.
+649: 
+650:     Examples
+651:     --------
+652:     >>> (ref_intervals,
+653:     ...  ref_labels) = mir_eval.io.load_labeled_intervals('ref.lab')
+654:     >>> (est_intervals,
+655:     ...  est_labels) = mir_eval.io.load_labeled_intervals('est.lab')
+656:     >>> est_intervals, est_labels = mir_eval.util.adjust_intervals(
+657:     ...     est_intervals, est_labels, ref_intervals.min(),
+658:     ...     ref_intervals.max(), mir_eval.chord.NO_CHORD,
+659:     ...     mir_eval.chord.NO_CHORD)
+660:     >>> (intervals,
+661:     ...  ref_labels,
+662:     ...  est_labels) = mir_eval.util.merge_labeled_intervals(
+663:     ...      ref_intervals, ref_labels, est_intervals, est_labels)
+664:     >>> durations = mir_eval.util.intervals_to_durations(intervals)
+665:     >>> # Here, we're using the "thirds" function to compare labels
+666:     >>> # but any of the comparison functions would work.
+667:     >>> comparisons = mir_eval.chord.thirds(ref_labels, est_labels)
+668:     >>> score = mir_eval.chord.weighted_accuracy(comparisons, durations)
+669: 
+670:     Parameters
+671:     ----------
+672:     comparisons : np.ndarray
+673:         List of chord comparison scores, in [0, 1] or -1
+674:     weights : np.ndarray
+675:         Weights (not necessarily normalized) for each comparison.
+676:         This can be a list of interval durations
+677: 
+678:     Returns
+679:     -------
+680:     score : float
+681:         Weighted accuracy
+682: 
+683:     """
+684:     N = len(comparisons)
+685:     # There should be as many weights as comparisons
+686:     if weights.shape[0] != N:
+687:         raise ValueError(
+688:             "weights and comparisons should be of the same"
+689:             " length. len(weights) = {} but len(comparisons)"
+690:             " = {}".format(weights.shape[0], N)
+691:         )
+692:     if (weights < 0).any():
+693:         raise ValueError("Weights should all be positive.")
+694:     if np.sum(weights) == 0:
+695:         warnings.warn("No nonzero weights, returning 0")
+696:         return 0
+697:     # Find all comparison scores which are valid
+698:     valid_idx = comparisons >= 0
+699:     # If no comparable chords were provided, warn and return 0
+700:     if valid_idx.sum() == 0:
+701:         warnings.warn(
+702:             "No reference chords were comparable " "to estimated chords, returning 0."
+703:         )
+704:         return 0
+705:     # Remove any uncomparable labels
+706:     comparisons = comparisons[valid_idx]
+707:     weights = weights[valid_idx]
+708:     # Normalize the weights
+709:     total_weight = float(np.sum(weights))
+710:     normalized_weights = np.asarray(weights, dtype=float) / total_weight
+711:     # Score is the sum of all weighted comparisons
+712:     return np.sum(comparisons * normalized_weights)
+713: 
+714: 
+715: def thirds(reference_labels, estimated_labels):
+716:     """Compare chords along root & third relationships.
+717: 
+718:     Examples
+719:     --------
+720:     >>> (ref_intervals,
+721:     ...  ref_labels) = mir_eval.io.load_labeled_intervals('ref.lab')
+722:     >>> (est_intervals,
+723:     ...  est_labels) = mir_eval.io.load_labeled_intervals('est.lab')
+724:     >>> est_intervals, est_labels = mir_eval.util.adjust_intervals(
+725:     ...     est_intervals, est_labels, ref_intervals.min(),
+726:     ...     ref_intervals.max(), mir_eval.chord.NO_CHORD,
+727:     ...     mir_eval.chord.NO_CHORD)
+728:     >>> (intervals,
+729:     ...  ref_labels,
+730:     ...  est_labels) = mir_eval.util.merge_labeled_intervals(
+731:     ...      ref_intervals, ref_labels, est_intervals, est_labels)
+732:     >>> durations = mir_eval.util.intervals_to_durations(intervals)
+733:     >>> comparisons = mir_eval.chord.thirds(ref_labels, est_labels)
+734:     >>> score = mir_eval.chord.weighted_accuracy(comparisons, durations)
+735: 
+736:     Parameters
+737:     ----------
+738:     reference_labels : list, len=n
+739:         Reference chord labels to score against.
+740:     estimated_labels : list, len=n
+741:         Estimated chord labels to score against.
+742: 
+743:     Returns
+744:     -------
+745:     comparison_scores : np.ndarray, shape=(n,), dtype=float
+746:         Comparison scores, in [0.0, 1.0]
+747: 
+748:     """
+749:     validate(reference_labels, estimated_labels)
+750:     ref_roots, ref_semitones = encode_many(reference_labels, False)[:2]
+751:     est_roots, est_semitones = encode_many(estimated_labels, False)[:2]
+752: 
+753:     eq_roots = ref_roots == est_roots
+754:     eq_thirds = ref_semitones[:, 3] == est_semitones[:, 3]
+755:     comparison_scores = (eq_roots * eq_thirds).astype(np.float64)
+756: 
+757:     # Ignore 'X' chords
+758:     comparison_scores[np.any(ref_semitones < 0, axis=1)] = -1.0
+759:     return comparison_scores
+760: 
+761: 
+762: def thirds_inv(reference_labels, estimated_labels):
+763:     """Score chords along root, third, & bass relationships.
+764: 
+765:     Examples
+766:     --------
+767:     >>> (ref_intervals,
+768:     ...  ref_labels) = mir_eval.io.load_labeled_intervals('ref.lab')
+769:     >>> (est_intervals,
+770:     ...  est_labels) = mir_eval.io.load_labeled_intervals('est.lab')
+771:     >>> est_intervals, est_labels = mir_eval.util.adjust_intervals(
+772:     ...     est_intervals, est_labels, ref_intervals.min(),
+773:     ...     ref_intervals.max(), mir_eval.chord.NO_CHORD,
+774:     ...     mir_eval.chord.NO_CHORD)
+775:     >>> (intervals,
+776:     ...  ref_labels,
+777:     ...  est_labels) = mir_eval.util.merge_labeled_intervals(
+778:     ...      ref_intervals, ref_labels, est_intervals, est_labels)
+779:     >>> durations = mir_eval.util.intervals_to_durations(intervals)
+780:     >>> comparisons = mir_eval.chord.thirds_inv(ref_labels, est_labels)
+781:     >>> score = mir_eval.chord.weighted_accuracy(comparisons, durations)
+782: 
+783:     Parameters
+784:     ----------
+785:     reference_labels : list, len=n
+786:         Reference chord labels to score against.
+787:     estimated_labels : list, len=n

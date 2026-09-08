@@ -1,0 +1,156 @@
+112: 	/**
+113: 	 * Instantiates a {@link FileImageSink} with the file to which the thumbnail
+114: 	 * should be written to.
+115: 	 * <p>
+116: 	 * The output format to use will be determined from the file extension.
+117: 	 * If another format should be used, then the
+118: 	 * {@link #setOutputFormatName(String)} should be called with the desired
+119: 	 * output format name.
+120: 	 * 
+121: 	 * @param destinationFile		The destination file.
+122: 	 * @param allowOverwrite		Whether or not the {@code FileImageSink}
+123: 	 * 								should overwrite the destination file if
+124: 	 * 								it already exists.
+125: 	 * @throws NullPointerException	If the specified file is {@code null}.
+126: 	 */
+127: 	public FileImageSink(File destinationFile, boolean allowOverwrite) {
+128: 		super();
+129: 		
+130: 		if (destinationFile == null) {
+131: 			throw new NullPointerException("File cannot be null.");
+132: 		}
+133: 		
+134: 		this.destinationFile = destinationFile;
+135: 		this.outputFormat = getExtension(destinationFile);
+136: 		this.allowOverwrite = allowOverwrite;
+137: 	}
+138: 	
+139: 	/**
+140: 	 * Instantiates a {@link FileImageSink} with the file to which the thumbnail
+141: 	 * should be written to.
+142: 	 * <p>
+143: 	 * The output format to use will be determined from the file extension.
+144: 	 * If another format should be used, then the
+145: 	 * {@link #setOutputFormatName(String)} should be called with the desired
+146: 	 * output format name.
+147: 	 * <p>
+148: 	 * When the destination file exists, then this {@code FileImageSink} will
+149: 	 * overwrite the existing file.
+150: 	 * 
+151: 	 * @param destinationFilePath	The destination file path.
+152: 	 * @throws NullPointerException	If the specified file path is {@code null}.
+153: 	 */
+154: 	public FileImageSink(String destinationFilePath) {
+155: 		this(destinationFilePath, true);
+156: 	}
+157: 	
+158: 	/**
+159: 	 * Instantiates a {@link FileImageSink} with the file to which the thumbnail
+160: 	 * should be written to.
+161: 	 * <p>
+162: 	 * The output format to use will be determined from the file extension.
+163: 	 * If another format should be used, then the
+164: 	 * {@link #setOutputFormatName(String)} should be called with the desired
+165: 	 * output format name.
+166: 	 * 
+167: 	 * @param destinationFilePath	The destination file path.
+168: 	 * @param allowOverwrite		Whether or not the {@code FileImageSink}
+169: 	 * 								should overwrite the destination file if
+170: 	 * 								it already exists.
+171: 	 * @throws NullPointerException	If the specified file path is {@code null}.
+172: 	 */
+173: 	public FileImageSink(String destinationFilePath, boolean allowOverwrite) {
+174: 		super();
+175: 		
+176: 		if (destinationFilePath == null) {
+177: 			throw new NullPointerException("File cannot be null.");
+178: 		}
+179: 		
+180: 		this.destinationFile = new File(destinationFilePath);
+181: 		this.outputFormat = getExtension(destinationFile);
+182: 		this.allowOverwrite = allowOverwrite;
+183: 	}
+184: 	
+185: 	/**
+186: 	 * Determines whether an specified format name and file extension are
+187: 	 * for the same format.
+188: 	 * 
+189: 	 * @param formatName			Format name.
+190: 	 * @param fileExtension			File extension.
+191: 	 * @return						Returns {@code true} if the specified file
+192: 	 * 								extension is valid for the specified format.
+193: 	 */
+194: 	private static boolean isMatchingFormat(String formatName, String fileExtension) throws UnsupportedFormatException {
+195: 		if (formatName == null || fileExtension == null) {
+196: 			return false;
+197: 		}
+198: 		
+199: 		ImageWriter iw;
+200: 		try {
+201: 			iw = ImageIO.getImageWritersByFormatName(formatName).next();
+202: 
+203: 		} catch (NoSuchElementException e) {
+204: 			throw new UnsupportedFormatException(
+205: 					formatName,
+206: 					"No suitable ImageWriter found for " + formatName + "."
+207: 			);
+208: 		}
+209: 		
+210: 		String[] suffixes = iw.getOriginatingProvider().getFileSuffixes();
+211: 		
+212: 		for (String suffix : suffixes) {
+213: 			if (fileExtension.equalsIgnoreCase(suffix)) {
+214: 				return true;
+215: 			}
+216: 		}
+217: 		return false;
+218: 	}
+219: 	
+220: 	/**
+221: 	 * Returns the file extension of the given {@link File}.
+222: 	 * 
+223: 	 * @param f			The file.
+224: 	 * @return			The extension of the file.
+225: 	 */
+226: 	private static String getExtension(File f) {
+227: 		String fileName = f.getName();
+228: 		if (
+229: 				fileName.indexOf('.') != -1
+230: 				&& fileName.lastIndexOf('.') != fileName.length() - 1
+231: 		) {
+232: 			int lastIndex = fileName.lastIndexOf('.');
+233: 			return fileName.substring(lastIndex + 1);
+234: 		}
+235: 		
+236: 		return null;
+237: 	}
+238: 	
+239: 	public String preferredOutputFormatName() {
+240: 		String fileExtension = getExtension(destinationFile);
+241: 
+242: 		if (fileExtension != null) {
+243: 			Iterator<ImageReader> rIter = ImageIO.getImageReadersBySuffix(fileExtension);
+244: 			
+245: 			if (rIter.hasNext()) {
+246: 				try {
+247: 					return rIter.next().getFormatName();
+248: 				} catch (IOException e) {
+249: 					return ThumbnailParameter.ORIGINAL_FORMAT;
+250: 				}
+251: 			}
+252: 		}
+253: 		
+254: 		return outputFormat;
+255: 	}
+256: 	
+257: 	/**
+258: 	 * Writes the resulting image to a file.
+259: 	 * 
+260: 	 * @param img							The image to write.
+261: 	 * @throws UnsupportedFormatException	When an unsupported format has been
+262: 	 * 										specified by the
+263: 	 * 										{@link #setOutputFormatName(String)}
+264: 	 * 										method, or if the output format
+265: 	 * 										has not been set and cannot be
+266: 	 * 										determined from the file name.
+267: 	 * @throws IOException					When a problem occurs while writing

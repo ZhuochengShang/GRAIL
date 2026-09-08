@@ -1,0 +1,77 @@
+1: """
+2: The :mod:`tslearn.datasets` module provides simplified access to standard time
+3: series datasets.
+4: """
+5: 
+6: import zipfile
+7: import tempfile
+8: import shutil
+9: import warnings
+10: from pathlib import Path
+11: from urllib.request import urlretrieve
+12: 
+13: __author__ = 'Romain Tavenard romain.tavenard[at]univ-rennes2.fr'
+14: 
+15: 
+16: def extract_from_zip_url(url, target_dir=None, verbose=False):
+17:     """Download a zip file from its URL and unzip it.
+18: 
+19:     A `RuntimeWarning` is printed on failure.
+20: 
+21:     Parameters
+22:     ----------
+23:     url : string
+24:         URL from which to download.
+25:     target_dir : str or None (default: None)
+26:         Directory to be used to extract unzipped downloaded files.
+27:     verbose : bool (default: False)
+28:         Whether to print information about the process (cached files used, ...)
+29: 
+30:     Returns
+31:     -------
+32:     str or None
+33:         Directory in which the zip file has been extracted if the process was
+34:         successful, None otherwise
+35:     """
+36:     fname = Path(url).name
+37:     tmpdir = tempfile.mkdtemp()
+38:     local_zip_fname = Path(tmpdir) / fname
+39:     urlretrieve(url, local_zip_fname)
+40:     target_dir = Path(target_dir)
+41:     target_dir.mkdir(parents=True, exist_ok=True)
+42:     try:
+43:         with zipfile.ZipFile(local_zip_fname, "r") as f:
+44:             f.extractall(path=target_dir)
+45:         if verbose:
+46:             print("Successfully extracted file %s to path %s" %
+47:                   (local_zip_fname, target_dir))
+48:         return target_dir
+49:     except zipfile.BadZipFile:
+50:         warnings.warn("Corrupted or missing zip file encountered, aborting",
+51:                       category=RuntimeWarning)
+52:         return None
+53:     finally:
+54:         shutil.rmtree(tmpdir, ignore_errors=True)
+55: 
+56: 
+57: def in_file_string_replace(filename, old_string, new_string):
+58:     """String replacement within a text file. It is used to fix typos in
+59:     downloaded csv file.
+60: 
+61:     The code was modified from "https://stackoverflow.com/questions/4128144/"
+62: 
+63:     Parameters
+64:     ----------
+65:     filename : str
+66:         Path to the file where strings should be replaced
+67:     old_string : str
+68:         The string to be replaced in the file.
+69:     new_string : str
+70:         The new string that will replace old_string
+71:     """
+72:     with open(filename) as f:
+73:         s = f.read()
+74: 
+75:     with open(filename, 'w') as f:
+76:         s = s.replace(old_string, new_string)
+77:         f.write(s)

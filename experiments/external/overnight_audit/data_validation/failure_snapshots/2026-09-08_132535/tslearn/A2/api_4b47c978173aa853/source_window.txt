@@ -1,0 +1,48 @@
+1203:         self.be = instantiate_backend(be, X, Y)
+1204:         self.compute_with_backend = compute_with_backend
+1205:         self.X = self.be.cast(to_time_series(X, be=be), dtype=self.be.float64)
+1206:         self.Y = self.be.cast(to_time_series(Y, be=be), dtype=self.be.float64)
+1207: 
+1208:     def compute(self):
+1209:         """Compute distance matrix.
+1210: 
+1211:         Returns
+1212:         -------
+1213:         D: array-like, shape=(m, n)
+1214:             Distance matrix.
+1215:         """
+1216:         return self.be.pairwise_euclidean_distances(self.X, self.Y) ** 2
+1217: 
+1218:     def jacobian_product(self, E):
+1219:         """Compute the product between the Jacobian
+1220:         (a linear map from m x d to m x n) and a matrix E.
+1221: 
+1222:         Parameters
+1223:         ----------
+1224:         E: array-like, shape=(m, n)
+1225:             Second time series.
+1226: 
+1227:         Returns
+1228:         -------
+1229:         G: array-like, shape=(m, d)
+1230:             Product with Jacobian.
+1231:             ([m x d, m x n] * [m x n] = [m x d]).
+1232:         """
+1233:         G = self.be.zeros_like(self.X, dtype=self.be.float64)
+1234: 
+1235:         if self.be.is_numpy:
+1236:             _njit_jacobian_product_sq_euc(self.X, self.Y, E.astype(np.float64), G)
+1237:         elif not self.compute_with_backend:
+1238:             _njit_jacobian_product_sq_euc(
+1239:                 self.be.to_numpy(self.X),
+1240:                 self.be.to_numpy(self.Y),
+1241:                 self.be.to_numpy(E).astype(np.float64),
+1242:                 self.be.to_numpy(G),
+1243:             )
+1244:             G = self.be.array(G)
+1245:         else:
+1246:             _jacobian_product_sq_euc(
+1247:                 self.X, self.Y, self.be.cast(E, self.be.float64), G
+1248:             )
+1249: 
+1250:         return G

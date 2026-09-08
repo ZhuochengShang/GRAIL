@@ -1,0 +1,10 @@
+from tslearn.backend import numpy_backend
+
+# X is a pre-loaded numpy array
+res_true = numpy_backend.is_array(X)
+res_false = numpy_backend.is_array([1, 2, 3])
+
+assert res_true is True, "X should be recognized as an array by the numpy backend"
+assert res_false is False, "A standard Python list should not be recognized as an array by the numpy backend"
+
+print(f"__CHECK__ is_array {res_true}, {res_false}")

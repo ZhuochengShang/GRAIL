@@ -1,0 +1,133 @@
+164: 		ready = new ReadinessTracker();
+165: 		ready.unset(PARAM_IMAGE_TYPE);
+166: 		ready.unset(PARAM_RESIZER);
+167: 		ready.unset(PARAM_RESIZERFACTORY);
+168: 		defaultImageType();
+169: 		defaultResizerFactory();
+170: 	}
+171: 	
+172: 	/**
+173: 	 * Makes a thumbnail.
+174: 	 * 
+175: 	 * @param img		The source image.
+176: 	 * @return			The thumbnail created from the source image, using the
+177: 	 * 					parameters set by the {@link ThumbnailMaker}.
+178: 	 */
+179: 	public abstract BufferedImage make(BufferedImage img);
+180: 	
+181: 	/**
+182: 	 * Makes a thumbnail of the specified dimensions, from the specified
+183: 	 * source image.
+184: 	 * 
+185: 	 * @param img		The source image.
+186: 	 * @param width		The target width of the thumbnail.
+187: 	 * @param height	The target height of the thumbnail.
+188: 	 * @return			The thumbnail image.
+189: 	 * @throws IllegalStateException		If the {@code ThumbnailMaker} is
+190: 	 * 										not ready to create thumbnails.
+191: 	 * @throws IllegalArgumentException		If the width and/or height is less
+192: 	 * 										than or equal to zero.
+193: 	 */
+194: 	protected BufferedImage makeThumbnail(BufferedImage img, int width, int height) {
+195: 		if (!ready.isReady()) {
+196: 			throw new IllegalStateException(ThumbnailMaker.NOT_READY_FOR_MAKE);
+197: 		}
+198: 		
+199: 		if (width <= 0) {
+200: 			throw new IllegalArgumentException(
+201: 					"Width must be greater than zero."
+202: 			);
+203: 		}
+204: 		if (height <= 0) {
+205: 			throw new IllegalArgumentException(
+206: 					"Height must be greater than zero."
+207: 			);
+208: 		}
+209: 
+210: 		BufferedImage thumbnailImage =
+211: 			new BufferedImageBuilder(width, height, imageType).build();
+212: 		
+213: 		Dimension imgSize = new Dimension(img.getWidth(), img.getHeight());
+214: 		Dimension thumbnailSize = new Dimension(width, height);
+215: 		
+216: 		Resizer resizer = resizerFactory.getResizer(imgSize, thumbnailSize);
+217: 		
+218: 		resizer.resize(img, thumbnailImage);
+219: 		
+220: 		return thumbnailImage;
+221: 	}
+222: 
+223: 	/**
+224: 	 * Sets the type for the {@link BufferedImage} to produce.
+225: 	 * 
+226: 	 * @param imageType		The type of the {@code BufferedImage}.
+227: 	 * @return				A reference to this object.
+228: 	 */
+229: 	public ThumbnailMaker imageType(int imageType) {
+230: 		this.imageType = imageType;
+231: 		ready.set(PARAM_IMAGE_TYPE);
+232: 		return this;
+233: 	}
+234: 	
+235: 	/**
+236: 	 * Sets the type of the {@link BufferedImage} to be the default type.
+237: 	 * 
+238: 	 * @return				A reference to this object.
+239: 	 */
+240: 	public ThumbnailMaker defaultImageType() {
+241: 		return imageType(DEFAULT_IMAGE_TYPE);
+242: 	}
+243: 	
+244: 	/**
+245: 	 * Sets the {@link Resizer} which is used for the resizing operation.
+246: 	 * 
+247: 	 * @param resizer		The {@link Resizer} to use when resizing the image
+248: 	 * 						to create the thumbnail.
+249: 	 * @return				A reference to this object.
+250: 	 */
+251: 	public ThumbnailMaker resizer(Resizer resizer) {
+252: 		this.resizerFactory = new FixedResizerFactory(resizer);
+253: 		ready.set(PARAM_RESIZER);
+254: 		ready.set(PARAM_RESIZERFACTORY);
+255: 		return this;
+256: 	}
+257: 	
+258: 	/**
+259: 	 * Sets the {@link Resizer} to use the default {@link Resizer}.
+260: 	 * 
+261: 	 * @return				A reference to this object.
+262: 	 */
+263: 	public ThumbnailMaker defaultResizer() {
+264: 		return defaultResizerFactory();
+265: 	}
+266: 	
+267: 	/**
+268: 	 * Sets the {@link ResizerFactory} which is used to obtain a {@link Resizer}
+269: 	 * for the resizing operation.
+270: 	 * 
+271: 	 * @param resizerFactory		The {@link ResizerFactory} to obtain the
+272: 	 * 						{@link Resizer} used when resizing the image
+273: 	 * 						to create the thumbnail.
+274: 	 * @return				A reference to this object.
+275: 	 * @since	0.4.0
+276: 	 */
+277: 	public ThumbnailMaker resizerFactory(ResizerFactory resizerFactory) {
+278: 		this.resizerFactory = resizerFactory;
+279: 		ready.set(PARAM_RESIZER);
+280: 		ready.set(PARAM_RESIZERFACTORY);
+281: 		return this;
+282: 	}
+283: 	
+284: 	/**
+285: 	 * Sets the {@link ResizerFactory} to use {@link DefaultResizerFactory}.
+286: 	 * 
+287: 	 * @return				A reference to this object.
+288: 	 * @since	0.4.0
+289: 	 */
+290: 	public ThumbnailMaker defaultResizerFactory() {
+291: 		this.resizerFactory = DefaultResizerFactory.getInstance();
+292: 		ready.set(PARAM_RESIZER);
+293: 		ready.set(PARAM_RESIZERFACTORY);
+294: 		return this;
+295: 	}
+296: }

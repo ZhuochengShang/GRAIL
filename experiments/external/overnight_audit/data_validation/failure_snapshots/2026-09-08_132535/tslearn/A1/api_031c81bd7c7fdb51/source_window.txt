@@ -1,0 +1,156 @@
+264:         self.degree = degree
+265:         self.gamma = gamma
+266:         self.coef0 = coef0
+267:         self.shrinking = shrinking
+268:         self.probability = probability
+269:         self.tol = tol
+270:         self.cache_size = cache_size
+271:         self.class_weight = class_weight
+272:         self.n_jobs = n_jobs
+273:         self.verbose = verbose
+274:         self.max_iter = max_iter
+275:         self.decision_function_shape = decision_function_shape
+276:         self.random_state = random_state
+277: 
+278:     @property
+279:     def n_iter_(self):
+280:         warnings.warn('n_iter_ is always set to 1 for TimeSeriesSVC, since '
+281:                       'it is non-trivial to access the underlying libsvm')
+282:         return 1
+283: 
+284:     @property
+285:     def support_vectors_(self):
+286:         check_is_fitted(self, '_X_fit')
+287:         sv = []
+288:         idx_start = 0
+289:         for cl in range(len(self.svm_estimator_.n_support_)):
+290:             idx_end = idx_start + self.svm_estimator_.n_support_[cl]
+291:             indices = self.svm_estimator_.support_[idx_start:idx_end]
+292:             sv.append(self._X_fit[indices])
+293:             idx_start += self.svm_estimator_.n_support_[cl]
+294:         return sv
+295: 
+296:     def fit(self, X, y, sample_weight=None):
+297:         """Fit the SVM model according to the given training data.
+298: 
+299:         Parameters
+300:         ----------
+301:         X : array-like of shape=(n_ts, sz, d)
+302:             Time series dataset.
+303: 
+304:         y : array-like of shape=(n_ts, )
+305:             Time series labels.
+306: 
+307:         sample_weight : array-like of shape (n_samples,), default=None
+308:             Per-sample weights. Rescale C per sample. Higher weights force the
+309:             classifier to put more emphasis on these points.
+310:         """
+311:         try:
+312:             sklearn_X, y, nb_features = self._preprocess_sklearn(X, y, fit_time=True)
+313:         except ZeroDivisionError:
+314:             raise RuntimeError(
+315:                 "The{} `gamma` parameter is close to 0 and "
+316:                 "cannot be used with gak kernel."
+317:                 .format(" auto computed" if self.gamma == "auto" else ""))
+318: 
+319:         self.svm_estimator_ = SVC(
+320:             C=self.C, kernel=self.estimator_kernel_, degree=self.degree,
+321:             gamma=self.gamma_, coef0=self.coef0, shrinking=self.shrinking,
+322:             probability=self.probability, tol=self.tol,
+323:             cache_size=self.cache_size, class_weight=self.class_weight,
+324:             verbose=self.verbose, max_iter=self.max_iter,
+325:             decision_function_shape=self.decision_function_shape,
+326:             random_state=self.random_state
+327:         )
+328:         self.svm_estimator_.fit(sklearn_X, y, sample_weight=sample_weight)
+329:         self.n_features_in_ = nb_features
+330:         return self
+331: 
+332:     def predict(self, X):
+333:         """Predict class for a given set of time series.
+334: 
+335:         Parameters
+336:         ----------
+337:         X : array-like of shape=(n_ts, sz, d)
+338:             Time series dataset.
+339: 
+340:         Returns
+341:         -------
+342:         array of shape=(n_ts, ) or (n_ts, n_classes), depending on the shape
+343:         of the label vector provided at training time.
+344:             Index of the cluster each sample belongs to or class probability
+345:             matrix, depending on what was provided at training time.
+346:         """
+347:         sklearn_X, y, nb_features = self._preprocess_sklearn(X, fit_time=False)
+348:         estimator = self.svm_estimator_.predict(sklearn_X)
+349:         self.n_features_in_ = nb_features
+350:         return estimator
+351: 
+352:     def decision_function(self, X):
+353:         """Evaluates the decision function for the samples in X.
+354: 
+355:         Parameters
+356:         ----------
+357:         X : array-like of shape=(n_ts, sz, d)
+358:             Time series dataset.
+359: 
+360:         Returns
+361:         -------
+362:         ndarray of shape (n_samples, n_classes * (n_classes-1) / 2)
+363:             Returns the decision function of the sample for each class
+364:             in the model.
+365:             If decision_function_shape='ovr', the shape is (n_samples,
+366:             n_classes)."""
+367:         sklearn_X, *_ = self._preprocess_sklearn(X, fit_time=False)
+368:         return self.svm_estimator_.decision_function(sklearn_X)
+369: 
+370:     def predict_log_proba(self, X):
+371:         """Predict class log-probabilities for a given set of time series.
+372: 
+373:         Note that probability estimates are not guaranteed to match predict
+374:         output.
+375:         See our :ref:`dedicated user guide section <kernels-ml>`
+376:         for more details.
+377: 
+378:         Parameters
+379:         ----------
+380:         X : array-like of shape=(n_ts, sz, d)
+381:             Time series dataset.
+382: 
+383:         Returns
+384:         -------
+385:         array of shape=(n_ts, n_classes),
+386:             Class probability matrix.
+387:         """
+388:         sklearn_X, *_ = self._preprocess_sklearn(X, fit_time=False)
+389:         return self.svm_estimator_.predict_log_proba(sklearn_X)
+390: 
+391:     def predict_proba(self, X):
+392:         """Predict class probability for a given set of time series.
+393: 
+394:         Note that probability estimates are not guaranteed to match predict
+395:         output.
+396:         See our :ref:`dedicated user guide section <kernels-ml>`
+397:         for more details.
+398: 
+399:         Parameters
+400:         ----------
+401:         X : array-like of shape=(n_ts, sz, d)
+402:             Time series dataset.
+403: 
+404:         Returns
+405:         -------
+406:         array of shape=(n_ts, n_classes),
+407:             Class probability matrix.
+408:         """
+409:         sklearn_X, *_ = self._preprocess_sklearn(X, fit_time=False)
+410:         return self.svm_estimator_.predict_proba(sklearn_X)
+411: 
+412: 
+413: class TimeSeriesSVR(TimeSeriesSVMMixin, RegressorMixin, BaseEstimator):
+414:     """Time-series specific Support Vector Regressor.
+415: 
+416:     Parameters
+417:     ----------
+418:     C : float, optional (default=1.0)
+419:         Penalty parameter C of the error term.

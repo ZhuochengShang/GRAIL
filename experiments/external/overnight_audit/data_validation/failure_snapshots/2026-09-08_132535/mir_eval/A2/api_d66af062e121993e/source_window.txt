@@ -1,0 +1,156 @@
+314:         # Is the track length at least 25% of the song?
+315:         if track_len - 1 > 0.25 * (reference_beats.shape[0] - 2):
+316:             goto_criteria = 1
+317:             start_beat = incorrect_beats[track_start]
+318:             end_beat = incorrect_beats[track_start + 1]
+319:             track = beat_error[start_beat : end_beat + 1]
+320:     # If we have a track
+321:     if goto_criteria:
+322:         # Are mean and std of the track less than the required thresholds?
+323:         if np.mean(np.abs(track)) < goto_mu and np.std(track, ddof=1) < goto_sigma:
+324:             goto_criteria = 3
+325:     # If all criteria are met, score is 100%!
+326:     return 1.0 * (goto_criteria == 3)
+327: 
+328: 
+329: def p_score(reference_beats, estimated_beats, p_score_threshold=0.2):
+330:     """Get McKinney's P-score.
+331:     Based on the autocorrelation of the reference and estimated beats
+332: 
+333:     Examples
+334:     --------
+335:     >>> reference_beats = mir_eval.io.load_events('reference.txt')
+336:     >>> reference_beats = mir_eval.beat.trim_beats(reference_beats)
+337:     >>> estimated_beats = mir_eval.io.load_events('estimated.txt')
+338:     >>> estimated_beats = mir_eval.beat.trim_beats(estimated_beats)
+339:     >>> p_score = mir_eval.beat.p_score(reference_beats, estimated_beats)
+340: 
+341:     Parameters
+342:     ----------
+343:     reference_beats : np.ndarray
+344:         reference beat times, in seconds
+345:     estimated_beats : np.ndarray
+346:         query beat times, in seconds
+347:     p_score_threshold : float
+348:         Window size will be
+349:         ``p_score_threshold*np.median(inter_annotation_intervals)``,
+350:         (Default value = 0.2)
+351: 
+352:     Returns
+353:     -------
+354:     correlation : float
+355:         McKinney's P-score
+356: 
+357:     """
+358:     validate(reference_beats, estimated_beats)
+359:     # Warn when only one beat is provided for either estimated or reference,
+360:     # report a warning
+361:     if reference_beats.size == 1:
+362:         warnings.warn(
+363:             "Only one reference beat was provided, so beat intervals"
+364:             " cannot be computed."
+365:         )
+366:     if estimated_beats.size == 1:
+367:         warnings.warn(
+368:             "Only one estimated beat was provided, so beat intervals"
+369:             " cannot be computed."
+370:         )
+371:     # When estimated or reference beats have <= 1 beats, can't compute the
+372:     # metric, so return 0
+373:     if estimated_beats.size <= 1 or reference_beats.size <= 1:
+374:         return 0.0
+375:     # Quantize beats to 10ms
+376:     sampling_rate = int(1.0 / 0.010)
+377:     # Shift beats so that the minimum in either sequence is zero
+378:     offset = min(estimated_beats.min(), reference_beats.min())
+379:     estimated_beats = np.array(estimated_beats - offset)
+380:     reference_beats = np.array(reference_beats - offset)
+381:     # Get the largest time index
+382:     end_point = np.int64(
+383:         np.ceil(np.max([np.max(estimated_beats), np.max(reference_beats)]))
+384:     )
+385:     # Make impulse trains with impulses at beat locations
+386:     reference_train = np.zeros(end_point * sampling_rate + 1)
+387:     beat_indices = np.ceil(reference_beats * sampling_rate).astype(np.int64)
+388:     reference_train[beat_indices] = 1.0
+389:     estimated_train = np.zeros(end_point * sampling_rate + 1)
+390:     beat_indices = np.ceil(estimated_beats * sampling_rate).astype(np.int64)
+391:     estimated_train[beat_indices] = 1.0
+392:     # Window size to take the correlation over
+393:     # defined as .2*median(inter-annotation-intervals)
+394:     annotation_intervals = np.diff(np.flatnonzero(reference_train))
+395:     win_size = int(np.round(p_score_threshold * np.median(annotation_intervals)))
+396:     # Get full correlation
+397:     train_correlation = np.correlate(reference_train, estimated_train, "full")
+398:     # Get the middle element - note we are rounding down on purpose here
+399:     middle_lag = train_correlation.shape[0] // 2
+400:     # Truncate to only valid lags (those corresponding to the window)
+401:     start = middle_lag - win_size
+402:     end = middle_lag + win_size + 1
+403:     train_correlation = train_correlation[start:end]
+404:     # Compute and return the P-score
+405:     n_beats = np.max([estimated_beats.shape[0], reference_beats.shape[0]])
+406:     return np.sum(train_correlation) / n_beats
+407: 
+408: 
+409: def continuity(
+410:     reference_beats,
+411:     estimated_beats,
+412:     continuity_phase_threshold=0.175,
+413:     continuity_period_threshold=0.175,
+414: ):
+415:     """Get metrics based on how much of the estimated beat sequence is
+416:     continually correct.
+417: 
+418:     Examples
+419:     --------
+420:     >>> reference_beats = mir_eval.io.load_events('reference.txt')
+421:     >>> reference_beats = mir_eval.beat.trim_beats(reference_beats)
+422:     >>> estimated_beats = mir_eval.io.load_events('estimated.txt')
+423:     >>> estimated_beats = mir_eval.beat.trim_beats(estimated_beats)
+424:     >>> CMLc, CMLt, AMLc, AMLt = mir_eval.beat.continuity(reference_beats,
+425:                                                           estimated_beats)
+426: 
+427:     Parameters
+428:     ----------
+429:     reference_beats : np.ndarray
+430:         reference beat times, in seconds
+431:     estimated_beats : np.ndarray
+432:         query beat times, in seconds
+433:     continuity_phase_threshold : float
+434:         Allowable ratio of how far is the estimated beat
+435:         can be from the reference beat
+436:         (Default value = 0.175)
+437:     continuity_period_threshold : float
+438:         Allowable distance between the inter-beat-interval
+439:         and the inter-annotation-interval
+440:         (Default value = 0.175)
+441: 
+442:     Returns
+443:     -------
+444:     CMLc : float
+445:         Correct metric level, continuous accuracy
+446:     CMLt : float
+447:         Correct metric level, total accuracy (continuity not required)
+448:     AMLc : float
+449:         Any metric level, continuous accuracy
+450:     AMLt : float
+451:         Any metric level, total accuracy (continuity not required)
+452:     """
+453:     validate(reference_beats, estimated_beats)
+454:     # Warn when only one beat is provided for either estimated or reference,
+455:     # report a warning
+456:     if reference_beats.size == 1:
+457:         warnings.warn(
+458:             "Only one reference beat was provided, so beat intervals"
+459:             " cannot be computed."
+460:         )
+461:     if estimated_beats.size == 1:
+462:         warnings.warn(
+463:             "Only one estimated beat was provided, so beat intervals"
+464:             " cannot be computed."
+465:         )
+466:     # When estimated or reference beats have <= 1 beats, can't compute the
+467:     # metric, so return 0
+468:     if estimated_beats.size <= 1 or reference_beats.size <= 1:
+469:         return 0.0, 0.0, 0.0, 0.0

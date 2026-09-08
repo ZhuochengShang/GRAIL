@@ -1,0 +1,58 @@
+93:     static {
+94:         properties = new Properties();
+95:         init();
+96:     }
+97: 
+98:     /**
+99:      * This method will initialize configurations from
+100:      * {@code thumbnailator.properties} on the classpath.
+101:      * <p>
+102:      * Implementation note: {@code thumbnailator.properties} is searched from
+103:      *                      the class loader associated with the current
+104:      *                      thread, rather than the system class loader.
+105:      * <p>
+106:      * This is intended only to be called from tests.
+107:      */
+108:     static void init() {
+109:         properties.clear();
+110: 
+111:         InputStream resourceIs = Thread.currentThread()
+112:                 .getContextClassLoader()
+113:                 .getResourceAsStream("thumbnailator.properties");
+114: 
+115:         if (resourceIs != null) {
+116:             try {
+117:                 properties.load(resourceIs);
+118:                 resourceIs.close();
+119:             } catch (IOException e) {
+120:                 throw new RuntimeException("Error while reading thumbnailator.properties", e);
+121:             }
+122:         }
+123:     }
+124: 
+125:     /**
+126:      * Clears the internal cache of properties.
+127:      * <p>
+128:      * This is intended only to be called from tests.
+129:      */
+130:     static void clear() {
+131:         properties.clear();
+132:     }
+133: 
+134:     Configurations(String key) {
+135:         this.key = key;
+136:     }
+137: 
+138:     /**
+139:      * Returns whether the specified configuration is enabled or not.
+140:      * @return  {@code true} if the configuration is enabled, {@code false}
+141:      *          otherwise.
+142:      */
+143:     public boolean getBoolean() {
+144:         String propertyValue = properties.getProperty(key);
+145:         if (propertyValue != null) {
+146:             return Boolean.parseBoolean(propertyValue);
+147:         }
+148:         return Boolean.getBoolean(key);
+149:     }
+150: }

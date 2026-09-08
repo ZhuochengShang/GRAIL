@@ -1,0 +1,23 @@
+import matplotlib.pyplot as plt
+import mir_eval.display
+
+plt.switch_backend('Agg')
+fig, ax = plt.subplots()
+
+intervals_hier = [ref_intervals, ref_intervals]
+labels_hier = [ref_labels, ref_labels]
+
+ax_ret = mir_eval.display.hierarchy(
+    intervals_hier,
+    labels_hier,
+    levels=["Coarse", "Fine"],
+    ax=ax
+)
+
+num_patches = len(ax_ret.patches)
+expected_patches = 2 * len(ref_intervals)
+
+assert ax_ret is ax, "Returned axes should be the same as the input axes"
+assert num_patches == expected_patches, f"Expected {expected_patches} patches, got {num_patches}"
+
+print(f"__CHECK__ hierarchy {num_patches}")

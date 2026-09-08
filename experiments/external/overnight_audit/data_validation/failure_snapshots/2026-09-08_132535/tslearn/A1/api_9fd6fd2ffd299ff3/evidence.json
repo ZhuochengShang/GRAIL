@@ -1,0 +1,58 @@
+{
+  "name": "call",
+  "native_row": {
+    "name": "call",
+    "doc_source": "original",
+    "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+    "execution_evidence": {
+      "status": "fail",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "fail",
+          "category": "infra",
+          "error": "missing module/import: No module named 'tensorflow'"
+        }
+      ],
+      "error_category": "infra",
+      "error": "missing module/import: No module named 'tensorflow'",
+      "code": "import numpy as np\nimport tensorflow as tf\nfrom tslearn.shapelets import GlobalMinPooling1D\n\n# GlobalMinPooling1D is a custom Keras layer in tslearn.\n# We instantiate it and directly invoke its `call` method.\nlayer = GlobalMinPooling1D()\n\n# Create a small deterministic tensor: 1 sample, 3 timesteps, 2 features\ninputs = tf.constant([[[3.0, 5.0], \n                       [1.0, 6.0], \n                       [4.0, 2.0]]], dtype=tf.float32)\n\n# Execute the call method\nres = layer.call(inputs).numpy()\n\n# The layer computes the minimum over the time dimension (axis 1)\n# Feature 0: min(3.0, 1.0, 4.0) = 1.0\n# Feature 1: min(5.0, 6.0, 2.0) = 2.0\nassert res.shape == (1, 2), f\"Expected shape (1, 2), got {res.shape}\"\nassert np.allclose(res, [[1.0, 2.0]]), f\"Expected [[1.0, 2.0]], got {res}\"\n\nprint(f\"__CHECK__ call {res.tolist()}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_call/api_test.py",
+      "exit_code": 1,
+      "stdout_tail": "",
+      "stderr_tail": "__RUN_ERR__ ModuleNotFoundError: No module named 'tensorflow'\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_call/api_test.py\", line 65, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_call/api_test.py\", line 60, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_call/api_test.py\", line 35, in api_test\n    import tensorflow as tf\nModuleNotFoundError: No module named 'tensorflow'\n"
+    },
+    "status": "fail",
+    "attempts": 1,
+    "pass_round": null,
+    "wall_s": 35.6,
+    "llm_calls": 1,
+    "input_tokens": 1307,
+    "output_tokens": 4361,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 1307,
+        "output_tokens": 4361
+      }
+    },
+    "error_category": "infra",
+    "error": "missing module/import: No module named 'tensorflow'",
+    "locus": "",
+    "doc_chars": 86,
+    "document_sha256": "4a3660267b63f156f9c0ac9f275d714a1720d00806eb92e577f3222ce1142c67",
+    "source": "tslearn/tslearn/shapelets/shapelets.py:89",
+    "source_other_sites": 3,
+    "codebase_frames": null
+  },
+  "retained_binding": "recorded_code_prefix_present",
+  "retained_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_call/api_test.py",
+  "retained_sha256": "f9e2d60e0f7ac9ff24b865b5eb51bf1542f1b97deaf3274021179b04c5dcc042",
+  "source_window": {
+    "path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/shapelets/shapelets.py",
+    "full_file_sha256": "4949339853367cd12b88bc8c3939edfe0882e2509b0f9910b86e5fe0f11dd9e1",
+    "first_line": 74,
+    "last_line": 229,
+    "other_sites": 3
+  }
+}

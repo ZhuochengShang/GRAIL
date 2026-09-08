@@ -1,0 +1,31 @@
+306: 
+307:     def to_pickle(self, path):
+308:         """
+309:         Save model to a pickle file.
+310: 
+311:         Parameters
+312:         ----------
+313:         path : str
+314:             Full file path.
+315:         """
+316: 
+317:         d = self._to_dict()
+318:         pickle.dump(d, open(path, 'wb'), protocol=2)
+319: 
+320:     @classmethod
+321:     def from_pickle(cls, path):
+322:         """
+323:         Load model from a pickle file.
+324: 
+325:         Parameters
+326:         ----------
+327:         path : str
+328:             Full path to file.
+329: 
+330:         Returns
+331:         -------
+332:         Model instance
+333:         """
+334:         model = pickle.load(open(path, 'rb'))
+335:         model = cls._byte2string(model)
+336:         return cls._organize_model(cls, model)

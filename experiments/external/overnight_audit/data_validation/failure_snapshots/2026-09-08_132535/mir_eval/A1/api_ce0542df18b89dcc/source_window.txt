@@ -1,0 +1,118 @@
+845: 
+846:     Returns
+847:     -------
+848:     True if function accepts arbitrary keyword arguments.
+849:     False otherwise.
+850:     """
+851:     sig = inspect.signature(function)
+852: 
+853:     for param in list(sig.parameters.values()):
+854:         if param.kind == param.VAR_KEYWORD:
+855:             return True
+856: 
+857:     return False
+858: 
+859: 
+860: def filter_kwargs(_function, *args, **kwargs):
+861:     r"""Given a function and args and keyword args to pass to it, call the function
+862:     but using only the keyword arguments which it accepts.  This is equivalent
+863:     to redefining the function with an additional ``**kwargs`` to accept slop
+864:     keyword args.
+865: 
+866:     If the target function already accepts ``**kwargs`` parameters, no filtering
+867:     is performed.
+868: 
+869:     Parameters
+870:     ----------
+871:     _function : callable
+872:         Function to call.  Can take in any number of args or kwargs
+873:     *args
+874:     **kwargs
+875:         Arguments and keyword arguments to _function.
+876:     """
+877:     if has_kwargs(_function):
+878:         return _function(*args, **kwargs)
+879: 
+880:     # Get the list of function arguments
+881:     func_code = _function.__code__
+882:     function_args = func_code.co_varnames[: func_code.co_argcount]
+883:     # Construct a dict of those kwargs which appear in the function
+884:     filtered_kwargs = {}
+885:     for kwarg, value in list(kwargs.items()):
+886:         if kwarg in function_args:
+887:             filtered_kwargs[kwarg] = value
+888:     # Call the function with the supplied args and the filtered kwarg dict
+889:     return _function(*args, **filtered_kwargs)
+890: 
+891: 
+892: def intervals_to_durations(intervals):
+893:     """Convert an array of n intervals to their n durations.
+894: 
+895:     Parameters
+896:     ----------
+897:     intervals : np.ndarray, shape=(n, 2)
+898:         An array of time intervals, as returned by
+899:         :func:`mir_eval.io.load_intervals()`.
+900:         The ``i`` th interval spans time ``intervals[i, 0]`` to
+901:         ``intervals[i, 1]``.
+902: 
+903:     Returns
+904:     -------
+905:     durations : np.ndarray, shape=(n,)
+906:         Array of the duration of each interval.
+907: 
+908:     """
+909:     validate_intervals(intervals)
+910:     return np.abs(np.diff(intervals, axis=-1)).flatten()
+911: 
+912: 
+913: def hz_to_midi(freqs):
+914:     """Convert Hz to MIDI numbers
+915: 
+916:     Parameters
+917:     ----------
+918:     freqs : number or ndarray
+919:         Frequency/frequencies in Hz
+920: 
+921:     Returns
+922:     -------
+923:     midi : number or ndarray
+924:         MIDI note numbers corresponding to input frequencies.
+925:         Note that these may be fractional.
+926:     """
+927:     return 12.0 * (np.log2(freqs) - np.log2(440.0)) + 69.0
+928: 
+929: 
+930: def midi_to_hz(midi):
+931:     """Convert MIDI numbers to Hz
+932: 
+933:     Parameters
+934:     ----------
+935:     midi : number or ndarray
+936:         MIDI notes
+937: 
+938:     Returns
+939:     -------
+940:     freqs : number or ndarray
+941:         Frequency/frequencies in Hz corresponding to `midi`
+942:     """
+943:     return 440.0 * (2.0 ** ((midi - 69.0) / 12.0))
+944: 
+945: 
+946: def deprecated(*, version, version_removed):
+947:     """Mark a function as deprecated.
+948: 
+949:     Using the decorated (old) function will result in a warning.
+950:     """
+951: 
+952:     def __wrapper(func, *args, **kwargs):
+953:         """Warn the user, and then proceed."""
+954:         warnings.warn(
+955:             f"{func.__module__}.{func.__name__}\n\tDeprecated as of mir_eval version {version}."
+956:             f"\n\tIt will be removed in mir_eval version {version_removed}.",
+957:             category=FutureWarning,
+958:             stacklevel=3,  # Would be 2, but the decorator adds a level
+959:         )
+960:         return func(*args, **kwargs)
+961: 
+962:     return decorator(__wrapper)

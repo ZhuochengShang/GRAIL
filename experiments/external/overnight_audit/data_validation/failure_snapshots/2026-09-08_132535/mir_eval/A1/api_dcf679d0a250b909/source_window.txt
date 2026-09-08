@@ -1,0 +1,156 @@
+297: 
+298:         if text:
+299:             ann = ax.annotate(
+300:                 lab,
+301:                 xy=(ival[0], height),
+302:                 xycoords=transform,
+303:                 xytext=(8, -10),
+304:                 textcoords="offset points",
+305:                 **text_kw,
+306:             )
+307:             ann.set_clip_path(rect)
+308: 
+309:     return ax
+310: 
+311: 
+312: def labeled_intervals(
+313:     intervals,
+314:     labels,
+315:     label_set=None,
+316:     base=None,
+317:     height=None,
+318:     extend_labels=True,
+319:     ax=None,
+320:     tick=True,
+321:     prop_cycle=None,
+322:     **kwargs,
+323: ):
+324:     """Plot labeled intervals with each label on its own row.
+325: 
+326:     Parameters
+327:     ----------
+328:     intervals : np.ndarray, shape=(n, 2)
+329:         segment intervals, in the format returned by
+330:         :func:`mir_eval.io.load_intervals` or
+331:         :func:`mir_eval.io.load_labeled_intervals`.
+332: 
+333:     labels : list, shape=(n,)
+334:         reference segment labels, in the format returned by
+335:         :func:`mir_eval.io.load_labeled_intervals`.
+336: 
+337:     label_set : list
+338:         An (ordered) list of labels to determine the plotting order.
+339:         If not provided, the labels will be inferred from
+340:         ``ax.get_yticklabels()``.
+341:         If no ``yticklabels`` exist, then the sorted set of unique values
+342:         in ``labels`` is taken as the label set.
+343: 
+344:     base : np.ndarray, shape=(n,), optional
+345:         Vertical positions of each label.
+346:         By default, labels are positioned at integers
+347:         ``np.arange(len(labels))``.
+348: 
+349:     height : scalar or np.ndarray, shape=(n,), optional
+350:         Height for each label.
+351:         If scalar, the same value is applied to all labels.
+352:         By default, each label has ``height=1``.
+353: 
+354:     extend_labels : bool
+355:         If ``False``, only values of ``labels`` that also exist in
+356:         ``label_set`` will be shown.
+357: 
+358:         If ``True``, all labels are shown, with those in `labels` but
+359:         not in `label_set` appended to the top of the plot.
+360:         A horizontal line is drawn to indicate the separation between
+361:         values in or out of ``label_set``.
+362: 
+363:     ax : matplotlib.pyplot.axes
+364:         An axis handle on which to draw the intervals.
+365:         If none is provided, a new set of axes is created.
+366: 
+367:     tick : bool
+368:         If ``True``, sets tick positions and labels on the y-axis.
+369: 
+370:     prop_cycle : cycle.Cycler
+371:         An optional property cycle object to specify style properties.
+372:         If not provided, the default property cycler will be retrieved from matplotlib.
+373: 
+374:     **kwargs
+375:         Additional keyword arguments to pass to
+376:         `matplotlib.collection.PolyCollection`.
+377: 
+378:     Returns
+379:     -------
+380:     ax : matplotlib.pyplot.axes._subplots.AxesSubplot
+381:         A handle to the (possibly constructed) plot axes
+382:     """
+383:     # Get the axes handle
+384:     ax, new_axes = __get_axes(ax=ax)
+385: 
+386:     if prop_cycle is None:
+387:         __AXMAP[ax].setdefault("prop_cycle", mpl.rcParams["axes.prop_cycle"])
+388:         __AXMAP[ax].setdefault("prop_iter", iter(mpl.rcParams["axes.prop_cycle"]))
+389:     elif "prop_iter" not in __AXMAP[ax]:
+390:         __AXMAP[ax]["prop_cycle"] = prop_cycle
+391:         __AXMAP[ax]["prop_iter"] = iter(prop_cycle)
+392: 
+393:     prop_cycle = __AXMAP[ax]["prop_cycle"]
+394:     prop_iter = __AXMAP[ax]["prop_iter"]
+395: 
+396:     # Make sure we have a numpy array
+397:     intervals = np.atleast_2d(intervals)
+398: 
+399:     if label_set is None:
+400:         # If we have non-empty pre-existing tick labels, use them
+401:         # If none of the label strings have content, treat it as empty
+402:         label_set = __AXMAP[ax].get("labels", [])
+403:     else:
+404:         label_set = list(label_set)
+405: 
+406:     # Put additional labels at the end, in order
+407:     extended = False
+408:     if extend_labels:
+409:         ticks = label_set + sorted(set(labels) - set(label_set))
+410:         if ticks != label_set and len(label_set) > 0:
+411:             extended = True
+412:     elif label_set:
+413:         ticks = label_set
+414:     else:
+415:         ticks = sorted(set(labels))
+416: 
+417:     # Push the ticks up into the axmap
+418:     __AXMAP[ax]["labels"] = ticks
+419: 
+420:     style = dict(linewidth=1)
+421: 
+422:     try:
+423:         properties = next(prop_iter)
+424:     except StopIteration:
+425:         prop_iter = iter(prop_cycle)
+426:         __AXMAP[ax]["prop_iter"] = prop_iter
+427:         properties = next(prop_iter)
+428: 
+429:     style = {
+430:         k: v
+431:         for k, v in properties.items()
+432:         if k in ["color", "facecolor", "edgecolor", "linewidth"]
+433:     }
+434:     # Swap color -> facecolor here so we preserve edgecolor on rects
+435:     style.setdefault("facecolor", style["color"])
+436:     style.pop("color", None)
+437:     style.update(kwargs)
+438: 
+439:     if base is None:
+440:         base = np.arange(len(ticks))
+441: 
+442:     if height is None:
+443:         height = 1
+444: 
+445:     if np.isscalar(height):
+446:         height = height * np.ones_like(base)
+447: 
+448:     seg_y = dict()
+449:     for ybase, yheight, lab in zip(base, height, ticks):
+450:         seg_y[lab] = (ybase, yheight)
+451: 
+452:     xvals = defaultdict(list)

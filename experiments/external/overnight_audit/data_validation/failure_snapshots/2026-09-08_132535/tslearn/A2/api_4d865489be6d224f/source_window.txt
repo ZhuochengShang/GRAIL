@@ -1,0 +1,156 @@
+3: import numpy as np
+4: 
+5: from scipy.sparse import coo_matrix
+6: 
+7: from sklearn.base import ClassifierMixin, clone, BaseEstimator
+8: from sklearn.metrics import confusion_matrix, accuracy_score
+9: from sklearn.model_selection import train_test_split
+10: from sklearn.utils.validation import check_is_fitted
+11: 
+12: from ..bases import TimeSeriesMixin
+13: from ..clustering import TimeSeriesKMeans
+14: from ..neighbors import KNeighborsTimeSeriesClassifier
+15: from ..utils import to_time_series, to_time_series_dataset, check_array, check_dims
+16: 
+17: 
+18: class NonMyopicEarlyClassifier(TimeSeriesMixin, ClassifierMixin, BaseEstimator):
+19:     """Early Classification modelling for time series using the model
+20:     presented in [1]_.
+21: 
+22:     Parameters
+23:     ----------
+24:     n_clusters : int
+25:         Number of clusters to form.
+26: 
+27:     base_classifier : Estimator or None
+28:         Estimator (instance) to be cloned and used for classifications.
+29:         If None, the chosen classifier is a 1NN with Euclidean metric.
+30: 
+31:     min_t : int
+32:         Earliest time at which a classification can be performed on a time
+33:         series
+34: 
+35:     lamb : float
+36:         Value of the hyper parameter lambda used during the computation of the
+37:         cost function to evaluate the probability
+38:         that a time series belongs to a cluster given the time series.
+39: 
+40:     cost_time_parameter : float
+41:         Parameter of the cost function of time. This function is of the form :
+42:         f(time) = time * cost_time_parameter
+43: 
+44:     random_state: int
+45:         Random state of the base estimator
+46: 
+47:     Attributes
+48:     ----------
+49: 
+50:     classifiers_ : list
+51:         A list containing all the classifiers trained for the model, that is,
+52:         (maximum_time_stamp - min_t) elements.
+53: 
+54:     pyhatyck_ : array like of shape (maximum_time_stamp - min_t, n_cluster, __n_classes, __n_classes)
+55:         Contains the probabilities of being classified as class y_hat given
+56:         class y and cluster ck for a trained classifier. The penultimate
+57:         dimension of the array is associated to the true
+58:         class of the series and the last dimension to the predicted class.
+59: 
+60: 
+61:     pyck_ : array like of shape (__n_classes, n_cluster)
+62:         Contains the probabilities of being of true class y given a cluster ck
+63: 
+64:     X_fit_dims : tuple of the same shape as the training dataset
+65: 
+66: 
+67:     Examples
+68:     --------
+69:     >>> dataset = to_time_series_dataset([[1, 2, 3, 4, 5, 6],
+70:     ...                                   [1, 2, 3, 4, 5, 6],
+71:     ...                                   [1, 2, 3, 4, 5, 6],
+72:     ...                                   [1, 2, 3, 3, 2, 1],
+73:     ...                                   [1, 2, 3, 3, 2, 1],
+74:     ...                                   [1, 2, 3, 3, 2, 1],
+75:     ...                                   [3, 2, 1, 1, 2, 3],
+76:     ...                                   [3, 2, 1, 1, 2, 3]])
+77:     >>> y = [0, 0, 0, 1, 1, 1, 0, 0]
+78:     >>> model = NonMyopicEarlyClassifier(n_clusters=3, lamb=1000.,
+79:     ...                                  cost_time_parameter=.1,
+80:     ...                                  random_state=0)
+81:     >>> model.fit(dataset, y)  # doctest: +ELLIPSIS
+82:     NonMyopicEarlyClassifier(...)
+83:     >>> print(type(model.classifiers_))
+84:     <class 'dict'>
+85:     >>> print(model.pyck_)
+86:     [[0. 1. 1.]
+87:      [1. 0. 0.]]
+88:     >>> preds, pred_times = model.predict_class_and_earliness(dataset)
+89:     >>> preds
+90:     array([0, 0, 0, 1, 1, 1, 0, 0])
+91:     >>> pred_times
+92:     array([4, 4, 4, 4, 4, 4, 1, 1])
+93:     >>> pred_probas, pred_times = model.predict_proba_and_earliness(dataset)
+94:     >>> pred_probas
+95:     array([[1., 0.],
+96:            [1., 0.],
+97:            [1., 0.],
+98:            [0., 1.],
+99:            [0., 1.],
+100:            [0., 1.],
+101:            [1., 0.],
+102:            [1., 0.]])
+103:     >>> pred_times
+104:     array([4, 4, 4, 4, 4, 4, 1, 1])
+105: 
+106:     References
+107:     ----------
+108:     .. [1] A. Dachraoui, A. Bondu & A. Cornuejols. Early classification of time
+109:        series as a non myopic sequential decision making problem.
+110:        ECML/PKDD 2015
+111:     """
+112: 
+113:     def __init__(self, n_clusters=2, base_classifier=None,
+114:                  min_t=1, lamb=1., cost_time_parameter=1., random_state=None):
+115:         super(NonMyopicEarlyClassifier, self).__init__()
+116:         self.base_classifier = base_classifier
+117:         self.n_clusters = n_clusters
+118:         self.min_t = min_t
+119:         self.lamb = lamb
+120:         self.cost_time_parameter = cost_time_parameter
+121:         self.random_state = random_state
+122: 
+123:     @property
+124:     def classes_(self):
+125:         if hasattr(self, 'classifiers_'):
+126:             return self.classifiers_[self.min_t].classes_
+127:         else:
+128:             return None
+129: 
+130:     def fit(self, X, y):
+131:         """
+132:         Fit early classifier.
+133: 
+134:         Parameters
+135:         ----------
+136:         X : array-like of shape (n_series, n_timestamps, n_features)
+137:             Training data, where `n_series` is the number of time series,
+138:             `n_timestamps` is the number of timestamps in the series
+139:             and `n_features` is the number of features recorded at each
+140:             timestamp.
+141: 
+142:         y : array-like of shape (n_samples,)
+143:             Target values. Will be cast to X's dtype if necessary
+144: 
+145:         Returns
+146:         -------
+147:         self : returns an instance of self.
+148:         """
+149: 
+150:         X = check_array(X, allow_nd=True)
+151:         X = check_dims(X)
+152:         X = to_time_series_dataset(X)
+153:         y_arr = np.array(y)
+154:         label_set = np.unique(y_arr)
+155: 
+156:         self.cluster_ = TimeSeriesKMeans(n_clusters=self.n_clusters,
+157:                                          random_state=self.random_state)
+158:         if self.base_classifier is not None:

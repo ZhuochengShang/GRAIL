@@ -1,0 +1,64 @@
+{
+  "name": "precision_recall_f1_overlap",
+  "native_row": {
+    "status": "fail",
+    "attempts": 1,
+    "pass_round": null,
+    "wall_s": 21.1,
+    "llm_calls": 1,
+    "input_tokens": 3781,
+    "output_tokens": 2664,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 3781,
+        "output_tokens": 2664
+      }
+    },
+    "error_category": "runtime",
+    "error": "ValueError: Reference intervals and pitches have different lengths.",
+    "locus": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/source/mir_eval/transcription.py:136",
+    "doc_chars": 8997,
+    "document_sha256": "1776bed173983ce40c157852ed7a6593fe19284c3ca613b9ade39cf22190c2ed",
+    "source": "source/mir_eval/transcription_velocity.py:230",
+    "source_other_sites": 1,
+    "codebase_frames": [
+      "source/mir_eval/transcription.py:565",
+      "source/mir_eval/transcription.py:136"
+    ],
+    "name": "precision_recall_f1_overlap",
+    "execution_evidence": {
+      "status": "fail",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "fail",
+          "category": "runtime",
+          "error": "ValueError: Reference intervals and pitches have different lengths.",
+          "codebase_frames": [
+            "source/mir_eval/transcription.py:565",
+            "source/mir_eval/transcription.py:136"
+          ]
+        }
+      ],
+      "error_category": "runtime",
+      "error": "ValueError: Reference intervals and pitches have different lengths.",
+      "code": "import mir_eval\nimport numpy as np\n\nprecision, recall, f_measure, avg_overlap_ratio = mir_eval.transcription.precision_recall_f1_overlap(\n    ref_intervals, ref_freqs, est_intervals, est_freqs, offset_ratio=None\n)\n\n# Oracle 1: F-measure must be the harmonic mean of precision and recall (beta=1.0)\nif precision + recall > 0:\n    expected_f = 2 * precision * recall / (precision + recall)\n    assert np.isclose(f_measure, expected_f), f\"F-measure {f_measure} != expected {expected_f}\"\nelse:\n    assert f_measure == 0.0\n\n# Oracle 2: Evaluating the reference against itself must yield perfect scores\nif len(ref_intervals) > 0:\n    p_perf, r_perf, f_perf, o_perf = mir_eval.transcription.precision_recall_f1_overlap(\n        ref_intervals, ref_freqs, ref_intervals, ref_freqs, offset_ratio=None\n    )\n    assert np.isclose(p_perf, 1.0), f\"Expected perfect precision, got {p_perf}\"\n    assert np.isclose(r_perf, 1.0), f\"Expected perfect recall, got {r_perf}\"\n    assert np.isclose(f_perf, 1.0), f\"Expected",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_precision_recall_f1_overlap/api_test.py",
+      "exit_code": 1,
+      "stdout_tail": "",
+      "stderr_tail": "__RUN_ERR__ ValueError: Reference intervals and pitches have different lengths.\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_precision_recall_f1_overlap/api_test.py\", line 66, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_precision_recall_f1_overlap/api_test.py\", line 61, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_precision_recall_f1_overlap/api_test.py\", line 36, in api_test\n    precision, recall, f_measure, avg_overlap_ratio = mir_eval.transcription.precision_recall_f1_overlap(\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/source/mir_eval/transcription.py\", line 565, in precision_recall_f1_overlap\n    validate(ref_intervals, ref_pitches, est_intervals, est_pitches)\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/source/mir_eval/transcription.py\", line 136, in validate\n    raise ValueError(\"Reference intervals and pitches have different \" \"lengths.\")\nValueError: Reference intervals and pitches have different lengths.\n"
+    },
+    "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6"
+  },
+  "retained_binding": "recorded_code_prefix_present",
+  "retained_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_precision_recall_f1_overlap/api_test.py",
+  "retained_sha256": "063f05970879118d005528dc3f0a9800189579c80cbb7c49afb85630eaf42d0a",
+  "source_window": {
+    "path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/source/mir_eval/transcription_velocity.py",
+    "full_file_sha256": "7a041bc1a36450a88c8ad5394e32c4d349334c89df4957bdb9896b5dfb521391",
+    "first_line": 215,
+    "last_line": 370,
+    "other_sites": 1
+  }
+}

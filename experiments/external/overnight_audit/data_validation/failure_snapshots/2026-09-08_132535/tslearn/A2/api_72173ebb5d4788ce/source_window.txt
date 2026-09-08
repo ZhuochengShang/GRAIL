@@ -1,0 +1,105 @@
+162:             return x.dtype.is_floating_point
+163: 
+164:         @staticmethod
+165:         def is_float32(x):
+166:             return isinstance(x, _torch.float32)
+167: 
+168:         @staticmethod
+169:         def is_float64(x):
+170:             return isinstance(x, _torch.float64)
+171: 
+172:         @staticmethod
+173:         def ndim(x):
+174:             return x.dim()
+175: 
+176:         @staticmethod
+177:         def pairwise_distances(X, Y=None, metric="euclidean"):
+178:             if Y is None:
+179:                 Y = X
+180:             if metric == "euclidean":
+181:                 return _torch.cdist(X, Y)
+182:             if metric == "sqeuclidean":
+183:                 return _torch.cdist(X, Y) ** 2
+184:             if callable(metric):
+185:                 distance_matrix = _torch.zeros(X.shape[0], Y.shape[0])
+186:                 for i in range(X.shape[0]):
+187:                     for j in range(Y.shape[0]):
+188:                         distance_matrix[i, j] = metric(X[i, ...], Y[j, ...])
+189:                 return distance_matrix
+190:             raise ValueError(f"Metric {metric} not implemented in PyTorch backend.")
+191: 
+192:         @staticmethod
+193:         def pdist(x, metric="euclidean", p=None):
+194:             if metric == "euclidean":
+195:                 return _torch.pdist(x)
+196:             if metric == "sqeuclidean":
+197:                 return _torch.pdist(x) ** 2
+198:             if metric == "minkowski":
+199:                 return _torch.pdist(x, p=p)
+200:             raise ValueError(f"Metric {metric} not implemented in PyTorch backend.")
+201: 
+202:         def shape(self, data):
+203:             if not self.is_array(data):
+204:                 data = self.array(data)
+205:             return tuple(_torch.Tensor.size(data))
+206: 
+207:         def sqrt(self, x, out=None):
+208:             if not self.is_array(x):
+209:                 x = self.array(x)
+210:             return _torch.sqrt(x, out=out)
+211: 
+212:         @staticmethod
+213:         def to_numpy(x):
+214:             return x.detach().cpu().numpy()
+215: 
+216:         @staticmethod
+217:         def tril(mat, k=0):
+218:             return _torch.tril(mat, diagonal=k)
+219: 
+220:         @staticmethod
+221:         def tril_indices(n, k=0, m=None):
+222:             if m is None:
+223:                 m = n
+224:             x = _torch.tril_indices(row=n, col=m, offset=k)
+225:             return x[0], x[1]
+226: 
+227:         @staticmethod
+228:         def triu(mat, k=0):
+229:             return _torch.triu(mat, diagonal=k)
+230: 
+231:         @staticmethod
+232:         def triu_indices(n, k=0, m=None):
+233:             if m is None:
+234:                 m = n
+235:             x = _torch.triu_indices(row=n, col=m, offset=k)
+236:             return x[0], x[1]
+237: 
+238:     class PyTorchLinalg:
+239:         def __init__(self):
+240:             self.inv = _torch.linalg.inv
+241:             self.norm = _torch.linalg.norm
+242: 
+243:     class PyTorchRandom:
+244:         def __init__(self):
+245:             self.rand = _torch.rand
+246:             self.randint = _torch.randint
+247:             self.randn = _torch.randn
+248: 
+249:         @staticmethod
+250:         def normal(loc=0.0, scale=1.0, size=(1,)):
+251:             if not hasattr(size, "__iter__"):
+252:                 size = (size,)
+253:             return _torch.normal(mean=loc, std=scale, size=size)
+254: 
+255:         @staticmethod
+256:         def uniform(low=0.0, high=1.0, size=(1,), dtype=None):
+257:             if not hasattr(size, "__iter__"):
+258:                 size = (size,)
+259:             if low >= high:
+260:                 raise ValueError("Upper bound must be higher than lower bound")
+261:             return (high - low) * _torch.rand(*size, dtype=dtype) + low
+262: 
+263:     class PyTorchTesting:
+264:         def __init__(self):
+265:             self.assert_allclose = _torch.allclose
+266:             self.assert_equal = _torch.testing.assert_close

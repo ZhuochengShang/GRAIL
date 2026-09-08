@@ -1,0 +1,67 @@
+280: 	 * <li><code>/foo/bar/image-5</code></li>
+281: 	 * <li><code>/foo/bar/image-6</code></li>
+282: 	 * <li><code>/foo/bar/image-7</code></li>
+283: 	 * <li><code>/foo/bar/image-8</code></li>
+284: 	 * </ol>
+285: 	 * <p>
+286: 	 * and so on.
+287: 	 * </p>
+288: 	 *
+289: 	 * @param dir			The directory in which the files are to be located.
+290: 	 * @param format		The format string to use.
+291: 	 * @param start			The value from which to start counting.
+292:  	 * @throws IOException	If the specified directory path is not a directory,
+293:  	 * 						or if does not exist.
+294: 	 */
+295: 	public ConsecutivelyNumberedFilenames(File dir, String format, int start) throws IOException {
+296: 		checkDirectory(dir);
+297: 		this.iter = new ConsecutivelyNumberedFilenamesIterator(dir, format, start);
+298: 	}
+299: 
+300: 	private static void checkDirectory(File dir) throws IOException {
+301: 		if (!dir.isDirectory()) {
+302: 			throw new IOException(
+303: 					"Specified path is not a directory or does not exist."
+304: 			);
+305: 		}
+306: 	}
+307: 
+308: 	private static class ConsecutivelyNumberedFilenamesIterator implements Iterator<File> {
+309: 		private final File dir;
+310: 		private final String format;
+311: 		private int count;
+312: 		
+313: 		public ConsecutivelyNumberedFilenamesIterator(File dir, String format, int start) {
+314: 			super();
+315: 			this.dir = dir;
+316: 			this.format = format;
+317: 			this.count = start;
+318: 		}
+319: 
+320: 		public boolean hasNext() {
+321: 			return true;
+322: 		}
+323: 
+324: 		public File next() {
+325: 			File f = new File(dir, String.format(format, count));
+326: 			count++;
+327: 			return f;
+328: 		}
+329: 
+330: 		public void remove() {
+331: 			throw new UnsupportedOperationException(
+332: 					"Cannot remove elements from this iterator."
+333: 			);
+334: 		}
+335: 	}
+336: 
+337: 	/**
+338: 	 * Returns an iterator which generates file names according to the rules
+339: 	 * specified by this object.
+340: 	 * 
+341: 	 * @return		An iterator which generates file names.
+342: 	 */
+343: 	public Iterator<File> iterator() {
+344: 		return iter;
+345: 	}
+346: }

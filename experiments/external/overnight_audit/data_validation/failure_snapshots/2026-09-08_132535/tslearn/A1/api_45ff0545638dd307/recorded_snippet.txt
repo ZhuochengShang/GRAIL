@@ -1,0 +1,14 @@
+from tslearn.utils import fix_force_all_finite_warning
+
+# The function is a compatibility helper for scikit-learn's force_all_finite parameter,
+# which transitioned from accepting False to "allow-nan" in version 1.3.
+try:
+    res = fix_force_all_finite_warning()
+except TypeError:
+    # Fallback in case it requires an explicit argument in some versions
+    res = fix_force_all_finite_warning(True)
+
+# Verify it returns one of the expected valid values for the force_all_finite parameter
+assert res in (False, "allow-nan", True), f"Unexpected return value for force_all_finite: {res}"
+
+print(f"__CHECK__ fix_force_all_finite_warning {res}")

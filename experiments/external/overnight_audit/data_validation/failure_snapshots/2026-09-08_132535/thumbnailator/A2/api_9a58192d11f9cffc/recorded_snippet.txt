@@ -1,0 +1,14 @@
+java.util.Iterator<javax.imageio.ImageReader> readers = javax.imageio.ImageIO.getImageReadersByFormatName("jpg");
+assert readers.hasNext() : "No JPEG reader found";
+javax.imageio.ImageReader reader = readers.next();
+
+net.coobird.thumbnailator.util.exif.Orientation orientation = null;
+try (javax.imageio.stream.ImageInputStream iis = javax.imageio.ImageIO.createImageInputStream(new java.io.File(exif_jpeg))) {
+    reader.setInput(iis);
+    orientation = net.coobird.thumbnailator.util.exif.ExifUtils.getExifOrientation(reader, 0);
+} finally {
+    reader.dispose();
+}
+
+assert orientation != null : "Expected EXIF orientation to be present in exif_jpeg";
+System.out.println("__CHECK__ getExifOrientation " + orientation.name());

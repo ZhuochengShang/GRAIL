@@ -1,0 +1,156 @@
+1705: 		
+1706: 		/**
+1707: 		 * Indicates that the output format should be determined from the
+1708: 		 * available information when writing the thumbnail image.
+1709: 		 * <p>
+1710: 		 * For example, calling this method will cause the output format to be
+1711: 		 * determined from the file extension if thumbnails are written to
+1712: 		 * files.
+1713: 		 * <p>
+1714: 		 * Calling this method multiple times will result in an
+1715: 		 * {@link IllegalStateException} to be thrown.
+1716: 		 * 
+1717: 		 * @return				Reference to this object.
+1718: 		 * @since	0.4.0
+1719: 		 */
+1720: 		public Builder<T> determineOutputFormat() {
+1721: 			updateStatus(Properties.OUTPUT_FORMAT, Status.ALREADY_SET);
+1722: 			outputFormat = ThumbnailParameter.DETERMINE_FORMAT;
+1723: 			return this;
+1724: 		}
+1725: 		
+1726: 		private boolean isOutputFormatNotSet() {
+1727: 			return outputFormat == null || ThumbnailParameter.DETERMINE_FORMAT.equals(outputFormat);
+1728: 		}
+1729: 		
+1730: 		/**
+1731: 		 * Sets the compression format type of the thumbnail to write.
+1732: 		 * <p>
+1733: 		 * If the default type for the compression codec should be used, a
+1734: 		 * value of {@link ThumbnailParameter#DEFAULT_FORMAT_TYPE} should be
+1735: 		 * used.
+1736: 		 * <p>
+1737: 		 * Calling this method to set this parameter is optional.
+1738: 		 * <p>
+1739: 		 * Calling this method multiple times will result in an
+1740: 		 * {@link IllegalStateException} to be thrown.
+1741: 		 * <p>
+1742: 		 * Furthermore, if this method is called, then calling the
+1743: 		 * {@link #outputFormat} method is disabled, in order to prevent
+1744: 		 * cases where the output format type does not exist in the format
+1745: 		 * specified for the {@code outputFormat} method.
+1746: 		 * <p>
+1747: 		 * <em>
+1748: 		 * Implementation note:
+1749: 		 * Compression format type settings are ignored when the underlying
+1750: 		 * image writer does not support compression. This behavior is subject
+1751: 		 * to change in the future.
+1752: 		 * </em>
+1753: 		 *
+1754: 		 * @param formatType	The compression format type
+1755: 		 * @return				Reference to this object.
+1756: 		 * @throws IllegalArgumentException	If an unsupported format type is
+1757: 		 * 									specified for the current output
+1758: 		 * 									format type. Or, if the output
+1759: 		 * 									format has not been specified before
+1760: 		 * 									this method was called.
+1761: 		 */
+1762: 		public Builder<T> outputFormatType(String formatType) {
+1763: 			/*
+1764: 			 * If the output format is the original format, and the format type
+1765: 			 * is being specified, it's going to be likely that the specified
+1766: 			 * type will not be present in all the formats, so we'll disallow
+1767: 			 * it. (e.g. setting type to "JPEG", and if the original formats
+1768: 			 * were JPEG and PNG, then we'd have a problem.
+1769: 			 */
+1770: 			if (formatType != ThumbnailParameter.DEFAULT_FORMAT_TYPE
+1771: 					&& isOutputFormatNotSet()) {
+1772: 				throw new IllegalArgumentException(
+1773: 						"Cannot set the format type if a specific output " +
+1774: 						"format has not been specified."
+1775: 				);
+1776: 			}
+1777: 			
+1778: 			if (!ThumbnailatorUtils.isSupportedOutputFormatType(outputFormat, formatType)) {
+1779: 				throw new IllegalArgumentException(
+1780: 						"Specified format type (" + formatType + ") is not " +
+1781: 						" supported for the format: " + outputFormat
+1782: 				);
+1783: 			}
+1784: 			
+1785: 			/*
+1786: 			 * If the output format type is set, then we'd better make the
+1787: 			 * output format unchangeable, or else we'd risk having a type
+1788: 			 * that is not part of the output format.
+1789: 			 */
+1790: 			updateStatus(Properties.OUTPUT_FORMAT_TYPE, Status.ALREADY_SET);
+1791: 			
+1792: 			if (!statusMap.containsKey(Properties.OUTPUT_FORMAT)) {
+1793: 				updateStatus(Properties.OUTPUT_FORMAT, Status.CANNOT_SET);
+1794: 			}
+1795: 			outputFormatType = formatType;
+1796: 			return this;
+1797: 		}
+1798: 		
+1799: 		/**
+1800: 		 * Sets the watermark to apply on the thumbnail.
+1801: 		 * <p>
+1802: 		 * This method can be called multiple times to apply multiple
+1803: 		 * watermarks.
+1804: 		 * <p>
+1805: 		 * If multiple watermarks are to be applied, the watermarks will be
+1806: 		 * applied in the order that this method is called.
+1807: 		 * <p>
+1808: 		 * Calling this method to set this parameter is optional.
+1809: 		 * 
+1810: 		 * @param w				The watermark to apply to the thumbnail.
+1811: 		 * @return				Reference to this object.
+1812: 		 */
+1813: 		public Builder<T> watermark(Watermark w) {
+1814: 			if (w == null) {
+1815: 				throw new NullPointerException("Watermark is null.");
+1816: 			}
+1817: 			
+1818: 			filterPipeline.add(w);
+1819: 			
+1820: 			return this;
+1821: 		}
+1822: 		
+1823: 		/**
+1824: 		 * <p>
+1825: 		 * Sets the image of the watermark to apply on the thumbnail.
+1826: 		 * </p>
+1827: 		 * <p>
+1828: 		 * This method is a convenience method for the
+1829: 		 * {@link #watermark(Position, BufferedImage, float)} method, where
+1830: 		 * the opacity is 50%, and the position is set to center of the
+1831: 		 * thumbnail:
+1832: 		 * </p>
+1833: 		 * <pre>
+1834: watermark(Positions.CENTER, image, 0.5f);
+1835: 		 * </pre>
+1836: 		 * <p>
+1837: 		 * This method can be called multiple times to apply multiple
+1838: 		 * watermarks.
+1839: 		 * </p>
+1840: 		 * <p>
+1841: 		 * If multiple watermarks are to be applied, the watermarks will be
+1842: 		 * applied in the order that this method is called.
+1843: 		 * </p>
+1844: 		 * <p>
+1845: 		 * Calling this method to set this parameter is optional.
+1846: 		 * </p>
+1847: 		 *
+1848: 		 * @param image			The image of the watermark.
+1849: 		 * @return				Reference to this object.
+1850: 		 */
+1851: 		public Builder<T> watermark(BufferedImage image) {
+1852: 			return watermark(Positions.CENTER, image, 0.5f);
+1853: 		}
+1854: 		
+1855: 		/**
+1856: 		 * <p>
+1857: 		 * Sets the image and opacity of the watermark to apply on
+1858: 		 * the thumbnail.
+1859: 		 * </p>
+1860: 		 * <p>

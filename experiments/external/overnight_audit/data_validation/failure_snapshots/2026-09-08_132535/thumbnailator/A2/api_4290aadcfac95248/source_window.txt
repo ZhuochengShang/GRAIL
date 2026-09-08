@@ -1,0 +1,45 @@
+103:  *
+104:  */
+105: public class DefaultResizerFactory implements ResizerFactory {
+106: 	private static final DefaultResizerFactory INSTANCE = new DefaultResizerFactory();
+107: 
+108: 	/**
+109: 	 * This class is not intended to be instantiated via the constructor.
+110: 	 */
+111: 	private DefaultResizerFactory() {}
+112: 	
+113: 	/**
+114: 	 * Returns an instance of this class.
+115: 	 * 
+116: 	 * @return		An instance of this class.
+117: 	 */
+118: 	public static ResizerFactory getInstance() {
+119: 		return INSTANCE;
+120: 	}
+121: 	
+122: 	public Resizer getResizer() {
+123: 		return Resizers.PROGRESSIVE;
+124: 	}
+125: 	
+126: 	public Resizer getResizer(Dimension originalSize, Dimension thumbnailSize) {
+127: 		int origWidth = originalSize.width;
+128: 		int origHeight = originalSize.height;
+129: 		int thumbWidth = thumbnailSize.width;
+130: 		int thumbHeight = thumbnailSize.height;
+131: 		
+132: 		if (thumbWidth < origWidth && thumbHeight < origHeight) {
+133: 			if (thumbWidth < (origWidth / 2) && thumbHeight < (origHeight / 2)) {
+134: 				return Resizers.PROGRESSIVE;
+135: 			} else {
+136: 				return Resizers.BILINEAR;
+137: 			}
+138: 		}
+139: 		else if (thumbWidth > origWidth && thumbHeight > origHeight) {
+140: 			return Resizers.BICUBIC;
+141: 		} else if (thumbWidth == origWidth && thumbHeight == origHeight) {
+142: 			return Resizers.NULL;
+143: 		} else {
+144: 			return getResizer();
+145: 		}
+146: 	}
+147: }

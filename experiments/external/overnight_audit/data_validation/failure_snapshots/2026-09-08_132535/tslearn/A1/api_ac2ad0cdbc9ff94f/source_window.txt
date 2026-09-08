@@ -1,0 +1,156 @@
+47:             Target values.
+48: 
+49:         Returns
+50:         -------
+51:         TimeSeriesMLPClassifier
+52:             The fitted estimator
+53:         """
+54:         X_ = check_array(X, force_all_finite=True, allow_nd=True)
+55:         X_ = to_time_series_dataset(X_)
+56:         self._X_fit_dims = X_.shape
+57:         X_ = X_.reshape((X_.shape[0], -1))
+58:         estimator = super().fit(X_, y)
+59:         self.n_features_in_ = self._X_fit_dims[-1]
+60:         return estimator
+61: 
+62:     def partial_fit(self, X, y, *args, **kwargs):
+63:         """Update the model with a single iteration over the given data.
+64: 
+65:             Parameters
+66:             ----------
+67:             X : array-like, shape (n_ts, sz, d)
+68:                 The input data.
+69: 
+70:             y : array-like, shape (n_ts, ) or (n_ts, dim_y)
+71:             Target values.
+72: 
+73:             *args, **kwargs : arguments for the underlying
+74:             MLPClassifier's method from scikit-learn
+75: 
+76:             Returns
+77:             -------
+78:             TimeSeriesMLPClassifier
+79:               The fitted estimator
+80:             """
+81:         X_ = check_array(X, force_all_finite=True, allow_nd=True)
+82:         if hasattr(self, "_X_fit_dims"):
+83:             X_ = check_dims(X_, self._X_fit_dims, extend=True)
+84:         else:
+85:             X_ = to_time_series_dataset(X_)
+86:             self._X_fit_dims = X_.shape
+87:             self.n_features_in_ = self._X_fit_dims[-1]
+88:         X_ = X_.reshape((X_.shape[0], -1))
+89:         with self._patch_attribute("n_features_in_", X_.shape[1]):
+90:             return super().partial_fit(X_, y, *args, **kwargs)
+91: 
+92:     def predict(self, X):
+93:         """Predict the class labels for the provided data
+94: 
+95:         Parameters
+96:         ----------
+97:         X : array-like, shape (n_ts, sz, d)
+98:             Test samples.
+99: 
+100:         Returns
+101:         -------
+102:         array, shape = (n_ts, )
+103:             Array of predicted class labels
+104:         """
+105:         check_is_fitted(self)
+106:         X_ = check_array(X, force_all_finite=True, allow_nd=True)
+107:         X_ = check_dims(X_, self._X_fit_dims, extend=True)
+108:         X_ = X_.reshape((X_.shape[0], -1))
+109:         with self._patch_attribute("n_features_in_", X_.shape[1]):
+110:             return super().predict(X_)
+111: 
+112:     def predict_proba(self, X):
+113:         """Predict the class probabilities for the provided data
+114: 
+115:         Parameters
+116:         ----------
+117:         X : array-like, shape (n_ts, sz, d)
+118:             Test samples.
+119: 
+120:         Returns
+121:         -------
+122:         array, shape = (n_ts, n_classes)
+123:             Array of predicted class probabilities
+124:         """
+125:         check_is_fitted(self)
+126:         X_ = check_array(X, force_all_finite=True, allow_nd=True)
+127:         X_ = check_dims(X_, self._X_fit_dims, extend=True)
+128:         X_ = X_.reshape((X_.shape[0], -1))
+129:         with self._patch_attribute("n_features_in_", X_.shape[1]):
+130:             return super().predict_proba(X_)
+131: 
+132: 
+133: class TimeSeriesMLPRegressor(TimeSeriesMixin, MLPRegressor):
+134:     """A Multi-Layer Perceptron regressor for time series.
+135: 
+136:     This class mainly reshapes data so that it can be fed to `scikit-learn`'s
+137:     ``MLPRegressor``.
+138: 
+139:     It accepts the exact same hyper-parameters as ``MLPRegressor``, check
+140:     `scikit-learn docs <https://scikit-learn.org/stable/modules/generated/sklearn.neural_network.MLPRegressor.html>`__
+141:     for a list of parameters and attributes.
+142: 
+143:     Notes
+144:     -----
+145:         This method requires a dataset of equal-sized time series.
+146: 
+147:     Examples
+148:     --------
+149:     >>> mlp = TimeSeriesMLPRegressor(hidden_layer_sizes=(64, 64),
+150:     ...                               random_state=0)
+151:     >>> mlp.fit(X=[[1, 2, 3], [1, 1.2, 3.2], [3, 2, 1]],
+152:     ...         y=[0, 0, 1])  # doctest: +ELLIPSIS
+153:     TimeSeriesMLPRegressor(...)
+154:     >>> [c.shape for c in mlp.coefs_]
+155:     [(3, 64), (64, 64), (64, 1)]
+156:     >>> [c.shape for c in mlp.intercepts_]
+157:     [(64,), (64,), (1,)]
+158:     """
+159:     def fit(self, X, y):
+160:         """Fit the model using X as training data and y as target values
+161: 
+162:         Parameters
+163:         ----------
+164:         X : array-like, shape (n_ts, sz, d)
+165:             Training data.
+166:         y : array-like, shape (n_ts, ) or (n_ts, dim_y)
+167:             Target values.
+168: 
+169:         Returns
+170:         -------
+171:         TimeSeriesMLPRegressor
+172:             The fitted estimator
+173:         """
+174:         X_ = check_array(X, force_all_finite=True, allow_nd=True)
+175:         X_ = to_time_series_dataset(X_)
+176:         self._X_fit_dims = X_.shape
+177:         X_ = X_.reshape((X_.shape[0], -1))
+178:         estimator = super(TimeSeriesMLPRegressor, self).fit(X_, y)
+179:         self.n_features_in_ = self._X_fit_dims[-1]
+180:         return estimator
+181: 
+182:     def partial_fit(self, X, y, *args, **kwargs):
+183:         """Update the model with a single iteration over the given data.
+184: 
+185:             Parameters
+186:             ----------
+187:             X : array-like, shape (n_ts, sz, d)
+188:                 The input data.
+189: 
+190:             y : array-like, shape (n_ts, ) or (n_ts, dim_y)
+191:             Target values.
+192: 
+193:             *args, **kwargs : arguments for the underlying
+194:             MLPClassifier's method from scikit-learn
+195: 
+196:             Returns
+197:             -------
+198:             TimeSeriesMLPRegressor
+199:               The fitted estimator
+200:             """
+201:         X_ = check_array(X, force_all_finite=True, allow_nd=True)
+202:         if hasattr(self, "_X_fit_dims"):

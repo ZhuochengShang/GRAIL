@@ -1,0 +1,156 @@
+422: 	 * 								thumbnail will be sized to fit within the
+423: 	 * 								specified dimensions, if the thumbnail is
+424: 	 * 								going to exceed those dimensions.
+425: 	 * @param useExifOrientation	Whether or not to use the Exif metadata to
+426: 	 * 								determine the orientation of the thumbnail.
+427: 	 * 								<p>
+428: 	 * 								If {@code true} is specified, then the
+429: 	 * 								Exif metadata will be used to determine
+430: 	 * 								the orientation of the thumbnail.
+431: 	 *
+432: 	 * @throws IllegalArgumentException 	If size is {@code null} or if the
+433: 	 * 										dimensions are negative, or if the
+434: 	 * 										{@link Resizer} is null.
+435: 	 * @since	0.4.3
+436: 	 */
+437: 	public ThumbnailParameter(
+438: 			Dimension thumbnailSize,
+439: 			Region sourceRegion,
+440: 			boolean keepAspectRatio,
+441: 			String outputFormat,
+442: 			String outputFormatType,
+443: 			float outputQuality,
+444: 			int imageType,
+445: 			List<ImageFilter> filters,
+446: 			Resizer resizer,
+447: 			boolean fitWithinDimensions,
+448: 			boolean useExifOrientation
+449: 	) {
+450: 		this(
+451: 				thumbnailSize,
+452: 				Double.NaN,
+453: 				Double.NaN,
+454: 				sourceRegion,
+455: 				keepAspectRatio,
+456: 				outputFormat,
+457: 				outputFormatType,
+458: 				outputQuality,
+459: 				imageType,
+460: 				filters,
+461: 				new FixedResizerFactory(resizer),
+462: 				fitWithinDimensions,
+463: 				useExifOrientation
+464: 		);
+465: 		
+466: 		validateThumbnailSize();
+467: 	}
+468: 	
+469: 	/**
+470: 	 * Creates an object holding the parameters needed in order to make a
+471: 	 * thumbnail.
+472: 	 * 
+473: 	 * @param widthScalingFactor	The scaling factor to apply to the width
+474: 	 * 								when creating a	thumbnail from the original
+475: 	 * 								image.
+476: 	 * @param heightScalingFactor	The scaling factor to apply to the height
+477: 	 * 								when creating a	thumbnail from the original
+478: 	 * 								image.
+479: 	 * @param sourceRegion		The region of the source image to use when
+480: 	 * 							creating a thumbnail.
+481: 	 * 							A value of {@code null} indicates that the
+482: 	 * 							entire source image should be used to create
+483: 	 * 							the thumbnail.
+484: 	 * @param keepAspectRatio	Indicates whether or not the thumbnail should
+485: 	 * 							maintain the aspect ratio of the original image.
+486: 	 * @param outputFormat		A string indicating the compression format
+487: 	 * 							that should be applied on the thumbnail.
+488: 	 * 							A value of
+489: 	 * 							{@link ThumbnailParameter#ORIGINAL_FORMAT}
+490: 	 * 							should be provided if the same image format as
+491: 	 * 							the original should	be used for the thumbnail.
+492: 	 * 							A value of
+493: 	 * 							{@link ThumbnailParameter#DETERMINE_FORMAT}
+494: 	 * 							should be provided if the output format of the
+495: 	 * 							thumbnail should be the determined from the
+496: 	 * 							information available, such as the output file
+497: 	 * 							name of the thumbnail.
+498: 	 * @param outputFormatType	A string indicating the compression type that
+499: 	 * 							should be used when writing the thumbnail.
+500: 	 * 							A value of
+501: 	 * 							{@link ThumbnailParameter#DEFAULT_FORMAT_TYPE}
+502: 	 * 							should be provided if the thumbnail should be
+503: 	 * 							written using the default compression type of
+504: 	 * 							the codec specified in {@code outputFormat}.
+505: 	 * @param outputQuality		A value from {@code 0.0f} to {@code 1.0f} which
+506: 	 * 							indicates the quality setting to use for the
+507: 	 * 							compression of the thumbnail. {@code 0.0f}
+508: 	 * 							indicates the lowest quality, {@code 1.0f}
+509: 	 * 							indicates the highest quality setting for the
+510: 	 * 							compression.
+511: 	 * 							{@link ThumbnailParameter#DEFAULT_QUALITY}
+512: 	 * 							should be specified when the codec's default
+513: 	 * 							compression quality settings should be used.
+514: 	 * @param imageType 		The {@link BufferedImage} image type of the
+515: 	 * 							thumbnail.
+516: 	 * 							A value of
+517: 	 * 							{@link ThumbnailParameter#DEFAULT_IMAGE_TYPE}
+518: 	 *							should be specified when the default image
+519: 	 *							type should be used when creating the thumbnail.
+520: 	 * @param filters			The {@link ImageFilter}s to apply to the
+521: 	 * 							thumbnail.
+522: 	 * 							A value of {@code null} will be recognized as
+523: 	 * 							no filters are to be applied.
+524: 	 * 							The filters are applied after the original
+525: 	 * 							image has been resized.
+526: 	 * @param resizer			The {@link Resizer} to use when performing the
+527: 	 * 							resizing operation to create a thumbnail.
+528: 	 * @param fitWithinDimensions	Whether or not to fit the thumbnail within
+529: 	 * 								the specified dimensions.
+530: 	 * 								<p>
+531: 	 * 								If {@code true} is specified, then the
+532: 	 * 								thumbnail will be sized to fit within the
+533: 	 * 								specified dimensions, if the thumbnail is
+534: 	 * 								going to exceed those dimensions.
+535: 	 * @param useExifOrientation	Whether or not to use the Exif metadata to
+536: 	 * 								determine the orientation of the thumbnail.
+537: 	 * 								<p>
+538: 	 * 								If {@code true} is specified, then the
+539: 	 * 								Exif metadata will be used to determine
+540: 	 * 								the orientation of the thumbnail.
+541: 	 * 
+542: 	 * @throws IllegalArgumentException 	If the scaling factor is not a
+543: 	 * 										rational number or is less than or
+544: 	 * 										equal to 0, or if the
+545: 	 * 										{@link Resizer} is null.
+546: 	 * @since	0.4.3
+547: 	 */
+548: 	public ThumbnailParameter(
+549: 			double widthScalingFactor,
+550: 			double heightScalingFactor,
+551: 			Region sourceRegion,
+552: 			boolean keepAspectRatio,
+553: 			String outputFormat,
+554: 			String outputFormatType,
+555: 			float outputQuality,
+556: 			int imageType,
+557: 			List<ImageFilter> filters,
+558: 			Resizer resizer,
+559: 			boolean fitWithinDimensions,
+560: 			boolean useExifOrientation
+561: 	) {
+562: 		this(
+563: 				null,
+564: 				widthScalingFactor,
+565: 				heightScalingFactor,
+566: 				sourceRegion,
+567: 				keepAspectRatio,
+568: 				outputFormat,
+569: 				outputFormatType,
+570: 				outputQuality,
+571: 				imageType,
+572: 				filters,
+573: 				new FixedResizerFactory(resizer),
+574: 				fitWithinDimensions,
+575: 				useExifOrientation
+576: 		);
+577: 		

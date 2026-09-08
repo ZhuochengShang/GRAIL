@@ -1,0 +1,156 @@
+184:            [False,  True,  True,  True,  True, False],
+185:            [False, False,  True,  True,  True, False],
+186:            [False, False, False, False, False,  True]])
+187: 
+188:     """
+189:     be = instantiate_backend(be)
+190: 
+191:     if be.is_numpy:
+192:         mask = _njit_itakura_mask(sz1, sz2, max_slope=max_slope)
+193:     else:
+194:         mask = _itakura_mask(sz1, sz2, max_slope=max_slope)
+195: 
+196:     return mask
+197: 
+198: 
+199: def compute_mask(
+200:     s1,
+201:     s2,
+202:     global_constraint=0,
+203:     sakoe_chiba_radius=None,
+204:     itakura_max_slope=None,
+205:     be=None,
+206: ):
+207:     r"""Compute the mask (region constraint).
+208: 
+209:     Parameters
+210:     ----------
+211:     s1 : array-like, shape=(sz1, d) or (sz1,) or int
+212:         A time series or integer.
+213:         If shape is (sz1,), the time series is assumed to be univariate.
+214:         If int, size sz1 used to dimension the mask.
+215:     s2 : array-like, shape=(sz2, d) or (sz2,) or int
+216:         Another time series or integer.
+217:         If shape is (sz2,), the time series is assumed to be univariate.
+218:         If int, size sz2 used to dimension the mask.
+219:     global_constraint : {0, 1, 2} (default: 0)
+220:         Global constraint to restrict admissible paths for DTW:
+221:         - "itakura" if 1
+222:         - "sakoe_chiba" if 2
+223:         - no constraint otherwise
+224:     sakoe_chiba_radius : int or None (default: None)
+225:         Radius to be used for Sakoe-Chiba band global constraint.
+226:         The Sakoe-Chiba radius corresponds to the parameter :math:`\delta` mentioned in [1]_,
+227:         it controls how far in time we can go in order to match a given
+228:         point from one time series to a point in another time series.
+229:         If None and `global_constraint` is set to 2 (sakoe-chiba), a radius of
+230:         1 is used.
+231:         If both `sakoe_chiba_radius` and `itakura_max_slope` are set,
+232:         `global_constraint` is used to infer which constraint to use among the
+233:         two. In this case, if `global_constraint` corresponds to no global
+234:         constraint, a `RuntimeWarning` is raised and no global constraint is
+235:         used.
+236:     itakura_max_slope : float or None (default: None)
+237:         Maximum slope for the Itakura parallelogram constraint.
+238:         If None and `global_constraint` is set to 1 (itakura), a maximum slope
+239:         of 2. is used.
+240:         If both `sakoe_chiba_radius` and `itakura_max_slope` are set,
+241:         `global_constraint` is used to infer which constraint to use among the
+242:         two. In this case, if `global_constraint` corresponds to no global
+243:         constraint, a `RuntimeWarning` is raised and no global constraint is
+244:         used.
+245:     be : Backend object or string or None
+246:         Backend. If `be` is an instance of the class `NumPyBackend` or the string `"numpy"`,
+247:         the NumPy backend is used.
+248:         If `be` is an instance of the class `PyTorchBackend` or the string `"pytorch"`,
+249:         the PyTorch backend is used.
+250:         If `be` is `None`, the backend is determined by the input arrays.
+251:         See our :ref:`dedicated user-guide page <backend>` for more information.
+252: 
+253:     Returns
+254:     -------
+255:     mask : array-like, shape=(sz1, sz2)
+256:         Constraint region.
+257: 
+258:     Examples
+259:     --------
+260:     >>> compute_mask(4, 4)
+261:     array([[ True,  True,  True,  True],
+262:            [ True,  True,  True,  True],
+263:            [ True,  True,  True,  True],
+264:            [ True,  True,  True,  True]])
+265:     >>> compute_mask(4, 4, sakoe_chiba_radius=1)
+266:     array([[ True,  True, False, False],
+267:            [ True,  True,  True, False],
+268:            [False,  True,  True,  True],
+269:            [False, False,  True,  True]])
+270:     >>> compute_mask(4, 4, itakura_max_slope=2)
+271:     array([[ True, False, False, False],
+272:            [False,  True,  True, False],
+273:            [False,  True,  True, False],
+274:            [False, False, False,  True]])
+275: 
+276:     References
+277:     ----------
+278:     .. [1] H. Sakoe, S. Chiba, "Dynamic programming algorithm optimization for
+279:            spoken word recognition," IEEE Transactions on Acoustics, Speech and
+280:            Signal Processing, vol. 26(1), pp. 43--49, 1978.
+281:     """
+282:     be = instantiate_backend(be, s1, s2)
+283: 
+284:     # The output mask will be of shape (sz1, sz2)
+285:     if isinstance(s1, int) and isinstance(s2, int):
+286:         sz1, sz2 = s1, s2
+287:     else:
+288:         sz1 = len(s1)
+289:         sz2 = len(s2)
+290: 
+291:     if be.is_numpy:
+292:         x = _njit_compute_mask(
+293:             sz1,
+294:             sz2,
+295:             global_constraint,
+296:             sakoe_chiba_radius,
+297:             itakura_max_slope,
+298:         )
+299:         return x
+300:     else:
+301:         return _compute_mask(
+302:             sz1,
+303:             sz2,
+304:             global_constraint,
+305:             sakoe_chiba_radius,
+306:             itakura_max_slope,
+307:         )
+308: 
+309: 
+310: def __make_compute_mask(backend):
+311:     if backend is numpy:
+312:         sakoe_chiba_mask_ = _njit_sakoe_chiba_mask
+313:         itakura_mask_ = _njit_itakura_mask
+314:     else:
+315:         sakoe_chiba_mask_ = _sakoe_chiba_mask
+316:         itakura_mask_ = _itakura_mask
+317: 
+318:     def _compute_mask_generic(
+319:             sz1,
+320:             sz2,
+321:             global_constraint=0,
+322:             sakoe_chiba_radius=None,
+323:             itakura_max_slope=None,
+324:     ):
+325:         if (
+326:                 global_constraint == 0
+327:                 and sakoe_chiba_radius is not None
+328:                 and itakura_max_slope is not None
+329:         ):
+330:             raise RuntimeWarning(
+331:                 "global_constraint is not set for DTW, but both "
+332:                 "sakoe_chiba_radius and itakura_max_slope are "
+333:                 "set, hence global_constraint cannot be inferred "
+334:                 "and no global constraint will be used."
+335:             )
+336:         if global_constraint == 2 or (
+337:                 global_constraint == 0 and sakoe_chiba_radius is not None
+338:         ):
+339:             if sakoe_chiba_radius is None:

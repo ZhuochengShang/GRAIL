@@ -1,0 +1,90 @@
+1161:             _njit_soft_dtw_grad(D, self.R_, E, gamma=self.gamma)
+1162:         elif not self.compute_with_backend:
+1163:             _njit_soft_dtw_grad(
+1164:                 self.be.to_numpy(D),
+1165:                 self.be.to_numpy(self.R_),
+1166:                 self.be.to_numpy(E),
+1167:                 gamma=self.be.to_numpy(self.gamma),
+1168:             )
+1169:             self.R_ = self.be.array(self.R_)
+1170:         else:
+1171:             _soft_dtw_grad(D, self.R_, E, gamma=self.gamma, be=self.be)
+1172: 
+1173:         return E[1:-1, 1:-1]
+1174: 
+1175: 
+1176: class SquaredEuclidean:
+1177:     """Squared Euclidean distance."""
+1178:     def __init__(self, X, Y, be=None, compute_with_backend=False):
+1179:         """Squared Euclidean distance.
+1180: 
+1181:         Parameters
+1182:         ----------
+1183:         X: array-like, shape=(m, d)
+1184:             First time series.
+1185:         Y: array-like, shape=(n, d)
+1186:             Second time series.
+1187:         be : Backend object or string or None
+1188:             Backend.
+1189:         compute_with_backend : bool, default=False
+1190:             This parameter has no influence when the NumPy backend is used.
+1191:             When a backend different from NumPy is used (cf parameter `be`):
+1192:             If `True`, the computation is done with the corresponding backend.
+1193:             If `False`, a conversion to the NumPy backend can be used to accelerate the computation.
+1194: 
+1195:         Examples
+1196:         --------
+1197:         >>> SquaredEuclidean([1, 2, 2, 3], [1, 2, 3, 4]).compute()
+1198:         array([[0., 1., 4., 9.],
+1199:                [1., 0., 1., 4.],
+1200:                [1., 0., 1., 4.],
+1201:                [4., 1., 0., 1.]])
+1202:         """
+1203:         self.be = instantiate_backend(be, X, Y)
+1204:         self.compute_with_backend = compute_with_backend
+1205:         self.X = self.be.cast(to_time_series(X, be=be), dtype=self.be.float64)
+1206:         self.Y = self.be.cast(to_time_series(Y, be=be), dtype=self.be.float64)
+1207: 
+1208:     def compute(self):
+1209:         """Compute distance matrix.
+1210: 
+1211:         Returns
+1212:         -------
+1213:         D: array-like, shape=(m, n)
+1214:             Distance matrix.
+1215:         """
+1216:         return self.be.pairwise_euclidean_distances(self.X, self.Y) ** 2
+1217: 
+1218:     def jacobian_product(self, E):
+1219:         """Compute the product between the Jacobian
+1220:         (a linear map from m x d to m x n) and a matrix E.
+1221: 
+1222:         Parameters
+1223:         ----------
+1224:         E: array-like, shape=(m, n)
+1225:             Second time series.
+1226: 
+1227:         Returns
+1228:         -------
+1229:         G: array-like, shape=(m, d)
+1230:             Product with Jacobian.
+1231:             ([m x d, m x n] * [m x n] = [m x d]).
+1232:         """
+1233:         G = self.be.zeros_like(self.X, dtype=self.be.float64)
+1234: 
+1235:         if self.be.is_numpy:
+1236:             _njit_jacobian_product_sq_euc(self.X, self.Y, E.astype(np.float64), G)
+1237:         elif not self.compute_with_backend:
+1238:             _njit_jacobian_product_sq_euc(
+1239:                 self.be.to_numpy(self.X),
+1240:                 self.be.to_numpy(self.Y),
+1241:                 self.be.to_numpy(E).astype(np.float64),
+1242:                 self.be.to_numpy(G),
+1243:             )
+1244:             G = self.be.array(G)
+1245:         else:
+1246:             _jacobian_product_sq_euc(
+1247:                 self.X, self.Y, self.be.cast(E, self.be.float64), G
+1248:             )
+1249: 
+1250:         return G

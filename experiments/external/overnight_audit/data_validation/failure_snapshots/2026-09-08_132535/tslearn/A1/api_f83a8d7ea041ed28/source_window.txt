@@ -1,0 +1,57 @@
+84:             for j in range(i):
+85:                 dists[i, j] = normalized_cc(
+86:                     dataset1[i], dataset2[j], norm1=norms1[i], norm2=norms2[j]
+87:                 ).max()
+88:         dists += dists.T
+89:     else:
+90:         for i in prange(n_ts1):
+91:             for j in range(n_ts2):
+92:                 dists[i, j] = normalized_cc(
+93:                     dataset1[i], dataset2[j], norm1=norms1[i], norm2=norms2[j]
+94:                 ).max()
+95:     return dists
+96: 
+97: 
+98: @njit(parallel=True, fastmath=True)
+99: def y_shifted_sbd_vec(ref_ts, dataset, norm_ref, norms_dataset):
+100:     """Shift a time series dataset w.r.t. a time series of reference.
+101: 
+102:     Parameters
+103:     ----------
+104:     ref_ts : array-like, shape=(sz, d), dtype=float64
+105:         Time series of reference.
+106:     dataset : array-like, shape=(n_ts, sz, d), dtype=float64
+107:         Time series dataset.
+108:     norm_ref : float64
+109:     norms_dataset : array-like, shape=(n_ts,), dtype=float64
+110:         Norms of the time series dataset.
+111: 
+112:     Returns
+113:     -------
+114:     dataset_shifted : array-like, shape=(n_ts, sz, d), dtype=float64
+115:         Shifted dataset.
+116:     """
+117:     n_ts = dataset.shape[0]
+118:     sz = dataset.shape[1]
+119:     d = dataset.shape[2]
+120:     assert sz == ref_ts.shape[0] and d == ref_ts.shape[1]
+121:     dataset_shifted = np.zeros((n_ts, sz, d))
+122: 
+123:     if norm_ref < 0:
+124:         norm_ref = np.linalg.norm(ref_ts)
+125:     if (norms_dataset < 0.0).any():
+126:         for i_ts in prange(n_ts):
+127:             norms_dataset[i_ts] = np.linalg.norm(dataset[i_ts, ...])
+128: 
+129:     for i in prange(n_ts):
+130:         cc = normalized_cc(ref_ts, dataset[i], norm1=norm_ref, norm2=norms_dataset[i])
+131:         idx = np.argmax(cc)
+132:         shift = idx + 1 - sz
+133:         if shift > 0:
+134:             dataset_shifted[i, shift:] = dataset[i, :-shift, :]
+135:         elif shift < 0:
+136:             dataset_shifted[i, :shift] = dataset[i, -shift:, :]
+137:         else:
+138:             dataset_shifted[i] = dataset[i]
+139: 
+140:     return dataset_shifted

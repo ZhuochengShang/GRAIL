@@ -1,0 +1,12 @@
+import mir_eval
+import numpy as np
+
+hop = 0.5
+end_time = 2.5
+timebase = mir_eval.melody.constant_hop_timebase(hop, end_time)
+
+assert isinstance(timebase, np.ndarray), "Expected timebase to be a numpy array"
+assert len(timebase) == 5, f"Expected length 5, got {len(timebase)}"
+assert np.allclose(timebase, [0.0, 0.5, 1.0, 1.5, 2.0]), "Timebase values do not match expected constant hop sequence"
+
+print(f"__CHECK__ constant_hop_timebase {timebase.tolist()}")

@@ -1,0 +1,156 @@
+398:     # Repeat for estimate
+399:     agree_est = np.equal.outer(y_est, y_est)
+400:     n_agree_est = (agree_est.sum() - len(y_est)) / 2.0
+401: 
+402:     # Find where they agree
+403:     matches = np.logical_and(agree_ref, agree_est)
+404:     n_matches = (matches.sum() - len(y_ref)) / 2.0
+405: 
+406:     precision = n_matches / n_agree_est
+407:     recall = n_matches / n_agree_ref
+408:     f_measure = util.f_measure(precision, recall, beta=beta)
+409: 
+410:     return precision, recall, f_measure
+411: 
+412: 
+413: def rand_index(
+414:     reference_intervals,
+415:     reference_labels,
+416:     estimated_intervals,
+417:     estimated_labels,
+418:     frame_size=0.1,
+419:     beta=1.0,
+420: ):
+421:     """(Non-adjusted) Rand index.
+422: 
+423:     Examples
+424:     --------
+425:     >>> (ref_intervals,
+426:     ...  ref_labels) = mir_eval.io.load_labeled_intervals('ref.lab')
+427:     >>> (est_intervals,
+428:     ...  est_labels) = mir_eval.io.load_labeled_intervals('est.lab')
+429:     >>> # Trim or pad the estimate to match reference timing
+430:     >>> (ref_intervals,
+431:     ...  ref_labels) = mir_eval.util.adjust_intervals(ref_intervals,
+432:     ...                                               ref_labels,
+433:     ...                                               t_min=0)
+434:     >>> (est_intervals,
+435:     ...  est_labels) = mir_eval.util.adjust_intervals(
+436:     ...     est_intervals, est_labels, t_min=0, t_max=ref_intervals.max())
+437:     >>> rand_index = mir_eval.structure.rand_index(ref_intervals,
+438:     ...                                            ref_labels,
+439:     ...                                            est_intervals,
+440:     ...                                            est_labels)
+441: 
+442:     Parameters
+443:     ----------
+444:     reference_intervals : np.ndarray, shape=(n, 2)
+445:         reference segment intervals, in the format returned by
+446:         :func:`mir_eval.io.load_labeled_intervals`.
+447:     reference_labels : list, shape=(n,)
+448:         reference segment labels, in the format returned by
+449:         :func:`mir_eval.io.load_labeled_intervals`.
+450:     estimated_intervals : np.ndarray, shape=(m, 2)
+451:         estimated segment intervals, in the format returned by
+452:         :func:`mir_eval.io.load_labeled_intervals`.
+453:     estimated_labels : list, shape=(m,)
+454:         estimated segment labels, in the format returned by
+455:         :func:`mir_eval.io.load_labeled_intervals`.
+456:     frame_size : float > 0
+457:         length (in seconds) of frames for clustering
+458:         (Default value = 0.1)
+459:     beta : float > 0
+460:         beta value for F-measure
+461:         (Default value = 1.0)
+462: 
+463:     Returns
+464:     -------
+465:     rand_index : float > 0
+466:         Rand index
+467:     """
+468:     validate_structure(
+469:         reference_intervals, reference_labels, estimated_intervals, estimated_labels
+470:     )
+471: 
+472:     # Check for empty annotations.  Don't need to check labels because
+473:     # validate_structure makes sure they're the same size as intervals
+474:     if reference_intervals.size == 0 or estimated_intervals.size == 0:
+475:         return 0.0, 0.0, 0.0
+476: 
+477:     # Generate the cluster labels
+478:     y_ref = util.intervals_to_samples(
+479:         reference_intervals, reference_labels, sample_size=frame_size
+480:     )[-1]
+481: 
+482:     y_ref = util.index_labels(y_ref)[0]
+483: 
+484:     # Map to index space
+485:     y_est = util.intervals_to_samples(
+486:         estimated_intervals, estimated_labels, sample_size=frame_size
+487:     )[-1]
+488: 
+489:     y_est = util.index_labels(y_est)[0]
+490: 
+491:     # Build the reference label agreement matrix
+492:     agree_ref = np.equal.outer(y_ref, y_ref)
+493: 
+494:     # Repeat for estimate
+495:     agree_est = np.equal.outer(y_est, y_est)
+496: 
+497:     # Find where they agree
+498:     matches_pos = np.logical_and(agree_ref, agree_est)
+499: 
+500:     # Find where they disagree
+501:     matches_neg = np.logical_and(~agree_ref, ~agree_est)
+502: 
+503:     n_pairs = len(y_ref) * (len(y_ref) - 1) / 2.0
+504: 
+505:     n_matches_pos = (matches_pos.sum() - len(y_ref)) / 2.0
+506:     n_matches_neg = matches_neg.sum() / 2.0
+507:     rand = (n_matches_pos + n_matches_neg) / n_pairs
+508: 
+509:     return rand
+510: 
+511: 
+512: def _contingency_matrix(reference_indices, estimated_indices):
+513:     """Compute the contingency matrix of a true labeling vs an estimated one.
+514: 
+515:     Parameters
+516:     ----------
+517:     reference_indices : np.ndarray
+518:         Array of reference indices
+519:     estimated_indices : np.ndarray
+520:         Array of estimated indices
+521: 
+522:     Returns
+523:     -------
+524:     contingency_matrix : np.ndarray
+525:         Contingency matrix, shape=(#reference indices, #estimated indices)
+526:     .. note:: Based on sklearn.metrics.cluster.contingency_matrix
+527: 
+528:     """
+529:     ref_classes, ref_class_idx = np.unique(reference_indices, return_inverse=True)
+530:     est_classes, est_class_idx = np.unique(estimated_indices, return_inverse=True)
+531:     n_ref_classes = ref_classes.shape[0]
+532:     n_est_classes = est_classes.shape[0]
+533:     # Using coo_matrix is faster than histogram2d
+534:     return scipy.sparse.coo_matrix(
+535:         (np.ones(ref_class_idx.shape[0]), (ref_class_idx, est_class_idx)),
+536:         shape=(n_ref_classes, n_est_classes),
+537:         dtype=np.int64,
+538:     ).toarray()
+539: 
+540: 
+541: def _adjusted_rand_index(reference_indices, estimated_indices):
+542:     """Compute the Rand index, adjusted for change.
+543: 
+544:     Parameters
+545:     ----------
+546:     reference_indices : np.ndarray
+547:         Array of reference indices
+548:     estimated_indices : np.ndarray
+549:         Array of estimated indices
+550: 
+551:     Returns
+552:     -------
+553:     ari : float

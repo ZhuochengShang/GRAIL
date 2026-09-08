@@ -1,0 +1,23 @@
+import numpy as np
+import tensorflow as tf
+from tslearn.shapelets import GlobalMinPooling1D
+
+# GlobalMinPooling1D is a custom Keras layer in tslearn.
+# We instantiate it and directly invoke its `call` method.
+layer = GlobalMinPooling1D()
+
+# Create a small deterministic tensor: 1 sample, 3 timesteps, 2 features
+inputs = tf.constant([[[3.0, 5.0], 
+                       [1.0, 6.0], 
+                       [4.0, 2.0]]], dtype=tf.float32)
+
+# Execute the call method
+res = layer.call(inputs).numpy()
+
+# The layer computes the minimum over the time dimension (axis 1)
+# Feature 0: min(3.0, 1.0, 4.0) = 1.0
+# Feature 1: min(5.0, 6.0, 2.0) = 2.0
+assert res.shape == (1, 2), f"Expected shape (1, 2), got {res.shape}"
+assert np.allclose(res, [[1.0, 2.0]]), f"Expected [[1.0, 2.0]], got {res}"
+
+print(f"__CHECK__ call {res.tolist()}")

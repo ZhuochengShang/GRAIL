@@ -1,0 +1,156 @@
+463: 
+464:     # Draw a line separating the new labels from pre-existing labels
+465:     if extended:
+466:         ax.axhline(len(label_set), color="k", alpha=0.5)
+467: 
+468:     if tick:
+469:         ax.grid(True, axis="y")
+470:         ax.set_yticks([])
+471:         ax.set_yticks(base)
+472:         ax.set_yticklabels(ticks, va="bottom")
+473:         ax.yaxis.set_major_formatter(IntervalFormatter(base, ticks))
+474: 
+475:     return ax
+476: 
+477: 
+478: class IntervalFormatter(Formatter):
+479:     """Ticker formatter for labeled interval plots.
+480: 
+481:     Parameters
+482:     ----------
+483:     base : array-like of int
+484:         The base positions of each label
+485: 
+486:     ticks : array-like of string
+487:         The labels for the ticks
+488:     """
+489: 
+490:     def __init__(self, base, ticks):
+491:         self._map = {int(k): v for k, v in zip(base, ticks)}
+492: 
+493:     def __call__(self, x, pos=None):
+494:         """Map the input position to its corresponding interval label"""
+495:         return self._map.get(int(x), "")
+496: 
+497: 
+498: def hierarchy(intervals_hier, labels_hier, levels=None, ax=None, **kwargs):
+499:     """Plot a hierarchical segmentation
+500: 
+501:     Parameters
+502:     ----------
+503:     intervals_hier : list of np.ndarray
+504:         A list of segmentation intervals.  Each element should be
+505:         an n-by-2 array of segment intervals, in the format returned by
+506:         :func:`mir_eval.io.load_intervals` or
+507:         :func:`mir_eval.io.load_labeled_intervals`.
+508:         Segmentations should be ordered by increasing specificity.
+509:     labels_hier : list of list-like
+510:         A list of segmentation labels.  Each element should
+511:         be a list of labels for the corresponding element in
+512:         `intervals_hier`.
+513:     levels : list of string
+514:         Each element ``levels[i]`` is a label for the ```i`` th segmentation.
+515:         This is used in the legend to denote the levels in a segment hierarchy.
+516:     ax : matplotlib.pyplot.axes
+517:         An axis handle on which to draw the intervals.
+518:         If none is provided, a new set of axes is created.
+519:     **kwargs
+520:         Additional keyword arguments to `labeled_intervals`.
+521: 
+522:     Returns
+523:     -------
+524:     ax : matplotlib.pyplot.axes._subplots.AxesSubplot
+525:         A handle to the (possibly constructed) plot axes
+526:     """
+527:     # This will break if a segment label exists in multiple levels
+528:     if levels is None:
+529:         levels = list(range(len(intervals_hier)))
+530: 
+531:     # Get the axes handle
+532:     ax, _ = __get_axes(ax=ax)
+533: 
+534:     # Count the pre-existing patches
+535:     n_patches = len(ax.patches)
+536: 
+537:     for ints, labs, key in zip(intervals_hier[::-1], labels_hier[::-1], levels[::-1]):
+538:         labeled_intervals(ints, labs, label=key, ax=ax, **kwargs)
+539: 
+540:     return ax
+541: 
+542: 
+543: def events(
+544:     times,
+545:     labels=None,
+546:     base=None,
+547:     height=None,
+548:     ax=None,
+549:     text_kw=None,
+550:     prop_cycle=None,
+551:     **kwargs,
+552: ):
+553:     """Plot event times as a set of vertical lines
+554: 
+555:     Parameters
+556:     ----------
+557:     times : np.ndarray, shape=(n,)
+558:         event times, in the format returned by
+559:         :func:`mir_eval.io.load_events` or
+560:         :func:`mir_eval.io.load_labeled_events`.
+561:     labels : list, shape=(n,), optional
+562:         event labels, in the format returned by
+563:         :func:`mir_eval.io.load_labeled_events`.
+564:     base : number
+565:         The vertical position of the base of the line.
+566:         By default, this will be the bottom of the plot.
+567:     height : number
+568:         The height of the lines.
+569:         By default, this will be the top of the plot (minus `base`).
+570:         .. note:: If either `base` or `height` are provided, both must be provided.
+571:     ax : matplotlib.pyplot.axes
+572:         An axis handle on which to draw the segmentation.
+573:         If none is provided, a new set of axes is created.
+574:     text_kw : dict
+575:         If `labels` is provided, the properties of the text
+576:         objects can be specified here.
+577:         See `matplotlib.pyplot.Text` for valid parameters
+578:     prop_cycle : cycle.Cycler
+579:         An optional property cycle object to specify style properties.
+580:         If not provided, the default property cycler will be retrieved from matplotlib.
+581:     **kwargs
+582:         Additional keyword arguments to pass to
+583:         `matplotlib.pyplot.vlines`.
+584: 
+585:     Returns
+586:     -------
+587:     ax : matplotlib.pyplot.axes._subplots.AxesSubplot
+588:         A handle to the (possibly constructed) plot axes
+589:     """
+590:     if text_kw is None:
+591:         text_kw = dict()
+592:     text_kw.setdefault("va", "top")
+593:     text_kw.setdefault("clip_on", True)
+594:     text_kw.setdefault("bbox", dict(boxstyle="round", facecolor="white"))
+595: 
+596:     # make sure we have an array for times
+597:     times = np.asarray(times)
+598: 
+599:     # Get the axes handle
+600:     ax, new_axes = __get_axes(ax=ax)
+601: 
+602:     if prop_cycle is None:
+603:         __AXMAP[ax].setdefault("prop_cycle", mpl.rcParams["axes.prop_cycle"])
+604:         __AXMAP[ax].setdefault("prop_iter", iter(mpl.rcParams["axes.prop_cycle"]))
+605:     elif "prop_iter" not in __AXMAP[ax]:
+606:         __AXMAP[ax]["prop_cycle"] = prop_cycle
+607:         __AXMAP[ax]["prop_iter"] = iter(prop_cycle)
+608: 
+609:     prop_cycle = __AXMAP[ax]["prop_cycle"]
+610:     prop_iter = __AXMAP[ax]["prop_iter"]
+611: 
+612:     if base is None and height is None:
+613:         # If neither are provided, we'll use axes coordinates to span the figure
+614:         base, height = 0, 1
+615:         transform = ax.get_xaxis_transform()
+616: 
+617:     elif base is not None and height is not None:
+618:         # If both are provided, we'll use data coordinates

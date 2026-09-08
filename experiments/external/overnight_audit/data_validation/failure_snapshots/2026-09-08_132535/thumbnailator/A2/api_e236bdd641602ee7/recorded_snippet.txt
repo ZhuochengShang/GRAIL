@@ -1,0 +1,12 @@
+net.coobird.thumbnailator.builders.ThumbnailParameterBuilder builder = new net.coobird.thumbnailator.builders.ThumbnailParameterBuilder();
+java.util.List<net.coobird.thumbnailator.filters.ImageFilter> myFilters = java.util.Arrays.asList(net.coobird.thumbnailator.filters.Flip.HORIZONTAL);
+
+builder.size(100, 100).filters(myFilters);
+net.coobird.thumbnailator.ThumbnailParameter param = builder.build();
+
+java.util.List<net.coobird.thumbnailator.filters.ImageFilter> retrievedFilters = param.getFilters();
+
+assert retrievedFilters != null && retrievedFilters.size() == 1 : "Filters should be set and retrievable";
+assert retrievedFilters.get(0) == net.coobird.thumbnailator.filters.Flip.HORIZONTAL : "Filter should match the one set";
+
+System.out.println("__CHECK__ filters " + retrievedFilters.size());

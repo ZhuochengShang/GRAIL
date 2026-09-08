@@ -1,0 +1,26 @@
+210:     return sklearn_silhouette(X=sklearn_X,
+211:                               labels=labels,
+212:                               metric=sklearn_metric,
+213:                               sample_size=sample_size,
+214:                               random_state=random_state,
+215:                               **kwds)
+216: 
+217: 
+218: def _check_initial_guess(init, n_clusters):
+219:     if hasattr(init, '__array__'):
+220:         assert init.shape[0] == n_clusters, \
+221:             "Initial guess index array must contain {} samples," \
+222:             " {} given".format(n_clusters, init.shape[0])
+223: 
+224: 
+225: class TimeSeriesCentroidBasedClusteringMixin(TimeSeriesMixin):
+226:     """Mixin class for centroid-based clustering of time series."""
+227:     def _post_fit(self, X_fitted, centroids, inertia):
+228:         if numpy.isfinite(inertia) and (centroids is not None):
+229:             self.cluster_centers_ = centroids
+230:             self._assign(X_fitted)
+231:             self._X_fit = X_fitted
+232:             self.inertia_ = inertia
+233:         else:
+234:             self._X_fit = None
+235:         self.n_features_in_ = X_fitted.shape[-1]

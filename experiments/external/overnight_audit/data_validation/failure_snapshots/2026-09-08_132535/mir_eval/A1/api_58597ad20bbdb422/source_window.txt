@@ -1,0 +1,156 @@
+142:     Parameters
+143:     ----------
+144:     freq_hz : np.ndarray
+145:         Array of frequencies in Hz.
+146:     base_frequency : float
+147:         Base frequency for conversion.
+148:         (Default value = 10.0)
+149:     """
+150:     freq_cent = np.zeros(freq_hz.shape[0])
+151:     freq_nonz_ind = np.flatnonzero(freq_hz)
+152:     normalized_frequency = np.abs(freq_hz[freq_nonz_ind]) / base_frequency
+153:     freq_cent[freq_nonz_ind] = 1200.0 * np.log2(normalized_frequency)
+154:     return freq_cent
+155: 
+156: 
+157: def freq_to_voicing(frequencies, voicing=None):
+158:     """Convert from an array of frequency values to frequency array +
+159:     voice/unvoiced array
+160: 
+161:     Parameters
+162:     ----------
+163:     frequencies : np.ndarray
+164:         Array of frequencies.  A frequency <= 0 indicates "unvoiced".
+165: 
+166:     voicing : np.ndarray
+167:         Array of voicing values.
+168:         (Default value = None)
+169:         Default None, which means the voicing is inferred from `frequencies`:
+170: 
+171:            - frames with frequency <= 0.0 are considered "unvoiced"
+172:            - frames with frequency > 0.0 are considered "voiced"
+173: 
+174:         If specified, `voicing` is used as the voicing array, but
+175:         frequencies with value 0 are forced to have 0 voicing.
+176: 
+177:            - Voicing inferred by negative frequency values is ignored.
+178: 
+179:     Returns
+180:     -------
+181:     frequencies : np.ndarray
+182:         Array of frequencies, all >= 0.
+183:     voiced : np.ndarray
+184:         Array of voicings between 0 and 1, same length as frequencies,
+185:         which indicates voiced or unvoiced
+186: 
+187:     """
+188:     if voicing is not None:
+189:         voicing[frequencies == 0] = 0
+190:     else:
+191:         voicing = (frequencies > 0).astype(float)
+192:     return np.abs(frequencies), voicing
+193: 
+194: 
+195: def constant_hop_timebase(hop, end_time):
+196:     """Generate a time series from 0 to ``end_time`` with times spaced ``hop`` apart
+197: 
+198:     Parameters
+199:     ----------
+200:     hop : float
+201:         Spacing of samples in the time series
+202:     end_time : float
+203:         Time series will span ``[0, end_time]``
+204: 
+205:     Returns
+206:     -------
+207:     times : np.ndarray
+208:         Generated timebase
+209: 
+210:     """
+211:     # Compute new timebase.  Rounding/linspace is to avoid float problems.
+212:     end_time = np.round(end_time, 10)
+213:     times = np.linspace(
+214:         0, hop * int(np.floor(end_time / hop)), int(np.floor(end_time / hop)) + 1
+215:     )
+216:     times = np.round(times, 10)
+217:     return times
+218: 
+219: 
+220: def resample_melody_series(times, frequencies, voicing, times_new, kind="linear"):
+221:     """Resamples frequency and voicing time series to a new timescale. Maintains
+222:     any zero ("unvoiced") values in frequencies.
+223: 
+224:     If ``times`` and ``times_new`` are equivalent, no resampling will be
+225:     performed.
+226: 
+227:     Parameters
+228:     ----------
+229:     times : np.ndarray
+230:         Times of each frequency value
+231:     frequencies : np.ndarray
+232:         Array of frequency values, >= 0
+233:     voicing : np.ndarray
+234:         Array which indicates voiced or unvoiced. This array may be binary
+235:         or have continuous values between 0 and 1.
+236:     times_new : np.ndarray
+237:         Times to resample frequency and voicing sequences to
+238:     kind : str
+239:         kind parameter to pass to scipy.interpolate.interp1d.
+240:         (Default value = 'linear')
+241: 
+242:     Returns
+243:     -------
+244:     frequencies_resampled : np.ndarray
+245:         Frequency array resampled to new timebase
+246:     voicing_resampled : np.ndarray
+247:         Voicing array resampled to new timebase
+248: 
+249:     """
+250:     # If the timebases are already the same, no need to interpolate
+251:     if times.shape == times_new.shape and np.allclose(times, times_new):
+252:         return frequencies, voicing
+253: 
+254:     # Warn when the delta between the original times is not constant,
+255:     # unless times[0] == 0. and frequencies[0] == frequencies[1] (see logic at
+256:     # the beginning of to_cent_voicing)
+257:     if not (
+258:         np.allclose(np.diff(times), np.diff(times).mean())
+259:         or (
+260:             np.allclose(np.diff(times[1:]), np.diff(times[1:]).mean())
+261:             and frequencies[0] == frequencies[1]
+262:         )
+263:     ):
+264:         warnings.warn(
+265:             "Non-uniform timescale passed to resample_melody_series.  Pitch "
+266:             "will be linearly interpolated, which will result in undesirable "
+267:             "behavior if silences are indicated by missing values.  Silences "
+268:             "should be indicated by nonpositive frequency values."
+269:         )
+270:     # Round to avoid floating point problems
+271:     times = np.round(times, 10)
+272:     times_new = np.round(times_new, 10)
+273:     # Add in an additional sample if we'll be asking for a time too large
+274:     if times_new.max() > times.max():
+275:         times = np.append(times, times_new.max())
+276:         frequencies = np.append(frequencies, 0)
+277:         voicing = np.append(voicing, 0)
+278:     # We need to fix zero transitions if interpolation is not zero or nearest
+279:     if kind != "zero" and kind != "nearest":
+280:         # Fill in zero values with the last reported frequency
+281:         # to avoid erroneous values when resampling
+282:         frequencies_held = np.array(frequencies)
+283:         for n, frequency in enumerate(frequencies[1:]):
+284:             if frequency == 0:
+285:                 frequencies_held[n + 1] = frequencies_held[n]
+286:         # Linearly interpolate frequencies
+287:         frequencies_resampled = scipy.interpolate.interp1d(
+288:             times, frequencies_held, kind
+289:         )(times_new)
+290:         # Retain zeros
+291:         frequency_mask = scipy.interpolate.interp1d(times, frequencies, "zero")(
+292:             times_new
+293:         )
+294:         frequencies_resampled *= frequency_mask != 0
+295:     else:
+296:         frequencies_resampled = scipy.interpolate.interp1d(times, frequencies, kind)(
+297:             times_new

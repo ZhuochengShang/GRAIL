@@ -1,0 +1,18 @@
+import numpy as np
+from tslearn.backend import Backend, instantiate_backend
+
+# Instantiate the NumPy backend
+be = instantiate_backend(backend="numpy")
+
+# Create a small integer array
+s1_int = np.array([1, 2, 3], dtype=np.int32)
+
+# Call cast to convert it to float64
+res = be.cast(s1_int, dtype=np.float64)
+
+# Verify the result is correctly casted and retains its values
+assert res.dtype == np.float64, f"Expected float64, got {res.dtype}"
+assert res.shape == (3,), f"Expected shape (3,), got {res.shape}"
+assert res[0] == 1.0, f"Expected 1.0, got {res[0]}"
+
+print(f"__CHECK__ cast {res.dtype}")

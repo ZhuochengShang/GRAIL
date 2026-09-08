@@ -1,0 +1,28 @@
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+import mir_eval
+import numpy as np
+
+n = len(ref_intervals)
+# Reuse ref_freqs, ensuring it matches the length of ref_intervals
+pitches = np.resize(ref_freqs, n) if len(ref_freqs) > 0 else np.full(n, 440.0)
+# Ensure strictly positive frequencies to avoid log2(0) warnings in hz_to_midi conversion
+pitches = np.where(pitches <= 0, 440.0, pitches)
+
+fig, ax = plt.subplots()
+ax_ret = mir_eval.display.piano_roll(
+    ref_intervals, 
+    pitches=pitches, 
+    ax=ax, 
+    label="Reference", 
+    alpha=0.5, 
+    facecolor="r"
+)
+
+# piano_roll delegates to labeled_intervals, which adds a Rectangle patch per interval
+num_patches = len(ax_ret.patches)
+assert ax_ret is ax, "Expected piano_roll to return the provided axes"
+assert num_patches == n, f"Expected {n} patches for {n} intervals, got {num_patches}"
+
+print(f"__CHECK__ piano_roll {num_patches}")

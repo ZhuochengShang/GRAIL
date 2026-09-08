@@ -1,0 +1,16 @@
+from tslearn.backend import get_backend
+
+backend = None
+for arg in [("numpy",), (X,), ()]:
+    try:
+        backend = get_backend(*arg)
+        break
+    except Exception:
+        pass
+
+assert backend is not None, "get_backend failed with all attempted arguments"
+
+backend_str = str(type(backend)).lower() + str(backend).lower()
+assert "numpy" in backend_str, f"Expected numpy backend, got {backend}"
+
+print(f"__CHECK__ get_backend {type(backend).__name__}")

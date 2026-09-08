@@ -1,0 +1,156 @@
+59:     -------
+60:     dist : float
+61:         Squared distance between x and y.
+62:     """
+63:     be = instantiate_backend(be, x, y)
+64:     x = be.array(x)
+65:     y = be.array(y)
+66:     dist = 0.0
+67:     for di in range(be.shape(x)[0]):
+68:         diff = x[di] - y[di]
+69:         dist += diff * diff
+70:     return dist
+71: 
+72: 
+73: @njit()
+74: def njit_accumulated_matrix(s1, s2, mask):
+75:     """Compute the accumulated cost matrix score between two time series.
+76: 
+77:     Parameters
+78:     ----------
+79:     s1 : array-like, shape=(sz1, d)
+80:         First time series.
+81:     s2 : array-like, shape=(sz2, d)
+82:         Second time series.
+83:     mask : array-like, shape=(sz1, sz2)
+84:         Mask. Unconsidered cells must have False values.
+85: 
+86:     Returns
+87:     -------
+88:     mat : array-like, shape=(sz1, sz2)
+89:         Accumulated cost matrix.
+90:     """
+91:     l1 = s1.shape[0]
+92:     l2 = s2.shape[0]
+93:     cum_sum = numpy.full((l1 + 1, l2 + 1), numpy.inf)
+94:     cum_sum[0, 0] = 0.0
+95: 
+96:     for i in range(l1):
+97:         for j in range(l2):
+98:             if mask[i, j]:
+99:                 cum_sum[i + 1, j + 1] = _njit_local_squared_dist(s1[i], s2[j])
+100:                 cum_sum[i + 1, j + 1] += min(
+101:                     cum_sum[i, j + 1], cum_sum[i + 1, j], cum_sum[i, j]
+102:                 )
+103:     return cum_sum[1:, 1:]
+104: 
+105: 
+106: def accumulated_matrix(s1, s2, mask, be=None):
+107:     """Compute the accumulated cost matrix score between two time series.
+108: 
+109:     Parameters
+110:     ----------
+111:     s1 : array-like, shape=(sz1, d)
+112:         First time series.
+113:     s2 : array-like, shape=(sz2, d)
+114:         Second time series.
+115:     mask : array-like, shape=(sz1, sz2)
+116:         Mask. Unconsidered cells must have False values.
+117:     be : Backend object or string or None
+118:         Backend. If `be` is an instance of the class `NumPyBackend` or the string `"numpy"`,
+119:         the NumPy backend is used.
+120:         If `be` is an instance of the class `PyTorchBackend` or the string `"pytorch"`,
+121:         the PyTorch backend is used.
+122:         If `be` is `None`, the backend is determined by the input arrays.
+123:         See our :ref:`dedicated user-guide page <backend>` for more information.
+124: 
+125:     Returns
+126:     -------
+127:     mat : array-like, shape=(sz1, sz2)
+128:         Accumulated cost matrix.
+129:     """
+130:     warnings.warn(
+131:         "This method is deprecated, use tslearn.metrics.accumulated_matrix instead.",
+132:         DeprecationWarning
+133:     )
+134: 
+135:     be = instantiate_backend(be, s1, s2)
+136:     s1 = be.array(s1)
+137:     s2 = be.array(s2)
+138:     l1 = be.shape(s1)[0]
+139:     l2 = be.shape(s2)[0]
+140:     cum_sum = be.full((l1 + 1, l2 + 1), be.inf)
+141:     cum_sum[0, 0] = 0.0
+142: 
+143:     for i in range(l1):
+144:         for j in range(l2):
+145:             if mask[i, j]:
+146:                 cum_sum[i + 1, j + 1] = _local_squared_dist(s1[i], s2[j], be=be)
+147:                 cum_sum[i + 1, j + 1] += min(
+148:                     cum_sum[i, j + 1], cum_sum[i + 1, j], cum_sum[i, j]
+149:                 )
+150:     return cum_sum[1:, 1:]
+151: 
+152: 
+153: @njit(nogil=True)
+154: def _njit_dtw(s1, s2, mask):
+155:     """Compute the dynamic time warping score between two time series.
+156: 
+157:     Parameters
+158:     ----------
+159:     s1 : array-like, shape=(sz1, d)
+160:         First time series.
+161:     s2 : array-like, shape=(sz2, d)
+162:         Second time series.
+163:     mask : array-like, shape=(sz1, sz2)
+164:         Mask. Unconsidered cells must have False values.
+165: 
+166:     Returns
+167:     -------
+168:     dtw_score : float
+169:         Dynamic Time Warping score between both time series.
+170: 
+171:     """
+172:     cum_sum = njit_accumulated_matrix(s1, s2, mask)
+173:     return numpy.sqrt(cum_sum[-1, -1])
+174: 
+175: 
+176: def _dtw(s1, s2, mask, be=None):
+177:     """Compute the dynamic time warping score between two time series.
+178: 
+179:     Parameters
+180:     ----------
+181:     s1 : array-like, shape=(sz1, d)
+182:         First time series.
+183:     s2 : array-like, shape=(sz2, d)
+184:         Second time series.
+185:     mask : array-like, shape=(sz1, sz2)
+186:         Mask. Unconsidered cells must have False values.
+187:     be : Backend object or string or None
+188:         Backend. If `be` is an instance of the class `NumPyBackend` or the string `"numpy"`,
+189:         the NumPy backend is used.
+190:         If `be` is an instance of the class `PyTorchBackend` or the string `"pytorch"`,
+191:         the PyTorch backend is used.
+192:         If `be` is `None`, the backend is determined by the input arrays.
+193:         See our :ref:`dedicated user-guide page <backend>` for more information.
+194: 
+195:     Returns
+196:     -------
+197:     dtw_score : float
+198:         Dynamic Time Warping score between both time series.
+199: 
+200:     """
+201:     be = instantiate_backend(be, s1, s2)
+202:     s1 = be.array(s1)
+203:     s2 = be.array(s2)
+204:     cum_sum = accumulated_matrix(s1, s2, mask, be=be)
+205:     return be.sqrt(cum_sum[-1, -1])
+206: 
+207: 
+208: @njit()
+209: def _njit_return_path(acc_cost_mat):
+210:     """Return path from accumulated cost matrix.
+211: 
+212:     Parameters
+213:     ----------
+214:     acc_cost_mat : array-like, shape=(sz1, sz2)

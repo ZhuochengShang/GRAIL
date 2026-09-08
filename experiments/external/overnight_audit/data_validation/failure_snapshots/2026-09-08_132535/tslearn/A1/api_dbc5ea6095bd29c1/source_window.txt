@@ -1,0 +1,148 @@
+1: import h5py
+2: import os
+3: import numpy as np
+4: import traceback
+5: from warnings import warn
+6: 
+7: 
+8: def save_dict(d, filename, group, raise_type_fail=True):
+9:     """
+10:     Recursively save a dict to an hdf5 group in a new file.
+11: 
+12:     Parameters
+13:     ----------
+14:     d: dict
+15:         dict to save as an hdf5 file
+16: 
+17:     filename : str
+18:         Full path to save the file to. File must not already exist.
+19: 
+20:     group : str
+21:         group name to save the dict to
+22: 
+23:     raise_type_fail : bool
+24:         If True: raise an exception if saving a part of the dict fails.
+25:         If False: prints a warning instead and saves the
+26:         object's __str__() return value.
+27: 
+28:     Returns
+29:     -------
+30:     None
+31: 
+32:     Raises
+33:     ------
+34:     FileExistsError
+35:         If the path specified by the `filename` parameter already exists.
+36: 
+37:     TypeError
+38:         If a particular entry within the dict cannot be saved to hdf5 AND
+39:         the argument `raise_type_fail` is set to `True`
+40:     """
+41:     if os.path.isfile(filename):
+42:         raise FileExistsError
+43: 
+44:     with h5py.File(filename, 'w') as h5file:
+45:         _dicts_to_group(h5file, "{}/".format(group), d,
+46:                         raise_meta_fail=raise_type_fail)
+47: 
+48: 
+49: def _dicts_to_group(h5file, path, d, raise_meta_fail):
+50: 
+51:     for key, item in d.items():
+52: 
+53:         if isinstance(item, np.ndarray):
+54: 
+55:             if item.dtype == np.dtype('O'):
+56:                 # see if h5py is ok with it
+57:                 try:
+58:                     h5file[path + key] = item
+59:                     # h5file[path + key].attrs['dtype'] = item.dtype.str
+60:                 except TypeError:
+61:                     msg = "numpy dtype 'O' for item:\n{}\n" \
+62:                           "not supported by HDF5\n{}" \
+63:                           "".format(item, traceback.format_exc())
+64: 
+65:                     if raise_meta_fail:
+66:                         raise TypeError(msg)
+67:                     else:
+68:                         h5file[path + key] = str(item)
+69:                         warn("{}, storing whatever str(obj) returns"
+70:                              "".format(msg))
+71: 
+72:             # numpy array of unicode strings
+73:             elif item.dtype.str.startswith('<U'):
+74:                 h5file[path + key] = item.astype(h5py.special_dtype(vlen=str))
+75: 
+76:                 # otherwise h5py doesn't restore the right dtype for str types
+77:                 h5file[path + key].attrs['dtype'] = item.dtype.str
+78: 
+79:             # other types
+80:             else:
+81:                 h5file[path + key] = item
+82:                 # h5file[path + key].attrs['dtype'] = item.dtype.str
+83: 
+84:         # single pieces of data
+85:         elif isinstance(item, (str, int, np.int8,
+86:                                np.int16, np.int32, np.int64, float,
+87:                                np.float16, np.float32, np.float64)):
+88:             h5file[path + key] = item
+89: 
+90:         elif isinstance(item, dict):
+91:             _dicts_to_group(
+92:                 h5file, "{}{}/".format(path, key), item, raise_meta_fail
+93:             )
+94: 
+95:         # last resort, try to convert this object
+96:         # to a dict and save its attributes
+97:         elif hasattr(item, '__dict__'):
+98:             _dicts_to_group(
+99:                 h5file,
+100:                 "{}{}/".format(path, key),
+101:                 item.__dict__,
+102:                 raise_meta_fail
+103:             )
+104: 
+105:         else:
+106:             msg = "{} for item: {} not supported by HDF5" \
+107:                   "".format(type(item), item)
+108: 
+109:             if raise_meta_fail:
+110:                 raise TypeError(msg)
+111: 
+112:             else:
+113:                 h5file[path + key] = str(item)
+114:                 warn("{}, storing whatever str(obj) returns"
+115:                      "".format(msg))
+116: 
+117: 
+118: def load_dict(filename, group):
+119:     """
+120:     Recursively load a dict from an hdf5 group in a file.
+121: 
+122:     Parameters
+123:     ----------
+124:     filename : str
+125:         full path to the hdf5 file
+126: 
+127:     group : str
+128:         Name of the group that contains the dict to load
+129: 
+130:     Returns
+131:     -------
+132:     d : dict
+133:         dict loaded from the specified hdf5 group.
+134:     """
+135: 
+136:     with h5py.File(filename, 'r') as h5file:
+137:         return _dicts_from_group(h5file, "{}/".format(group))
+138: 
+139: 
+140: def _dicts_from_group(h5file, path):
+141:     ans = {}
+142:     for key, item in h5file[path].items():
+143:         if isinstance(item, h5py._hl.dataset.Dataset):
+144:             if item.attrs.__contains__('dtype'):
+145:                 ans[key] = item[()].astype(item.attrs['dtype'])
+146:             else:
+147:                 ans[key] = item[()]
+148:         elif isinstance(item, h5py._hl.group.Group):

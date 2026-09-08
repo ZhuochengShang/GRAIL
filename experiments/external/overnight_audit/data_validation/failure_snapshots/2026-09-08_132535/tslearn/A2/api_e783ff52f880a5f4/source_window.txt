@@ -1,0 +1,156 @@
+2255:     acc_cost_mat = numpy.full((l1 + 1, l2 + 1), 0)
+2256: 
+2257:     for i in range(1, l1 + 1):
+2258:         for j in range(1, l2 + 1):
+2259:             if numpy.isfinite(mask[i - 1, j - 1]):
+2260:                 if numpy.sqrt(_njit_local_squared_dist(s1[i - 1], s2[j - 1])) <= eps:
+2261:                     acc_cost_mat[i][j] = 1 + acc_cost_mat[i - 1][j - 1]
+2262:                 else:
+2263:                     acc_cost_mat[i][j] = max(
+2264:                         acc_cost_mat[i][j - 1], acc_cost_mat[i - 1][j]
+2265:                     )
+2266: 
+2267:     return acc_cost_mat
+2268: 
+2269: 
+2270: def lcss_accumulated_matrix(s1, s2, eps, mask, be=None):
+2271:     """Compute the longest common subsequence similarity score between
+2272:     two time series.
+2273: 
+2274:     Parameters
+2275:     ----------
+2276:     s1 : array-like, shape=(sz1, d) or (sz1,)
+2277:         First time series. If shape is (sz1,), the time series is assumed to be univariate.
+2278:     s2 : array-like, shape=(sz2, d) or (sz2,)
+2279:         Second time series. If shape is (sz2,), the time series is assumed to be univariate.
+2280:     eps : float
+2281:         Matching threshold.
+2282:     mask : array-like, shape=(sz1, sz2)
+2283:         Mask. Unconsidered cells must have False values.
+2284:     be : Backend object or string or None
+2285:         Backend. If `be` is an instance of the class `NumPyBackend` or the string `"numpy"`,
+2286:         the NumPy backend is used.
+2287:         If `be` is an instance of the class `PyTorchBackend` or the string `"pytorch"`,
+2288:         the PyTorch backend is used.
+2289:         If `be` is `None`, the backend is determined by the input arrays.
+2290:         See our :ref:`dedicated user-guide page <backend>` for more information.
+2291: 
+2292:     Returns
+2293:     -------
+2294:     acc_cost_mat : array-like, shape=(sz1 + 1, sz2 + 1)
+2295:         Accumulated cost matrix.
+2296:     """
+2297:     be = instantiate_backend(be, s1, s2)
+2298:     s1 = to_time_series(s1, remove_nans=True, be=be)
+2299:     s2 = to_time_series(s2, remove_nans=True, be=be)
+2300:     l1 = be.shape(s1)[0]
+2301:     l2 = be.shape(s2)[0]
+2302:     acc_cost_mat = be.full((l1 + 1, l2 + 1), 0)
+2303: 
+2304:     for i in range(1, l1 + 1):
+2305:         for j in range(1, l2 + 1):
+2306:             if mask[i - 1, j - 1]:
+2307:                 if be.is_numpy:
+2308:                     squared_dist = _njit_local_squared_dist(s1[i - 1], s2[j - 1])
+2309:                 else:
+2310:                     squared_dist = _local_squared_dist(s1[i - 1], s2[j - 1], be=be)
+2311:                 if be.sqrt(squared_dist) <= eps:
+2312:                     acc_cost_mat[i][j] = 1 + acc_cost_mat[i - 1][j - 1]
+2313:                 else:
+2314:                     acc_cost_mat[i][j] = max(
+2315:                         acc_cost_mat[i][j - 1], acc_cost_mat[i - 1][j]
+2316:                     )
+2317: 
+2318:     return acc_cost_mat
+2319: 
+2320: 
+2321: @njit(nogil=True)
+2322: def _njit_lcss(s1, s2, eps, mask):
+2323:     """Compute the longest common subsequence score between two time series.
+2324: 
+2325:     Parameters
+2326:     ----------
+2327:     s1 : array-like, shape=(sz1, d)
+2328:         First time series.
+2329:     s2 : array-like, shape=(sz2, d)
+2330:         Second time series.
+2331:     eps : float (default: 1.)
+2332:         Maximum matching distance threshold.
+2333:     mask : array-like, shape=(sz1, sz2)
+2334:         Mask. Unconsidered cells must have False values.
+2335: 
+2336:     Returns
+2337:     -------
+2338:     lcss_score : float
+2339:         Longest Common Subsquence score between both time series.
+2340:     """
+2341:     l1 = s1.shape[0]
+2342:     l2 = s2.shape[0]
+2343:     acc_cost_mat = njit_lcss_accumulated_matrix(s1, s2, eps, mask)
+2344: 
+2345:     return float(acc_cost_mat[-1][-1]) / min([l1, l2])
+2346: 
+2347: 
+2348: def _lcss(s1, s2, eps, mask, be=None):
+2349:     """Compute the longest common subsequence score between two time series.
+2350: 
+2351:     Parameters
+2352:     ----------
+2353:     s1 : array-like, shape=(sz1, d) or (sz1,)
+2354:         First time series. If shape is (sz1,), the time series is assumed to be univariate.
+2355:     s2 : array-like, shape=(sz2, d) or (sz2,)
+2356:         Second time series. If shape is (sz2,), the time series is assumed to be univariate.
+2357:     eps : float (default: 1.)
+2358:         Maximum matching distance threshold.
+2359:     mask : array-like, shape=(sz1, sz2)
+2360:         Mask. Unconsidered cells must have False values.
+2361:     be : Backend object or string or None
+2362:         Backend. If `be` is an instance of the class `NumPyBackend` or the string `"numpy"`,
+2363:         the NumPy backend is used.
+2364:         If `be` is an instance of the class `PyTorchBackend` or the string `"pytorch"`,
+2365:         the PyTorch backend is used.
+2366:         If `be` is `None`, the backend is determined by the input arrays.
+2367:         See our :ref:`dedicated user-guide page <backend>` for more information.
+2368: 
+2369:     Returns
+2370:     -------
+2371:     lcss_score : float
+2372:         Longest Common Subsquence score between both time series.
+2373:     """
+2374:     be = instantiate_backend(be, s1, s2)
+2375:     s1 = be.array(s1)
+2376:     s2 = be.array(s2)
+2377:     l1 = be.shape(s1)[0]
+2378:     l2 = be.shape(s2)[0]
+2379:     acc_cost_mat = lcss_accumulated_matrix(s1, s2, eps, mask, be=be)
+2380:     return float(acc_cost_mat[-1][-1]) / min([l1, l2])
+2381: 
+2382: 
+2383: def lcss(
+2384:     s1,
+2385:     s2,
+2386:     eps=1.0,
+2387:     global_constraint=None,
+2388:     sakoe_chiba_radius=None,
+2389:     itakura_max_slope=None,
+2390:     be=None,
+2391: ):
+2392:     r"""Compute the Longest Common Subsequence (LCSS) similarity measure
+2393:     between (possibly multidimensional) time series and return the
+2394:     similarity.
+2395: 
+2396:     LCSS is computed by matching indexes that are met up until the eps
+2397:     threshold, so it leaves some points unmatched and focuses on the
+2398:     similar parts of two sequences. The matching can occur even if the
+2399:     time indexes are different. One can set additional constraints to the
+2400:     set of acceptable paths: the Sakoe-Chiba band which is parametrized by a
+2401:     radius or the Itakura parallelogram which is parametrized by a maximum slope.
+2402:     Both these constraints consists in forcing paths to lie close
+2403:     to the diagonal. To retrieve a meaningful similarity value from the
+2404:     length of the longest common subsequence, the percentage of that value
+2405:     regarding the length of the shortest time series is returned.
+2406: 
+2407:     According to this definition, the values returned by LCSS range from
+2408:     0 to 1, the highest value taken when two time series fully match,
+2409:     and vice-versa. It is not required that both time series share the
+2410:     same size, but they must be the same dimension. LCSS was originally

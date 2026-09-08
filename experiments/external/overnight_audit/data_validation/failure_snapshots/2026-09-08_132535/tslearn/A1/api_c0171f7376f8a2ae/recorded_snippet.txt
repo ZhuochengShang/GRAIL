@@ -1,0 +1,7 @@
+from tslearn.datasets import UCR_UEA_datasets
+
+ucr = UCR_UEA_datasets()
+acc = ucr.baseline_accuracy("Trace")
+
+assert acc is None or (isinstance(acc, float) and 0.0 <= acc <= 1.0), f"Unexpected baseline accuracy: {acc}"
+print(f"__CHECK__ baseline_accuracy {acc}")

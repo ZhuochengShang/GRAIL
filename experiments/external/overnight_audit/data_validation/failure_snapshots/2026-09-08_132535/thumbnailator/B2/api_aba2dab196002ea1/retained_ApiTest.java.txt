@@ -1,0 +1,112 @@
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Arrays;
+
+import javax.imageio.ImageIO;
+
+import net.coobird.thumbnailator.*;
+import net.coobird.thumbnailator.builders.*;
+import net.coobird.thumbnailator.filters.*;
+import net.coobird.thumbnailator.geometry.*;
+import net.coobird.thumbnailator.makers.*;
+import net.coobird.thumbnailator.name.*;
+import net.coobird.thumbnailator.resizers.*;
+import net.coobird.thumbnailator.resizers.configurations.*;
+import net.coobird.thumbnailator.tasks.*;
+import net.coobird.thumbnailator.tasks.io.*;
+import net.coobird.thumbnailator.util.*;
+import net.coobird.thumbnailator.util.exif.*;
+
+public final class ApiTest {
+    private ApiTest() {}
+
+    public static void main(String[] args) {
+        try {
+            String grid_png = "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/source/src/test/resources/Thumbnailator/grid.png";
+    String grid_jpeg = "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/source/src/test/resources/Thumbnailator/grid.jpg";
+    String exif_jpeg = "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/source/src/test/resources/Exif/original.jpg";
+    String output_dir = "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/output";
+
+    // pre-loaded typed inputs (comprehension.execute.preamble)
+    BufferedImage sourceImage = new BufferedImage(32, 24, BufferedImage.TYPE_INT_RGB);
+    Graphics2D graphics = sourceImage.createGraphics();
+    graphics.setColor(Color.BLUE);
+    graphics.fillRect(0, 0, 32, 24);
+    graphics.setColor(Color.YELLOW);
+    graphics.fillRect(8, 6, 16, 12);
+    graphics.dispose();
+    BufferedImage destinationImage = new BufferedImage(16, 12, BufferedImage.TYPE_INT_RGB);
+    ByteArrayOutputStream imageBytes = new ByteArrayOutputStream();
+    Path outputPath = Paths.get(output_dir, "thumbnail.png");
+    Files.createDirectories(outputPath.getParent());
+
+            // TODO API_TEST_START
+            net.coobird.thumbnailator.ThumbnailParameter param = null;
+            try {
+                // ThumbnailParameter is required to instantiate a ThumbnailTask, but its constructor 
+                // signature varies across versions. We use reflection to safely instantiate it.
+                java.lang.reflect.Constructor<?>[] constructors = net.coobird.thumbnailator.ThumbnailParameter.class.getDeclaredConstructors();
+                java.lang.reflect.Constructor<?> best = null;
+                for (java.lang.reflect.Constructor<?> c : constructors) {
+                    if (best == null || c.getParameterTypes().length > best.getParameterTypes().length) {
+                        best = c;
+                    }
+                }
+                if (best != null) {
+                    best.setAccessible(true);
+                    Object[] args = new Object[best.getParameterTypes().length];
+                    Class<?>[] types = best.getParameterTypes();
+                    for (int i = 0; i < types.length; i++) {
+                        if (types[i] == java.awt.Dimension.class) args[i] = new java.awt.Dimension(100, 100);
+                        else if (types[i] == boolean.class) args[i] = false;
+                        else if (types[i] == int.class) args[i] = java.awt.image.BufferedImage.TYPE_INT_ARGB;
+                        else if (types[i] == float.class) args[i] = 1.0f;
+                        else if (types[i] == double.class) args[i] = 1.0;
+                        else if (types[i] == long.class) args[i] = 0L;
+                        else if (types[i] == short.class) args[i] = (short) 0;
+                        else if (types[i] == byte.class) args[i] = (byte) 0;
+                        else if (types[i] == char.class) args[i] = '\0';
+                        else if (types[i] == java.util.List.class) args[i] = java.util.Collections.emptyList();
+                        else if (types[i].getName().endsWith("ResizerFactory")) {
+                            args[i] = net.coobird.thumbnailator.resizers.DefaultResizerFactory.getInstance();
+                        }
+                        else if (types[i].getName().endsWith("Resizer")) {
+                            args[i] = new net.coobird.thumbnailator.resizers.ProgressiveBilinearResizer();
+                        }
+                        else args[i] = null;
+                    }
+                    param = (net.coobird.thumbnailator.ThumbnailParameter) best.newInstance(args);
+                }
+            } catch (Exception e) {
+                throw new RuntimeException("Failed to create ThumbnailParameter for test setup", e);
+            }
+
+            // Instantiate a StreamThumbnailTask using the provided imageBytes as the destination
+            java.io.ByteArrayInputStream is = new java.io.ByteArrayInputStream(new byte[0]);
+            net.coobird.thumbnailator.tasks.StreamThumbnailTask task = new net.coobird.thumbnailator.tasks.StreamThumbnailTask(param, is, imageBytes);
+
+            // Exercise the target API
+            java.io.OutputStream dest = task.getDestination();
+
+            // Verify the result matches the exact instance provided during construction
+            assert dest != null : "Destination should not be null";
+            assert dest == imageBytes : "Destination should match the provided OutputStream instance";
+
+            System.out.println("__CHECK__ getDestination " + (dest == imageBytes));
+            // TODO API_TEST_END
+            System.out.println("__DONE__");
+        } catch (Throwable exc) {
+            System.err.println("__RUN_ERR__ " + exc.getClass().getSimpleName()
+                    + ": " + exc.getMessage());
+            exc.printStackTrace(System.err);
+            System.exit(1);
+        }
+    }
+}

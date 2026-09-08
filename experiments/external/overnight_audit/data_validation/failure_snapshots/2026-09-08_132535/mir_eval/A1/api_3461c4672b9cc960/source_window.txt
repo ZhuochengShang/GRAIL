@@ -1,0 +1,156 @@
+301:     # if voicing is not binary, use linear interpolation
+302:     is_binary_voicing = np.all(
+303:         np.logical_or(np.equal(voicing, 0), np.equal(voicing, 1))
+304:     )
+305:     if kind == "nearest" or (kind == "linear" and not is_binary_voicing):
+306:         voicing_resampled = scipy.interpolate.interp1d(times, voicing, kind)(times_new)
+307:     # otherwise, always use zeroth order
+308:     else:
+309:         voicing_resampled = scipy.interpolate.interp1d(times, voicing, "zero")(
+310:             times_new
+311:         )
+312: 
+313:     return frequencies_resampled, voicing_resampled
+314: 
+315: 
+316: def to_cent_voicing(
+317:     ref_time,
+318:     ref_freq,
+319:     est_time,
+320:     est_freq,
+321:     est_voicing=None,
+322:     ref_reward=None,
+323:     base_frequency=10.0,
+324:     hop=None,
+325:     kind="linear",
+326: ):
+327:     """Convert reference and estimated time/frequency (Hz) annotations to sampled
+328:     frequency (cent)/voicing arrays.
+329: 
+330:     A zero frequency indicates "unvoiced".
+331: 
+332:     If est_voicing is not provided, a negative frequency indicates:
+333:         "Predicted as unvoiced, but if it's voiced,
+334:         this is the frequency estimate".
+335: 
+336:     If it is provided, negative frequency values are ignored, and the voicing
+337:     from est_voicing is directly used.
+338: 
+339:     Parameters
+340:     ----------
+341:     ref_time : np.ndarray
+342:         Time of each reference frequency value
+343: 
+344:     ref_freq : np.ndarray
+345:         Array of reference frequency values
+346: 
+347:     est_time : np.ndarray
+348:         Time of each estimated frequency value
+349: 
+350:     est_freq : np.ndarray
+351:         Array of estimated frequency values
+352: 
+353:     est_voicing : np.ndarray
+354:         Estimate voicing confidence.
+355:         Default None, which means the voicing is inferred from est_freq:
+356: 
+357:           - frames with frequency <= 0.0 are considered "unvoiced"
+358:           - frames with frequency > 0.0 are considered "voiced"
+359: 
+360:     ref_reward : np.ndarray
+361:         Reference voicing reward.
+362:         Default None, which means all frames are weighted equally.
+363: 
+364:     base_frequency : float
+365:         Base frequency in Hz for conversion to cents
+366:         (Default value = 10.)
+367: 
+368:     hop : float
+369:         Hop size, in seconds, to resample,
+370:         default None which means use ref_time
+371: 
+372:     kind : str
+373:         kind parameter to pass to scipy.interpolate.interp1d.
+374:         (Default value = 'linear')
+375: 
+376:     Returns
+377:     -------
+378:     ref_voicing : np.ndarray
+379:         Resampled reference voicing array
+380:     ref_cent : np.ndarray
+381:         Resampled reference frequency (cent) array
+382:     est_voicing : np.ndarray
+383:         Resampled estimated voicing array
+384:     est_cent : np.ndarray
+385:         Resampled estimated frequency (cent) array
+386: 
+387:     """
+388:     # Check if missing sample at time 0 and if so add one
+389:     if ref_time[0] > 0:
+390:         ref_time = np.insert(ref_time, 0, 0)
+391:         ref_freq = np.insert(ref_freq, 0, ref_freq[0])
+392:         if ref_reward is not None:
+393:             ref_reward = np.insert(ref_reward, 0, ref_reward[0])
+394:     if est_time[0] > 0:
+395:         est_time = np.insert(est_time, 0, 0)
+396:         est_freq = np.insert(est_freq, 0, est_freq[0])
+397:         if est_voicing is not None:
+398:             est_voicing = np.insert(est_voicing, 0, est_voicing[0])
+399: 
+400:     # Get separated frequency array and voicing array
+401:     ref_freq, ref_voicing = freq_to_voicing(ref_freq, ref_reward)
+402:     est_freq, est_voicing = freq_to_voicing(est_freq, est_voicing)
+403:     # convert both sequences to cents
+404:     ref_cent = hz2cents(ref_freq, base_frequency)
+405:     est_cent = hz2cents(est_freq, base_frequency)
+406: 
+407:     # If we received a hop, use it to resample both
+408:     if hop is not None:
+409:         # Resample to common time base
+410:         ref_cent, ref_voicing = resample_melody_series(
+411:             ref_time,
+412:             ref_cent,
+413:             ref_voicing,
+414:             constant_hop_timebase(hop, ref_time.max()),
+415:             kind,
+416:         )
+417:         est_cent, est_voicing = resample_melody_series(
+418:             est_time,
+419:             est_cent,
+420:             est_voicing,
+421:             constant_hop_timebase(hop, est_time.max()),
+422:             kind,
+423:         )
+424:     # Otherwise, only resample estimated to the reference time base
+425:     else:
+426:         est_cent, est_voicing = resample_melody_series(
+427:             est_time, est_cent, est_voicing, ref_time, kind
+428:         )
+429:     # ensure the estimated sequence is the same length as the reference
+430:     len_diff = ref_cent.shape[0] - est_cent.shape[0]
+431:     if len_diff >= 0:
+432:         est_cent = np.append(est_cent, np.zeros(len_diff))
+433:         est_voicing = np.append(est_voicing, np.zeros(len_diff))
+434:     else:
+435:         est_cent = est_cent[: ref_cent.shape[0]]
+436:         est_voicing = est_voicing[: ref_voicing.shape[0]]
+437: 
+438:     return (ref_voicing, ref_cent, est_voicing, est_cent)
+439: 
+440: 
+441: def voicing_recall(ref_voicing, est_voicing):
+442:     """Compute the voicing recall given two voicing
+443:     indicator sequences, one as reference (truth) and the other as the estimate
+444:     (prediction).  The sequences must be of the same length.
+445: 
+446:     Examples
+447:     --------
+448:     >>> ref_time, ref_freq = mir_eval.io.load_time_series('ref.txt')
+449:     >>> est_time, est_freq = mir_eval.io.load_time_series('est.txt')
+450:     >>> (ref_v, ref_c,
+451:     ...  est_v, est_c) = mir_eval.melody.to_cent_voicing(ref_time,
+452:     ...                                                  ref_freq,
+453:     ...                                                  est_time,
+454:     ...                                                  est_freq)
+455:     >>> recall = mir_eval.melody.voicing_recall(ref_v, est_v)
+456: 

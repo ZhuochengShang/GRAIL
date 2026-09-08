@@ -1,0 +1,156 @@
+239: 	 * 
+240: 	 * @param format		The output format of the thumbnail.
+241: 	 * @return				A reference to this object.
+242: 	 */
+243: 	public ThumbnailParameterBuilder format(String format) {
+244: 		this.thumbnailFormat = format;
+245: 		return this;
+246: 	}
+247: 	
+248: 	/**
+249: 	 * Sets the output format type of the thumbnail.
+250: 	 * 
+251: 	 * @param formatType	The output format type of the thumbnail.
+252: 	 * @return				A reference to this object.
+253: 	 */
+254: 	public ThumbnailParameterBuilder formatType(String formatType) {
+255: 		this.thumbnailFormatType = formatType;
+256: 		return this;
+257: 	}
+258: 	
+259: 	/**
+260: 	 * Sets the {@link ImageFilter}s to apply to the thumbnail.
+261: 	 * <p>
+262: 	 * These filters will be applied after the original image is resized.
+263: 	 * 
+264: 	 * @param filters		The output format type of the thumbnail.
+265: 	 * @return				A reference to this object.
+266: 	 */
+267: 	public ThumbnailParameterBuilder filters(List<ImageFilter> filters) {
+268: 		if (filters == null) {
+269: 			throw new NullPointerException("Filters is null.");
+270: 		}
+271: 		
+272: 		this.filters = filters;
+273: 		return this;
+274: 	}
+275: 	
+276: 	/**
+277: 	 * Sets the {@link Resizer} to use when performing the resizing operation
+278: 	 * to create the thumbnail.
+279: 	 * <p>
+280: 	 * Calling this method after {@link #resizerFactory(ResizerFactory)} will
+281: 	 * cause the {@link ResizerFactory} used by the resulting
+282: 	 * {@link ThumbnailParameter} to only return the specified {@link Resizer}.
+283: 	 *
+284: 	 * @param resizer		The {@link Resizer} to use when creating the
+285: 	 * 						thumbnail.
+286: 	 * @return				A reference to this object.
+287: 	 */
+288: 	public ThumbnailParameterBuilder resizer(Resizer resizer) {
+289: 		if (resizer == null) {
+290: 			throw new NullPointerException("Resizer is null.");
+291: 		}
+292: 		
+293: 		this.resizerFactory = new FixedResizerFactory(resizer);
+294: 		return this;
+295: 	}
+296: 	
+297: 	/**
+298: 	 * Sets the {@link ResizerFactory} to use to obtain a {@link Resizer} when
+299: 	 * performing the resizing operation to create the thumbnail.
+300: 	 * <p>
+301: 	 * Calling this method after {@link #resizer(Resizer)} could result in
+302: 	 * {@link Resizer}s not specified in the {@code resizer} method to be used
+303: 	 * when creating thumbnails.
+304: 	 * 
+305: 	 * 
+306: 	 * @param resizerFactory	The {@link ResizerFactory} to use when obtaining
+307: 	 * 							a {@link Resizer} to create the thumbnail.
+308: 	 * @return					A reference to this object.
+309: 	 * @since	0.4.0
+310: 	 */
+311: 	public ThumbnailParameterBuilder resizerFactory(ResizerFactory resizerFactory) {
+312: 		if (resizerFactory == null) {
+313: 			throw new NullPointerException("Resizer is null.");
+314: 		}
+315: 		
+316: 		this.resizerFactory = resizerFactory;
+317: 		return this;
+318: 	}
+319: 	
+320: 	/**
+321: 	 * Sets whether or not the thumbnail should fit within the specified
+322: 	 * dimensions.
+323: 	 * 
+324: 	 * @param fit		{@code true} if the thumbnail should be sized to fit
+325: 	 *					within the specified dimensions, if the thumbnail
+326: 	 * 					is going to exceed those dimensions.
+327: 	 * @return			A reference to this object.
+328: 	 * @since	0.4.0
+329: 	 */
+330: 	public ThumbnailParameterBuilder fitWithinDimensions(boolean fit) {
+331: 		this.fitWithinDimensions = fit;
+332: 		return this;
+333: 	}
+334: 	
+335: 	/**
+336: 	 * Sets whether or not the Exif metadata should be used to determine the
+337: 	 * orientation of the thumbnail.
+338: 	 * 
+339: 	 * @param use		{@code true} if the Exif metadata should be used
+340: 	 * 					to determine the orientation of the thumbnail,
+341: 	 * 					{@code false} otherwise.
+342: 	 * @return			A reference to this object.
+343: 	 * @since	0.4.3
+344: 	 */
+345: 	public ThumbnailParameterBuilder useExifOrientation(boolean use) {
+346: 		this.useExifOrientation = use;
+347: 		return this;
+348: 	}
+349: 
+350: 	/**
+351: 	 * Returns a {@link ThumbnailParameter} from the parameters which are
+352: 	 * currently set.
+353: 	 * <p>
+354: 	 * This method will throw a {@link IllegalArgumentException} required
+355: 	 * parameters for the {@link ThumbnailParameter} have not been set.
+356: 	 * 
+357: 	 * @return		A {@link ThumbnailParameter} with parameters set through
+358: 	 * 				the use of this builder.
+359: 	 * @throws IllegalStateException	If neither the size nor the scaling
+360: 	 * 									factor has been set.
+361: 	 */
+362: 	public ThumbnailParameter build() {
+363: 		if (!Double.isNaN(widthScalingFactor)) {
+364: 			// If scaling factor has been set.
+365: 			return new ThumbnailParameter(
+366: 					widthScalingFactor,
+367: 					heightScalingFactor,
+368: 					sourceRegion,
+369: 					keepAspectRatio,
+370: 					thumbnailFormat,
+371: 					thumbnailFormatType,
+372: 					thumbnailQuality,
+373: 					imageType,
+374: 					filters,
+375: 					resizerFactory,
+376: 					fitWithinDimensions,
+377: 					useExifOrientation
+378: 			);
+379: 
+380: 		} else if (width != UNINITIALIZED && height != UNINITIALIZED) {
+381: 			return new ThumbnailParameter(
+382: 					new Dimension(width, height),
+383: 					sourceRegion,
+384: 					keepAspectRatio,
+385: 					thumbnailFormat,
+386: 					thumbnailFormatType,
+387: 					thumbnailQuality,
+388: 					imageType,
+389: 					filters,
+390: 					resizerFactory,
+391: 					fitWithinDimensions,
+392: 					useExifOrientation
+393: 			);
+394: 		} else {

@@ -1,0 +1,156 @@
+779:             "the maximum allowable time of max_time = {} (did you"
+780:             " supply event times in "
+781:             "seconds?)".format(events.max(), max_time)
+782:         )
+783:     # Make sure event locations are 1-d np ndarrays
+784:     if events.ndim != 1:
+785:         raise ValueError(
+786:             "Event times should be 1-d numpy ndarray, "
+787:             "but shape={}".format(events.shape)
+788:         )
+789:     # Make sure event times are increasing
+790:     if (np.diff(events) < 0).any():
+791:         raise ValueError("Events should be in increasing order.")
+792: 
+793: 
+794: def validate_frequencies(frequencies, max_freq, min_freq, allow_negatives=False):
+795:     """Check that a 1-d frequency ndarray is well-formed, and raises
+796:     errors if not.
+797: 
+798:     Parameters
+799:     ----------
+800:     frequencies : np.ndarray, shape=(n,)
+801:         Array of frequency values
+802:     max_freq : float
+803:         If a frequency is found above this pitch, a ValueError will be raised.
+804:         (Default value = 5000.)
+805:     min_freq : float
+806:         If a frequency is found below this pitch, a ValueError will be raised.
+807:         (Default value = 20.)
+808:     allow_negatives : bool
+809:         Whether or not to allow negative frequency values.
+810:     """
+811:     # If flag is true, map frequencies to their absolute value.
+812:     if allow_negatives:
+813:         frequencies = np.abs(frequencies)
+814:     # Make sure no frequency values are huge
+815:     if (np.abs(frequencies) > max_freq).any():
+816:         raise ValueError(
+817:             "A frequency of {} was found which is greater than "
+818:             "the maximum allowable value of max_freq = {} (did "
+819:             "you supply frequency values in "
+820:             "Hz?)".format(frequencies.max(), max_freq)
+821:         )
+822:     # Make sure no frequency values are tiny
+823:     if (np.abs(frequencies) < min_freq).any():
+824:         raise ValueError(
+825:             "A frequency of {} was found which is less than the "
+826:             "minimum allowable value of min_freq = {} (did you "
+827:             "supply frequency values in "
+828:             "Hz?)".format(frequencies.min(), min_freq)
+829:         )
+830:     # Make sure frequency values are 1-d np ndarrays
+831:     if frequencies.ndim != 1:
+832:         raise ValueError(
+833:             "Frequencies should be 1-d numpy ndarray, "
+834:             "but shape={}".format(frequencies.shape)
+835:         )
+836: 
+837: 
+838: def has_kwargs(function):
+839:     r"""Determine whether a function has ``**kwargs``.
+840: 
+841:     Parameters
+842:     ----------
+843:     function : callable
+844:         The function to test
+845: 
+846:     Returns
+847:     -------
+848:     True if function accepts arbitrary keyword arguments.
+849:     False otherwise.
+850:     """
+851:     sig = inspect.signature(function)
+852: 
+853:     for param in list(sig.parameters.values()):
+854:         if param.kind == param.VAR_KEYWORD:
+855:             return True
+856: 
+857:     return False
+858: 
+859: 
+860: def filter_kwargs(_function, *args, **kwargs):
+861:     r"""Given a function and args and keyword args to pass to it, call the function
+862:     but using only the keyword arguments which it accepts.  This is equivalent
+863:     to redefining the function with an additional ``**kwargs`` to accept slop
+864:     keyword args.
+865: 
+866:     If the target function already accepts ``**kwargs`` parameters, no filtering
+867:     is performed.
+868: 
+869:     Parameters
+870:     ----------
+871:     _function : callable
+872:         Function to call.  Can take in any number of args or kwargs
+873:     *args
+874:     **kwargs
+875:         Arguments and keyword arguments to _function.
+876:     """
+877:     if has_kwargs(_function):
+878:         return _function(*args, **kwargs)
+879: 
+880:     # Get the list of function arguments
+881:     func_code = _function.__code__
+882:     function_args = func_code.co_varnames[: func_code.co_argcount]
+883:     # Construct a dict of those kwargs which appear in the function
+884:     filtered_kwargs = {}
+885:     for kwarg, value in list(kwargs.items()):
+886:         if kwarg in function_args:
+887:             filtered_kwargs[kwarg] = value
+888:     # Call the function with the supplied args and the filtered kwarg dict
+889:     return _function(*args, **filtered_kwargs)
+890: 
+891: 
+892: def intervals_to_durations(intervals):
+893:     """Convert an array of n intervals to their n durations.
+894: 
+895:     Parameters
+896:     ----------
+897:     intervals : np.ndarray, shape=(n, 2)
+898:         An array of time intervals, as returned by
+899:         :func:`mir_eval.io.load_intervals()`.
+900:         The ``i`` th interval spans time ``intervals[i, 0]`` to
+901:         ``intervals[i, 1]``.
+902: 
+903:     Returns
+904:     -------
+905:     durations : np.ndarray, shape=(n,)
+906:         Array of the duration of each interval.
+907: 
+908:     """
+909:     validate_intervals(intervals)
+910:     return np.abs(np.diff(intervals, axis=-1)).flatten()
+911: 
+912: 
+913: def hz_to_midi(freqs):
+914:     """Convert Hz to MIDI numbers
+915: 
+916:     Parameters
+917:     ----------
+918:     freqs : number or ndarray
+919:         Frequency/frequencies in Hz
+920: 
+921:     Returns
+922:     -------
+923:     midi : number or ndarray
+924:         MIDI note numbers corresponding to input frequencies.
+925:         Note that these may be fractional.
+926:     """
+927:     return 12.0 * (np.log2(freqs) - np.log2(440.0)) + 69.0
+928: 
+929: 
+930: def midi_to_hz(midi):
+931:     """Convert MIDI numbers to Hz
+932: 
+933:     Parameters
+934:     ----------

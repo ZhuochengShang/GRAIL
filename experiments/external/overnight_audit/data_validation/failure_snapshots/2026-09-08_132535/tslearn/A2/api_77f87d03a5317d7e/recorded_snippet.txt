@@ -1,0 +1,23 @@
+from tslearn.early_classification import NonMyopicEarlyClassifier
+from sklearn.tree import DecisionTreeClassifier
+
+# Initialize the early classifier with a simple base classifier
+early_clf = NonMyopicEarlyClassifier(
+    n_clusters=2,
+    base_classifier=DecisionTreeClassifier(random_state=42),
+    cost_time_parameter=1e-3,
+    random_state=42
+)
+
+# Fit the model on the balanced dataset
+early_clf.fit(X, y)
+
+# Predict class and earliness
+predicted_classes, prediction_timestamps = early_clf.predict_class_and_earliness(X)
+
+# Verify the results
+assert predicted_classes.shape == (X.shape[0],), f"Expected shape {(X.shape[0],)}, got {predicted_classes.shape}"
+assert prediction_timestamps.shape == (X.shape[0],), f"Expected shape {(X.shape[0],)}, got {prediction_timestamps.shape}"
+assert all(0 <= t <= X.shape[1] for t in prediction_timestamps), "Prediction timestamps must be within the series length"
+
+print(f"__CHECK__ predict_class_and_earliness {predicted_classes.shape}, {prediction_timestamps

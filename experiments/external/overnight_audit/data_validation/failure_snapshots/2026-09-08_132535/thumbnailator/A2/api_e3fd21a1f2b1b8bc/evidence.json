@@ -1,0 +1,57 @@
+{
+  "name": "defaultResizerFactory",
+  "native_row": {
+    "status": "fail",
+    "attempts": 1,
+    "pass_round": null,
+    "wall_s": 14.3,
+    "llm_calls": 1,
+    "input_tokens": 1634,
+    "output_tokens": 1676,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 1634,
+        "output_tokens": 1676
+      }
+    },
+    "error_category": "runtime",
+    "error": "IllegalStateException: Maker not ready to make thumbnail.",
+    "locus": "ApiTest.java:53",
+    "doc_chars": 1899,
+    "document_sha256": "7bd4f9cb42b204da50cbb8532d98b9221a44161b65c934425ef61cd3486b4559",
+    "source": "source/src/main/java/net/coobird/thumbnailator/makers/ThumbnailMaker.java:290",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "name": "defaultResizerFactory",
+    "execution_evidence": {
+      "status": "fail",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "fail",
+          "category": "runtime",
+          "error": "IllegalStateException: Maker not ready to make thumbnail."
+        }
+      ],
+      "error_category": "runtime",
+      "error": "IllegalStateException: Maker not ready to make thumbnail.",
+      "code": "net.coobird.thumbnailator.makers.ThumbnailMaker maker = new net.coobird.thumbnailator.makers.FixedSizeThumbnailMaker(50, 50);\nnet.coobird.thumbnailator.makers.ThumbnailMaker chained = maker.defaultResizerFactory();\njava.awt.image.BufferedImage result = chained.make(sourceImage);\n\nassert chained == maker : \"Expected fluent return for method chaining\";\nassert result != null : \"Resulting image should not be null\";\nassert result.getWidth() <= 50 && result.getHeight() <= 50 : \"Image should be resized to fit within 50x50\";\n\nSystem.out.println(\"__CHECK__ defaultResizerFactory \" + result.getWidth() + \"x\" + result.getHeight());",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/.aideal_exec/A2/run_defaultResizerFactory/ApiTest.java",
+      "exit_code": 1,
+      "stdout_tail": "",
+      "stderr_tail": "__RUN_ERR__ IllegalStateException: Maker not ready to make thumbnail.\njava.lang.IllegalStateException: Maker not ready to make thumbnail.\n\tat net.coobird.thumbnailator.makers.ThumbnailMaker.makeThumbnail(Unknown Source)\n\tat net.coobird.thumbnailator.makers.FixedSizeThumbnailMaker.make(Unknown Source)\n\tat ApiTest.main(ApiTest.java:53)\n"
+    },
+    "experiment_fingerprint": "d0a4b20f3e5d3ea0caf7b1501a9bf2fb4d4f11ac7d844517d7b5d67874427464"
+  },
+  "retained_binding": "recorded_code_prefix_present",
+  "retained_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/.aideal_exec/A2/run_defaultResizerFactory/ApiTest.java",
+  "retained_sha256": "f1da4dea3a6d86ff22643a531280f1e7b794a606dde49c1cbf90da7319730cfc",
+  "source_window": {
+    "path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/source/src/main/java/net/coobird/thumbnailator/makers/ThumbnailMaker.java",
+    "full_file_sha256": "692d1af698999f929072acc71440e7f011af9e83956ffb0bed1edf7ca4c9d313",
+    "first_line": 275,
+    "last_line": 296,
+    "other_sites": 0
+  }
+}

@@ -1,0 +1,156 @@
+2504: 		 * 							thumbnails should be written to.
+2505: 		 * @param rename			The rename function which is used to
+2506: 		 * 							determine the filenames of the thumbnail
+2507: 		 * 							files to write.
+2508: 		 * @return					A list of {@link File}s of the thumbnails
+2509: 		 * 							which were created.
+2510: 		 * @throws IOException		If a problem occurs while reading the
+2511: 		 * 							original images or writing the thumbnails
+2512: 		 * 							to files.
+2513: 		 * @throws IllegalStateException		If the original images are not
+2514: 		 * 										from files.
+2515: 		 * @throws IllegalArgumentException		If the destination directory
+2516: 		 * 										is not a directory.
+2517: 		 * @since 	0.4.7
+2518: 		 */
+2519: 		public List<File> asFiles(File destinationDir, Rename rename) throws IOException {
+2520: 			checkReadiness();
+2521: 			
+2522: 			if (rename == null) {
+2523: 				throw new NullPointerException("Rename is null.");
+2524: 			}
+2525: 			
+2526: 			if (destinationDir != null && !destinationDir.isDirectory()) {
+2527: 				throw new IllegalArgumentException("Given destination is not a directory.");
+2528: 			}
+2529: 
+2530: 			List<File> destinationFiles = new ArrayList<File>();
+2531: 			
+2532: 			for (ImageSource<T> source : sources) {
+2533: 				if (!(source instanceof FileImageSource)) {
+2534: 					throw new IllegalStateException("Cannot create thumbnails to files if original images are not from files.");
+2535: 				}
+2536: 				
+2537: 				ThumbnailParameter param = makeParam();
+2538: 				
+2539: 				File f = ((FileImageSource)source).getSource();
+2540: 				
+2541: 				File actualDestDir = destinationDir == null ? f.getParentFile() : destinationDir;
+2542: 				File destinationFile = new File(actualDestDir, rename.apply(f.getName(), param));
+2543: 				
+2544: 				FileImageSink destination = new FileImageSink(destinationFile, allowOverwrite);
+2545: 				
+2546: 				try {
+2547: 					Thumbnailator.createThumbnail(
+2548: 							new SourceSinkThumbnailTask<T, File>(param, source, destination)
+2549: 					);
+2550: 					
+2551: 					destinationFiles.add(destination.getSink());
+2552: 
+2553: 				} catch (IllegalArgumentException e) {
+2554: 					/*
+2555: 					 * Handle the IllegalArgumentException which is thrown when
+2556: 					 * the destination file already exists by not adding the
+2557: 					 * current file to the destinationFiles list.
+2558: 					 */
+2559: 				}
+2560: 			}
+2561: 			
+2562: 			return destinationFiles;
+2563: 		}
+2564: 
+2565: 		/**
+2566: 		 * Creates thumbnails and stores them to files using the
+2567: 		 * {@link Rename} function to determine the filenames.
+2568: 		 * <p>
+2569: 		 * When the destination file exists, and overwriting files has been
+2570: 		 * disabled by calling the {@link #allowOverwrite(boolean)} method
+2571: 		 * with {@code false}, then the thumbnail with the destination file
+2572: 		 * already existing will not be written.
+2573: 		 * <p>
+2574: 		 * To call this method, the thumbnails must have been creates from
+2575: 		 * files by calling the {@link Thumbnails#of(File...)} method.
+2576: 		 * 
+2577: 		 * @param rename			The rename function which is used to
+2578: 		 * 							determine the filenames of the thumbnail
+2579: 		 * 							files to write.
+2580: 		 * @throws IOException		If a problem occurs while reading the
+2581: 		 * 							original images or writing the thumbnails
+2582: 		 * 							to files.
+2583: 		 * 							thumbnails to files.
+2584: 		 * @throws IllegalStateException		If the original images are not
+2585: 		 * 										from files.
+2586: 		 * @since 	0.3.7
+2587: 		 */
+2588: 		public void toFiles(Rename rename) throws IOException {
+2589: 			toFiles(null, rename);
+2590: 		}
+2591: 		
+2592: 		/**
+2593: 		 * Creates thumbnails and stores them to files in the directory
+2594: 		 * specified by the given {@link File} object, and using the
+2595: 		 * {@link Rename} function to determine the filenames.
+2596: 		 * <p>
+2597: 		 * When the destination file exists, and overwriting files has been
+2598: 		 * disabled by calling the {@link #allowOverwrite(boolean)} method
+2599: 		 * with {@code false}, then the thumbnail with the destination file
+2600: 		 * already existing will not be written.
+2601: 		 * <p>
+2602: 		 * Extra caution should be taken when using this method, as there are
+2603: 		 * no protections in place to prevent file name collisions resulting
+2604: 		 * from creating thumbnails from files in separate directories but
+2605: 		 * having the same name. In such a case, the behavior will be depend
+2606: 		 * on the behavior of the {@link #allowOverwrite(boolean)} as
+2607: 		 * described in the previous paragraph.
+2608: 		 * <p>
+2609: 		 * To call this method, the thumbnails must have been creates from
+2610: 		 * files by calling the {@link Thumbnails#of(File...)} method.
+2611: 		 * 
+2612: 		 * @param destinationDir	The destination directory to which the
+2613: 		 * 							thumbnails should be written to.
+2614: 		 * @param rename			The rename function which is used to
+2615: 		 * 							determine the filenames of the thumbnail
+2616: 		 * 							files to write.
+2617: 		 * @throws IOException		If a problem occurs while reading the
+2618: 		 * 							original images or writing the thumbnails
+2619: 		 * 							to files.
+2620: 		 * 							thumbnails to files.
+2621: 		 * @throws IllegalStateException		If the original images are not
+2622: 		 * 										from files.
+2623: 		 * @throws IllegalArgumentException		If the destination directory
+2624: 		 * 										is not a directory.
+2625: 		 * @since 	0.4.7
+2626: 		 */
+2627: 		public void toFiles(File destinationDir, Rename rename) throws IOException {
+2628: 			asFiles(destinationDir, rename);
+2629: 		}
+2630: 
+2631: 		/**
+2632: 		 * Create a thumbnail and writes it to a {@link File}.
+2633: 		 * <p>
+2634: 		 * When the destination file exists, and overwriting files has been
+2635: 		 * disabled by calling the {@link #allowOverwrite(boolean)} method
+2636: 		 * with {@code false}, then an {@link IllegalArgumentException} will
+2637: 		 * be thrown.
+2638: 		 * <p>
+2639: 		 * To call this method, the thumbnail must have been created from a
+2640: 		 * single source.
+2641: 		 * 
+2642: 		 * @param outFile			The file to which the thumbnail is to be
+2643: 		 * 							written to.
+2644: 		 * @throws IOException		If a problem occurs while reading the
+2645: 		 * 							original images or writing the thumbnails
+2646: 		 * 							to files.
+2647: 		 * @throws IllegalArgumentException		If multiple original image files
+2648: 		 * 										are	specified, or if the
+2649: 		 * 										destination file exists, and
+2650: 		 * 										overwriting files is disabled.
+2651: 		 */
+2652: 		public void toFile(File outFile) throws IOException {
+2653: 			checkReadiness();
+2654: 			
+2655: 			Iterator<ImageSource<T>> iter = sources.iterator();
+2656: 			ImageSource<T> source = iter.next();
+2657: 			
+2658: 			if (iter.hasNext()) {
+2659: 				throw new IllegalArgumentException("Cannot output multiple thumbnails to one file.");

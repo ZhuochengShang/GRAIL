@@ -1,0 +1,156 @@
+337:         X : array-like of shape=(n_ts, sz, d)
+338:             Time series dataset.
+339: 
+340:         Returns
+341:         -------
+342:         array of shape=(n_ts, ) or (n_ts, n_classes), depending on the shape
+343:         of the label vector provided at training time.
+344:             Index of the cluster each sample belongs to or class probability
+345:             matrix, depending on what was provided at training time.
+346:         """
+347:         sklearn_X, y, nb_features = self._preprocess_sklearn(X, fit_time=False)
+348:         estimator = self.svm_estimator_.predict(sklearn_X)
+349:         self.n_features_in_ = nb_features
+350:         return estimator
+351: 
+352:     def decision_function(self, X):
+353:         """Evaluates the decision function for the samples in X.
+354: 
+355:         Parameters
+356:         ----------
+357:         X : array-like of shape=(n_ts, sz, d)
+358:             Time series dataset.
+359: 
+360:         Returns
+361:         -------
+362:         ndarray of shape (n_samples, n_classes * (n_classes-1) / 2)
+363:             Returns the decision function of the sample for each class
+364:             in the model.
+365:             If decision_function_shape='ovr', the shape is (n_samples,
+366:             n_classes)."""
+367:         sklearn_X, *_ = self._preprocess_sklearn(X, fit_time=False)
+368:         return self.svm_estimator_.decision_function(sklearn_X)
+369: 
+370:     def predict_log_proba(self, X):
+371:         """Predict class log-probabilities for a given set of time series.
+372: 
+373:         Note that probability estimates are not guaranteed to match predict
+374:         output.
+375:         See our :ref:`dedicated user guide section <kernels-ml>`
+376:         for more details.
+377: 
+378:         Parameters
+379:         ----------
+380:         X : array-like of shape=(n_ts, sz, d)
+381:             Time series dataset.
+382: 
+383:         Returns
+384:         -------
+385:         array of shape=(n_ts, n_classes),
+386:             Class probability matrix.
+387:         """
+388:         sklearn_X, *_ = self._preprocess_sklearn(X, fit_time=False)
+389:         return self.svm_estimator_.predict_log_proba(sklearn_X)
+390: 
+391:     def predict_proba(self, X):
+392:         """Predict class probability for a given set of time series.
+393: 
+394:         Note that probability estimates are not guaranteed to match predict
+395:         output.
+396:         See our :ref:`dedicated user guide section <kernels-ml>`
+397:         for more details.
+398: 
+399:         Parameters
+400:         ----------
+401:         X : array-like of shape=(n_ts, sz, d)
+402:             Time series dataset.
+403: 
+404:         Returns
+405:         -------
+406:         array of shape=(n_ts, n_classes),
+407:             Class probability matrix.
+408:         """
+409:         sklearn_X, *_ = self._preprocess_sklearn(X, fit_time=False)
+410:         return self.svm_estimator_.predict_proba(sklearn_X)
+411: 
+412: 
+413: class TimeSeriesSVR(TimeSeriesSVMMixin, RegressorMixin, BaseEstimator):
+414:     """Time-series specific Support Vector Regressor.
+415: 
+416:     Parameters
+417:     ----------
+418:     C : float, optional (default=1.0)
+419:         Penalty parameter C of the error term.
+420: 
+421:     kernel : string, optional (default='gak')
+422:          Specifies the kernel type to be used in the algorithm.
+423:          It must be one of 'gak' or a kernel accepted by ``sklearn.svm.SVC``.
+424:          If none is given, 'gak' will be used. If a callable is given it is
+425:          used to pre-compute the kernel matrix from data matrices; that matrix
+426:          should be an array of shape ``(n_samples, n_samples)``.
+427: 
+428:     degree : int, optional (default=3)
+429:         Degree of the polynomial kernel function ('poly').
+430:         Ignored by all other kernels.
+431: 
+432:     gamma : float, optional (default='auto')
+433:         Kernel coefficient for 'gak', 'rbf', 'poly' and 'sigmoid'.
+434:         For 'gak' kernel, a `RuntimeError` is raised at fit time when value is
+435:         close to 0 and therefore not compatible with 'gak' kernel.
+436: 
+437:         If gamma is 'auto' then:
+438: 
+439:         - for 'gak' kernel, it is computed based on a sampling of the training
+440:           set (cf :ref:`tslearn.metrics.gamma_soft_dtw <fun-tslearn.metrics.gamma_soft_dtw>`).
+441:           A `RuntimeError` is raised at fit time when computed value is
+442:           close to 0 and therefore not compatible with 'gak' kernel.
+443: 
+444:         - for other kernels (eg. 'rbf'), 1/n_features will be used.
+445: 
+446:     coef0 : float, optional (default=0.0)
+447:         Independent term in kernel function.
+448:         It is only significant in 'poly' and 'sigmoid'.
+449: 
+450:     tol : float, optional (default=1e-3)
+451:         Tolerance for stopping criterion.
+452: 
+453:     epsilon : float, optional (default=0.1)
+454:          Epsilon in the epsilon-SVR model. It specifies the epsilon-tube
+455:          within which no penalty is associated in the training loss function
+456:          with points predicted within a distance epsilon from the actual
+457:          value.
+458: 
+459:     shrinking : boolean, optional (default=True)
+460:         Whether to use the shrinking heuristic.
+461: 
+462:     cache_size :  float, optional (default=200.0)
+463:         Specify the size of the kernel cache (in MB).
+464: 
+465:     n_jobs : int or None, optional (default=None)
+466:         The number of jobs to run in parallel for GAK cross-similarity matrix
+467:         computations.
+468:         ``None`` means 1 unless in a :obj:`joblib.parallel_backend` context.
+469:         ``-1`` means using all processors. See scikit-learns'
+470:         `Glossary <https://scikit-learn.org/stable/glossary.html#term-n_jobs>`_
+471:         for more details.
+472: 
+473:     verbose : int, default: 0
+474:         Enable verbose output. Note that this setting takes advantage of a
+475:         per-process runtime setting in libsvm that, if enabled, may not work
+476:         properly in a multithreaded context.
+477: 
+478:     max_iter : int, optional (default=-1)
+479:         Hard limit on iterations within solver, or -1 for no limit.
+480: 
+481:     random_state : int, RandomState instance or None, optional (default=None)
+482:         The seed of the pseudo random number generator to use when shuffling
+483:         the data.  If int, random_state is the seed used by the random number
+484:         generator; If RandomState instance, random_state is the random number
+485:         generator; If None, the random number generator is the RandomState
+486:         instance used by `np.random`.
+487: 
+488:     Attributes
+489:     ----------
+490:     support_ : array-like, shape = [n_SV]
+491:         Indices of support vectors.
+492: 

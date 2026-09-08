@@ -1,0 +1,19 @@
+net.coobird.thumbnailator.resizers.ResizerFactory factory = net.coobird.thumbnailator.resizers.DefaultResizerFactory.getInstance();
+
+// 1. Test ThumbnailParameterBuilder overload
+net.coobird.thumbnailator.ThumbnailParameter param = new net.coobird.thumbnailator.ThumbnailParameterBuilder()
+    .size(100, 100)
+    .resizerFactory(factory)
+    .build();
+
+assert param.getResizerFactory() == factory : "ResizerFactory was not set correctly on ThumbnailParameter";
+
+// 2. Test Thumbnails.Builder overload
+java.awt.image.BufferedImage result = net.coobird.thumbnailator.Thumbnails.of(sourceImage)
+    .size(42, 42)
+    .resizerFactory(factory)
+    .asBufferedImage();
+
+assert result.getWidth() <= 42 && result.getHeight() <= 42 : "Image was not resized correctly using the provided ResizerFactory";
+
+System.out.println("__CHECK__ resizerFactory " + param.getResizerFactory().getClass().getSimpleName() + "_" + result.getWidth() + "x" + result.getHeight());

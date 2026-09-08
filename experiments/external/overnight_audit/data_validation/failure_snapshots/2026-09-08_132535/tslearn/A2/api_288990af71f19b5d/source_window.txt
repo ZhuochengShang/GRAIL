@@ -1,0 +1,156 @@
+1053:                 ts1_short, ts1_short, gamma=gamma, be=be, compute_with_backend=compute_with_backend
+1054:             )
+1055: 
+1056:         self_dists2 = be.empty((1, dataset2.shape[0]))
+1057:         for j, ts2 in enumerate(dataset2):
+1058:             ts2_short = _to_time_series(ts2, True, be)
+1059:             self_dists2[0, j] = soft_dtw(
+1060:                 ts2_short, ts2_short, gamma=gamma, be=be, compute_with_backend=compute_with_backend
+1061:             )
+1062: 
+1063:         normalizer = -0.5 * (self_dists1 + self_dists2)
+1064:     dists += normalizer
+1065:     return dists
+1066: 
+1067: 
+1068: class SoftDTW:
+1069:     """Soft Dynamic Time Warping"""
+1070:     def __init__(self, D, gamma=1.0, be=None, compute_with_backend=False):
+1071:         """Soft Dynamic Time Warping.
+1072: 
+1073:         Parameters
+1074:         ----------
+1075:         D : array-like, shape=(m, n), dtype=float64 or class computing distances with a method 'compute'
+1076:             Distances. An example of class computing distance is 'SquaredEuclidean'.
+1077:         gamma: float
+1078:             Regularization parameter.
+1079:             Lower is less smoothed (closer to true DTW).
+1080:         be : Backend object or string or None
+1081:             Backend.
+1082:         compute_with_backend : bool, default=False
+1083:             This parameter has no influence when the NumPy backend is used.
+1084:             When a backend different from NumPy is used (cf parameter `be`):
+1085:             If `True`, the computation is done with the corresponding backend.
+1086:             If `False`, a conversion to the NumPy backend can be used to accelerate the computation.
+1087: 
+1088:         Attributes
+1089:         ----------
+1090:         self.R_: array-like, shape =(m + 2, n + 2)
+1091:             Accumulated cost matrix (stored after calling `compute`).
+1092:         """
+1093:         be = instantiate_backend(be, D)
+1094:         self.be = be
+1095:         self.compute_with_backend = compute_with_backend
+1096:         if hasattr(D, "compute"):
+1097:             self.D = D.compute()
+1098:         else:
+1099:             self.D = D
+1100:         self.D = self.be.cast(self.D, dtype=self.be.float64)
+1101: 
+1102:         # Allocate memory.
+1103:         # We need +2 because we use indices starting from 1
+1104:         # and to deal with edge cases in the backward recursion.
+1105:         m, n = self.be.shape(self.D)
+1106:         self.R_ = self.be.zeros((m + 2, n + 2), dtype=self.be.float64)
+1107:         self.computed = False
+1108: 
+1109:         self.gamma = self.be.array(gamma, dtype=self.be.float64)
+1110: 
+1111:     def compute(self):
+1112:         """Compute soft-DTW by dynamic programming.
+1113: 
+1114:         Returns
+1115:         -------
+1116:         sdtw: float
+1117:             soft-DTW discrepancy.
+1118:         """
+1119:         m, n = self.be.shape(self.D)
+1120: 
+1121:         if self.be.is_numpy:
+1122:             _njit_soft_dtw(self.D, self.R_, gamma=self.gamma)
+1123:         elif not self.compute_with_backend:
+1124:             _njit_soft_dtw(
+1125:                 self.be.to_numpy(self.D),
+1126:                 self.be.to_numpy(self.R_),
+1127:                 gamma=self.be.to_numpy(self.gamma),
+1128:             )
+1129:             self.R_ = self.be.array(self.R_)
+1130:         else:
+1131:             _soft_dtw(self.D, self.R_, gamma=self.gamma, be=self.be)
+1132: 
+1133:         self.computed = True
+1134: 
+1135:         return self.R_[m, n]
+1136: 
+1137:     def grad(self):
+1138:         """Compute gradient of soft-DTW w.r.t. D by dynamic programming.
+1139: 
+1140:         Returns
+1141:         -------
+1142:         grad: array-like, shape=(m, n)
+1143:             Gradient w.r.t. D.
+1144:         """
+1145:         if not self.computed:
+1146:             raise ValueError("Needs to call compute() first.")
+1147: 
+1148:         m, n = self.be.shape(self.D)
+1149: 
+1150:         # Add an extra row and an extra column to D.
+1151:         # Needed to deal with edge cases in the recursion.
+1152:         D = self.be.vstack((self.D, self.be.zeros(n)))
+1153:         D = self.be.hstack((D, self.be.zeros((m + 1, 1))))
+1154: 
+1155:         # Allocate memory.
+1156:         # We need +2 because we use indices starting from 1
+1157:         # and to deal with edge cases in the recursion.
+1158:         E = self.be.zeros((m + 2, n + 2), dtype=self.be.float64)
+1159: 
+1160:         if self.be.is_numpy:
+1161:             _njit_soft_dtw_grad(D, self.R_, E, gamma=self.gamma)
+1162:         elif not self.compute_with_backend:
+1163:             _njit_soft_dtw_grad(
+1164:                 self.be.to_numpy(D),
+1165:                 self.be.to_numpy(self.R_),
+1166:                 self.be.to_numpy(E),
+1167:                 gamma=self.be.to_numpy(self.gamma),
+1168:             )
+1169:             self.R_ = self.be.array(self.R_)
+1170:         else:
+1171:             _soft_dtw_grad(D, self.R_, E, gamma=self.gamma, be=self.be)
+1172: 
+1173:         return E[1:-1, 1:-1]
+1174: 
+1175: 
+1176: class SquaredEuclidean:
+1177:     """Squared Euclidean distance."""
+1178:     def __init__(self, X, Y, be=None, compute_with_backend=False):
+1179:         """Squared Euclidean distance.
+1180: 
+1181:         Parameters
+1182:         ----------
+1183:         X: array-like, shape=(m, d)
+1184:             First time series.
+1185:         Y: array-like, shape=(n, d)
+1186:             Second time series.
+1187:         be : Backend object or string or None
+1188:             Backend.
+1189:         compute_with_backend : bool, default=False
+1190:             This parameter has no influence when the NumPy backend is used.
+1191:             When a backend different from NumPy is used (cf parameter `be`):
+1192:             If `True`, the computation is done with the corresponding backend.
+1193:             If `False`, a conversion to the NumPy backend can be used to accelerate the computation.
+1194: 
+1195:         Examples
+1196:         --------
+1197:         >>> SquaredEuclidean([1, 2, 2, 3], [1, 2, 3, 4]).compute()
+1198:         array([[0., 1., 4., 9.],
+1199:                [1., 0., 1., 4.],
+1200:                [1., 0., 1., 4.],
+1201:                [4., 1., 0., 1.]])
+1202:         """
+1203:         self.be = instantiate_backend(be, X, Y)
+1204:         self.compute_with_backend = compute_with_backend
+1205:         self.X = self.be.cast(to_time_series(X, be=be), dtype=self.be.float64)
+1206:         self.Y = self.be.cast(to_time_series(Y, be=be), dtype=self.be.float64)
+1207: 
+1208:     def compute(self):

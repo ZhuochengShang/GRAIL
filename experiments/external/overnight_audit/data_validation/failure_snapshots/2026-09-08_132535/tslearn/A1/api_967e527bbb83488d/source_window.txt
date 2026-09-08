@@ -1,0 +1,156 @@
+429:         ----------
+430:         X : array-like of shape (n_ts, sz, d)
+431:             Time series dataset
+432: 
+433:         Returns
+434:         -------
+435:         numpy.ndarray of integers with shape (n_ts, n_segments, d)
+436:             SAX-Transformed dataset
+437:         """
+438:         self._is_fitted()
+439:         X = check_array(X, allow_nd=True, force_all_finite=False)
+440:         X = check_dims(X, X_fit_dims=tuple(self._X_fit_dims_),
+441:                        check_n_features_only=True)
+442:         return self._transform(X, y)
+443: 
+444:     def distance_sax(self, sax1, sax2):
+445:         """Compute distance between SAX representations as defined in [1]_.
+446: 
+447:         Parameters
+448:         ----------
+449:         sax1 : array-like
+450:             SAX representation of a time series
+451:         sax2 : array-like
+452:             SAX representation of another time series
+453: 
+454:         Returns
+455:         -------
+456:         float
+457:             SAX distance
+458: 
+459:         References
+460:         ----------
+461:         .. [1] J. Lin, E. Keogh, L. Wei, et al. Experiencing SAX: a novel
+462:            symbolic representation of time series.
+463:            Data Mining and Knowledge Discovery, 2007. vol. 15(107)
+464:         """
+465:         self._is_fitted()
+466:         return cydist_sax(sax1, sax2,
+467:                           self.breakpoints_avg_, self._X_fit_dims_[1])
+468: 
+469:     def distance(self, ts1, ts2):
+470:         """Compute distance between SAX representations as defined in [1]_.
+471: 
+472:         Parameters
+473:         ----------
+474:         ts1 : array-like
+475:             A time series
+476:         ts2 : array-like
+477:             Another time series
+478: 
+479:         Returns
+480:         -------
+481:         float
+482:             SAX distance
+483: 
+484:         References
+485:         ----------
+486:         .. [1] J. Lin, E. Keogh, L. Wei, et al. Experiencing SAX: a novel
+487:            symbolic representation of time series. Data Mining and Knowledge
+488:            Discovery, 2007. vol. 15(107)
+489:         """
+490:         sax = self.transform([ts1, ts2])
+491:         return self.distance_sax(sax[0], sax[1])
+492: 
+493:     def inverse_transform(self, X):
+494:         """Compute time series corresponding to given SAX representations.
+495: 
+496:         Parameters
+497:         ----------
+498:         X : array-like of shape (n_ts, sz_sax, d)
+499:             A dataset of SAX series.
+500: 
+501:         Returns
+502:         -------
+503:         numpy.ndarray of shape (n_ts, sz_original_ts, d)
+504:             A dataset of time series corresponding to the provided
+505:             representation.
+506:         """
+507:         self._is_fitted()
+508:         X = check_array(X, allow_nd=True, force_all_finite=False)
+509:         X = check_dims(X, X_fit_dims=(None, None, self._X_fit_dims_[-1]),
+510:                        check_n_features_only=True)
+511:         X_orig = inv_transform_sax(
+512:                 X,
+513:                 breakpoints_middle_=self.breakpoints_avg_middle_,
+514:                 original_size=self._X_fit_dims_[1]
+515:         )
+516:         return self._unscale(X_orig)
+517: 
+518:     def _more_tags(self):
+519:         tags = super()._more_tags()
+520:         tags['_xfail_checks'].update({
+521:             "check_transformer_preserve_dtypes" : "Forces int transform"
+522:         })
+523:         return tags
+524: 
+525:     def __sklearn_tags__(self):
+526:         # Needed for check_estimator_tags_renamed
+527:         return super().__sklearn_tags__()
+528: 
+529: 
+530: class OneD_SymbolicAggregateApproximation(SymbolicAggregateApproximation):
+531:     """One-D Symbolic Aggregate approXimation (1d-SAX) transformation.
+532: 
+533:     1d-SAX was originally presented in [1]_.
+534: 
+535:     Parameters
+536:     ----------
+537:     n_segments : int (default: 1)
+538:         Number of PAA segments to compute.
+539:         
+540:     alphabet_size_avg : int (default: 5)
+541:         Number of SAX symbols to use to describe average values.
+542:         
+543:     alphabet_size_slope : int (default: 5)
+544:         Number of SAX symbols to use to describe slopes.
+545:         
+546:     sigma_l : float or None (default: None)
+547:         Scale parameter of the Gaussian distribution used to quantize slopes.
+548:         If None, the formula given in [1]_ is
+549:         used: :math:`\\sigma_L = \\sqrt{0.03 / L}` where :math:`L` is the
+550:         length of each segment.
+551:     
+552:     scale: bool (default: False)
+553:          Whether input data should be scaled for each feature of each time 
+554:          series to have zero mean and unit variance.
+555:          Default for this parameter is set to `False` in version 0.4 to ensure
+556:          backward compatibility, but is likely to change in a future version.
+557: 
+558:     Attributes
+559:     ----------
+560:     breakpoints_avg_ : numpy.ndarray of shape (alphabet_size_avg - 1, )
+561:         List of breakpoints used to generate SAX symbols for average values.
+562:     breakpoints_slope_ : numpy.ndarray of shape (alphabet_size_slope - 1, )
+563:         List of breakpoints used to generate SAX symbols for slopes.
+564: 
+565:     Notes
+566:     -----
+567:         This method requires a dataset of equal-sized time series.
+568: 
+569:     Examples
+570:     --------
+571:     >>> one_d_sax = OneD_SymbolicAggregateApproximation(n_segments=3,
+572:     ...         alphabet_size_avg=2, alphabet_size_slope=2, sigma_l=1.)
+573:     >>> data = [[-1., 2., 0.1, -1., 1., -1.], [1., 3.2, -1., -3., 1., -1.]]
+574:     >>> one_d_sax_data = one_d_sax.fit_transform(data)
+575:     >>> one_d_sax_data.shape
+576:     (2, 3, 2)
+577:     >>> one_d_sax_data
+578:     array([[[1, 1],
+579:             [0, 0],
+580:             [1, 0]],
+581:     <BLANKLINE>
+582:            [[1, 1],
+583:             [0, 0],
+584:             [1, 0]]])

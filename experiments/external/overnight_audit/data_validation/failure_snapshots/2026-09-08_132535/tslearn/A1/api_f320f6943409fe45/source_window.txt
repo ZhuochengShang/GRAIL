@@ -1,0 +1,147 @@
+68:     if timestamps_weights is not None:
+69:         timestamps_weights = be.asarray(timestamps_weights)
+70:         res = timestamps_weights @ res / timestamps_weights.sum()
+71:     else:
+72:         res = res.mean(axis=0)
+73: 
+74:     if isinstance(multioutput, str):
+75:         if multioutput == "uniform_average":
+76:             res = res.mean()
+77:     else:
+78:         multioutput = be.asarray(multioutput)
+79:         res = multioutput@res / multioutput.sum()
+80:     return res
+81: 
+82: 
+83: def mse(
+84:     y_true,
+85:     y_pred,
+86:     ts_weights=None,
+87:     timestamps_weights=None,
+88:     multioutput="uniform_average"
+89: ):
+90:     """
+91:     Mean squared error (MSE)
+92: 
+93:     MSE is a measure of the prediction accuracy for forecasting and regression tasks that computes
+94:     the average of the squared deviations between ground truth and predicted values.
+95: 
+96:     Parameters
+97:     ----------
+98:     y_true: array like, shape (n_ts, sz, d)
+99:         Target dataset of ground_truth values
+100:     y_pred: array like, shape (n_ts, sz, d)
+101:         Estimated dataset of predicted values
+102:     ts_weights: array like, shape (n_ts,) or None (default: None)
+103:         Weights to apply to the time-series in the datasets if non-uniform.
+104:         Use none for uniform weights.
+105:     timestamps_weights: array like, shape (sz,) or None (default: None)
+106:         Weights to apply to the timestamps of each-time series if non-uniform.
+107:         Use none for uniform weights.
+108:     multioutput: {'uniform_average', 'raw_values'} or array-like, shape (d,) (default: 'uniform_average')
+109:         for multivariate timeseries, defines the aggregation of per feature results, if any.
+110: 
+111:         'raw_values':
+112:             no aggregation, result is per feature
+113:         'uniform_average':
+114:             errors of all features are averaged with uniform weights
+115:         array-like:
+116:             errors of all features are averaged using the given weights
+117: 
+118:     Returns
+119:     -------
+120:     float or array-like, shape (d,)
+121:         If multioutput is ‘raw_values’, then mean squared error is returned for each feature.
+122:         Otherwise, the average of each feature is returned.
+123: 
+124:     """
+125:     y_true = to_time_series_dataset(y_true)
+126:     y_pred = to_time_series_dataset(y_pred)
+127: 
+128:     n_ts, sz, d = y_true.shape
+129: 
+130:     res = skmetrics.mean_squared_error(
+131:         y_true.reshape(n_ts, sz * d),
+132:         y_pred.reshape(n_ts, sz * d),
+133:         sample_weight=ts_weights,
+134:         multioutput="raw_values"
+135:     ).reshape(sz, d)
+136:     be = instantiate_backend(res)
+137: 
+138:     if timestamps_weights is not None:
+139:         timestamps_weights = be.asarray(timestamps_weights)
+140:         res = timestamps_weights @ res / timestamps_weights.sum()
+141:     else:
+142:         res = res.mean(axis=0)
+143: 
+144:     if isinstance(multioutput, str):
+145:         if multioutput == "uniform_average":
+146:             res = res.mean()
+147:     else:
+148:         multioutput = be.asarray(multioutput)
+149:         res = multioutput@res / multioutput.sum()
+150:     return res
+151: 
+152: 
+153: def mase(
+154:     y_true,
+155:     y_pred,
+156:     train_data,
+157:     seasonal_period=1,
+158:     ts_weights=None,
+159:     timestamps_weights=None,
+160:     multioutput="uniform_average"
+161: ):
+162:     """
+163:     Mean absolute scaled error (MASE)
+164: 
+165:     MASE is a measure of the prediction accuracy for forecasting and regression tasks that computes
+166:     the scaled average of the deviations between ground truth and predicted values.
+167: 
+168:     The scaling factor is computed as the MAE of the naive m-seasonal forecast on the in-sample dataset.
+169: 
+170:     Parameters
+171:     ----------
+172:     y_true: array like, shape (n_ts, sz, d)
+173:         Target dataset of ground_truth values
+174:     y_pred: array like, shape (n_ts, sz, d)
+175:         Estimated dataset of predicted values
+176:     train_data: array like
+177:         the in-sample dataset, used to compute the scaling factor
+178:     seasonal_period: int (default: 1)
+179:         seasonal period used to compute the scaling factor
+180:     ts_weights: array like, shape (n_ts,) or None (default: None)
+181:         Weights to apply to the time-series in the datasets if non-uniform.
+182:         Use none for uniform weights.
+183:     timestamps_weights: array like, shape (sz,) or None (default: None)
+184:         Weights to apply to the timestamps of each-time series if non-uniform.
+185:         Use none for uniform weights.
+186:     multioutput: {'uniform_average', 'raw_values'} or array-like, shape (d,) (default: 'uniform_average')
+187:         for multivariate timeseries, defines the aggregation of per feature results, if any.
+188: 
+189:         'raw_values':
+190:             no aggregation, result is per feature
+191:         'uniform_average':
+192:             errors of all features are averaged with uniform weights
+193:         array-like:
+194:             errors of all features are averaged using the given weights
+195: 
+196:     Returns
+197:     -------
+198:     float or array-like, shape (d,)
+199:         If multioutput is ‘raw_values’, then mean squared error is returned for each feature.
+200:         Otherwise, the average of each feature is returned.
+201: 
+202:     """
+203: 
+204:     train_data = to_time_series_dataset(train_data)
+205: 
+206:     mae_ = mae(y_true, y_pred, ts_weights, timestamps_weights, multioutput)
+207: 
+208:     if multioutput == "raw_values":
+209:         scale_axis = (0, 1)
+210:     else:
+211:         scale_axis = None
+212:     scale = abs(train_data[:, :-seasonal_period] - train_data[:, seasonal_period:]).mean(axis=scale_axis)
+213: 
+214:     return mae_ / scale

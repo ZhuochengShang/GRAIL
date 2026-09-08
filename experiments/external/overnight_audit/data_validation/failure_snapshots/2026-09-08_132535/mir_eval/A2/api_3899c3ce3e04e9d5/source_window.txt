@@ -1,0 +1,156 @@
+426:         est_cent, est_voicing = resample_melody_series(
+427:             est_time, est_cent, est_voicing, ref_time, kind
+428:         )
+429:     # ensure the estimated sequence is the same length as the reference
+430:     len_diff = ref_cent.shape[0] - est_cent.shape[0]
+431:     if len_diff >= 0:
+432:         est_cent = np.append(est_cent, np.zeros(len_diff))
+433:         est_voicing = np.append(est_voicing, np.zeros(len_diff))
+434:     else:
+435:         est_cent = est_cent[: ref_cent.shape[0]]
+436:         est_voicing = est_voicing[: ref_voicing.shape[0]]
+437: 
+438:     return (ref_voicing, ref_cent, est_voicing, est_cent)
+439: 
+440: 
+441: def voicing_recall(ref_voicing, est_voicing):
+442:     """Compute the voicing recall given two voicing
+443:     indicator sequences, one as reference (truth) and the other as the estimate
+444:     (prediction).  The sequences must be of the same length.
+445: 
+446:     Examples
+447:     --------
+448:     >>> ref_time, ref_freq = mir_eval.io.load_time_series('ref.txt')
+449:     >>> est_time, est_freq = mir_eval.io.load_time_series('est.txt')
+450:     >>> (ref_v, ref_c,
+451:     ...  est_v, est_c) = mir_eval.melody.to_cent_voicing(ref_time,
+452:     ...                                                  ref_freq,
+453:     ...                                                  est_time,
+454:     ...                                                  est_freq)
+455:     >>> recall = mir_eval.melody.voicing_recall(ref_v, est_v)
+456: 
+457:     Parameters
+458:     ----------
+459:     ref_voicing : np.ndarray
+460:         Reference boolean voicing array
+461:     est_voicing : np.ndarray
+462:         Estimated boolean voicing array
+463: 
+464:     Returns
+465:     -------
+466:     vx_recall : float
+467:         Voicing recall rate, the fraction of voiced frames in ref
+468:         indicated as voiced in est
+469:     """
+470:     if ref_voicing.size == 0 or est_voicing.size == 0:
+471:         return 0.0
+472:     ref_indicator = (ref_voicing > 0).astype(float)
+473:     if np.sum(ref_indicator) == 0:
+474:         return 1
+475:     return np.sum(est_voicing * ref_indicator) / np.sum(ref_indicator)
+476: 
+477: 
+478: def voicing_false_alarm(ref_voicing, est_voicing):
+479:     """Compute the voicing false alarm rates given two voicing
+480:     indicator sequences, one as reference (truth) and the other as the estimate
+481:     (prediction).  The sequences must be of the same length.
+482: 
+483:     Examples
+484:     --------
+485:     >>> ref_time, ref_freq = mir_eval.io.load_time_series('ref.txt')
+486:     >>> est_time, est_freq = mir_eval.io.load_time_series('est.txt')
+487:     >>> (ref_v, ref_c,
+488:     ...  est_v, est_c) = mir_eval.melody.to_cent_voicing(ref_time,
+489:     ...                                                  ref_freq,
+490:     ...                                                  est_time,
+491:     ...                                                  est_freq)
+492:     >>> false_alarm = mir_eval.melody.voicing_false_alarm(ref_v, est_v)
+493: 
+494:     Parameters
+495:     ----------
+496:     ref_voicing : np.ndarray
+497:         Reference boolean voicing array
+498:     est_voicing : np.ndarray
+499:         Estimated boolean voicing array
+500: 
+501:     Returns
+502:     -------
+503:     vx_false_alarm : float
+504:         Voicing false alarm rate, the fraction of unvoiced frames in ref
+505:         indicated as voiced in est
+506:     """
+507:     if ref_voicing.size == 0 or est_voicing.size == 0:
+508:         return 0.0
+509:     ref_indicator = (ref_voicing == 0).astype(float)
+510:     if np.sum(ref_indicator) == 0:
+511:         return 0
+512:     return np.sum(est_voicing * ref_indicator) / np.sum(ref_indicator)
+513: 
+514: 
+515: def voicing_measures(ref_voicing, est_voicing):
+516:     """Compute the voicing recall and false alarm rates given two voicing
+517:     indicator sequences, one as reference (truth) and the other as the estimate
+518:     (prediction).  The sequences must be of the same length.
+519: 
+520:     Examples
+521:     --------
+522:     >>> ref_time, ref_freq = mir_eval.io.load_time_series('ref.txt')
+523:     >>> est_time, est_freq = mir_eval.io.load_time_series('est.txt')
+524:     >>> (ref_v, ref_c,
+525:     ...  est_v, est_c) = mir_eval.melody.to_cent_voicing(ref_time,
+526:     ...                                                  ref_freq,
+527:     ...                                                  est_time,
+528:     ...                                                  est_freq)
+529:     >>> recall, false_alarm = mir_eval.melody.voicing_measures(ref_v,
+530:     ...                                                        est_v)
+531: 
+532:     Parameters
+533:     ----------
+534:     ref_voicing : np.ndarray
+535:         Reference boolean voicing array
+536:     est_voicing : np.ndarray
+537:         Estimated boolean voicing array
+538: 
+539:     Returns
+540:     -------
+541:     vx_recall : float
+542:         Voicing recall rate, the fraction of voiced frames in ref
+543:         indicated as voiced in est
+544:     vx_false_alarm : float
+545:         Voicing false alarm rate, the fraction of unvoiced frames in ref
+546:         indicated as voiced in est
+547:     """
+548:     validate_voicing(ref_voicing, est_voicing)
+549:     vx_recall = voicing_recall(ref_voicing, est_voicing)
+550:     vx_false_alm = voicing_false_alarm(ref_voicing, est_voicing)
+551:     return vx_recall, vx_false_alm
+552: 
+553: 
+554: def raw_pitch_accuracy(ref_voicing, ref_cent, est_voicing, est_cent, cent_tolerance=50):
+555:     """Compute the raw pitch accuracy given two pitch (frequency) sequences in
+556:     cents and matching voicing indicator sequences. The first pitch and voicing
+557:     arrays are treated as the reference (truth), and the second two as the
+558:     estimate (prediction).  All 4 sequences must be of the same length.
+559: 
+560:     Examples
+561:     --------
+562:     >>> ref_time, ref_freq = mir_eval.io.load_time_series('ref.txt')
+563:     >>> est_time, est_freq = mir_eval.io.load_time_series('est.txt')
+564:     >>> (ref_v, ref_c,
+565:     ...  est_v, est_c) = mir_eval.melody.to_cent_voicing(ref_time,
+566:     ...                                                  ref_freq,
+567:     ...                                                  est_time,
+568:     ...                                                  est_freq)
+569:     >>> raw_pitch = mir_eval.melody.raw_pitch_accuracy(ref_v, ref_c,
+570:     ...                                                est_v, est_c)
+571: 
+572:     Parameters
+573:     ----------
+574:     ref_voicing : np.ndarray
+575:         Reference voicing array. When this array is non-binary, it is treated
+576:         as a 'reference reward', as in (Bittner & Bosch, 2019)
+577:     ref_cent : np.ndarray
+578:         Reference pitch sequence in cents
+579:     est_voicing : np.ndarray
+580:         Estimated voicing array
+581:     est_cent : np.ndarray

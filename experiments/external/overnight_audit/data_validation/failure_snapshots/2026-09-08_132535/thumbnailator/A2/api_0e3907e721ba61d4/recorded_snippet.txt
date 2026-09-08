@@ -1,0 +1,13 @@
+java.awt.image.BufferedImage img = new java.awt.image.BufferedImage(120, 60, java.awt.image.BufferedImage.TYPE_INT_ARGB);
+
+net.coobird.thumbnailator.filters.Pipeline pipeline = new net.coobird.thumbnailator.filters.Pipeline(
+    new net.coobird.thumbnailator.filters.Rotation(90)
+);
+
+java.awt.image.BufferedImage result = pipeline.apply(img);
+
+assert result != null : "Resulting image should not be null";
+assert result.getWidth() == 60 : "Expected width 60 after 90-degree rotation, got " + result.getWidth();
+assert result.getHeight() == 120 : "Expected height 120 after 90-degree rotation, got " + result.getHeight();
+
+System.out.println("__CHECK__ Pipeline " + result.getWidth() + "x" + result.getHeight());

@@ -1,0 +1,80 @@
+698:                           "if cesium is not installed.")
+699: 
+700:     X_ = check_dataset(X)
+701:     backend = instantiate_backend(X_)
+702: 
+703:     def transpose_or_flatten(ts):
+704:         ts_ = _to_time_series(ts, True, backend)
+705:         if ts.shape[1] == 1:
+706:             return ts_.reshape((-1, ))
+707:         else:
+708:             return ts_.transpose()
+709: 
+710:     return [TimeSeries(m=transpose_or_flatten(Xi)) for Xi in X_]
+711: 
+712: 
+713: def from_cesium_dataset(X):
+714:     """Transform a cesium-compatible dataset into a tslearn dataset.
+715: 
+716:     Parameters
+717:     ----------
+718:     X: list of cesium TimeSeries
+719:         cesium-formatted dataset (cf.
+720:         `link <http://cesium-ml.org/docs/api/cesium.time_series.html#cesium.time_series.TimeSeries>`_)
+721: 
+722:     Returns
+723:     -------
+724:     array, shape=(n_ts, sz, d)
+725:         tslearn-formatted dataset.
+726: 
+727:     Examples
+728:     --------
+729:     >>> from cesium.time_series import TimeSeries
+730:     >>> cesium_ds = [TimeSeries(m=numpy.array([1, 2, 3, 4]))]
+731:     >>> tslearn_arr = from_cesium_dataset(cesium_ds)
+732:     >>> tslearn_arr.shape
+733:     (1, 4, 1)
+734:     >>> cesium_ds = [
+735:     ...     TimeSeries(m=numpy.array([[1, 2, 3, 4],
+736:     ...                               [5, 6, 7, 8]]))
+737:     ... ]
+738:     >>> tslearn_arr = from_cesium_dataset(cesium_ds)
+739:     >>> tslearn_arr.shape
+740:     (1, 4, 2)
+741: 
+742:     Notes
+743:     -----
+744:     Conversion from/to cesium format requires cesium to be installed.
+745:     """  # noqa: E501
+746:     try:
+747:         from cesium.time_series import TimeSeries
+748:     except ImportError:
+749:         raise ImportError("Conversion from/to cesium cannot be performed "
+750:                           "if cesium is not installed.")
+751: 
+752:     def format_to_tslearn(ts):
+753:         try:
+754:             ts.sort()
+755:         except ValueError:
+756:             warnings.warn("Cesium dataset could not be sorted, assuming "
+757:                           "it is already sorted before casting to "
+758:                           "tslearn format.")
+759:         if ts.measurement.ndim == 1:
+760:             data = ts.measurement.reshape((1, -1))
+761:         else:
+762:             data = ts.measurement
+763:         d = len(data)
+764:         max_sz = max([len(ts_di) for ts_di in data])
+765:         tslearn_ts = numpy.empty((max_sz, d))
+766:         tslearn_ts[:] = numpy.nan
+767:         for di in range(d):
+768:             sz = data[di].shape[0]
+769:             tslearn_ts[:sz, di] = data[di]
+770:         return tslearn_ts
+771: 
+772:     if not isinstance(X, list) or \
+773:             [type(ts) for ts in X] != [TimeSeries] * len(X):
+774:         raise ValueError("X is not a valid input cesium array. "
+775:                          "A list of cesium TimeSeries is expected.")
+776:     dataset = [format_to_tslearn(ts) for ts in X]
+777:     return to_time_series_dataset(dataset=dataset)

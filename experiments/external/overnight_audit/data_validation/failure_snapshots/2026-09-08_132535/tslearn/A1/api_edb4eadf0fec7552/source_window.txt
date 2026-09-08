@@ -1,0 +1,151 @@
+1: STUFF_cysax = "cysax"
+2: 
+3: import numpy as np
+4: from numba import njit, objmode, prange
+5: from sklearn.linear_model import LinearRegression
+6: 
+7: __author__ = "Romain Tavenard romain.tavenard[at]univ-rennes2.fr"
+8: 
+9: 
+10: @njit(parallel=True, fastmath=True)
+11: def inv_transform_paa(dataset_paa, original_size):
+12:     """Compute time series corresponding to given PAA representations.
+13: 
+14:     Parameters
+15:     ----------
+16:     dataset_paa : array-like, shape=(n_ts, sz, d), dtype=float64
+17:         A dataset of PAA series.
+18:     original_size : int32
+19:         Length of the original time series.
+20: 
+21:     Returns
+22:     -------
+23:     dataset_out : array-like, shape=(n_ts, original_size, d), dtype=float64
+24:         A dataset of time series corresponding to the provided
+25:         representation.
+26:     """
+27:     n_ts, sz, d = dataset_paa.shape
+28:     seg_sz = original_size // sz
+29:     dataset_out = np.zeros((n_ts, original_size, d))
+30:     for t in prange(sz):
+31:         t0 = t * seg_sz
+32:         for i_ts in range(n_ts):
+33:             dataset_out[i_ts, t0 : t0 + seg_sz, :] = dataset_paa[i_ts, t, :]
+34:     return dataset_out
+35: 
+36: 
+37: @njit(parallel=True, fastmath=True)
+38: def cydist_sax(sax1, sax2, breakpoints, original_size):
+39:     """Compute distance between SAX representations as defined in [1]_.
+40: 
+41:     Parameters
+42:     ----------
+43:     sax1 : array-like, shape=(sz, d)
+44:         SAX representation of a time series.
+45:     sax2 : array-like, shape=(sz, d)
+46:         SAX representation of another time series.
+47:     breakpoints : array-like, ndim=1, dtype=float64
+48:         The breakpoints used to assign the alphabet symbols.
+49:     original_size : int64 (Linux and MacOS) or int32 (Windows)
+50:         Length of the original time series.
+51: 
+52:     Returns
+53:     -------
+54:     dist_sax : float64
+55:         SAX distance.
+56: 
+57:     References
+58:     ----------
+59:     .. [1] J. Lin, E. Keogh, L. Wei, et al. Experiencing SAX: a novel
+60:        symbolic representation of time series.
+61:        Data Mining and Knowledge Discovery, 2007. vol. 15(107)
+62:     """
+63:     assert sax1.shape == sax2.shape
+64:     s = 0.0
+65:     sz, d = sax1.shape
+66:     for t in prange(sz):
+67:         for di in range(d):
+68:             if np.abs(sax1[t, di] - sax2[t, di]) > 1:
+69:                 max_symbol = max(sax1[t, di], sax2[t, di])
+70:                 min_symbol = min(sax1[t, di], sax2[t, di])
+71:                 s += (breakpoints[max_symbol - 1] - breakpoints[min_symbol]) ** 2
+72:     dist_sax = np.sqrt(s * float(original_size) / sz)
+73: 
+74:     return dist_sax
+75: 
+76: 
+77: @njit(parallel=True, fastmath=True)
+78: def inv_transform_sax(dataset_sax, breakpoints_middle_, original_size):
+79:     """Compute time series corresponding to given SAX representations.
+80: 
+81:     Parameters
+82:     ----------
+83:     dataset_sax : array-like, shape=(n_ts, sz, d), dtype=float64 (Linux and MacOS) or float32 (Windows)
+84:         A dataset of SAX series.
+85:     breakpoints_middle_ : array-like, ndim=1, dtype=float64
+86:     original_size : int64 (Linux and MacOS) or int32 (Windows)
+87:         Length of the original time series.
+88: 
+89:     Returns
+90:     -------
+91:     dataset_out : array-like, shape=(n_ts, original_size, d), dtype=float64
+92:     """
+93:     n_ts, sz, d = dataset_sax.shape
+94:     seg_sz = original_size // sz
+95:     dataset_out = np.zeros((n_ts, original_size, d))
+96: 
+97:     for i in prange(n_ts):
+98:         for t in range(sz):
+99:             t0 = t * seg_sz
+100:             dataset_out[i, t0 : t0 + seg_sz, :] = breakpoints_middle_[
+101:                 dataset_sax[i, t, :]
+102:             ]
+103:     return dataset_out
+104: 
+105: 
+106: @njit(parallel=True, fastmath=True)
+107: def cyslopes(dataset, t0):
+108:     """Compute slopes.
+109: 
+110:     Parameters
+111:     ----------
+112:     dataset : array-like, shape=(n_ts, sz, d), dtype=float64
+113:     t0 : int32
+114: 
+115:     Returns
+116:     -------
+117:     dataset_out : array-like, shape=(n_ts, d), dtype=float64
+118:     """
+119:     n_ts, sz, d = dataset.shape
+120:     dataset_out = np.empty((n_ts, d))
+121:     vec_t = np.arange(t0, t0 + sz).reshape((-1, 1))
+122:     for i in prange(n_ts):
+123:         for di in range(d):
+124:             with objmode(dataset_out_i_di="float64"):
+125:                 dataset_out_i_di = (
+126:                     LinearRegression()
+127:                     .fit(vec_t, dataset[i, :, di])
+128:                     .coef_[0]
+129:                 )
+130:             dataset_out[i, di] = dataset_out_i_di
+131:     return dataset_out
+132: 
+133: 
+134: @njit(parallel=True, fastmath=True)
+135: def cydist_1d_sax(
+136:     sax1, sax2, breakpoints_avg_middle_, breakpoints_slope_middle_, original_size
+137: ):
+138:     """Compute distance between 1d-SAX representations as defined in [1]_.
+139: 
+140:     Parameters
+141:     ----------
+142:     sax1 : array-like, shape=(sz, 2 * d), dtype=float64 (Linux and MacOS) or float32 (Windows)
+143:         1d-SAX representation of a time series.
+144:     sax2 : array-like, shape=(sz, 2 * d), dtype=float64 (Linux and MacOS) or float32 (Windows)
+145:         1d-SAX representation of another time series.
+146:     breakpoints_avg_middle_ : array-like, ndim=1, dtype=float64
+147:     breakpoints_slope_middle_ : array-like, ndim=1, dtype=float64
+148:     original_size : int64 (Linux and MacOS) or int32 (Windows)
+149:         Length of the original time series.
+150: 
+151:     Returns

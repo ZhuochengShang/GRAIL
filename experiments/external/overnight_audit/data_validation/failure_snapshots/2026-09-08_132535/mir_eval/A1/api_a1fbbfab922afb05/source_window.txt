@@ -1,0 +1,156 @@
+1085:         z_est = np.log2(contingency.shape[1])
+1086: 
+1087:     score_under = 0.0
+1088:     if z_ref > 0:
+1089:         score_under = 1.0 - true_given_est / z_ref
+1090: 
+1091:     score_over = 0.0
+1092:     if z_est > 0:
+1093:         score_over = 1.0 - pred_given_ref / z_est
+1094: 
+1095:     f_measure = util.f_measure(score_over, score_under, beta=beta)
+1096: 
+1097:     return score_over, score_under, f_measure
+1098: 
+1099: 
+1100: def vmeasure(
+1101:     reference_intervals,
+1102:     reference_labels,
+1103:     estimated_intervals,
+1104:     estimated_labels,
+1105:     frame_size=0.1,
+1106:     beta=1.0,
+1107: ):
+1108:     """Frame-clustering segmentation: v-measure
+1109: 
+1110:     Computes cross-entropy of cluster assignment, normalized by the
+1111:     marginal-entropy.
+1112: 
+1113:     This is equivalent to `nce(..., marginal=True)`.
+1114: 
+1115:     Examples
+1116:     --------
+1117:     >>> (ref_intervals,
+1118:     ...  ref_labels) = mir_eval.io.load_labeled_intervals('ref.lab')
+1119:     >>> (est_intervals,
+1120:     ...  est_labels) = mir_eval.io.load_labeled_intervals('est.lab')
+1121:     >>> # Trim or pad the estimate to match reference timing
+1122:     >>> (ref_intervals,
+1123:     ...  ref_labels) = mir_eval.util.adjust_intervals(ref_intervals,
+1124:     ...                                               ref_labels,
+1125:     ...                                               t_min=0)
+1126:     >>> (est_intervals,
+1127:     ...  est_labels) = mir_eval.util.adjust_intervals(
+1128:     ...     est_intervals, est_labels, t_min=0, t_max=ref_intervals.max())
+1129:     >>> V_precision, V_recall, V_F = mir_eval.structure.vmeasure(ref_intervals,
+1130:     ...                                                          ref_labels,
+1131:     ...                                                          est_intervals,
+1132:     ...                                                          est_labels)
+1133: 
+1134:     Parameters
+1135:     ----------
+1136:     reference_intervals : np.ndarray, shape=(n, 2)
+1137:         reference segment intervals, in the format returned by
+1138:         :func:`mir_eval.io.load_labeled_intervals`.
+1139:     reference_labels : list, shape=(n,)
+1140:         reference segment labels, in the format returned by
+1141:         :func:`mir_eval.io.load_labeled_intervals`.
+1142:     estimated_intervals : np.ndarray, shape=(m, 2)
+1143:         estimated segment intervals, in the format returned by
+1144:         :func:`mir_eval.io.load_labeled_intervals`.
+1145:     estimated_labels : list, shape=(m,)
+1146:         estimated segment labels, in the format returned by
+1147:         :func:`mir_eval.io.load_labeled_intervals`.
+1148:     frame_size : float > 0
+1149:         length (in seconds) of frames for clustering
+1150:         (Default value = 0.1)
+1151:     beta : float > 0
+1152:         beta for F-measure
+1153:         (Default value = 1.0)
+1154: 
+1155:     Returns
+1156:     -------
+1157:     V_precision
+1158:         Over-clustering score:
+1159:         ``1 - H(y_est | y_ref) / H(y_est)``
+1160: 
+1161:         If `|y_est|==1`, then `V_precision` will be 0.
+1162:     V_recall
+1163:         Under-clustering score:
+1164:         ``1 - H(y_ref | y_est) / H(y_ref)``
+1165: 
+1166:         If `|y_ref|==1`, then `V_recall` will be 0.
+1167:     V_F
+1168:         F-measure for (V_precision, V_recall)
+1169:     """
+1170:     return nce(
+1171:         reference_intervals,
+1172:         reference_labels,
+1173:         estimated_intervals,
+1174:         estimated_labels,
+1175:         frame_size=frame_size,
+1176:         beta=beta,
+1177:         marginal=True,
+1178:     )
+1179: 
+1180: 
+1181: def evaluate(ref_intervals, ref_labels, est_intervals, est_labels, **kwargs):
+1182:     """Compute all metrics for the given reference and estimated annotations.
+1183: 
+1184:     Examples
+1185:     --------
+1186:     >>> (ref_intervals,
+1187:     ...  ref_labels) = mir_eval.io.load_labeled_intervals('ref.lab')
+1188:     >>> (est_intervals,
+1189:     ...  est_labels) = mir_eval.io.load_labeled_intervals('est.lab')
+1190:     >>> scores = mir_eval.segment.evaluate(ref_intervals, ref_labels,
+1191:     ...                                    est_intervals, est_labels)
+1192: 
+1193:     Parameters
+1194:     ----------
+1195:     ref_intervals : np.ndarray, shape=(n, 2)
+1196:         reference segment intervals, in the format returned by
+1197:         :func:`mir_eval.io.load_labeled_intervals`.
+1198:     ref_labels : list, shape=(n,)
+1199:         reference segment labels, in the format returned by
+1200:         :func:`mir_eval.io.load_labeled_intervals`.
+1201:     est_intervals : np.ndarray, shape=(m, 2)
+1202:         estimated segment intervals, in the format returned by
+1203:         :func:`mir_eval.io.load_labeled_intervals`.
+1204:     est_labels : list, shape=(m,)
+1205:         estimated segment labels, in the format returned by
+1206:         :func:`mir_eval.io.load_labeled_intervals`.
+1207:     **kwargs
+1208:         Additional keyword arguments which will be passed to the
+1209:         appropriate metric or preprocessing functions.
+1210: 
+1211:     Returns
+1212:     -------
+1213:     scores : dict
+1214:         Dictionary of scores, where the key is the metric name (str) and
+1215:         the value is the (float) score achieved.
+1216:     """
+1217:     # Adjust timespan of estimations relative to ground truth
+1218:     ref_intervals, ref_labels = util.adjust_intervals(
+1219:         ref_intervals, labels=ref_labels, t_min=0.0
+1220:     )
+1221: 
+1222:     est_intervals, est_labels = util.adjust_intervals(
+1223:         est_intervals, labels=est_labels, t_min=0.0, t_max=ref_intervals.max()
+1224:     )
+1225: 
+1226:     # Now compute all the metrics
+1227:     scores = collections.OrderedDict()
+1228: 
+1229:     # Boundary detection
+1230:     # Force these values for window
+1231:     kwargs["window"] = 0.5
+1232:     (
+1233:         scores["Precision@0.5"],
+1234:         scores["Recall@0.5"],
+1235:         scores["F-measure@0.5"],
+1236:     ) = util.filter_kwargs(detection, ref_intervals, est_intervals, **kwargs)
+1237: 
+1238:     kwargs["window"] = 3.0
+1239:     (
+1240:         scores["Precision@3.0"],

@@ -1,0 +1,156 @@
+63:             setattr(self, attribute_name, orig)
+64: 
+65:     def _more_tags(self):
+66:         return copy.deepcopy(_DEFAULT_TAGS)
+67: 
+68:     def __sklearn_tags__(self):
+69:         tags_orig = super().__sklearn_tags__()
+70:         as_dict = {
+71:             field.name: getattr(tags_orig, field.name)
+72:             for field in fields(tags_orig)
+73:         }
+74:         tags = TsLearnTags(**as_dict)
+75:         return tags
+76: 
+77: 
+78: class BaseModelPackage(object):
+79:     __metaclass__ = ABCMeta
+80: 
+81:     @abstractmethod
+82:     def _is_fitted(self):
+83:         """
+84:         Implement this method in a subclass to check
+85:         if the model has been fit.
+86: 
+87:         Usually implements a model specific call to
+88:         sklearn.utils.validation.check_is_fitted
+89: 
+90:         Returns
+91:         -------
+92:         bool
+93:         """
+94:         pass
+95: 
+96:     def _get_model_params(self):
+97:         """Get model parameters that are sufficient to recapitulate it."""
+98:         params = {}
+99:         for attr in dir(self):
+100:             # Do not save properties
+101:             if (hasattr(type(self), attr) and
+102:                     isinstance(getattr(type(self), attr), property)):
+103:                 continue
+104:             if (not attr.startswith("__") and
+105:                     attr.endswith("_") and
+106:                     not callable(getattr(self, attr))):
+107:                 params[attr] = getattr(self, attr)
+108:         return params
+109: 
+110:     def _to_dict(self, output=None, hyper_parameters_only=False):
+111:         """
+112:         Get model hyper-parameters and model-parameters
+113:         as a dict that can be saved to disk.
+114: 
+115:         Returns
+116:         -------
+117:         params : dict
+118:             dict with relevant attributes sufficient to describe the model.
+119:         """
+120: 
+121:         if not self._is_fitted():
+122:             raise NotFittedError("Model must be fit before it can be packaged")
+123: 
+124:         d = {'hyper_params': self.get_params(),
+125:              'model_params': self._get_model_params()}
+126: 
+127:         # This is just for json support to convert numpy arrays to lists
+128:         if output == 'json':
+129:             d['model_params'] = BaseModelPackage._listify(d['model_params'])
+130:             d['hyper_params'] = BaseModelPackage._listify(d['hyper_params'])
+131: 
+132:         elif output == 'hdf5':
+133:             d['hyper_params'] = \
+134:                 BaseModelPackage._none_to_str(d['hyper_params'])
+135: 
+136:         if hyper_parameters_only:
+137:             del d["model_params"]
+138: 
+139:         return d
+140: 
+141:     @staticmethod
+142:     def _none_to_str(mp):
+143:         """Use str to store Nones. Used for HDF5"""
+144:         for k in mp.keys():
+145:             if mp[k] is None:
+146:                 mp[k] = 'None'
+147: 
+148:         return mp
+149: 
+150:     @staticmethod
+151:     def _listify(model_params):
+152:         """
+153:         Convert all numpy arrays in model-parameters to lists.
+154:         Used for json support
+155:         """
+156:         for k in model_params.keys():
+157:             param = model_params[k]
+158: 
+159:             if isinstance(param, np.ndarray):
+160:                 model_params[k] = param.tolist()  # for json support
+161:             elif isinstance(param, list) and isinstance(param[0], np.ndarray):
+162:                 model_params[k] = [p.tolist() for p in param]  # json support
+163:             else:
+164:                 model_params[k] = param
+165:         return model_params
+166: 
+167:     @staticmethod
+168:     def _organize_model(cls, model):
+169:         """
+170:         Instantiate the model with all hyper-parameters,
+171:         set all model parameters and then return the model.
+172: 
+173:         Do not use directly. Use the designated classmethod to load a model.
+174: 
+175:         Parameters
+176:         ----------
+177:         cls : instance of model that inherits from `BaseModelPackage`
+178:             a model instance
+179: 
+180:         model : dict
+181:             Model dict containing hyper-parameters and model-parameters
+182: 
+183:         Returns
+184:         -------
+185:         model: instance of model that inherits from `BaseModelPackage`
+186:             instance of the model class with hyper-parameters and
+187:             model parameters set from the passed model dict
+188:         """
+189: 
+190:         model_params = model.pop('model_params')
+191:         hyper_params = model.pop('hyper_params')  # hyper-params
+192: 
+193:         # instantiate with hyper-parameters
+194:         inst = cls(**hyper_params)
+195: 
+196:         # set all model params
+197:         for p in model_params.keys():
+198:             setattr(inst, p, model_params[p])
+199: 
+200:         return inst
+201: 
+202:     @classmethod
+203:     def _byte2string(cls, model):
+204:         for param_set in ['hyper_params', 'model_params']:
+205:             for k in model[param_set].keys():
+206:                 if type(model[param_set][k]) == type(b''):
+207:                     model[param_set][k] = model[param_set][k].decode('utf-8')
+208:         return model
+209: 
+210:     def to_hdf5(self, path):
+211:         """
+212:         Save model to a HDF5 file.
+213:         Requires ``h5py`` http://docs.h5py.org/
+214: 
+215:         Parameters
+216:         ----------
+217:         path : str
+218:             Full file path. File must not already exist.

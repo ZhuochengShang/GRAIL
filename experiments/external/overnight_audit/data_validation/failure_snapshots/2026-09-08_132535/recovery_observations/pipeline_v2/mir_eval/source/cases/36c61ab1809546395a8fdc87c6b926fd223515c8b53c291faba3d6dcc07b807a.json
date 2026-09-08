@@ -1,0 +1,103 @@
+{
+  "fingerprint": "880d080ea29cc92a7aa7985712538cb62c55b710a59e282e238010d34a32d5d9",
+  "identity": {
+    "baseline_fingerprint": "ea2bfacf7be649de61c9ef34386a0c1981e61766f231e06367304ff9caa25571",
+    "baseline_result_sha256": "cefdd1520279c9cc708b3dfca67ae2f9755094b1b667f75832a27555ea742f2c",
+    "api": "reduce_extended_quality",
+    "script_sha256": "18a4b7d72462ebf5af1370e94bcf5a645c2a47143deba2fd75f56b5b65a6b890",
+    "prompt_sha256": {
+      "comprehension_write_exec": "f557fcc5d4534cdfa6e596066b2106fd4d9f1ed459be8afccb8676070275c501",
+      "deep_dive": "bcaacb96d675d8e898784eea65319e5ded213c06eb8578f5e40627fd3adce504"
+    },
+    "current_effective_config_sha256": "1d5c6ce15c735688c4e59110fa91590908a98da74d1004717fe5d5a65b7fc667",
+    "current_profile_sha256": "560a6da75cd464fd3c47d55a08fd848f1f7576f843ac7fca551f7afae3bdd4b0",
+    "upstream_test_context": {
+      "sha256": "f24ad3849965243154e9c0f1502af354540a17ca401734f96b806ee34a5163a4",
+      "file_count": 19
+    },
+    "context_engine": {
+      "deepdive.py": "11b4bd8f2c2761c17c43d43a4747ee3660173c94c1a621811c8f720e13898c73",
+      "docfix.py": "1d2f7cf6acdf9455ede12acdf35dcb93d91aa5bc7fe05514fbf783a5eca877b9"
+    },
+    "protocol_sha256": "b6caeb1e279ff5f30bd90547071380caf7efd19a54ea2f5972fddd266f91b5a2",
+    "source": {
+      "sha256": "30c5d1632077b02939819dbb8dc76fa72096d5a5f5b45e77468b96d14050d705",
+      "file_count": 19
+    },
+    "document_sha256": "5eba111df92b5bc6ab512be681189573503dd38c6667f775f4be6d8ce0051c37",
+    "script_binding": "retained_unbound_legacy",
+    "baseline_compatibility": {
+      "legacy_fingerprint": "ea2bfacf7be649de61c9ef34386a0c1981e61766f231e06367304ff9caa25571",
+      "current_fingerprint": "ac291361c00b17e14ad9ecffbb6bda4cca40abafe15c33c5eca8003b1b35c08e",
+      "record": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_A2/experiments/external/mir_eval/.aideal_exec/A2/checkpoint_compatibility.json",
+      "record_sha256": "74b86e8269e2558f8d1af0b5ca7abe35764c43eff8c25d887175f528b6af2378",
+      "selection_policy": "latest fully attempted reproducible group, else latest reproducible group; never select by score or combine legacy groups",
+      "reason": "Reviewed schema-3 output-hash repair and bounded provider transport; model, prompts, scoring and logical fix budgets unchanged",
+      "baseline_fingerprint": "ea2bfacf7be649de61c9ef34386a0c1981e61766f231e06367304ff9caa25571",
+      "historical_output_aggregate_differs": false,
+      "limitation": "Input bytes are checked against the reviewed input-only proof; historical output contents and runtime state are not reconstructed. This is a supplementary recovery result, not certification of baseline execution."
+    },
+    "mode": "source",
+    "max_code_fix_rounds": 5,
+    "stuck_rounds": 2,
+    "runner_sha256": "0b5d7370459006a623d7084ab5c63a2ecdaa953fc2494a65627175671b994abf",
+    "engine_sha256": "6d9f4310015755d44f7e002ef5add7fb29dfaad0685c7e9d61ca495c1cddeaf1",
+    "validation_sha256": "6b57fe6df9a3049e7b76fbe76ca8042f885bcd507d87040a28032401879cdeb9",
+    "compatibility_adapter_sha256": "86d978d07814e35310da027da25d1e59bafd84dd350be5f66dc278050b1d43f9"
+  },
+  "initial": {
+    "status": "fail",
+    "category": "runtime",
+    "error": "AssertionError: Expected base quality 'maj', got maj7",
+    "code": "import sys\nimport traceback\n\nimport numpy as np\nimport mir_eval\nfrom mir_eval import alignment, beat, chord, display, hierarchy, io, key\nfrom mir_eval import melody, multipitch, onset, pattern, segment, separation\nfrom mir_eval import sonify, tempo, transcription, transcription_velocity, util\n\n\ndef run():\n    beat_reference_file = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/mir_eval/cefdd1520279c9cc708b3dfca67ae2f9755094b1b667f75832a27555ea742f2c/project/source/tests/data/beat/ref00.txt\"\n    beat_estimate_file = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/mir_eval/cefdd1520279c9cc708b3dfca67ae2f9755094b1b667f75832a27555ea742f2c/project/source/tests/data/beat/est00.txt\"\n    chord_reference_file = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/mir_eval/cefdd1520279c9cc708b3dfca67ae2f9755094b1b667f75832a27555ea742f2c/project/source/tests/data/chord/ref00.lab\"\n    melody_reference_file = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/mir_eval/cefdd1520279c9cc708b3dfca67ae2f9755094b1b667f75832a27555ea742f2c/project/source/tests/data/melody/ref00.txt\"\n    output_dir = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/mir_eval/cefdd1520279c9cc708b3dfca67ae2f9755094b1b667f75832a27555ea742f2c/project/.aideal_exec/A2/output\"\n\n    # pre-loaded typed inputs (comprehension.execute.preamble)\n    times = np.array([0.0, 0.5, 1.0, 1.5, 2.0])  # type: numpy.ndarray event/frame times\n    ref_events = np.array([0.0, 0.5, 1.0, 1.5])  # type: numpy.ndarray reference events\n    est_events = np.array([0.02, 0.48, 1.03, 1.52])  # type: numpy.ndarray estimated events\n    ref_intervals = np.array([[0.0, 0.5], [0.5, 1.0], [1.0, 1.5], [1.5, 2.0]])  # type: numpy.ndarray reference intervals\n    est_intervals = np.array([[0.0, 0.48], [0.48, 1.02], [1.02, 1.48], [1.48, 2.0]])  # type: numpy.ndarray estimated intervals\n    ref_labels = [\"C:maj\", \"G:maj\", \"A:min\", \"F:maj\"]  # type: list[str] reference labels\n    est_labels = [\"C:maj\", \"G:maj\", \"A:min\", \"F:maj\"]  # type: list[str] estimated labels\n    ref_freqs = np.array([440.0, 440.0, 0.0, 523.25, 523.25])  # type: numpy.ndarray reference frequencies\n    est_freqs = np.array([442.0, 438.0, 0.0, 525.0, 520.0])  # type: numpy.ndarray estimated frequencies\n    ref_sources = np.vstack([np.sin(2*np.pi*3*times), np.cos(2*np.pi*2*times)])  # type: numpy.ndarray reference sources\n    est_sources = ref_sources + 0.001  # type: numpy.ndarray estimated sources\n\n    def api_test():\n        # TODO API_TEST_START\n        import mir_eval\n\n        base_quality, extensions = mir_eval.chord.reduce_extended_quality(\"maj9\")\n\n        assert base_quality == \"maj\", f\"Expected base quality 'maj', got {base_quality}\"\n        assert extensions == {\"7\", \"9\"}, f\"Expected extensions {{'7', '9'}}, got {extensions}\"\n\n        print(f\"__CHECK__ reduce_extended_quality {base_quality} {sorted(list(extensions))}\")\n        # TODO API_TEST_END\n        pass\n\n    api_test()\n\n\nif __name__ == \"__main__\":\n    try:\n        run()\n        print(\"__DONE__\")\n    except Exception as exc:\n        sys.stderr.write(f\"__RUN_ERR__ {type(exc).__name__}: {exc}\\n\")\n        traceback.print_exc()\n        sys.exit(1)\n"
+  },
+  "events": [
+    {
+      "status": "pass",
+      "category": null,
+      "error": null,
+      "code": "import sys\nimport traceback\n\nimport numpy as np\nimport mir_eval\nfrom mir_eval import alignment, beat, chord, display, hierarchy, io, key\nfrom mir_eval import melody, multipitch, onset, pattern, segment, separation\nfrom mir_eval import sonify, tempo, transcription, transcription_velocity, util\n\n\ndef run():\n    beat_reference_file = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/mir_eval/cefdd1520279c9cc708b3dfca67ae2f9755094b1b667f75832a27555ea742f2c/project/source/tests/data/beat/ref00.txt\"\n    beat_estimate_file = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/mir_eval/cefdd1520279c9cc708b3dfca67ae2f9755094b1b667f75832a27555ea742f2c/project/source/tests/data/beat/est00.txt\"\n    chord_reference_file = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/mir_eval/cefdd1520279c9cc708b3dfca67ae2f9755094b1b667f75832a27555ea742f2c/project/source/tests/data/chord/ref00.lab\"\n    melody_reference_file = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/mir_eval/cefdd1520279c9cc708b3dfca67ae2f9755094b1b667f75832a27555ea742f2c/project/source/tests/data/melody/ref00.txt\"\n    output_dir = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/mir_eval/cefdd1520279c9cc708b3dfca67ae2f9755094b1b667f75832a27555ea742f2c/project/.aideal_recovery/7e6f951f541c6ed45a8fa768ed3e27ddac249c54a4dcabc8884ac4e2a3909208/round_01/attempt_0001/output\"\n\n    # pre-loaded typed inputs (comprehension.execute.preamble)\n    times = np.array([0.0, 0.5, 1.0, 1.5, 2.0])  # type: numpy.ndarray event/frame times\n    ref_events = np.array([0.0, 0.5, 1.0, 1.5])  # type: numpy.ndarray reference events\n    est_events = np.array([0.02, 0.48, 1.03, 1.52])  # type: numpy.ndarray estimated events\n    ref_intervals = np.array([[0.0, 0.5], [0.5, 1.0], [1.0, 1.5], [1.5, 2.0]])  # type: numpy.ndarray reference intervals\n    est_intervals = np.array([[0.0, 0.48], [0.48, 1.02], [1.02, 1.48], [1.48, 2.0]])  # type: numpy.ndarray estimated intervals\n    ref_labels = [\"C:maj\", \"G:maj\", \"A:min\", \"F:maj\"]  # type: list[str] reference labels\n    est_labels = [\"C:maj\", \"G:maj\", \"A:min\", \"F:maj\"]  # type: list[str] estimated labels\n    ref_freqs = np.array([440.0, 440.0, 0.0, 523.25, 523.25])  # type: numpy.ndarray reference frequencies\n    est_freqs = np.array([442.0, 438.0, 0.0, 525.0, 520.0])  # type: numpy.ndarray estimated frequencies\n    ref_sources = np.vstack([np.sin(2*np.pi*3*times), np.cos(2*np.pi*2*times)])  # type: numpy.ndarray reference sources\n    est_sources = ref_sources + 0.001  # type: numpy.ndarray estimated sources\n\n    def api_test():\n        # TODO API_TEST_START\n        import mir_eval\n\n        base_quality, extensions = mir_eval.chord.reduce_extended_quality(\"maj9\")\n\n        assert base_quality == \"maj7\", f\"Expected base quality 'maj7', got {base_quality}\"\n        assert extensions == {\"9\"}, f\"Expected extensions {{'9'}}, got {extensions}\"\n\n        print(f\"__CHECK__ reduce_extended_quality {base_quality} {sorted(list(extensions))}\")\n        # TODO API_TEST_END\n        pass\n\n    api_test()\n\n\nif __name__ == \"__main__\":\n    try:\n        run()\n        print(\"__DONE__\")\n    except Exception as exc:\n        sys.stderr.write(f\"__RUN_ERR__ {type(exc).__name__}: {exc}\\n\")\n        traceback.print_exc()\n        sys.exit(1)\n",
+      "native_result": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/mir_eval/cefdd1520279c9cc708b3dfca67ae2f9755094b1b667f75832a27555ea742f2c/project/.aideal_recovery/7e6f951f541c6ed45a8fa768ed3e27ddac249c54a4dcabc8884ac4e2a3909208/round_01/attempt_0001/native_result.json",
+      "script_sha256": "fe2fdfb2b92f7b377ffdc0d7d227d252154fe5855edad5ae9ba9770accc6bc4c",
+      "wall_s": 6.1,
+      "llm_calls": 1,
+      "input_tokens": 3271,
+      "output_tokens": 524,
+      "code_fix_round": 1
+    }
+  ],
+  "rounds": [
+    {
+      "status": "pass",
+      "category": null,
+      "error": null,
+      "code": "import sys\nimport traceback\n\nimport numpy as np\nimport mir_eval\nfrom mir_eval import alignment, beat, chord, display, hierarchy, io, key\nfrom mir_eval import melody, multipitch, onset, pattern, segment, separation\nfrom mir_eval import sonify, tempo, transcription, transcription_velocity, util\n\n\ndef run():\n    beat_reference_file = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/mir_eval/cefdd1520279c9cc708b3dfca67ae2f9755094b1b667f75832a27555ea742f2c/project/source/tests/data/beat/ref00.txt\"\n    beat_estimate_file = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/mir_eval/cefdd1520279c9cc708b3dfca67ae2f9755094b1b667f75832a27555ea742f2c/project/source/tests/data/beat/est00.txt\"\n    chord_reference_file = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/mir_eval/cefdd1520279c9cc708b3dfca67ae2f9755094b1b667f75832a27555ea742f2c/project/source/tests/data/chord/ref00.lab\"\n    melody_reference_file = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/mir_eval/cefdd1520279c9cc708b3dfca67ae2f9755094b1b667f75832a27555ea742f2c/project/source/tests/data/melody/ref00.txt\"\n    output_dir = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/mir_eval/cefdd1520279c9cc708b3dfca67ae2f9755094b1b667f75832a27555ea742f2c/project/.aideal_recovery/7e6f951f541c6ed45a8fa768ed3e27ddac249c54a4dcabc8884ac4e2a3909208/round_01/attempt_0001/output\"\n\n    # pre-loaded typed inputs (comprehension.execute.preamble)\n    times = np.array([0.0, 0.5, 1.0, 1.5, 2.0])  # type: numpy.ndarray event/frame times\n    ref_events = np.array([0.0, 0.5, 1.0, 1.5])  # type: numpy.ndarray reference events\n    est_events = np.array([0.02, 0.48, 1.03, 1.52])  # type: numpy.ndarray estimated events\n    ref_intervals = np.array([[0.0, 0.5], [0.5, 1.0], [1.0, 1.5], [1.5, 2.0]])  # type: numpy.ndarray reference intervals\n    est_intervals = np.array([[0.0, 0.48], [0.48, 1.02], [1.02, 1.48], [1.48, 2.0]])  # type: numpy.ndarray estimated intervals\n    ref_labels = [\"C:maj\", \"G:maj\", \"A:min\", \"F:maj\"]  # type: list[str] reference labels\n    est_labels = [\"C:maj\", \"G:maj\", \"A:min\", \"F:maj\"]  # type: list[str] estimated labels\n    ref_freqs = np.array([440.0, 440.0, 0.0, 523.25, 523.25])  # type: numpy.ndarray reference frequencies\n    est_freqs = np.array([442.0, 438.0, 0.0, 525.0, 520.0])  # type: numpy.ndarray estimated frequencies\n    ref_sources = np.vstack([np.sin(2*np.pi*3*times), np.cos(2*np.pi*2*times)])  # type: numpy.ndarray reference sources\n    est_sources = ref_sources + 0.001  # type: numpy.ndarray estimated sources\n\n    def api_test():\n        # TODO API_TEST_START\n        import mir_eval\n\n        base_quality, extensions = mir_eval.chord.reduce_extended_quality(\"maj9\")\n\n        assert base_quality == \"maj7\", f\"Expected base quality 'maj7', got {base_quality}\"\n        assert extensions == {\"9\"}, f\"Expected extensions {{'9'}}, got {extensions}\"\n\n        print(f\"__CHECK__ reduce_extended_quality {base_quality} {sorted(list(extensions))}\")\n        # TODO API_TEST_END\n        pass\n\n    api_test()\n\n\nif __name__ == \"__main__\":\n    try:\n        run()\n        print(\"__DONE__\")\n    except Exception as exc:\n        sys.stderr.write(f\"__RUN_ERR__ {type(exc).__name__}: {exc}\\n\")\n        traceback.print_exc()\n        sys.exit(1)\n",
+      "native_result": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/mir_eval/cefdd1520279c9cc708b3dfca67ae2f9755094b1b667f75832a27555ea742f2c/project/.aideal_recovery/7e6f951f541c6ed45a8fa768ed3e27ddac249c54a4dcabc8884ac4e2a3909208/round_01/attempt_0001/native_result.json",
+      "script_sha256": "fe2fdfb2b92f7b377ffdc0d7d227d252154fe5855edad5ae9ba9770accc6bc4c",
+      "wall_s": 6.1,
+      "llm_calls": 1,
+      "input_tokens": 3271,
+      "output_tokens": 524,
+      "code_fix_round": 1
+    }
+  ],
+  "status": "recovered_native",
+  "diagnosis": {
+    "api": "reduce_extended_quality",
+    "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/mir_eval/cefdd1520279c9cc708b3dfca67ae2f9755094b1b667f75832a27555ea742f2c/project/.aideal_recovery/7e6f951f541c6ed45a8fa768ed3e27ddac249c54a4dcabc8884ac4e2a3909208/deepdive/reduce_extended_quality.md",
+    "model": "google:gemini-3.1-pro-preview",
+    "tokens": {
+      "in": 4920,
+      "out": 2174
+    },
+    "wall_s": 20.8,
+    "report_text": "**L0 AUDIENCE + TESTABILITY CLASSIFICATION**\nThis API is classified as **INTERNAL/FRAMEWORK**. While it lacks a leading underscore and is technically accessible, it is a highly specific helper function designed to be consumed by higher-level parsing functions like `mir_eval.chord.split` and `mir_eval.chord.encode`. It should generally be excluded from a main user-facing benchmark denominator. \n\nIt is **TESTABLE FROM PUBLIC INPUTS**, as it is a pure function that takes a standard Python string and returns a tuple of standard Python types.\n\n**L1 PURPOSE**\nThe `reduce_extended_quality` function maps an extended chord quality string (such as `\"maj9\"` or `\"13\"`) to a simpler base quality (like `\"maj7\"` or `\"7\"`) while extracting the upper voices into a set of scale degree extensions. It sits in the chord parsing data flow, specifically acting as an optional normalization step when users pass `reduce_extended_chords=True` to `mir_eval.chord.split` or `mir_eval.chord.encode`.\n\n**L2 CONTRACT**\n*   **Receiver**: None (standalone module-level function).\n*   **Parameters**:\n    *   `quality` (`str`): The chord quality string to reduce (e.g., `\"maj9\"`, `\"min11\"`, `\"maj\"`). It should not include the chord root or bass.\n*   **Returns**: `tuple[str, set]`\n    *   `base_quality` (`str`): The simplified chord quality.\n    *   `extensions` (`set` of `str`): The scale degree extensions extracted from the original quality.\n*   **Visibility**: Publicly accessible, but intended for internal use within the `mir_eval.chord` module.\n*   **Thread-safety/Laziness**: Thread-safe and eagerly evaluated (pure function with no side effects).\n\n**L3 MECHANICS**\nThe function operates entirely via a dictionary lookup. It calls `.get(quality, (quality, set()))` on the module-level `EXTENDED_QUALITY_REDUX` dictionary (defined at `source/mir_eval/chord.py:302`). \n*   If the `quality` string exists in the dictionary (e.g., `\"maj9\"`), it returns the hardcoded tuple (e.g., `(\"maj7\", {\"9\"})`).\n*   If the `quality` string is not in the dictionary (e.g., `\"maj\"`, `\"min\"`, or an invalid string), it returns the original `quality` string unmodified, paired with an empty `set()`.\n*   It does not perform any validation on the input string and will not raise any exceptions.\n\n**L4 CORRECT MINIMAL USAGE**\n```python\nimport mir_eval\n\n# Example 1: Reducing an extended chord quality\nbase_quality, extensions = mir_eval.chord.reduce_extended_quality(\"maj9\")\nassert base_quality == \"maj7\"\nassert extensions == {\"9\"}\n\n# Example 2: Passing a quality that does not need reduction\nbase_quality, extensions = mir_eval.chord.reduce_extended_quality(\"maj\")\nassert base_quality == \"maj\"\nassert extensions == set()\n```\n\n**L5 FAILURE FORENSICS**\n*   `[fail/runtime] AssertionError: Expected base quality 'maj', got maj7`\n    *   **Why it failed:** The author of the test assumed that reducing an extended chord like `\"maj9\"` would reduce it all the way down to a triad (`\"maj\"`) and extract both the 7th and 9th into the extensions set. \n    *   **Source citation:** As defined in `EXTENDED_QUALITY_REDUX` at `source/mir_eval/chord.py:304`, the mapping for `\"maj9\"` is explicitly `(\"maj7\", {\"9\"})`. The function reduces extended chords to 7th chords, not triads.\n\n**L6 SELF-ASSESSMENT**\n*   **Inferences:** None. All claims are directly traceable to the provided source code, dictionary definitions, and failure logs.\n*   **Information needed for certainty:** None. The function is a pure, deterministic dictionary lookup.\n*   **Confidence Scores:**\n    *   L2 (Contract): 10/10 - The parameter and return types are explicitly clear from the source code and default return tuple.\n    *   L3 (Mechanics): 10/10 - The function is a single line of code delegating to a static dictionary.\n    *   L4 (Usage): 10/10 - The snippet uses standard Python types and directly exercises the dictionary lookup logic.",
+    "report_sha256": "9689b6b483d02fe400e7a47231160dd232f3c3867331823f5ebd7c83947ed150"
+  },
+  "max_rounds": 5,
+  "stuck_threshold": 2,
+  "stop_reason": null,
+  "semantic_validation": "needs_independent_review",
+  "headline_credit": false,
+  "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/mir_eval/cefdd1520279c9cc708b3dfca67ae2f9755094b1b667f75832a27555ea742f2c/project/.aideal_recovery/7e6f951f541c6ed45a8fa768ed3e27ddac249c54a4dcabc8884ac4e2a3909208/recovery.json"
+}

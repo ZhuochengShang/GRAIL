@@ -1,0 +1,20 @@
+net.coobird.thumbnailator.geometry.Region expectedRegion = new net.coobird.thumbnailator.geometry.Region(
+    new net.coobird.thumbnailator.geometry.Coordinate(10, 15),
+    new net.coobird.thumbnailator.geometry.AbsoluteSize(50, 60)
+);
+
+net.coobird.thumbnailator.ThumbnailParameter params = new net.coobird.thumbnailator.builders.ThumbnailParameterBuilder()
+    .region(expectedRegion)
+    .size(20, 20)
+    .build();
+
+net.coobird.thumbnailator.geometry.Region actualRegion = params.getSourceRegion();
+assert actualRegion != null : "Source region must not be null";
+
+java.awt.Rectangle rect = actualRegion.calculate(100, 100);
+assert rect.x == 10 : "Expected x to be 10, got " + rect.x;
+assert rect.y == 15 : "Expected y to be 15, got " + rect.y;
+assert rect.width == 50 : "Expected width to be 50, got " + rect.width;
+assert rect.height == 60 : "Expected height to be 60, got " + rect.height;
+
+System.out.println("__CHECK__ region " + rect.x + "," + rect.y + "," + rect.width + "," + rect.height);

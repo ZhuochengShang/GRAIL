@@ -1,0 +1,156 @@
+106:         except Exception:
+107:             self._baseline_scores_filename = None
+108: 
+109:         self._ignore_list = ["Data Descriptions"]
+110:         # File names for datasets for which it is not obvious
+111:         # key: from timeseriesclassification.com, value: right dataset name
+112:         self._filenames = {
+113:             "AtrialFibrillation": "AtrialFibrilation",
+114:             "CinCECGtorso": "CinCECGTorso",
+115:             "MixedShapes": "MixedShapesRegularTrain",
+116:             "NonInvasiveFetalECGThorax1": "NonInvasiveFatalECGThorax1",
+117:             "NonInvasiveFetalECGThorax2": "NonInvasiveFatalECGThorax2",
+118:             "StarlightCurves": "StarLightCurves"
+119:         }
+120: 
+121:     def baseline_accuracy(self, list_datasets=None, list_methods=None):
+122:         """Report baseline performances as provided by UEA/UCR website (for
+123:         univariate datasets only).
+124: 
+125:         Parameters
+126:         ----------
+127:         list_datasets: list or None (default: None)
+128:             A list of strings indicating for which datasets performance should
+129:             be reported.
+130:             If None, performance is reported for all datasets.
+131:         list_methods: list or None (default: None)
+132:             A list of baselines methods for which performance should be
+133:             reported.
+134:             If None, performance for all baseline methods is reported.
+135: 
+136:         Returns
+137:         -------
+138:         dict
+139:             A dictionary in which keys are dataset names and associated values
+140:             are themselves dictionaries that provide accuracy scores for the
+141:             requested methods.
+142: 
+143:         Examples
+144:         --------
+145:         >>> uea_ucr = UCR_UEA_datasets()
+146:         >>> dict_acc = uea_ucr.baseline_accuracy(
+147:         ...         list_datasets=["Adiac", "ChlorineConcentration"],
+148:         ...         list_methods=["C45"])
+149:         >>> len(dict_acc)
+150:         2
+151:         >>> dict_acc["Adiac"]  # doctest: +ELLIPSIS
+152:         {'C45': 0.542199...}
+153:         >>> all_dict_acc = uea_ucr.baseline_accuracy()
+154:         >>> len(all_dict_acc)
+155:         85
+156:         """
+157:         warnings.warn("The method baseline_accuracy will soon be deprecated because "
+158:                       "the data provider no longer maintains this information.",
+159:                       category=DeprecationWarning, stacklevel=2)
+160:         with open(self._baseline_scores_filename, "r") as f:
+161:             d_out = dict()
+162:             for perfs_dict in csv.DictReader(f, delimiter=";"):
+163:                 dataset_name = perfs_dict[""]
+164:                 if list_datasets is None or dataset_name in list_datasets:
+165:                     d_out[dataset_name] = {}
+166:                     for m in perfs_dict.keys():
+167:                         if m != "" and (list_methods is None or m in list_methods):
+168:                             try:
+169:                                 d_out[dataset_name][m] = float(perfs_dict[m])
+170:                             except ValueError:  # Missing score case (score == "")
+171:                                 pass
+172:             return d_out
+173: 
+174:     def list_univariate_datasets(self):
+175:         """List univariate datasets in the UCR/UEA archive.
+176: 
+177:         Examples
+178:         --------
+179:         >>> l = UCR_UEA_datasets().list_univariate_datasets()
+180:         >>> len(l)
+181:         128
+182: 
+183:         Returns
+184:         -------
+185:         list of str:
+186:             A list of the names of all univariate datasets.
+187:         """
+188:         with open(self._list_univariate_filename, "r") as f:
+189:             return [
+190:                 infos_dict["problem"]  # get the dataset name
+191:                 for infos_dict in csv.DictReader(f, delimiter=",")
+192:             ]
+193: 
+194:     def list_multivariate_datasets(self):
+195:         """List multivariate datasets in the UCR/UEA archive.
+196: 
+197:         Examples
+198:         --------
+199:         >>> l = UCR_UEA_datasets().list_multivariate_datasets()
+200:         >>> "PenDigits" in l
+201:         True
+202: 
+203:         Returns
+204:         -------
+205:         list of str:
+206:             A list of the names of all multivariate dataset namas.
+207:         """
+208:         with open(self._list_multivariate_filename, "r") as f:
+209:             return [
+210:                 infos_dict["Problem"]  # get the dataset name
+211:                 for infos_dict in csv.DictReader(f, delimiter=",")
+212:             ]
+213: 
+214:     def list_datasets(self):
+215:         """List datasets (both univariate and multivariate) available in the
+216:         UCR/UEA archive.
+217: 
+218:         Examples
+219:         --------
+220:         >>> l = UCR_UEA_datasets().list_datasets()
+221:         >>> "PenDigits" in l
+222:         True
+223:         >>> "BeetleFly" in l
+224:         True
+225:         >>> "DatasetThatDoesNotExist" in l
+226:         False
+227: 
+228:         Returns
+229:         -------
+230:         list of str:
+231:             A list of names of all (univariate and multivariate) dataset names.
+232:         """
+233:         return (self.list_univariate_datasets()
+234:                 + self.list_multivariate_datasets())
+235: 
+236:     def list_cached_datasets(self):
+237:         """List datasets from the UCR/UEA archive that are available in cache.
+238: 
+239:         Examples
+240:         --------
+241:         >>> beetlefly = UCR_UEA_datasets().load_dataset("BeetleFly")
+242:         >>> l = UCR_UEA_datasets().list_cached_datasets()
+243:         >>> "BeetleFly" in l
+244:         True
+245:         """
+246:         return [path.name for path in self._data_dir.iterdir()
+247:                 if path.is_dir() and path.name not in self._ignore_list]
+248: 
+249:     def load_dataset(self, dataset_name):
+250:         """Load a dataset from the UCR/UEA archive from its name.
+251: 
+252:         On failure, `None` is returned for each of the four values and a
+253:         `RuntimeWarning` is printed.
+254: 
+255:         Parameters
+256:         ----------
+257:         dataset_name : str
+258:             Name of the dataset. Should be in the list returned by
+259:             `list_datasets`
+260: 
+261:         Returns

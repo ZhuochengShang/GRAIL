@@ -1,0 +1,15 @@
+net.coobird.thumbnailator.tasks.io.BufferedImageSource source = new net.coobird.thumbnailator.tasks.io.BufferedImageSource(sourceImage);
+
+net.coobird.thumbnailator.ThumbnailParameter param = new net.coobird.thumbnailator.ThumbnailParameterBuilder()
+    .region(new net.coobird.thumbnailator.geometry.Region(
+        net.coobird.thumbnailator.geometry.Positions.TOP_LEFT, 
+        new net.coobird.thumbnailator.geometry.AbsoluteSize(5, 5)))
+    .size(20, 20)
+    .build();
+
+source.setThumbnailParameter(param);
+
+java.awt.image.BufferedImage img = source.read();
+
+assert img.getWidth() == 5 && img.getHeight() == 5 : "Expected cropped image of 5x5, got " + img.getWidth() + "x" + img.getHeight();
+System.out.println("__CHECK__ setThumbnailParameter " + img.getWidth() + "x" + img.getHeight());

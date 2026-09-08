@@ -1,0 +1,156 @@
+180: 
+181:         Parameters
+182:         ----------
+183:         X : array-like of shape (n_ts, sz, d)
+184:             Time series dataset
+185: 
+186:         Returns
+187:         -------
+188:         numpy.ndarray of shape (n_ts, n_segments, d)
+189:             PAA-Transformed dataset
+190:         """
+191:         X = check_array(X, allow_nd=True, force_all_finite=False)
+192:         X = check_dims(X)
+193:         return self._fit(X)._transform(X)
+194: 
+195:     def distance_paa(self, paa1, paa2):
+196:         """Compute distance between PAA representations as defined in [1]_.
+197: 
+198:         Parameters
+199:         ----------
+200:         paa1 : array-like
+201:             PAA representation of a time series
+202:         paa2 : array-like
+203:             PAA representation of another time series
+204: 
+205:         Returns
+206:         -------
+207:         float
+208:             PAA distance
+209: 
+210:         References
+211:         ----------
+212:         .. [1] E. Keogh & M. Pazzani. Scaling up dynamic time warping for
+213:            datamining applications. SIGKDD 2000, pp. 285--289.
+214:         """
+215:         self._is_fitted()
+216:         return (numpy.linalg.norm(paa1 - paa2) *
+217:                 numpy.sqrt(self._X_fit_dims_[1] / self.n_segments))
+218: 
+219:     def distance(self, ts1, ts2):
+220:         """Compute distance between PAA representations as defined in [1]_.
+221: 
+222:         Parameters
+223:         ----------
+224:         ts1 : array-like
+225:             A time series
+226:         ts2 : array-like
+227:             Another time series
+228: 
+229:         Returns
+230:         -------
+231:         float
+232:             PAA distance
+233: 
+234:         References
+235:         ----------
+236:         .. [1] E. Keogh & M. Pazzani. Scaling up dynamic time warping for
+237:            datamining applications. SIGKDD 2000, pp. 285--289.
+238:         """
+239:         paa = self.transform([ts1, ts2])
+240:         return self.distance_paa(paa[0], paa[1])
+241: 
+242:     def inverse_transform(self, X):
+243:         """Compute time series corresponding to given PAA representations.
+244: 
+245:         Parameters
+246:         ----------
+247:         X : array-like of shape (n_ts, sz_paa, d)
+248:             A dataset of PAA series.
+249: 
+250:         Returns
+251:         -------
+252:         numpy.ndarray of shape (n_ts, sz_original_ts, d)
+253:             A dataset of time series corresponding to the provided
+254:             representation.
+255:         """
+256:         self._is_fitted()
+257:         X = check_array(X, allow_nd=True, force_all_finite=False)
+258:         X = check_dims(X)
+259:         return inv_transform_paa(X, original_size=self._X_fit_dims_[1])
+260: 
+261:     def _more_tags(self):
+262:         tags = super()._more_tags()
+263:         tags.update({
+264:             'allow_nan': True,
+265:             ALLOW_VARIABLE_LENGTH: True,
+266:         })
+267:         return tags
+268: 
+269:     def __sklearn_tags__(self):
+270:         tags = super().__sklearn_tags__()
+271:         tags.input_tags.allow_nan = True
+272:         tags.allow_variable_length = True
+273:         return tags
+274: 
+275: 
+276: class SymbolicAggregateApproximation(PiecewiseAggregateApproximation):
+277:     """Symbolic Aggregate approXimation (SAX) transformation.
+278: 
+279:     SAX was originally presented in [1]_.
+280: 
+281:     Parameters
+282:     ----------
+283:     n_segments : int (default: 1)
+284:         Number of PAA segments to compute
+285:         
+286:     alphabet_size_avg : int (default: 5)
+287:         Number of SAX symbols to use
+288:     
+289:     scale: bool (default: False)
+290:          Whether input data should be scaled for each feature to have zero 
+291:          mean and unit variance across the dataset passed at fit time.
+292:          Default for this parameter is set to `False` in version 0.4 to ensure
+293:          backward compatibility, but is likely to change in a future version.
+294: 
+295:     Attributes
+296:     ----------
+297:     breakpoints_avg_ : numpy.ndarray of shape (alphabet_size - 1, )
+298:         List of breakpoints used to generate SAX symbols
+299: 
+300:     Notes
+301:     -----
+302:         This method requires a dataset of equal-sized time series.
+303: 
+304:     Examples
+305:     --------
+306:     >>> sax = SymbolicAggregateApproximation(n_segments=3, alphabet_size_avg=2)
+307:     >>> data = [[-1., 2., 0.1, -1., 1., -1.], [1., 3.2, -1., -3., 1., -1.]]
+308:     >>> sax_data = sax.fit_transform(data)
+309:     >>> sax_data.shape
+310:     (2, 3, 1)
+311:     >>> sax_data
+312:     array([[[1],
+313:             [0],
+314:             [1]],
+315:     <BLANKLINE>
+316:            [[1],
+317:             [0],
+318:             [1]]])
+319:     >>> sax.distance_sax(sax_data[0], sax_data[1])  # doctest: +ELLIPSIS
+320:     0.0
+321:     >>> sax.distance(data[0], data[1])  # doctest: +ELLIPSIS
+322:     0.0
+323:     >>> sax.inverse_transform(sax_data)
+324:     array([[[ 0.67448975],
+325:             [ 0.67448975],
+326:             [-0.67448975],
+327:             [-0.67448975],
+328:             [ 0.67448975],
+329:             [ 0.67448975]],
+330:     <BLANKLINE>
+331:            [[ 0.67448975],
+332:             [ 0.67448975],
+333:             [-0.67448975],
+334:             [-0.67448975],
+335:             [ 0.67448975],

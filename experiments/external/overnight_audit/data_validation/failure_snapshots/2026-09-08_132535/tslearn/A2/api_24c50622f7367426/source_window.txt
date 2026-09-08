@@ -1,0 +1,156 @@
+585:             A dataset of incomplete time series observed up to time t
+586: 
+587:         Returns
+588:         -------
+589:         array-like, shape (n_series,)
+590:             Predicted classes.
+591:         array-like, shape (n_series,)
+592:             Estimated delays before prediction timestamps.
+593:         """
+594:         check_is_fitted(self, '_X_fit_dims')
+595:         X = check_array(X, allow_nd=True)
+596:         X = check_dims(X, X_fit_dims=self._X_fit_dims, check_n_features_only=True)
+597:         X = to_time_series_dataset(X)
+598:         return self._early_predict(X, predict_proba=False)
+599: 
+600:     def early_predict_proba(self, X):
+601:         """
+602:         Provides probability estimates as well as estimated delays before prediction timestamps
+603:         for a dataset of incomplete time series.
+604: 
+605:         Prediction timestamps are timestamps at which a prediction is made in
+606:         early classification setting.
+607: 
+608:         Parameters
+609:         ----------
+610:         X : array-like of shape (n_series, t, n_features)
+611:             A dataset of incomplete time series observed up to time t
+612: 
+613:         Returns
+614:         -------
+615:         array-like, shape (n_series, n_classes)
+616:             Probabilities for each class in the model,
+617:             where classes are ordered as they are in ``self.classes_``.
+618:         array-like of shape (n_series,)
+619:             Estimated delays before prediction timestamps.
+620:         """
+621:         check_is_fitted(self, '_X_fit_dims')
+622:         X = check_array(X, allow_nd=True)
+623:         X = check_dims(X, X_fit_dims=self._X_fit_dims, check_n_features_only=True)
+624:         X = to_time_series_dataset(X)
+625:         return self._early_predict(X, predict_proba=True)
+626: 
+627:     def get_early_predict_generator(self, n_ts=1):
+628:         """
+629:         Allows streaming incoming timestamps of a time series and retrieving
+630:         current predicted class as well as estimated delay before prediction timestamps.
+631: 
+632:         Prediction timestamps are timestamps at which a prediction is made in
+633:         early classification setting.
+634: 
+635:         Parameters
+636:         ----------
+637:         n_ts: int (default 1)
+638:             The number of time series that will be predicted by the generator
+639: 
+640:         Returns
+641:         -------
+642:         generator
+643:             Use the `send` method of the generator to stream timestamps as they become available and retrieve associated
+644:             predictions and delays. This method takes an array-like, shape (n_ts, n_timestamps, n_features),
+645:             representing freshly aquired data for all timeseries as input. This new data is concatenated with previously
+646:             sent data, if any, to output the predicted classes and estimated delays before optimal prediction
+647:             timestamps for all timeseries based all on available data (same output as :func:`~early_predict`).
+648:             Use n_timestamps = 1 for step by step feeding.
+649: 
+650:         Examples
+651:         --------
+652:         >>> dataset = to_time_series_dataset([[1, 2, 3, 4, 5, 6],
+653:         ...                                   [1, 2, 3, 4, 5, 6],
+654:         ...                                   [1, 2, 3, 4, 5, 6],
+655:         ...                                   [1, 2, 3, 3, 2, 1],
+656:         ...                                   [1, 2, 3, 3, 2, 1],
+657:         ...                                   [1, 2, 3, 3, 2, 1],
+658:         ...                                   [3, 2, 1, 1, 2, 3],
+659:         ...                                   [3, 2, 1, 1, 2, 3]])
+660:         >>> y = [0, 0, 0, 1, 1, 1, 0, 0]
+661:         >>> model = NonMyopicEarlyClassifier(n_clusters=3, lamb=1000.,
+662:         ...                                  cost_time_parameter=.1,
+663:         ...                                  random_state=0).fit(dataset, y)
+664:         >>> incoming_timestamps = np.array([1, 2, 3, 3, 1, 2]).reshape(6, 1, 1, 1)
+665:         >>> gen = model.get_early_predict_generator()
+666:         >>> for x in incoming_timestamps:
+667:         ...     print(gen.send(x))
+668:         (array([0]), array([3]))
+669:         (array([0]), array([2]))
+670:         (array([0]), array([1]))
+671:         (array([1]), array([0]))
+672:         (array([1]), array([0]))
+673:         (array([1]), array([0]))
+674:         """
+675:         return self._get_early_predict_generator(n_ts, predict_proba=False)
+676: 
+677:     def get_early_predict_proba_generator(self, n_ts=1):
+678:         """
+679:         Allows streaming incoming timestamps of a time series and retrieving
+680:         current probability estimates as well as estimated delay before prediction timestamps.
+681: 
+682:         Prediction timestamps are timestamps at which a prediction is made in
+683:         early classification setting.
+684: 
+685:         Parameters
+686:         ----------
+687:         n_ts: int (default 1)
+688:             The number of time series that will be predicted by the generator
+689: 
+690:         Returns
+691:         -------
+692:         generator
+693:             Use the `send` method of the generator to stream timestamps as they become available and retrieve associated
+694:             prediction probalities and delays. This method takes an array-like, shape (n_ts, n_timestamps, n_features),
+695:             representing freshly aquired data for all timeseries as input. This new data is concatenated with previously
+696:             sent data, if any, to output the predicted probability estimates and estimated delays before optimal prediction
+697:             timestamps for all timeseries based all on available data (same output as :func:`~early_predict_proba`).
+698:             Use n_timestamps = 1 for step by step feeding.
+699: 
+700:         Examples
+701:         --------
+702:         >>> dataset = to_time_series_dataset([[1, 2, 3, 4, 5, 6],
+703:         ...                                   [1, 2, 3, 4, 5, 6],
+704:         ...                                   [1, 2, 3, 4, 5, 6],
+705:         ...                                   [1, 2, 3, 3, 2, 1],
+706:         ...                                   [1, 2, 3, 3, 2, 1],
+707:         ...                                   [1, 2, 3, 3, 2, 1],
+708:         ...                                   [3, 2, 1, 1, 2, 3],
+709:         ...                                   [3, 2, 1, 1, 2, 3]])
+710:         >>> y = [0, 0, 0, 1, 1, 1, 0, 0]
+711:         >>> model = NonMyopicEarlyClassifier(n_clusters=3, lamb=1000.,
+712:         ...                                  cost_time_parameter=.1,
+713:         ...                                  random_state=0).fit(dataset, y)
+714:         >>> incoming_timestamps = np.array([1, 2, 3, 3, 1, 2]).reshape(6, 1, 1, 1)
+715:         >>> gen = model.get_early_predict_proba_generator()
+716:         >>> for x in incoming_timestamps:
+717:         ...     print(gen.send(x))
+718:         (array([[1., 0.]]), array([3]))
+719:         (array([[1., 0.]]), array([2]))
+720:         (array([[1., 0.]]), array([1]))
+721:         (array([[0., 1.]]), array([0]))
+722:         (array([[0., 1.]]), array([0]))
+723:         (array([[0., 1.]]), array([0]))
+724:         """
+725:         return self._get_early_predict_generator(n_ts, predict_proba=True)
+726: 
+727:     def _get_early_predict_generator(self, n_ts, predict_proba):
+728:         check_is_fitted(self, '_X_fit_dims')
+729: 
+730:         gen = self._generate_early_predictions(n_ts, predict_proba=predict_proba)
+731:         next(gen)
+732:         return gen
+733: 
+734:     def _generate_early_predictions(self, n_ts, predict_proba=False):
+735:         data = np.empty((n_ts, 0, self._X_fit_dims[-1]))
+736: 
+737:         while True:
+738:             incoming_timestamp = yield self._early_predict(data, predict_proba=predict_proba)
+739:             if incoming_timestamp is not None:
+740:                 try:

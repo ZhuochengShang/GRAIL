@@ -1,0 +1,24 @@
+361:             if there are both training and test files with the specified
+362:             file extension
+363:         """
+364:         if ext is None:
+365:             return any(
+366:                 self._has_files(dataset_name, ext=ext) for ext in SUPPORTED_EXT
+367:             )
+368:         else:
+369:             dataset_name = self._filenames.get(dataset_name, dataset_name)
+370:             full_path = self._data_dir / dataset_name
+371:             return (
+372:                 (full_path / (dataset_name + f"_TRAIN.{ext}")).exists() and
+373:                 (full_path / (dataset_name + f"_TEST.{ext}")).exists()
+374:             )
+375: 
+376:     def cache_all(self):
+377:         """Cache all datasets from the UCR/UEA archive for later use."""
+378:         for dataset_name in self.list_datasets():
+379:             try:
+380:                 self.load_dataset(dataset_name)
+381:             except Exception as exception:
+382:                 warnings.warn("Could not cache dataset \"%s\": %s"
+383:                               % (dataset_name, str(exception)),
+384:                               category=RuntimeWarning, stacklevel=2)

@@ -1,0 +1,74 @@
+"""Shared infrastructure-only scaffold for tslearn's full-surface 2x2.
+
+This exact file is used in A1, A2, B1, and B2. It intentionally imports no
+tested tslearn API because discovering the public import is part of the
+audience task in every cell.
+"""
+
+from pathlib import Path
+import sys
+import traceback
+
+import numpy as np
+
+
+def run():
+    # Typed repository fixture path and condition-specific output directory:
+    trace_npz = r"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A2/experiments/tslearn/tslearn/tslearn/.cached_datasets/Trace.npz"
+    output_dir = r"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A2/experiments/tslearn/.aideal_exec/A2/output"
+
+    # pre-loaded typed inputs (comprehension.execute.preamble)
+    Path(output_dir).mkdir(parents=True, exist_ok=True)
+    _trace = np.load(trace_npz)
+    _balanced = np.array([0, 4, 1, 17, 3, 13, 2, 5], dtype=int)
+    X = _trace["X_train"][_balanced, :40, :]  # type: balanced time-series dataset ndarray (8, 40, 1)
+    X2 = _trace["X_test"][:4, :32, :]  # type: second dataset ndarray (4, 32, 1)
+    s1 = X[0].ravel()  # type: 1-D series ndarray (40,)
+    s2 = X[1].ravel()  # type: 1-D series ndarray (40,)
+    y = _trace["y_train"][_balanced]  # type: four balanced labels, two examples per class
+    tiny_matrix = np.arange(12.0).reshape(3, 4)  # type: deterministic numeric matrix
+
+    # Keep audience imports local so they cannot shadow fixture construction.
+    def api_test():
+        # TODO API_TEST_START
+        from tslearn.svm.svm import TimeSeriesSVMMixin
+        from sklearn.base import BaseEstimator
+
+        # Create a custom estimator inheriting from the mixin to test its injected behavior
+        class CustomTimeSeriesSVM(BaseEstimator, TimeSeriesSVMMixin):
+            def __init__(self, sv):
+                # Mocking the support_vectors_ attribute typically created during fit()
+                self.support_vectors_ = sv
+
+        # Instantiate with the pre-loaded tiny_matrix
+        estimator = CustomTimeSeriesSVM(tiny_matrix)
+
+        # Verify that the mixin correctly injects time-series specific scikit-learn tags
+        tags = estimator._get_tags()
+        assert isinstance(tags, dict), "Tags should be a dictionary"
+        assert tags.get("allow_nan") is True, "TimeSeriesSVMMixin should inherit allow_nan=True from TimeSeriesMixin"
+
+        # Verify SVM-specific properties provided by the mixin, if present
+        if hasattr(CustomTimeSeriesSVM, "support_vectors_time_series_"):
+            sv_ts = estimator.support_vectors_time_series_
+            assert sv_ts.ndim == 3, "support_vectors_time_series_ should format data as a 3D array"
+            assert sv_ts.shape[0] == tiny_matrix.shape[0], "Number of support vectors should match the input matrix"
+            witness = f"tags_allow_nan={tags['allow_nan']}, sv_ts_shape={sv_ts.shape}"
+        else:
+            witness = f"tags_allow_nan={tags['allow_nan']}, has_sv_prop=False"
+
+        print(f"__CHECK__ TimeSeriesSVMMixin {witness}")
+        # TODO API_TEST_END
+        pass
+
+    api_test()
+
+
+if __name__ == "__main__":
+    try:
+        run()
+        print("__DONE__")
+    except Exception as exc:  # noqa: BLE001 - execution boundary
+        sys.stderr.write("__RUN_ERR__ " + type(exc).__name__ + ": " + str(exc) + "\n")
+        traceback.print_exc()
+        raise SystemExit(1)

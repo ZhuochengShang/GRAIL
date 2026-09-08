@@ -1,0 +1,156 @@
+215:     # Re-scale est velocities to match ref
+216:     est_matched_velocities = slope * est_matched_velocities + intercept
+217:     # Compute the absolute error of (rescaled) estimated velocities vs.
+218:     # normalized reference velocities. Error will be in [0, 1]
+219:     velocity_diff = np.abs(est_matched_velocities - ref_matched_velocities)
+220:     # Check whether each error is within the provided tolerance
+221:     velocity_within_tolerance = velocity_diff < velocity_tolerance
+222:     # Only keep matches whose velocity was within the provided tolerance
+223:     matching = matching[velocity_within_tolerance]
+224:     # Convert back to list-of-tuple format
+225:     matching = [tuple(_) for _ in matching]
+226: 
+227:     return matching
+228: 
+229: 
+230: def precision_recall_f1_overlap(
+231:     ref_intervals,
+232:     ref_pitches,
+233:     ref_velocities,
+234:     est_intervals,
+235:     est_pitches,
+236:     est_velocities,
+237:     onset_tolerance=0.05,
+238:     pitch_tolerance=50.0,
+239:     offset_ratio=0.2,
+240:     offset_min_tolerance=0.05,
+241:     strict=False,
+242:     velocity_tolerance=0.1,
+243:     beta=1.0,
+244: ):
+245:     """Compute the Precision, Recall and F-measure of correct vs incorrectly
+246:     transcribed notes, and the Average Overlap Ratio for correctly transcribed
+247:     notes (see :func:`mir_eval.transcription.average_overlap_ratio`).
+248:     "Correctness" is determined based on note onset, velocity, pitch and
+249:     (optionally) offset. An estimated note is considered correct if
+250: 
+251:     1. Its onset is within ``onset_tolerance`` (default +-50ms) of a
+252:        reference note
+253:     2. Its pitch (F0) is within +/- ``pitch_tolerance`` (default one
+254:        quarter tone, 50 cents) of the corresponding reference note
+255:     3. Its velocity, after normalizing reference velocities to the range
+256:        [0, 1] and globally rescaling estimated velocities to minimize L2
+257:        distance between matched reference notes, is within
+258:        ``velocity_tolerance`` (default 0.1) the corresponding reference note
+259:     4. If ``offset_ratio`` is ``None``, note offsets are ignored in the
+260:        comparison. Otherwise, on top of the above requirements, a correct
+261:        returned note is required to have an offset value within
+262:        `offset_ratio`` (default 20%) of the reference note's duration around
+263:        the reference note's offset, or within ``offset_min_tolerance``
+264:        (default 50 ms), whichever is larger.
+265: 
+266:     Parameters
+267:     ----------
+268:     ref_intervals : np.ndarray, shape=(n,2)
+269:         Array of reference notes time intervals (onset and offset times)
+270:     ref_pitches : np.ndarray, shape=(n,)
+271:         Array of reference pitch values in Hertz
+272:     ref_velocities : np.ndarray, shape=(n,)
+273:         Array of MIDI velocities (i.e. between 0 and 127) of reference notes
+274:     est_intervals : np.ndarray, shape=(m,2)
+275:         Array of estimated notes time intervals (onset and offset times)
+276:     est_pitches : np.ndarray, shape=(m,)
+277:         Array of estimated pitch values in Hertz
+278:     est_velocities : np.ndarray, shape=(n,)
+279:         Array of MIDI velocities (i.e. between 0 and 127) of estimated notes
+280:     onset_tolerance : float > 0
+281:         The tolerance for an estimated note's onset deviating from the
+282:         reference note's onset, in seconds. Default is 0.05 (50 ms).
+283:     pitch_tolerance : float > 0
+284:         The tolerance for an estimated note's pitch deviating from the
+285:         reference note's pitch, in cents. Default is 50.0 (50 cents).
+286:     offset_ratio : float > 0 or None
+287:         The ratio of the reference note's duration used to define the
+288:         offset_tolerance. Default is 0.2 (20%), meaning the
+289:         ``offset_tolerance`` will equal the ``ref_duration * 0.2``, or
+290:         ``offset_min_tolerance`` (0.05 by default, i.e. 50 ms), whichever is
+291:         greater. If ``offset_ratio`` is set to ``None``, offsets are ignored in
+292:         the evaluation.
+293:     offset_min_tolerance : float > 0
+294:         The minimum tolerance for offset matching. See ``offset_ratio``
+295:         description for an explanation of how the offset tolerance is
+296:         determined. Note: this parameter only influences the results if
+297:         ``offset_ratio`` is not ``None``.
+298:     strict : bool
+299:         If ``strict=False`` (the default), threshold checks for onset, offset,
+300:         and pitch matching are performed using ``<=`` (less than or equal). If
+301:         ``strict=True``, the threshold checks are performed using ``<`` (less
+302:         than).
+303:     velocity_tolerance : float > 0
+304:         Estimated notes are considered correct if, after rescaling and
+305:         normalization to [0, 1], they are within ``velocity_tolerance`` of a
+306:         matched reference note.
+307:     beta : float > 0
+308:         Weighting factor for f-measure (default value = 1.0).
+309: 
+310:     Returns
+311:     -------
+312:     precision : float
+313:         The computed precision score
+314:     recall : float
+315:         The computed recall score
+316:     f_measure : float
+317:         The computed F-measure score
+318:     avg_overlap_ratio : float
+319:         The computed Average Overlap Ratio score
+320:     """
+321:     validate(
+322:         ref_intervals,
+323:         ref_pitches,
+324:         ref_velocities,
+325:         est_intervals,
+326:         est_pitches,
+327:         est_velocities,
+328:     )
+329:     # When reference notes are empty, metrics are undefined, return 0's
+330:     if len(ref_pitches) == 0 or len(est_pitches) == 0:
+331:         return 0.0, 0.0, 0.0, 0.0
+332: 
+333:     matching = match_notes(
+334:         ref_intervals,
+335:         ref_pitches,
+336:         ref_velocities,
+337:         est_intervals,
+338:         est_pitches,
+339:         est_velocities,
+340:         onset_tolerance,
+341:         pitch_tolerance,
+342:         offset_ratio,
+343:         offset_min_tolerance,
+344:         strict,
+345:         velocity_tolerance,
+346:     )
+347: 
+348:     precision = float(len(matching)) / len(est_pitches)
+349:     recall = float(len(matching)) / len(ref_pitches)
+350:     f_measure = util.f_measure(precision, recall, beta=beta)
+351: 
+352:     avg_overlap_ratio = transcription.average_overlap_ratio(
+353:         ref_intervals, est_intervals, matching
+354:     )
+355: 
+356:     return precision, recall, f_measure, avg_overlap_ratio
+357: 
+358: 
+359: def evaluate(
+360:     ref_intervals,
+361:     ref_pitches,
+362:     ref_velocities,
+363:     est_intervals,
+364:     est_pitches,
+365:     est_velocities,
+366:     **kwargs
+367: ):
+368:     """Compute all metrics for the given reference and estimated annotations.
+369: 
+370:     Parameters

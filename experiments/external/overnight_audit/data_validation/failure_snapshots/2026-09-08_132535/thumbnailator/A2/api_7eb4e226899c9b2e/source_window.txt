@@ -1,0 +1,134 @@
+863: 	}
+864: 
+865: 	/**
+866: 	 * Returns the output format for the thumbnail.
+867: 	 * <p>
+868: 	 * If the output format is to use the same compression format as the
+869: 	 * original image, this method will return
+870: 	 * {@link ThumbnailParameter#ORIGINAL_FORMAT}.
+871: 	 * <p>
+872: 	 * If the output format should be determined from the information available
+873: 	 * such as the file name of the thumbnail, then this method will return
+874: 	 * {@link ThumbnailParameter#DETERMINE_FORMAT}.
+875: 	 * 
+876: 	 * @return 		The output format for the thumbnail.
+877: 	 */
+878: 	public String getOutputFormat() {
+879: 		return outputFormat;
+880: 	}
+881: 	
+882: 	/**
+883: 	 * Returns the output format type for the thumbnail.
+884: 	 * <p>
+885: 	 * If the default compression type of the compression format is to be used,
+886: 	 * then this method will return
+887: 	 * {@link ThumbnailParameter#DEFAULT_FORMAT_TYPE}.
+888: 	 *
+889: 	 * @return 		The output format type for the thumbnail.
+890: 	 */
+891: 	public String getOutputFormatType() {
+892: 		return outputFormatType;
+893: 	}
+894: 
+895: 	/**
+896: 	 * Returns the compression quality settings for the thumbnail.
+897: 	 * <p>
+898: 	 * The value is in the range of {@code 0.0f} to {@code 1.0f},
+899: 	 * where {@code 0.0f} is for the lowest quality setting and {@code 1.0f} for
+900: 	 * the highest quality setting.
+901: 	 * <p>
+902: 	 * If the default compression quality is to be used, then this method will
+903: 	 * return {@link ThumbnailParameter#DEFAULT_QUALITY}.
+904: 	 * 
+905: 	 * @return 		The compression quality settings for the thumbnail.
+906: 	 */
+907: 	public float getOutputQuality() {
+908: 		return outputQuality;
+909: 	}
+910: 
+911: 	/**
+912: 	 * Returns the list of {@link ImageFilter}s which are applied to the
+913: 	 * thumbnail.
+914: 	 * <p>
+915: 	 * These filters are applied after the original image has been resized.
+916: 	 * 
+917: 	 * @return		The {@link ImageFilter}s which are applied to the thumbnail.
+918: 	 */
+919: 	public List<ImageFilter> getImageFilters() {
+920: 		return filters;
+921: 	}
+922: 	
+923: 	/**
+924: 	 * Returns the default {@link Resizer} that will be used when performing the
+925: 	 * resizing operation to create a thumbnail.
+926: 	 * 
+927: 	 * @return		The default {@link Resizer} to use when performing a resize
+928: 	 * 				operation.
+929: 	 */
+930: 	public Resizer getResizer() {
+931: 		return resizerFactory.getResizer();
+932: 	}
+933: 	
+934: 	/**
+935: 	 * Returns the {@link ResizerFactory} for obtaining a {@link Resizer} which
+936: 	 * is to be used when performing the resizing operation to create a
+937: 	 * thumbnail.
+938: 	 * 
+939: 	 * @return		The {@link ResizerFactory} to use to obtain the
+940: 	 * 				{@link Resizer}.
+941: 	 */
+942: 	public ResizerFactory getResizerFactory() {
+943: 		return resizerFactory;
+944: 	}
+945: 	
+946: 	/**
+947: 	 * Returns whether or not the original image type should be used for the
+948: 	 * thumbnail.
+949: 	 * 
+950: 	 * @return		{@code true} if the original image type should be used,
+951: 	 * 				{@code false} otherwise.
+952: 	 */
+953: 	public boolean useOriginalImageType() {
+954: 		return imageType == ORIGINAL_IMAGE_TYPE;
+955: 	}
+956: 	
+957: 	/**
+958: 	 * Returns the region of the source image to use when creating a thumbnail,
+959: 	 * represented by a {@link Region} object.
+960: 	 * 
+961: 	 * @return		The {@code Region} object representing the source region
+962: 	 * 				to use when creating a thumbnail.
+963: 	 * 				<p>
+964:      * 				A value of {@code null} indicates that the entire source
+965:      * 				image should be used to create the thumbnail.
+966: 	 */
+967: 	public Region getSourceRegion() {
+968: 		return sourceRegion;
+969: 	}
+970: 	
+971: 	/**
+972: 	 * Returns whether or not to fit the thumbnail within the specified
+973: 	 * dimensions.
+974: 	 * 
+975: 	 * @return		{@code true} is returned when the thumbnail should be sized
+976: 	 * 				to fit within the specified dimensions, if the thumbnail
+977: 	 * 				is going to exceed those dimensions.
+978: 	 * @since	0.4.0
+979: 	 */
+980: 	public boolean fitWithinDimenions() {
+981: 		return fitWithinDimensions;
+982: 	}
+983: 	
+984: 	/**
+985: 	 * Returns whether or not the Exif metadata should be used to determine
+986: 	 * the orientation of the thumbnail.
+987: 	 *
+988: 	 * @return		{@code true} is returned when the Exif metadata should be
+989: 	 * 				used to decide the orientation of the thumbnail,
+990: 	 * 				{@code false} otherwise.
+991: 	 * @since	0.4.3
+992: 	 */
+993: 	public boolean useExifOrientation() {
+994: 		return useExifOrientation;
+995: 	}
+996: }

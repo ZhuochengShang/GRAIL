@@ -1,0 +1,72 @@
+71:         self.pdist = pdist
+72:         self.reshape = _np.reshape
+73:         self.round = _np.round
+74:         self.shape = _np.shape
+75:         self.sqrt = _np.sqrt
+76:         self.sum = _np.sum
+77:         self.tril = _np.tril
+78:         self.tril_indices = _np.tril_indices
+79:         self.triu = _np.triu
+80:         self.triu_indices = _np.triu_indices
+81:         self.vstack = _np.vstack
+82:         self.zeros = _np.zeros
+83:         self.zeros_like = _np.zeros_like
+84: 
+85:     @staticmethod
+86:     def belongs_to_backend(x):
+87:         return "numpy" in str(type(x)).lower()
+88: 
+89:     @staticmethod
+90:     def cast(x, dtype):
+91:         return x.astype(dtype)
+92: 
+93:     @staticmethod
+94:     def copy(x):
+95:         return x.copy()
+96: 
+97:     @staticmethod
+98:     def from_numpy(x):
+99:         return x
+100: 
+101:     @staticmethod
+102:     def is_array(x):
+103:         return type(x) is _np.ndarray
+104: 
+105:     @staticmethod
+106:     def is_float(x):
+107:         return isinstance(x, (_np.floating, float))
+108: 
+109:     @staticmethod
+110:     def is_float32(x):
+111:         return isinstance(x, _np.float32)
+112: 
+113:     @staticmethod
+114:     def is_float64(x):
+115:         return isinstance(x, _np.float64)
+116: 
+117:     @staticmethod
+118:     def ndim(x):
+119:         return x.ndim
+120: 
+121:     @staticmethod
+122:     def to_numpy(x):
+123:         return x
+124: 
+125: 
+126: class NumPyLinalg:
+127:     def __init__(self):
+128:         self.inv = _np.linalg.inv
+129:         self.norm = _np.linalg.norm
+130: 
+131: 
+132: class NumPyRandom:
+133:     def __init__(self):
+134:         self.rand = _np.random.rand
+135:         self.randint = _np.random.randint
+136:         self.randn = _np.random.randn
+137: 
+138: 
+139: class NumPyTesting:
+140:     def __init__(self):
+141:         self.assert_allclose = _np.testing.assert_allclose
+142:         self.assert_equal = _np.testing.assert_equal

@@ -1,0 +1,156 @@
+161:         The computed F-measure score
+162: 
+163:     """
+164:     validate(reference_beats, estimated_beats)
+165:     # When estimated beats are empty, no beats are correct; metric is 0
+166:     if estimated_beats.size == 0 or reference_beats.size == 0:
+167:         return 0.0
+168:     # Compute the best-case matching between reference and estimated locations
+169:     matching = util.match_events(reference_beats, estimated_beats, f_measure_threshold)
+170: 
+171:     precision = float(len(matching)) / len(estimated_beats)
+172:     recall = float(len(matching)) / len(reference_beats)
+173:     return util.f_measure(precision, recall)
+174: 
+175: 
+176: def cemgil(reference_beats, estimated_beats, cemgil_sigma=0.04):
+177:     """Cemgil's score, computes a gaussian error of each estimated beat.
+178:     Compares against the original beat times and all metrical variations.
+179: 
+180:     Examples
+181:     --------
+182:     >>> reference_beats = mir_eval.io.load_events('reference.txt')
+183:     >>> reference_beats = mir_eval.beat.trim_beats(reference_beats)
+184:     >>> estimated_beats = mir_eval.io.load_events('estimated.txt')
+185:     >>> estimated_beats = mir_eval.beat.trim_beats(estimated_beats)
+186:     >>> cemgil_score, cemgil_max = mir_eval.beat.cemgil(reference_beats,
+187:                                                         estimated_beats)
+188: 
+189:     Parameters
+190:     ----------
+191:     reference_beats : np.ndarray
+192:         reference beat times, in seconds
+193:     estimated_beats : np.ndarray
+194:         query beat times, in seconds
+195:     cemgil_sigma : float
+196:         Sigma parameter of gaussian error windows
+197:         (Default value = 0.04)
+198: 
+199:     Returns
+200:     -------
+201:     cemgil_score : float
+202:         Cemgil's score for the original reference beats
+203:     cemgil_max : float
+204:         The best Cemgil score for all metrical variations
+205:     """
+206:     validate(reference_beats, estimated_beats)
+207:     # When estimated beats are empty, no beats are correct; metric is 0
+208:     if estimated_beats.size == 0 or reference_beats.size == 0:
+209:         return 0.0, 0.0
+210:     # We'll compute Cemgil's accuracy for each variation
+211:     accuracies = []
+212:     for reference_beats in _get_reference_beat_variations(reference_beats):
+213:         accuracy = 0
+214:         # Cycle through beats
+215:         for beat in reference_beats:
+216:             # Find the error for the closest beat to the reference beat
+217:             beat_diff = np.min(np.abs(beat - estimated_beats))
+218:             # Add gaussian error into the accuracy
+219:             accuracy += np.exp(-(beat_diff**2) / (2.0 * cemgil_sigma**2))
+220:         # Normalize the accuracy
+221:         accuracy /= 0.5 * (estimated_beats.shape[0] + reference_beats.shape[0])
+222:         # Add it to our list of accuracy scores
+223:         accuracies.append(accuracy)
+224:     # Return raw accuracy with non-varied annotations
+225:     # and maximal accuracy across all variations
+226:     return accuracies[0], np.max(accuracies)
+227: 
+228: 
+229: def goto(
+230:     reference_beats, estimated_beats, goto_threshold=0.35, goto_mu=0.2, goto_sigma=0.2
+231: ):
+232:     """Calculate Goto's score, a binary 1 or 0 depending on some specific
+233:     heuristic criteria
+234: 
+235:     Examples
+236:     --------
+237:     >>> reference_beats = mir_eval.io.load_events('reference.txt')
+238:     >>> reference_beats = mir_eval.beat.trim_beats(reference_beats)
+239:     >>> estimated_beats = mir_eval.io.load_events('estimated.txt')
+240:     >>> estimated_beats = mir_eval.beat.trim_beats(estimated_beats)
+241:     >>> goto_score = mir_eval.beat.goto(reference_beats, estimated_beats)
+242: 
+243:     Parameters
+244:     ----------
+245:     reference_beats : np.ndarray
+246:         reference beat times, in seconds
+247:     estimated_beats : np.ndarray
+248:         query beat times, in seconds
+249:     goto_threshold : float
+250:         Threshold of beat error for a beat to be "correct"
+251:         (Default value = 0.35)
+252:     goto_mu : float
+253:         The mean of the beat errors in the continuously correct
+254:         track must be less than this
+255:         (Default value = 0.2)
+256:     goto_sigma : float
+257:         The std of the beat errors in the continuously correct track must
+258:         be less than this
+259:         (Default value = 0.2)
+260: 
+261:     Returns
+262:     -------
+263:     goto_score : float
+264:         Either 1.0 or 0.0 if some specific criteria are met
+265:     """
+266:     validate(reference_beats, estimated_beats)
+267:     # When estimated beats are empty, no beats are correct; metric is 0
+268:     if estimated_beats.size == 0 or reference_beats.size == 0:
+269:         return 0.0
+270:     # Error for each beat
+271:     beat_error = np.ones(reference_beats.shape[0])
+272:     # Flag for whether the reference and estimated beats are paired
+273:     paired = np.zeros(reference_beats.shape[0])
+274:     # Keep track of Goto's three criteria
+275:     goto_criteria = 0
+276:     for n in range(1, reference_beats.shape[0] - 1):
+277:         # Get previous inner-reference-beat-interval
+278:         previous_interval = 0.5 * (reference_beats[n] - reference_beats[n - 1])
+279:         # Window start - in the middle of the current beat and the previous
+280:         window_min = reference_beats[n] - previous_interval
+281:         # Next inter-reference-beat-interval
+282:         next_interval = 0.5 * (reference_beats[n + 1] - reference_beats[n])
+283:         # Window end - in the middle of the current beat and the next
+284:         window_max = reference_beats[n] + next_interval
+285:         # Get estimated beats in the window
+286:         beats_in_window = np.logical_and(
+287:             (estimated_beats >= window_min), (estimated_beats < window_max)
+288:         )
+289:         # False negative/positive
+290:         if beats_in_window.sum() == 0 or beats_in_window.sum() > 1:
+291:             paired[n] = 0
+292:             beat_error[n] = 1
+293:         else:
+294:             # Single beat is paired!
+295:             paired[n] = 1
+296:             # Get offset of the estimated beat and the reference beat
+297:             offset = estimated_beats[beats_in_window] - reference_beats[n]
+298:             # Scale by previous or next interval
+299:             if offset < 0:
+300:                 beat_error[n] = offset[0] / previous_interval
+301:             else:
+302:                 beat_error[n] = offset[0] / next_interval
+303:     # Get indices of incorrect beats
+304:     incorrect_beats = np.flatnonzero(np.abs(beat_error) > goto_threshold)
+305:     # All beats are correct (first and last will be 0 so always correct)
+306:     if incorrect_beats.shape[0] < 3:
+307:         # Get the track of correct beats
+308:         track = beat_error[incorrect_beats[0] + 1 : incorrect_beats[-1] - 1]
+309:         goto_criteria = 1
+310:     else:
+311:         # Get the track of maximal length
+312:         track_len = np.max(np.diff(incorrect_beats))
+313:         track_start = np.flatnonzero(np.diff(incorrect_beats) == track_len)[0]
+314:         # Is the track length at least 25% of the song?
+315:         if track_len - 1 > 0.25 * (reference_beats.shape[0] - 2):
+316:             goto_criteria = 1

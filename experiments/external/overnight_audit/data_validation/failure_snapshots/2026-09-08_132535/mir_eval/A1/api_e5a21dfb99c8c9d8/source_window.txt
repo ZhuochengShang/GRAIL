@@ -1,0 +1,156 @@
+451:     for level, intervals in enumerate(intervals_hier[1:], 1):
+452:         # Make sure this level is consistent with the root
+453:         label_current = util.generate_labels(intervals)
+454:         validate_structure(intervals_hier[0], label_top, intervals, label_current)
+455: 
+456:         # Make sure all previous boundaries are accounted for
+457:         new_bounds = set(util.intervals_to_boundaries(intervals))
+458: 
+459:         if boundaries - new_bounds:
+460:             warnings.warn(
+461:                 "Segment hierarchy is inconsistent " "at level {:d}".format(level)
+462:             )
+463:         boundaries |= new_bounds
+464: 
+465: 
+466: def tmeasure(
+467:     reference_intervals_hier,
+468:     estimated_intervals_hier,
+469:     transitive=False,
+470:     window=15.0,
+471:     frame_size=0.1,
+472:     beta=1.0,
+473: ):
+474:     """Compute the tree measures for hierarchical segment annotations.
+475: 
+476:     Parameters
+477:     ----------
+478:     reference_intervals_hier : list of ndarray
+479:         ``reference_intervals_hier[i]`` contains the segment intervals
+480:         (in seconds) for the ``i`` th layer of the annotations.  Layers are
+481:         ordered from top to bottom, so that the last list of intervals should
+482:         be the most specific.
+483:     estimated_intervals_hier : list of ndarray
+484:         Like ``reference_intervals_hier`` but for the estimated annotation
+485:     transitive : bool
+486:         whether to compute the t-measures using transitivity or not.
+487:     window : float > 0
+488:         size of the window (in seconds).  For each query frame q,
+489:         result frames are only counted within q +- window.
+490:     frame_size : float > 0
+491:         length (in seconds) of frames.  The frame size cannot be longer than
+492:         the window.
+493:     beta : float > 0
+494:         beta parameter for the F-measure.
+495: 
+496:     Returns
+497:     -------
+498:     t_precision : number [0, 1]
+499:         T-measure Precision
+500:     t_recall : number [0, 1]
+501:         T-measure Recall
+502:     t_measure : number [0, 1]
+503:         F-beta measure for ``(t_precision, t_recall)``
+504: 
+505:     Raises
+506:     ------
+507:     ValueError
+508:         If either of the input hierarchies are inconsistent
+509: 
+510:         If the input hierarchies have different time durations
+511: 
+512:         If ``frame_size > window`` or ``frame_size <= 0``
+513:     """
+514:     # Compute the number of frames in the window
+515:     if frame_size <= 0:
+516:         raise ValueError(
+517:             "frame_size ({:.2f}) must be a positive " "number.".format(frame_size)
+518:         )
+519: 
+520:     if window is None:
+521:         window_frames = None
+522:     else:
+523:         if frame_size > window:
+524:             raise ValueError(
+525:                 "frame_size ({:.2f}) cannot exceed "
+526:                 "window ({:.2f})".format(frame_size, window)
+527:             )
+528: 
+529:         window_frames = int(_round(window, frame_size) / frame_size)
+530: 
+531:     # Validate the hierarchical segmentations
+532:     validate_hier_intervals(reference_intervals_hier)
+533:     validate_hier_intervals(estimated_intervals_hier)
+534: 
+535:     # Build the least common ancestor matrices
+536:     ref_lca = _lca(reference_intervals_hier, frame_size)
+537:     est_lca = _lca(estimated_intervals_hier, frame_size)
+538: 
+539:     # Compute precision and recall
+540:     t_recall = _gauc(ref_lca, est_lca, transitive, window_frames)
+541:     t_precision = _gauc(est_lca, ref_lca, transitive, window_frames)
+542: 
+543:     t_measure = util.f_measure(t_precision, t_recall, beta=beta)
+544: 
+545:     return t_precision, t_recall, t_measure
+546: 
+547: 
+548: def lmeasure(
+549:     reference_intervals_hier,
+550:     reference_labels_hier,
+551:     estimated_intervals_hier,
+552:     estimated_labels_hier,
+553:     frame_size=0.1,
+554:     beta=1.0,
+555: ):
+556:     """Compute the tree measures for hierarchical segment annotations.
+557: 
+558:     Parameters
+559:     ----------
+560:     reference_intervals_hier : list of ndarray
+561:         ``reference_intervals_hier[i]`` contains the segment intervals
+562:         (in seconds) for the ``i`` th layer of the annotations.  Layers are
+563:         ordered from top to bottom, so that the last list of intervals should
+564:         be the most specific.
+565:     reference_labels_hier : list of list of str
+566:         ``reference_labels_hier[i]`` contains the segment labels for the
+567:         ``i`` th layer of the annotations
+568:     estimated_intervals_hier : list of ndarray
+569:     estimated_labels_hier : list of ndarray
+570:         Like ``reference_intervals_hier`` and ``reference_labels_hier``
+571:         but for the estimated annotation
+572:     frame_size : float > 0
+573:         length (in seconds) of frames.  The frame size cannot be longer than
+574:         the window.
+575:     beta : float > 0
+576:         beta parameter for the F-measure.
+577: 
+578:     Returns
+579:     -------
+580:     l_precision : number [0, 1]
+581:         L-measure Precision
+582:     l_recall : number [0, 1]
+583:         L-measure Recall
+584:     l_measure : number [0, 1]
+585:         F-beta measure for ``(l_precision, l_recall)``
+586: 
+587:     Raises
+588:     ------
+589:     ValueError
+590:         If either of the input hierarchies are inconsistent
+591: 
+592:         If the input hierarchies have different time durations
+593: 
+594:         If ``frame_size > window`` or ``frame_size <= 0``
+595:     """
+596:     # Compute the number of frames in the window
+597:     if frame_size <= 0:
+598:         raise ValueError(
+599:             "frame_size ({:.2f}) must be a positive " "number.".format(frame_size)
+600:         )
+601: 
+602:     # Validate the hierarchical segmentations
+603:     validate_hier_intervals(reference_intervals_hier)
+604:     validate_hier_intervals(estimated_intervals_hier)
+605: 
+606:     # Build the least common ancestor matrices

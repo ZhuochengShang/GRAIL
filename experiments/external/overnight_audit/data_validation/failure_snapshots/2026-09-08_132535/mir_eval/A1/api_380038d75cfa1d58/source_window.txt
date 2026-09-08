@@ -1,0 +1,156 @@
+71:         Measure.
+72:         In EMNLP-CoNLL (Vol. 7, pp. 410-420).
+73: """
+74: 
+75: import collections
+76: import warnings
+77: 
+78: import numpy as np
+79: import scipy.stats
+80: import scipy.sparse
+81: import scipy.special
+82: 
+83: from . import util
+84: 
+85: 
+86: def validate_boundary(reference_intervals, estimated_intervals, trim):
+87:     """Check that the input annotations to a segment boundary estimation
+88:     metric (i.e. one that only takes in segment intervals) look like valid
+89:     segment times, and throws helpful errors if not.
+90: 
+91:     Parameters
+92:     ----------
+93:     reference_intervals : np.ndarray, shape=(n, 2)
+94:         reference segment intervals, in the format returned by
+95:         :func:`mir_eval.io.load_intervals` or
+96:         :func:`mir_eval.io.load_labeled_intervals`.
+97:     estimated_intervals : np.ndarray, shape=(m, 2)
+98:         estimated segment intervals, in the format returned by
+99:         :func:`mir_eval.io.load_intervals` or
+100:         :func:`mir_eval.io.load_labeled_intervals`.
+101:     trim : bool
+102:         will the start and end events be trimmed?
+103:     """
+104:     if trim:
+105:         # If we're trimming, then we need at least 2 intervals
+106:         min_size = 2
+107:     else:
+108:         # If we're not trimming, then we only need one interval
+109:         min_size = 1
+110: 
+111:     if len(reference_intervals) < min_size:
+112:         warnings.warn("Reference intervals are empty.")
+113: 
+114:     if len(estimated_intervals) < min_size:
+115:         warnings.warn("Estimated intervals are empty.")
+116: 
+117:     for intervals in [reference_intervals, estimated_intervals]:
+118:         util.validate_intervals(intervals)
+119: 
+120: 
+121: def validate_structure(
+122:     reference_intervals, reference_labels, estimated_intervals, estimated_labels
+123: ):
+124:     """Check that the input annotations to a structure estimation metric (i.e.
+125:     one that takes in both segment boundaries and their labels) look like valid
+126:     segment times and labels, and throws helpful errors if not.
+127: 
+128:     Parameters
+129:     ----------
+130:     reference_intervals : np.ndarray, shape=(n, 2)
+131:         reference segment intervals, in the format returned by
+132:         :func:`mir_eval.io.load_labeled_intervals`.
+133:     reference_labels : list, shape=(n,)
+134:         reference segment labels, in the format returned by
+135:         :func:`mir_eval.io.load_labeled_intervals`.
+136:     estimated_intervals : np.ndarray, shape=(m, 2)
+137:         estimated segment intervals, in the format returned by
+138:         :func:`mir_eval.io.load_labeled_intervals`.
+139:     estimated_labels : list, shape=(m,)
+140:         estimated segment labels, in the format returned by
+141:         :func:`mir_eval.io.load_labeled_intervals`.
+142: 
+143:     """
+144:     for intervals, labels in [
+145:         (reference_intervals, reference_labels),
+146:         (estimated_intervals, estimated_labels),
+147:     ]:
+148:         util.validate_intervals(intervals)
+149:         if intervals.shape[0] != len(labels):
+150:             raise ValueError("Number of intervals does not match number " "of labels")
+151: 
+152:         # Check only when intervals are non-empty
+153:         if intervals.size > 0:
+154:             # Make sure intervals start at 0
+155:             if not np.allclose(intervals.min(), 0.0):
+156:                 raise ValueError("Segment intervals do not start at 0")
+157: 
+158:     if reference_intervals.size == 0:
+159:         warnings.warn("Reference intervals are empty.")
+160:     if estimated_intervals.size == 0:
+161:         warnings.warn("Estimated intervals are empty.")
+162:     # Check only when intervals are non-empty
+163:     if reference_intervals.size > 0 and estimated_intervals.size > 0:
+164:         if not np.allclose(reference_intervals.max(), estimated_intervals.max()):
+165:             raise ValueError("End times do not match")
+166: 
+167: 
+168: def detection(
+169:     reference_intervals, estimated_intervals, window=0.5, beta=1.0, trim=False
+170: ):
+171:     """Boundary detection hit-rate.
+172: 
+173:     A hit is counted whenever an reference boundary is within ``window`` of a
+174:     estimated boundary.  Note that each boundary is matched at most once: this
+175:     is achieved by computing the size of a maximal matching between reference
+176:     and estimated boundary points, subject to the window constraint.
+177: 
+178:     Examples
+179:     --------
+180:     >>> ref_intervals, _ = mir_eval.io.load_labeled_intervals('ref.lab')
+181:     >>> est_intervals, _ = mir_eval.io.load_labeled_intervals('est.lab')
+182:     >>> # With 0.5s windowing
+183:     >>> P05, R05, F05 = mir_eval.segment.detection(ref_intervals,
+184:     ...                                            est_intervals,
+185:     ...                                            window=0.5)
+186:     >>> # With 3s windowing
+187:     >>> P3, R3, F3 = mir_eval.segment.detection(ref_intervals,
+188:     ...                                         est_intervals,
+189:     ...                                         window=3)
+190:     >>> # Ignoring hits for the beginning and end of track
+191:     >>> P, R, F = mir_eval.segment.detection(ref_intervals,
+192:     ...                                      est_intervals,
+193:     ...                                      window=0.5,
+194:     ...                                      trim=True)
+195: 
+196:     Parameters
+197:     ----------
+198:     reference_intervals : np.ndarray, shape=(n, 2)
+199:         reference segment intervals, in the format returned by
+200:         :func:`mir_eval.io.load_intervals` or
+201:         :func:`mir_eval.io.load_labeled_intervals`.
+202:     estimated_intervals : np.ndarray, shape=(m, 2)
+203:         estimated segment intervals, in the format returned by
+204:         :func:`mir_eval.io.load_intervals` or
+205:         :func:`mir_eval.io.load_labeled_intervals`.
+206:     window : float > 0
+207:         size of the window of 'correctness' around ground-truth beats
+208:         (in seconds)
+209:         (Default value = 0.5)
+210:     beta : float > 0
+211:         weighting constant for F-measure.
+212:         (Default value = 1.0)
+213:     trim : boolean
+214:         if ``True``, the first and last boundary times are ignored.
+215:         Typically, these denote start (0) and end-markers.
+216:         (Default value = False)
+217: 
+218:     Returns
+219:     -------
+220:     precision : float
+221:         precision of estimated predictions
+222:     recall : float
+223:         recall of reference reference boundaries
+224:     f_measure : float
+225:         F-measure (weighted harmonic mean of ``precision`` and ``recall``)
+226:     """

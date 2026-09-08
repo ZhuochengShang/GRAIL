@@ -1,0 +1,156 @@
+271: 
+272:     if be.is_numpy:
+273:         dtw_path_ = _njit_dtw_path
+274:     else:
+275:         dtw_path_ = _dtw_path
+276:     dist, path = dtw_path_(
+277:         s1,
+278:         s2,
+279:         global_constraint_,
+280:         sakoe_chiba_radius,
+281:         itakura_max_slope
+282:     )
+283:     return path, dist
+284: 
+285: 
+286: def accumulated_matrix(s1, s2, mask, be=None):
+287:     """Compute the DTW accumulated cost matrix score between two time series.
+288: 
+289:     It is not required that both time series share the same size, but they must
+290:     be the same dimension.
+291: 
+292:     Parameters
+293:     ----------
+294:     s1 : array-like, shape=(sz1,) or (sz1, d)
+295:         First time series.
+296:     s2 : array-like, shape=(sz2,) or (sz2, d)
+297:         Second time series.
+298:     mask : array-like, shape=(sz1, sz2)
+299:         Mask used to constrain the region of computation. Unconsidered cells must have False values.
+300:     be : Backend object or string or None
+301:         Backend. If `be` is an instance of the class `NumPyBackend` or the string `"numpy"`,
+302:         the NumPy backend is used.
+303:         If `be` is an instance of the class `PyTorchBackend` or the string `"pytorch"`,
+304:         the PyTorch backend is used.
+305:         If `be` is `None`, the backend is determined by the input arrays.
+306:         See our :ref:`dedicated user-guide page <backend>` for more information.
+307: 
+308:     Returns
+309:     -------
+310:     mat : array-like, shape=(sz1, sz2)
+311:         Accumulated cost matrix. Non computed cells due to masking have infinite value.
+312:     """
+313:     be = instantiate_backend(be, s1, s2)
+314:     s1 = to_time_series(s1, be=be)
+315:     s2 = to_time_series(s2, be=be)
+316: 
+317:     if be.is_numpy:
+318:         compute_accumulated_matrix = _njit_accumulated_matrix
+319:     else:
+320:         compute_accumulated_matrix = _accumulated_matrix
+321:     return compute_accumulated_matrix(s1, s2, mask)
+322: 
+323: 
+324: @njit(nogil=True)
+325: def _njit_accumulated_matrix(s1, s2, mask):
+326:     l1 = s1.shape[0]
+327:     l2 = s2.shape[0]
+328:     cum_sum = numpy.full((l1 + 1, l2 + 1), numpy.inf)
+329:     cum_sum[0, 0] = 0.0
+330: 
+331:     for i in range(l1):
+332:         for j in range(l2):
+333:             if mask[i, j]:
+334:                 dist = 0.0
+335:                 for di in range(s1[i].shape[0]):
+336:                     diff = s1[i][di] - s2[j][di]
+337:                     dist += diff * diff
+338:                 cum_sum[i + 1, j + 1] = dist
+339:                 cum_sum[i + 1, j + 1] += min(
+340:                     cum_sum[i, j + 1],
+341:                     cum_sum[i + 1, j],
+342:                     cum_sum[i, j]
+343:                 )
+344:     return cum_sum[1:, 1:]
+345: 
+346: 
+347: if torch is not None:
+348:     _accumulated_matrix = functools.partial(
+349:         _torch_accumulated_matrix,
+350:         acc_fun=lambda distances, predecessors: distances + torch.min(predecessors, dim=0).values
+351:     )
+352: else:
+353:     _accumulated_matrix = _njit_accumulated_matrix
+354: 
+355: 
+356: @njit(nogil=True)
+357: def _njit_acc_matrix_from_dist_matrix(D, mask):
+358:     l1, l2 = D.shape
+359:     cum_sum = numpy.full((l1 + 1, l2 + 1), numpy.inf)
+360:     cum_sum[0, 0] = 0.0
+361: 
+362:     for i in range(l1):
+363:         for j in range(l2):
+364:             if mask[i, j]:
+365:                 cum_sum[i + 1, j + 1] = D[i, j]
+366:                 cum_sum[i + 1, j + 1] += min(
+367:                     cum_sum[i, j + 1],
+368:                     cum_sum[i + 1, j],
+369:                     cum_sum[i, j]
+370:                 )
+371:     return cum_sum[1:, 1:]
+372: 
+373: 
+374: if torch is not None:
+375:     _acc_matrix_from_dist_matrix = functools.partial(
+376:         _torch_acc_matrix_from_dist_matrix,
+377:         acc_fun=lambda distances, predecessors: distances + torch.min(predecessors, dim=0).values
+378:     )
+379: else:
+380:     _acc_matrix_from_dist_matrix = _njit_acc_matrix_from_dist_matrix
+381: 
+382: 
+383: def __make_dtw(backend):
+384:     if backend is numpy:
+385:         compute_mask_ = _njit_compute_mask
+386:         accumulated_matrix_ = _njit_accumulated_matrix
+387:     else:
+388:         compute_mask_ = _compute_mask
+389:         accumulated_matrix_ = _accumulated_matrix
+390: 
+391:     def _dtw_generic(
+392:         s1,
+393:         s2,
+394:         global_constraint=0,
+395:         sakoe_chiba_radius=None,
+396:         itakura_max_slope=None,
+397:     ):
+398:         mask = compute_mask_(s1.shape[0], s2.shape[0], global_constraint, sakoe_chiba_radius, itakura_max_slope)
+399:         cum_sum = accumulated_matrix_(s1, s2, mask)
+400:         return backend.sqrt(cum_sum[-1, -1])
+401: 
+402:     if backend is numpy:
+403:         return njit(nogil=True)(_dtw_generic)
+404:     else:
+405:         return _dtw_generic
+406: 
+407: 
+408: _njit_dtw = __make_dtw(numpy)
+409: if torch is not None:
+410:     _dtw = __make_dtw(instantiate_backend("torch"))
+411: else:
+412:     _dtw = _njit_dtw
+413: 
+414: 
+415: def __make_dtw_path(backend):
+416:     if backend is numpy:
+417:         compute_mask_ = _njit_compute_mask
+418:         accumulated_matrix_ = _njit_accumulated_matrix
+419:         compute_path_ = _njit_compute_path
+420:     else:
+421:         compute_mask_ = _compute_mask
+422:         accumulated_matrix_ = _accumulated_matrix
+423:         compute_path_ = _compute_path
+424: 
+425:     def _dtw_path_generic(
+426:         s1,

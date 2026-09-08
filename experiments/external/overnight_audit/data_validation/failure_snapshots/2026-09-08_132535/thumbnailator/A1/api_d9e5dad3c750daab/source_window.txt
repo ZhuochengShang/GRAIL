@@ -1,0 +1,156 @@
+1476: 		 * 									<ol>
+1477: 		 * 									<li>the {@link #size(int, int)} has
+1478: 		 * 									not yet been called to specify the
+1479: 		 * 									size of the thumbnail, or</li>
+1480: 		 * 									<li>the {@link #scale(double)}
+1481: 		 * 									method has been called, or</li>
+1482: 		 * 									<li>the
+1483: 		 * 									{@link #scale(double, double)}
+1484: 		 * 									method has been called, or</li>
+1485: 		 * 									<li>the {@link #width(int)} and/or
+1486: 		 * 									{@link #height(int)} has been called
+1487: 		 * 									and not preserving the aspect ratio
+1488: 		 * 									is desired.</li>
+1489: 		 * 									</ol>
+1490: 		 */
+1491: 		public Builder<T> keepAspectRatio(boolean keep) {
+1492: 			if (statusMap.get(Properties.SCALE) == Status.ALREADY_SET) {
+1493: 				throw new IllegalStateException("Cannot specify whether to " +
+1494: 						"keep the aspect ratio if the scaling factor has " +
+1495: 						"already been specified.");
+1496: 			}
+1497: 			if (statusMap.get(Properties.SIZE) == Status.NOT_READY) {
+1498: 				throw new IllegalStateException("Cannot specify whether to " +
+1499: 						"keep the aspect ratio unless the size parameter has " +
+1500: 						"already been specified.");
+1501: 			}
+1502: 			if ((statusMap.get(Properties.WIDTH) == Status.ALREADY_SET ||
+1503: 					statusMap.get(Properties.HEIGHT) == Status.ALREADY_SET) &&
+1504: 					!keep
+1505: 			) {
+1506: 				throw new IllegalStateException("The aspect ratio must be " +
+1507: 						"preserved when the width and/or height parameter " +
+1508: 						"has already been specified.");
+1509: 			}
+1510: 			
+1511: 			updateStatus(Properties.KEEP_ASPECT_RATIO, Status.ALREADY_SET);
+1512: 			keepAspectRatio = keep;
+1513: 			return this;
+1514: 		}
+1515: 		
+1516: 		/**
+1517: 		 * Sets the output quality of the compression algorithm used to
+1518: 		 * compress the thumbnail when it is written to an external destination
+1519: 		 * such as a file or output stream.
+1520: 		 * <p>
+1521: 		 * The value is a {@code float} between {@code 0.0f} and {@code 1.0f}
+1522: 		 * where {@code 0.0f} indicates the minimum quality and {@code 1.0f}
+1523: 		 * indicates the maximum quality settings should be used for by the
+1524: 		 * compression codec.
+1525: 		 * <p>
+1526: 		 * Calling this method to set this parameter is optional.
+1527: 		 * <p>
+1528: 		 * Calling this method in conjunction with {@link #asBufferedImage()}
+1529: 		 * or {@link #asBufferedImages()} will not result in any changes to the
+1530: 		 * final result.
+1531: 		 * <p>
+1532: 		 * Calling this method multiple times, or the
+1533: 		 * {@link #outputQuality(double)} in conjunction with this method will
+1534: 		 * result in an {@link IllegalStateException} to be thrown.
+1535: 		 * <p>
+1536: 		 * <em>
+1537: 		 * Implementation note:
+1538: 		 * Compression quality settings are ignored when the underlying
+1539: 		 * image writer does not support compression. This behavior is subject
+1540: 		 * to change in the future.
+1541: 		 * </em>
+1542: 		 * 
+1543: 		 * @param quality		The compression quality to use when writing
+1544: 		 * 						the thumbnail.
+1545: 		 * @return				Reference to this object.
+1546: 		 * @throws IllegalArgumentException	If the argument is less than
+1547: 		 * 									{@code 0.0f} or is greater than
+1548: 		 * 									{@code 1.0f}.
+1549: 		 */
+1550: 		public Builder<T> outputQuality(float quality) {
+1551: 			if (quality < 0.0f || quality > 1.0f) {
+1552: 				throw new IllegalArgumentException(
+1553: 						"The quality setting must be in the range 0.0f and " +
+1554: 						"1.0f, inclusive."
+1555: 				);
+1556: 			}
+1557: 			updateStatus(Properties.OUTPUT_QUALITY, Status.ALREADY_SET);
+1558: 			outputQuality = quality;
+1559: 			return this;
+1560: 		}
+1561: 		
+1562: 		/**
+1563: 		 * Sets the output quality of the compression algorithm used to
+1564: 		 * compress the thumbnail when it is written to an external destination
+1565: 		 * such as a file or output stream.
+1566: 		 * <p>
+1567: 		 * The value is a {@code double} between {@code 0.0d} and {@code 1.0d}
+1568: 		 * where {@code 0.0d} indicates the minimum quality and {@code 1.0d}
+1569: 		 * indicates the maximum quality settings should be used for by the
+1570: 		 * compression codec.
+1571: 		 * <p>
+1572: 		 * This method is a convenience method for {@link #outputQuality(float)}
+1573: 		 * where the {@code double} argument type is accepted instead of a
+1574: 		 * {@code float}.
+1575: 		 * <p>
+1576: 		 * Calling this method to set this parameter is optional.
+1577: 		 * <p>
+1578: 		 * Calling this method in conjunction with {@link #asBufferedImage()}
+1579: 		 * or {@link #asBufferedImages()} will not result in any changes to the
+1580: 		 * final result.
+1581: 		 * <p>
+1582: 		 * Calling this method multiple times, or the
+1583: 		 * {@link #outputQuality(float)} in conjunction with this method will
+1584: 		 * result in an {@link IllegalStateException} to be thrown.
+1585: 		 * <p>
+1586: 		 * <em>
+1587: 		 * Implementation note:
+1588: 		 * Compression quality settings are ignored when the underlying
+1589: 		 * image writer does not support compression. This behavior is subject
+1590: 		 * to change in the future.
+1591: 		 * </em>
+1592: 		 * 
+1593: 		 * @param quality		The compression quality to use when writing
+1594: 		 * 						the thumbnail.
+1595: 		 * @return				Reference to this object.
+1596: 		 * @throws IllegalArgumentException	If the argument is less than
+1597: 		 * 									{@code 0.0d} or is greater than
+1598: 		 * 									{@code 1.0d}.
+1599:  		 */
+1600: 		public Builder<T> outputQuality(double quality) {
+1601: 			if (quality < 0.0d || quality > 1.0d) {
+1602: 				throw new IllegalArgumentException(
+1603: 						"The quality setting must be in the range 0.0d and " +
+1604: 						"1.0d, inclusive."
+1605: 				);
+1606: 			}
+1607: 			
+1608: 			updateStatus(Properties.OUTPUT_QUALITY, Status.ALREADY_SET);
+1609: 			outputQuality = (float)quality;
+1610: 			if (outputQuality < 0.0f) {
+1611: 				outputQuality = 0.0f;
+1612: 			} else if (outputQuality > 1.0f) {
+1613: 				outputQuality = 1.0f;
+1614: 			}
+1615: 			return this;
+1616: 		}
+1617: 		
+1618: 		/**
+1619: 		 * Sets the compression format to use when writing the thumbnail.
+1620: 		 * <p>
+1621: 		 * For example, to set the output format to JPEG, the following code
+1622: 		 * can be used:
+1623: 		 * <pre><code>
+1624: Thumbnails.of(image)
+1625:     .size(640, 480)
+1626:     .outputFormat("JPEG")
+1627:     .toFile(thumbnail);
+1628: 		 * </code></pre>
+1629: 		 * or, alternatively:
+1630: 		 * <pre><code>
+1631: Thumbnails.of(image)

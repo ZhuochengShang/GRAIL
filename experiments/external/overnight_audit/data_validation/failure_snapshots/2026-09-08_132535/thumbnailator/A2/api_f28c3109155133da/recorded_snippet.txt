@@ -1,0 +1,21 @@
+try {
+    java.lang.reflect.Constructor<?>[] constructors = net.coobird.thumbnailator.ThumbnailParameter.class.getConstructors();
+    if (constructors.length == 0) {
+        throw new IllegalStateException("No public constructors found for ThumbnailParameter");
+    }
+    
+    java.lang.reflect.Constructor<?> constructor = constructors[0];
+    Object[] argsTrue = new Object[constructor.getParameterTypes().length];
+    Object[] argsFalse = new Object[constructor.getParameterTypes().length];
+
+    for (int i = 0; i < argsTrue.length; i++) {
+        Class<?> type = constructor.getParameterTypes()[i];
+        if (type == java.awt.Dimension.class) {
+            argsTrue[i] = new java.awt.Dimension(100, 100);
+            argsFalse[i] = new java.awt.Dimension(100, 100);
+        } else if (type == boolean.class) {
+            argsTrue[i] = true;
+            argsFalse[i] = false;
+        } else if (type == int.class) {
+            argsTrue[i] = java.awt.image.BufferedImage.TYPE_INT_ARGB;
+        

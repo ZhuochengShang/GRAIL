@@ -1,0 +1,12 @@
+net.coobird.thumbnailator.makers.FixedSizeThumbnailMaker maker = new net.coobird.thumbnailator.makers.FixedSizeThumbnailMaker(50, 50);
+net.coobird.thumbnailator.makers.ThumbnailMaker returnedMaker = maker.defaultResizer();
+
+assert returnedMaker == maker : "Expected fluent return of the same ThumbnailMaker instance";
+
+java.awt.image.BufferedImage result = returnedMaker.make(sourceImage);
+
+assert result != null : "Resulting image should not be null";
+assert result.getWidth() <= 50 && result.getHeight() <= 50 : "Image should fit within 50x50";
+assert result.getWidth() == 50 || result.getHeight() == 50 : "At least one dimension should be exactly 50";
+
+System.out.println("__CHECK__ defaultResizer " + result.getWidth() + "x" + result.getHeight());

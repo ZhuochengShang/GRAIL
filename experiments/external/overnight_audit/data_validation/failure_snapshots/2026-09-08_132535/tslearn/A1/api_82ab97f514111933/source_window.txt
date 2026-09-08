@@ -1,0 +1,150 @@
+851:         >>> X, y = random_walk_blobs(n_ts_per_blob=100, sz=256, d=1, n_blobs=3)
+852:         >>> clf = LearningShapelets(n_shapelets_per_size={10: 5}, max_iter=1,
+853:         ...                     verbose=0)
+854:         >>> clf.fit(X, y).get_weights("classification")[0].shape
+855:         (5, 3)
+856:         >>> clf.get_weights("shapelets_0")[0].shape
+857:         (5, 10, 1)
+858:         >>> len(clf.get_weights("shapelets_0"))
+859:         1
+860:         """
+861:         if layer_name is None:
+862:             return self.model_.get_weights()
+863:         else:
+864:             return self.model_.get_layer(layer_name).get_weights()
+865: 
+866:     def set_weights(self, weights, layer_name=None):
+867:         """Set model weights (or weights for a given layer if `layer_name`
+868:         is provided).
+869: 
+870:         Parameters
+871:         ----------
+872:         weights: list of ndarrays
+873:             Weights to set for the model / target layer
+874: 
+875:         layer_name: str or None (default: None)
+876:             Name of the layer for which  weights should be set.
+877:             If None, all model weights are set.
+878:             Available layer names with weights are:
+879: 
+880:             - "shapelets_i_j" with i an integer for the shapelet id and j an
+881:               integer for the dimension
+882:             - "classification" for the final classification layer
+883: 
+884:         Examples
+885:         --------
+886:         >>> from tslearn.generators import random_walk_blobs
+887:         >>> X, y = random_walk_blobs(n_ts_per_blob=10, sz=16, d=1, n_blobs=3)
+888:         >>> clf = LearningShapelets(n_shapelets_per_size={3: 1}, max_iter=1,
+889:         ...                     verbose=0)
+890:         >>> _ = clf.fit(X, y)
+891:         >>> weights_shapelet = [
+892:         ...     numpy.array([[[1], [2], [3]]])
+893:         ... ]
+894:         >>> clf.set_weights(weights_shapelet, layer_name="shapelets_0")
+895:         >>> clf.shapelets_as_time_series_
+896:         array([[[1.],
+897:                 [2.],
+898:                 [3.]]])
+899:         """
+900:         if layer_name is None:
+901:             return self.model_.set_weights(weights)
+902:         else:
+903:             return self.model_.get_layer(layer_name).set_weights(weights)
+904: 
+905:     def _is_fitted(self):
+906:         check_is_fitted(self, 'model_')
+907:         return True
+908: 
+909:     def _to_dict(self, output=None, hyper_parameters_only=False):
+910:         result = super()._to_dict(output, hyper_parameters_only)
+911: 
+912:         # In case optimizer is a keras optimizer, leaves string unchanged
+913:         result["hyper_params"]["optimizer"] = serialize_keras_object(
+914:             result["hyper_params"]["optimizer"]
+915:         )
+916:         return result
+917: 
+918:     def _get_model_params(self):
+919:         """Get model parameters that are sufficient to recapitulate it."""
+920:         params = super()._get_model_params()
+921:         params.update({"_X_fit_dims": self._X_fit_dims,
+922:                        "model_": self.model_.to_json(),
+923:                        "model_weights_": self.get_weights()})
+924:         return params
+925: 
+926:     @staticmethod
+927:     def _organize_model(cls, model):
+928:         """
+929:         Instantiate the model with all hyper-parameters,
+930:         set all model parameters and then return the model.
+931:         Do not use directly. Use the designated classmethod to load a model.
+932:         Parameters
+933:         ----------
+934:         cls : instance of model that inherits from `BaseModelPackage`
+935:             a model instance
+936:         model : dict
+937:             Model dict containing hyper-parameters and model-parameters
+938:         Returns
+939:         -------
+940:         model: instance of model that inherits from `BaseModelPackage`
+941:             instance of the model class with hyper-parameters and
+942:             model parameters set from the passed model dict
+943:         """
+944: 
+945:         model_params = model.pop('model_params')
+946:         hyper_params = model.pop('hyper_params')  # hyper-params
+947: 
+948:         # In case optimizer is a keras optimizer, leaves string unchanged
+949:         hyper_params["optimizer"] = deserialize_keras_object(
+950:             hyper_params["optimizer"]
+951:         )
+952: 
+953:         if hyper_params["n_shapelets_per_size"]:
+954:             # Keys are encoded with strings in json
+955:             hyper_params["n_shapelets_per_size"] = {
+956:                 int(sz): nb for sz, nb in
+957:                 hyper_params["n_shapelets_per_size"].items()
+958:             }
+959: 
+960:         # instantiate with hyperparameters
+961:         inst = cls(**hyper_params)
+962: 
+963:         if "model_" in model_params.keys():
+964:             # set all model params
+965:             inst.model_ = model_from_json(
+966:                 model_params.pop("model_"),
+967:                 custom_objects={
+968:                     "LocalSquaredDistanceLayer": LocalSquaredDistanceLayer,
+969:                     "GlobalMinPooling1D": GlobalMinPooling1D,
+970:                     "PatchingLayer": PatchingLayer,
+971:                 }
+972:             )
+973:             inst.set_weights(model_params.pop("model_weights_"))
+974:         for p in model_params.keys():
+975:             if p == "n_shapelets_per_size_":
+976:                 # Keys are encoded with strings in json
+977:                 model_params[p] = {
+978:                     int(sz): nb for sz, nb in model_params[p].items()
+979:                 }
+980:             setattr(inst, p, model_params[p])
+981:         inst._X_fit_dims = tuple(inst._X_fit_dims)
+982:         inst._build_auxiliary_models()
+983: 
+984:         return inst
+985: 
+986:     def to_hdf5(self, path):
+987:         """LearningShapelet is not HDF5 serializable"""
+988:         check_is_fitted(self, 'model_')
+989:         raise NotImplementedError("LearningShapelet is not HDF5 serializable")
+990: 
+991:     def _more_tags(self):
+992:         tags = super()._more_tags()
+993:         tags.update({'allow_nan': True, 'allow_variable_length': True})
+994:         return tags
+995: 
+996:     def __sklearn_tags__(self):
+997:         tags = super().__sklearn_tags__()
+998:         tags.input_tags.allow_nan = True
+999:         tags.allow_variable_length = True
+1000:         return tags

@@ -1,0 +1,136 @@
+7: ----------------
+8: [JMLR:v21:19-027] Nina Miolane, Nicolas Guigui, Alice Le Brigant, Johan Mathe,
+9: Benjamin Hou, Yann Thanwerdas, Stefan Heyder, Olivier Peltre, Niklas Koep, Hadi Zaatiti,
+10: Hatem Hajri, Yann Cabanes, Thomas Gerald, Paul Chauchat, Christian Shewmake, Daniel Brooks,
+11: Bernhard Kainz, Claire Donnat, Susan Holmes and Xavier Pennec.
+12: Geomstats:  A Python Package for Riemannian Geometry in Machine Learning,
+13: Journal of Machine Learning Research, 2020, volume 21, number 223, pages 1-9,
+14: http://jmlr.org/papers/v21/19-027.html, https://github.com/geomstats/geomstats/
+15: """
+16: 
+17: import numpy as _np
+18: from scipy.spatial.distance import cdist, pdist
+19: from sklearn.metrics.pairwise import euclidean_distances, pairwise_distances
+20: 
+21: 
+22: class NumPyBackend(object):
+23:     """Class for the Numpy  backend."""
+24: 
+25:     def __init__(self):
+26:         self.backend_string = "numpy"
+27: 
+28:         self.linalg = NumPyLinalg()
+29:         self.random = NumPyRandom()
+30:         self.testing = NumPyTesting()
+31: 
+32:         self.int8 = _np.int8
+33:         self.int16 = _np.int16
+34:         self.int32 = _np.int32
+35:         self.int64 = _np.int64
+36:         self.float32 = _np.float32
+37:         self.float64 = _np.float64
+38:         self.complex64 = _np.complex64
+39:         self.complex128 = _np.complex128
+40: 
+41:         self.abs = _np.abs
+42:         self.all = _np.all
+43:         self.any = _np.any
+44:         self.arange = _np.arange
+45:         self.argmax = _np.argmax
+46:         self.argmin = _np.argmin
+47:         self.array = _np.array
+48:         self.asarray = _np.asarray
+49:         self.cdist = cdist
+50:         self.ceil = _np.ceil
+51:         self.dbl_max = _np.finfo("double").max
+52:         self.diag = _np.diag
+53:         self.empty = _np.empty
+54:         self.exp = _np.exp
+55:         self.eye = _np.eye
+56:         self.floor = _np.floor
+57:         self.full = _np.full
+58:         self.hstack = _np.hstack
+59:         self.inf = _np.inf
+60:         self.iscomplex = _np.iscomplex
+61:         self.isfinite = _np.isfinite
+62:         self.isnan = _np.isnan
+63:         self.log = _np.log
+64:         self.max = _np.max
+65:         self.mean = _np.mean
+66:         self.median = _np.median
+67:         self.min = _np.min
+68:         self.nan = _np.nan
+69:         self.pairwise_distances = pairwise_distances
+70:         self.pairwise_euclidean_distances = euclidean_distances
+71:         self.pdist = pdist
+72:         self.reshape = _np.reshape
+73:         self.round = _np.round
+74:         self.shape = _np.shape
+75:         self.sqrt = _np.sqrt
+76:         self.sum = _np.sum
+77:         self.tril = _np.tril
+78:         self.tril_indices = _np.tril_indices
+79:         self.triu = _np.triu
+80:         self.triu_indices = _np.triu_indices
+81:         self.vstack = _np.vstack
+82:         self.zeros = _np.zeros
+83:         self.zeros_like = _np.zeros_like
+84: 
+85:     @staticmethod
+86:     def belongs_to_backend(x):
+87:         return "numpy" in str(type(x)).lower()
+88: 
+89:     @staticmethod
+90:     def cast(x, dtype):
+91:         return x.astype(dtype)
+92: 
+93:     @staticmethod
+94:     def copy(x):
+95:         return x.copy()
+96: 
+97:     @staticmethod
+98:     def from_numpy(x):
+99:         return x
+100: 
+101:     @staticmethod
+102:     def is_array(x):
+103:         return type(x) is _np.ndarray
+104: 
+105:     @staticmethod
+106:     def is_float(x):
+107:         return isinstance(x, (_np.floating, float))
+108: 
+109:     @staticmethod
+110:     def is_float32(x):
+111:         return isinstance(x, _np.float32)
+112: 
+113:     @staticmethod
+114:     def is_float64(x):
+115:         return isinstance(x, _np.float64)
+116: 
+117:     @staticmethod
+118:     def ndim(x):
+119:         return x.ndim
+120: 
+121:     @staticmethod
+122:     def to_numpy(x):
+123:         return x
+124: 
+125: 
+126: class NumPyLinalg:
+127:     def __init__(self):
+128:         self.inv = _np.linalg.inv
+129:         self.norm = _np.linalg.norm
+130: 
+131: 
+132: class NumPyRandom:
+133:     def __init__(self):
+134:         self.rand = _np.random.rand
+135:         self.randint = _np.random.randint
+136:         self.randn = _np.random.randn
+137: 
+138: 
+139: class NumPyTesting:
+140:     def __init__(self):
+141:         self.assert_allclose = _np.testing.assert_allclose
+142:         self.assert_equal = _np.testing.assert_equal

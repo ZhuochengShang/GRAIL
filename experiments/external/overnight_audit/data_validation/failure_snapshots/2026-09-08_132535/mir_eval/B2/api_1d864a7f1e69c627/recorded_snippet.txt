@@ -1,0 +1,21 @@
+import os
+import numpy as np
+from scipy.io import wavfile
+import warnings
+import mir_eval
+
+wav_path = os.path.join(output_dir, "test_load.wav")
+fs_expected = 8000
+# Use 16-bit PCM with a full-scale negative value to ensure peak/type normalization yields the same result
+audio_expected = np.array([0, 16384, -16384, 32767, -32768], dtype=np.int16)
+wavfile.write(wav_path, fs_expected, audio_expected)
+
+with warnings.catch_warnings():
+    warnings.simplefilter("ignore")
+    audio_data, fs = mir_eval.io.load_wav(wav_path, mono=True)
+
+assert fs == fs_expected, f"Expected fs {fs_expected}, got {fs}"
+assert audio_data.shape == (5,), f"Expected shape (5,), got {audio_data.shape}"
+assert np.allclose(audio_data, audio_expected / 32768.0), "Audio data not correctly normalized to [-1., 1.]"
+
+print(f"__CHECK__ load_wav {audio_data.shape}, {fs}")

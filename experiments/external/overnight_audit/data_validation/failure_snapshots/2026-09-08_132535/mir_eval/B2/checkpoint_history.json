@@ -1,0 +1,524 @@
+{
+  "source": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/comprehension_progress.jsonl",
+  "sha256": "078315c3ce72633cb1f5510350d8a51ba343246fb56d0d4f85920fec9f1dd327",
+  "observed_at": "2026-09-08T13:25:36.068994-07:00",
+  "note": "All retained fingerprint groups; not all are compatible. Event count is not SDK attempt count.",
+  "events": [
+    {
+      "name": "cemgil",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "runtime",
+            "error": "AssertionError: Expected perfect score to be ~1.0, got 0.0"
+          }
+        ],
+        "error_category": "runtime",
+        "error": "AssertionError: Expected perfect score to be ~1.0, got 0.0",
+        "code": "import mir_eval\nimport numpy as np\n\n# Preprocess inputs as required by standard MIR evaluation practices\nref_beats = mir_eval.beat.trim_beats(ref_events)\nest_beats = mir_eval.beat.trim_beats(est_events)\n\n# Compute Cemgil's score\ncemgil_score, cemgil_max = mir_eval.beat.cemgil(ref_beats, est_beats)\n\n# Strong oracle: identical inputs should yield a perfect score of 1.0\nperfect_score, perfect_max = mir_eval.beat.cemgil(ref_beats, ref_beats)\n\nassert isinstance(cemgil_score, float), \"cemgil_score must be a float\"\nassert isinstance(cemgil_max, float), \"cemgil_max must be a float\"\nassert perfect_score > 0.99, f\"Expected perfect score to be ~1.0, got {perfect_score}\"\nassert 0.0 <= cemgil_score <= 1.0, \"cemgil_score should be bounded between 0 and 1\"\n\nprint(f\"__CHECK__ cemgil {cemgil_score:.4f}, {cemgil_max:.4f}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_cemgil/api_test.py",
+        "exit_code": 1,
+        "stdout_tail": "",
+        "stderr_tail": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/source/mir_eval/beat.py:90: UserWarning: Reference beats are empty.\n  warnings.warn(\"Reference beats are empty.\")\n/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/source/mir_eval/beat.py:92: UserWarning: Estimated beats are empty.\n  warnings.warn(\"Estimated beats are empty.\")\n__RUN_ERR__ AssertionError: Expected perfect score to be ~1.0, got 0.0\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_cemgil/api_test.py\", line 60, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_cemgil/api_test.py\", line 55, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_cemgil/api_test.py\", line 48, in api_test\n    assert perfect_score > 0.99, f\"Expected perfect score to be ~1.0, got {perfect_score}\"\nAssertionError: Expected perfect score to be ~1.0, got 0.0\n"
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 17.0,
+      "llm_calls": 1,
+      "input_tokens": 2371,
+      "output_tokens": 1855,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2371,
+          "output_tokens": 1855
+        }
+      },
+      "error_category": "runtime",
+      "error": "AssertionError: Expected perfect score to be ~1.0, got 0.0",
+      "locus": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_cemgil/api_test.py:48",
+      "doc_chars": 3968,
+      "document_sha256": "190edd6fd12face5d668b1264eafa0321a6f5dfd66fe5bac9bd99fa7eb97da65",
+      "source": "source/mir_eval/beat.py:176",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    },
+    {
+      "name": "hierarchy",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "runtime",
+            "error": "AssertionError: Expected 8 patches, got 0"
+          }
+        ],
+        "error_category": "runtime",
+        "error": "AssertionError: Expected 8 patches, got 0",
+        "code": "import matplotlib.pyplot as plt\nimport mir_eval.display\n\nplt.switch_backend('Agg')\nfig, ax = plt.subplots()\n\nintervals_hier = [ref_intervals, ref_intervals]\nlabels_hier = [ref_labels, ref_labels]\n\nax_ret = mir_eval.display.hierarchy(\n    intervals_hier,\n    labels_hier,\n    levels=[\"Coarse\", \"Fine\"],\n    ax=ax\n)\n\nnum_patches = len(ax_ret.patches)\nexpected_patches = 2 * len(ref_intervals)\n\nassert ax_ret is ax, \"Returned axes should be the same as the input axes\"\nassert num_patches == expected_patches, f\"Expected {expected_patches} patches, got {num_patches}\"\n\nprint(f\"__CHECK__ hierarchy {num_patches}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_hierarchy/api_test.py",
+        "exit_code": 1,
+        "stdout_tail": "",
+        "stderr_tail": "__RUN_ERR__ AssertionError: Expected 8 patches, got 0\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_hierarchy/api_test.py\", line 64, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_hierarchy/api_test.py\", line 59, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_hierarchy/api_test.py\", line 53, in api_test\n    assert num_patches == expected_patches, f\"Expected {expected_patches} patches, got {num_patches}\"\nAssertionError: Expected 8 patches, got 0\n"
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 15.5,
+      "llm_calls": 1,
+      "input_tokens": 2525,
+      "output_tokens": 1193,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2525,
+          "output_tokens": 1193
+        }
+      },
+      "error_category": "runtime",
+      "error": "AssertionError: Expected 8 patches, got 0",
+      "locus": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_hierarchy/api_test.py:53",
+      "doc_chars": 5010,
+      "document_sha256": "68a68d7d4a6aaa6af18a7c6a4bd42c2f65d4e1fc93b7c714afc548bfcdca8150",
+      "source": "source/mir_eval/display.py:498",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    },
+    {
+      "name": "load_key",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "runtime",
+            "error": "FileNotFoundError: [Errno 2] No such file or directory: '/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval"
+          }
+        ],
+        "error_category": "runtime",
+        "error": "FileNotFoundError: [Errno 2] No such file or directory: '/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/output/test_key.txt'",
+        "code": "import os\nimport mir_eval\n\nkey_file = os.path.join(output_dir, \"test_key.txt\")\nwith open(key_file, \"w\") as f:\n    f.write(\"# ground truth key\\n\")\n    f.write(\"C:maj\\n\")\n\nkey_data = mir_eval.io.load_key(key_file)\n\nassert key_data == \"C:maj\", f\"Expected 'C:maj', got {key_data}\"\nprint(f\"__CHECK__ load_key {key_data}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_load_key/api_test.py",
+        "exit_code": 1,
+        "stdout_tail": "",
+        "stderr_tail": "__RUN_ERR__ FileNotFoundError: [Errno 2] No such file or directory: '/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/output/test_key.txt'\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_load_key/api_test.py\", line 53, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_load_key/api_test.py\", line 48, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_load_key/api_test.py\", line 37, in api_test\n    with open(key_file, \"w\") as f:\nFileNotFoundError: [Errno 2] No such file or directory: '/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/output/test_key.txt'\n"
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 22.0,
+      "llm_calls": 1,
+      "input_tokens": 2141,
+      "output_tokens": 2474,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2141,
+          "output_tokens": 2474
+        }
+      },
+      "error_category": "runtime",
+      "error": "FileNotFoundError: [Errno 2] No such file or directory: '/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/output/test_key.txt'",
+      "locus": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_load_key/api_test.py:37",
+      "doc_chars": 3343,
+      "document_sha256": "93d1e18049fd1460a394e385603c5b0181fdbc7bb47c47d7727c852cb04d2782",
+      "source": "source/mir_eval/io.py:497",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    },
+    {
+      "name": "load_patterns",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "runtime",
+            "error": "FileNotFoundError: [Errno 2] No such file or directory: '/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval",
+            "codebase_frames": [
+              "source/mir_eval/io.py:380",
+              "source/mir_eval/io.py:26"
+            ]
+          }
+        ],
+        "error_category": "runtime",
+        "error": "FileNotFoundError: [Errno 2] No such file or directory: '/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/source/tests/data/pattern/reference.txt'",
+        "code": "import os\nimport mir_eval\n\n# Navigate from the known beat_reference_file to the pattern reference file\ndata_dir = os.path.dirname(os.path.dirname(beat_reference_file))\npattern_file = os.path.join(data_dir, 'pattern', 'reference.txt')\n\n# Load the MIREX 2013 formatted pattern file\npatterns = mir_eval.io.load_patterns(pattern_file)\n\n# Verify the deeply nested list structure: list[list[list[tuple[float, float]]]]\nassert isinstance(patterns, list), \"Output must be a list of patterns\"\nassert len(patterns) > 0, \"Should load at least one pattern\"\n\nfirst_pattern = patterns[0]\nassert isinstance(first_pattern, list), \"Each pattern must be a list of occurrences\"\nassert len(first_pattern) > 0, \"Pattern should have at least one occurrence\"\n\nfirst_occurrence = first_pattern[0]\nassert isinstance(first_occurrence, list), \"Each occurrence must be a list of events\"\nassert len(first_occurrence) > 0, \"Occurrence should have at least one event\"\n\nfirst_event = first_occurrence[0]\nassert isinstance(first_even",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_load_patterns/api_test.py",
+        "exit_code": 1,
+        "stdout_tail": "",
+        "stderr_tail": "__RUN_ERR__ FileNotFoundError: [Errno 2] No such file or directory: '/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/source/tests/data/pattern/reference.txt'\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_load_patterns/api_test.py\", line 70, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_load_patterns/api_test.py\", line 65, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_load_patterns/api_test.py\", line 41, in api_test\n    patterns = mir_eval.io.load_patterns(pattern_file)\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/source/mir_eval/io.py\", line 380, in load_patterns\n    with _open(filename, mode=\"r\") as input_file:\n  File \"/Users/clockorangezoe/miniconda3/envs/geo_llm_spark/lib/python3.10/contextlib.py\", line 135, in __enter__\n    return next(self.gen)\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/source/mir_eval/io.py\", line 26, in _open\n    with open(file_or_path, **kwargs) as file_desc:\nFileNotFoundError: [Errno 2] No such file or directory: '/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/source/tests/data/pattern/reference.txt'\n"
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 26.3,
+      "llm_calls": 1,
+      "input_tokens": 2844,
+      "output_tokens": 3083,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2844,
+          "output_tokens": 3083
+        }
+      },
+      "error_category": "runtime",
+      "error": "FileNotFoundError: [Errno 2] No such file or directory: '/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/source/tests/data/pattern/reference.txt'",
+      "locus": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/source/mir_eval/io.py:26",
+      "doc_chars": 4859,
+      "document_sha256": "a3df10bff9eaf6c4b833c67df393629ab7708a7716dea290003c0197c5940eba",
+      "source": "source/mir_eval/io.py:331",
+      "source_other_sites": 0,
+      "codebase_frames": [
+        "source/mir_eval/io.py:380",
+        "source/mir_eval/io.py:26"
+      ]
+    },
+    {
+      "name": "load_ragged_time_series",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "runtime",
+            "error": "ValueError: Couldn't convert value timestamp using float found at /var/folders/83/6ly5xs5j5ns3gmwbqgjqd7rw0000gn/T/tmp3up3srzm.csv:1:",
+            "codebase_frames": [
+              "source/mir_eval/io.py:669",
+              "source/mir_eval/io.py:671"
+            ]
+          }
+        ],
+        "error_category": "runtime",
+        "error": "ValueError: Couldn't convert value timestamp using float found at /var/folders/83/6ly5xs5j5ns3gmwbqgjqd7rw0000gn/T/tmp3up3srzm.csv:1:",
+        "code": "import os\nimport tempfile\nimport numpy as np\nfrom mir_eval.io import load_ragged_time_series\n\nwith tempfile.NamedTemporaryFile(mode='w', delete=False, suffix='.csv') as f:\n    f.write(\"timestamp,f0_1,f0_2,f0_3\\n\")\n    f.write(\"0.1,440.0\\n\")\n    f.write(\"0.2,440.0,554.37\\n\")\n    f.write(\"0.3,440.0,554.37,659.25\\n\")\n    temp_path = f.name\n\ntry:\n    times, values = load_ragged_time_series(temp_path, delimiter=',', header=True)\n    \n    assert isinstance(times, np.ndarray), \"times should be a numpy array\"\n    assert isinstance(values, list), \"values should be a list\"\n    assert len(times) == 3, \"Should have 3 timestamps\"\n    assert len(values) == 3, \"Should have 3 value arrays\"\n    assert np.allclose(times, [0.1, 0.2, 0.3]), \"Timestamps mismatch\"\n    assert len(values[0]) == 1, \"First row should have 1 value\"\n    assert len(values[1]) == 2, \"Second row should have 2 values\"\n    assert len(values[2]) == 3, \"Third row should have 3 values\"\n    assert np.allclose(values[2], [440.0, 554.37, 65",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_load_ragged_time_series/api_test.py",
+        "exit_code": 1,
+        "stdout_tail": "",
+        "stderr_tail": "__RUN_ERR__ ValueError: Couldn't convert value timestamp using float found at /var/folders/83/6ly5xs5j5ns3gmwbqgjqd7rw0000gn/T/tmp3up3srzm.csv:1:\n\ttimestamp,f0_1,f0_2,f0_3\n\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/source/mir_eval/io.py\", line 669, in load_ragged_time_series\n    converted_time = float(data[0])\nValueError: could not convert string to float: 'timestamp'\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_load_ragged_time_series/api_test.py\", line 69, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_load_ragged_time_series/api_test.py\", line 64, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_load_ragged_time_series/api_test.py\", line 46, in api_test\n    times, values = load_ragged_time_series(temp_path, delimiter=',', header=True)\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/source/mir_eval/io.py\", line 671, in load_ragged_time_series\n    raise ValueError(\nValueError: Couldn't convert value timestamp using float found at /var/folders/83/6ly5xs5j5ns3gmwbqgjqd7rw0000gn/T/tmp3up3srzm.csv:1:\n\ttimestamp,f0_1,f0_2,f0_3\n\n"
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 21.7,
+      "llm_calls": 1,
+      "input_tokens": 2613,
+      "output_tokens": 2645,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2613,
+          "output_tokens": 2645
+        }
+      },
+      "error_category": "runtime",
+      "error": "ValueError: Couldn't convert value timestamp using float found at /var/folders/83/6ly5xs5j5ns3gmwbqgjqd7rw0000gn/T/tmp3up3srzm.csv:1:",
+      "locus": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/source/mir_eval/io.py:671",
+      "doc_chars": 4999,
+      "document_sha256": "5977b0086c361133d6962d652789e51a1c66bcc0bb481fddb702fc06c2ca6cf2",
+      "source": "source/mir_eval/io.py:594",
+      "source_other_sites": 0,
+      "codebase_frames": [
+        "source/mir_eval/io.py:669",
+        "source/mir_eval/io.py:671"
+      ]
+    },
+    {
+      "name": "load_tempo",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "runtime",
+            "error": "FileNotFoundError: [Errno 2] No such file or directory: '/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval"
+          }
+        ],
+        "error_category": "runtime",
+        "error": "FileNotFoundError: [Errno 2] No such file or directory: '/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/output/test_tempo.txt'",
+        "code": "import os\nimport numpy as np\nimport mir_eval\n\n# Create a deterministic tempo annotation file in the provided output directory\ntempo_file = os.path.join(output_dir, \"test_tempo.txt\")\nwith open(tempo_file, \"w\") as f:\n    f.write(\"# This is a comment line\\n\")\n    f.write(\"60.0 120.0 0.5\\n\")\n\n# Load the tempo annotations\ntempi, weight = mir_eval.io.load_tempo(tempo_file)\n\n# Verify the loaded data matches the written file\nassert isinstance(tempi, np.ndarray), \"tempi should be a NumPy array\"\nassert tempi.shape == (2,), f\"Expected 2 tempo values, got {tempi.shape[0]}\"\nassert np.allclose(tempi, [60.0, 120.0]), \"Parsed tempi values do not match expected\"\nassert isinstance(weight, float), \"weight should be a float\"\nassert weight == 0.5, \"Parsed weight does not match expected\"\n\nprint(f\"__CHECK__ load_tempo {tempi.tolist()} {weight}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_load_tempo/api_test.py",
+        "exit_code": 1,
+        "stdout_tail": "",
+        "stderr_tail": "__RUN_ERR__ FileNotFoundError: [Errno 2] No such file or directory: '/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/output/test_tempo.txt'\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_load_tempo/api_test.py\", line 62, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_load_tempo/api_test.py\", line 57, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_load_tempo/api_test.py\", line 39, in api_test\n    with open(tempo_file, \"w\") as f:\nFileNotFoundError: [Errno 2] No such file or directory: '/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/output/test_tempo.txt'\n"
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 12.2,
+      "llm_calls": 1,
+      "input_tokens": 2232,
+      "output_tokens": 1375,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2232,
+          "output_tokens": 1375
+        }
+      },
+      "error_category": "runtime",
+      "error": "FileNotFoundError: [Errno 2] No such file or directory: '/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/output/test_tempo.txt'",
+      "locus": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_load_tempo/api_test.py:39",
+      "doc_chars": 3474,
+      "document_sha256": "5ba7c237608d306af8408bd21136b3a24445067a5c63c05fe2aa4ecfdaf65e2d",
+      "source": "source/mir_eval/io.py:542",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    },
+    {
+      "name": "load_wav",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "runtime",
+            "error": "FileNotFoundError: [Errno 2] No such file or directory: '/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval"
+          }
+        ],
+        "error_category": "runtime",
+        "error": "FileNotFoundError: [Errno 2] No such file or directory: '/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/output/test_load.wav'",
+        "code": "import os\nimport numpy as np\nfrom scipy.io import wavfile\nimport warnings\nimport mir_eval\n\nwav_path = os.path.join(output_dir, \"test_load.wav\")\nfs_expected = 8000\n# Use 16-bit PCM with a full-scale negative value to ensure peak/type normalization yields the same result\naudio_expected = np.array([0, 16384, -16384, 32767, -32768], dtype=np.int16)\nwavfile.write(wav_path, fs_expected, audio_expected)\n\nwith warnings.catch_warnings():\n    warnings.simplefilter(\"ignore\")\n    audio_data, fs = mir_eval.io.load_wav(wav_path, mono=True)\n\nassert fs == fs_expected, f\"Expected fs {fs_expected}, got {fs}\"\nassert audio_data.shape == (5,), f\"Expected shape (5,), got {audio_data.shape}\"\nassert np.allclose(audio_data, audio_expected / 32768.0), \"Audio data not correctly normalized to [-1., 1.]\"\n\nprint(f\"__CHECK__ load_wav {audio_data.shape}, {fs}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_load_wav/api_test.py",
+        "exit_code": 1,
+        "stdout_tail": "",
+        "stderr_tail": "__RUN_ERR__ FileNotFoundError: [Errno 2] No such file or directory: '/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/output/test_load.wav'\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_load_wav/api_test.py\", line 62, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_load_wav/api_test.py\", line 57, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_load_wav/api_test.py\", line 43, in api_test\n    wavfile.write(wav_path, fs_expected, audio_expected)\n  File \"/Users/clockorangezoe/miniconda3/envs/geo_llm_spark/lib/python3.10/site-packages/scipy/io/wavfile.py\", line 793, in write\n    fid = open(filename, 'wb')\nFileNotFoundError: [Errno 2] No such file or directory: '/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/output/test_load.wav'\n"
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 30.7,
+      "llm_calls": 1,
+      "input_tokens": 2403,
+      "output_tokens": 3636,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2403,
+          "output_tokens": 3636
+        }
+      },
+      "error_category": "runtime",
+      "error": "FileNotFoundError: [Errno 2] No such file or directory: '/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/output/test_load.wav'",
+      "locus": "/Users/clockorangezoe/miniconda3/envs/geo_llm_spark/lib/python3.10/site-packages/scipy/io/wavfile.py:793",
+      "doc_chars": 3691,
+      "document_sha256": "53e5ffd075590e40189dad3cf0f40fbdac562e0826e255a4e5b2564fcd813b46",
+      "source": "source/mir_eval/io.py:409",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    },
+    {
+      "name": "piano_roll",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "runtime",
+            "error": "AssertionError: Expected 4 patches for 4 intervals, got 0"
+          }
+        ],
+        "error_category": "runtime",
+        "error": "AssertionError: Expected 4 patches for 4 intervals, got 0",
+        "code": "import matplotlib\nmatplotlib.use(\"Agg\")\nimport matplotlib.pyplot as plt\nimport mir_eval\nimport numpy as np\n\nn = len(ref_intervals)\n# Reuse ref_freqs, ensuring it matches the length of ref_intervals\npitches = np.resize(ref_freqs, n) if len(ref_freqs) > 0 else np.full(n, 440.0)\n# Ensure strictly positive frequencies to avoid log2(0) warnings in hz_to_midi conversion\npitches = np.where(pitches <= 0, 440.0, pitches)\n\nfig, ax = plt.subplots()\nax_ret = mir_eval.display.piano_roll(\n    ref_intervals, \n    pitches=pitches, \n    ax=ax, \n    label=\"Reference\", \n    alpha=0.5, \n    facecolor=\"r\"\n)\n\n# piano_roll delegates to labeled_intervals, which adds a Rectangle patch per interval\nnum_patches = len(ax_ret.patches)\nassert ax_ret is ax, \"Expected piano_roll to return the provided axes\"\nassert num_patches == n, f\"Expected {n} patches for {n} intervals, got {num_patches}\"\n\nprint(f\"__CHECK__ piano_roll {num_patches}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_piano_roll/api_test.py",
+        "exit_code": 1,
+        "stdout_tail": "",
+        "stderr_tail": "__RUN_ERR__ AssertionError: Expected 4 patches for 4 intervals, got 0\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_piano_roll/api_test.py\", line 69, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_piano_roll/api_test.py\", line 64, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_piano_roll/api_test.py\", line 58, in api_test\n    assert num_patches == n, f\"Expected {n} patches for {n} intervals, got {num_patches}\"\nAssertionError: Expected 4 patches for 4 intervals, got 0\n"
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 39.8,
+      "llm_calls": 1,
+      "input_tokens": 2613,
+      "output_tokens": 4650,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2613,
+          "output_tokens": 4650
+        }
+      },
+      "error_category": "runtime",
+      "error": "AssertionError: Expected 4 patches for 4 intervals, got 0",
+      "locus": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_piano_roll/api_test.py:58",
+      "doc_chars": 4715,
+      "document_sha256": "cdcfbe63faa10ddab671830a63df003d7188cd8fbc7ba484231b321e0134c624",
+      "source": "source/mir_eval/display.py:873",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    },
+    {
+      "name": "precision_recall_f1_overlap",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "runtime",
+            "error": "ValueError: Reference intervals and pitches have different lengths.",
+            "codebase_frames": [
+              "source/mir_eval/transcription.py:565",
+              "source/mir_eval/transcription.py:136"
+            ]
+          }
+        ],
+        "error_category": "runtime",
+        "error": "ValueError: Reference intervals and pitches have different lengths.",
+        "code": "import mir_eval\nimport numpy as np\n\nprecision, recall, f_measure, avg_overlap_ratio = mir_eval.transcription.precision_recall_f1_overlap(\n    ref_intervals, ref_freqs, est_intervals, est_freqs, offset_ratio=None\n)\n\n# Oracle 1: F-measure must be the harmonic mean of precision and recall (beta=1.0)\nif precision + recall > 0:\n    expected_f = 2 * precision * recall / (precision + recall)\n    assert np.isclose(f_measure, expected_f), f\"F-measure {f_measure} != expected {expected_f}\"\nelse:\n    assert f_measure == 0.0\n\n# Oracle 2: Evaluating the reference against itself must yield perfect scores\nif len(ref_intervals) > 0:\n    p_perf, r_perf, f_perf, o_perf = mir_eval.transcription.precision_recall_f1_overlap(\n        ref_intervals, ref_freqs, ref_intervals, ref_freqs, offset_ratio=None\n    )\n    assert np.isclose(p_perf, 1.0), f\"Expected perfect precision, got {p_perf}\"\n    assert np.isclose(r_perf, 1.0), f\"Expected perfect recall, got {r_perf}\"\n    assert np.isclose(f_perf, 1.0), f\"Expected",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_precision_recall_f1_overlap/api_test.py",
+        "exit_code": 1,
+        "stdout_tail": "",
+        "stderr_tail": "__RUN_ERR__ ValueError: Reference intervals and pitches have different lengths.\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_precision_recall_f1_overlap/api_test.py\", line 66, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_precision_recall_f1_overlap/api_test.py\", line 61, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_precision_recall_f1_overlap/api_test.py\", line 36, in api_test\n    precision, recall, f_measure, avg_overlap_ratio = mir_eval.transcription.precision_recall_f1_overlap(\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/source/mir_eval/transcription.py\", line 565, in precision_recall_f1_overlap\n    validate(ref_intervals, ref_pitches, est_intervals, est_pitches)\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/source/mir_eval/transcription.py\", line 136, in validate\n    raise ValueError(\"Reference intervals and pitches have different \" \"lengths.\")\nValueError: Reference intervals and pitches have different lengths.\n"
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 21.1,
+      "llm_calls": 1,
+      "input_tokens": 3781,
+      "output_tokens": 2664,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 3781,
+          "output_tokens": 2664
+        }
+      },
+      "error_category": "runtime",
+      "error": "ValueError: Reference intervals and pitches have different lengths.",
+      "locus": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/source/mir_eval/transcription.py:136",
+      "doc_chars": 8997,
+      "document_sha256": "1776bed173983ce40c157852ed7a6593fe19284c3ca613b9ade39cf22190c2ed",
+      "source": "source/mir_eval/transcription_velocity.py:230",
+      "source_other_sites": 1,
+      "codebase_frames": [
+        "source/mir_eval/transcription.py:565",
+        "source/mir_eval/transcription.py:136"
+      ]
+    },
+    {
+      "name": "ticker_pitch",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "runtime",
+            "error": "AssertionError: Expected 'A' in label for MIDI 69, got 440"
+          }
+        ],
+        "error_category": "runtime",
+        "error": "AssertionError: Expected 'A' in label for MIDI 69, got 440",
+        "code": "import matplotlib\nmatplotlib.use('Agg')\nimport matplotlib.pyplot as plt\nimport mir_eval\n\nfig, ax = plt.subplots()\nmir_eval.display.pitch(times, ref_freqs, midi=True, ax=ax)\nmir_eval.display.ticker_pitch(ax=ax)\n\nformatter = ax.yaxis.get_major_formatter()\n# MIDI note 69 corresponds to A4 (or A3/A5 depending on octave numbering convention)\nlabel_69 = formatter(69, 0)\n\nassert 'A' in label_69, f\"Expected 'A' in label for MIDI 69, got {label_69}\"\nprint(f\"__CHECK__ ticker_pitch {label_69}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_ticker_pitch/api_test.py",
+        "exit_code": 1,
+        "stdout_tail": "",
+        "stderr_tail": "__RUN_ERR__ AssertionError: Expected 'A' in label for MIDI 69, got 440\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_ticker_pitch/api_test.py\", line 56, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_ticker_pitch/api_test.py\", line 51, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_ticker_pitch/api_test.py\", line 46, in api_test\n    assert 'A' in label_69, f\"Expected 'A' in label for MIDI 69, got {label_69}\"\nAssertionError: Expected 'A' in label for MIDI 69, got 440\n"
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 19.7,
+      "llm_calls": 1,
+      "input_tokens": 2072,
+      "output_tokens": 1841,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2072,
+          "output_tokens": 1841
+        }
+      },
+      "error_category": "runtime",
+      "error": "AssertionError: Expected 'A' in label for MIDI 69, got 440",
+      "locus": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_ticker_pitch/api_test.py:46",
+      "doc_chars": 3054,
+      "document_sha256": "2e7f4af10b63d4a0c7bde717feca1c220426d3b8e22044c0eeb0651f5b559cc5",
+      "source": "source/mir_eval/display.py:1095",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    },
+    {
+      "name": "tmeasure",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "runtime",
+            "error": "AssertionError: Expected precision 1.0, got 0.0"
+          }
+        ],
+        "error_category": "runtime",
+        "error": "AssertionError: Expected precision 1.0, got 0.0",
+        "code": "import numpy as np\nimport mir_eval\n\n# Construct a deterministic hierarchical segmentation input\n# The reference has 2 levels, the estimate has 1 level.\n# Both cover the exact same time duration [0.0, 30.0].\nref_hier = [\n    np.array([[0.0, 30.0]]), \n    np.array([[0.0, 15.0], [15.0, 30.0]])\n]\nest_hier = [\n    np.array([[0.0, 30.0]])\n]\n\n# Compute tree measures\nt_precision, t_recall, t_measure = mir_eval.hierarchy.tmeasure(\n    ref_hier, est_hier, window=15.0, frame_size=0.1\n)\n\n# Since the estimate perfectly matches the top level of the reference but misses the finer level,\n# precision should be 1.0, recall should be 0.5, and the F1-measure should be ~0.666.\nassert t_precision == 1.0, f\"Expected precision 1.0, got {t_precision}\"\nassert 0.4 < t_recall < 0.6, f\"Expected recall ~0.5, got {t_recall}\"\nassert 0.6 < t_measure < 0.7, f\"Expected f-measure ~0.66, got {t_measure}\"\n\nprint(f\"__CHECK__ tmeasure {t_precision:.4f}, {t_recall:.4f}, {t_measure:.4f}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_tmeasure/api_test.py",
+        "exit_code": 1,
+        "stdout_tail": "",
+        "stderr_tail": "__RUN_ERR__ AssertionError: Expected precision 1.0, got 0.0\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_tmeasure/api_test.py\", line 67, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_tmeasure/api_test.py\", line 62, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_tmeasure/api_test.py\", line 54, in api_test\n    assert t_precision == 1.0, f\"Expected precision 1.0, got {t_precision}\"\nAssertionError: Expected precision 1.0, got 0.0\n"
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 33.2,
+      "llm_calls": 1,
+      "input_tokens": 2819,
+      "output_tokens": 3855,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2819,
+          "output_tokens": 3855
+        }
+      },
+      "error_category": "runtime",
+      "error": "AssertionError: Expected precision 1.0, got 0.0",
+      "locus": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_tmeasure/api_test.py:54",
+      "doc_chars": 5711,
+      "document_sha256": "3ff36e2f9ce484ff4345edfe49c90c126612bbacae8cb493164765ce3012c52a",
+      "source": "source/mir_eval/hierarchy.py:466",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ]
+}

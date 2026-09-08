@@ -1,0 +1,156 @@
+143: 	 * @param width			The width of the thumbnail to produce.
+144: 	 * @param height		The height of the thumbnails to produce.
+145: 	 * @param aspectRatio	Whether or not to maintain the aspect ratio in the
+146: 	 * 						thumbnail the same as the original image.
+147: 	 * 						<p>
+148: 	 * 						If {@code true} is specified, then the
+149: 	 * 						thumbnail image will have the same aspect ratio
+150: 	 * 						as the original image.
+151: 	 * @param fit			Whether or not to fit the thumbnail within the
+152: 	 * 						specified dimensions.
+153: 	 * 						<p>
+154: 	 * 						If {@code true} is specified, then the thumbnail
+155: 	 * 						will be sized to fit within the specified
+156: 	 * 						{@code width} and {@code height}.
+157: 	 */
+158: 	public FixedSizeThumbnailMaker(int width, int height, boolean aspectRatio, boolean fit) {
+159: 		this();
+160: 		size(width, height);
+161: 		keepAspectRatio(aspectRatio);
+162: 		fitWithinDimensions(fit);
+163: 	}
+164: 	
+165: 	/**
+166: 	 * Sets the size of the thumbnail to produce.
+167: 	 * 
+168: 	 * @param width				The width of the thumbnail to produce.
+169: 	 * @param height			The height of the thumbnails to produce.
+170: 	 * @return					A reference to this object.
+171: 	 * @throws IllegalStateException	If the size has already
+172: 	 * 									been previously set, or if the
+173: 	 * 									{@code width} or {@code height} is less
+174: 	 * 									than or equal to zero.
+175: 	 */
+176: 	public FixedSizeThumbnailMaker size(int width, int height) {
+177: 		if (ready.isSet(PARAM_SIZE)) {
+178: 			throw new IllegalStateException(
+179: 					"The size has already been set."
+180: 			);
+181: 		}
+182: 		
+183: 		if (width <= 0) {
+184: 			throw new IllegalArgumentException(
+185: 					"Width must be greater than zero."
+186: 			);
+187: 		}
+188: 		if (height <= 0) {
+189: 			throw new IllegalArgumentException(
+190: 					"Height must be greater than zero."
+191: 			);
+192: 		}
+193: 		
+194: 		this.width = width;
+195: 		this.height = height;
+196: 
+197: 		ready.set(PARAM_SIZE);
+198: 		return this;
+199: 	}
+200: 	
+201: 	/**
+202: 	 * Sets whether or not the thumbnail is to maintain the aspect ratio of
+203: 	 * the original image.
+204: 	 * 
+205: 	 * @param keep			Whether or not to maintain the aspect ratio in the
+206: 	 * 						thumbnail the same as the original image.
+207: 	 * 						<p>
+208: 	 * 						If {@code true} is specified, then the
+209: 	 * 						thumbnail image will have the same aspect ratio
+210: 	 * 						as the original image.
+211:  	 * @return				A reference to this object.
+212: 	 * @throws IllegalStateException	If whether to keep the aspect ratio has
+213: 	 * 									already	been previously set.
+214: 	 */
+215: 	public FixedSizeThumbnailMaker keepAspectRatio(boolean keep) {
+216: 		if (ready.isSet(PARAM_KEEP_RATIO)) {
+217: 			throw new IllegalStateException(
+218: 					"Whether to keep the aspect ratio has already been set."
+219: 			);
+220: 		}
+221: 		this.keepRatio = keep;
+222: 
+223: 		ready.set(PARAM_KEEP_RATIO);
+224: 		return this;
+225: 	}
+226: 	
+227: 	/**
+228: 	 * Sets whether or not the thumbnail should fit within the specified
+229: 	 * dimensions.
+230: 	 * <p>
+231: 	 * When the dimensions of a thumbnail will exceed the specified dimensions,
+232: 	 * with the aspect ratio of the original being preserved, then if this
+233: 	 * method was called with {@code false}, then the resulting thumbnail will
+234: 	 * have the larger dimension align with the specified dimension, and the
+235: 	 * other will exceed the given dimension.
+236: 	 * <p>
+237: 	 * When {@link #keepAspectRatio(boolean)} is {@code false}, then calling
+238: 	 * this method with {@code true} or {@code false} makes no difference, as
+239: 	 * the thumbnail dimensions will be exactly the given dimensions.
+240: 	 * 
+241: 	 * @param fit			Whether or not to maintain the aspect ratio in the
+242: 	 * 						thumbnail the same as the original image.
+243: 	 * 						<p>
+244: 	 * 						If {@code true} is specified, then the
+245: 	 * 						thumbnail image will have the same aspect ratio
+246: 	 * 						as the original image.
+247: 	 * @return				A reference to this object.
+248: 	 * @throws IllegalStateException	If whether to keep the aspect ratio has
+249: 	 * 									already	been previously set.
+250: 	 * @since 0.4.0
+251: 	 */
+252: 	public FixedSizeThumbnailMaker fitWithinDimensions(boolean fit) {
+253: 		if (ready.isSet(PARAM_FIT_WITHIN)) {
+254: 			throw new IllegalStateException(
+255: 					"Whether to fit within dimensions has already been set."
+256: 			);
+257: 		}
+258: 		this.fitWithinDimensions = fit;
+259: 		
+260: 		ready.set(PARAM_FIT_WITHIN);
+261: 		return this;
+262: 	}
+263: 	
+264: 	@Override
+265: 	public BufferedImage make(BufferedImage img) {
+266: 		int targetWidth = this.width;
+267: 		int targetHeight = this.height;
+268: 
+269: 		if (keepRatio) {
+270: 			int sourceWidth = img.getWidth();
+271: 			int sourceHeight = img.getHeight();
+272: 			
+273: 			double sourceRatio = (double)sourceWidth / (double)sourceHeight;
+274: 			double targetRatio = (double)targetWidth / (double)targetHeight;
+275: 			
+276: 			/*
+277: 			 * If the ratios are not the same, then the appropriate
+278: 			 * width and height must be picked.
+279: 			 */
+280: 			if (Double.compare(sourceRatio, targetRatio) != 0) {
+281: 				if (fitWithinDimensions) {
+282: 					if (sourceRatio > targetRatio) {
+283: 						targetWidth = width;
+284: 						targetHeight = (int)Math.round(targetWidth / sourceRatio);
+285: 					} else {
+286: 						targetWidth = (int)Math.round(targetHeight * sourceRatio);
+287: 						targetHeight = height;
+288: 					}
+289: 				} else {
+290: 					if (sourceRatio > targetRatio) {
+291: 						targetWidth = (int)Math.round(targetHeight * sourceRatio);
+292: 						targetHeight = height;
+293: 					} else {
+294: 						targetWidth = width;
+295: 						targetHeight = (int)Math.round(targetWidth / sourceRatio);
+296: 					}
+297: 				}
+298: 			}

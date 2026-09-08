@@ -1,0 +1,156 @@
+937: 
+938:     """
+939:     validate(reference_labels, estimated_labels)
+940:     ref_roots, ref_semitones = encode_many(reference_labels, False)[:2]
+941:     est_roots, est_semitones = encode_many(estimated_labels, False)[:2]
+942: 
+943:     eq_roots = ref_roots == est_roots
+944:     eq_semitones = np.all(np.equal(ref_semitones, est_semitones), axis=1)
+945:     comparison_scores = (eq_roots * eq_semitones).astype(np.float64)
+946: 
+947:     # Ignore 'X' chords
+948:     comparison_scores[np.any(ref_semitones < 0, axis=1)] = -1.0
+949:     return comparison_scores
+950: 
+951: 
+952: def tetrads_inv(reference_labels, estimated_labels):
+953:     """Compare chords along tetrad (root, full quality, & bass) relationships.
+954: 
+955:     Examples
+956:     --------
+957:     >>> (ref_intervals,
+958:     ...  ref_labels) = mir_eval.io.load_labeled_intervals('ref.lab')
+959:     >>> (est_intervals,
+960:     ...  est_labels) = mir_eval.io.load_labeled_intervals('est.lab')
+961:     >>> est_intervals, est_labels = mir_eval.util.adjust_intervals(
+962:     ...     est_intervals, est_labels, ref_intervals.min(),
+963:     ...     ref_intervals.max(), mir_eval.chord.NO_CHORD,
+964:     ...     mir_eval.chord.NO_CHORD)
+965:     >>> (intervals,
+966:     ...  ref_labels,
+967:     ...  est_labels) = mir_eval.util.merge_labeled_intervals(
+968:     ...      ref_intervals, ref_labels, est_intervals, est_labels)
+969:     >>> durations = mir_eval.util.intervals_to_durations(intervals)
+970:     >>> comparisons = mir_eval.chord.tetrads_inv(ref_labels, est_labels)
+971:     >>> score = mir_eval.chord.weighted_accuracy(comparisons, durations)
+972: 
+973:     Parameters
+974:     ----------
+975:     reference_labels : list, len=n
+976:         Reference chord labels to score against.
+977:     estimated_labels : list, len=n
+978:         Estimated chord labels to score against.
+979: 
+980:     Returns
+981:     -------
+982:     comparison_scores : np.ndarray, shape=(n,), dtype=float
+983:         Comparison scores, in [0.0, 1.0]
+984: 
+985:     """
+986:     validate(reference_labels, estimated_labels)
+987:     ref_roots, ref_semitones, ref_bass = encode_many(reference_labels, False)
+988:     est_roots, est_semitones, est_bass = encode_many(estimated_labels, False)
+989: 
+990:     eq_roots = ref_roots == est_roots
+991:     eq_basses = ref_bass == est_bass
+992:     eq_semitones = np.all(np.equal(ref_semitones, est_semitones), axis=1)
+993:     comparison_scores = (eq_roots * eq_semitones * eq_basses).astype(np.float64)
+994: 
+995:     # Ignore 'X' chords
+996:     comparison_scores[np.any(ref_semitones < 0, axis=1)] = -1.0
+997:     return comparison_scores
+998: 
+999: 
+1000: def root(reference_labels, estimated_labels):
+1001:     """Compare chords according to roots.
+1002: 
+1003:     Examples
+1004:     --------
+1005:     >>> (ref_intervals,
+1006:     ...  ref_labels) = mir_eval.io.load_labeled_intervals('ref.lab')
+1007:     >>> (est_intervals,
+1008:     ...  est_labels) = mir_eval.io.load_labeled_intervals('est.lab')
+1009:     >>> est_intervals, est_labels = mir_eval.util.adjust_intervals(
+1010:     ...     est_intervals, est_labels, ref_intervals.min(),
+1011:     ...     ref_intervals.max(), mir_eval.chord.NO_CHORD,
+1012:     ...     mir_eval.chord.NO_CHORD)
+1013:     >>> (intervals,
+1014:     ...  ref_labels,
+1015:     ...  est_labels) = mir_eval.util.merge_labeled_intervals(
+1016:     ...      ref_intervals, ref_labels, est_intervals, est_labels)
+1017:     >>> durations = mir_eval.util.intervals_to_durations(intervals)
+1018:     >>> comparisons = mir_eval.chord.root(ref_labels, est_labels)
+1019:     >>> score = mir_eval.chord.weighted_accuracy(comparisons, durations)
+1020: 
+1021:     Parameters
+1022:     ----------
+1023:     reference_labels : list, len=n
+1024:         Reference chord labels to score against.
+1025:     estimated_labels : list, len=n
+1026:         Estimated chord labels to score against.
+1027: 
+1028:     Returns
+1029:     -------
+1030:     comparison_scores : np.ndarray, shape=(n,), dtype=float
+1031:         Comparison scores, in [0.0, 1.0], or -1 if the comparison is out of
+1032:         gamut.
+1033:     """
+1034:     validate(reference_labels, estimated_labels)
+1035:     ref_roots, ref_semitones = encode_many(reference_labels, False)[:2]
+1036:     est_roots = encode_many(estimated_labels, False)[0]
+1037:     comparison_scores = (ref_roots == est_roots).astype(np.float64)
+1038: 
+1039:     # Ignore 'X' chords
+1040:     comparison_scores[np.any(ref_semitones < 0, axis=1)] = -1.0
+1041:     return comparison_scores
+1042: 
+1043: 
+1044: def mirex(reference_labels, estimated_labels):
+1045:     """Compare chords along MIREX rules.
+1046: 
+1047:     Examples
+1048:     --------
+1049:     >>> (ref_intervals,
+1050:     ...  ref_labels) = mir_eval.io.load_labeled_intervals('ref.lab')
+1051:     >>> (est_intervals,
+1052:     ...  est_labels) = mir_eval.io.load_labeled_intervals('est.lab')
+1053:     >>> est_intervals, est_labels = mir_eval.util.adjust_intervals(
+1054:     ...     est_intervals, est_labels, ref_intervals.min(),
+1055:     ...     ref_intervals.max(), mir_eval.chord.NO_CHORD,
+1056:     ...     mir_eval.chord.NO_CHORD)
+1057:     >>> (intervals,
+1058:     ...  ref_labels,
+1059:     ...  est_labels) = mir_eval.util.merge_labeled_intervals(
+1060:     ...      ref_intervals, ref_labels, est_intervals, est_labels)
+1061:     >>> durations = mir_eval.util.intervals_to_durations(intervals)
+1062:     >>> comparisons = mir_eval.chord.mirex(ref_labels, est_labels)
+1063:     >>> score = mir_eval.chord.weighted_accuracy(comparisons, durations)
+1064: 
+1065:     Parameters
+1066:     ----------
+1067:     reference_labels : list, len=n
+1068:         Reference chord labels to score against.
+1069:     estimated_labels : list, len=n
+1070:         Estimated chord labels to score against.
+1071: 
+1072:     Returns
+1073:     -------
+1074:     comparison_scores : np.ndarray, shape=(n,), dtype=float
+1075:         Comparison scores, in [0.0, 1.0]
+1076: 
+1077:     """
+1078:     validate(reference_labels, estimated_labels)
+1079:     # TODO(?): Should this be an argument?
+1080:     min_intersection = 3
+1081:     ref_data = encode_many(reference_labels, False)
+1082:     ref_chroma = rotate_bitmaps_to_roots(ref_data[1], ref_data[0])
+1083:     est_data = encode_many(estimated_labels, False)
+1084:     est_chroma = rotate_bitmaps_to_roots(est_data[1], est_data[0])
+1085: 
+1086:     eq_chroma = (ref_chroma * est_chroma).sum(axis=-1)
+1087: 
+1088:     # Chroma matching for set bits
+1089:     comparison_scores = (eq_chroma >= min_intersection).astype(np.float64)
+1090: 
+1091:     # No-chord matching; match -1 roots, SKIP_CHORDS dropped next
+1092:     no_root = np.logical_and(ref_data[0] == -1, est_data[0] == -1)

@@ -1,0 +1,93 @@
+244:         Model instance
+245:         """
+246:         if not HDF5_INSTALLED:
+247:             raise ImportError(h5py_msg)
+248: 
+249:         model = hdftools.load_dict(path, 'data')
+250:         model = cls._byte2string(model)
+251: 
+252:         for k in model['hyper_params'].keys():
+253:             if isinstance(model['hyper_params'][k], str):
+254:                 if model['hyper_params'][k] == 'None':
+255:                     model['hyper_params'][k] = None
+256: 
+257:         return cls._organize_model(cls, model)
+258: 
+259:     def to_json(self, path):
+260:         """
+261:         Save model to a JSON file.
+262: 
+263:         Parameters
+264:         ----------
+265:         path : str
+266:             Full file path.
+267:         """
+268: 
+269:         d = self._to_dict(output='json')
+270:         json.dump(d, open(path, 'w'))
+271: 
+272:     @classmethod
+273:     def from_json(cls, path):
+274:         """
+275:         Load model from a JSON file.
+276: 
+277:         Parameters
+278:         ----------
+279:         path : str
+280:             Full path to file.
+281: 
+282:         Returns
+283:         -------
+284:         Model instance
+285:         """
+286: 
+287:         model = json.load(open(path, 'r'))
+288:         model = cls._byte2string(model)
+289: 
+290:         # Convert the lists back to arrays
+291:         for param_type in ['model_params', 'hyper_params']:
+292:             for k in model[param_type].keys():
+293:                 param = model[param_type][k]
+294:                 if type(param) is list:
+295:                     try:
+296:                         arr = np.array(param)
+297:                         if arr.dtype == object:
+298:                             # Then maybe it was rather a list of arrays
+299:                             # This is very hacky...
+300:                             arr = [np.array(p) for p in param]
+301:                     except ValueError:
+302:                         arr = [np.array(p) for p in param]
+303:                     model[param_type][k] = arr
+304: 
+305:         return cls._organize_model(cls, model)
+306: 
+307:     def to_pickle(self, path):
+308:         """
+309:         Save model to a pickle file.
+310: 
+311:         Parameters
+312:         ----------
+313:         path : str
+314:             Full file path.
+315:         """
+316: 
+317:         d = self._to_dict()
+318:         pickle.dump(d, open(path, 'wb'), protocol=2)
+319: 
+320:     @classmethod
+321:     def from_pickle(cls, path):
+322:         """
+323:         Load model from a pickle file.
+324: 
+325:         Parameters
+326:         ----------
+327:         path : str
+328:             Full path to file.
+329: 
+330:         Returns
+331:         -------
+332:         Model instance
+333:         """
+334:         model = pickle.load(open(path, 'rb'))
+335:         model = cls._byte2string(model)
+336:         return cls._organize_model(cls, model)

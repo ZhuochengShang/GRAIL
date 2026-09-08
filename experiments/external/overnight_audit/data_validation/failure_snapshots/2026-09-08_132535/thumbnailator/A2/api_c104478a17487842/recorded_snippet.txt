@@ -1,0 +1,14 @@
+java.io.File outputFile = outputPath.resolve("output.png").toFile();
+net.coobird.thumbnailator.tasks.io.FileImageSink sink = new net.coobird.thumbnailator.tasks.io.FileImageSink(outputFile);
+
+byte[] data = new byte[] { 10, 20, 30, 40 };
+try (java.io.OutputStream os = sink.createOutputStream(outputFile)) {
+    os.write(data);
+} catch (java.io.IOException e) {
+    throw new RuntimeException("Failed to create or write to output stream", e);
+}
+
+assert outputFile.exists() : "Output file should have been created";
+assert outputFile.length() == data.length : "Output file should contain the exact written bytes";
+
+System.out.println("__CHECK__ createOutputStream " + outputFile.length());

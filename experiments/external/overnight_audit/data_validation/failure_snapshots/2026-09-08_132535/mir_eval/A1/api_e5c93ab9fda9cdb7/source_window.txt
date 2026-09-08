@@ -1,0 +1,156 @@
+14: The weighting value from the reference must be a float in the range [0, 1].
+15: 
+16: Metrics
+17: -------
+18: * :func:`mir_eval.tempo.detection`: Relative error, hits, and weighted
+19:   precision of tempo estimation.
+20: 
+21: """
+22: 
+23: import warnings
+24: import numpy as np
+25: import collections
+26: from . import util
+27: 
+28: 
+29: def validate_tempi(tempi, reference=True):
+30:     """Check that there are two non-negative tempi.
+31:     For a reference value, at least one tempo has to be greater than zero.
+32: 
+33:     Parameters
+34:     ----------
+35:     tempi : np.ndarray
+36:         length-2 array of tempo, in bpm
+37:     reference : bool
+38:         indicates a reference value
+39:     """
+40:     if tempi.size != 2:
+41:         raise ValueError("tempi must have exactly two values")
+42: 
+43:     if not np.all(np.isfinite(tempi)) or np.any(tempi < 0):
+44:         raise ValueError(f"tempi={tempi} must be non-negative numbers")
+45: 
+46:     if reference and np.all(tempi == 0):
+47:         raise ValueError(
+48:             "reference tempi={} must have one" " value greater than zero".format(tempi)
+49:         )
+50: 
+51: 
+52: def validate(reference_tempi, reference_weight, estimated_tempi):
+53:     """Check that the input annotations to a metric look like valid tempo
+54:     annotations.
+55: 
+56:     Parameters
+57:     ----------
+58:     reference_tempi : np.ndarray
+59:         reference tempo values, in bpm
+60:     reference_weight : float
+61:         perceptual weight of slow vs fast in reference
+62:     estimated_tempi : np.ndarray
+63:         estimated tempo values, in bpm
+64: 
+65:     """
+66:     validate_tempi(reference_tempi, reference=True)
+67:     validate_tempi(estimated_tempi, reference=False)
+68: 
+69:     if reference_weight < 0 or reference_weight > 1:
+70:         raise ValueError("Reference weight must lie in range [0, 1]")
+71: 
+72: 
+73: def detection(reference_tempi, reference_weight, estimated_tempi, tol=0.08):
+74:     """Compute the tempo detection accuracy metric.
+75: 
+76:     Parameters
+77:     ----------
+78:     reference_tempi : np.ndarray, shape=(2,)
+79:         Two non-negative reference tempi
+80:     reference_weight : float > 0
+81:         The relative strength of ``reference_tempi[0]`` vs
+82:         ``reference_tempi[1]``.
+83:     estimated_tempi : np.ndarray, shape=(2,)
+84:         Two non-negative estimated tempi.
+85:     tol : float in [0, 1]:
+86:         The maximum allowable deviation from a reference tempo to
+87:         count as a hit.
+88:         ``|est_t - ref_t| <= tol * ref_t``
+89:         (Default value = 0.08)
+90: 
+91:     Returns
+92:     -------
+93:     p_score : float in [0, 1]
+94:         Weighted average of recalls:
+95:         ``reference_weight * hits[0] + (1 - reference_weight) * hits[1]``
+96:     one_correct : bool
+97:         True if at least one reference tempo was correctly estimated
+98:     both_correct : bool
+99:         True if both reference tempi were correctly estimated
+100: 
+101:     Raises
+102:     ------
+103:     ValueError
+104:         If the input tempi are ill-formed
+105: 
+106:         If the reference weight is not in the range [0, 1]
+107: 
+108:         If ``tol < 0`` or ``tol > 1``.
+109:     """
+110:     validate(reference_tempi, reference_weight, estimated_tempi)
+111: 
+112:     if tol < 0 or tol > 1:
+113:         raise ValueError(
+114:             "invalid tolerance {}: must lie in the range " "[0, 1]".format(tol)
+115:         )
+116:     if tol == 0.0:
+117:         warnings.warn("A tolerance of 0.0 may not " "lead to the results you expect.")
+118: 
+119:     hits = [False, False]
+120: 
+121:     for i, ref_t in enumerate(reference_tempi):
+122:         if ref_t > 0:
+123:             # Compute the relative error for this reference tempo
+124:             f_ref_t = float(ref_t)
+125:             relative_error = np.min(np.abs(ref_t - estimated_tempi) / f_ref_t)
+126: 
+127:             # Count the hits
+128:             hits[i] = relative_error <= tol
+129: 
+130:     p_score = reference_weight * hits[0] + (1.0 - reference_weight) * hits[1]
+131: 
+132:     one_correct = bool(np.max(hits))
+133:     both_correct = bool(np.min(hits))
+134: 
+135:     return p_score, one_correct, both_correct
+136: 
+137: 
+138: def evaluate(reference_tempi, reference_weight, estimated_tempi, **kwargs):
+139:     """Compute all metrics for the given reference and estimated annotations.
+140: 
+141:     Parameters
+142:     ----------
+143:     reference_tempi : np.ndarray, shape=(2,)
+144:         Two non-negative reference tempi
+145:     reference_weight : float > 0
+146:         The relative strength of ``reference_tempi[0]`` vs
+147:         ``reference_tempi[1]``.
+148:     estimated_tempi : np.ndarray, shape=(2,)
+149:         Two non-negative estimated tempi.
+150:     **kwargs
+151:         Additional keyword arguments which will be passed to the
+152:         appropriate metric or preprocessing functions.
+153: 
+154:     Returns
+155:     -------
+156:     scores : dict
+157:         Dictionary of scores, where the key is the metric name (str) and
+158:         the value is the (float) score achieved.
+159:     """
+160:     # Compute all metrics
+161:     scores = collections.OrderedDict()
+162: 
+163:     (
+164:         scores["P-score"],
+165:         scores["One-correct"],
+166:         scores["Both-correct"],
+167:     ) = util.filter_kwargs(
+168:         detection, reference_tempi, reference_weight, estimated_tempi, **kwargs
+169:     )

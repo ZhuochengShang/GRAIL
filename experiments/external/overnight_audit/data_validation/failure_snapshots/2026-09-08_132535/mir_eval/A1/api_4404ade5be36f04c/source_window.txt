@@ -1,0 +1,156 @@
+492:                 512,
+493:                 Gj[j],
+494:                 G,
+495:             )
+496:             Gj[j] = Gj_temp
+497:             sdr[j], isr[j], sir[j], sar[j] = _bss_image_crit(
+498:                 s_true, e_spat, e_interf, e_artif
+499:             )
+500: 
+501:         # return the default permutation for compatibility
+502:         popt = np.arange(nsrc)
+503:         return (sdr, isr, sir, sar, popt)
+504: 
+505: 
+506: @util.deprecated(version="0.8", version_removed="0.9")
+507: def bss_eval_images_framewise(
+508:     reference_sources,
+509:     estimated_sources,
+510:     window=30 * 44100,
+511:     hop=15 * 44100,
+512:     compute_permutation=False,
+513: ):
+514:     """Framewise computation of bss_eval_images
+515: 
+516:     Please be aware that this function does not compute permutations (by
+517:     default) on the possible relations between ``reference_sources`` and
+518:     ``estimated_sources`` due to the dangers of a changing permutation.
+519:     Therefore (by default), it assumes that ``reference_sources[i]``
+520:     corresponds to ``estimated_sources[i]``. To enable computing permutations
+521:     please set ``compute_permutation`` to be ``True`` and check that the
+522:     returned ``perm`` is identical for all windows.
+523: 
+524:     NOTE: if ``reference_sources`` and ``estimated_sources`` would be evaluated
+525:     using only a single window or are shorter than the window length, the
+526:     result of ``bss_eval_images`` called on ``reference_sources`` and
+527:     ``estimated_sources`` (with the ``compute_permutation`` parameter passed to
+528:     ``bss_eval_images``) is returned
+529: 
+530:     Examples
+531:     --------
+532:     >>> # reference_sources[n] should be an ndarray of samples of the
+533:     >>> # n'th reference source
+534:     >>> # estimated_sources[n] should be the same for the n'th estimated
+535:     >>> # source
+536:     >>> (sdr, isr, sir, sar,
+537:     ...  perm) = mir_eval.separation.bss_eval_images_framewise(
+538:              reference_sources,
+539:     ...      estimated_sources,
+540:              window,
+541:     ....     hop)
+542: 
+543:     Parameters
+544:     ----------
+545:     reference_sources : np.ndarray, shape=(nsrc, nsampl, nchan)
+546:         matrix containing true sources (must have the same shape as
+547:         ``estimated_sources``)
+548:     estimated_sources : np.ndarray, shape=(nsrc, nsampl, nchan)
+549:         matrix containing estimated sources (must have the same shape as
+550:         ``reference_sources``)
+551:     window : int
+552:         Window length for framewise evaluation
+553:     hop : int
+554:         Hop size for framewise evaluation
+555:     compute_permutation : bool, optional
+556:         compute permutation of estimate/source combinations for all windows
+557:         (False by default)
+558: 
+559:     Returns
+560:     -------
+561:     sdr : np.ndarray, shape=(nsrc, nframes)
+562:         vector of Signal to Distortion Ratios (SDR)
+563:     isr : np.ndarray, shape=(nsrc, nframes)
+564:         vector of source Image to Spatial distortion Ratios (ISR)
+565:     sir : np.ndarray, shape=(nsrc, nframes)
+566:         vector of Source to Interference Ratios (SIR)
+567:     sar : np.ndarray, shape=(nsrc, nframes)
+568:         vector of Sources to Artifacts Ratios (SAR)
+569:     perm : np.ndarray, shape=(nsrc, nframes)
+570:         vector containing the best ordering of estimated sources in
+571:         the mean SIR sense (estimated source number perm[j] corresponds to
+572:         true source number j)
+573:         Note: perm will be range(nsrc) for all windows if compute_permutation
+574:         is False
+575:     """
+576:     # make sure the input has 3 dimensions
+577:     # assuming input is in shape (nsampl) or (nsrc, nsampl)
+578:     estimated_sources = np.atleast_3d(estimated_sources)
+579:     reference_sources = np.atleast_3d(reference_sources)
+580:     # we will ensure input doesn't have more than 3 dimensions in validate
+581: 
+582:     validate(reference_sources, estimated_sources)
+583:     # If empty matrices were supplied, return empty lists (special case)
+584:     if reference_sources.size == 0 or estimated_sources.size == 0:
+585:         return np.array([]), np.array([]), np.array([]), np.array([])
+586: 
+587:     nsrc = reference_sources.shape[0]
+588: 
+589:     nwin = int(np.floor((reference_sources.shape[1] - window + hop) / hop))
+590:     # if fewer than 2 windows would be evaluated, return the images result
+591:     if nwin < 2:
+592:         result = bss_eval_images(
+593:             reference_sources, estimated_sources, compute_permutation
+594:         )
+595:         return [np.expand_dims(score, -1) for score in result]
+596: 
+597:     # compute the criteria across all windows
+598:     sdr = np.empty((nsrc, nwin))
+599:     isr = np.empty((nsrc, nwin))
+600:     sir = np.empty((nsrc, nwin))
+601:     sar = np.empty((nsrc, nwin))
+602:     perm = np.empty((nsrc, nwin))
+603: 
+604:     # k iterates across all the windows
+605:     for k in range(nwin):
+606:         win_slice = slice(k * hop, k * hop + window)
+607:         ref_slice = reference_sources[:, win_slice, :]
+608:         est_slice = estimated_sources[:, win_slice, :]
+609:         # check for a silent frame
+610:         if not _any_source_silent(ref_slice) and not _any_source_silent(est_slice):
+611:             sdr[:, k], isr[:, k], sir[:, k], sar[:, k], perm[:, k] = bss_eval_images(
+612:                 ref_slice, est_slice, compute_permutation
+613:             )
+614:         else:
+615:             # if we have a silent frame set results as np.nan
+616:             sdr[:, k] = sir[:, k] = sar[:, k] = perm[:, k] = np.nan
+617: 
+618:     return sdr, isr, sir, sar, perm
+619: 
+620: 
+621: def _bss_decomp_mtifilt(reference_sources, estimated_source, j, flen):
+622:     """Decomposition of an estimated source image into four components
+623:     representing respectively the true source image, spatial (or filtering)
+624:     distortion, interference and artifacts, derived from the true source
+625:     images using multichannel time-invariant filters.
+626:     """
+627:     nsampl = estimated_source.size
+628:     # decomposition
+629:     # true source image
+630:     s_true = np.hstack((reference_sources[j], np.zeros(flen - 1)))
+631:     # spatial (or filtering) distortion
+632:     e_spat = (
+633:         _project(reference_sources[j, np.newaxis, :], estimated_source, flen) - s_true
+634:     )
+635:     # interference
+636:     e_interf = _project(reference_sources, estimated_source, flen) - s_true - e_spat
+637:     # artifacts
+638:     e_artif = -s_true - e_spat - e_interf
+639:     e_artif[:nsampl] += estimated_source
+640:     return (s_true, e_spat, e_interf, e_artif)
+641: 
+642: 
+643: def _bss_decomp_mtifilt_images(
+644:     reference_sources, estimated_source, j, flen, Gj=None, G=None
+645: ):
+646:     """Decomposition of an estimated source image into four components
+647:     representing respectively the true source image, spatial (or filtering)

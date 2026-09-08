@@ -1,0 +1,57 @@
+{
+  "name": "createOutputStream",
+  "native_row": {
+    "status": "fail",
+    "attempts": 1,
+    "pass_round": null,
+    "wall_s": 23.8,
+    "llm_calls": 1,
+    "input_tokens": 1869,
+    "output_tokens": 2497,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 1869,
+        "output_tokens": 2497
+      }
+    },
+    "error_category": "compile",
+    "error": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/.aideal_exec/A2/run_createOutputStream/ApiTest.java:55: error: createOutputStream(File) is not public in FileImageSink; cannot be accessed from outside package",
+    "locus": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/.aideal_exec/A2/run_createOutputStream/ApiTest.java:55",
+    "doc_chars": 3011,
+    "document_sha256": "7580997a676fef64481a74ff1a468bcf7f5e06556e26d655c38b4ed5a91cbb93",
+    "source": "source/src/main/java/net/coobird/thumbnailator/tasks/io/FileImageSink.java:326",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "name": "createOutputStream",
+    "execution_evidence": {
+      "status": "fail",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "fail",
+          "category": "compile",
+          "error": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/.aideal_exec/A2/run_createOutputStream/ApiTest"
+        }
+      ],
+      "error_category": "compile",
+      "error": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/.aideal_exec/A2/run_createOutputStream/ApiTest.java:55: error: createOutputStream(File) is not public in FileImageSink; cannot be accessed from outside package",
+      "code": "java.io.File outputFile = outputPath.resolve(\"output.png\").toFile();\nnet.coobird.thumbnailator.tasks.io.FileImageSink sink = new net.coobird.thumbnailator.tasks.io.FileImageSink(outputFile);\n\nbyte[] data = new byte[] { 10, 20, 30, 40 };\ntry (java.io.OutputStream os = sink.createOutputStream(outputFile)) {\n    os.write(data);\n} catch (java.io.IOException e) {\n    throw new RuntimeException(\"Failed to create or write to output stream\", e);\n}\n\nassert outputFile.exists() : \"Output file should have been created\";\nassert outputFile.length() == data.length : \"Output file should contain the exact written bytes\";\n\nSystem.out.println(\"__CHECK__ createOutputStream \" + outputFile.length());",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/.aideal_exec/A2/run_createOutputStream/ApiTest.java",
+      "exit_code": 1,
+      "stdout_tail": "",
+      "stderr_tail": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/.aideal_exec/A2/run_createOutputStream/ApiTest.java:55: error: createOutputStream(File) is not public in FileImageSink; cannot be accessed from outside package\n            try (java.io.OutputStream os = sink.createOutputStream(outputFile)) {\n                                               ^\n1 error\n"
+    },
+    "experiment_fingerprint": "d0a4b20f3e5d3ea0caf7b1501a9bf2fb4d4f11ac7d844517d7b5d67874427464"
+  },
+  "retained_binding": "recorded_code_prefix_present",
+  "retained_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/.aideal_exec/A2/run_createOutputStream/ApiTest.java",
+  "retained_sha256": "0b25a603a615cfc6141aaf5a6809c57a3fc00460a3f9084f5565ba646c9d6184",
+  "source_window": {
+    "path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/source/src/main/java/net/coobird/thumbnailator/tasks/io/FileImageSink.java",
+    "full_file_sha256": "8cb77bab77d8fc353ffb3020a472b8c6d3bd7d0cde9be453cca3abc1fb09e581",
+    "first_line": 311,
+    "last_line": 353,
+    "other_sites": 0
+  }
+}

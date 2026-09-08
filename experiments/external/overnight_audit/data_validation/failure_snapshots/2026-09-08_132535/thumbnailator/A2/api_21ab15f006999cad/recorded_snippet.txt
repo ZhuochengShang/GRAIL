@@ -1,0 +1,24 @@
+byte[] jpegBytes = java.nio.file.Files.readAllBytes(java.nio.file.Paths.get(exif_jpeg));
+byte[] exifData = null;
+
+// Extract the APP1 (Exif) segment from the JPEG file
+for (int i = 0; i < jpegBytes.length - 1; i++) {
+    if (jpegBytes[i] == (byte) 0xFF && jpegBytes[i + 1] == (byte) 0xE1) {
+        int length = ((jpegBytes[i + 2] & 0xFF) << 8) | (jpegBytes[i + 3] & 0xFF);
+        if (i + 4 + length - 2 <= jpegBytes.length) {
+            byte[] segment = new byte[length - 2];
+            System.arraycopy(jpegBytes, i + 4, segment, 0, length - 2);
+            if (segment.length >= 4 && segment[0] == 'E' && segment[1] == 'x' && segment[2] == 'i' && segment[3] == 'f') {
+                exifData = segment;
+                break;
+            }
+        }
+    }
+}
+
+net.coobird.thumbnailator.util.exif.Orientation orientation = null;
+if (exifData != null) {
+    orientation = net.coobird.thumbnailator.util.exif.ExifUtils.getOrientationFromExif(exifData);
+}
+
+// Fallback to a manually constructed val

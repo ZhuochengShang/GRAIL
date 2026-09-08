@@ -1,0 +1,156 @@
+165:             import matplotlib.pyplot as plt
+166: 
+167:             fig = plt.gcf()
+168: 
+169:         if not fig.get_axes():
+170:             new_axes = True
+171:         ax = fig.gca()
+172: 
+173:     # Create a storage bucket for this axes in case we need it
+174:     if ax not in __AXMAP:
+175:         __AXMAP[ax] = dict()
+176: 
+177:     return ax, new_axes
+178: 
+179: 
+180: def segments(
+181:     intervals,
+182:     labels,
+183:     base=None,
+184:     height=None,
+185:     text=False,
+186:     text_kw=None,
+187:     ax=None,
+188:     prop_cycle=None,
+189:     **kwargs,
+190: ):
+191:     """Plot a segmentation as a set of disjoint rectangles.
+192: 
+193:     Parameters
+194:     ----------
+195:     intervals : np.ndarray, shape=(n, 2)
+196:         segment intervals, in the format returned by
+197:         :func:`mir_eval.io.load_intervals` or
+198:         :func:`mir_eval.io.load_labeled_intervals`.
+199:     labels : list, shape=(n,)
+200:         reference segment labels, in the format returned by
+201:         :func:`mir_eval.io.load_labeled_intervals`.
+202:     base : number
+203:         The vertical position of the base of the rectangles.
+204:         By default, this will be the bottom of the plot.
+205:     height : number
+206:         The height of the rectangles.
+207:         By default, this will be the top of the plot (minus ``base``).
+208:         .. note:: If either `base` or `height` are provided, both must be provided.
+209:     text : bool
+210:         If true, each segment's label is displayed in its
+211:         upper-left corner
+212:     text_kw : dict
+213:         If ``text == True``, the properties of the text
+214:         object can be specified here.
+215:         See ``matplotlib.pyplot.Text`` for valid parameters
+216:     ax : matplotlib.pyplot.axes
+217:         An axis handle on which to draw the segmentation.
+218:         If none is provided, a new set of axes is created.
+219:     prop_cycle : cycle.Cycler
+220:         An optional property cycle object to specify style properties.
+221:         If not provided, the default property cycler will be retrieved from matplotlib.
+222:     **kwargs
+223:         Additional keyword arguments to pass to
+224:         ``matplotlib.patches.Rectangle``.
+225: 
+226:     Returns
+227:     -------
+228:     ax : matplotlib.pyplot.axes._subplots.AxesSubplot
+229:         A handle to the (possibly constructed) plot axes
+230:     """
+231:     if text_kw is None:
+232:         text_kw = dict()
+233:     text_kw.setdefault("va", "top")
+234:     text_kw.setdefault("clip_on", True)
+235:     text_kw.setdefault("bbox", dict(boxstyle="round", facecolor="white"))
+236: 
+237:     # Make sure we have a numpy array
+238:     intervals = np.atleast_2d(intervals)
+239: 
+240:     seg_def_style = dict(linewidth=1)
+241: 
+242:     ax, new_axes = __get_axes(ax=ax)
+243: 
+244:     if prop_cycle is None:
+245:         __AXMAP[ax].setdefault("prop_cycle", mpl.rcParams["axes.prop_cycle"])
+246:         __AXMAP[ax].setdefault("prop_iter", iter(mpl.rcParams["axes.prop_cycle"]))
+247:     elif "prop_iter" not in __AXMAP[ax]:
+248:         __AXMAP[ax]["prop_cycle"] = prop_cycle
+249:         __AXMAP[ax]["prop_iter"] = iter(prop_cycle)
+250: 
+251:     prop_cycle = __AXMAP[ax]["prop_cycle"]
+252:     prop_iter = __AXMAP[ax]["prop_iter"]
+253: 
+254:     if new_axes:
+255:         ax.set_yticks([])
+256: 
+257:     if base is None and height is None:
+258:         # If neither are provided, we'll use axes coordinates to span the figure
+259:         base, height = 0, 1
+260:         transform = ax.get_xaxis_transform()
+261: 
+262:     elif base is not None and height is not None:
+263:         # If both are provided, we'll use data coordinates
+264:         transform = None
+265:     else:
+266:         raise ValueError("When specifying base or height, both must be provided.")
+267: 
+268:     seg_map = dict()
+269: 
+270:     for lab in labels:
+271:         if lab in seg_map:
+272:             continue
+273: 
+274:         try:
+275:             properties = next(prop_iter)
+276:         except StopIteration:
+277:             prop_iter = iter(prop_cycle)
+278:             __AXMAP[ax]["prop_iter"] = prop_iter
+279:             properties = next(prop_iter)
+280: 
+281:         style = {
+282:             k: v
+283:             for k, v in properties.items()
+284:             if k in ["color", "facecolor", "edgecolor", "linewidth"]
+285:         }
+286:         # Swap color -> facecolor here so we preserve edgecolor on rects
+287:         style.setdefault("facecolor", style["color"])
+288:         style.pop("color", None)
+289:         seg_map[lab] = seg_def_style.copy()
+290:         seg_map[lab].update(style)
+291:         seg_map[lab].update(kwargs)
+292:         seg_map[lab]["label"] = lab
+293: 
+294:     for ival, lab in zip(intervals, labels):
+295:         rect = ax.axvspan(ival[0], ival[1], ymin=base, ymax=height, **seg_map[lab])
+296:         seg_map[lab].pop("label", None)
+297: 
+298:         if text:
+299:             ann = ax.annotate(
+300:                 lab,
+301:                 xy=(ival[0], height),
+302:                 xycoords=transform,
+303:                 xytext=(8, -10),
+304:                 textcoords="offset points",
+305:                 **text_kw,
+306:             )
+307:             ann.set_clip_path(rect)
+308: 
+309:     return ax
+310: 
+311: 
+312: def labeled_intervals(
+313:     intervals,
+314:     labels,
+315:     label_set=None,
+316:     base=None,
+317:     height=None,
+318:     extend_labels=True,
+319:     ax=None,
+320:     tick=True,

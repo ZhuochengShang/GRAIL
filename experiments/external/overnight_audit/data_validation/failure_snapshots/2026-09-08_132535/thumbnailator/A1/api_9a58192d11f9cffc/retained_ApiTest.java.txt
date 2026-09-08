@@ -1,0 +1,83 @@
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Arrays;
+
+import javax.imageio.ImageIO;
+
+import net.coobird.thumbnailator.*;
+import net.coobird.thumbnailator.builders.*;
+import net.coobird.thumbnailator.filters.*;
+import net.coobird.thumbnailator.geometry.*;
+import net.coobird.thumbnailator.makers.*;
+import net.coobird.thumbnailator.name.*;
+import net.coobird.thumbnailator.resizers.*;
+import net.coobird.thumbnailator.resizers.configurations.*;
+import net.coobird.thumbnailator.tasks.*;
+import net.coobird.thumbnailator.tasks.io.*;
+import net.coobird.thumbnailator.util.*;
+import net.coobird.thumbnailator.util.exif.*;
+
+public final class ApiTest {
+    private ApiTest() {}
+
+    public static void main(String[] args) {
+        try {
+            String grid_png = "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A1/experiments/external/thumbnailator/source/src/test/resources/Thumbnailator/grid.png";
+    String grid_jpeg = "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A1/experiments/external/thumbnailator/source/src/test/resources/Thumbnailator/grid.jpg";
+    String exif_jpeg = "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A1/experiments/external/thumbnailator/source/src/test/resources/Exif/original.jpg";
+    String output_dir = "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A1/experiments/external/thumbnailator/.aideal_exec/A1/output";
+
+    // pre-loaded typed inputs (comprehension.execute.preamble)
+    BufferedImage sourceImage = new BufferedImage(32, 24, BufferedImage.TYPE_INT_RGB);
+    Graphics2D graphics = sourceImage.createGraphics();
+    graphics.setColor(Color.BLUE);
+    graphics.fillRect(0, 0, 32, 24);
+    graphics.setColor(Color.YELLOW);
+    graphics.fillRect(8, 6, 16, 12);
+    graphics.dispose();
+    BufferedImage destinationImage = new BufferedImage(16, 12, BufferedImage.TYPE_INT_RGB);
+    ByteArrayOutputStream imageBytes = new ByteArrayOutputStream();
+    Path outputPath = Paths.get(output_dir, "thumbnail.png");
+    Files.createDirectories(outputPath.getParent());
+
+            // TODO API_TEST_START
+            javax.imageio.ImageReader emptyReader = javax.imageio.ImageIO.getImageReadersByFormatName("JPEG").next();
+            boolean threw = false;
+            try {
+                net.coobird.thumbnailator.util.exif.ExifUtils.getExifOrientation(emptyReader, 0);
+            } catch (IllegalArgumentException e) {
+                threw = true;
+            }
+            assert threw : "Expected IllegalArgumentException when ImageReader input is not set";
+            emptyReader.dispose();
+
+            net.coobird.thumbnailator.util.exif.Orientation orientation = null;
+            try (javax.imageio.stream.ImageInputStream iis = javax.imageio.ImageIO.createImageInputStream(new java.io.File(exif_jpeg))) {
+                java.util.Iterator<javax.imageio.ImageReader> readers = javax.imageio.ImageIO.getImageReaders(iis);
+                assert readers.hasNext() : "Expected to find an ImageReader for exif_jpeg";
+    
+                javax.imageio.ImageReader reader = readers.next();
+                reader.setInput(iis);
+    
+                orientation = net.coobird.thumbnailator.util.exif.ExifUtils.getExifOrientation(reader, 0);
+                reader.dispose();
+            }
+
+            System.out.println("__CHECK__ getExifOrientation threw=" + threw + ", orientation=" + orientation);
+            // TODO API_TEST_END
+            System.out.println("__DONE__");
+        } catch (Throwable exc) {
+            System.err.println("__RUN_ERR__ " + exc.getClass().getSimpleName()
+                    + ": " + exc.getMessage());
+            exc.printStackTrace(System.err);
+            System.exit(1);
+        }
+    }
+}

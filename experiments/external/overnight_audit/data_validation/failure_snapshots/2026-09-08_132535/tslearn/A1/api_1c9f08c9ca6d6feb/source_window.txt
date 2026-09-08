@@ -1,0 +1,36 @@
+42:     try:
+43:         with zipfile.ZipFile(local_zip_fname, "r") as f:
+44:             f.extractall(path=target_dir)
+45:         if verbose:
+46:             print("Successfully extracted file %s to path %s" %
+47:                   (local_zip_fname, target_dir))
+48:         return target_dir
+49:     except zipfile.BadZipFile:
+50:         warnings.warn("Corrupted or missing zip file encountered, aborting",
+51:                       category=RuntimeWarning)
+52:         return None
+53:     finally:
+54:         shutil.rmtree(tmpdir, ignore_errors=True)
+55: 
+56: 
+57: def in_file_string_replace(filename, old_string, new_string):
+58:     """String replacement within a text file. It is used to fix typos in
+59:     downloaded csv file.
+60: 
+61:     The code was modified from "https://stackoverflow.com/questions/4128144/"
+62: 
+63:     Parameters
+64:     ----------
+65:     filename : str
+66:         Path to the file where strings should be replaced
+67:     old_string : str
+68:         The string to be replaced in the file.
+69:     new_string : str
+70:         The new string that will replace old_string
+71:     """
+72:     with open(filename) as f:
+73:         s = f.read()
+74: 
+75:     with open(filename, 'w') as f:
+76:         s = s.replace(old_string, new_string)
+77:         f.write(s)

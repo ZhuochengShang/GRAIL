@@ -1,0 +1,156 @@
+607:     # Raw pitch = the number of voiced frames in the reference for which the
+608:     # estimate provides a correct frequency value (within cent_tolerance cents)
+609:     # NB: voicing estimation is ignored in this measure
+610: 
+611:     nonzero_freqs = np.logical_and(est_cent != 0, ref_cent != 0)
+612: 
+613:     if sum(nonzero_freqs) == 0:
+614:         return 0.0
+615: 
+616:     freq_diff_cents = np.abs(ref_cent - est_cent)[nonzero_freqs]
+617:     correct_frequencies = freq_diff_cents < cent_tolerance
+618:     rpa = np.sum(ref_voicing[nonzero_freqs] * correct_frequencies) / np.sum(ref_voicing)
+619:     return rpa
+620: 
+621: 
+622: def raw_chroma_accuracy(
+623:     ref_voicing, ref_cent, est_voicing, est_cent, cent_tolerance=50
+624: ):
+625:     """Compute the raw chroma accuracy given two pitch (frequency) sequences
+626:     in cents and matching voicing indicator sequences. The first pitch and
+627:     voicing arrays are treated as the reference (truth), and the second two as
+628:     the estimate (prediction).  All 4 sequences must be of the same length.
+629: 
+630:     Examples
+631:     --------
+632:     >>> ref_time, ref_freq = mir_eval.io.load_time_series('ref.txt')
+633:     >>> est_time, est_freq = mir_eval.io.load_time_series('est.txt')
+634:     >>> (ref_v, ref_c,
+635:     ...  est_v, est_c) = mir_eval.melody.to_cent_voicing(ref_time,
+636:     ...                                                  ref_freq,
+637:     ...                                                  est_time,
+638:     ...                                                  est_freq)
+639:     >>> raw_chroma = mir_eval.melody.raw_chroma_accuracy(ref_v, ref_c,
+640:     ...                                                  est_v, est_c)
+641: 
+642:     Parameters
+643:     ----------
+644:     ref_voicing : np.ndarray
+645:         Reference voicing array. When this array is non-binary, it is treated
+646:         as a 'reference reward', as in (Bittner & Bosch, 2019)
+647:     ref_cent : np.ndarray
+648:         Reference pitch sequence in cents
+649:     est_voicing : np.ndarray
+650:         Estimated voicing array
+651:     est_cent : np.ndarray
+652:         Estimate pitch sequence in cents
+653:     cent_tolerance : float
+654:         Maximum absolute deviation in cents for a frequency value to be
+655:         considered correct
+656:         (Default value = 50)
+657: 
+658:     Returns
+659:     -------
+660:     raw_chroma : float
+661:         Raw chroma accuracy, the fraction of voiced frames in ref_cent for
+662:         which est_cent provides a correct frequency values (within
+663:         cent_tolerance cents), ignoring octave errors
+664: 
+665:     """
+666:     validate_voicing(ref_voicing, est_voicing)
+667:     validate(ref_voicing, ref_cent, est_voicing, est_cent)
+668:     # When input arrays are empty, return 0 by special case
+669:     # If there are no voiced frames in reference, metric is 0
+670:     if (
+671:         ref_voicing.size == 0
+672:         or ref_voicing.sum() == 0
+673:         or ref_cent.size == 0
+674:         or est_cent.size == 0
+675:     ):
+676:         return 0.0
+677: 
+678:     # # Raw chroma = same as raw pitch except that octave errors are ignored.
+679:     nonzero_freqs = np.logical_and(est_cent != 0, ref_cent != 0)
+680: 
+681:     if sum(nonzero_freqs) == 0:
+682:         return 0.0
+683: 
+684:     freq_diff_cents = np.abs(ref_cent - est_cent)[nonzero_freqs]
+685:     octave = 1200.0 * np.floor(freq_diff_cents / 1200 + 0.5)
+686:     correct_chroma = np.abs(freq_diff_cents - octave) < cent_tolerance
+687:     rca = np.sum(ref_voicing[nonzero_freqs] * correct_chroma) / np.sum(ref_voicing)
+688:     return rca
+689: 
+690: 
+691: def overall_accuracy(ref_voicing, ref_cent, est_voicing, est_cent, cent_tolerance=50):
+692:     """Compute the overall accuracy given two pitch (frequency) sequences
+693:     in cents and matching voicing indicator sequences. The first pitch and
+694:     voicing arrays are treated as the reference (truth), and the second two
+695:     as the estimate (prediction).  All 4 sequences must be of the same length.
+696: 
+697:     Examples
+698:     --------
+699:     >>> ref_time, ref_freq = mir_eval.io.load_time_series('ref.txt')
+700:     >>> est_time, est_freq = mir_eval.io.load_time_series('est.txt')
+701:     >>> (ref_v, ref_c,
+702:     ...  est_v, est_c) = mir_eval.melody.to_cent_voicing(ref_time,
+703:     ...                                                  ref_freq,
+704:     ...                                                  est_time,
+705:     ...                                                  est_freq)
+706:     >>> overall_accuracy = mir_eval.melody.overall_accuracy(ref_v, ref_c,
+707:     ...                                                     est_v, est_c)
+708: 
+709:     Parameters
+710:     ----------
+711:     ref_voicing : np.ndarray
+712:         Reference voicing array. When this array is non-binary, it is treated
+713:         as a 'reference reward', as in (Bittner & Bosch, 2019)
+714:     ref_cent : np.ndarray
+715:         Reference pitch sequence in cents
+716:     est_voicing : np.ndarray
+717:         Estimated voicing array
+718:     est_cent : np.ndarray
+719:         Estimate pitch sequence in cents
+720:     cent_tolerance : float
+721:         Maximum absolute deviation in cents for a frequency value to be
+722:         considered correct
+723:         (Default value = 50)
+724: 
+725:     Returns
+726:     -------
+727:     overall_accuracy : float
+728:         Overall accuracy, the total fraction of correctly estimates frames,
+729:         where provides a correct frequency values (within cent_tolerance).
+730: 
+731:     """
+732:     validate_voicing(ref_voicing, est_voicing)
+733:     validate(ref_voicing, ref_cent, est_voicing, est_cent)
+734: 
+735:     # When input arrays are empty, return 0 by special case
+736:     if (
+737:         ref_voicing.size == 0
+738:         or est_voicing.size == 0
+739:         or ref_cent.size == 0
+740:         or est_cent.size == 0
+741:     ):
+742:         return 0.0
+743: 
+744:     nonzero_freqs = np.logical_and(est_cent != 0, ref_cent != 0)
+745:     freq_diff_cents = np.abs(ref_cent - est_cent)[nonzero_freqs]
+746:     correct_frequencies = freq_diff_cents < cent_tolerance
+747:     ref_binary = (ref_voicing > 0).astype(float)
+748:     n_frames = float(len(ref_voicing))
+749: 
+750:     if np.sum(ref_voicing) == 0:
+751:         ratio = 0.0
+752:     else:
+753:         ratio = np.sum(ref_binary) / np.sum(ref_voicing)
+754: 
+755:     accuracy = (
+756:         (
+757:             ratio
+758:             * np.sum(
+759:                 ref_voicing[nonzero_freqs]
+760:                 * est_voicing[nonzero_freqs]
+761:                 * correct_frequencies
+762:             )

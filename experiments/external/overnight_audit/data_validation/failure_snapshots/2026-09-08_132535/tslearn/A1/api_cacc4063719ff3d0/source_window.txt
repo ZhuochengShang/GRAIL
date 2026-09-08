@@ -1,0 +1,156 @@
+441:     """
+442:     l1, l2 = dist_matrix.shape
+443:     cum_sum = numpy.full((l1 + 1, l2 + 1), numpy.inf)
+444:     cum_sum[0, 0] = 0.0
+445: 
+446:     for i in prange(l1):
+447:         for j in prange(l2):
+448:             if mask[i, j]:
+449:                 cum_sum[i + 1, j + 1] = dist_matrix[i, j]
+450:                 cum_sum[i + 1, j + 1] += min(
+451:                     cum_sum[i, j + 1], cum_sum[i + 1, j], cum_sum[i, j]
+452:                 )
+453:     return cum_sum[1:, 1:]
+454: 
+455: 
+456: def accumulated_matrix_from_dist_matrix(dist_matrix, mask, be=None):
+457:     """Compute the accumulated cost matrix score between two time series using
+458:     a precomputed distance matrix.
+459: 
+460:     Parameters
+461:     ----------
+462:     dist_matrix : array-like, shape=(sz1, sz2)
+463:         Array containing the pairwise distances.
+464:     mask : array-like, shape=(sz1, sz2)
+465:         Mask. Unconsidered cells must have False values.
+466:     be : Backend object or string or None
+467:         Backend. If `be` is an instance of the class `NumPyBackend` or the string `"numpy"`,
+468:         the NumPy backend is used.
+469:         If `be` is an instance of the class `PyTorchBackend` or the string `"pytorch"`,
+470:         the PyTorch backend is used.
+471:         If `be` is `None`, the backend is determined by the input arrays.
+472:         See our :ref:`dedicated user-guide page <backend>` for more information.
+473: 
+474:     Returns
+475:     -------
+476:     mat : array-like, shape=(sz1, sz2)
+477:         Accumulated cost matrix.
+478:     """
+479:     be = instantiate_backend(be, dist_matrix)
+480:     dist_matrix = be.array(dist_matrix)
+481:     l1, l2 = be.shape(dist_matrix)
+482:     cum_sum = be.full((l1 + 1, l2 + 1), be.inf)
+483:     cum_sum[0, 0] = 0.0
+484: 
+485:     for i in range(l1):
+486:         for j in range(l2):
+487:             if mask[i, j]:
+488:                 cum_sum[i + 1, j + 1] = dist_matrix[i, j]
+489:                 cum_sum[i + 1, j + 1] += min(
+490:                     cum_sum[i, j + 1], cum_sum[i + 1, j], cum_sum[i, j]
+491:                 )
+492:     return cum_sum[1:, 1:]
+493: 
+494: 
+495: def dtw_path_from_metric(
+496:     s1,
+497:     s2=None,
+498:     metric="euclidean",
+499:     global_constraint=None,
+500:     sakoe_chiba_radius=None,
+501:     itakura_max_slope=None,
+502:     be=None,
+503:     **kwds
+504: ):
+505:     r"""Compute Dynamic Time Warping (DTW) similarity measure between
+506:     (possibly multidimensional) time series using a distance metric defined by
+507:     the user and return both the path and the similarity.
+508: 
+509:     Similarity is computed as the cumulative cost along the aligned time
+510:     series.
+511: 
+512:     It is not required that both time series share the same size, but they must
+513:     be the same dimension. DTW was originally presented in [1]_.
+514: 
+515:     Valid values for metric are the same as for scikit-learn
+516:     `pairwise_distances`_ function i.e. a string (e.g. "euclidean",
+517:     "sqeuclidean", "hamming") or a function that is used to compute the
+518:     pairwise distances. See `scikit`_ and `scipy`_ documentations for more
+519:     information about the available metrics.
+520: 
+521:     Parameters
+522:     ----------
+523:     s1 : array-like, shape=(sz1, d) or (sz1,) if metric!="precomputed", (sz1, sz2) otherwise
+524:         A time series or an array of pairwise distances between samples.
+525:         If shape is (sz1,), the time series is assumed to be univariate.
+526: 
+527:     s2 : array-like, shape=(sz2, d) or (sz2,), optional (default: None)
+528:         A second time series, only allowed if metric != "precomputed".
+529:         If shape is (sz2,), the time series is assumed to be univariate.
+530: 
+531:     metric : string or callable (default: "euclidean")
+532:         Function used to compute the pairwise distances between each points of
+533:         `s1` and `s2`.
+534: 
+535:         If metric is "precomputed", `s1` is assumed to be a distance matrix.
+536: 
+537:         If metric is an other string, it must be one of the options compatible
+538:         with sklearn.metrics.pairwise_distances.
+539: 
+540:         Alternatively, if metric is a callable function, it is called on pairs
+541:         of rows of `s1` and `s2`. The callable should take two 1 dimensional
+542:         arrays as input and return a value indicating the distance between
+543:         them.
+544: 
+545:     global_constraint : {"itakura", "sakoe_chiba"} or None (default: None)
+546:         Global constraint to restrict admissible paths for DTW.
+547: 
+548:     sakoe_chiba_radius : int or None (default: None)
+549:         Radius to be used for Sakoe-Chiba band global constraint.
+550:         The Sakoe-Chiba radius corresponds to the parameter :math:`\delta` mentioned in [1]_,
+551:         it controls how far in time we can go in order to match a given
+552:         point from one time series to a point in another time series.
+553:         If None and `global_constraint` is set to "sakoe_chiba", a radius of
+554:         1 is used.
+555:         If both `sakoe_chiba_radius` and `itakura_max_slope` are set,
+556:         `global_constraint` is used to infer which constraint to use among the
+557:         two. In this case, if `global_constraint` corresponds to no global
+558:         constraint, a `RuntimeWarning` is raised and no global constraint is
+559:         used.
+560: 
+561:     itakura_max_slope : float or None (default: None)
+562:         Maximum slope for the Itakura parallelogram constraint.
+563:         If None and `global_constraint` is set to "itakura", a maximum slope
+564:         of 2. is used.
+565:         If both `sakoe_chiba_radius` and `itakura_max_slope` are set,
+566:         `global_constraint` is used to infer which constraint to use among the
+567:         two. In this case, if `global_constraint` corresponds to no global
+568:         constraint, a `RuntimeWarning` is raised and no global constraint is
+569:         used.
+570: 
+571:     be : Backend object or string or None
+572:         Backend. If `be` is an instance of the class `NumPyBackend` or the string `"numpy"`,
+573:         the NumPy backend is used.
+574:         If `be` is an instance of the class `PyTorchBackend` or the string `"pytorch"`,
+575:         the PyTorch backend is used.
+576:         If `be` is `None`, the backend is determined by the input arrays.
+577:         See our :ref:`dedicated user-guide page <backend>` for more information.
+578: 
+579:     **kwds
+580:         Additional arguments to pass to sklearn pairwise_distances to compute
+581:         the pairwise distances.
+582: 
+583:     Returns
+584:     -------
+585:     list of integer pairs
+586:         Matching path represented as a list of index pairs. In each pair, the
+587:         first index corresponds to s1 and the second one corresponds to s2.
+588: 
+589:     float
+590:         Similarity score (sum of metric along the wrapped time series).
+591: 
+592:     Examples
+593:     --------
+594:     Lets create 2 numpy arrays to wrap:
+595: 
+596:     >>> import numpy as np

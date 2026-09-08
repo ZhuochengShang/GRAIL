@@ -1,0 +1,41 @@
+Source: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/source/mir_eval/beat.py
+SHA256: 023a864e042643c742e900ee3b8c08dfaf571641e0b9744e83fc42b276cf0a97
+56: def trim_beats(beats, min_beat_time=5.0):
+57:     """Remove beats before min_beat_time.  A common preprocessing step.
+58: 
+59:     Parameters
+60:     ----------
+61:     beats : np.ndarray
+62:         Array of beat times in seconds.
+63:     min_beat_time : float
+64:         Minimum beat time to allow
+65:         (Default value = 5.)
+66: 
+67:     Returns
+68:     -------
+69:     beats_trimmed : np.ndarray
+70:         Trimmed beat array.
+71:     """
+72:     # Remove beats before min_beat_time
+73:     return beats[beats >= min_beat_time]
+74: 
+75: 
+76: def validate(reference_beats, estimated_beats):
+77:     """Check that the input annotations to a metric look like valid beat time
+78:     arrays, and throws helpful errors if not.
+79: 
+80:     Parameters
+81:     ----------
+82:     reference_beats : np.ndarray
+83:         reference beat times, in seconds
+84:     estimated_beats : np.ndarray
+85:         estimated beat times, in seconds
+86:     """
+87:     # If reference or estimated beats are empty,
+88:     # warn because metric will be 0
+89:     if reference_beats.size == 0:
+90:         warnings.warn("Reference beats are empty.")
+91:     if estimated_beats.size == 0:
+92:         warnings.warn("Estimated beats are empty.")
+93:     for beats in [reference_beats, estimated_beats]:
+94:         util.validate_events(beats, MAX_TIME)

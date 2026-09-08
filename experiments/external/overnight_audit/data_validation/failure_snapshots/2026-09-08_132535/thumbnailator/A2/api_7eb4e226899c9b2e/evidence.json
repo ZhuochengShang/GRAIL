@@ -1,0 +1,57 @@
+{
+  "name": "getOutputFormat",
+  "native_row": {
+    "status": "fail",
+    "attempts": 1,
+    "pass_round": null,
+    "wall_s": 21.3,
+    "llm_calls": 1,
+    "input_tokens": 2009,
+    "output_tokens": 2545,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2009,
+        "output_tokens": 2545
+      }
+    },
+    "error_category": "runtime",
+    "error": "NullPointerException: null",
+    "locus": "ApiTest.java:63",
+    "doc_chars": 3516,
+    "document_sha256": "ce15ed07cc452f384cd144f071ddde19a0be6ab7591e4ac98faf44e978208d72",
+    "source": "source/src/main/java/net/coobird/thumbnailator/ThumbnailParameter.java:878",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "name": "getOutputFormat",
+    "execution_evidence": {
+      "status": "fail",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "fail",
+          "category": "runtime",
+          "error": "NullPointerException: null"
+        }
+      ],
+      "error_category": "runtime",
+      "error": "NullPointerException: null",
+      "code": "net.coobird.thumbnailator.builders.ThumbnailParameterBuilder builder = new net.coobird.thumbnailator.builders.ThumbnailParameterBuilder();\nbuilder.size(100, 100);\nbuilder.format(\"png\");\nnet.coobird.thumbnailator.ThumbnailParameter param = builder.build();\n\nString format = param.getOutputFormat();\nassert \"png\".equals(format) : \"Expected 'png', got \" + format;\n\nnet.coobird.thumbnailator.ThumbnailParameter defaultParam = new net.coobird.thumbnailator.builders.ThumbnailParameterBuilder().size(100, 100).build();\nString defaultFormat = defaultParam.getOutputFormat();\nassert net.coobird.thumbnailator.ThumbnailParameter.ORIGINAL_FORMAT.equals(defaultFormat) : \"Expected ORIGINAL_FORMAT\";\n\nSystem.out.println(\"__CHECK__ getOutputFormat \" + format + \"_\" + (net.coobird.thumbnailator.ThumbnailParameter.ORIGINAL_FORMAT.equals(defaultFormat) ? \"ORIGINAL\" : \"OTHER\"));",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/.aideal_exec/A2/run_getOutputFormat/ApiTest.java",
+      "exit_code": 1,
+      "stdout_tail": "",
+      "stderr_tail": "__RUN_ERR__ NullPointerException: null\njava.lang.NullPointerException\n\tat ApiTest.main(ApiTest.java:63)\n"
+    },
+    "experiment_fingerprint": "d0a4b20f3e5d3ea0caf7b1501a9bf2fb4d4f11ac7d844517d7b5d67874427464"
+  },
+  "retained_binding": "recorded_code_prefix_present",
+  "retained_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/.aideal_exec/A2/run_getOutputFormat/ApiTest.java",
+  "retained_sha256": "773d613848665843be6f9719fe8320796e46a3691736502802e63e2efce7f8f8",
+  "source_window": {
+    "path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/source/src/main/java/net/coobird/thumbnailator/ThumbnailParameter.java",
+    "full_file_sha256": "c159d3277dc8bf7cdca84d60076e95dd68fe08ae3ef7dc6cdb1a89be725c123a",
+    "first_line": 863,
+    "last_line": 996,
+    "other_sites": 0
+  }
+}

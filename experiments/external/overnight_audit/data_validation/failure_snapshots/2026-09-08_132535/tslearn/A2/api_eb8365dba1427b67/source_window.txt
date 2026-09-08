@@ -1,0 +1,106 @@
+1: from tslearn.backend import instantiate_backend
+2: from tslearn.utils import to_time_series_dataset
+3: 
+4: from .utils import _cdist_generic
+5: from .cysax import cydist_sax
+6: 
+7: __author__ = 'Romain Tavenard romain.tavenard[at]univ-rennes2.fr'
+8: 
+9: 
+10: def cdist_sax(
+11:     dataset1,
+12:     breakpoints_avg,
+13:     size_fitted,
+14:     dataset2=None,
+15:     n_jobs=None,
+16:     verbose=0
+17: ):
+18:     r"""Calculates a matrix of distances (MINDIST) on SAX-transformed data,
+19:     as presented in [1]_. It is important to note that this function
+20:     expects the timeseries in dataset1 and dataset2 to be normalized
+21:     to each have zero mean and unit variance.
+22: 
+23:     Parameters
+24:     ----------
+25:     dataset1 : array-like, shape=(n_ts1, sz1, d) or (n_ts1, sz1) or (sz1,)
+26:         A dataset of time series.
+27:         If shape is (n_ts1, sz1), the dataset is composed of univariate time series.
+28:         If shape is (sz1,), the dataset is composed of a unique univariate time series.
+29: 
+30:     breakpoints_avg : array-like, ndim=1
+31:         The breakpoints used to assign the alphabet symbols.
+32: 
+33:     size_fitted: int
+34:         The original timesteps in the timeseries, before
+35:         discretizing through SAX.
+36: 
+37:     dataset2 : None or array-like, shape=(n_ts2, sz2, d) or (n_ts2, sz2) or (sz2,) (default: None)
+38:         Another dataset of time series. 
+39:         If `None`, self-similarity of `dataset1` is returned.
+40:         If shape is (n_ts2, sz2), the dataset is composed of univariate time series.
+41:         If shape is (sz2,), the dataset is composed of a unique univariate time series.
+42: 
+43:     n_jobs : int or None, optional (default=None)
+44:         The number of jobs to run in parallel.
+45:         ``None`` means 1 unless in a :obj:`joblib.parallel_backend` context.
+46:         ``-1`` means using all processors. See scikit-learns'
+47:         `Glossary <https://scikit-learn.org/stable/glossary.html#term-n_jobs>`__
+48:         for more details.
+49: 
+50:     verbose : int, optional (default=0)
+51:         The verbosity level: if non zero, progress messages are printed.
+52:         Above 50, the output is sent to stdout.
+53:         The frequency of the messages increases with the verbosity level.
+54:         If it more than 10, all iterations are reported.
+55:         `Glossary <https://joblib.readthedocs.io/en/latest/parallel.html#parallel-reference-documentation>`__
+56:         for more details.
+57: 
+58:     Returns
+59:     -------
+60:     cdist : array-like, shape=(n_ts1, n_ts2)
+61:         Cross-similarity matrix.
+62: 
+63:     References
+64:     ----------
+65:     .. [1] Lin, Jessica, et al. "Experiencing SAX: a novel symbolic
+66:            representation of time series." Data Mining and knowledge
+67:            discovery 15.2 (2007): 107-144.
+68: 
+69:     """  # noqa: E501
+70:     be = instantiate_backend("numpy")
+71:     dataset1 = to_time_series_dataset(dataset1, dtype=int,  be=be)
+72:     if dataset2 is not None:
+73:         dataset2 = to_time_series_dataset(dataset2, dtype=int, be=be)
+74:     return _cdist_sax(
+75:         dataset1=dataset1,
+76:         dataset2=dataset2,
+77:         n_jobs=n_jobs,
+78:         verbose=verbose,
+79:         be=be,
+80:         breakpoints=breakpoints_avg,
+81:         original_size=size_fitted
+82:     )
+83: 
+84: 
+85: def _cdist_sax(
+86:     dataset1,
+87:     breakpoints,
+88:     original_size,
+89:     dataset2=None,
+90:     n_jobs=None,
+91:     verbose=0,
+92:     be=None
+93: ):
+94:     if be is None:
+95:         be = instantiate_backend("numpy")
+96:     return _cdist_generic(
+97:         dist_fun=cydist_sax,
+98:         dataset1=dataset1,
+99:         dataset2=dataset2,
+100:         n_jobs=n_jobs,
+101:         verbose=verbose,
+102:         compute_diagonal=False,
+103:         be=be,
+104:         breakpoints=breakpoints,
+105:         original_size=original_size
+106:     )

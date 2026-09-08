@@ -1,0 +1,32 @@
+931:     """Convert MIDI numbers to Hz
+932: 
+933:     Parameters
+934:     ----------
+935:     midi : number or ndarray
+936:         MIDI notes
+937: 
+938:     Returns
+939:     -------
+940:     freqs : number or ndarray
+941:         Frequency/frequencies in Hz corresponding to `midi`
+942:     """
+943:     return 440.0 * (2.0 ** ((midi - 69.0) / 12.0))
+944: 
+945: 
+946: def deprecated(*, version, version_removed):
+947:     """Mark a function as deprecated.
+948: 
+949:     Using the decorated (old) function will result in a warning.
+950:     """
+951: 
+952:     def __wrapper(func, *args, **kwargs):
+953:         """Warn the user, and then proceed."""
+954:         warnings.warn(
+955:             f"{func.__module__}.{func.__name__}\n\tDeprecated as of mir_eval version {version}."
+956:             f"\n\tIt will be removed in mir_eval version {version_removed}.",
+957:             category=FutureWarning,
+958:             stacklevel=3,  # Would be 2, but the decorator adds a level
+959:         )
+960:         return func(*args, **kwargs)
+961: 
+962:     return decorator(__wrapper)

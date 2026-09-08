@@ -1,0 +1,156 @@
+275:     """
+276:     base_size = int(l * ts_sz)
+277:     base_size = max(base_size, 1)
+278:     r = min(r, ts_sz)
+279:     d = {}
+280:     for sz_idx in range(r):
+281:         shp_sz = base_size * (sz_idx + 1)
+282:         n_shapelets = int(numpy.log10(n_ts *
+283:                                       (ts_sz - shp_sz + 1) *
+284:                                       (n_classes - 1)))
+285:         n_shapelets = max(1, n_shapelets)
+286:         d[shp_sz] = n_shapelets
+287:     return d
+288: 
+289: 
+290: class LearningShapelets(TimeSeriesMixin, ClassifierMixin, TransformerMixin, BaseEstimator,
+291:                         BaseModelPackage):
+292:     r"""Learning Time-Series Shapelets model.
+293: 
+294:     Learning Time-Series Shapelets was originally presented in [1]_.
+295: 
+296:     From an input (possibly multidimensional) time series :math:`x` and a set
+297:     of shapelets :math:`\{s_i\}_i`, the :math:`i`-th coordinate of the Shapelet
+298:     transform is computed as:
+299: 
+300:     .. math::
+301: 
+302:         ST(x, s_i) = \min_t \sum_{\delta_t}
+303:             \left\|x(t+\delta_t) - s_i(\delta_t)\right\|_2^2
+304: 
+305:     The Shapelet model consists in a logistic regression layer on top of this
+306:     transform. Shapelet coefficients as well as logistic regression weights are
+307:     optimized by gradient descent on a L2-penalized cross-entropy loss.
+308: 
+309:     Parameters
+310:     ----------
+311:     n_shapelets_per_size: dict (default: None)
+312:         Dictionary giving, for each shapelet size (key),
+313:         the number of such shapelets to be trained (value).
+314:         If None, :func:`grabocka_params_to_shapelet_size_dict` is used and the
+315:         size used to compute is that of the shortest time series passed at fit
+316:         time.
+317: 
+318:     max_iter: int (default: 10,000)
+319:         Number of training epochs.
+320: 
+321:         .. versionchanged:: 0.3
+322:             default value for max_iter is set to 10,000 instead of 100
+323: 
+324:     batch_size: int (default: 256)
+325:         Batch size to be used.
+326: 
+327:     verbose: {0, 1, 2} (default: 0)
+328:         `keras` verbose level.
+329: 
+330:     optimizer: str or keras.optimizers.Optimizer (default: "sgd")
+331:         `keras` optimizer to use for training.
+332: 
+333:     weight_regularizer: float (default: 0.)
+334:         Strength of the L2 regularizer to use for training the classification
+335:         (softmax) layer. If 0, no regularization is performed.
+336: 
+337:     shapelet_length: float (default: 0.15)
+338:         The length of the shapelets, expressed as a fraction of the time
+339:         series length.
+340:         Used only if `n_shapelets_per_size` is None.
+341: 
+342:     total_lengths: int (default: 3)
+343:         The number of different shapelet lengths. Will extract shapelets of
+344:         length i * shapelet_length for i in [1, total_lengths]
+345:         Used only if `n_shapelets_per_size` is None.
+346: 
+347:     max_size: int or None (default: None)
+348:         Maximum size for time series to be fed to the model. If None, it is
+349:         set to the size (number of timestamps) of the training time series.
+350: 
+351:     scale: bool (default: False)
+352:         Whether input data should be scaled for each feature of each time
+353:         series to lie in the [0-1] interval.
+354:         Default for this parameter is set to `False` in version 0.4 to ensure
+355:         backward compatibility, but is likely to change in a future version.
+356: 
+357:     random_state : int or None, optional (default: None)
+358:         The seed of the pseudo random number generator to use when shuffling
+359:         the data.  If int, random_state is the seed used by the random number
+360:         generator; If None, the random number generator is the RandomState
+361:         instance used by `np.random`.
+362: 
+363:     Attributes
+364:     ----------
+365:     shapelets_ : numpy.ndarray of objects, each object being a time series
+366:         Set of time-series shapelets.
+367: 
+368:     shapelets_as_time_series_ : numpy.ndarray of shape (n_shapelets, sz_shp, d)
+369:     where `sz_shp` is the maximum of all shapelet sizes
+370:         Set of time-series shapelets formatted as a ``tslearn`` time series
+371:         dataset.
+372: 
+373:     transformer_model_ : keras.Model
+374:         Transforms an input dataset of timeseries into distances to the
+375:         learned shapelets.
+376: 
+377:     locator_model_ : keras.Model
+378:         Returns the indices where each of the shapelets can be found (minimal
+379:         distance) within each of the timeseries of the input dataset.
+380: 
+381:     model_ : keras.Model
+382:         Directly predicts the class probabilities for the input timeseries.
+383: 
+384:     history_ : dict
+385:         Dictionary of losses and metrics recorded during fit.
+386: 
+387:     Examples
+388:     --------
+389:     >>> from tslearn.generators import random_walk_blobs
+390:     >>> X, y = random_walk_blobs(n_ts_per_blob=10, sz=16, d=2, n_blobs=3)
+391:     >>> clf = LearningShapelets(n_shapelets_per_size={4: 5},
+392:     ...                         max_iter=1, verbose=0)
+393:     >>> clf.fit(X, y).shapelets_.shape
+394:     (5,)
+395:     >>> clf.shapelets_[0].shape
+396:     (4, 2)
+397:     >>> clf.predict(X).shape
+398:     (30,)
+399:     >>> clf.predict_proba(X).shape
+400:     (30, 3)
+401:     >>> clf.transform(X).shape
+402:     (30, 5)
+403: 
+404:     Notes
+405:     -----
+406:     This model does not support HDF5 serialization.
+407: 
+408:     References
+409:     ----------
+410:     .. [1] J. Grabocka et al. Learning Time-Series Shapelets.
+411:        SIGKDD 2014.
+412:     """
+413:     def __init__(self, n_shapelets_per_size=None,
+414:                  max_iter=10000,
+415:                  batch_size=256,
+416:                  verbose=0,
+417:                  optimizer="sgd",
+418:                  weight_regularizer=0.,
+419:                  shapelet_length=0.15,
+420:                  total_lengths=3,
+421:                  max_size=None,
+422:                  scale=False,
+423:                  random_state=None):
+424:         self.n_shapelets_per_size = n_shapelets_per_size
+425:         self.max_iter = max_iter
+426:         self.batch_size = batch_size
+427:         self.verbose = verbose
+428:         self.optimizer = optimizer
+429:         self.weight_regularizer = weight_regularizer
+430:         self.shapelet_length = shapelet_length

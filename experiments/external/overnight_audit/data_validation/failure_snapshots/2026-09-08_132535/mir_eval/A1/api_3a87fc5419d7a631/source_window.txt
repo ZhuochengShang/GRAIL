@@ -1,0 +1,156 @@
+223:             if len(P) != len(Q):
+224:                 continue
+225: 
+226:             # Check transposition given a certain tolerance
+227:             if len(P) == len(Q) == 1 or np.max(np.abs(np.diff(P - Q, axis=0))) < tol:
+228:                 k += 1
+229:                 break
+230: 
+231:     # Compute the standard measures
+232:     precision = k / float(nQ)
+233:     recall = k / float(nP)
+234:     f_measure = util.f_measure(precision, recall)
+235:     return f_measure, precision, recall
+236: 
+237: 
+238: def establishment_FPR(
+239:     reference_patterns, estimated_patterns, similarity_metric="cardinality_score"
+240: ):
+241:     """Compute the establishment F1 Score, Precision and Recall.
+242: 
+243:     Examples
+244:     --------
+245:     >>> ref_patterns = mir_eval.io.load_patterns("ref_pattern.txt")
+246:     >>> est_patterns = mir_eval.io.load_patterns("est_pattern.txt")
+247:     >>> F, P, R = mir_eval.pattern.establishment_FPR(ref_patterns,
+248:     ...                                              est_patterns)
+249: 
+250:     Parameters
+251:     ----------
+252:     reference_patterns : list
+253:         The reference patterns in the format returned by
+254:         :func:`mir_eval.io.load_patterns()`
+255: 
+256:     estimated_patterns : list
+257:         The estimated patterns in the same format
+258: 
+259:     similarity_metric : str
+260:         A string representing the metric to be used when computing the
+261:         similarity matrix. Accepted values:
+262: 
+263:             - "cardinality_score": Count of the intersection
+264:               between occurrences.
+265: 
+266:         (Default value = "cardinality_score")
+267: 
+268:     Returns
+269:     -------
+270:     f_measure : float
+271:         The establishment F1 Score
+272:     precision : float
+273:         The establishment Precision
+274:     recall : float
+275:         The establishment Recall
+276: 
+277:     """
+278:     validate(reference_patterns, estimated_patterns)
+279:     nP = len(reference_patterns)  # Number of elements in reference
+280:     nQ = len(estimated_patterns)  # Number of elements in estimation
+281:     S = np.zeros((nP, nQ))  # Establishment matrix
+282: 
+283:     # If no patterns were provided, metric is zero
+284:     if _n_onset_midi(reference_patterns) == 0 or _n_onset_midi(estimated_patterns) == 0:
+285:         return 0.0, 0.0, 0.0
+286: 
+287:     for iP, ref_pattern in enumerate(reference_patterns):
+288:         for iQ, est_pattern in enumerate(estimated_patterns):
+289:             s = _compute_score_matrix(ref_pattern, est_pattern, similarity_metric)
+290:             S[iP, iQ] = np.max(s)
+291: 
+292:     # Compute scores
+293:     precision = np.mean(np.max(S, axis=0))
+294:     recall = np.mean(np.max(S, axis=1))
+295:     f_measure = util.f_measure(precision, recall)
+296:     return f_measure, precision, recall
+297: 
+298: 
+299: def occurrence_FPR(
+300:     reference_patterns,
+301:     estimated_patterns,
+302:     thres=0.75,
+303:     similarity_metric="cardinality_score",
+304: ):
+305:     """Compute the occurrence F1 Score, Precision and Recall.
+306: 
+307:     Examples
+308:     --------
+309:     >>> ref_patterns = mir_eval.io.load_patterns("ref_pattern.txt")
+310:     >>> est_patterns = mir_eval.io.load_patterns("est_pattern.txt")
+311:     >>> F, P, R = mir_eval.pattern.occurrence_FPR(ref_patterns,
+312:     ...                                           est_patterns)
+313: 
+314:     Parameters
+315:     ----------
+316:     reference_patterns : list
+317:         The reference patterns in the format returned by
+318:         :func:`mir_eval.io.load_patterns()`
+319: 
+320:     estimated_patterns : list
+321:         The estimated patterns in the same format
+322: 
+323:     thres : float
+324:         How similar two occurrences must be in order to be considered
+325:         equal
+326:         (Default value = .75)
+327: 
+328:     similarity_metric : str
+329:         A string representing the metric to be used
+330:         when computing the similarity matrix. Accepted values:
+331: 
+332:             - "cardinality_score": Count of the intersection
+333:               between occurrences.
+334: 
+335:         (Default value = "cardinality_score")
+336: 
+337:     Returns
+338:     -------
+339:     f_measure : float
+340:         The occurrence F1 Score
+341:     precision : float
+342:         The occurrence Precision
+343:     recall : float
+344:         The occurrence Recall
+345:     """
+346:     validate(reference_patterns, estimated_patterns)
+347:     # Number of elements in reference
+348:     nP = len(reference_patterns)
+349:     # Number of elements in estimation
+350:     nQ = len(estimated_patterns)
+351:     # Occurrence matrix with Precision and recall in its last dimension
+352:     O_PR = np.zeros((nP, nQ, 2))
+353: 
+354:     # Index of the values that are greater than the specified threshold
+355:     rel_idx = np.empty((0, 2), dtype=int)
+356: 
+357:     # If no patterns were provided, metric is zero
+358:     if _n_onset_midi(reference_patterns) == 0 or _n_onset_midi(estimated_patterns) == 0:
+359:         return 0.0, 0.0, 0.0
+360: 
+361:     for iP, ref_pattern in enumerate(reference_patterns):
+362:         for iQ, est_pattern in enumerate(estimated_patterns):
+363:             s = _compute_score_matrix(ref_pattern, est_pattern, similarity_metric)
+364:             if np.max(s) >= thres:
+365:                 O_PR[iP, iQ, 0] = np.mean(np.max(s, axis=0))
+366:                 O_PR[iP, iQ, 1] = np.mean(np.max(s, axis=1))
+367:                 rel_idx = np.vstack((rel_idx, [iP, iQ]))
+368: 
+369:     # Compute the scores
+370:     if len(rel_idx) == 0:
+371:         precision = 0
+372:         recall = 0
+373:     else:
+374:         P = O_PR[:, :, 0]
+375:         precision = np.mean(np.max(P[np.ix_(rel_idx[:, 0], rel_idx[:, 1])], axis=0))
+376:         R = O_PR[:, :, 1]
+377:         recall = np.mean(np.max(R[np.ix_(rel_idx[:, 0], rel_idx[:, 1])], axis=1))
+378:     f_measure = util.f_measure(precision, recall)

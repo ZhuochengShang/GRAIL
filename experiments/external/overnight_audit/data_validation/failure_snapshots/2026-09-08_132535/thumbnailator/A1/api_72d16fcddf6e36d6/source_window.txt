@@ -1,0 +1,156 @@
+185: 		}
+186: 		
+187: 		this.widthScalingFactor = widthScalingFactor;
+188: 		this.heightScalingFactor = heightScalingFactor;
+189: 		return this;
+190: 	}
+191: 	
+192: 	/**
+193: 	 * Sets the region of the source image to use when creating a thumbnail.
+194: 	 * 
+195: 	 * @param sourceRegion		The region of the source image to use when
+196: 	 * 							creating a thumbnail.
+197: 	 * @return			A reference to this object.
+198: 	 * @since	0.3.4
+199: 	 */
+200: 	public ThumbnailParameterBuilder region(Region sourceRegion) {
+201: 		this.sourceRegion = sourceRegion;
+202: 		return this;
+203: 	}
+204: 	
+205: 	/**
+206: 	 * Sets whether or not the thumbnail is to maintain the aspect ratio of
+207: 	 * the original image.
+208: 	 * 
+209: 	 * @param keep		{@code true} if the aspect ratio of the original image
+210: 	 * 					is to be maintained in the thumbnail, {@code false}
+211: 	 * 					otherwise.
+212: 	 * @return			A reference to this object.
+213: 	 */
+214: 	public ThumbnailParameterBuilder keepAspectRatio(boolean keep) {
+215: 		this.keepAspectRatio = keep;
+216: 		return this;
+217: 	}
+218: 	
+219: 	/**
+220: 	 * Sets the compression quality setting of the thumbnail.
+221: 	 * <p>
+222: 	 * An acceptable value is in the range of {@code 0.0f} to {@code 1.0f},
+223: 	 * where {@code 0.0f} is for the lowest quality setting and {@code 1.0f} for
+224: 	 * the highest quality setting.
+225: 	 * <p>
+226: 	 * If the default compression quality is to be used, then the value
+227: 	 * {@link ThumbnailParameter#DEFAULT_QUALITY} should be used.
+228: 	 * 
+229: 	 * @param quality		The compression quality setting of the thumbnail.
+230: 	 * @return				A reference to this object.
+231: 	 */
+232: 	public ThumbnailParameterBuilder quality(float quality) {
+233: 		this.thumbnailQuality = quality;
+234: 		return this;
+235: 	}
+236: 
+237: 	/**
+238: 	 * Sets the output format of the thumbnail.
+239: 	 * 
+240: 	 * @param format		The output format of the thumbnail.
+241: 	 * @return				A reference to this object.
+242: 	 */
+243: 	public ThumbnailParameterBuilder format(String format) {
+244: 		this.thumbnailFormat = format;
+245: 		return this;
+246: 	}
+247: 	
+248: 	/**
+249: 	 * Sets the output format type of the thumbnail.
+250: 	 * 
+251: 	 * @param formatType	The output format type of the thumbnail.
+252: 	 * @return				A reference to this object.
+253: 	 */
+254: 	public ThumbnailParameterBuilder formatType(String formatType) {
+255: 		this.thumbnailFormatType = formatType;
+256: 		return this;
+257: 	}
+258: 	
+259: 	/**
+260: 	 * Sets the {@link ImageFilter}s to apply to the thumbnail.
+261: 	 * <p>
+262: 	 * These filters will be applied after the original image is resized.
+263: 	 * 
+264: 	 * @param filters		The output format type of the thumbnail.
+265: 	 * @return				A reference to this object.
+266: 	 */
+267: 	public ThumbnailParameterBuilder filters(List<ImageFilter> filters) {
+268: 		if (filters == null) {
+269: 			throw new NullPointerException("Filters is null.");
+270: 		}
+271: 		
+272: 		this.filters = filters;
+273: 		return this;
+274: 	}
+275: 	
+276: 	/**
+277: 	 * Sets the {@link Resizer} to use when performing the resizing operation
+278: 	 * to create the thumbnail.
+279: 	 * <p>
+280: 	 * Calling this method after {@link #resizerFactory(ResizerFactory)} will
+281: 	 * cause the {@link ResizerFactory} used by the resulting
+282: 	 * {@link ThumbnailParameter} to only return the specified {@link Resizer}.
+283: 	 *
+284: 	 * @param resizer		The {@link Resizer} to use when creating the
+285: 	 * 						thumbnail.
+286: 	 * @return				A reference to this object.
+287: 	 */
+288: 	public ThumbnailParameterBuilder resizer(Resizer resizer) {
+289: 		if (resizer == null) {
+290: 			throw new NullPointerException("Resizer is null.");
+291: 		}
+292: 		
+293: 		this.resizerFactory = new FixedResizerFactory(resizer);
+294: 		return this;
+295: 	}
+296: 	
+297: 	/**
+298: 	 * Sets the {@link ResizerFactory} to use to obtain a {@link Resizer} when
+299: 	 * performing the resizing operation to create the thumbnail.
+300: 	 * <p>
+301: 	 * Calling this method after {@link #resizer(Resizer)} could result in
+302: 	 * {@link Resizer}s not specified in the {@code resizer} method to be used
+303: 	 * when creating thumbnails.
+304: 	 * 
+305: 	 * 
+306: 	 * @param resizerFactory	The {@link ResizerFactory} to use when obtaining
+307: 	 * 							a {@link Resizer} to create the thumbnail.
+308: 	 * @return					A reference to this object.
+309: 	 * @since	0.4.0
+310: 	 */
+311: 	public ThumbnailParameterBuilder resizerFactory(ResizerFactory resizerFactory) {
+312: 		if (resizerFactory == null) {
+313: 			throw new NullPointerException("Resizer is null.");
+314: 		}
+315: 		
+316: 		this.resizerFactory = resizerFactory;
+317: 		return this;
+318: 	}
+319: 	
+320: 	/**
+321: 	 * Sets whether or not the thumbnail should fit within the specified
+322: 	 * dimensions.
+323: 	 * 
+324: 	 * @param fit		{@code true} if the thumbnail should be sized to fit
+325: 	 *					within the specified dimensions, if the thumbnail
+326: 	 * 					is going to exceed those dimensions.
+327: 	 * @return			A reference to this object.
+328: 	 * @since	0.4.0
+329: 	 */
+330: 	public ThumbnailParameterBuilder fitWithinDimensions(boolean fit) {
+331: 		this.fitWithinDimensions = fit;
+332: 		return this;
+333: 	}
+334: 	
+335: 	/**
+336: 	 * Sets whether or not the Exif metadata should be used to determine the
+337: 	 * orientation of the thumbnail.
+338: 	 * 
+339: 	 * @param use		{@code true} if the Exif metadata should be used
+340: 	 * 					to determine the orientation of the thumbnail,

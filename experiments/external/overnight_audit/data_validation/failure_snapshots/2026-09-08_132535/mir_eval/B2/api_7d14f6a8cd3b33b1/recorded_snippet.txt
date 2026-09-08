@@ -1,0 +1,24 @@
+import os
+import tempfile
+import numpy as np
+from mir_eval.io import load_ragged_time_series
+
+with tempfile.NamedTemporaryFile(mode='w', delete=False, suffix='.csv') as f:
+    f.write("timestamp,f0_1,f0_2,f0_3\n")
+    f.write("0.1,440.0\n")
+    f.write("0.2,440.0,554.37\n")
+    f.write("0.3,440.0,554.37,659.25\n")
+    temp_path = f.name
+
+try:
+    times, values = load_ragged_time_series(temp_path, delimiter=',', header=True)
+    
+    assert isinstance(times, np.ndarray), "times should be a numpy array"
+    assert isinstance(values, list), "values should be a list"
+    assert len(times) == 3, "Should have 3 timestamps"
+    assert len(values) == 3, "Should have 3 value arrays"
+    assert np.allclose(times, [0.1, 0.2, 0.3]), "Timestamps mismatch"
+    assert len(values[0]) == 1, "First row should have 1 value"
+    assert len(values[1]) == 2, "Second row should have 2 values"
+    assert len(values[2]) == 3, "Third row should have 3 values"
+    assert np.allclose(values[2], [440.0, 554.37, 65

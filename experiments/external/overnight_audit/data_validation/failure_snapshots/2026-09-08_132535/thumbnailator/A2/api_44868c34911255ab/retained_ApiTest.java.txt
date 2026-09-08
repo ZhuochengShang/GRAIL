@@ -1,0 +1,79 @@
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Arrays;
+
+import javax.imageio.ImageIO;
+
+import net.coobird.thumbnailator.*;
+import net.coobird.thumbnailator.builders.*;
+import net.coobird.thumbnailator.filters.*;
+import net.coobird.thumbnailator.geometry.*;
+import net.coobird.thumbnailator.makers.*;
+import net.coobird.thumbnailator.name.*;
+import net.coobird.thumbnailator.resizers.*;
+import net.coobird.thumbnailator.resizers.configurations.*;
+import net.coobird.thumbnailator.tasks.*;
+import net.coobird.thumbnailator.tasks.io.*;
+import net.coobird.thumbnailator.util.*;
+import net.coobird.thumbnailator.util.exif.*;
+
+public final class ApiTest {
+    private ApiTest() {}
+
+    public static void main(String[] args) {
+        try {
+            String grid_png = "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/source/src/test/resources/Thumbnailator/grid.png";
+    String grid_jpeg = "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/source/src/test/resources/Thumbnailator/grid.jpg";
+    String exif_jpeg = "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/source/src/test/resources/Exif/original.jpg";
+    String output_dir = "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/.aideal_exec/A2/output";
+
+    // pre-loaded typed inputs (comprehension.execute.preamble)
+    BufferedImage sourceImage = new BufferedImage(32, 24, BufferedImage.TYPE_INT_RGB);
+    Graphics2D graphics = sourceImage.createGraphics();
+    graphics.setColor(Color.BLUE);
+    graphics.fillRect(0, 0, 32, 24);
+    graphics.setColor(Color.YELLOW);
+    graphics.fillRect(8, 6, 16, 12);
+    graphics.dispose();
+    BufferedImage destinationImage = new BufferedImage(16, 12, BufferedImage.TYPE_INT_RGB);
+    ByteArrayOutputStream imageBytes = new ByteArrayOutputStream();
+    Path outputPath = Paths.get(output_dir, "thumbnail.png");
+    Files.createDirectories(outputPath.getParent());
+
+            // TODO API_TEST_START
+            net.coobird.thumbnailator.resizers.ResizerFactory factory = net.coobird.thumbnailator.resizers.DefaultResizerFactory.getInstance();
+
+            // 1. Test ThumbnailParameterBuilder overload
+            net.coobird.thumbnailator.ThumbnailParameter param = new net.coobird.thumbnailator.ThumbnailParameterBuilder()
+                .size(100, 100)
+                .resizerFactory(factory)
+                .build();
+
+            assert param.getResizerFactory() == factory : "ResizerFactory was not set correctly on ThumbnailParameter";
+
+            // 2. Test Thumbnails.Builder overload
+            java.awt.image.BufferedImage result = net.coobird.thumbnailator.Thumbnails.of(sourceImage)
+                .size(42, 42)
+                .resizerFactory(factory)
+                .asBufferedImage();
+
+            assert result.getWidth() <= 42 && result.getHeight() <= 42 : "Image was not resized correctly using the provided ResizerFactory";
+
+            System.out.println("__CHECK__ resizerFactory " + param.getResizerFactory().getClass().getSimpleName() + "_" + result.getWidth() + "x" + result.getHeight());
+            // TODO API_TEST_END
+            System.out.println("__DONE__");
+        } catch (Throwable exc) {
+            System.err.println("__RUN_ERR__ " + exc.getClass().getSimpleName()
+                    + ": " + exc.getMessage());
+            exc.printStackTrace(System.err);
+            System.exit(1);
+        }
+    }
+}

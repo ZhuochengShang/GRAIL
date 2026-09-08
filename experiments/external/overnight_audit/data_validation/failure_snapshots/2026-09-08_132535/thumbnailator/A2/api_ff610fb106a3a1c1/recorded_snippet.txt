@@ -1,0 +1,11 @@
+net.coobird.thumbnailator.builders.ThumbnailParameterBuilder builder = new net.coobird.thumbnailator.builders.ThumbnailParameterBuilder();
+builder.size(100, 100);
+
+net.coobird.thumbnailator.builders.ThumbnailParameterBuilder returnedBuilder = builder.quality(0.75f);
+assert returnedBuilder == builder : "Builder should return itself for method chaining";
+
+net.coobird.thumbnailator.ThumbnailParameter param = builder.build();
+float q = param.getQuality();
+
+assert Math.abs(q - 0.75f) < 0.0001f : "Quality was not set correctly in the built ThumbnailParameter";
+System.out.println("__CHECK__ quality " + q);

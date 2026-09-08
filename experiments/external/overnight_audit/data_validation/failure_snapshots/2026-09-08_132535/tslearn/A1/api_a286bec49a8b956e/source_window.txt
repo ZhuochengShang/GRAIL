@@ -1,0 +1,156 @@
+533:     numpy.ndarray
+534:         A time series made of zeros.
+535: 
+536:     Examples
+537:     --------
+538:     >>> ts_zeros(3, 2)  # doctest: +NORMALIZE_WHITESPACE
+539:     array([[0., 0.],
+540:            [0., 0.],
+541:            [0., 0.]])
+542:     >>> ts_zeros(5).shape
+543:     (5, 1)
+544:     """
+545:     return numpy.zeros((sz, d))
+546: 
+547: 
+548: def check_dataset(
+549:     X, force_univariate=False, force_equal_length=False, force_single_time_series=False
+550: ):
+551:     """Check if X is a valid tslearn dataset, with possibly additional extra
+552:     constraints.
+553: 
+554:     Parameters
+555:     ----------
+556:     X: array-like, shape=(n_ts, sz, d)
+557:         Time series dataset.
+558:     force_univariate: bool (default: False)
+559:         If True, only univariate datasets are considered valid.
+560:     force_equal_length: bool (default: False)
+561:         If True, only equal-length datasets are considered valid.
+562:     force_single_time_series: bool (default: False)
+563:         If True, only datasets made of a single time series are considered
+564:         valid.
+565: 
+566:     Returns
+567:     -------
+568:     array-like, shape=(n_ts, sz, d)
+569:         Formatted dataset, if it is valid
+570: 
+571:     Raises
+572:     ------
+573:     ValueError
+574:         Raised if X is not a valid dataset, or one of the constraints is not
+575:         satisfied.
+576: 
+577:     Examples
+578:     --------
+579:     >>> X = [[1, 2, 3], [1, 2, 3, 4]]
+580:     >>> X_new = check_dataset(X)
+581:     >>> X_new.shape
+582:     (2, 4, 1)
+583:     >>> check_dataset(
+584:     ...     X,
+585:     ...     force_equal_length=True
+586:     ... )  # doctest: +IGNORE_EXCEPTION_DETAIL
+587:     Traceback (most recent call last):
+588:     ...
+589:     ValueError: All the time series in the array should be of equal lengths.
+590:     >>> other_X = numpy.random.randn(3, 10, 2)
+591:     >>> check_dataset(
+592:     ...     other_X,
+593:     ...     force_univariate=True
+594:     ... )  # doctest: +IGNORE_EXCEPTION_DETAIL
+595:     Traceback (most recent call last):
+596:     ...
+597:     ValueError: Array should be univariate and is of shape: (3, 10, 2)
+598:     >>> other_X = numpy.random.randn(3, 10, 2)
+599:     >>> check_dataset(
+600:     ...     other_X,
+601:     ...     force_single_time_series=True
+602:     ... )  # doctest: +IGNORE_EXCEPTION_DETAIL
+603:     Traceback (most recent call last):
+604:     ...
+605:     ValueError: Array should be made of a single time series (3 here)
+606:     """
+607:     X_ = to_time_series_dataset(X)
+608:     if force_univariate and X_.shape[2] != 1:
+609:         raise ValueError(
+610:             "Array should be univariate and is of shape: {}".format(X_.shape)
+611:         )
+612:     if force_equal_length and not _check_equal_size(X_):
+613:         raise ValueError(
+614:             "All the time series in the array should be of equal lengths"
+615:         )
+616:     if force_single_time_series and X_.shape[0] != 1:
+617:         raise ValueError(
+618:             "Array should be made of a single time series "
+619:             "({} here)".format(X_.shape[0])
+620:         )
+621:     return X_
+622: 
+623: 
+624: def _load_arff_uea(dataset_path):
+625:     """Load arff file for uni/multi variate dataset
+626: 
+627:     Parameters
+628:     ----------
+629:     dataset_path: string of dataset_path
+630:         Path to the ARFF file to be read
+631: 
+632:     Returns
+633:     -------
+634:     x: numpy array of shape (n_timeseries, n_timestamps, n_features)
+635:         Time series dataset
+636:     y: numpy array of shape (n_timeseries, )
+637:         Vector of targets
+638: 
+639:     Raises
+640:     ------
+641:     ImportError: if the version of *Scipy* is too old (pre 1.3.0)
+642:     Exception: on any failure, e.g. if the given file does not exist or is
+643:                corrupted
+644:     """
+645:     if not HAS_ARFF:
+646:         raise ImportError(
+647:             "scipy 1.3.0 or newer is required to load "
+648:             "time series datasets from arff format."
+649:         )
+650:     data, meta = arff.loadarff(dataset_path)
+651:     names = meta.names()  # ["input", "class"] for multi-variate
+652: 
+653:     # firstly get y_train
+654:     y_ = data[names[-1]]  # data["class"]
+655:     y = numpy.array(y_).astype("str")
+656: 
+657:     # get x_train
+658:     if len(names) == 2:  # len=2 => multi-variate
+659:         x_ = data[names[0]]
+660:         x_ = numpy.asarray(x_.tolist())
+661: 
+662:         nb_example = x_.shape[0]
+663:         nb_channel = x_.shape[1]
+664:         length_one_channel = len(x_.dtype.descr)
+665:         x = numpy.empty([nb_example, length_one_channel, nb_channel])
+666: 
+667:         for i in range(length_one_channel):
+668:             # x_.dtype.descr: [('t1', '<f8'), ('t2', '<f8'), ('t3', '<f8')]
+669:             time_stamp = x_.dtype.descr[i][0]  # ["t1", "t2", "t3"]
+670:             x[:, i, :] = x_[time_stamp]
+671: 
+672:     else:  # uni-variate situation
+673:         x_ = data[names[:-1]]
+674:         x = numpy.asarray(x_.tolist(), dtype=float)
+675:         x = x.reshape(len(x), -1, 1)
+676: 
+677:     return x, y
+678: 
+679: 
+680: def _load_txt_uea(dataset_path):
+681:     """Load arff file for uni/multi variate dataset
+682: 
+683:     Parameters
+684:     ----------
+685:     dataset_path: string of dataset_path
+686:         Path to the TXT file to be read
+687: 
+688:     Returns

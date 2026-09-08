@@ -1,0 +1,22 @@
+import mir_eval
+import numpy as np
+
+precision, recall, f_measure, avg_overlap_ratio = mir_eval.transcription.precision_recall_f1_overlap(
+    ref_intervals, ref_freqs, est_intervals, est_freqs, offset_ratio=None
+)
+
+# Oracle 1: F-measure must be the harmonic mean of precision and recall (beta=1.0)
+if precision + recall > 0:
+    expected_f = 2 * precision * recall / (precision + recall)
+    assert np.isclose(f_measure, expected_f), f"F-measure {f_measure} != expected {expected_f}"
+else:
+    assert f_measure == 0.0
+
+# Oracle 2: Evaluating the reference against itself must yield perfect scores
+if len(ref_intervals) > 0:
+    p_perf, r_perf, f_perf, o_perf = mir_eval.transcription.precision_recall_f1_overlap(
+        ref_intervals, ref_freqs, ref_intervals, ref_freqs, offset_ratio=None
+    )
+    assert np.isclose(p_perf, 1.0), f"Expected perfect precision, got {p_perf}"
+    assert np.isclose(r_perf, 1.0), f"Expected perfect recall, got {r_perf}"
+    assert np.isclose(f_perf, 1.0), f"Expected

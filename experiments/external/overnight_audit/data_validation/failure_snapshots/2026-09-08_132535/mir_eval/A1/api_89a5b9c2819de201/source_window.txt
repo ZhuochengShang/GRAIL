@@ -1,0 +1,154 @@
+1: """
+2: Useful functionality required across the task submodules,
+3: such as preprocessing, validation, and common computations.
+4: """
+5: 
+6: import os
+7: import inspect
+8: import warnings
+9: from decorator import decorator
+10: 
+11: import numpy as np
+12: 
+13: 
+14: def index_labels(labels, case_sensitive=False):
+15:     """Convert a list of string identifiers into numerical indices.
+16: 
+17:     Parameters
+18:     ----------
+19:     labels : list of strings, shape=(n,)
+20:         A list of annotations, e.g., segment or chord labels from an
+21:         annotation file.
+22:     case_sensitive : bool
+23:         Set to True to enable case-sensitive label indexing
+24:         (Default value = False)
+25: 
+26:     Returns
+27:     -------
+28:     indices : list, shape=(n,)
+29:         Numerical representation of ``labels``
+30:     index_to_label : dict
+31:         Mapping to convert numerical indices back to labels.
+32:         ``labels[i] == index_to_label[indices[i]]``
+33:     """
+34:     label_to_index = {}
+35:     index_to_label = {}
+36: 
+37:     # If we're not case-sensitive,
+38:     if not case_sensitive:
+39:         labels = [str(s).lower() for s in labels]
+40: 
+41:     # First, build the unique label mapping
+42:     for index, s in enumerate(sorted(set(labels))):
+43:         label_to_index[s] = index
+44:         index_to_label[index] = s
+45: 
+46:     # Remap the labels to indices
+47:     indices = [label_to_index[s] for s in labels]
+48: 
+49:     # Return the converted labels, and the inverse mapping
+50:     return indices, index_to_label
+51: 
+52: 
+53: def generate_labels(items, prefix="__"):
+54:     """Given an array of items (e.g. events, intervals), create a synthetic label
+55:     for each event of the form '(label prefix)(item number)'
+56: 
+57:     Parameters
+58:     ----------
+59:     items : list-like
+60:         A list or array of events or intervals
+61:     prefix : str
+62:         This prefix will be prepended to all synthetically generated labels
+63:         (Default value = '__')
+64: 
+65:     Returns
+66:     -------
+67:     labels : list of str
+68:         Synthetically generated labels
+69: 
+70:     """
+71:     return [f"{prefix}{n}" for n in range(len(items))]
+72: 
+73: 
+74: def intervals_to_samples(intervals, labels, offset=0, sample_size=0.1, fill_value=None):
+75:     """Convert an array of labeled time intervals to annotated samples.
+76: 
+77:     Parameters
+78:     ----------
+79:     intervals : np.ndarray, shape=(n, d)
+80:         An array of time intervals, as returned by
+81:         :func:`mir_eval.io.load_intervals()` or
+82:         :func:`mir_eval.io.load_labeled_intervals()`.
+83:         The ``i`` th interval spans time ``intervals[i, 0]`` to
+84:         ``intervals[i, 1]``.
+85:     labels : list, shape=(n,)
+86:         The annotation for each interval
+87:     offset : float > 0
+88:         Phase offset of the sampled time grid (in seconds)
+89:         (Default value = 0)
+90:     sample_size : float > 0
+91:         duration of each sample to be generated (in seconds)
+92:         (Default value = 0.1)
+93:     fill_value : type(labels[0])
+94:         Object to use for the label with out-of-range time points.
+95:         (Default value = None)
+96: 
+97:     Returns
+98:     -------
+99:     sample_times : list
+100:         list of sample times
+101:     sample_labels : list
+102:         array of labels for each generated sample
+103: 
+104:     Notes
+105:     -----
+106:         Intervals will be rounded down to the nearest multiple
+107:         of ``sample_size``.
+108:     """
+109:     # Round intervals to the sample size
+110:     num_samples = int(np.floor(intervals.max() / sample_size))
+111:     sample_indices = np.arange(num_samples, dtype=np.float32)
+112:     sample_times = (sample_indices * sample_size + offset).tolist()
+113:     sampled_labels = interpolate_intervals(intervals, labels, sample_times, fill_value)
+114: 
+115:     return sample_times, sampled_labels
+116: 
+117: 
+118: def interpolate_intervals(intervals, labels, time_points, fill_value=None):
+119:     """Assign labels to a set of points in time given a set of intervals.
+120: 
+121:     Time points that do not lie within an interval are mapped to `fill_value`.
+122: 
+123:     Parameters
+124:     ----------
+125:     intervals : np.ndarray, shape=(n, 2)
+126:         An array of time intervals, as returned by
+127:         :func:`mir_eval.io.load_intervals()`.
+128:         The ``i`` th interval spans time ``intervals[i, 0]`` to
+129:         ``intervals[i, 1]``.
+130: 
+131:         Intervals are assumed to be disjoint.
+132: 
+133:     labels : list, shape=(n,)
+134:         The annotation for each interval
+135: 
+136:     time_points : array_like, shape=(m,)
+137:         Points in time to assign labels.  These must be in
+138:         non-decreasing order.
+139: 
+140:     fill_value : type(labels[0])
+141:         Object to use for the label with out-of-range time points.
+142:         (Default value = None)
+143: 
+144:     Returns
+145:     -------
+146:     aligned_labels : list
+147:         Labels corresponding to the given time points.
+148: 
+149:     Raises
+150:     ------
+151:     ValueError
+152:         If `time_points` is not in non-decreasing order.
+153:     """
+154:     # Verify that time_points is sorted

@@ -1,0 +1,57 @@
+{
+  "name": "getFormatName",
+  "native_row": {
+    "status": "fail",
+    "attempts": 1,
+    "pass_round": null,
+    "wall_s": 17.8,
+    "llm_calls": 1,
+    "input_tokens": 1991,
+    "output_tokens": 1957,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 1991,
+        "output_tokens": 1957
+      }
+    },
+    "error_category": "runtime",
+    "error": "IllegalArgumentException: Specified format is not supported: superfakeformat",
+    "locus": "ApiTest.java:57",
+    "doc_chars": 3336,
+    "document_sha256": "64f3517a0218e982a6fd1c56ec6be90a67ab43d073ff2da4d022102271314576",
+    "source": "source/src/main/java/net/coobird/thumbnailator/tasks/UnsupportedFormatException.java:80",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "name": "getFormatName",
+    "execution_evidence": {
+      "status": "fail",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "fail",
+          "category": "runtime",
+          "error": "IllegalArgumentException: Specified format is not supported: superfakeformat"
+        }
+      ],
+      "error_category": "runtime",
+      "error": "IllegalArgumentException: Specified format is not supported: superfakeformat",
+      "code": "String expectedFormat = \"superfakeformat\";\nString actualFormat = null;\n\ntry {\n    net.coobird.thumbnailator.Thumbnails.of(sourceImage)\n        .size(10, 10)\n        .outputFormat(expectedFormat)\n        .toOutputStream(imageBytes);\n    assert false : \"Expected UnsupportedFormatException to be thrown\";\n} catch (net.coobird.thumbnailator.tasks.UnsupportedFormatException e) {\n    actualFormat = e.getFormatName();\n} catch (java.io.IOException e) {\n    assert false : \"Expected UnsupportedFormatException, but got standard IOException: \" + e.getMessage();\n}\n\nassert expectedFormat.equals(actualFormat) : \"Format name should match the unsupported format requested\";\nSystem.out.println(\"__CHECK__ getFormatName \" + actualFormat);",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/.aideal_exec/A2/run_getFormatName/ApiTest.java",
+      "exit_code": 1,
+      "stdout_tail": "",
+      "stderr_tail": "__RUN_ERR__ IllegalArgumentException: Specified format is not supported: superfakeformat\njava.lang.IllegalArgumentException: Specified format is not supported: superfakeformat\n\tat net.coobird.thumbnailator.Thumbnails$Builder.outputFormat(Unknown Source)\n\tat ApiTest.main(ApiTest.java:57)\n"
+    },
+    "experiment_fingerprint": "d0a4b20f3e5d3ea0caf7b1501a9bf2fb4d4f11ac7d844517d7b5d67874427464"
+  },
+  "retained_binding": "recorded_code_prefix_present",
+  "retained_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/.aideal_exec/A2/run_getFormatName/ApiTest.java",
+  "retained_sha256": "fb9d435b4e5fb5af39800beeac3af7e1afc9ba7ea8b3a0f9acb7dafa3e0858c2",
+  "source_window": {
+    "path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/source/src/main/java/net/coobird/thumbnailator/tasks/UnsupportedFormatException.java",
+    "full_file_sha256": "75b729727e0bbaac737ec64e6bf01baede2321ebbeefc8673796985c6bfbfe46",
+    "first_line": 65,
+    "last_line": 83,
+    "other_sites": 0
+  }
+}

@@ -1,0 +1,22 @@
+import numpy as np
+from tslearn.metrics.lcss import njit_lcss_accumulated_matrix
+
+# Prepare small 2D time series (n_timestamps, n_features)
+s1_small = s1[:5].reshape(-1, 1).astype(np.float64)
+s2_small = s1[:5].reshape(-1, 1).astype(np.float64)
+
+# LCSS uses a mask where finite values indicate valid alignment paths
+mask = np.zeros((5, 5), dtype=np.float64)
+eps = 0.5
+
+# Compute the accumulated cost matrix
+acc_mat = njit_lcss_accumulated_matrix(s1_small, s2_small, eps, mask)
+
+# The accumulated matrix should have an extra row and column for base cases
+assert acc_mat.shape == (6, 6), f"Expected shape (6, 6), got {acc_mat.shape}"
+
+# Since s1_small and s2_small are identical, the longest common subsequence length should be 5
+lcss_score = acc_mat[-1, -1]
+assert lcss_score == 5.0, f"Expected LCSS of 5.0 for identical series, got {lcss_score}"
+
+print(f"__CHECK__ njit_lcss_accumulated_matrix {acc_mat.shape} {lcss_score}")

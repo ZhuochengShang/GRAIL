@@ -1,0 +1,156 @@
+421:         chord_root, quality_name = chord_label.split(":")
+422:         # Extended chords (with ":"s) may not explicitly have Major qualities,
+423:         # so only overwrite the default if the string is not empty.
+424:         if quality_name:
+425:             quality = quality_name.lower()
+426:     else:
+427:         chord_root = chord_label
+428: 
+429:     if reduce_extended_chords:
+430:         quality, addl_scale_degrees = reduce_extended_quality(quality)
+431:         scale_degrees.update(addl_scale_degrees)
+432: 
+433:     return [chord_root, quality, scale_degrees, bass]
+434: 
+435: 
+436: def join(chord_root, quality="", extensions=None, bass=""):
+437:     r"""Join the parts of a chord into a complete chord label.
+438: 
+439:     Parameters
+440:     ----------
+441:     chord_root : str
+442:         Root pitch class of the chord, e.g. 'C', 'Eb'
+443:     quality : str
+444:         Quality of the chord, e.g. 'maj', 'hdim7'
+445:         (Default value = '')
+446:     extensions : list
+447:         Any added or absent scaled degrees for this chord, e.g. ['4', '\*3']
+448:         (Default value = None)
+449:     bass : str
+450:         Scale degree of the bass note, e.g. '5'.
+451:         (Default value = '')
+452: 
+453:     Returns
+454:     -------
+455:     chord_label : str
+456:         A complete chord label.
+457: 
+458:     """
+459:     chord_label = chord_root
+460:     if quality or extensions:
+461:         chord_label += ":%s" % quality
+462:     if extensions:
+463:         chord_label += "(%s)" % ",".join(extensions)
+464:     if bass and bass != "1":
+465:         chord_label += "/%s" % bass
+466:     validate_chord_label(chord_label)
+467:     return chord_label
+468: 
+469: 
+470: # --- Chords to Numerical Representations ---
+471: def encode(chord_label, reduce_extended_chords=False, strict_bass_intervals=False):
+472:     """Translate a chord label to numerical representations for evaluation.
+473: 
+474:     Parameters
+475:     ----------
+476:     chord_label : str
+477:         Chord label to encode.
+478:     reduce_extended_chords : bool
+479:         Whether to map the upper voicings of extended chords (9's, 11's, 13's)
+480:         to semitone extensions.
+481:         (Default value = False)
+482:     strict_bass_intervals : bool
+483:         Whether to require that the bass scale degree is present in the chord.
+484:         (Default value = False)
+485: 
+486:     Returns
+487:     -------
+488:     root_number : int
+489:         Absolute semitone of the chord's root.
+490:     semitone_bitmap : np.ndarray, dtype=int
+491:         12-dim vector of relative semitones in the chord spelling.
+492:     bass_number : int
+493:         Relative semitone of the chord's bass note, e.g. 0=root, 7=fifth, etc.
+494:     """
+495:     if chord_label == NO_CHORD:
+496:         return NO_CHORD_ENCODED
+497:     if chord_label == X_CHORD:
+498:         return X_CHORD_ENCODED
+499:     chord_root, quality, scale_degrees, bass = split(
+500:         chord_label, reduce_extended_chords=reduce_extended_chords
+501:     )
+502: 
+503:     root_number = pitch_class_to_semitone(chord_root)
+504:     bass_number = scale_degree_to_semitone(bass) % 12
+505: 
+506:     semitone_bitmap = quality_to_bitmap(quality)
+507:     semitone_bitmap[0] = 1
+508: 
+509:     for scale_degree in scale_degrees:
+510:         semitone_bitmap += scale_degree_to_bitmap(scale_degree, reduce_extended_chords)
+511: 
+512:     semitone_bitmap = (semitone_bitmap > 0).astype(np.int64)
+513:     if not semitone_bitmap[bass_number] and strict_bass_intervals:
+514:         raise InvalidChordException(
+515:             "Given bass scale degree is absent from this chord: " "%s" % chord_label,
+516:             chord_label,
+517:         )
+518:     else:
+519:         semitone_bitmap[bass_number] = 1
+520:     return root_number, semitone_bitmap, bass_number
+521: 
+522: 
+523: def encode_many(chord_labels, reduce_extended_chords=False):
+524:     """Translate a set of chord labels to numerical representations for sane
+525:     evaluation.
+526: 
+527:     Parameters
+528:     ----------
+529:     chord_labels : list
+530:         Set of chord labels to encode.
+531:     reduce_extended_chords : bool
+532:         Whether to map the upper voicings of extended chords (9's, 11's, 13's)
+533:         to semitone extensions.
+534:         (Default value = False)
+535: 
+536:     Returns
+537:     -------
+538:     root_number : np.ndarray, dtype=int
+539:         Absolute semitone of the chord's root.
+540:     interval_bitmap : np.ndarray, dtype=int
+541:         12-dim vector of relative semitones in the given chord quality.
+542:     bass_number : np.ndarray, dtype=int
+543:         Relative semitones of the chord's bass notes.
+544: 
+545:     """
+546:     num_items = len(chord_labels)
+547:     roots, basses = np.zeros([2, num_items], dtype=np.int64)
+548:     semitones = np.zeros([num_items, 12], dtype=np.int64)
+549:     local_cache = dict()
+550:     for i, label in enumerate(chord_labels):
+551:         result = local_cache.get(label, None)
+552:         if result is None:
+553:             result = encode(label, reduce_extended_chords)
+554:             local_cache[label] = result
+555:         roots[i], semitones[i], basses[i] = result
+556:     return roots, semitones, basses
+557: 
+558: 
+559: def rotate_bitmap_to_root(bitmap, chord_root):
+560:     """Circularly shift a relative bitmap to its absolute pitch classes.
+561: 
+562:     For clarity, the best explanation is an example. Given 'G:Maj', the root
+563:     and quality map are as follows::
+564: 
+565:         root=5
+566:         quality=[1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0]  # Relative chord shape
+567: 
+568:     After rotating to the root, the resulting bitmap becomes::
+569: 
+570:         abs_quality = [0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1]  # G, B, and D
+571: 
+572:     Parameters
+573:     ----------
+574:     bitmap : np.ndarray, shape=(12,)
+575:         Bitmap of active notes, relative to the given root.
+576:     chord_root : int

@@ -1,0 +1,13 @@
+net.coobird.thumbnailator.builders.ThumbnailParameterBuilder builder = new net.coobird.thumbnailator.builders.ThumbnailParameterBuilder();
+builder.size(100, 100);
+builder.format("png");
+net.coobird.thumbnailator.ThumbnailParameter param = builder.build();
+
+String format = param.getOutputFormat();
+assert "png".equals(format) : "Expected 'png', got " + format;
+
+net.coobird.thumbnailator.ThumbnailParameter defaultParam = new net.coobird.thumbnailator.builders.ThumbnailParameterBuilder().size(100, 100).build();
+String defaultFormat = defaultParam.getOutputFormat();
+assert net.coobird.thumbnailator.ThumbnailParameter.ORIGINAL_FORMAT.equals(defaultFormat) : "Expected ORIGINAL_FORMAT";
+
+System.out.println("__CHECK__ getOutputFormat " + format + "_" + (net.coobird.thumbnailator.ThumbnailParameter.ORIGINAL_FORMAT.equals(defaultFormat) ? "ORIGINAL" : "OTHER"));

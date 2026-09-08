@@ -1,0 +1,36 @@
+Source: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/source/mir_eval/display.py
+SHA256: c38e1fde860509c0e100a8b584ef10e88adb0184a241ea54bd3a3cf2e5c2e98b
+430:         k: v
+431:         for k, v in properties.items()
+432:         if k in ["color", "facecolor", "edgecolor", "linewidth"]
+433:     }
+434:     # Swap color -> facecolor here so we preserve edgecolor on rects
+435:     style.setdefault("facecolor", style["color"])
+436:     style.pop("color", None)
+437:     style.update(kwargs)
+438: 
+439:     if base is None:
+440:         base = np.arange(len(ticks))
+441: 
+442:     if height is None:
+443:         height = 1
+444: 
+445:     if np.isscalar(height):
+446:         height = height * np.ones_like(base)
+447: 
+448:     seg_y = dict()
+449:     for ybase, yheight, lab in zip(base, height, ticks):
+450:         seg_y[lab] = (ybase, yheight)
+451: 
+452:     xvals = defaultdict(list)
+453:     for ival, lab in zip(intervals, labels):
+454:         if lab not in seg_y:
+455:             continue
+456:         xvals[lab].append((ival[0], ival[1] - ival[0]))
+457: 
+458:     for lab in seg_y:
+459:         ax.broken_barh(xvals[lab], seg_y[lab], **style)
+460:         # Pop the label after the first time we see it, so we only get
+461:         # one legend entry
+462:         style.pop("label", None)
+463: 

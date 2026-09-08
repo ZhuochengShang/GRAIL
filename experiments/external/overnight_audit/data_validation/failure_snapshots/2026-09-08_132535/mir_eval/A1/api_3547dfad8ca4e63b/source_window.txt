@@ -1,0 +1,156 @@
+1080:     Parameters
+1081:     ----------
+1082:     ax : matplotlib.pyplot.axes
+1083:         The axes handle to apply the ticker.
+1084:         By default, uses the current axes handle.
+1085: 
+1086:     """
+1087:     ax, _ = __get_axes(ax=ax)
+1088: 
+1089:     ax.yaxis.set_major_formatter(FMT_MIDI_NOTE)
+1090:     # Get the tick labels and reset the vertical alignment
+1091:     for tick in ax.yaxis.get_ticklabels():
+1092:         tick.set_verticalalignment("baseline")
+1093: 
+1094: 
+1095: def ticker_pitch(ax=None):
+1096:     """Set the y-axis of the given axes to MIDI frequencies
+1097: 
+1098:     Parameters
+1099:     ----------
+1100:     ax : matplotlib.pyplot.axes
+1101:         The axes handle to apply the ticker.
+1102:         By default, uses the current axes handle.
+1103:     """
+1104:     ax, _ = __get_axes(ax=ax)
+1105: 
+1106:     ax.yaxis.set_major_formatter(FMT_MIDI_HZ)
+1107: 
+1108: 
+1109: # Instantiate ticker objects; we don't need more than one of each
+1110: FMT_MIDI_NOTE = FuncFormatter(__ticker_midi_note)
+1111: FMT_MIDI_HZ = FuncFormatter(__ticker_midi_hz)
+1112: 
+1113: 
+1114: # Hatch patterns for chord displays
+1115: __CHORD_HATCHES__ = {
+1116:     "maj": "",
+1117:     "min": "",
+1118:     "sus4": "||",
+1119:     "sus2": "--",
+1120:     "aug": "++",
+1121:     "dim": "..",
+1122:     "maj7": "//",
+1123:     "minmaj7": "//",
+1124:     "7": r"\\",
+1125:     "min7": r"\\",
+1126:     "hdim7": ".//",
+1127:     "dim7": r".\\",
+1128:     "maj6": "xx",
+1129:     "min6": "xx",
+1130: }
+1131: 
+1132: 
+1133: def _quality_to_majminoth(q):
+1134: 
+1135:     if q[3] and not q[4]:
+1136:         # a b3 and no natural 3
+1137:         return "min"
+1138: 
+1139:     elif q[4] and not q[3]:
+1140:         # a natural 3 and no flat 3
+1141:         return "maj"
+1142:     else:
+1143:         # Anything else is 'other'
+1144:         return "other"
+1145: 
+1146: 
+1147: def __chord_to_color(chord, major, minor, other):
+1148: 
+1149:     root, quality, bass = encode_chord(chord, reduce_extended_chords=True)
+1150:     ctype = _quality_to_majminoth(quality)
+1151: 
+1152:     if ctype == "maj" or "sus" in chord:
+1153:         return major(root)
+1154:     elif ctype == "min":
+1155:         return minor(root)
+1156:     else:
+1157:         return other(root)
+1158: 
+1159: 
+1160: def chords(
+1161:     intervals,
+1162:     labels,
+1163:     base=None,
+1164:     height=None,
+1165:     text=False,
+1166:     text_kw=None,
+1167:     ax=None,
+1168:     cmap="fifths",
+1169:     pattern=True,
+1170:     **kwargs,
+1171: ):
+1172:     """Plot a chord annotation as a set of disjoint rectangles with semantically meaningful colors.
+1173: 
+1174:     Parameters
+1175:     ----------
+1176:     intervals : np.ndarray, shape=(n, 2)
+1177:         segment intervals, in the format returned by
+1178:         :func:`mir_eval.io.load_intervals` or
+1179:         :func:`mir_eval.io.load_labeled_intervals`.
+1180:     labels : list, shape=(n,)
+1181:         reference chord labels, in the format returned by
+1182:         :func:`mir_eval.io.load_labeled_intervals`.
+1183:     base : number
+1184:         The vertical position of the base of the rectangles.
+1185:         By default, this will be the bottom of the plot.
+1186:     height : number
+1187:         The height of the rectangles.
+1188:         By default, this will be the top of the plot (minus ``base``).
+1189:         .. note:: If either `base` or `height` are provided, both must be provided.
+1190:     text : bool
+1191:         If true, each segment's label is displayed in its
+1192:         upper-left corner
+1193:     text_kw : dict
+1194:         If ``text == True``, the properties of the text
+1195:         object can be specified here.
+1196:         See ``matplotlib.pyplot.Text`` for valid parameters
+1197:     ax : matplotlib.pyplot.axes
+1198:         An axis handle on which to draw the segmentation.
+1199:         If none is provided, a new set of axes is created.
+1200:     cmap : {'pitch', 'fifths'}
+1201:         The color map to use for the chord display.
+1202:         If 'pitch', the colors will cycle chromatically (C, C#, D, ...)
+1203:         If 'fifths', the colors will cycle through the circle of fifths (C, G, D, ...).
+1204:         In both cases, major qualities (identified by a natural third) and suspended chords (sus2, sus4)
+1205:         will receive a bright color, and minor qualities (identified by a flat third) will receive a
+1206:         darker color.
+1207:         Other Qualities which are neither major nor minor will receive a light color.
+1208:         No-chord ('N') or out-of-gamut ('X') symbols will be colored gray.
+1209:     pattern : bool
+1210:         If `True`, segments will be filled with a hatch pattern
+1211:         corresponding to the chord quality as described below:
+1212:         - Major: no hatch
+1213:         - Minor: no hatch
+1214:         - Suspended 2nd: horizontal hatch
+1215:         - Suspended 4th: vertical hatch
+1216:         - Augmented: cross hatch
+1217:         - Diminished: dot hatch
+1218:         - Major 7th: forward slash hatch
+1219:         - Minor Major 7th: forward slash hatch
+1220:         - Dominant 7th: backward slash hatch
+1221:         - Minor 7th: backward slash hatch
+1222:         - Half-diminished 7th: dot and forward slash hatch
+1223:         - Diminished 7th: dot and backward slash hatch
+1224:         - Major 6th: cross hatch
+1225:         - Minor 6th: cross hatch
+1226:     **kwargs
+1227:         Additional keyword arguments to pass to
+1228:         ``matplotlib.axes.Axes.axvspan``.
+1229: 
+1230:     Returns
+1231:     -------
+1232:     ax : matplotlib.pyplot.axes._subplots.AxesSubplot
+1233:         A handle to the (possibly constructed) plot axes
+1234:     """
+1235:     if cmap == "fifths":

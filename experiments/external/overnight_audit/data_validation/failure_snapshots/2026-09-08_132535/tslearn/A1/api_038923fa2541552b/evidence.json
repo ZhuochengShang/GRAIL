@@ -1,0 +1,58 @@
+{
+  "name": "cast",
+  "native_row": {
+    "name": "cast",
+    "doc_source": "original",
+    "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+    "execution_evidence": {
+      "status": "fail",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "fail",
+          "category": "runtime",
+          "error": "TypeError: instantiate_backend() got an unexpected keyword argument 'backend'"
+        }
+      ],
+      "error_category": "runtime",
+      "error": "TypeError: instantiate_backend() got an unexpected keyword argument 'backend'",
+      "code": "import numpy as np\nfrom tslearn.backend import Backend, instantiate_backend\n\n# Instantiate the NumPy backend\nbe = instantiate_backend(backend=\"numpy\")\n\n# Create a small integer array\ns1_int = np.array([1, 2, 3], dtype=np.int32)\n\n# Call cast to convert it to float64\nres = be.cast(s1_int, dtype=np.float64)\n\n# Verify the result is correctly casted and retains its values\nassert res.dtype == np.float64, f\"Expected float64, got {res.dtype}\"\nassert res.shape == (3,), f\"Expected shape (3,), got {res.shape}\"\nassert res[0] == 1.0, f\"Expected 1.0, got {res[0]}\"\n\nprint(f\"__CHECK__ cast {res.dtype}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_cast/api_test.py",
+      "exit_code": 1,
+      "stdout_tail": "",
+      "stderr_tail": "__RUN_ERR__ TypeError: instantiate_backend() got an unexpected keyword argument 'backend'\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_cast/api_test.py\", line 60, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_cast/api_test.py\", line 55, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_cast/api_test.py\", line 38, in api_test\n    be = instantiate_backend(backend=\"numpy\")\nTypeError: instantiate_backend() got an unexpected keyword argument 'backend'\n"
+    },
+    "status": "fail",
+    "attempts": 1,
+    "pass_round": null,
+    "wall_s": 42.9,
+    "llm_calls": 1,
+    "input_tokens": 1307,
+    "output_tokens": 4417,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 1307,
+        "output_tokens": 4417
+      }
+    },
+    "error_category": "runtime",
+    "error": "TypeError: instantiate_backend() got an unexpected keyword argument 'backend'",
+    "locus": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_cast/api_test.py:38",
+    "doc_chars": 86,
+    "document_sha256": "56e39a510cf948a03607dcdbf719d12556b8f62911c2af18a09950bd7a28d3ea",
+    "source": "tslearn/tslearn/backend/backend.py:91",
+    "source_other_sites": 2,
+    "codebase_frames": null
+  },
+  "retained_binding": "recorded_code_prefix_present",
+  "retained_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_cast/api_test.py",
+  "retained_sha256": "3bb3a5e035bd824160f347338715ba091c67dc0f843a7f69972c041827936628",
+  "source_window": {
+    "path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/backend/backend.py",
+    "full_file_sha256": "9ef1534cc9ef139550ff3bd8e49a43c370ef9358afd8725dc1579976523f749c",
+    "first_line": 76,
+    "last_line": 116,
+    "other_sites": 2
+  }
+}

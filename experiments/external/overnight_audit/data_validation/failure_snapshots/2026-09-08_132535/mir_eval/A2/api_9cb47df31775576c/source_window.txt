@@ -1,0 +1,156 @@
+494: 
+495:     # If no patterns were provided, metric is zero
+496:     if _n_onset_midi(reference_patterns) == 0 or _n_onset_midi(estimated_patterns) == 0:
+497:         return 0.0, 0.0, 0.0
+498: 
+499:     # Compute the second layer (it includes the first layer)
+500:     F_2 = compute_layer(reference_patterns, estimated_patterns, layer=2)
+501: 
+502:     # Compute the final scores (third layer)
+503:     precision_3 = np.mean(np.max(F_2, axis=0))
+504:     recall_3 = np.mean(np.max(F_2, axis=1))
+505:     f_measure_3 = util.f_measure(precision_3, recall_3)
+506:     return f_measure_3, precision_3, recall_3
+507: 
+508: 
+509: def first_n_three_layer_P(reference_patterns, estimated_patterns, n=5):
+510:     """First n three-layer precision.
+511: 
+512:     This metric is basically the same as the three-layer FPR but it is only
+513:     applied to the first n estimated patterns, and it only returns the
+514:     precision. In MIREX and typically, n = 5.
+515: 
+516:     Examples
+517:     --------
+518:     >>> ref_patterns = mir_eval.io.load_patterns("ref_pattern.txt")
+519:     >>> est_patterns = mir_eval.io.load_patterns("est_pattern.txt")
+520:     >>> P = mir_eval.pattern.first_n_three_layer_P(ref_patterns,
+521:     ...                                            est_patterns, n=5)
+522: 
+523:     Parameters
+524:     ----------
+525:     reference_patterns : list
+526:         The reference patterns in the format returned by
+527:         :func:`mir_eval.io.load_patterns()`
+528:     estimated_patterns : list
+529:         The estimated patterns in the same format
+530:     n : int
+531:         Number of patterns to consider from the estimated results, in
+532:         the order they appear in the matrix
+533:         (Default value = 5)
+534: 
+535:     Returns
+536:     -------
+537:     precision : float
+538:         The first n three-layer Precision
+539:     """
+540:     validate(reference_patterns, estimated_patterns)
+541:     # If no patterns were provided, metric is zero
+542:     if _n_onset_midi(reference_patterns) == 0 or _n_onset_midi(estimated_patterns) == 0:
+543:         return 0.0, 0.0, 0.0
+544: 
+545:     # Get only the first n patterns from the estimated results
+546:     fn_est_patterns = estimated_patterns[: min(len(estimated_patterns), n)]
+547: 
+548:     # Compute the three-layer scores for the first n estimated patterns
+549:     F, P, R = three_layer_FPR(reference_patterns, fn_est_patterns)
+550: 
+551:     return P  # Return the precision only
+552: 
+553: 
+554: def first_n_target_proportion_R(reference_patterns, estimated_patterns, n=5):
+555:     """First n target proportion establishment recall metric.
+556: 
+557:     This metric is similar is similar to the establishment FPR score, but it
+558:     only takes into account the first n estimated patterns and it only
+559:     outputs the Recall value of it.
+560: 
+561:     Examples
+562:     --------
+563:     >>> ref_patterns = mir_eval.io.load_patterns("ref_pattern.txt")
+564:     >>> est_patterns = mir_eval.io.load_patterns("est_pattern.txt")
+565:     >>> R = mir_eval.pattern.first_n_target_proportion_R(
+566:     ...                                 ref_patterns, est_patterns, n=5)
+567: 
+568:     Parameters
+569:     ----------
+570:     reference_patterns : list
+571:         The reference patterns in the format returned by
+572:         :func:`mir_eval.io.load_patterns()`
+573:     estimated_patterns : list
+574:         The estimated patterns in the same format
+575:     n : int
+576:         Number of patterns to consider from the estimated results, in
+577:         the order they appear in the matrix.
+578:         (Default value = 5)
+579: 
+580:     Returns
+581:     -------
+582:     recall : float
+583:         The first n target proportion Recall.
+584:     """
+585:     validate(reference_patterns, estimated_patterns)
+586:     # If no patterns were provided, metric is zero
+587:     if _n_onset_midi(reference_patterns) == 0 or _n_onset_midi(estimated_patterns) == 0:
+588:         return 0.0, 0.0, 0.0
+589: 
+590:     # Get only the first n patterns from the estimated results
+591:     fn_est_patterns = estimated_patterns[: min(len(estimated_patterns), n)]
+592: 
+593:     F, P, R = establishment_FPR(reference_patterns, fn_est_patterns)
+594:     return R
+595: 
+596: 
+597: def evaluate(ref_patterns, est_patterns, **kwargs):
+598:     """Load data and perform the evaluation.
+599: 
+600:     Examples
+601:     --------
+602:     >>> ref_patterns = mir_eval.io.load_patterns("ref_pattern.txt")
+603:     >>> est_patterns = mir_eval.io.load_patterns("est_pattern.txt")
+604:     >>> scores = mir_eval.pattern.evaluate(ref_patterns, est_patterns)
+605: 
+606:     Parameters
+607:     ----------
+608:     ref_patterns : list
+609:         The reference patterns in the format returned by
+610:         :func:`mir_eval.io.load_patterns()`
+611:     est_patterns : list
+612:         The estimated patterns in the same format
+613:     **kwargs
+614:         Additional keyword arguments which will be passed to the
+615:         appropriate metric or preprocessing functions.
+616: 
+617:     Returns
+618:     -------
+619:     scores : dict
+620:         Dictionary of scores, where the key is the metric name (str) and
+621:         the value is the (float) score achieved.
+622:     """
+623:     # Compute all the metrics
+624:     scores = collections.OrderedDict()
+625: 
+626:     # Standard scores
+627:     scores["F"], scores["P"], scores["R"] = util.filter_kwargs(
+628:         standard_FPR, ref_patterns, est_patterns, **kwargs
+629:     )
+630: 
+631:     # Establishment scores
+632:     scores["F_est"], scores["P_est"], scores["R_est"] = util.filter_kwargs(
+633:         establishment_FPR, ref_patterns, est_patterns, **kwargs
+634:     )
+635: 
+636:     # Occurrence scores
+637:     # Force these values for thresh
+638:     kwargs["thresh"] = 0.5
+639:     scores["F_occ.5"], scores["P_occ.5"], scores["R_occ.5"] = util.filter_kwargs(
+640:         occurrence_FPR, ref_patterns, est_patterns, **kwargs
+641:     )
+642:     kwargs["thresh"] = 0.75
+643:     scores["F_occ.75"], scores["P_occ.75"], scores["R_occ.75"] = util.filter_kwargs(
+644:         occurrence_FPR, ref_patterns, est_patterns, **kwargs
+645:     )
+646: 
+647:     # Three-layer scores
+648:     scores["F_3"], scores["P_3"], scores["R_3"] = util.filter_kwargs(
+649:         three_layer_FPR, ref_patterns, est_patterns, **kwargs

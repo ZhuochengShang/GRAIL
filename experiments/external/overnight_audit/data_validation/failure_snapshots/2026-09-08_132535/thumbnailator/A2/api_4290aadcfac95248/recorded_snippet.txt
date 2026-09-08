@@ -1,0 +1,12 @@
+net.coobird.thumbnailator.resizers.ResizerFactory resizerFactory = net.coobird.thumbnailator.resizers.DefaultResizerFactory.getInstance();
+net.coobird.thumbnailator.ThumbnailParameter param = new net.coobird.thumbnailator.ThumbnailParameterBuilder()
+        .size(100, 100)
+        .resizerFactory(resizerFactory)
+        .build();
+
+assert param.getResizerFactory() == resizerFactory : "ResizerFactory should match the one set in the builder";
+assert param.getSize().width == 100 : "ThumbnailParameter size should be correctly set";
+
+net.coobird.thumbnailator.filters.SwapDimensions swapFilter = net.coobird.thumbnailator.filters.SwapDimensions.getInstance();
+
+System.out.println("__CHECK__ getInstance " + resizerFactory.getClass().getSimpleName() + ", " + swapFilter.getClass().getSimpleName());

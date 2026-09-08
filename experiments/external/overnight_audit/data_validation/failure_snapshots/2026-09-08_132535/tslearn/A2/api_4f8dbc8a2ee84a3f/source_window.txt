@@ -1,0 +1,156 @@
+606:             barycenter_size=barycenter_size,
+607:             init_barycenter=init_barycenter,
+608:             max_iter=max_iter,
+609:             tol=tol,
+610:             weights=weights,
+611:             metric_params=metric_params,
+612:             verbose=verbose,
+613:             n_jobs=n_jobs
+614:         )
+615:         if loss < best_cost:
+616:             best_cost = loss
+617:             best_barycenter = bary
+618:     return best_barycenter
+619: 
+620: 
+621: def dtw_barycenter_averaging_one_init(
+622:     X,
+623:     barycenter_size=None,
+624:     init_barycenter=None,
+625:     max_iter=30,
+626:     tol=1e-5,
+627:     weights=None,
+628:     metric_params=None,
+629:     verbose=False,
+630:     n_jobs=None
+631: ):
+632:     """DTW Barycenter Averaging (DBA) method estimated through
+633:     Expectation-Maximization algorithm.
+634: 
+635:     DBA was originally presented in [1]_.
+636:     This implementation is based on a idea from [2]_ (Majorize-Minimize Mean
+637:     Algorithm).
+638: 
+639:     Parameters
+640:     ----------
+641:     X : array-like, shape=(n_ts, sz, d)
+642:         Time series dataset.
+643: 
+644:     barycenter_size : int or None (default: None)
+645:         Size of the barycenter to generate. If None, the size of the barycenter
+646:         is that of the data provided at fit
+647:         time or that of the initial barycenter if specified.
+648: 
+649:     init_barycenter : array or None (default: None)
+650:         Initial barycenter to start from for the optimization process.
+651: 
+652:     max_iter : int (default: 30)
+653:         Number of iterations of the Expectation-Maximization optimization
+654:         procedure.
+655: 
+656:     tol : float (default: 1e-5)
+657:         Tolerance to use for early stopping: if the decrease in cost is lower
+658:         than this value, the
+659:         Expectation-Maximization procedure stops.
+660: 
+661:     weights: None or array
+662:         Weights of each X[i]. Must be the same size as len(X).
+663:         If None, uniform weights are used.
+664: 
+665:     metric_params: dict or None (default: None)
+666:         DTW constraint parameters to be used.
+667:         See :ref:`tslearn.metrics.dtw_path <fun-tslearn.metrics.dtw_path>` for
+668:         a list of accepted parameters
+669:         If None, no constraint is used for DTW computations.
+670: 
+671:     verbose : boolean (default: False)
+672:         Whether to print information about the cost at each iteration or not.
+673: 
+674:     n_jobs : int or None, optional (default=None)
+675:         The number of jobs to run in parallel.
+676:         ``None`` means 1 unless in a :obj:`joblib.parallel_backend` context.
+677:         ``-1`` means using all processors. See scikit-learns'
+678:         `Glossary <https://scikit-learn.org/stable/glossary.html#term-n_jobs>`__
+679:         for more details.
+680: 
+681: 
+682:     Returns
+683:     -------
+684:     numpy.array of shape (barycenter_size, d) or (sz, d) if barycenter_size \
+685:             is None
+686:         DBA barycenter of the provided time series dataset.
+687:     float
+688:         Associated inertia
+689: 
+690:     References
+691:     ----------
+692:     .. [1] F. Petitjean, A. Ketterlin & P. Gancarski. A global averaging method
+693:        for dynamic time warping, with applications to clustering. Pattern
+694:        Recognition, Elsevier, 2011, Vol. 44, Num. 3, pp. 678-693
+695: 
+696:     .. [2] D. Schultz and B. Jain. Nonsmooth Analysis and Subgradient Methods
+697:        for Averaging in Dynamic Time Warping Spaces.
+698:        Pattern Recognition, 74, 340-358.
+699:     """
+700:     backend = instantiate_backend("numpy")
+701: 
+702:     X_ = to_time_series_dataset(X, be=backend)
+703:     if barycenter_size is None:
+704:         barycenter_size = X_.shape[1]
+705:     weights = _set_weights(weights, X_.shape[0])
+706:     if init_barycenter is None:
+707:         barycenter = _init_avg(X_, barycenter_size)
+708:     else:
+709:         barycenter_size = init_barycenter.shape[0]
+710:         barycenter = to_time_series(
+711:             init_barycenter,
+712:             remove_nans=True,
+713:             be=backend
+714:         )
+715:     cost_prev, cost = numpy.inf, numpy.inf
+716:     for it in range(max_iter):
+717:         list_p_k, cost = _mm_assignment(
+718:             X_,
+719:             barycenter,
+720:             weights,
+721:             metric_params,
+722:             n_jobs
+723:         )
+724:         diag_sum_v_k, list_w_k = _mm_valence_warping(list_p_k, barycenter_size,
+725:                                                      weights)
+726:         if verbose:
+727:             print("[DBA] epoch %d, cost: %.3f" % (it + 1, cost))
+728:         barycenter = _mm_update_barycenter(X_, diag_sum_v_k, list_w_k)
+729:         if abs(cost_prev - cost) < tol:
+730:             break
+731:         elif cost_prev < cost:
+732:             warnings.warn("DBA loss is increasing while it should not be. "
+733:                           "Stopping optimization.", ConvergenceWarning)
+734:             break
+735:         else:
+736:             cost_prev = cost
+737:     return barycenter, cost
+738: 
+739: 
+740: def dtw_barycenter_averaging_subgradient(
+741:     X,
+742:     barycenter_size=None,
+743:     init_barycenter=None,
+744:     max_iter=30,
+745:     initial_step_size=.05,
+746:     final_step_size=.005,
+747:     tol=1e-5,
+748:     random_state=None,
+749:     weights=None,
+750:     metric_params=None,
+751:     verbose=False
+752: ):
+753:     """DTW Barycenter Averaging (DBA) method estimated through subgradient
+754:     descent algorithm.
+755: 
+756:     DBA was originally presented in [1]_.
+757:     This implementation is based on a idea from [2]_ (Stochastic Subgradient
+758:     Mean Algorithm).
+759: 
+760:     Parameters
+761:     ----------

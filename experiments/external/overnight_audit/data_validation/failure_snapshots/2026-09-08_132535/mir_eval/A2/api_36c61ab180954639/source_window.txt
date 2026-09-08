@@ -1,0 +1,156 @@
+304:     "maj9": ("maj7", {"9"}),
+305:     "min9": ("min7", {"9"}),
+306:     "9": ("7", {"9"}),
+307:     "b9": ("7", {"b9"}),
+308:     "#9": ("7", {"#9"}),
+309:     "11": ("7", {"9", "11"}),
+310:     "#11": ("7", {"9", "#11"}),
+311:     "13": ("7", {"9", "11", "13"}),
+312:     "b13": ("7", {"9", "11", "b13"}),
+313:     "min11": ("min7", {"9", "11"}),
+314:     "maj13": ("maj7", {"9", "11", "13"}),
+315:     "min13": ("min7", {"9", "11", "13"}),
+316: }
+317: 
+318: 
+319: def reduce_extended_quality(quality):
+320:     """Map an extended chord quality to a simpler one, moving upper voices to
+321:     a set of scale degree extensions.
+322: 
+323:     Parameters
+324:     ----------
+325:     quality : str
+326:         Extended chord quality to reduce.
+327: 
+328:     Returns
+329:     -------
+330:     base_quality : str
+331:         New chord quality.
+332:     extensions : set
+333:         Scale degrees extensions for the quality.
+334: 
+335:     """
+336:     return EXTENDED_QUALITY_REDUX.get(quality, (quality, set()))
+337: 
+338: 
+339: # --- Chord Label Parsing ---
+340: # This monster regexp is pulled from the JAMS chord namespace,
+341: # which is in turn derived from the context-free grammar of
+342: # Harte et al., 2005.
+343: CHORD_RE = re.compile(
+344:     r"""^((N|X)|(([A-G](b*|#*))((:(maj|min|dim|aug|1|5|sus2|sus4|maj6|min6|7|maj7|min7|dim7|hdim7|minmaj7|aug7|9|maj9|min9|11|maj11|min11|13|maj13|min13)(\((\*?((b*|#*)([1-9]|1[0-3]?))(,\*?((b*|#*)([1-9]|1[0-3]?)))*)\))?)|(:\((\*?((b*|#*)([1-9]|1[0-3]?))(,\*?((b*|#*)([1-9]|1[0-3]?)))*)\)))?((/((b*|#*)([1-9]|1[0-3]?)))?)?))$"""
+345: )  # nopep8
+346: 
+347: 
+348: def validate_chord_label(chord_label):
+349:     """Test for well-formedness of a chord label.
+350: 
+351:     Parameters
+352:     ----------
+353:     chord_label : str
+354:         Chord label to validate.
+355:     """
+356:     if not CHORD_RE.match(chord_label):
+357:         raise InvalidChordException("Invalid chord label: " "{}".format(chord_label))
+358:     pass
+359: 
+360: 
+361: def split(chord_label, reduce_extended_chords=False):
+362:     """Parse a chord label into its four constituent parts:
+363:         - root
+364:         - quality shorthand
+365:         - scale degrees
+366:         - bass
+367: 
+368:     Note: Chords lacking quality AND interval information are major.
+369:       - If a quality is specified, it is returned.
+370:       - If an interval is specified WITHOUT a quality, the quality field is
+371:         empty.
+372: 
+373:     Some examples::
+374: 
+375:         'C' -> ['C', 'maj', {}, '1']
+376:         'G#:min(*b3,*5)/5' -> ['G#', 'min', {'*b3', '*5'}, '5']
+377:         'A:(3)/6' -> ['A', '', {'3'}, '6']
+378: 
+379:     Parameters
+380:     ----------
+381:     chord_label : str
+382:         A chord label.
+383:     reduce_extended_chords : bool
+384:         Whether to map the upper voicings of extended chords (9's, 11's, 13's)
+385:         to semitone extensions. (Default value = False)
+386: 
+387:     Returns
+388:     -------
+389:     chord_parts : list
+390:         Split version of the chord label.
+391: 
+392:     """
+393:     chord_label = str(chord_label)
+394:     validate_chord_label(chord_label)
+395:     if chord_label == NO_CHORD:
+396:         return [chord_label, "", set(), ""]
+397: 
+398:     bass = "1"
+399:     if "/" in chord_label:
+400:         chord_label, bass = chord_label.split("/")
+401: 
+402:     scale_degrees = set()
+403:     omission = False
+404:     if "(" in chord_label:
+405:         chord_label, scale_degrees = chord_label.split("(")
+406:         omission = "*" in scale_degrees
+407:         scale_degrees = scale_degrees.strip(")")
+408:         scale_degrees = {i.strip() for i in scale_degrees.split(",")}
+409: 
+410:     # Note: Chords lacking quality AND added interval information are major.
+411:     #   If a quality shorthand is specified, it is returned.
+412:     #   If an interval is specified WITHOUT a quality, the quality field is
+413:     #     empty.
+414:     #   Intervals specifying omissions MUST have a quality.
+415:     if omission and ":" not in chord_label:
+416:         raise InvalidChordException(
+417:             "Intervals specifying omissions MUST have a quality."
+418:         )
+419:     quality = "" if scale_degrees else "maj"
+420:     if ":" in chord_label:
+421:         chord_root, quality_name = chord_label.split(":")
+422:         # Extended chords (with ":"s) may not explicitly have Major qualities,
+423:         # so only overwrite the default if the string is not empty.
+424:         if quality_name:
+425:             quality = quality_name.lower()
+426:     else:
+427:         chord_root = chord_label
+428: 
+429:     if reduce_extended_chords:
+430:         quality, addl_scale_degrees = reduce_extended_quality(quality)
+431:         scale_degrees.update(addl_scale_degrees)
+432: 
+433:     return [chord_root, quality, scale_degrees, bass]
+434: 
+435: 
+436: def join(chord_root, quality="", extensions=None, bass=""):
+437:     r"""Join the parts of a chord into a complete chord label.
+438: 
+439:     Parameters
+440:     ----------
+441:     chord_root : str
+442:         Root pitch class of the chord, e.g. 'C', 'Eb'
+443:     quality : str
+444:         Quality of the chord, e.g. 'maj', 'hdim7'
+445:         (Default value = '')
+446:     extensions : list
+447:         Any added or absent scaled degrees for this chord, e.g. ['4', '\*3']
+448:         (Default value = None)
+449:     bass : str
+450:         Scale degree of the bass note, e.g. '5'.
+451:         (Default value = '')
+452: 
+453:     Returns
+454:     -------
+455:     chord_label : str
+456:         A complete chord label.
+457: 
+458:     """
+459:     chord_label = chord_root

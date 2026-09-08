@@ -1,0 +1,13 @@
+java.io.File outFile = outputPath.resolve("test_sink.png").toFile();
+net.coobird.thumbnailator.tasks.io.FileImageSink sink = new net.coobird.thumbnailator.tasks.io.FileImageSink(outFile, true);
+
+// Exercise the sink by writing the provided in-memory image to the file
+sink.write(sourceImage);
+
+// Read back the output to verify the sink correctly wrote the image data
+java.awt.image.BufferedImage readBack = javax.imageio.ImageIO.read(outFile);
+assert readBack != null : "Image should be written and readable";
+assert readBack.getWidth() == sourceImage.getWidth() : "Width mismatch in written image";
+assert readBack.getHeight() == sourceImage.getHeight() : "Height mismatch in written image";
+
+System.out.println("__CHECK__ FileImageSink " + outFile.exists() + "," + readBack.getWidth() + "x" + readBack.getHeight());

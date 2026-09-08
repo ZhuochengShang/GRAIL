@@ -1,0 +1,156 @@
+13:     _cdist_ctw,
+14:     _cdist_soft_dtw,
+15:     _cdist_sax,
+16:     _cdist_frechet,
+17:     TSLEARN_VALID_METRICS
+18: )
+19: from tslearn.piecewise import SymbolicAggregateApproximation
+20: from tslearn.utils import (
+21:     to_time_series_dataset,
+22:     to_sklearn_dataset,
+23:     check_array,
+24:     check_dims
+25: )
+26: 
+27: 
+28: class KNeighborsTimeSeriesMixin(TimeSeriesMixin):
+29:     """Mixin for k-neighbors searches on Time Series."""
+30: 
+31:     def _sax_preprocess(self, X, n_segments=10, alphabet_size_avg=4,
+32:                         scale=False):
+33:         # Now SAX-transform the time series
+34:         if not hasattr(self, '_sax') or self._sax is None:
+35:             self._sax = SymbolicAggregateApproximation(
+36:                 n_segments=n_segments,
+37:                 alphabet_size_avg=alphabet_size_avg,
+38:                 scale=scale
+39:             )
+40:         X_sax = self._sax.fit_transform(X)
+41: 
+42:         return X_sax
+43: 
+44:     def _get_metric_params(self):
+45:         if self.metric_params is None:
+46:             metric_params = {}
+47:         else:
+48:             metric_params = self.metric_params.copy()
+49:         if "gamma_sdtw" in metric_params.keys():
+50:             metric_params["gamma"] = metric_params["gamma_sdtw"]
+51:             del metric_params["gamma_sdtw"]
+52:         if "n_jobs" in metric_params.keys():
+53:             del metric_params["n_jobs"]
+54:         if "verbose" in metric_params.keys():
+55:             del metric_params["verbose"]
+56:         return metric_params
+57: 
+58:     def _precompute_cross_dist(self, X, other_X=None):
+59:         if other_X is None:
+60:             other_X = self._ts_fit
+61: 
+62:         self._ts_metric = self.metric
+63:         self.metric = "precomputed"
+64: 
+65:         metric_params = self._get_metric_params()
+66: 
+67:         X = check_array(X, allow_nd=True, force_all_finite=False)
+68:         X = to_time_series_dataset(X)
+69: 
+70:         if self._ts_metric == "dtw":
+71:             X_ = _cdist_dtw(
+72:                 X,
+73:                 other_X,
+74:                 n_jobs=self.n_jobs,
+75:                 **metric_params)
+76:         elif self._ts_metric == "ctw":
+77:             X_ = _cdist_ctw(X, other_X, **metric_params)
+78:         elif self._ts_metric == "softdtw":
+79:             X_ = _cdist_soft_dtw(X, other_X, **metric_params)
+80:         elif self._ts_metric == "sax":
+81:             X = self._sax_preprocess(X, **metric_params)
+82:             X_ = _cdist_sax(
+83:                 X,
+84:                 self._sax.breakpoints_avg_,
+85:                 self._sax._X_fit_dims_[1],
+86:                 other_X,
+87:                 n_jobs=self.n_jobs)
+88:         elif self._ts_metric == "frechet":
+89:             X_ = _cdist_frechet(
+90:                 X,
+91:                 other_X,
+92:                 n_jobs=self.n_jobs,
+93:                 **metric_params
+94:             )
+95:         else:
+96:             raise ValueError("Invalid metric recorded: %s" %
+97:                              self._ts_metric)
+98: 
+99:         return X_
+100: 
+101:     def kneighbors(self, X=None, n_neighbors=None, return_distance=True):
+102:         """Finds the K-neighbors of a point.
+103: 
+104:         Returns indices of and distances to the neighbors of each point.
+105: 
+106:         Parameters
+107:         ----------
+108:         X : array-like, shape (n_ts, sz, d)
+109:             The query time series.
+110:             If not provided, neighbors of each indexed point are returned.
+111:             In this case, the query point is not considered its own neighbor.
+112:         n_neighbors : int
+113:             Number of neighbors to get (default is the value passed to the
+114:             constructor).
+115:         return_distance : boolean, optional. Defaults to True.
+116:             If False, distances will not be returned
+117: 
+118:         Returns
+119:         -------
+120:         dist : array
+121:             Array representing the distance to points, only present if
+122:             return_distance=True
+123:         ind : array
+124:             Indices of the nearest points in the population matrix.
+125:         """
+126:         self_neighbors = False
+127:         if n_neighbors is None:
+128:             n_neighbors = self.n_neighbors
+129:         if X is None:
+130:             X = self._X_fit
+131:             self_neighbors = True
+132:         if self.metric == "precomputed":
+133:             full_dist_matrix = X
+134:         else:
+135: 
+136:             if X.ndim == 2:  # sklearn-format case
+137:                 X = X.reshape((X.shape[0], -1, self._d))
+138:                 fit_X = self._X_fit.reshape((self._X_fit.shape[0],
+139:                                              -1,
+140:                                              self._d))
+141:             elif hasattr(self, '_ts_fit') and self._ts_fit is not None:
+142:                 fit_X = self._ts_fit
+143:             else:
+144:                 fit_X = self._X_fit
+145: 
+146:             if self.metric in TSLEARN_VALID_METRICS:
+147:                 full_dist_matrix = self._precompute_cross_dist(X,
+148:                                                                other_X=fit_X)
+149:             elif self.metric in ["euclidean", "sqeuclidean", "cityblock"]:
+150:                 full_dist_matrix = scipy_cdist(X.reshape((X.shape[0], -1)),
+151:                                                fit_X.reshape((fit_X.shape[0],
+152:                                                               -1)),
+153:                                                metric=self.metric)
+154:             else:
+155:                 raise ValueError("Unrecognized time series metric string: %s "
+156:                                  "(should be one of 'dtw', 'softdtw', "
+157:                                  "'frechet', 'sax', 'euclidean', 'sqeuclidean'"
+158:                                  " or 'cityblock')" % self.metric)
+159: 
+160:         # Code similar to sklearn (sklearn/neighbors/base.py), to make sure
+161:         # that TimeSeriesKNeighbor~(metric='euclidean') has the same results as
+162:         # feeding a distance matrix to sklearn.KNeighbors~(metric='euclidean')
+163:         kbin = min(n_neighbors - 1, full_dist_matrix.shape[1] - 1)
+164:         # argpartition will make sure the first `kbin` entries are the
+165:         # `kbin` smallest ones (but in arbitrary order) --> complexity: O(n)
+166:         ind = numpy.argpartition(full_dist_matrix, kbin, axis=1)
+167: 
+168:         if self_neighbors:

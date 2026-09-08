@@ -1,0 +1,48 @@
+69:     def __init__(self, data=None):
+70:         self.backend = select_backend(data)
+71: 
+72:     def __getattr__(self, item):
+73:         # Forwards missing attribute calls to backend
+74:         return getattr(self.backend, item)
+75: 
+76:     @property
+77:     def is_numpy(self):
+78:         return self.backend_string == "numpy"
+79: 
+80:     @property
+81:     def is_pytorch(self):
+82:         return self.backend_string == "pytorch"
+83: 
+84:     def get_backend(self):
+85:         return self.backend
+86: 
+87:     def set_backend(self, data=None):
+88:         self.backend = select_backend(data)
+89: 
+90: 
+91: def cast(data, array_type="numpy"):
+92:     """Cast data to list or specific backend.
+93: 
+94:     Parameters
+95:     ----------
+96:     data: array-like,
+97:         The input data should be a list or numpy array or torch array.
+98:         The data to cast.
+99:     array_type: string
+100:         The type to cast the data. It can be "numpy", "pytorch" or "list".
+101: 
+102:     Returns
+103:     --------
+104:     data_cast: array-like
+105:         Data cast to array_type.
+106:     """
+107:     data_type_string = str(type(data)).lower()
+108:     array_type = array_type.lower()
+109:     if array_type == "pytorch":
+110:         array_type = "torch"
+111:     if array_type in data_type_string:
+112:         return data
+113:     if array_type == "list":
+114:         return data.tolist()
+115:     be = Backend(array_type)
+116:     return be.array(data)

@@ -1,0 +1,57 @@
+{
+  "name": "fitWithinDimenions",
+  "native_row": {
+    "status": "fail",
+    "attempts": 1,
+    "pass_round": null,
+    "wall_s": 61.1,
+    "llm_calls": 1,
+    "input_tokens": 1770,
+    "output_tokens": 8448,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 1770,
+        "output_tokens": 8448
+      }
+    },
+    "error_category": "runtime",
+    "error": "RuntimeException: Failed to instantiate ThumbnailParameter via reflection",
+    "locus": "ApiTest.java:95",
+    "doc_chars": 2559,
+    "document_sha256": "c784fd3def1d5c620f55f46a370f3ee0e200a04ee8f37ad040e08be490fc7b54",
+    "source": "source/src/main/java/net/coobird/thumbnailator/ThumbnailParameter.java:980",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "name": "fitWithinDimenions",
+    "execution_evidence": {
+      "status": "fail",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "fail",
+          "category": "runtime",
+          "error": "RuntimeException: Failed to instantiate ThumbnailParameter via reflection"
+        }
+      ],
+      "error_category": "runtime",
+      "error": "RuntimeException: Failed to instantiate ThumbnailParameter via reflection",
+      "code": "try {\n    java.lang.reflect.Constructor<?>[] constructors = net.coobird.thumbnailator.ThumbnailParameter.class.getConstructors();\n    if (constructors.length == 0) {\n        throw new IllegalStateException(\"No public constructors found for ThumbnailParameter\");\n    }\n    \n    java.lang.reflect.Constructor<?> constructor = constructors[0];\n    Object[] argsTrue = new Object[constructor.getParameterTypes().length];\n    Object[] argsFalse = new Object[constructor.getParameterTypes().length];\n\n    for (int i = 0; i < argsTrue.length; i++) {\n        Class<?> type = constructor.getParameterTypes()[i];\n        if (type == java.awt.Dimension.class) {\n            argsTrue[i] = new java.awt.Dimension(100, 100);\n            argsFalse[i] = new java.awt.Dimension(100, 100);\n        } else if (type == boolean.class) {\n            argsTrue[i] = true;\n            argsFalse[i] = false;\n        } else if (type == int.class) {\n            argsTrue[i] = java.awt.image.BufferedImage.TYPE_INT_ARGB;\n        ",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/.aideal_exec/A2/run_fitWithinDimenions/ApiTest.java",
+      "exit_code": 1,
+      "stdout_tail": "",
+      "stderr_tail": "__RUN_ERR__ RuntimeException: Failed to instantiate ThumbnailParameter via reflection\njava.lang.RuntimeException: Failed to instantiate ThumbnailParameter via reflection\n\tat ApiTest.main(ApiTest.java:95)\nCaused by: java.lang.reflect.InvocationTargetException\n\tat sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)\n\tat sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)\n\tat sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)\n\tat java.lang.reflect.Constructor.newInstance(Constructor.java:423)\n\tat ApiTest.main(ApiTest.java:84)\nCaused by: java.lang.IllegalArgumentException: Resizer cannot be null\n\tat net.coobird.thumbnailator.ThumbnailParameter.<init>(Unknown Source)\n\tat net.coobird.thumbnailator.ThumbnailParameter.<init>(Unknown Source)\n\t... 5 more\n"
+    },
+    "experiment_fingerprint": "d0a4b20f3e5d3ea0caf7b1501a9bf2fb4d4f11ac7d844517d7b5d67874427464"
+  },
+  "retained_binding": "recorded_code_prefix_present",
+  "retained_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/.aideal_exec/A2/run_fitWithinDimenions/ApiTest.java",
+  "retained_sha256": "aecbb4bca7a2fad15403f1e4a144b5c562e743e1bb8338daaa281b97c6b0b14b",
+  "source_window": {
+    "path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/source/src/main/java/net/coobird/thumbnailator/ThumbnailParameter.java",
+    "full_file_sha256": "c159d3277dc8bf7cdca84d60076e95dd68fe08ae3ef7dc6cdb1a89be725c123a",
+    "first_line": 965,
+    "last_line": 996,
+    "other_sites": 0
+  }
+}

@@ -1,0 +1,17 @@
+String expectedFormat = "superfakeformat";
+String actualFormat = null;
+
+try {
+    net.coobird.thumbnailator.Thumbnails.of(sourceImage)
+        .size(10, 10)
+        .outputFormat(expectedFormat)
+        .toOutputStream(imageBytes);
+    assert false : "Expected UnsupportedFormatException to be thrown";
+} catch (net.coobird.thumbnailator.tasks.UnsupportedFormatException e) {
+    actualFormat = e.getFormatName();
+} catch (java.io.IOException e) {
+    assert false : "Expected UnsupportedFormatException, but got standard IOException: " + e.getMessage();
+}
+
+assert expectedFormat.equals(actualFormat) : "Format name should match the unsupported format requested";
+System.out.println("__CHECK__ getFormatName " + actualFormat);

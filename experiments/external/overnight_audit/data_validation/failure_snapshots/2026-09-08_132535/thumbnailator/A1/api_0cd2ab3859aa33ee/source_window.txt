@@ -1,0 +1,36 @@
+115:         if (resourceIs != null) {
+116:             try {
+117:                 properties.load(resourceIs);
+118:                 resourceIs.close();
+119:             } catch (IOException e) {
+120:                 throw new RuntimeException("Error while reading thumbnailator.properties", e);
+121:             }
+122:         }
+123:     }
+124: 
+125:     /**
+126:      * Clears the internal cache of properties.
+127:      * <p>
+128:      * This is intended only to be called from tests.
+129:      */
+130:     static void clear() {
+131:         properties.clear();
+132:     }
+133: 
+134:     Configurations(String key) {
+135:         this.key = key;
+136:     }
+137: 
+138:     /**
+139:      * Returns whether the specified configuration is enabled or not.
+140:      * @return  {@code true} if the configuration is enabled, {@code false}
+141:      *          otherwise.
+142:      */
+143:     public boolean getBoolean() {
+144:         String propertyValue = properties.getProperty(key);
+145:         if (propertyValue != null) {
+146:             return Boolean.parseBoolean(propertyValue);
+147:         }
+148:         return Boolean.getBoolean(key);
+149:     }
+150: }

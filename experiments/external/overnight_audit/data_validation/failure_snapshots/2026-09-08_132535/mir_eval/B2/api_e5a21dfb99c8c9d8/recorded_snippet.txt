@@ -1,0 +1,26 @@
+import numpy as np
+import mir_eval
+
+# Construct a deterministic hierarchical segmentation input
+# The reference has 2 levels, the estimate has 1 level.
+# Both cover the exact same time duration [0.0, 30.0].
+ref_hier = [
+    np.array([[0.0, 30.0]]), 
+    np.array([[0.0, 15.0], [15.0, 30.0]])
+]
+est_hier = [
+    np.array([[0.0, 30.0]])
+]
+
+# Compute tree measures
+t_precision, t_recall, t_measure = mir_eval.hierarchy.tmeasure(
+    ref_hier, est_hier, window=15.0, frame_size=0.1
+)
+
+# Since the estimate perfectly matches the top level of the reference but misses the finer level,
+# precision should be 1.0, recall should be 0.5, and the F1-measure should be ~0.666.
+assert t_precision == 1.0, f"Expected precision 1.0, got {t_precision}"
+assert 0.4 < t_recall < 0.6, f"Expected recall ~0.5, got {t_recall}"
+assert 0.6 < t_measure < 0.7, f"Expected f-measure ~0.66, got {t_measure}"
+
+print(f"__CHECK__ tmeasure {t_precision:.4f}, {t_recall:.4f}, {t_measure:.4f}")

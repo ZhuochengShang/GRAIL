@@ -1,0 +1,35 @@
+java.awt.Dimension size = new java.awt.Dimension(100, 100);
+net.coobird.thumbnailator.geometry.Region expectedRegion = new net.coobird.thumbnailator.geometry.Region(new java.awt.Dimension(50, 50));
+
+net.coobird.thumbnailator.ThumbnailParameter paramWithRegion = new net.coobird.thumbnailator.ThumbnailParameter(
+    size,
+    expectedRegion,
+    true,
+    "JPEG",
+    null,
+    0.8f,
+    java.awt.image.BufferedImage.TYPE_INT_ARGB,
+    java.util.Collections.emptyList(),
+    null,
+    true,
+    true
+);
+
+net.coobird.thumbnailator.geometry.Region actualRegion = paramWithRegion.getSourceRegion();
+assert actualRegion == expectedRegion : "Expected the region to match the one provided in constructor";
+
+net.coobird.thumbnailator.ThumbnailParameter paramWithoutRegion = new net.coobird.thumbnailator.ThumbnailParameter(
+    size,
+    null,
+    true,
+    "JPEG",
+    null,
+    0.8f,
+    java.awt.image.BufferedImage.TYPE_INT_ARGB,
+    java.util.Collections.emptyList(),
+    null,
+    true,
+    true
+);
+
+n

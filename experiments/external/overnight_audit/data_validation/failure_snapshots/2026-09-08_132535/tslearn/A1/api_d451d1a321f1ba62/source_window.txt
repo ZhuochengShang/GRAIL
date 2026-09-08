@@ -1,0 +1,156 @@
+2218:     lb_keogh : Compute LB_Keogh similarity
+2219: 
+2220:     References
+2221:     ----------
+2222:     .. [1] Keogh, E. Exact indexing of dynamic time warping. In International
+2223:        Conference on Very Large Data Bases, 2002. pp 406-417.
+2224:     """
+2225:     be = instantiate_backend(be, ts)
+2226:     ts = to_time_series(ts, be=be)
+2227:     if be.is_numpy:
+2228:         return _njit_lb_envelope(ts, radius=radius)
+2229:     return _lb_envelope(ts, radius=radius, be=be)
+2230: 
+2231: 
+2232: @njit(nogil=True)
+2233: def njit_lcss_accumulated_matrix(s1, s2, eps, mask):
+2234:     """Compute the longest common subsequence similarity score between
+2235:     two time series.
+2236: 
+2237:     Parameters
+2238:     ----------
+2239:     s1 : array-like, shape=(sz1, d)
+2240:         First time series.
+2241:     s2 : array-like, shape=(sz2, d)
+2242:         Second time series.
+2243:     eps : float
+2244:         Matching threshold.
+2245:     mask : array-like, shape=(sz1, sz2)
+2246:         Mask. Unconsidered cells must have False values.
+2247:         
+2248:     Returns
+2249:     -------
+2250:     acc_cost_mat : array-like, shape=(sz1 + 1, sz2 + 1)
+2251:         Accumulated cost matrix.
+2252:     """
+2253:     l1 = s1.shape[0]
+2254:     l2 = s2.shape[0]
+2255:     acc_cost_mat = numpy.full((l1 + 1, l2 + 1), 0)
+2256: 
+2257:     for i in range(1, l1 + 1):
+2258:         for j in range(1, l2 + 1):
+2259:             if numpy.isfinite(mask[i - 1, j - 1]):
+2260:                 if numpy.sqrt(_njit_local_squared_dist(s1[i - 1], s2[j - 1])) <= eps:
+2261:                     acc_cost_mat[i][j] = 1 + acc_cost_mat[i - 1][j - 1]
+2262:                 else:
+2263:                     acc_cost_mat[i][j] = max(
+2264:                         acc_cost_mat[i][j - 1], acc_cost_mat[i - 1][j]
+2265:                     )
+2266: 
+2267:     return acc_cost_mat
+2268: 
+2269: 
+2270: def lcss_accumulated_matrix(s1, s2, eps, mask, be=None):
+2271:     """Compute the longest common subsequence similarity score between
+2272:     two time series.
+2273: 
+2274:     Parameters
+2275:     ----------
+2276:     s1 : array-like, shape=(sz1, d) or (sz1,)
+2277:         First time series. If shape is (sz1,), the time series is assumed to be univariate.
+2278:     s2 : array-like, shape=(sz2, d) or (sz2,)
+2279:         Second time series. If shape is (sz2,), the time series is assumed to be univariate.
+2280:     eps : float
+2281:         Matching threshold.
+2282:     mask : array-like, shape=(sz1, sz2)
+2283:         Mask. Unconsidered cells must have False values.
+2284:     be : Backend object or string or None
+2285:         Backend. If `be` is an instance of the class `NumPyBackend` or the string `"numpy"`,
+2286:         the NumPy backend is used.
+2287:         If `be` is an instance of the class `PyTorchBackend` or the string `"pytorch"`,
+2288:         the PyTorch backend is used.
+2289:         If `be` is `None`, the backend is determined by the input arrays.
+2290:         See our :ref:`dedicated user-guide page <backend>` for more information.
+2291: 
+2292:     Returns
+2293:     -------
+2294:     acc_cost_mat : array-like, shape=(sz1 + 1, sz2 + 1)
+2295:         Accumulated cost matrix.
+2296:     """
+2297:     be = instantiate_backend(be, s1, s2)
+2298:     s1 = to_time_series(s1, remove_nans=True, be=be)
+2299:     s2 = to_time_series(s2, remove_nans=True, be=be)
+2300:     l1 = be.shape(s1)[0]
+2301:     l2 = be.shape(s2)[0]
+2302:     acc_cost_mat = be.full((l1 + 1, l2 + 1), 0)
+2303: 
+2304:     for i in range(1, l1 + 1):
+2305:         for j in range(1, l2 + 1):
+2306:             if mask[i - 1, j - 1]:
+2307:                 if be.is_numpy:
+2308:                     squared_dist = _njit_local_squared_dist(s1[i - 1], s2[j - 1])
+2309:                 else:
+2310:                     squared_dist = _local_squared_dist(s1[i - 1], s2[j - 1], be=be)
+2311:                 if be.sqrt(squared_dist) <= eps:
+2312:                     acc_cost_mat[i][j] = 1 + acc_cost_mat[i - 1][j - 1]
+2313:                 else:
+2314:                     acc_cost_mat[i][j] = max(
+2315:                         acc_cost_mat[i][j - 1], acc_cost_mat[i - 1][j]
+2316:                     )
+2317: 
+2318:     return acc_cost_mat
+2319: 
+2320: 
+2321: @njit(nogil=True)
+2322: def _njit_lcss(s1, s2, eps, mask):
+2323:     """Compute the longest common subsequence score between two time series.
+2324: 
+2325:     Parameters
+2326:     ----------
+2327:     s1 : array-like, shape=(sz1, d)
+2328:         First time series.
+2329:     s2 : array-like, shape=(sz2, d)
+2330:         Second time series.
+2331:     eps : float (default: 1.)
+2332:         Maximum matching distance threshold.
+2333:     mask : array-like, shape=(sz1, sz2)
+2334:         Mask. Unconsidered cells must have False values.
+2335: 
+2336:     Returns
+2337:     -------
+2338:     lcss_score : float
+2339:         Longest Common Subsquence score between both time series.
+2340:     """
+2341:     l1 = s1.shape[0]
+2342:     l2 = s2.shape[0]
+2343:     acc_cost_mat = njit_lcss_accumulated_matrix(s1, s2, eps, mask)
+2344: 
+2345:     return float(acc_cost_mat[-1][-1]) / min([l1, l2])
+2346: 
+2347: 
+2348: def _lcss(s1, s2, eps, mask, be=None):
+2349:     """Compute the longest common subsequence score between two time series.
+2350: 
+2351:     Parameters
+2352:     ----------
+2353:     s1 : array-like, shape=(sz1, d) or (sz1,)
+2354:         First time series. If shape is (sz1,), the time series is assumed to be univariate.
+2355:     s2 : array-like, shape=(sz2, d) or (sz2,)
+2356:         Second time series. If shape is (sz2,), the time series is assumed to be univariate.
+2357:     eps : float (default: 1.)
+2358:         Maximum matching distance threshold.
+2359:     mask : array-like, shape=(sz1, sz2)
+2360:         Mask. Unconsidered cells must have False values.
+2361:     be : Backend object or string or None
+2362:         Backend. If `be` is an instance of the class `NumPyBackend` or the string `"numpy"`,
+2363:         the NumPy backend is used.
+2364:         If `be` is an instance of the class `PyTorchBackend` or the string `"pytorch"`,
+2365:         the PyTorch backend is used.
+2366:         If `be` is `None`, the backend is determined by the input arrays.
+2367:         See our :ref:`dedicated user-guide page <backend>` for more information.
+2368: 
+2369:     Returns
+2370:     -------
+2371:     lcss_score : float
+2372:         Longest Common Subsquence score between both time series.
+2373:     """

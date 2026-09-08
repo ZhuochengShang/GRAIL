@@ -1,0 +1,156 @@
+690:     validate_intervals(ref_intervals, est_intervals)
+691:     # When reference notes are empty, metrics are undefined, return 0's
+692:     if len(ref_intervals) == 0 or len(est_intervals) == 0:
+693:         return 0.0, 0.0, 0.0
+694: 
+695:     matching = match_note_onsets(
+696:         ref_intervals, est_intervals, onset_tolerance=onset_tolerance, strict=strict
+697:     )
+698: 
+699:     onset_precision = float(len(matching)) / len(est_intervals)
+700:     onset_recall = float(len(matching)) / len(ref_intervals)
+701:     onset_f_measure = util.f_measure(onset_precision, onset_recall, beta=beta)
+702:     return onset_precision, onset_recall, onset_f_measure
+703: 
+704: 
+705: def offset_precision_recall_f1(
+706:     ref_intervals,
+707:     est_intervals,
+708:     offset_ratio=0.2,
+709:     offset_min_tolerance=0.05,
+710:     strict=False,
+711:     beta=1.0,
+712: ):
+713:     """Compute the Precision, Recall and F-measure of note offsets: an
+714:     estimated offset is considered correct if it is within +-50ms (or 20% of
+715:     the ref note duration, which ever is greater) of a reference offset. Note
+716:     that this metric completely ignores note onsets and note pitch. This means
+717:     an estimated offset will be considered correct if it matches a
+718:     reference offset, even if the offsets come from notes with completely
+719:     different pitches (i.e. notes that would not match with
+720:     :func:`match_notes`).
+721: 
+722:     Examples
+723:     --------
+724:     >>> ref_intervals, _ = mir_eval.io.load_valued_intervals(
+725:     ...     'reference.txt')
+726:     >>> est_intervals, _ = mir_eval.io.load_valued_intervals(
+727:     ...     'estimated.txt')
+728:     >>> (offset_precision,
+729:     ...  offset_recall,
+730:     ...  offset_f_measure) = mir_eval.transcription.offset_precision_recall_f1(
+731:     ...      ref_intervals, est_intervals)
+732: 
+733:     Parameters
+734:     ----------
+735:     ref_intervals : np.ndarray, shape=(n,2)
+736:         Array of reference notes time intervals (onset and offset times)
+737:     est_intervals : np.ndarray, shape=(m,2)
+738:         Array of estimated notes time intervals (onset and offset times)
+739:     offset_ratio : float > 0 or None
+740:         The ratio of the reference note's duration used to define the
+741:         offset_tolerance. Default is 0.2 (20%), meaning the
+742:         ``offset_tolerance`` will equal the ``ref_duration * 0.2``, or
+743:         ``offset_min_tolerance`` (0.05 by default, i.e. 50 ms), whichever is
+744:         greater.
+745:     offset_min_tolerance : float > 0
+746:         The minimum tolerance for offset matching. See ``offset_ratio``
+747:         description for an explanation of how the offset tolerance is
+748:         determined.
+749:     strict : bool
+750:         If ``strict=False`` (the default), threshold checks for onset matching
+751:         are performed using ``<=`` (less than or equal). If ``strict=True``,
+752:         the threshold checks are performed using ``<`` (less than).
+753:     beta : float > 0
+754:         Weighting factor for f-measure (default value = 1.0).
+755: 
+756:     Returns
+757:     -------
+758:     precision : float
+759:         The computed precision score
+760:     recall : float
+761:         The computed recall score
+762:     f_measure : float
+763:         The computed F-measure score
+764:     """
+765:     validate_intervals(ref_intervals, est_intervals)
+766:     # When reference notes are empty, metrics are undefined, return 0's
+767:     if len(ref_intervals) == 0 or len(est_intervals) == 0:
+768:         return 0.0, 0.0, 0.0
+769: 
+770:     matching = match_note_offsets(
+771:         ref_intervals,
+772:         est_intervals,
+773:         offset_ratio=offset_ratio,
+774:         offset_min_tolerance=offset_min_tolerance,
+775:         strict=strict,
+776:     )
+777: 
+778:     offset_precision = float(len(matching)) / len(est_intervals)
+779:     offset_recall = float(len(matching)) / len(ref_intervals)
+780:     offset_f_measure = util.f_measure(offset_precision, offset_recall, beta=beta)
+781:     return offset_precision, offset_recall, offset_f_measure
+782: 
+783: 
+784: def evaluate(ref_intervals, ref_pitches, est_intervals, est_pitches, **kwargs):
+785:     """Compute all metrics for the given reference and estimated annotations.
+786: 
+787:     Examples
+788:     --------
+789:     >>> ref_intervals, ref_pitches = mir_eval.io.load_valued_intervals(
+790:     ...    'reference.txt')
+791:     >>> est_intervals, est_pitches = mir_eval.io.load_valued_intervals(
+792:     ...    'estimate.txt')
+793:     >>> scores = mir_eval.transcription.evaluate(ref_intervals, ref_pitches,
+794:     ...     est_intervals, est_pitches)
+795: 
+796:     Parameters
+797:     ----------
+798:     ref_intervals : np.ndarray, shape=(n,2)
+799:         Array of reference notes time intervals (onset and offset times)
+800:     ref_pitches : np.ndarray, shape=(n,)
+801:         Array of reference pitch values in Hertz
+802:     est_intervals : np.ndarray, shape=(m,2)
+803:         Array of estimated notes time intervals (onset and offset times)
+804:     est_pitches : np.ndarray, shape=(m,)
+805:         Array of estimated pitch values in Hertz
+806:     **kwargs
+807:         Additional keyword arguments which will be passed to the
+808:         appropriate metric or preprocessing functions.
+809: 
+810:     Returns
+811:     -------
+812:     scores : dict
+813:         Dictionary of scores, where the key is the metric name (str) and
+814:         the value is the (float) score achieved.
+815:     """
+816:     # Compute all the metrics
+817:     scores = collections.OrderedDict()
+818: 
+819:     # Precision, recall and f-measure taking note offsets into account
+820:     kwargs.setdefault("offset_ratio", 0.2)
+821:     orig_offset_ratio = kwargs["offset_ratio"]
+822:     if kwargs["offset_ratio"] is not None:
+823:         (
+824:             scores["Precision"],
+825:             scores["Recall"],
+826:             scores["F-measure"],
+827:             scores["Average_Overlap_Ratio"],
+828:         ) = util.filter_kwargs(
+829:             precision_recall_f1_overlap,
+830:             ref_intervals,
+831:             ref_pitches,
+832:             est_intervals,
+833:             est_pitches,
+834:             **kwargs
+835:         )
+836: 
+837:     # Precision, recall and f-measure NOT taking note offsets into account
+838:     kwargs["offset_ratio"] = None
+839:     (
+840:         scores["Precision_no_offset"],
+841:         scores["Recall_no_offset"],
+842:         scores["F-measure_no_offset"],
+843:         scores["Average_Overlap_Ratio_no_offset"],
+844:     ) = util.filter_kwargs(
+845:         precision_recall_f1_overlap,

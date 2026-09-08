@@ -1,0 +1,58 @@
+{
+  "name": "get_backend",
+  "native_row": {
+    "name": "get_backend",
+    "doc_source": "original",
+    "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+    "execution_evidence": {
+      "status": "fail",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "fail",
+          "category": "infra",
+          "error": "missing module/import: cannot import name 'get_backend' from 'tslearn.backend' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1"
+        }
+      ],
+      "error_category": "infra",
+      "error": "missing module/import: cannot import name 'get_backend' from 'tslearn.backend' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/backend/__init__.py)",
+      "code": "from tslearn.backend import get_backend\n\nbackend = None\nfor arg in [(\"numpy\",), (X,), ()]:\n    try:\n        backend = get_backend(*arg)\n        break\n    except Exception:\n        pass\n\nassert backend is not None, \"get_backend failed with all attempted arguments\"\n\nbackend_str = str(type(backend)).lower() + str(backend).lower()\nassert \"numpy\" in backend_str, f\"Expected numpy backend, got {backend}\"\n\nprint(f\"__CHECK__ get_backend {type(backend).__name__}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_get_backend/api_test.py",
+      "exit_code": 1,
+      "stdout_tail": "",
+      "stderr_tail": "__RUN_ERR__ ImportError: cannot import name 'get_backend' from 'tslearn.backend' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/backend/__init__.py)\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_get_backend/api_test.py\", line 58, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_get_backend/api_test.py\", line 53, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_get_backend/api_test.py\", line 34, in api_test\n    from tslearn.backend import get_backend\nImportError: cannot import name 'get_backend' from 'tslearn.backend' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/backend/__init__.py)\n"
+    },
+    "status": "fail",
+    "attempts": 1,
+    "pass_round": null,
+    "wall_s": 327.1,
+    "llm_calls": 1,
+    "input_tokens": 1323,
+    "output_tokens": 2474,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 1323,
+        "output_tokens": 2474
+      }
+    },
+    "error_category": "infra",
+    "error": "missing module/import: cannot import name 'get_backend' from 'tslearn.backend' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/backend/__init__.py)",
+    "locus": "",
+    "doc_chars": 93,
+    "document_sha256": "bc14d5927c55cf3915d91a4bf9d5bf7826a9db2cdc6614c08477f9f0b70be31d",
+    "source": "tslearn/tslearn/backend/backend.py:84",
+    "source_other_sites": 0,
+    "codebase_frames": null
+  },
+  "retained_binding": "recorded_code_prefix_present",
+  "retained_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_get_backend/api_test.py",
+  "retained_sha256": "f5fd81ab3bc5d71a04d20954fd39af91702f283dfe84c4e420eee842811f26fa",
+  "source_window": {
+    "path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/backend/backend.py",
+    "full_file_sha256": "9ef1534cc9ef139550ff3bd8e49a43c370ef9358afd8725dc1579976523f749c",
+    "first_line": 69,
+    "last_line": 116,
+    "other_sites": 0
+  }
+}

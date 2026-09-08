@@ -1,0 +1,156 @@
+156:     sm = np.zeros((len(P), len(Q)))  # The score matrix
+157:     for iP, occ_P in enumerate(P):
+158:         for iQ, occ_Q in enumerate(Q):
+159:             if similarity_metric == "cardinality_score":
+160:                 denom = float(np.max([len(occ_P), len(occ_Q)]))
+161:                 # Compute the score
+162:                 sm[iP, iQ] = len(_occurrence_intersection(occ_P, occ_Q)) / denom
+163:             # TODO: More scores: 'normalised matching socre'
+164:             else:
+165:                 raise ValueError(
+166:                     "The similarity metric (%s) can only be: " "'cardinality_score'."
+167:                 )
+168:     return sm
+169: 
+170: 
+171: def standard_FPR(reference_patterns, estimated_patterns, tol=1e-5):
+172:     """Compute the standard F1 Score, Precision and Recall.
+173: 
+174:     This metric checks if the prototype patterns of the reference match
+175:     possible translated patterns in the prototype patterns of the estimations.
+176:     Since the sizes of these prototypes must be equal, this metric is quite
+177:     restrictive and it tends to be 0 in most of 2013 MIREX results.
+178: 
+179:     Examples
+180:     --------
+181:     >>> ref_patterns = mir_eval.io.load_patterns("ref_pattern.txt")
+182:     >>> est_patterns = mir_eval.io.load_patterns("est_pattern.txt")
+183:     >>> F, P, R = mir_eval.pattern.standard_FPR(ref_patterns, est_patterns)
+184: 
+185:     Parameters
+186:     ----------
+187:     reference_patterns : list
+188:         The reference patterns using the format returned by
+189:         :func:`mir_eval.io.load_patterns()`
+190:     estimated_patterns : list
+191:         The estimated patterns in the same format
+192:     tol : float
+193:         Tolerance level when comparing reference against estimation.
+194:         Default parameter is the one found in the original matlab code by
+195:         Tom Collins used for MIREX 2013.
+196:         (Default value = 1e-5)
+197: 
+198:     Returns
+199:     -------
+200:     f_measure : float
+201:         The standard F1 Score
+202:     precision : float
+203:         The standard Precision
+204:     recall : float
+205:         The standard Recall
+206: 
+207:     """
+208:     validate(reference_patterns, estimated_patterns)
+209:     nP = len(reference_patterns)  # Number of patterns in the reference
+210:     nQ = len(estimated_patterns)  # Number of patterns in the estimation
+211:     k = 0  # Number of patterns that match
+212: 
+213:     # If no patterns were provided, metric is zero
+214:     if _n_onset_midi(reference_patterns) == 0 or _n_onset_midi(estimated_patterns) == 0:
+215:         return 0.0, 0.0, 0.0
+216: 
+217:     # Find matches of the prototype patterns
+218:     for ref_pattern in reference_patterns:
+219:         P = np.asarray(ref_pattern[0])  # Get reference prototype
+220:         for est_pattern in estimated_patterns:
+221:             Q = np.asarray(est_pattern[0])  # Get estimation prototype
+222: 
+223:             if len(P) != len(Q):
+224:                 continue
+225: 
+226:             # Check transposition given a certain tolerance
+227:             if len(P) == len(Q) == 1 or np.max(np.abs(np.diff(P - Q, axis=0))) < tol:
+228:                 k += 1
+229:                 break
+230: 
+231:     # Compute the standard measures
+232:     precision = k / float(nQ)
+233:     recall = k / float(nP)
+234:     f_measure = util.f_measure(precision, recall)
+235:     return f_measure, precision, recall
+236: 
+237: 
+238: def establishment_FPR(
+239:     reference_patterns, estimated_patterns, similarity_metric="cardinality_score"
+240: ):
+241:     """Compute the establishment F1 Score, Precision and Recall.
+242: 
+243:     Examples
+244:     --------
+245:     >>> ref_patterns = mir_eval.io.load_patterns("ref_pattern.txt")
+246:     >>> est_patterns = mir_eval.io.load_patterns("est_pattern.txt")
+247:     >>> F, P, R = mir_eval.pattern.establishment_FPR(ref_patterns,
+248:     ...                                              est_patterns)
+249: 
+250:     Parameters
+251:     ----------
+252:     reference_patterns : list
+253:         The reference patterns in the format returned by
+254:         :func:`mir_eval.io.load_patterns()`
+255: 
+256:     estimated_patterns : list
+257:         The estimated patterns in the same format
+258: 
+259:     similarity_metric : str
+260:         A string representing the metric to be used when computing the
+261:         similarity matrix. Accepted values:
+262: 
+263:             - "cardinality_score": Count of the intersection
+264:               between occurrences.
+265: 
+266:         (Default value = "cardinality_score")
+267: 
+268:     Returns
+269:     -------
+270:     f_measure : float
+271:         The establishment F1 Score
+272:     precision : float
+273:         The establishment Precision
+274:     recall : float
+275:         The establishment Recall
+276: 
+277:     """
+278:     validate(reference_patterns, estimated_patterns)
+279:     nP = len(reference_patterns)  # Number of elements in reference
+280:     nQ = len(estimated_patterns)  # Number of elements in estimation
+281:     S = np.zeros((nP, nQ))  # Establishment matrix
+282: 
+283:     # If no patterns were provided, metric is zero
+284:     if _n_onset_midi(reference_patterns) == 0 or _n_onset_midi(estimated_patterns) == 0:
+285:         return 0.0, 0.0, 0.0
+286: 
+287:     for iP, ref_pattern in enumerate(reference_patterns):
+288:         for iQ, est_pattern in enumerate(estimated_patterns):
+289:             s = _compute_score_matrix(ref_pattern, est_pattern, similarity_metric)
+290:             S[iP, iQ] = np.max(s)
+291: 
+292:     # Compute scores
+293:     precision = np.mean(np.max(S, axis=0))
+294:     recall = np.mean(np.max(S, axis=1))
+295:     f_measure = util.f_measure(precision, recall)
+296:     return f_measure, precision, recall
+297: 
+298: 
+299: def occurrence_FPR(
+300:     reference_patterns,
+301:     estimated_patterns,
+302:     thres=0.75,
+303:     similarity_metric="cardinality_score",
+304: ):
+305:     """Compute the occurrence F1 Score, Precision and Recall.
+306: 
+307:     Examples
+308:     --------
+309:     >>> ref_patterns = mir_eval.io.load_patterns("ref_pattern.txt")
+310:     >>> est_patterns = mir_eval.io.load_patterns("est_pattern.txt")
+311:     >>> F, P, R = mir_eval.pattern.occurrence_FPR(ref_patterns,

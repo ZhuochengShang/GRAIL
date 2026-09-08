@@ -1,0 +1,19 @@
+248: 
+249:         @staticmethod
+250:         def normal(loc=0.0, scale=1.0, size=(1,)):
+251:             if not hasattr(size, "__iter__"):
+252:                 size = (size,)
+253:             return _torch.normal(mean=loc, std=scale, size=size)
+254: 
+255:         @staticmethod
+256:         def uniform(low=0.0, high=1.0, size=(1,), dtype=None):
+257:             if not hasattr(size, "__iter__"):
+258:                 size = (size,)
+259:             if low >= high:
+260:                 raise ValueError("Upper bound must be higher than lower bound")
+261:             return (high - low) * _torch.rand(*size, dtype=dtype) + low
+262: 
+263:     class PyTorchTesting:
+264:         def __init__(self):
+265:             self.assert_allclose = _torch.allclose
+266:             self.assert_equal = _torch.testing.assert_close

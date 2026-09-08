@@ -1,0 +1,10 @@
+net.coobird.thumbnailator.resizers.Resizer resizer = new net.coobird.thumbnailator.resizers.BicubicResizer();
+java.util.Map<java.awt.RenderingHints.Key, Object> hints = resizer.getRenderingHints();
+
+assert hints != null : "Hints map should not be null";
+assert hints.containsKey(java.awt.RenderingHints.KEY_INTERPOLATION) : "Hints should contain KEY_INTERPOLATION";
+
+Object interpValue = hints.get(java.awt.RenderingHints.KEY_INTERPOLATION);
+assert java.awt.RenderingHints.VALUE_INTERPOLATION_BICUBIC.equals(interpValue) : "Expected bicubic interpolation hint";
+
+System.out.println("__CHECK__ getRenderingHints " + interpValue);

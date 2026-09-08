@@ -1,0 +1,104 @@
+254:                 f"Reference timestamps are all identical, can not compute PCS"
+255:                 f" metric!"
+256:             )
+257: 
+258:         ref_starts = reference_timestamps[:-1]
+259:         ref_ends = reference_timestamps[1:]
+260:         est_starts = estimated_timestamps[:-1]
+261:         est_ends = estimated_timestamps[1:]
+262: 
+263:     overlap_starts = np.maximum(ref_starts, est_starts)
+264:     overlap_ends = np.minimum(ref_ends, est_ends)
+265:     overlap_duration = np.sum(np.maximum(overlap_ends - overlap_starts, 0))
+266:     return overlap_duration / duration
+267: 
+268: 
+269: def karaoke_perceptual_metric(reference_timestamps, estimated_timestamps):
+270:     """Metric based on human synchronicity perception as measured in the paper
+271:     "User-centered evaluation of lyrics to audio alignment" [#lizemasclef2021]
+272: 
+273:     The parameters of this function were tuned on data collected through a user Karaoke-like
+274:     experiment
+275:     It reflects human judgment of how "synchronous" lyrics and audio stimuli are perceived
+276:     in that setup.
+277:     Beware that this metric is non-symmetrical and by construction it is also not equal to 1 at 0.
+278: 
+279:     Examples
+280:     --------
+281:     >>> reference_timestamps = mir_eval.io.load_events('reference.txt')
+282:     >>> estimated_timestamps = mir_eval.io.load_events('estimated.txt')
+283:     >>> score = mir_eval.align.karaoke_perceptual_metric(reference_onsets, estimated_timestamps)
+284: 
+285:     Parameters
+286:     ----------
+287:     reference_timestamps : np.ndarray
+288:         reference timestamps, in seconds
+289:     estimated_timestamps : np.ndarray
+290:         estimated timestamps, in seconds
+291: 
+292:     Returns
+293:     -------
+294:     perceptual_score : float
+295:         Perceptual score, averaged over all timestamps
+296:     """
+297:     validate(reference_timestamps, estimated_timestamps)
+298:     offsets = estimated_timestamps - reference_timestamps
+299: 
+300:     # Score offsets using a certain skewed normal distribution
+301:     skewness = 1.12244251
+302:     localisation = -0.22270315
+303:     scale = 0.29779424
+304:     normalisation_factor = 1.6857
+305:     perceptual_scores = (1.0 / normalisation_factor) * skewnorm.pdf(
+306:         offsets, skewness, loc=localisation, scale=scale
+307:     )
+308: 
+309:     return np.mean(perceptual_scores)
+310: 
+311: 
+312: def evaluate(reference_timestamps, estimated_timestamps, **kwargs):
+313:     """Compute all metrics for the given reference and estimated annotations.
+314: 
+315:     Examples
+316:     --------
+317:     >>> reference_timestamps = mir_eval.io.load_events('reference.txt')
+318:     >>> estimated_timestamps = mir_eval.io.load_events('estimated.txt')
+319:     >>> duration = max(np.max(reference_timestamps), np.max(estimated_timestamps)) + 10
+320:     >>> scores = mir_eval.align.evaluate(reference_onsets, estimated_timestamps, duration)
+321: 
+322:     Parameters
+323:     ----------
+324:     reference_timestamps : np.ndarray
+325:         reference timestamp locations, in seconds
+326:     estimated_timestamps : np.ndarray
+327:         estimated timestamp locations, in seconds
+328:     **kwargs
+329:         Additional keyword arguments which will be passed to the
+330:         appropriate metric or preprocessing functions.
+331: 
+332:     Returns
+333:     -------
+334:     scores : dict
+335:         Dictionary of scores, where the key is the metric name (str) and
+336:         the value is the (float) score achieved.
+337:     """
+338:     # Compute all metrics
+339:     scores = collections.OrderedDict()
+340: 
+341:     scores["pc"] = filter_kwargs(
+342:         percentage_correct, reference_timestamps, estimated_timestamps, **kwargs
+343:     )
+344:     scores["mae"], scores["aae"] = absolute_error(
+345:         reference_timestamps, estimated_timestamps
+346:     )
+347:     scores["pcs"] = filter_kwargs(
+348:         percentage_correct_segments,
+349:         reference_timestamps,
+350:         estimated_timestamps,
+351:         **kwargs,
+352:     )
+353:     scores["perceptual"] = karaoke_perceptual_metric(
+354:         reference_timestamps, estimated_timestamps
+355:     )
+356: 
+357:     return scores

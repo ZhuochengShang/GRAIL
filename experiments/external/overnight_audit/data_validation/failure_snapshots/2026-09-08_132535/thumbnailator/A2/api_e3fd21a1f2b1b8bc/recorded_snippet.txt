@@ -1,0 +1,9 @@
+net.coobird.thumbnailator.makers.ThumbnailMaker maker = new net.coobird.thumbnailator.makers.FixedSizeThumbnailMaker(50, 50);
+net.coobird.thumbnailator.makers.ThumbnailMaker chained = maker.defaultResizerFactory();
+java.awt.image.BufferedImage result = chained.make(sourceImage);
+
+assert chained == maker : "Expected fluent return for method chaining";
+assert result != null : "Resulting image should not be null";
+assert result.getWidth() <= 50 && result.getHeight() <= 50 : "Image should be resized to fit within 50x50";
+
+System.out.println("__CHECK__ defaultResizerFactory " + result.getWidth() + "x" + result.getHeight());

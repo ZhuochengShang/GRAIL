@@ -1,0 +1,156 @@
+945: 
+946:     y_est = util.index_labels(y_est)[0]
+947: 
+948:     # Mutual information
+949:     mutual_info = _mutual_info_score(y_ref, y_est)
+950: 
+951:     # Adjusted mutual information
+952:     adj_mutual_info = _adjusted_mutual_info_score(y_ref, y_est)
+953: 
+954:     # Normalized mutual information
+955:     norm_mutual_info = _normalized_mutual_info_score(y_ref, y_est)
+956: 
+957:     return mutual_info, adj_mutual_info, norm_mutual_info
+958: 
+959: 
+960: def nce(
+961:     reference_intervals,
+962:     reference_labels,
+963:     estimated_intervals,
+964:     estimated_labels,
+965:     frame_size=0.1,
+966:     beta=1.0,
+967:     marginal=False,
+968: ):
+969:     """Frame-clustering segmentation: normalized conditional entropy
+970: 
+971:     Computes cross-entropy of cluster assignment, normalized by the
+972:     max-entropy.
+973: 
+974:     Examples
+975:     --------
+976:     >>> (ref_intervals,
+977:     ...  ref_labels) = mir_eval.io.load_labeled_intervals('ref.lab')
+978:     >>> (est_intervals,
+979:     ...  est_labels) = mir_eval.io.load_labeled_intervals('est.lab')
+980:     >>> # Trim or pad the estimate to match reference timing
+981:     >>> (ref_intervals,
+982:     ...  ref_labels) = mir_eval.util.adjust_intervals(ref_intervals,
+983:     ...                                               ref_labels,
+984:     ...                                               t_min=0)
+985:     >>> (est_intervals,
+986:     ...  est_labels) = mir_eval.util.adjust_intervals(
+987:     ...     est_intervals, est_labels, t_min=0, t_max=ref_intervals.max())
+988:     >>> S_over, S_under, S_F = mir_eval.structure.nce(ref_intervals,
+989:     ...                                               ref_labels,
+990:     ...                                               est_intervals,
+991:     ...                                               est_labels)
+992: 
+993:     Parameters
+994:     ----------
+995:     reference_intervals : np.ndarray, shape=(n, 2)
+996:         reference segment intervals, in the format returned by
+997:         :func:`mir_eval.io.load_labeled_intervals`.
+998:     reference_labels : list, shape=(n,)
+999:         reference segment labels, in the format returned by
+1000:         :func:`mir_eval.io.load_labeled_intervals`.
+1001:     estimated_intervals : np.ndarray, shape=(m, 2)
+1002:         estimated segment intervals, in the format returned by
+1003:         :func:`mir_eval.io.load_labeled_intervals`.
+1004:     estimated_labels : list, shape=(m,)
+1005:         estimated segment labels, in the format returned by
+1006:         :func:`mir_eval.io.load_labeled_intervals`.
+1007:     frame_size : float > 0
+1008:         length (in seconds) of frames for clustering
+1009:         (Default value = 0.1)
+1010:     beta : float > 0
+1011:         beta for F-measure
+1012:         (Default value = 1.0)
+1013:     marginal : bool
+1014:         If `False`, normalize conditional entropy by uniform entropy.
+1015:         If `True`, normalize conditional entropy by the marginal entropy.
+1016:         (Default value = False)
+1017: 
+1018:     Returns
+1019:     -------
+1020:     S_over
+1021:         Over-clustering score:
+1022: 
+1023:         - For `marginal=False`, ``1 - H(y_est | y_ref) / log(|y_est|)``
+1024: 
+1025:         - For `marginal=True`, ``1 - H(y_est | y_ref) / H(y_est)``
+1026: 
+1027:         If `|y_est|==1`, then `S_over` will be 0.
+1028:     S_under
+1029:         Under-clustering score:
+1030: 
+1031:         - For `marginal=False`, ``1 - H(y_ref | y_est) / log(|y_ref|)``
+1032: 
+1033:         - For `marginal=True`, ``1 - H(y_ref | y_est) / H(y_ref)``
+1034: 
+1035:         If `|y_ref|==1`, then `S_under` will be 0.
+1036:     S_F
+1037:         F-measure for (S_over, S_under)
+1038:     """
+1039:     validate_structure(
+1040:         reference_intervals, reference_labels, estimated_intervals, estimated_labels
+1041:     )
+1042: 
+1043:     # Check for empty annotations.  Don't need to check labels because
+1044:     # validate_structure makes sure they're the same size as intervals
+1045:     if reference_intervals.size == 0 or estimated_intervals.size == 0:
+1046:         return 0.0, 0.0, 0.0
+1047: 
+1048:     # Generate the cluster labels
+1049:     y_ref = util.intervals_to_samples(
+1050:         reference_intervals, reference_labels, sample_size=frame_size
+1051:     )[-1]
+1052: 
+1053:     y_ref = util.index_labels(y_ref)[0]
+1054: 
+1055:     # Map to index space
+1056:     y_est = util.intervals_to_samples(
+1057:         estimated_intervals, estimated_labels, sample_size=frame_size
+1058:     )[-1]
+1059: 
+1060:     y_est = util.index_labels(y_est)[0]
+1061: 
+1062:     # Make the contingency table: shape = (n_ref, n_est)
+1063:     contingency = _contingency_matrix(y_ref, y_est).astype(float)
+1064: 
+1065:     # Normalize by the number of frames
+1066:     contingency = contingency / len(y_ref)
+1067: 
+1068:     # Compute the marginals
+1069:     p_est = contingency.sum(axis=0)
+1070:     p_ref = contingency.sum(axis=1)
+1071: 
+1072:     # H(true | prediction) = sum_j P[estimated = j] *
+1073:     # sum_i P[true = i | estimated = j] log P[true = i | estimated = j]
+1074:     # entropy sums over axis=0, which is true labels
+1075: 
+1076:     true_given_est = p_est.dot(scipy.stats.entropy(contingency, base=2))
+1077:     pred_given_ref = p_ref.dot(scipy.stats.entropy(contingency.T, base=2))
+1078: 
+1079:     if marginal:
+1080:         # Normalize conditional entropy by marginal entropy
+1081:         z_ref = scipy.stats.entropy(p_ref, base=2)
+1082:         z_est = scipy.stats.entropy(p_est, base=2)
+1083:     else:
+1084:         z_ref = np.log2(contingency.shape[0])
+1085:         z_est = np.log2(contingency.shape[1])
+1086: 
+1087:     score_under = 0.0
+1088:     if z_ref > 0:
+1089:         score_under = 1.0 - true_given_est / z_ref
+1090: 
+1091:     score_over = 0.0
+1092:     if z_est > 0:
+1093:         score_over = 1.0 - pred_given_ref / z_est
+1094: 
+1095:     f_measure = util.f_measure(score_over, score_under, beta=beta)
+1096: 
+1097:     return score_over, score_under, f_measure
+1098: 
+1099: 
+1100: def vmeasure(

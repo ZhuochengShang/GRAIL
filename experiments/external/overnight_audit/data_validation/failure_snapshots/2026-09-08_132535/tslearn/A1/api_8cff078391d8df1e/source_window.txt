@@ -1,0 +1,156 @@
+22:     HAS_TORCH = True
+23: except ImportError:
+24:     HAS_TORCH = False
+25: 
+26: 
+27: if not HAS_TORCH:
+28: 
+29:     class PyTorchBackend:
+30:         def __init__(self):
+31:             raise ValueError(
+32:                 "Could not use the PyTorch backend since torch is not installed"
+33:             )
+34: 
+35: else:
+36: 
+37:     class PyTorchBackend(object):
+38:         """Class for the PyTorch  backend."""
+39: 
+40:         def __init__(self):
+41:             self.backend_string = "pytorch"
+42: 
+43:             self.linalg = PyTorchLinalg()
+44:             self.random = PyTorchRandom()
+45:             self.testing = PyTorchTesting()
+46: 
+47:             self.int8 = _torch.int8
+48:             self.int16 = _torch.int16
+49:             self.int32 = _torch.int32
+50:             self.int64 = _torch.int64
+51:             self.float32 = _torch.float32
+52:             self.float64 = _torch.float64
+53:             self.complex64 = _torch.complex64
+54:             self.complex128 = _torch.complex128
+55: 
+56:             self.abs = _torch.abs
+57:             self.any = _torch.any
+58:             self.arange = _torch.arange
+59:             self.argmax = _torch.argmax
+60:             self.argmin = _torch.argmin
+61:             self.asarray = _torch.asarray
+62:             self.dbl_max = _torch.finfo(_torch.double).max
+63:             self.ceil = _torch.ceil
+64:             self.diag = _torch.diag
+65:             self.empty = _torch.empty
+66:             self.exp = _torch.exp
+67:             self.eye = _torch.eye
+68:             self.floor = _torch.floor
+69:             self.full = _torch.full
+70:             self.hstack = _torch.hstack
+71:             self.inf = _torch.inf
+72:             self.is_array = _torch.is_tensor
+73:             self.isfinite = _torch.isfinite
+74:             self.isnan = _torch.isnan
+75:             self.log = _torch.log
+76:             self.max = _torch.max
+77:             self.mean = _torch.mean
+78:             self.median = _torch.median
+79:             self.min = _torch.min
+80:             self.nan = _torch.nan
+81:             self.pairwise_euclidean_distances = _torch.cdist
+82:             self.reshape = _torch.reshape
+83:             self.round = _torch.round
+84:             self.sum = _torch.sum
+85:             self.vstack = _torch.vstack
+86:             self.zeros = _torch.zeros
+87:             self.zeros_like = _torch.zeros_like
+88: 
+89:         @staticmethod
+90:         def all(x, axis=None):
+91:             if not _torch.is_tensor(x):
+92:                 x = _torch.tensor(x)
+93:             if axis is None:
+94:                 return x.bool().all()
+95:             if isinstance(axis, int):
+96:                 return _torch.all(x.bool(), axis)
+97:             if len(axis) == 1:
+98:                 return _torch.all(x, *axis)
+99:             axis = list(axis)
+100:             for i_axis, one_axis in enumerate(axis):
+101:                 if one_axis < 0:
+102:                     axis[i_axis] = x.ndim() + one_axis
+103:             new_axis = tuple(k - 1 if k >= 0 else k for k in axis[1:])
+104:             return all(_torch.all(x.bool(), axis[0]), new_axis)
+105: 
+106:         def array(self, val, dtype=None):
+107:             if _torch.is_tensor(val):
+108:                 if dtype is None or val.dtype == dtype:
+109:                     return val.clone()
+110:                 return self.cast(val, dtype=dtype)
+111: 
+112:             elif isinstance(val, _np.ndarray):
+113:                 tensor = self.from_numpy(val)
+114:                 if dtype is not None and tensor.dtype != dtype:
+115:                     tensor = self.cast(tensor, dtype=dtype)
+116: 
+117:                 return tensor
+118: 
+119:             elif isinstance(val, (list, tuple)) and len(val):
+120:                 tensors = [self.array(tensor, dtype=dtype) for tensor in val]
+121:                 return _torch.stack(tensors)
+122: 
+123:             return _torch.tensor(val, dtype=dtype)
+124: 
+125:         @staticmethod
+126:         def belongs_to_backend(x):
+127:             return "torch" in str(type(x)).lower()
+128: 
+129:         def cast(self, x, dtype):
+130:             if _torch.is_tensor(x):
+131:                 return x.to(dtype=dtype)
+132:             return self.array(x, dtype=dtype)
+133: 
+134:         @staticmethod
+135:         def cdist(x, y, metric="euclidean", p=None):
+136:             if metric == "euclidean":
+137:                 return _torch.cdist(x, y)
+138:             if metric == "sqeuclidean":
+139:                 return _torch.cdist(x, y) ** 2
+140:             if metric == "minkowski":
+141:                 return _torch.cdist(x, y, p=p)
+142:             raise ValueError(f"Metric {metric} not implemented in PyTorch backend.")
+143: 
+144:         @staticmethod
+145:         def copy(x):
+146:             return x.clone()
+147: 
+148:         @staticmethod
+149:         def from_numpy(x):
+150:             return _torch.from_numpy(x)
+151: 
+152:         @staticmethod
+153:         def iscomplex(x):
+154:             if isinstance(x, complex):
+155:                 return True
+156:             return x.dtype.is_complex
+157: 
+158:         @staticmethod
+159:         def is_float(x):
+160:             if isinstance(x, float):
+161:                 return True
+162:             return x.dtype.is_floating_point
+163: 
+164:         @staticmethod
+165:         def is_float32(x):
+166:             return isinstance(x, _torch.float32)
+167: 
+168:         @staticmethod
+169:         def is_float64(x):
+170:             return isinstance(x, _torch.float64)
+171: 
+172:         @staticmethod
+173:         def ndim(x):
+174:             return x.dim()
+175: 
+176:         @staticmethod
+177:         def pairwise_distances(X, Y=None, metric="euclidean"):

@@ -1,0 +1,102 @@
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Arrays;
+
+import javax.imageio.ImageIO;
+
+import net.coobird.thumbnailator.*;
+import net.coobird.thumbnailator.builders.*;
+import net.coobird.thumbnailator.filters.*;
+import net.coobird.thumbnailator.geometry.*;
+import net.coobird.thumbnailator.makers.*;
+import net.coobird.thumbnailator.name.*;
+import net.coobird.thumbnailator.resizers.*;
+import net.coobird.thumbnailator.resizers.configurations.*;
+import net.coobird.thumbnailator.tasks.*;
+import net.coobird.thumbnailator.tasks.io.*;
+import net.coobird.thumbnailator.util.*;
+import net.coobird.thumbnailator.util.exif.*;
+
+public final class ApiTest {
+    private ApiTest() {}
+
+    public static void main(String[] args) {
+        try {
+            String grid_png = "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A1/experiments/external/thumbnailator/source/src/test/resources/Thumbnailator/grid.png";
+    String grid_jpeg = "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A1/experiments/external/thumbnailator/source/src/test/resources/Thumbnailator/grid.jpg";
+    String exif_jpeg = "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A1/experiments/external/thumbnailator/source/src/test/resources/Exif/original.jpg";
+    String output_dir = "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A1/experiments/external/thumbnailator/.aideal_exec/A1/output";
+
+    // pre-loaded typed inputs (comprehension.execute.preamble)
+    BufferedImage sourceImage = new BufferedImage(32, 24, BufferedImage.TYPE_INT_RGB);
+    Graphics2D graphics = sourceImage.createGraphics();
+    graphics.setColor(Color.BLUE);
+    graphics.fillRect(0, 0, 32, 24);
+    graphics.setColor(Color.YELLOW);
+    graphics.fillRect(8, 6, 16, 12);
+    graphics.dispose();
+    BufferedImage destinationImage = new BufferedImage(16, 12, BufferedImage.TYPE_INT_RGB);
+    ByteArrayOutputStream imageBytes = new ByteArrayOutputStream();
+    Path outputPath = Paths.get(output_dir, "thumbnail.png");
+    Files.createDirectories(outputPath.getParent());
+
+            // TODO API_TEST_START
+            try {
+                java.lang.reflect.Constructor<?> targetConstructor = net.coobird.thumbnailator.ThumbnailParameter.class.getConstructors()[0];
+                for (java.lang.reflect.Constructor<?> cons : net.coobird.thumbnailator.ThumbnailParameter.class.getConstructors()) {
+                    if (java.util.Arrays.asList(cons.getParameterTypes()).contains(java.awt.Dimension.class)) {
+                        targetConstructor = cons;
+                        break;
+                    }
+                }
+    
+                Object[] args = new Object[targetConstructor.getParameterTypes().length];
+                for (int i = 0; i < args.length; i++) {
+                    Class<?> t = targetConstructor.getParameterTypes()[i];
+                    if (t == java.awt.Dimension.class) {
+                        args[i] = new java.awt.Dimension(123, 456);
+                    } else if (t == double.class) {
+                        args[i] = 1.5;
+                    } else if (t == boolean.class) {
+                        args[i] = true;
+                    } else if (t == String.class) {
+                        args[i] = "JPEG";
+                    } else if (t == float.class) {
+                        args[i] = 0.8f;
+                    } else if (t == int.class) {
+                        args[i] = java.awt.image.BufferedImage.TYPE_INT_ARGB;
+                    } else if (t == java.util.List.class) {
+                        args[i] = java.util.Collections.emptyList();
+                    }
+                }
+    
+                net.coobird.thumbnailator.ThumbnailParameter param = 
+                    (net.coobird.thumbnailator.ThumbnailParameter) targetConstructor.newInstance(args);
+    
+                java.awt.Dimension size = param.getSize();
+                String format = param.getOutputFormat();
+    
+                assert size == null || size.width == 123 : "Size mismatch in ThumbnailParameter";
+                assert format == null || "JPEG".equals(format) : "Format mismatch in ThumbnailParameter";
+    
+                System.out.println("__CHECK__ ThumbnailParameter " + (size != null ? size.width : "null") + "_" + format);
+            } catch (Exception e) {
+                throw new RuntimeException("Failed to instantiate and verify ThumbnailParameter", e);
+            }
+            // TODO API_TEST_END
+            System.out.println("__DONE__");
+        } catch (Throwable exc) {
+            System.err.println("__RUN_ERR__ " + exc.getClass().getSimpleName()
+                    + ": " + exc.getMessage());
+            exc.printStackTrace(System.err);
+            System.exit(1);
+        }
+    }
+}

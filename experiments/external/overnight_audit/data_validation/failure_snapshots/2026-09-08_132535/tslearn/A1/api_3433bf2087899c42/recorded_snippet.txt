@@ -1,0 +1,11 @@
+from tslearn.shapelets import LearningShapelets
+
+shp_clf = LearningShapelets(n_shapelets_per_size={3: 2, 4: 1}, max_iter=1, random_state=42)
+shp_clf.fit(X, y)
+
+shapelets = shp_clf.shapelets_
+
+assert len(shapelets) == 3, f"Expected 3 shapelets, got {len(shapelets)}"
+assert shapelets[0].shape[0] in (3, 4), f"Unexpected shapelet length: {shapelets[0].shape[0]}"
+
+print(f"__CHECK__ shapelets_ {len(shapelets)}")

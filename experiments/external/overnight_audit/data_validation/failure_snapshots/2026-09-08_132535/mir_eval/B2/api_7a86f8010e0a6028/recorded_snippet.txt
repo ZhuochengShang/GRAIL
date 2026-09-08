@@ -1,0 +1,19 @@
+import mir_eval
+import numpy as np
+
+# Preprocess inputs as required by standard MIR evaluation practices
+ref_beats = mir_eval.beat.trim_beats(ref_events)
+est_beats = mir_eval.beat.trim_beats(est_events)
+
+# Compute Cemgil's score
+cemgil_score, cemgil_max = mir_eval.beat.cemgil(ref_beats, est_beats)
+
+# Strong oracle: identical inputs should yield a perfect score of 1.0
+perfect_score, perfect_max = mir_eval.beat.cemgil(ref_beats, ref_beats)
+
+assert isinstance(cemgil_score, float), "cemgil_score must be a float"
+assert isinstance(cemgil_max, float), "cemgil_max must be a float"
+assert perfect_score > 0.99, f"Expected perfect score to be ~1.0, got {perfect_score}"
+assert 0.0 <= cemgil_score <= 1.0, "cemgil_score should be bounded between 0 and 1"
+
+print(f"__CHECK__ cemgil {cemgil_score:.4f}, {cemgil_max:.4f}")

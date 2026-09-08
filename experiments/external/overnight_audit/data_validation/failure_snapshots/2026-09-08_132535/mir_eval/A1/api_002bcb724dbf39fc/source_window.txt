@@ -1,0 +1,156 @@
+237: 
+238:     # If we have no boundaries, we get no score.
+239:     if len(reference_boundaries) == 0 or len(estimated_boundaries) == 0:
+240:         return 0.0, 0.0, 0.0
+241: 
+242:     matching = util.match_events(reference_boundaries, estimated_boundaries, window)
+243: 
+244:     precision = float(len(matching)) / len(estimated_boundaries)
+245:     recall = float(len(matching)) / len(reference_boundaries)
+246: 
+247:     f_measure = util.f_measure(precision, recall, beta=beta)
+248: 
+249:     return precision, recall, f_measure
+250: 
+251: 
+252: def deviation(reference_intervals, estimated_intervals, trim=False):
+253:     """Compute the median deviations between reference
+254:     and estimated boundary times.
+255: 
+256:     Examples
+257:     --------
+258:     >>> ref_intervals, _ = mir_eval.io.load_labeled_intervals('ref.lab')
+259:     >>> est_intervals, _ = mir_eval.io.load_labeled_intervals('est.lab')
+260:     >>> r_to_e, e_to_r = mir_eval.boundary.deviation(ref_intervals,
+261:     ...                                              est_intervals)
+262: 
+263:     Parameters
+264:     ----------
+265:     reference_intervals : np.ndarray, shape=(n, 2)
+266:         reference segment intervals, in the format returned by
+267:         :func:`mir_eval.io.load_intervals` or
+268:         :func:`mir_eval.io.load_labeled_intervals`.
+269:     estimated_intervals : np.ndarray, shape=(m, 2)
+270:         estimated segment intervals, in the format returned by
+271:         :func:`mir_eval.io.load_intervals` or
+272:         :func:`mir_eval.io.load_labeled_intervals`.
+273:     trim : boolean
+274:         if ``True``, the first and last intervals are ignored.
+275:         Typically, these denote start (0.0) and end-of-track markers.
+276:         (Default value = False)
+277: 
+278:     Returns
+279:     -------
+280:     reference_to_estimated : float
+281:         median time from each reference boundary to the
+282:         closest estimated boundary
+283:     estimated_to_reference : float
+284:         median time from each estimated boundary to the
+285:         closest reference boundary
+286:     """
+287:     validate_boundary(reference_intervals, estimated_intervals, trim)
+288: 
+289:     # Convert intervals to boundaries
+290:     reference_boundaries = util.intervals_to_boundaries(reference_intervals)
+291:     estimated_boundaries = util.intervals_to_boundaries(estimated_intervals)
+292: 
+293:     # Suppress the first and last intervals
+294:     if trim:
+295:         reference_boundaries = reference_boundaries[1:-1]
+296:         estimated_boundaries = estimated_boundaries[1:-1]
+297: 
+298:     # If we have no boundaries, we get no score.
+299:     if len(reference_boundaries) == 0 or len(estimated_boundaries) == 0:
+300:         return np.nan, np.nan
+301: 
+302:     dist = np.abs(np.subtract.outer(reference_boundaries, estimated_boundaries))
+303: 
+304:     estimated_to_reference = np.median(dist.min(axis=0))
+305:     reference_to_estimated = np.median(dist.min(axis=1))
+306: 
+307:     return reference_to_estimated, estimated_to_reference
+308: 
+309: 
+310: def pairwise(
+311:     reference_intervals,
+312:     reference_labels,
+313:     estimated_intervals,
+314:     estimated_labels,
+315:     frame_size=0.1,
+316:     beta=1.0,
+317: ):
+318:     """Frame-clustering segmentation evaluation by pair-wise agreement.
+319: 
+320:     Examples
+321:     --------
+322:     >>> (ref_intervals,
+323:     ...  ref_labels) = mir_eval.io.load_labeled_intervals('ref.lab')
+324:     >>> (est_intervals,
+325:     ...  est_labels) = mir_eval.io.load_labeled_intervals('est.lab')
+326:     >>> # Trim or pad the estimate to match reference timing
+327:     >>> (ref_intervals,
+328:     ...  ref_labels) = mir_eval.util.adjust_intervals(ref_intervals,
+329:     ...                                               ref_labels,
+330:     ...                                               t_min=0)
+331:     >>> (est_intervals,
+332:     ...  est_labels) = mir_eval.util.adjust_intervals(
+333:     ...     est_intervals, est_labels, t_min=0, t_max=ref_intervals.max())
+334:     >>> precision, recall, f = mir_eval.structure.pairwise(ref_intervals,
+335:     ...                                                    ref_labels,
+336:     ...                                                    est_intervals,
+337:     ...                                                    est_labels)
+338: 
+339:     Parameters
+340:     ----------
+341:     reference_intervals : np.ndarray, shape=(n, 2)
+342:         reference segment intervals, in the format returned by
+343:         :func:`mir_eval.io.load_labeled_intervals`.
+344:     reference_labels : list, shape=(n,)
+345:         reference segment labels, in the format returned by
+346:         :func:`mir_eval.io.load_labeled_intervals`.
+347:     estimated_intervals : np.ndarray, shape=(m, 2)
+348:         estimated segment intervals, in the format returned by
+349:         :func:`mir_eval.io.load_labeled_intervals`.
+350:     estimated_labels : list, shape=(m,)
+351:         estimated segment labels, in the format returned by
+352:         :func:`mir_eval.io.load_labeled_intervals`.
+353:     frame_size : float > 0
+354:         length (in seconds) of frames for clustering
+355:         (Default value = 0.1)
+356:     beta : float > 0
+357:         beta value for F-measure
+358:         (Default value = 1.0)
+359: 
+360:     Returns
+361:     -------
+362:     precision : float > 0
+363:         Precision of detecting whether frames belong in the same cluster
+364:     recall : float > 0
+365:         Recall of detecting whether frames belong in the same cluster
+366:     f : float > 0
+367:         F-measure of detecting whether frames belong in the same cluster
+368: 
+369:     """
+370:     validate_structure(
+371:         reference_intervals, reference_labels, estimated_intervals, estimated_labels
+372:     )
+373: 
+374:     # Check for empty annotations.  Don't need to check labels because
+375:     # validate_structure makes sure they're the same size as intervals
+376:     if reference_intervals.size == 0 or estimated_intervals.size == 0:
+377:         return 0.0, 0.0, 0.0
+378: 
+379:     # Generate the cluster labels
+380:     y_ref = util.intervals_to_samples(
+381:         reference_intervals, reference_labels, sample_size=frame_size
+382:     )[-1]
+383: 
+384:     y_ref = util.index_labels(y_ref)[0]
+385: 
+386:     # Map to index space
+387:     y_est = util.intervals_to_samples(
+388:         estimated_intervals, estimated_labels, sample_size=frame_size
+389:     )[-1]
+390: 
+391:     y_est = util.index_labels(y_est)[0]
+392: 

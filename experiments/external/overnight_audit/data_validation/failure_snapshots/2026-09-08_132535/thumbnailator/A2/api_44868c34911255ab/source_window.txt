@@ -1,0 +1,156 @@
+1333: 		 * Sets the {@link ResizerFactory} object to use to decide what kind of
+1334: 		 * resizing operation is to be used when creating the thumbnail.
+1335: 		 * <p>
+1336: 		 * Calling this method to set this parameter is optional.
+1337: 		 * <p>
+1338: 		 * Calling this method multiple times will result in an
+1339: 		 * {@link IllegalStateException} to be thrown.
+1340: 		 * <p>
+1341: 		 * This method cannot be called in conjunction with the
+1342: 		 * {@link #resizer(Resizer)} method.
+1343: 		 * 
+1344: 		 * @param resizerFactory		The scaling operation to use.
+1345: 		 * @return						Reference to this object.
+1346: 		 * @since	0.4.0
+1347: 		 */
+1348: 		public Builder<T> resizerFactory(ResizerFactory resizerFactory) {
+1349: 			checkForNull(resizerFactory, "ResizerFactory is null.");
+1350: 			updateStatus(Properties.RESIZER_FACTORY, Status.ALREADY_SET);
+1351: 			updateStatus(Properties.RESIZER, Status.CANNOT_SET);
+1352: 			
+1353: 			// disable the methods which set parameters for the Resizer
+1354: 			updateStatus(Properties.SCALING_MODE, Status.CANNOT_SET);
+1355: 			updateStatus(Properties.ALPHA_INTERPOLATION, Status.CANNOT_SET);
+1356: 			updateStatus(Properties.DITHERING, Status.CANNOT_SET);
+1357: 			updateStatus(Properties.ANTIALIASING, Status.CANNOT_SET);
+1358: 			updateStatus(Properties.RENDERING, Status.CANNOT_SET);
+1359: 			
+1360: 			this.resizerFactory = resizerFactory;
+1361: 			return this;
+1362: 		}
+1363: 		
+1364: 		/**
+1365: 		 * Sets the alpha interpolation mode when performing the resizing
+1366: 		 * operation to generate the thumbnail.
+1367: 		 * <p>
+1368: 		 * Calling this method to set this parameter is optional.
+1369: 		 * <p>
+1370: 		 * Calling this method multiple times will result in an
+1371: 		 * {@link IllegalStateException} to be thrown.
+1372: 		 * <p>
+1373: 		 * This method cannot be called in conjunction with the
+1374: 		 * {@link #resizerFactory(ResizerFactory)} method.
+1375: 		 * 
+1376: 		 * @param config		The alpha interpolation mode.
+1377: 		 * @return				Reference to this object.
+1378: 		 */
+1379: 		public Builder<T> alphaInterpolation(AlphaInterpolation config) {
+1380: 			checkForNull(config, "Alpha interpolation is null.");
+1381: 			updateStatus(Properties.RESIZER_FACTORY, Status.CANNOT_SET);
+1382: 			updateStatus(Properties.ALPHA_INTERPOLATION, Status.ALREADY_SET);
+1383: 			alphaInterpolation = config;
+1384: 			return this;
+1385: 		}
+1386: 
+1387: 		/**
+1388: 		 * Sets the dithering mode when performing the resizing
+1389: 		 * operation to generate the thumbnail.
+1390: 		 * <p>
+1391: 		 * Calling this method to set this parameter is optional.
+1392: 		 * <p>
+1393: 		 * Calling this method multiple times will result in an
+1394: 		 * {@link IllegalStateException} to be thrown.
+1395: 		 * <p>
+1396: 		 * This method cannot be called in conjunction with the
+1397: 		 * {@link #resizerFactory(ResizerFactory)} method.
+1398: 		 * 
+1399: 		 * @param config		The dithering mode.
+1400: 		 * @return				Reference to this object.
+1401: 		 */
+1402: 		public Builder<T> dithering(Dithering config) {
+1403: 			checkForNull(config, "Dithering is null.");
+1404: 			updateStatus(Properties.RESIZER_FACTORY, Status.CANNOT_SET);
+1405: 			updateStatus(Properties.DITHERING, Status.ALREADY_SET);
+1406: 			dithering = config;
+1407: 			return this;
+1408: 		}
+1409: 		
+1410: 		/**
+1411: 		 * Sets the antialiasing mode when performing the resizing
+1412: 		 * operation to generate the thumbnail.
+1413: 		 * <p>
+1414: 		 * Calling this method to set this parameter is optional.
+1415: 		 * <p>
+1416: 		 * Calling this method multiple times will result in an
+1417: 		 * {@link IllegalStateException}.
+1418: 		 * <p>
+1419: 		 * This method cannot be called in conjunction with the
+1420: 		 * {@link #resizerFactory(ResizerFactory)} method.
+1421: 		 * 
+1422: 		 * @param config		The antialiasing mode.
+1423: 		 * @return				Reference to this object.
+1424: 		 */
+1425: 		public Builder<T> antialiasing(Antialiasing config) {
+1426: 			checkForNull(config, "Antialiasing is null.");
+1427: 			updateStatus(Properties.RESIZER_FACTORY, Status.CANNOT_SET);
+1428: 			updateStatus(Properties.ANTIALIASING, Status.ALREADY_SET);
+1429: 			antialiasing = config;
+1430: 			return this;
+1431: 		}
+1432: 		
+1433: 		/**
+1434: 		 * Sets the rendering mode when performing the resizing
+1435: 		 * operation to generate the thumbnail.
+1436: 		 * <p>
+1437: 		 * Calling this method to set this parameter is optional.
+1438: 		 * <p>
+1439: 		 * Calling this method multiple times will result in an
+1440: 		 * {@link IllegalStateException} to be thrown.
+1441: 		 * <p>
+1442: 		 * This method cannot be called in conjunction with the
+1443: 		 * {@link #resizerFactory(ResizerFactory)} method.
+1444: 		 * 
+1445: 		 * @param config		The rendering mode.
+1446: 		 * @return				Reference to this object.
+1447: 		 */
+1448: 		public Builder<T> rendering(Rendering config) {
+1449: 			checkForNull(config, "Rendering is null.");
+1450: 			updateStatus(Properties.RESIZER_FACTORY, Status.CANNOT_SET);
+1451: 			updateStatus(Properties.RENDERING, Status.ALREADY_SET);
+1452: 			rendering = config;
+1453: 			return this;
+1454: 		}
+1455: 		
+1456: 		/**
+1457: 		 * Sets whether or not to keep the aspect ratio of the original image
+1458: 		 * for the thumbnail.
+1459: 		 * <p>
+1460: 		 * Calling this method without first calling the {@link #size(int, int)}
+1461: 		 * method will result in an {@link IllegalStateException} to be thrown.
+1462: 		 * <p>
+1463: 		 * If this method is not called when, by default the aspect ratio of
+1464: 		 * the original image is preserved for the thumbnail.
+1465: 		 * <p>
+1466: 		 * Calling this method after calling the {@link #scale(double)} method
+1467: 		 * or the {@link #scale(double, double)} method will result in a
+1468: 		 * {@link IllegalStateException}.
+1469: 		 * 
+1470: 		 * @param keep			{@code true} if the thumbnail is to maintain
+1471: 		 * 						the aspect ratio of the original image,
+1472: 		 * 						{@code false} otherwise.
+1473: 		 * @return				Reference to this object.
+1474: 		 * 
+1475: 		 * @throws IllegalStateException	If
+1476: 		 * 									<ol>
+1477: 		 * 									<li>the {@link #size(int, int)} has
+1478: 		 * 									not yet been called to specify the
+1479: 		 * 									size of the thumbnail, or</li>
+1480: 		 * 									<li>the {@link #scale(double)}
+1481: 		 * 									method has been called, or</li>
+1482: 		 * 									<li>the
+1483: 		 * 									{@link #scale(double, double)}
+1484: 		 * 									method has been called, or</li>
+1485: 		 * 									<li>the {@link #width(int)} and/or
+1486: 		 * 									{@link #height(int)} has been called
+1487: 		 * 									and not preserving the aspect ratio
+1488: 		 * 									is desired.</li>

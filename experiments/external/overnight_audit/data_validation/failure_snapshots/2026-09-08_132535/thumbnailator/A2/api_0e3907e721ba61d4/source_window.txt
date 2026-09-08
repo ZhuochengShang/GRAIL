@@ -1,0 +1,100 @@
+58: 	private final List<ImageFilter> unmodifiableFiltersToApply;
+59: 	
+60: 	/**
+61: 	 * Instantiates a new {@link Pipeline} with no image filters to apply.
+62: 	 */
+63: 	public Pipeline() {
+64: 		this(Collections.<ImageFilter>emptyList());
+65: 	}
+66: 	
+67: 	/**
+68: 	 * Instantiates a new {@link Pipeline} with an array of {@link ImageFilter}s
+69: 	 * to apply.
+70: 	 * 
+71: 	 * @param filters		An array of {@link ImageFilter}s to apply.
+72: 	 */
+73: 	public Pipeline(ImageFilter... filters) {
+74: 		this(Arrays.asList(filters));
+75: 	}
+76: 	
+77: 	/**
+78: 	 * Instantiates a new {@link Pipeline} with a list of {@link ImageFilter}s
+79: 	 * to apply.
+80: 	 * 
+81: 	 * @param filters		A list of {@link ImageFilter}s to apply.
+82: 	 */
+83: 	public Pipeline(List<ImageFilter> filters) {
+84: 		if (filters == null) {
+85: 			throw new NullPointerException("Cannot instantiate with a null" +
+86: 			"list of image filters.");
+87: 		}
+88: 		
+89: 		filtersToApply = new ArrayList<ImageFilter>(filters);
+90: 		unmodifiableFiltersToApply =
+91: 			Collections.unmodifiableList(filtersToApply);
+92: 	}
+93: 	
+94: 	/**
+95: 	 * Adds an {@code ImageFilter} to the pipeline.
+96: 	 *
+97: 	 * @param filter		An {@code ImageFilter}.
+98: 	 */
+99: 	public void add(ImageFilter filter) {
+100: 		if (filter == null) {
+101: 			throw new NullPointerException("An image filter must not be null.");
+102: 		}
+103: 		
+104: 		filtersToApply.add(filter);
+105: 	}
+106: 	
+107: 	/**
+108: 	 * Adds an {@code ImageFilter} to the beginning of the pipeline.
+109: 	 *
+110: 	 * @param filter		An {@code ImageFilter}.
+111: 	 */
+112: 	public void addFirst(ImageFilter filter) {
+113: 		if (filter == null) {
+114: 			throw new NullPointerException("An image filter must not be null.");
+115: 		}
+116: 		
+117: 		filtersToApply.add(0, filter);
+118: 	}
+119: 	
+120: 	/**
+121: 	 * Adds a {@code List} of {@code ImageFilter}s to the pipeline.
+122: 	 * 
+123: 	 * @param filters			A list of filters to add to the pipeline.
+124: 	 */
+125: 	public void addAll(List<ImageFilter> filters) {
+126: 		if (filters == null) {
+127: 			throw new NullPointerException("A list of image filters must not be null.");
+128: 		}
+129: 		
+130: 		filtersToApply.addAll(filters);
+131: 	}
+132: 	
+133: 	/**
+134: 	 * Returns a list of {@link ImageFilter}s which will be applied by this
+135: 	 * {@link Pipeline}.
+136: 	 * 
+137: 	 * @return					A list of filters which are applied by this
+138: 	 * 							pipeline.
+139: 	 */
+140: 	public List<ImageFilter> getFilters() {
+141: 		return unmodifiableFiltersToApply;
+142: 	}
+143: 	
+144: 	public BufferedImage apply(BufferedImage img) {
+145: 		if (filtersToApply.isEmpty()) {
+146: 			return img;
+147: 		}
+148: 		
+149: 		BufferedImage image = BufferedImages.copy(img);
+150: 		
+151: 		for (ImageFilter filter : filtersToApply) {
+152: 			image = filter.apply(image);
+153: 		}
+154: 		
+155: 		return image;
+156: 	}
+157: }

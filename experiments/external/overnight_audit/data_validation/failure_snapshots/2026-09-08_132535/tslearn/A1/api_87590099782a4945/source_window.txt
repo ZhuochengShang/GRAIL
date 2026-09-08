@@ -1,0 +1,156 @@
+27:                 upper = min(sz2, i + width) + 1
+28:                 mask[i, lower:upper] = True
+29:         return mask
+30:     if backend is numpy:
+31:         return njit(nogil=True)(_sakoe_chiba_mask_generic)
+32:     else:
+33:         return _sakoe_chiba_mask_generic
+34: 
+35: _njit_sakoe_chiba_mask = __make_sakoe_chiba_mask(numpy)
+36: if HAS_TORCH:
+37:     _sakoe_chiba_mask = __make_sakoe_chiba_mask(instantiate_backend("torch"))
+38: else:
+39:     _sakoe_chiba_mask = _njit_sakoe_chiba_mask
+40: 
+41: 
+42: def sakoe_chiba_mask(sz1, sz2, radius=1, be=None):
+43:     """Compute the Sakoe-Chiba mask.
+44: 
+45:     Parameters
+46:     ----------
+47:     sz1 : int
+48:         The size of the first time series
+49:     sz2 : int
+50:         The size of the second time series.
+51:     radius : int
+52:         The radius of the band.
+53:     be : Backend object or string or None
+54:         Backend. If `be` is an instance of the class `NumPyBackend` or the string `"numpy"`,
+55:         the NumPy backend is used.
+56:         If `be` is an instance of the class `PyTorchBackend` or the string `"pytorch"`,
+57:         the PyTorch backend is used.
+58:         If `be` is `None`, the backend is determined by the input arrays.
+59:         See our :ref:`dedicated user-guide page <backend>` for more information.
+60: 
+61:     Returns
+62:     -------
+63:     mask : array-like, shape=(sz1, sz2)
+64:         Sakoe-Chiba mask.
+65: 
+66:     Examples
+67:     --------
+68:     >>> sakoe_chiba_mask(4, 4, radius=2)
+69:     array([[ True,  True,  True, False],
+70:            [ True,  True,  True,  True],
+71:            [ True,  True,  True,  True],
+72:            [False,  True,  True,  True]])
+73:     """
+74:     be = instantiate_backend(be)
+75:     if be.is_numpy:
+76:         return _njit_sakoe_chiba_mask(
+77:             sz1,
+78:             sz2,
+79:             radius,
+80:         )
+81:     else:
+82:         return _sakoe_chiba_mask(
+83:             sz1,
+84:             sz2,
+85:             radius,
+86:         )
+87: 
+88: 
+89: def __make_itakura_mask(backend):
+90: 
+91:     def _itakura_mask_generic(sz1, sz2, max_slope=2.0):
+92:         min_slope = 1 / float(max_slope)
+93:         max_slope *= float(sz1) / float(sz2)
+94:         min_slope *= float(sz1) / float(sz2)
+95: 
+96:         lower_bound = backend.empty((2, sz2))
+97:         lower_bound[0] = min_slope * backend.arange(sz2)
+98:         lower_bound[1] = (sz1 - 1) - max_slope * (sz2 - 1) + max_slope * backend.arange(sz2)
+99:         lower_bound_ = backend.empty(sz2)
+100:         for i in range(sz2):
+101:             lower_bound_[i] = max(
+102:                 backend.round(lower_bound[0, i], decimals=2),
+103:                 backend.round(lower_bound[1, i], decimals=2)
+104:             )
+105:         lower_bound_ = backend.ceil(lower_bound_)
+106: 
+107:         upper_bound = backend.empty((2, sz2))
+108:         upper_bound[0] = max_slope * backend.arange(sz2)
+109:         upper_bound[1] = (sz1 - 1) - min_slope * (sz2 - 1) + min_slope * backend.arange(sz2)
+110:         upper_bound_ = backend.empty(sz2)
+111:         for i in range(sz2):
+112:             upper_bound_[i] = min(
+113:                 backend.round(upper_bound[0, i], decimals=2),
+114:                 backend.round(upper_bound[1, i], decimals=2)
+115:             )
+116:         upper_bound_ = backend.floor(upper_bound_ + 1)
+117: 
+118:         mask = backend.full((sz1, sz2), False)
+119:         for i in range(sz2):
+120:             mask[int(lower_bound_[i]): int(upper_bound_[i]), i] = True
+121: 
+122:         # Post-check
+123:         raise_warning = False
+124:         for i in range(sz1):
+125:             if not backend.any(mask[i]):
+126:                 raise_warning = True
+127:                 break
+128:         if not raise_warning:
+129:             for j in range(sz2):
+130:                 if not backend.any(mask[:, j]):
+131:                     raise_warning = True
+132:                     break
+133:         if raise_warning:
+134:             raise RuntimeWarning(
+135:                 "'itakura_max_slope' constraint is unfeasible "
+136:                 "(ie. leads to no admissible path) for the "
+137:                 "provided time series sizes",
+138:             )
+139: 
+140:         return mask
+141: 
+142:     if backend is numpy:
+143:         return njit(nogil=True)(_itakura_mask_generic)
+144:     else:
+145:         return _itakura_mask_generic
+146: 
+147: _njit_itakura_mask = __make_itakura_mask(numpy)
+148: if HAS_TORCH:
+149:     _itakura_mask = __make_itakura_mask(instantiate_backend("torch"))
+150: else:
+151:     _itakura_mask = _njit_itakura_mask
+152: 
+153: 
+154: def itakura_mask(sz1, sz2, max_slope=2.0, be=None):
+155:     """Compute the Itakura mask.
+156: 
+157:     Parameters
+158:     ----------
+159:     sz1 : int
+160:         The size of the first time series
+161:     sz2 : int
+162:         The size of the second time series.
+163:     max_slope : float (default = 2)
+164:         The maximum slope of the parallelogram.
+165:     be : Backend object or string or None
+166:         Backend. If `be` is an instance of the class `NumPyBackend` or the string `"numpy"`,
+167:         the NumPy backend is used.
+168:         If `be` is an instance of the class `PyTorchBackend` or the string `"pytorch"`,
+169:         the PyTorch backend is used.
+170:         If `be` is `None`, the backend is determined by the input arrays.
+171:         See our :ref:`dedicated user-guide page <backend>` for more information.
+172: 
+173:     Returns
+174:     -------
+175:     mask : array-like, shape=(sz1, sz2)
+176:         Itakura mask.
+177: 
+178:     Examples
+179:     --------
+180:     >>> itakura_mask(6, 6, max_slope=3)
+181:     array([[ True, False, False, False, False, False],
+182:            [False,  True,  True,  True, False, False],

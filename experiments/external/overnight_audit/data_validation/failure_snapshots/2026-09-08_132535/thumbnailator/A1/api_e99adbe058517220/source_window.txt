@@ -1,0 +1,83 @@
+95: 	 * @param width			The width of the {@link BufferedImage} to build.
+96: 	 * @param height		The height of the {@link BufferedImage} to build.
+97: 	 * @param imageType		The image type of the {@link BufferedImage} to build.
+98: 	 */
+99: 	public BufferedImageBuilder(int width, int height, int imageType) {
+100: 		size(width, height);
+101: 		imageType(imageType);
+102: 	}
+103: 	
+104: 	/**
+105: 	 * Generates a new {@code BufferedImage}.
+106: 	 * 
+107: 	 * @return		Returns a newly created {@link BufferedImage} from the
+108: 	 * 				parameters set in the {@link BufferedImageBuilder}.
+109: 	 */
+110: 	public BufferedImage build() {
+111: 		return new BufferedImage(width, height, imageType);
+112: 	}
+113: 
+114: 	/**
+115: 	 * Sets the type of the image of the {@link BufferedImage}.
+116: 	 * 
+117: 	 * @param imageType		The image type to use.
+118: 	 * 						If {@link BufferedImage#TYPE_CUSTOM} is used, it
+119: 	 * 						be substituted by {@link BufferedImage#TYPE_INT_ARGB}.
+120: 	 * @return				This {@link BufferedImageBuilder} instance.
+121: 	 */
+122: 	public BufferedImageBuilder imageType(int imageType) {
+123: 		if (imageType == BufferedImage.TYPE_CUSTOM) {
+124: 			imageType = DEFAULT_TYPE;
+125: 		}
+126: 
+127: 		this.imageType = imageType;
+128: 		return this;
+129: 	}
+130: 	
+131: 	/**
+132: 	 * Sets the size for the {@code BufferedImage}.
+133: 	 * 
+134: 	 * @param width			The width of the image to create.
+135: 	 * @param height		The height of the image to create.
+136: 	 * @return				This {@link BufferedImageBuilder} instance.
+137: 	 */
+138: 	public BufferedImageBuilder size(int width, int height) {
+139: 		width(width);
+140: 		height(height);
+141: 		return this;
+142: 	}
+143: 	
+144: 	/**
+145: 	 * Sets the width for the {@link BufferedImage}.
+146: 	 * 
+147: 	 * @param width			The width of the image to create.
+148: 	 * @return				This {@link BufferedImageBuilder} instance.
+149: 	 */
+150: 	public BufferedImageBuilder width(int width) {
+151: 		if (width <= 0) {
+152: 			throw new IllegalArgumentException(
+153: 					"Width must be greater than 0."
+154: 			);
+155: 		}
+156: 		
+157: 		this.width = width;
+158: 		return this;
+159: 	}
+160: 	
+161: 	/**
+162: 	 * Sets the height for the {@link BufferedImage}.
+163: 	 * 
+164: 	 * @param height		The height of the image to create.
+165: 	 * @return				This {@link BufferedImageBuilder} instance.
+166: 	 */
+167: 	public BufferedImageBuilder height(int height) {
+168: 		if (height <= 0) {
+169: 			throw new IllegalArgumentException(
+170: 					"Height must be greater than 0."
+171: 			);
+172: 		}
+173: 
+174: 		this.height = height;
+175: 		return this;
+176: 	}
+177: }

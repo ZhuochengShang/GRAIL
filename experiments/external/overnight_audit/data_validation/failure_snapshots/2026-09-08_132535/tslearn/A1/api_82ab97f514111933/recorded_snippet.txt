@@ -1,0 +1,21 @@
+from tslearn.shapelets import LearningShapelets
+import numpy as np
+
+# Initialize and fit a small LearningShapelets model
+clf = LearningShapelets(n_shapelets_per_size={3: 2}, max_iter=1, batch_size=8, random_state=42)
+clf.fit(X, y)
+
+# Retrieve the current weights
+weights = clf.get_weights()
+
+# Modify the weights and set them back using set_weights
+new_weights = [w + 1.0 for w in weights]
+clf.set_weights(new_weights)
+
+# Retrieve the updated weights to verify the setter worked
+updated_weights = clf.get_weights()
+
+assert len(updated_weights) == len(weights), "Number of weight arrays changed unexpectedly."
+assert np.allclose(updated_weights[0], weights[0] + 1.0), "Weights were not updated correctly by set_weights."
+
+print(f"__CHECK__ set_weights {len(updated_weights)}")

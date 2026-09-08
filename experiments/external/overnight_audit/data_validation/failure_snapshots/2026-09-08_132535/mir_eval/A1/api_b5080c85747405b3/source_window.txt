@@ -1,0 +1,156 @@
+59:     items : list-like
+60:         A list or array of events or intervals
+61:     prefix : str
+62:         This prefix will be prepended to all synthetically generated labels
+63:         (Default value = '__')
+64: 
+65:     Returns
+66:     -------
+67:     labels : list of str
+68:         Synthetically generated labels
+69: 
+70:     """
+71:     return [f"{prefix}{n}" for n in range(len(items))]
+72: 
+73: 
+74: def intervals_to_samples(intervals, labels, offset=0, sample_size=0.1, fill_value=None):
+75:     """Convert an array of labeled time intervals to annotated samples.
+76: 
+77:     Parameters
+78:     ----------
+79:     intervals : np.ndarray, shape=(n, d)
+80:         An array of time intervals, as returned by
+81:         :func:`mir_eval.io.load_intervals()` or
+82:         :func:`mir_eval.io.load_labeled_intervals()`.
+83:         The ``i`` th interval spans time ``intervals[i, 0]`` to
+84:         ``intervals[i, 1]``.
+85:     labels : list, shape=(n,)
+86:         The annotation for each interval
+87:     offset : float > 0
+88:         Phase offset of the sampled time grid (in seconds)
+89:         (Default value = 0)
+90:     sample_size : float > 0
+91:         duration of each sample to be generated (in seconds)
+92:         (Default value = 0.1)
+93:     fill_value : type(labels[0])
+94:         Object to use for the label with out-of-range time points.
+95:         (Default value = None)
+96: 
+97:     Returns
+98:     -------
+99:     sample_times : list
+100:         list of sample times
+101:     sample_labels : list
+102:         array of labels for each generated sample
+103: 
+104:     Notes
+105:     -----
+106:         Intervals will be rounded down to the nearest multiple
+107:         of ``sample_size``.
+108:     """
+109:     # Round intervals to the sample size
+110:     num_samples = int(np.floor(intervals.max() / sample_size))
+111:     sample_indices = np.arange(num_samples, dtype=np.float32)
+112:     sample_times = (sample_indices * sample_size + offset).tolist()
+113:     sampled_labels = interpolate_intervals(intervals, labels, sample_times, fill_value)
+114: 
+115:     return sample_times, sampled_labels
+116: 
+117: 
+118: def interpolate_intervals(intervals, labels, time_points, fill_value=None):
+119:     """Assign labels to a set of points in time given a set of intervals.
+120: 
+121:     Time points that do not lie within an interval are mapped to `fill_value`.
+122: 
+123:     Parameters
+124:     ----------
+125:     intervals : np.ndarray, shape=(n, 2)
+126:         An array of time intervals, as returned by
+127:         :func:`mir_eval.io.load_intervals()`.
+128:         The ``i`` th interval spans time ``intervals[i, 0]`` to
+129:         ``intervals[i, 1]``.
+130: 
+131:         Intervals are assumed to be disjoint.
+132: 
+133:     labels : list, shape=(n,)
+134:         The annotation for each interval
+135: 
+136:     time_points : array_like, shape=(m,)
+137:         Points in time to assign labels.  These must be in
+138:         non-decreasing order.
+139: 
+140:     fill_value : type(labels[0])
+141:         Object to use for the label with out-of-range time points.
+142:         (Default value = None)
+143: 
+144:     Returns
+145:     -------
+146:     aligned_labels : list
+147:         Labels corresponding to the given time points.
+148: 
+149:     Raises
+150:     ------
+151:     ValueError
+152:         If `time_points` is not in non-decreasing order.
+153:     """
+154:     # Verify that time_points is sorted
+155:     time_points = np.asarray(time_points)
+156: 
+157:     if np.any(time_points[1:] < time_points[:-1]):
+158:         raise ValueError("time_points must be in non-decreasing order")
+159: 
+160:     aligned_labels = [fill_value] * len(time_points)
+161: 
+162:     starts = np.searchsorted(time_points, intervals[:, 0], side="left")
+163:     ends = np.searchsorted(time_points, intervals[:, 1], side="right")
+164: 
+165:     for start, end, lab in zip(starts, ends, labels):
+166:         aligned_labels[start:end] = [lab] * (end - start)
+167: 
+168:     return aligned_labels
+169: 
+170: 
+171: def sort_labeled_intervals(intervals, labels=None):
+172:     """Sort intervals, and optionally, their corresponding labels
+173:     according to start time.
+174: 
+175:     Parameters
+176:     ----------
+177:     intervals : np.ndarray, shape=(n, 2)
+178:         The input intervals
+179:     labels : list, optional
+180:         Labels for each interval
+181: 
+182:     Returns
+183:     -------
+184:     intervals_sorted or (intervals_sorted, labels_sorted)
+185:         Labels are only returned if provided as input
+186:     """
+187:     idx = np.argsort(intervals[:, 0])
+188: 
+189:     intervals_sorted = intervals[idx]
+190: 
+191:     if labels is None:
+192:         return intervals_sorted
+193:     else:
+194:         return intervals_sorted, [labels[_] for _ in idx]
+195: 
+196: 
+197: def f_measure(precision, recall, beta=1.0):
+198:     """Compute the f-measure from precision and recall scores.
+199: 
+200:     Parameters
+201:     ----------
+202:     precision : float in (0, 1]
+203:         Precision
+204:     recall : float in (0, 1]
+205:         Recall
+206:     beta : float > 0
+207:         Weighting factor for f-measure
+208:         (Default value = 1.0)
+209: 
+210:     Returns
+211:     -------
+212:     f_measure : float
+213:         The weighted f-measure
+214:     """

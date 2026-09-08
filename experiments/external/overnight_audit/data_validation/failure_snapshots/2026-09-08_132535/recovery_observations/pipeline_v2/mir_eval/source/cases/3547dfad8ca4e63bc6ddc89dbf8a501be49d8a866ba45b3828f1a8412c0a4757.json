@@ -1,0 +1,103 @@
+{
+  "fingerprint": "24c0b47fbb6b6014b8378d856ee4edd678f0b9a7ab500672c9fb1228edbd7ca0",
+  "identity": {
+    "baseline_fingerprint": "ea2bfacf7be649de61c9ef34386a0c1981e61766f231e06367304ff9caa25571",
+    "baseline_result_sha256": "cefdd1520279c9cc708b3dfca67ae2f9755094b1b667f75832a27555ea742f2c",
+    "api": "ticker_pitch",
+    "script_sha256": "f5811e39a6cd37b7872247e42798b9ef3241078848b65314573fc9c68f671131",
+    "prompt_sha256": {
+      "comprehension_write_exec": "f557fcc5d4534cdfa6e596066b2106fd4d9f1ed459be8afccb8676070275c501",
+      "deep_dive": "bcaacb96d675d8e898784eea65319e5ded213c06eb8578f5e40627fd3adce504"
+    },
+    "current_effective_config_sha256": "1d5c6ce15c735688c4e59110fa91590908a98da74d1004717fe5d5a65b7fc667",
+    "current_profile_sha256": "560a6da75cd464fd3c47d55a08fd848f1f7576f843ac7fca551f7afae3bdd4b0",
+    "upstream_test_context": {
+      "sha256": "f24ad3849965243154e9c0f1502af354540a17ca401734f96b806ee34a5163a4",
+      "file_count": 19
+    },
+    "context_engine": {
+      "deepdive.py": "11b4bd8f2c2761c17c43d43a4747ee3660173c94c1a621811c8f720e13898c73",
+      "docfix.py": "1d2f7cf6acdf9455ede12acdf35dcb93d91aa5bc7fe05514fbf783a5eca877b9"
+    },
+    "protocol_sha256": "b6caeb1e279ff5f30bd90547071380caf7efd19a54ea2f5972fddd266f91b5a2",
+    "source": {
+      "sha256": "30c5d1632077b02939819dbb8dc76fa72096d5a5f5b45e77468b96d14050d705",
+      "file_count": 19
+    },
+    "document_sha256": "5eba111df92b5bc6ab512be681189573503dd38c6667f775f4be6d8ce0051c37",
+    "script_binding": "retained_unbound_legacy",
+    "baseline_compatibility": {
+      "legacy_fingerprint": "ea2bfacf7be649de61c9ef34386a0c1981e61766f231e06367304ff9caa25571",
+      "current_fingerprint": "ac291361c00b17e14ad9ecffbb6bda4cca40abafe15c33c5eca8003b1b35c08e",
+      "record": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_A2/experiments/external/mir_eval/.aideal_exec/A2/checkpoint_compatibility.json",
+      "record_sha256": "74b86e8269e2558f8d1af0b5ca7abe35764c43eff8c25d887175f528b6af2378",
+      "selection_policy": "latest fully attempted reproducible group, else latest reproducible group; never select by score or combine legacy groups",
+      "reason": "Reviewed schema-3 output-hash repair and bounded provider transport; model, prompts, scoring and logical fix budgets unchanged",
+      "baseline_fingerprint": "ea2bfacf7be649de61c9ef34386a0c1981e61766f231e06367304ff9caa25571",
+      "historical_output_aggregate_differs": false,
+      "limitation": "Input bytes are checked against the reviewed input-only proof; historical output contents and runtime state are not reconstructed. This is a supplementary recovery result, not certification of baseline execution."
+    },
+    "mode": "source",
+    "max_code_fix_rounds": 5,
+    "stuck_rounds": 2,
+    "runner_sha256": "0b5d7370459006a623d7084ab5c63a2ecdaa953fc2494a65627175671b994abf",
+    "engine_sha256": "6d9f4310015755d44f7e002ef5add7fb29dfaad0685c7e9d61ca495c1cddeaf1",
+    "validation_sha256": "6b57fe6df9a3049e7b76fbe76ca8042f885bcd507d87040a28032401879cdeb9",
+    "compatibility_adapter_sha256": "86d978d07814e35310da027da25d1e59bafd84dd350be5f66dc278050b1d43f9"
+  },
+  "initial": {
+    "status": "fail",
+    "category": "runtime",
+    "error": "AssertionError: Expected 'A' in formatted MIDI 69, got 440",
+    "code": "import sys\nimport traceback\n\nimport numpy as np\nimport mir_eval\nfrom mir_eval import alignment, beat, chord, display, hierarchy, io, key\nfrom mir_eval import melody, multipitch, onset, pattern, segment, separation\nfrom mir_eval import sonify, tempo, transcription, transcription_velocity, util\n\n\ndef run():\n    beat_reference_file = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/mir_eval/cefdd1520279c9cc708b3dfca67ae2f9755094b1b667f75832a27555ea742f2c/project/source/tests/data/beat/ref00.txt\"\n    beat_estimate_file = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/mir_eval/cefdd1520279c9cc708b3dfca67ae2f9755094b1b667f75832a27555ea742f2c/project/source/tests/data/beat/est00.txt\"\n    chord_reference_file = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/mir_eval/cefdd1520279c9cc708b3dfca67ae2f9755094b1b667f75832a27555ea742f2c/project/source/tests/data/chord/ref00.lab\"\n    melody_reference_file = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/mir_eval/cefdd1520279c9cc708b3dfca67ae2f9755094b1b667f75832a27555ea742f2c/project/source/tests/data/melody/ref00.txt\"\n    output_dir = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/mir_eval/cefdd1520279c9cc708b3dfca67ae2f9755094b1b667f75832a27555ea742f2c/project/.aideal_exec/A2/output\"\n\n    # pre-loaded typed inputs (comprehension.execute.preamble)\n    times = np.array([0.0, 0.5, 1.0, 1.5, 2.0])  # type: numpy.ndarray event/frame times\n    ref_events = np.array([0.0, 0.5, 1.0, 1.5])  # type: numpy.ndarray reference events\n    est_events = np.array([0.02, 0.48, 1.03, 1.52])  # type: numpy.ndarray estimated events\n    ref_intervals = np.array([[0.0, 0.5], [0.5, 1.0], [1.0, 1.5], [1.5, 2.0]])  # type: numpy.ndarray reference intervals\n    est_intervals = np.array([[0.0, 0.48], [0.48, 1.02], [1.02, 1.48], [1.48, 2.0]])  # type: numpy.ndarray estimated intervals\n    ref_labels = [\"C:maj\", \"G:maj\", \"A:min\", \"F:maj\"]  # type: list[str] reference labels\n    est_labels = [\"C:maj\", \"G:maj\", \"A:min\", \"F:maj\"]  # type: list[str] estimated labels\n    ref_freqs = np.array([440.0, 440.0, 0.0, 523.25, 523.25])  # type: numpy.ndarray reference frequencies\n    est_freqs = np.array([442.0, 438.0, 0.0, 525.0, 520.0])  # type: numpy.ndarray estimated frequencies\n    ref_sources = np.vstack([np.sin(2*np.pi*3*times), np.cos(2*np.pi*2*times)])  # type: numpy.ndarray reference sources\n    est_sources = ref_sources + 0.001  # type: numpy.ndarray estimated sources\n\n    def api_test():\n        # TODO API_TEST_START\n        import matplotlib\n        matplotlib.use('Agg')\n        import matplotlib.pyplot as plt\n        import mir_eval.display\n\n        plt.figure()\n        mir_eval.display.pitch(times, ref_freqs, midi=True)\n        mir_eval.display.ticker_pitch()\n\n        ax = plt.gca()\n        formatter = ax.yaxis.get_major_formatter()\n        # MIDI note 69 corresponds to A4 (or A3/A5 depending on octave numbering convention)\n        witness = formatter(69.0, 0)\n\n        assert isinstance(witness, str) and 'A' in witness, f\"Expected 'A' in formatted MIDI 69, got {witness}\"\n        print(f\"__CHECK__ ticker_pitch {witness}\")\n        # TODO API_TEST_END\n        pass\n\n    api_test()\n\n\nif __name__ == \"__main__\":\n    try:\n        run()\n        print(\"__DONE__\")\n    except Exception as exc:\n        sys.stderr.write(f\"__RUN_ERR__ {type(exc).__name__}: {exc}\\n\")\n        traceback.print_exc()\n        sys.exit(1)\n"
+  },
+  "events": [
+    {
+      "status": "pass",
+      "category": null,
+      "error": null,
+      "code": "import sys\nimport traceback\n\nimport numpy as np\nimport mir_eval\nfrom mir_eval import alignment, beat, chord, display, hierarchy, io, key\nfrom mir_eval import melody, multipitch, onset, pattern, segment, separation\nfrom mir_eval import sonify, tempo, transcription, transcription_velocity, util\n\n\ndef run():\n    beat_reference_file = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/mir_eval/cefdd1520279c9cc708b3dfca67ae2f9755094b1b667f75832a27555ea742f2c/project/source/tests/data/beat/ref00.txt\"\n    beat_estimate_file = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/mir_eval/cefdd1520279c9cc708b3dfca67ae2f9755094b1b667f75832a27555ea742f2c/project/source/tests/data/beat/est00.txt\"\n    chord_reference_file = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/mir_eval/cefdd1520279c9cc708b3dfca67ae2f9755094b1b667f75832a27555ea742f2c/project/source/tests/data/chord/ref00.lab\"\n    melody_reference_file = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/mir_eval/cefdd1520279c9cc708b3dfca67ae2f9755094b1b667f75832a27555ea742f2c/project/source/tests/data/melody/ref00.txt\"\n    output_dir = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/mir_eval/cefdd1520279c9cc708b3dfca67ae2f9755094b1b667f75832a27555ea742f2c/project/.aideal_recovery/d238720a51f73cbb4ac50369669fa6f426d80f4189d3d6c744ea90512de29dfc/round_01/attempt_0001/output\"\n\n    # pre-loaded typed inputs (comprehension.execute.preamble)\n    times = np.array([0.0, 0.5, 1.0, 1.5, 2.0])  # type: numpy.ndarray event/frame times\n    ref_events = np.array([0.0, 0.5, 1.0, 1.5])  # type: numpy.ndarray reference events\n    est_events = np.array([0.02, 0.48, 1.03, 1.52])  # type: numpy.ndarray estimated events\n    ref_intervals = np.array([[0.0, 0.5], [0.5, 1.0], [1.0, 1.5], [1.5, 2.0]])  # type: numpy.ndarray reference intervals\n    est_intervals = np.array([[0.0, 0.48], [0.48, 1.02], [1.02, 1.48], [1.48, 2.0]])  # type: numpy.ndarray estimated intervals\n    ref_labels = [\"C:maj\", \"G:maj\", \"A:min\", \"F:maj\"]  # type: list[str] reference labels\n    est_labels = [\"C:maj\", \"G:maj\", \"A:min\", \"F:maj\"]  # type: list[str] estimated labels\n    ref_freqs = np.array([440.0, 440.0, 0.0, 523.25, 523.25])  # type: numpy.ndarray reference frequencies\n    est_freqs = np.array([442.0, 438.0, 0.0, 525.0, 520.0])  # type: numpy.ndarray estimated frequencies\n    ref_sources = np.vstack([np.sin(2*np.pi*3*times), np.cos(2*np.pi*2*times)])  # type: numpy.ndarray reference sources\n    est_sources = ref_sources + 0.001  # type: numpy.ndarray estimated sources\n\n    def api_test():\n        # TODO API_TEST_START\n        import matplotlib\n        matplotlib.use('Agg')\n        import matplotlib.pyplot as plt\n        import mir_eval.display\n\n        plt.figure()\n        mir_eval.display.pitch(times, ref_freqs, midi=True)\n        mir_eval.display.ticker_pitch()\n\n        ax = plt.gca()\n        formatter = ax.yaxis.get_major_formatter()\n        # ticker_pitch formats MIDI note numbers as frequencies in Hz.\n        # MIDI note 69 corresponds to 440 Hz.\n        witness = formatter(69.0, 0)\n\n        assert witness == '440', f\"Expected '440' for MIDI 69, got {witness}\"\n        print(f\"__CHECK__ ticker_pitch {witness}\")\n        # TODO API_TEST_END\n        pass\n\n    api_test()\n\n\nif __name__ == \"__main__\":\n    try:\n        run()\n        print(\"__DONE__\")\n    except Exception as exc:\n        sys.stderr.write(f\"__RUN_ERR__ {type(exc).__name__}: {exc}\\n\")\n        traceback.print_exc()\n        sys.exit(1)\n",
+      "native_result": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/mir_eval/cefdd1520279c9cc708b3dfca67ae2f9755094b1b667f75832a27555ea742f2c/project/.aideal_recovery/d238720a51f73cbb4ac50369669fa6f426d80f4189d3d6c744ea90512de29dfc/round_01/attempt_0001/native_result.json",
+      "script_sha256": "5ea0e7c8bc8e5eaa8699961e4f04ffc0551c79487144221dc236bd7b855bf1e0",
+      "wall_s": 12.4,
+      "llm_calls": 1,
+      "input_tokens": 3460,
+      "output_tokens": 694,
+      "code_fix_round": 1
+    }
+  ],
+  "rounds": [
+    {
+      "status": "pass",
+      "category": null,
+      "error": null,
+      "code": "import sys\nimport traceback\n\nimport numpy as np\nimport mir_eval\nfrom mir_eval import alignment, beat, chord, display, hierarchy, io, key\nfrom mir_eval import melody, multipitch, onset, pattern, segment, separation\nfrom mir_eval import sonify, tempo, transcription, transcription_velocity, util\n\n\ndef run():\n    beat_reference_file = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/mir_eval/cefdd1520279c9cc708b3dfca67ae2f9755094b1b667f75832a27555ea742f2c/project/source/tests/data/beat/ref00.txt\"\n    beat_estimate_file = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/mir_eval/cefdd1520279c9cc708b3dfca67ae2f9755094b1b667f75832a27555ea742f2c/project/source/tests/data/beat/est00.txt\"\n    chord_reference_file = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/mir_eval/cefdd1520279c9cc708b3dfca67ae2f9755094b1b667f75832a27555ea742f2c/project/source/tests/data/chord/ref00.lab\"\n    melody_reference_file = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/mir_eval/cefdd1520279c9cc708b3dfca67ae2f9755094b1b667f75832a27555ea742f2c/project/source/tests/data/melody/ref00.txt\"\n    output_dir = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/mir_eval/cefdd1520279c9cc708b3dfca67ae2f9755094b1b667f75832a27555ea742f2c/project/.aideal_recovery/d238720a51f73cbb4ac50369669fa6f426d80f4189d3d6c744ea90512de29dfc/round_01/attempt_0001/output\"\n\n    # pre-loaded typed inputs (comprehension.execute.preamble)\n    times = np.array([0.0, 0.5, 1.0, 1.5, 2.0])  # type: numpy.ndarray event/frame times\n    ref_events = np.array([0.0, 0.5, 1.0, 1.5])  # type: numpy.ndarray reference events\n    est_events = np.array([0.02, 0.48, 1.03, 1.52])  # type: numpy.ndarray estimated events\n    ref_intervals = np.array([[0.0, 0.5], [0.5, 1.0], [1.0, 1.5], [1.5, 2.0]])  # type: numpy.ndarray reference intervals\n    est_intervals = np.array([[0.0, 0.48], [0.48, 1.02], [1.02, 1.48], [1.48, 2.0]])  # type: numpy.ndarray estimated intervals\n    ref_labels = [\"C:maj\", \"G:maj\", \"A:min\", \"F:maj\"]  # type: list[str] reference labels\n    est_labels = [\"C:maj\", \"G:maj\", \"A:min\", \"F:maj\"]  # type: list[str] estimated labels\n    ref_freqs = np.array([440.0, 440.0, 0.0, 523.25, 523.25])  # type: numpy.ndarray reference frequencies\n    est_freqs = np.array([442.0, 438.0, 0.0, 525.0, 520.0])  # type: numpy.ndarray estimated frequencies\n    ref_sources = np.vstack([np.sin(2*np.pi*3*times), np.cos(2*np.pi*2*times)])  # type: numpy.ndarray reference sources\n    est_sources = ref_sources + 0.001  # type: numpy.ndarray estimated sources\n\n    def api_test():\n        # TODO API_TEST_START\n        import matplotlib\n        matplotlib.use('Agg')\n        import matplotlib.pyplot as plt\n        import mir_eval.display\n\n        plt.figure()\n        mir_eval.display.pitch(times, ref_freqs, midi=True)\n        mir_eval.display.ticker_pitch()\n\n        ax = plt.gca()\n        formatter = ax.yaxis.get_major_formatter()\n        # ticker_pitch formats MIDI note numbers as frequencies in Hz.\n        # MIDI note 69 corresponds to 440 Hz.\n        witness = formatter(69.0, 0)\n\n        assert witness == '440', f\"Expected '440' for MIDI 69, got {witness}\"\n        print(f\"__CHECK__ ticker_pitch {witness}\")\n        # TODO API_TEST_END\n        pass\n\n    api_test()\n\n\nif __name__ == \"__main__\":\n    try:\n        run()\n        print(\"__DONE__\")\n    except Exception as exc:\n        sys.stderr.write(f\"__RUN_ERR__ {type(exc).__name__}: {exc}\\n\")\n        traceback.print_exc()\n        sys.exit(1)\n",
+      "native_result": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/mir_eval/cefdd1520279c9cc708b3dfca67ae2f9755094b1b667f75832a27555ea742f2c/project/.aideal_recovery/d238720a51f73cbb4ac50369669fa6f426d80f4189d3d6c744ea90512de29dfc/round_01/attempt_0001/native_result.json",
+      "script_sha256": "5ea0e7c8bc8e5eaa8699961e4f04ffc0551c79487144221dc236bd7b855bf1e0",
+      "wall_s": 12.4,
+      "llm_calls": 1,
+      "input_tokens": 3460,
+      "output_tokens": 694,
+      "code_fix_round": 1
+    }
+  ],
+  "status": "recovered_native",
+  "diagnosis": {
+    "api": "ticker_pitch",
+    "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/mir_eval/cefdd1520279c9cc708b3dfca67ae2f9755094b1b667f75832a27555ea742f2c/project/.aideal_recovery/d238720a51f73cbb4ac50369669fa6f426d80f4189d3d6c744ea90512de29dfc/deepdive/ticker_pitch.md",
+    "model": "google:gemini-3.1-pro-preview",
+    "tokens": {
+      "in": 4841,
+      "out": 2419
+    },
+    "wall_s": 25.8,
+    "report_text": "**L0 AUDIENCE + TESTABILITY CLASSIFICATION**\nUSER-FACING. TESTABLE FROM PUBLIC INPUTS.\nThis is a public display utility intended for end-users to format matplotlib axes. It can be tested directly by passing a standard `matplotlib.axes.Axes` object (or relying on the implicit current axes) and inspecting the applied formatter.\n\n**L1 PURPOSE**\nThe `ticker_pitch` API configures the y-axis of a matplotlib plot to display frequencies in Hertz (Hz), under the assumption that the underlying plotted data is scaled in MIDI note numbers. It sits in the display module's formatting utilities, allowing users to plot pitch data linearly by MIDI note (which visually represents pitch accurately to human perception) while labeling the axis with the corresponding physical frequencies.\n\n**L2 CONTRACT**\n- **Parameters:**\n  - `ax` (`matplotlib.pyplot.axes` or `None`, default `None`): The axes handle to which the ticker should be applied. If `None`, it resolves to the current active matplotlib axes.\n- **Returns:** `None`. The function mutates the provided or current axes in place.\n- **Side Effects:** Modifies the `major_formatter` of the y-axis on the target `ax`.\n- **Visibility:** Public.\n\n**L3 MECHANICS**\n1. The function delegates to an internal `__get_axes(ax=ax)` (line 1104) to resolve the target axes object.\n2. It sets the y-axis major formatter of the resolved axes to `FMT_MIDI_HZ` (line 1106).\n3. `FMT_MIDI_HZ` is a matplotlib `FuncFormatter` instantiated with the internal `__ticker_midi_hz` function (line 1111).\n4. When matplotlib draws the ticks, `__ticker_midi_hz(x, pos)` is called for each tick value `x`. It assumes `x` is a MIDI note number, converts it to Hertz using `midi_to_hz(x)`, and formats it as a general float string (`f\"{...}:g\"`) (lines 1068-1074).\n\n**L4 CORRECT MINIMAL USAGE**\n```python\nimport matplotlib\nmatplotlib.use('Agg')  # Required for headless environments\nimport matplotlib.pyplot as plt\nimport mir_eval\n\nfig, ax = plt.subplots()\n\n# Plot data where the y-values are MIDI note numbers (e.g., MIDI 69 = A4 = 440Hz)\ntimes = [0.0, 1.0, 2.0]\nmidi_pitches = [69.0, 70.0, 71.0]\nax.plot(times, midi_pitches)\n\n# Apply the ticker to format the y-axis labels as frequencies in Hz\nmir_eval.display.ticker_pitch(ax)\n\n# The tick label for y=69 will now render as \"440\"\n```\n\n**L5 FAILURE FORENSICS**\n- `[fail/runtime] AssertionError: Expected 'A' in formatted MIDI 69, got 440`\n  This failure occurred because the test author was misled by the provided documentation entry, which incorrectly claims that `ticker_pitch` formats the axis with \"human-readable musical note names.\" In reality, `ticker_pitch` applies `FMT_MIDI_HZ` (line 1106), which converts MIDI numbers to *frequencies in Hz* (line 1074). MIDI note 69 is converted to 440.0 Hz, hence the output `440`. The function that actually formats axes with musical note names (like 'A4') is `ticker_notes` (line 1077), which uses `FMT_MIDI_NOTE`. The LLM instruction prompt in the current documentation is actively hallucinating the behavior of `ticker_pitch`.\n\n**L6 SELF-ASSESSMENT**\n- **Inferences:** I inferred that `midi_to_hz` (called on line 1074) correctly implements the standard MIDI-to-Hertz conversion formula (where 69 -> 440.0), which explains the exact value seen in the failure forensics. I also inferred the behavior of `__get_axes` based on standard matplotlib wrapper patterns and the documentation.\n- **Missing Information:** The exact implementation of `midi_to_hz` and `__get_axes` are not in the provided snippet, though their behavior is obvious from context.\n- **Confidence Scores:**\n  - L2 (Contract): 10/10. The signature and types are explicitly defined in the source and docstrings.\n  - L3 (Mechanics): 10/10. The delegation to `FMT_MIDI_HZ` and `__ticker_midi_hz` is fully visible in the provided source.\n  - L4 (Minimal Usage): 10/10. The usage relies only on standard matplotlib and the public API, adhering strictly to the headless constraint.",
+    "report_sha256": "ae86781f0b3d5248eb97b88bdb77215f21d37126aca41edde8c3c7c5c3db002c"
+  },
+  "max_rounds": 5,
+  "stuck_threshold": 2,
+  "stop_reason": null,
+  "semantic_validation": "needs_independent_review",
+  "headline_credit": false,
+  "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/mir_eval/cefdd1520279c9cc708b3dfca67ae2f9755094b1b667f75832a27555ea742f2c/project/.aideal_recovery/d238720a51f73cbb4ac50369669fa6f426d80f4189d3d6c744ea90512de29dfc/recovery.json"
+}

@@ -1,0 +1,156 @@
+152:         inputs = ops.reshape(inputs, (n_ts, sz * d))
+153:         inputs = ops.extract_sequences(inputs, self.shapelet_length * d, d)
+154:         inputs = ops.reshape(
+155:             inputs,
+156:             (n_ts, sz - self.shapelet_length + 1, self.shapelet_length, d)
+157:         )
+158:         return inputs
+159: 
+160:     def get_config(self):
+161:         config = {'shapelet_length': self.shapelet_length}
+162:         base_config = super().get_config()
+163:         return {**config, **base_config}
+164: 
+165: 
+166: @register_keras_serializable()
+167: class LocalSquaredDistanceLayer(Layer):
+168:     """Pairwise (squared) distance computation between local patches and
+169:     shapelets
+170: 
+171:     # Input shape
+172:         4D tensor with shape:
+173:         `(batch_size, steps - shapelet_size, shapelet_length, features)`.
+174:     # Output shape
+175:         3D tensor with shape:
+176:         `(batch_size, steps, n_shapelets)`.
+177:     """
+178: 
+179:     def __init__(self, nb_shapelets, init=None, **kwargs):
+180:         self.nb_shapelets = nb_shapelets
+181:         if init is None:
+182:             self.initializer = "uniform"
+183:         else:
+184:            self.initializer = init
+185:         super().__init__(**kwargs)
+186:         self.input_spec = InputSpec(ndim=4)
+187: 
+188:     def build(self, input_shape):
+189:         self.kernel = self.add_weight(name='kernel',
+190:                                       shape=(self.nb_shapelets,
+191:                                              input_shape[2],
+192:                                              input_shape[3]),
+193:                                       initializer=self.initializer,
+194:                                       trainable=True)
+195:         super().build(input_shape)
+196: 
+197:     def compute_mask(self, inputs, mask=None):
+198:         mask = ops.isfinite(ops.sum(inputs, axis=(-1, -2)))
+199:         mask = ops.expand_dims(mask, axis=-1)
+200:         return mask
+201: 
+202:     def call(self, x, **kwargs):
+203:         # Remove nans for backward pass, use mask to propagate invalidity
+204:         x = ops.nan_to_num(x, nan=0)
+205: 
+206:         shapelet_size = ops.shape(self.kernel)[1]
+207:         nb_features = ops.shape(self.kernel)[2]
+208: 
+209:         # (x - y)^2 = x^2 + y^2 - 2 * x * y
+210:         x_sq = ops.sum(ops.sum(x ** 2, axis=-1), axis=-1, keepdims = True)
+211:         y_sq = ops.reshape(ops.sum(self.kernel ** 2, axis=(-1, -2)),
+212:                            (1, 1, self.nb_shapelets))
+213:         x_ = ops.reshape(
+214:             x,
+215:             (ops.shape(x)[0],
+216:              ops.shape(x)[1],
+217:              shapelet_size * nb_features)
+218:         )
+219:         y_ = ops.reshape(
+220:             ops.transpose(self.kernel,
+221:                           (1, 0, 2)),
+222:                          (shapelet_size * nb_features, self.nb_shapelets))
+223:         xy = ops.dot(x_, y_)
+224:         return (x_sq + y_sq - 2 * xy) / shapelet_size
+225: 
+226:     def compute_output_shape(self, input_shape):
+227:         return input_shape[0], input_shape[1], self.nb_shapelets
+228: 
+229:     def get_config(self):
+230:         config = {'nb_shapelets': self.nb_shapelets}
+231:         base_config = super().get_config()
+232:         return dict(list(base_config.items()) + list(config.items()))
+233: 
+234: 
+235: def grabocka_params_to_shapelet_size_dict(n_ts, ts_sz, n_classes, l, r):
+236:     """Compute number and length of shapelets.
+237: 
+238:      This function uses the heuristic from [1]_.
+239: 
+240:     Parameters
+241:     ----------
+242:     n_ts: int
+243:         Number of time series in the dataset
+244:     ts_sz: int
+245:         Length of time series in the dataset
+246:     n_classes: int
+247:         Number of classes in the dataset
+248:     l: float
+249:         Fraction of the length of time series to be used for base shapelet
+250:         length
+251:     r: int
+252:         Number of different shapelet lengths to use
+253: 
+254:     Returns
+255:     -------
+256:     dict
+257:         Dictionary giving, for each shapelet length, the number of such
+258:         shapelets to be generated
+259: 
+260:     Examples
+261:     --------
+262:     >>> d = grabocka_params_to_shapelet_size_dict(
+263:     ...         n_ts=100, ts_sz=100, n_classes=3, l=0.1, r=2)
+264:     >>> keys = sorted(d.keys())
+265:     >>> print(keys)
+266:     [10, 20]
+267:     >>> print([d[k] for k in keys])
+268:     [4, 4]
+269: 
+270: 
+271:     References
+272:     ----------
+273:     .. [1] J. Grabocka et al. Learning Time-Series Shapelets.
+274:        SIGKDD 2014.
+275:     """
+276:     base_size = int(l * ts_sz)
+277:     base_size = max(base_size, 1)
+278:     r = min(r, ts_sz)
+279:     d = {}
+280:     for sz_idx in range(r):
+281:         shp_sz = base_size * (sz_idx + 1)
+282:         n_shapelets = int(numpy.log10(n_ts *
+283:                                       (ts_sz - shp_sz + 1) *
+284:                                       (n_classes - 1)))
+285:         n_shapelets = max(1, n_shapelets)
+286:         d[shp_sz] = n_shapelets
+287:     return d
+288: 
+289: 
+290: class LearningShapelets(TimeSeriesMixin, ClassifierMixin, TransformerMixin, BaseEstimator,
+291:                         BaseModelPackage):
+292:     r"""Learning Time-Series Shapelets model.
+293: 
+294:     Learning Time-Series Shapelets was originally presented in [1]_.
+295: 
+296:     From an input (possibly multidimensional) time series :math:`x` and a set
+297:     of shapelets :math:`\{s_i\}_i`, the :math:`i`-th coordinate of the Shapelet
+298:     transform is computed as:
+299: 
+300:     .. math::
+301: 
+302:         ST(x, s_i) = \min_t \sum_{\delta_t}
+303:             \left\|x(t+\delta_t) - s_i(\delta_t)\right\|_2^2
+304: 
+305:     The Shapelet model consists in a logistic regression layer on top of this
+306:     transform. Shapelet coefficients as well as logistic regression weights are
+307:     optimized by gradient descent on a L2-penalized cross-entropy loss.

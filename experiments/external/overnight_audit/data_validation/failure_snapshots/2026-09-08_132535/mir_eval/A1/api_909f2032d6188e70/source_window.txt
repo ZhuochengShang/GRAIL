@@ -1,0 +1,156 @@
+191:     """Compute the number of frequencies for each time point.
+192: 
+193:     Parameters
+194:     ----------
+195:     frequencies : list of np.ndarray
+196:         Frequency values
+197: 
+198:     Returns
+199:     -------
+200:     num_freqs : np.ndarray
+201:         Number of frequencies at each time point.
+202:     """
+203:     return np.array([f.size for f in frequencies])
+204: 
+205: 
+206: def compute_num_true_positives(ref_freqs, est_freqs, window=0.5, chroma=False):
+207:     """Compute the number of true positives in an estimate given a reference.
+208:     A frequency is correct if it is within a quartertone of the
+209:     correct frequency.
+210: 
+211:     Parameters
+212:     ----------
+213:     ref_freqs : list of np.ndarray
+214:         reference frequencies (MIDI)
+215:     est_freqs : list of np.ndarray
+216:         estimated frequencies (MIDI)
+217:     window : float
+218:         Window size, in semitones
+219:     chroma : bool
+220:         If True, computes distances modulo n.
+221:         If True, ``ref_freqs`` and ``est_freqs`` should be wrapped modulo n.
+222: 
+223:     Returns
+224:     -------
+225:     true_positives : np.ndarray
+226:         Array the same length as ref_freqs containing the number of true
+227:         positives.
+228: 
+229:     """
+230:     n_frames = len(ref_freqs)
+231:     true_positives = np.zeros((n_frames,))
+232: 
+233:     for i, (ref_frame, est_frame) in enumerate(zip(ref_freqs, est_freqs)):
+234:         if chroma:
+235:             # match chroma-wrapped frequency events
+236:             matching = util.match_events(
+237:                 ref_frame, est_frame, window, distance=util._outer_distance_mod_n
+238:             )
+239:         else:
+240:             # match frequency events within tolerance window in semitones
+241:             matching = util.match_events(ref_frame, est_frame, window)
+242: 
+243:         true_positives[i] = len(matching)
+244: 
+245:     return true_positives
+246: 
+247: 
+248: def compute_accuracy(true_positives, n_ref, n_est):
+249:     """Compute accuracy metrics.
+250: 
+251:     Parameters
+252:     ----------
+253:     true_positives : np.ndarray
+254:         Array containing the number of true positives at each time point.
+255:     n_ref : np.ndarray
+256:         Array containing the number of reference frequencies at each time
+257:         point.
+258:     n_est : np.ndarray
+259:         Array containing the number of estimate frequencies at each time point.
+260: 
+261:     Returns
+262:     -------
+263:     precision : float
+264:         ``sum(true_positives)/sum(n_est)``
+265:     recall : float
+266:         ``sum(true_positives)/sum(n_ref)``
+267:     acc : float
+268:         ``sum(true_positives)/sum(n_est + n_ref - true_positives)``
+269: 
+270:     """
+271:     true_positive_sum = float(true_positives.sum())
+272: 
+273:     n_est_sum = n_est.sum()
+274:     if n_est_sum > 0:
+275:         precision = true_positive_sum / n_est.sum()
+276:     else:
+277:         warnings.warn("Estimate frequencies are all empty.")
+278:         precision = 0.0
+279: 
+280:     n_ref_sum = n_ref.sum()
+281:     if n_ref_sum > 0:
+282:         recall = true_positive_sum / n_ref.sum()
+283:     else:
+284:         warnings.warn("Reference frequencies are all empty.")
+285:         recall = 0.0
+286: 
+287:     acc_denom = (n_est + n_ref - true_positives).sum()
+288:     if acc_denom > 0:
+289:         acc = true_positive_sum / acc_denom
+290:     else:
+291:         acc = 0.0
+292: 
+293:     return precision, recall, acc
+294: 
+295: 
+296: def compute_err_score(true_positives, n_ref, n_est):
+297:     """Compute error score metrics.
+298: 
+299:     Parameters
+300:     ----------
+301:     true_positives : np.ndarray
+302:         Array containing the number of true positives at each time point.
+303:     n_ref : np.ndarray
+304:         Array containing the number of reference frequencies at each time
+305:         point.
+306:     n_est : np.ndarray
+307:         Array containing the number of estimate frequencies at each time point.
+308: 
+309:     Returns
+310:     -------
+311:     e_sub : float
+312:         Substitution error
+313:     e_miss : float
+314:         Miss error
+315:     e_fa : float
+316:         False alarm error
+317:     e_tot : float
+318:         Total error
+319: 
+320:     """
+321:     n_ref_sum = float(n_ref.sum())
+322: 
+323:     if n_ref_sum == 0:
+324:         warnings.warn("Reference frequencies are all empty.")
+325:         return 0.0, 0.0, 0.0, 0.0
+326: 
+327:     # Substitution error
+328:     e_sub = (np.min([n_ref, n_est], axis=0) - true_positives).sum() / n_ref_sum
+329: 
+330:     # compute the max of (n_ref - n_est) and 0
+331:     e_miss_numerator = n_ref - n_est
+332:     e_miss_numerator[e_miss_numerator < 0] = 0
+333:     # Miss error
+334:     e_miss = e_miss_numerator.sum() / n_ref_sum
+335: 
+336:     # compute the max of (n_est - n_ref) and 0
+337:     e_fa_numerator = n_est - n_ref
+338:     e_fa_numerator[e_fa_numerator < 0] = 0
+339:     # False alarm error
+340:     e_fa = e_fa_numerator.sum() / n_ref_sum
+341: 
+342:     # total error
+343:     e_tot = (np.max([n_ref, n_est], axis=0) - true_positives).sum() / n_ref_sum
+344: 
+345:     return e_sub, e_miss, e_fa, e_tot
+346: 

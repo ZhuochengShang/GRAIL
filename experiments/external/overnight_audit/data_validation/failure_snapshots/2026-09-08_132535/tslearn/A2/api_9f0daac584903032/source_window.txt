@@ -1,0 +1,156 @@
+71:         2D tensor with shape:
+72:         `(batch_size, features)`.
+73: 
+74:     Examples
+75:     --------
+76:     >>> x = numpy.array([5.0, 6.8, numpy.inf])
+77:     >>> x = x.reshape([1, 3, 1])
+78:     >>> ops.convert_to_numpy(GlobalMinPooling1D()(x))
+79:     array([[5.]], dtype=float32)
+80:     """
+81: 
+82:     def __init__(self, **kwargs):
+83:         super().__init__(**kwargs)
+84:         self.input_spec = InputSpec(ndim=3)
+85: 
+86:     def compute_output_shape(self, input_shape):
+87:         return input_shape[0], input_shape[2]
+88: 
+89:     def call(self, inputs, mask=None):
+90:         if mask is not None:
+91:             max_ = ops.max(inputs)
+92:             inputs = ops.where(mask, inputs, max_)
+93:         return ops.min(inputs, axis=1)
+94: 
+95: 
+96: @register_keras_serializable()
+97: class GlobalArgminPooling1D(Layer):
+98:     """Global argmin pooling operation for temporal data.
+99:     # Input shape
+100:         3D tensor with shape: `(batch_size, steps, features)`.
+101:     # Output shape
+102:         2D tensor with shape:
+103:         `(batch_size, features)`.
+104: 
+105:     Examples
+106:     --------
+107:     >>> x = numpy.array([5.0, 6.8, numpy.inf])
+108:     >>> x = x.reshape([1, 3, 1])
+109:     >>> ops.convert_to_numpy(GlobalArgminPooling1D()(x))
+110:     array([[0.]], dtype=float32)
+111:     """
+112: 
+113:     def __init__(self, **kwargs):
+114:         super().__init__(**kwargs)
+115:         self.input_spec = InputSpec(ndim=3)
+116: 
+117:     def compute_output_shape(self, input_shape):
+118:         return input_shape[0], input_shape[2]
+119: 
+120:     def call(self, inputs, mask=None):
+121:         if mask is not None:
+122:             max_ = ops.max(inputs)
+123:             inputs = ops.where(mask, inputs, max_)
+124:         return ops.cast(ops.argmin(inputs, axis=1), dtype=float)
+125: 
+126: 
+127: @register_keras_serializable()
+128: class PatchingLayer(Layer):
+129:     """Format data for processing with patches matching shapelets length
+130:     and nans removal.
+131:     # Input shape
+132:         3D tensor with shape: `(batch_size, steps, features)`.
+133:     # Output shape
+134:         4D tensor with shape:
+135:          `(batch_size, steps - shapelet_size, shapelet_length, features)`.
+136:     """
+137: 
+138:     def __init__(self, shapelet_length, **kwargs):
+139:         self.shapelet_length = shapelet_length
+140:         super().__init__(**kwargs)
+141:         self.input_spec = InputSpec(ndim=3)
+142: 
+143:     def compute_output_shape(self, input_shape):
+144:         return (
+145:             input_shape[0],
+146:             input_shape[1] - self.shapelet_length + 1,
+147:             self.shapelet_length, input_shape[2]
+148:         )
+149: 
+150:     def call(self, inputs):
+151:         n_ts, sz, d = ops.shape(inputs)
+152:         inputs = ops.reshape(inputs, (n_ts, sz * d))
+153:         inputs = ops.extract_sequences(inputs, self.shapelet_length * d, d)
+154:         inputs = ops.reshape(
+155:             inputs,
+156:             (n_ts, sz - self.shapelet_length + 1, self.shapelet_length, d)
+157:         )
+158:         return inputs
+159: 
+160:     def get_config(self):
+161:         config = {'shapelet_length': self.shapelet_length}
+162:         base_config = super().get_config()
+163:         return {**config, **base_config}
+164: 
+165: 
+166: @register_keras_serializable()
+167: class LocalSquaredDistanceLayer(Layer):
+168:     """Pairwise (squared) distance computation between local patches and
+169:     shapelets
+170: 
+171:     # Input shape
+172:         4D tensor with shape:
+173:         `(batch_size, steps - shapelet_size, shapelet_length, features)`.
+174:     # Output shape
+175:         3D tensor with shape:
+176:         `(batch_size, steps, n_shapelets)`.
+177:     """
+178: 
+179:     def __init__(self, nb_shapelets, init=None, **kwargs):
+180:         self.nb_shapelets = nb_shapelets
+181:         if init is None:
+182:             self.initializer = "uniform"
+183:         else:
+184:            self.initializer = init
+185:         super().__init__(**kwargs)
+186:         self.input_spec = InputSpec(ndim=4)
+187: 
+188:     def build(self, input_shape):
+189:         self.kernel = self.add_weight(name='kernel',
+190:                                       shape=(self.nb_shapelets,
+191:                                              input_shape[2],
+192:                                              input_shape[3]),
+193:                                       initializer=self.initializer,
+194:                                       trainable=True)
+195:         super().build(input_shape)
+196: 
+197:     def compute_mask(self, inputs, mask=None):
+198:         mask = ops.isfinite(ops.sum(inputs, axis=(-1, -2)))
+199:         mask = ops.expand_dims(mask, axis=-1)
+200:         return mask
+201: 
+202:     def call(self, x, **kwargs):
+203:         # Remove nans for backward pass, use mask to propagate invalidity
+204:         x = ops.nan_to_num(x, nan=0)
+205: 
+206:         shapelet_size = ops.shape(self.kernel)[1]
+207:         nb_features = ops.shape(self.kernel)[2]
+208: 
+209:         # (x - y)^2 = x^2 + y^2 - 2 * x * y
+210:         x_sq = ops.sum(ops.sum(x ** 2, axis=-1), axis=-1, keepdims = True)
+211:         y_sq = ops.reshape(ops.sum(self.kernel ** 2, axis=(-1, -2)),
+212:                            (1, 1, self.nb_shapelets))
+213:         x_ = ops.reshape(
+214:             x,
+215:             (ops.shape(x)[0],
+216:              ops.shape(x)[1],
+217:              shapelet_size * nb_features)
+218:         )
+219:         y_ = ops.reshape(
+220:             ops.transpose(self.kernel,
+221:                           (1, 0, 2)),
+222:                          (shapelet_size * nb_features, self.nb_shapelets))
+223:         xy = ops.dot(x_, y_)
+224:         return (x_sq + y_sq - 2 * xy) / shapelet_size
+225: 
+226:     def compute_output_shape(self, input_shape):

@@ -1,0 +1,156 @@
+394:                 continue
+395:             string_values = line.split(",")
+396:             onset_midi = (float(string_values[0]), float(string_values[1]))
+397:             occurrence.append(onset_midi)
+398: 
+399:         # Add last occurrence and pattern to pattern_list
+400:         if occurrence != []:
+401:             pattern.append(occurrence)
+402:         if pattern != []:
+403:             pattern_list.append(pattern)
+404: 
+405:     return pattern_list
+406: 
+407: 
+408: @util.deprecated(version="0.8.1", version_removed="0.9.0")
+409: def load_wav(path, mono=True):
+410:     """Load a .wav file as a numpy array using ``scipy.io.wavfile``.
+411: 
+412:     .. warning:: This function is deprecatred in mir_eval 0.8.1
+413:         and will be removed in 0.9.0.
+414:         We recommend using a dedicated audio IO library such as
+415:         `soundfile` instead.
+416: 
+417:     Parameters
+418:     ----------
+419:     path : str or `os.Pathlike`
+420:         Path to a .wav file
+421:     mono : bool
+422:         If the provided .wav has more than one channel, it will be
+423:         converted to mono if ``mono=True``. (Default value = True)
+424: 
+425:     Returns
+426:     -------
+427:     audio_data : np.ndarray
+428:         Array of audio samples, normalized to the range [-1., 1.]
+429:     fs : int
+430:         Sampling rate of the audio data
+431:     """
+432:     fs, audio_data = scipy.io.wavfile.read(path)
+433:     # Make float in range [-1, 1]
+434:     if audio_data.dtype == "int8":
+435:         audio_data = audio_data / float(2**8)
+436:     elif audio_data.dtype == "int16":
+437:         audio_data = audio_data / float(2**16)
+438:     elif audio_data.dtype == "int32":
+439:         audio_data = audio_data / float(2**24)
+440:     else:
+441:         raise ValueError("Got unexpected .wav data type " "{}".format(audio_data.dtype))
+442:     # Optionally convert to mono
+443:     if mono and audio_data.ndim != 1:
+444:         audio_data = audio_data.mean(axis=1)
+445:     return audio_data, fs
+446: 
+447: 
+448: def load_valued_intervals(filename, delimiter=r"\s+", comment="#"):
+449:     r"""Import valued intervals from an annotation file. The file should
+450:     consist of three columns: Two consisting of numeric values corresponding to
+451:     start and end time of each interval and a third, also of numeric values,
+452:     corresponding to the value of each interval. This is primarily useful for
+453:     processing events which span a duration and have a numeric value, such as
+454:     piano-roll notes which have an onset, offset, and a pitch value.
+455: 
+456:     Parameters
+457:     ----------
+458:     filename : str or `os.Pathlike`
+459:         Path to the annotation file
+460: 
+461:     delimiter : str
+462:         Separator regular expression.
+463:         By default, lines will be split by any amount of whitespace.
+464: 
+465:     comment : str or None
+466:         Comment regular expression.
+467:         Any lines beginning with this string or pattern will be ignored.
+468: 
+469:         Setting to `None` disables comments.
+470: 
+471:     Returns
+472:     -------
+473:     intervals : np.ndarray, shape=(n_events, 2)
+474:         Array of event start and end times
+475:     values : np.ndarray, shape=(n_events,)
+476:         Array of values
+477: 
+478:     """
+479:     # Use our universal function to load in the events
+480:     starts, ends, values = load_delimited(
+481:         filename, [float, float, float], delimiter=delimiter, comment=comment
+482:     )
+483:     # Stack into an interval matrix
+484:     intervals = np.array([starts, ends]).T
+485:     # Validate them, but throw a warning in place of an error
+486:     try:
+487:         util.validate_intervals(intervals)
+488:     except ValueError as error:
+489:         warnings.warn(error.args[0])
+490: 
+491:     # return values as np.ndarray
+492:     values = np.array(values)
+493: 
+494:     return intervals, values
+495: 
+496: 
+497: def load_key(filename, delimiter=r"\s+", comment="#"):
+498:     r"""Load key labels from an annotation file. The file should
+499:     consist of two string columns: One denoting the key scale degree
+500:     (semitone), and the other denoting the mode (major or minor).  The file
+501:     should contain only one row.
+502: 
+503:     Parameters
+504:     ----------
+505:     filename : str or `os.Pathlike`
+506:         Path to the annotation file
+507: 
+508:     delimiter : str
+509:         Separator regular expression.
+510:         By default, lines will be split by any amount of whitespace.
+511: 
+512:     comment : str or None
+513:         Comment regular expression.
+514:         Any lines beginning with this string or pattern will be ignored.
+515: 
+516:         Setting to `None` disables comments.
+517: 
+518:     Returns
+519:     -------
+520:     key : str
+521:         Key label, in the form ``'(key) (mode)'``
+522: 
+523:     """
+524:     # Use our universal function to load the key and mode strings
+525:     scale, mode = load_delimited(
+526:         filename, [str, str], delimiter=delimiter, comment=comment
+527:     )
+528:     if len(scale) != 1:
+529:         raise ValueError("Key file should contain only one line.")
+530:     scale, mode = scale[0], mode[0]
+531:     # Join with a space
+532:     key_string = f"{scale} {mode}"
+533:     # Validate them, but throw a warning in place of an error
+534:     try:
+535:         key.validate_key(key_string)
+536:     except ValueError as error:
+537:         warnings.warn(error.args[0])
+538: 
+539:     return key_string
+540: 
+541: 
+542: def load_tempo(filename, delimiter=r"\s+", comment="#"):
+543:     r"""Load tempo estimates from an annotation file in MIREX format.
+544:     The file should consist of three numeric columns: the first two
+545:     correspond to tempo estimates (in beats-per-minute), and the third
+546:     denotes the relative confidence of the first value compared to the
+547:     second (in the range [0, 1]). The file should contain only one row.
+548: 
+549:     Parameters

@@ -1,0 +1,58 @@
+{
+  "name": "FileImageSink",
+  "native_row": {
+    "status": "fail",
+    "attempts": 1,
+    "pass_round": null,
+    "wall_s": 18.1,
+    "llm_calls": 1,
+    "input_tokens": 2170,
+    "output_tokens": 2062,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2170,
+        "output_tokens": 2062
+      }
+    },
+    "error_category": "runtime",
+    "error": "FileNotFoundException: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/output/thumbnail.png/test_sink.png (No such file or directory)",
+    "locus": "FileOutputStream.java:270",
+    "doc_chars": 4314,
+    "document_sha256": "92148b466d48d20d815031e9529d1eee59e7c512298552d32e897cb6318cffdf",
+    "source": "source/src/main/java/net/coobird/thumbnailator/tasks/io/FileImageSink.java:127",
+    "source_other_sites": 3,
+    "codebase_frames": null,
+    "evidence_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced",
+    "name": "FileImageSink",
+    "execution_evidence": {
+      "status": "fail",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "fail",
+          "category": "runtime",
+          "error": "FileNotFoundException: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/output/"
+        }
+      ],
+      "error_category": "runtime",
+      "error": "FileNotFoundException: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/output/thumbnail.png/test_sink.png (No such file or directory)",
+      "code": "java.io.File outFile = outputPath.resolve(\"test_sink.png\").toFile();\nnet.coobird.thumbnailator.tasks.io.FileImageSink sink = new net.coobird.thumbnailator.tasks.io.FileImageSink(outFile, true);\n\n// Exercise the sink by writing the provided in-memory image to the file\nsink.write(sourceImage);\n\n// Read back the output to verify the sink correctly wrote the image data\njava.awt.image.BufferedImage readBack = javax.imageio.ImageIO.read(outFile);\nassert readBack != null : \"Image should be written and readable\";\nassert readBack.getWidth() == sourceImage.getWidth() : \"Width mismatch in written image\";\nassert readBack.getHeight() == sourceImage.getHeight() : \"Height mismatch in written image\";\n\nSystem.out.println(\"__CHECK__ FileImageSink \" + outFile.exists() + \",\" + readBack.getWidth() + \"x\" + readBack.getHeight());",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_FileImageSink/ApiTest.java",
+      "exit_code": 1,
+      "stdout_tail": "",
+      "stderr_tail": "__RUN_ERR__ FileNotFoundException: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/output/thumbnail.png/test_sink.png (No such file or directory)\njava.io.FileNotFoundException: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/output/thumbnail.png/test_sink.png (No such file or directory)\n\tat java.io.FileOutputStream.open0(Native Method)\n\tat java.io.FileOutputStream.open(FileOutputStream.java:270)\n\tat java.io.FileOutputStream.<init>(FileOutputStream.java:213)\n\tat java.io.FileOutputStream.<init>(FileOutputStream.java:162)\n\tat net.coobird.thumbnailator.tasks.io.FileImageSink.createOutputStream(Unknown Source)\n\tat net.coobird.thumbnailator.tasks.io.FileImageSink.write(Unknown Source)\n\tat ApiTest.main(ApiTest.java:55)\n"
+    },
+    "experiment_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced"
+  },
+  "retained_binding": "recorded_code_prefix_present",
+  "retained_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_FileImageSink/ApiTest.java",
+  "retained_sha256": "1d4e96423b7d701f1a957e362b2c9cd2530de11e2f3305658085b6e3ed3c05af",
+  "source_window": {
+    "path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/source/src/main/java/net/coobird/thumbnailator/tasks/io/FileImageSink.java",
+    "full_file_sha256": "8cb77bab77d8fc353ffb3020a472b8c6d3bd7d0cde9be453cca3abc1fb09e581",
+    "first_line": 112,
+    "last_line": 267,
+    "other_sites": 3
+  }
+}

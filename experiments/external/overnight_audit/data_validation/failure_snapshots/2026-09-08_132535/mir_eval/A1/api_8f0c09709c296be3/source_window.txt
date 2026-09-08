@@ -1,0 +1,156 @@
+102:         "#931fad",
+103:         "#1fad7e",
+104:         "#ad1f4e",
+105:         "#1f62ad",
+106:         "#ad6a1f",
+107:         "#561fad",
+108:         "#1fad41",
+109:         "#ad1f8b",
+110:         "#1f9fad",
+111:     ],
+112: }
+113: 
+114: 
+115: # Borrowed from seaborn 0.13.2
+116: # https://github.com/mwaskom/seaborn/blob/v0.13.2/seaborn/_compat.py#L67
+117: def register_colormap(name, cmap):
+118:     """Handle changes to matplotlib colormap interface in 3.6."""
+119:     try:
+120:         if name not in mpl.colormaps:
+121:             mpl.colormaps.register(cmap, name=name)
+122:     except AttributeError:
+123:         mpl.cm.register_cmap(name, cmap)
+124: 
+125: 
+126: # Register the colormaps with matplotlib
+127: for name in __COLORMAPS__:
+128:     _cmap = ListedColormap(__COLORMAPS__[name], name=name)
+129:     _cmap.set_extremes(under=(0.75, 0.75, 0.75), over=(0.75, 0.75, 0.75))
+130:     register_colormap(name=name, cmap=_cmap)
+131: 
+132: del name, _cmap
+133: 
+134: # This dictionary is used to track mir_eval-specific attributes
+135: # attached to matplotlib axes
+136: __AXMAP = WeakKeyDictionary()
+137: 
+138: 
+139: def __get_axes(ax=None, fig=None):
+140:     """Get or construct the target axes object for a new plot.
+141: 
+142:     Parameters
+143:     ----------
+144:     ax : matplotlib.pyplot.axes, optional
+145:         If provided, return this axes object directly.
+146: 
+147:     fig : matplotlib.figure.Figure, optional
+148:         The figure to query for axes.
+149: 
+150:         By default, uses the current figure `plt.gcf()`.
+151: 
+152:     Returns
+153:     -------
+154:     ax : matplotlib.pyplot.axes
+155:         An axis handle on which to draw the segmentation.
+156:         If none is provided, a new set of axes is created.
+157:     new_axes : bool
+158:         If `True`, the axis object was newly constructed.
+159:         If `False`, the axis object already existed.
+160:     """
+161:     new_axes = False
+162: 
+163:     if ax is None:
+164:         if fig is None:
+165:             import matplotlib.pyplot as plt
+166: 
+167:             fig = plt.gcf()
+168: 
+169:         if not fig.get_axes():
+170:             new_axes = True
+171:         ax = fig.gca()
+172: 
+173:     # Create a storage bucket for this axes in case we need it
+174:     if ax not in __AXMAP:
+175:         __AXMAP[ax] = dict()
+176: 
+177:     return ax, new_axes
+178: 
+179: 
+180: def segments(
+181:     intervals,
+182:     labels,
+183:     base=None,
+184:     height=None,
+185:     text=False,
+186:     text_kw=None,
+187:     ax=None,
+188:     prop_cycle=None,
+189:     **kwargs,
+190: ):
+191:     """Plot a segmentation as a set of disjoint rectangles.
+192: 
+193:     Parameters
+194:     ----------
+195:     intervals : np.ndarray, shape=(n, 2)
+196:         segment intervals, in the format returned by
+197:         :func:`mir_eval.io.load_intervals` or
+198:         :func:`mir_eval.io.load_labeled_intervals`.
+199:     labels : list, shape=(n,)
+200:         reference segment labels, in the format returned by
+201:         :func:`mir_eval.io.load_labeled_intervals`.
+202:     base : number
+203:         The vertical position of the base of the rectangles.
+204:         By default, this will be the bottom of the plot.
+205:     height : number
+206:         The height of the rectangles.
+207:         By default, this will be the top of the plot (minus ``base``).
+208:         .. note:: If either `base` or `height` are provided, both must be provided.
+209:     text : bool
+210:         If true, each segment's label is displayed in its
+211:         upper-left corner
+212:     text_kw : dict
+213:         If ``text == True``, the properties of the text
+214:         object can be specified here.
+215:         See ``matplotlib.pyplot.Text`` for valid parameters
+216:     ax : matplotlib.pyplot.axes
+217:         An axis handle on which to draw the segmentation.
+218:         If none is provided, a new set of axes is created.
+219:     prop_cycle : cycle.Cycler
+220:         An optional property cycle object to specify style properties.
+221:         If not provided, the default property cycler will be retrieved from matplotlib.
+222:     **kwargs
+223:         Additional keyword arguments to pass to
+224:         ``matplotlib.patches.Rectangle``.
+225: 
+226:     Returns
+227:     -------
+228:     ax : matplotlib.pyplot.axes._subplots.AxesSubplot
+229:         A handle to the (possibly constructed) plot axes
+230:     """
+231:     if text_kw is None:
+232:         text_kw = dict()
+233:     text_kw.setdefault("va", "top")
+234:     text_kw.setdefault("clip_on", True)
+235:     text_kw.setdefault("bbox", dict(boxstyle="round", facecolor="white"))
+236: 
+237:     # Make sure we have a numpy array
+238:     intervals = np.atleast_2d(intervals)
+239: 
+240:     seg_def_style = dict(linewidth=1)
+241: 
+242:     ax, new_axes = __get_axes(ax=ax)
+243: 
+244:     if prop_cycle is None:
+245:         __AXMAP[ax].setdefault("prop_cycle", mpl.rcParams["axes.prop_cycle"])
+246:         __AXMAP[ax].setdefault("prop_iter", iter(mpl.rcParams["axes.prop_cycle"]))
+247:     elif "prop_iter" not in __AXMAP[ax]:
+248:         __AXMAP[ax]["prop_cycle"] = prop_cycle
+249:         __AXMAP[ax]["prop_iter"] = iter(prop_cycle)
+250: 
+251:     prop_cycle = __AXMAP[ax]["prop_cycle"]
+252:     prop_iter = __AXMAP[ax]["prop_iter"]
+253: 
+254:     if new_axes:
+255:         ax.set_yticks([])
+256: 
+257:     if base is None and height is None:

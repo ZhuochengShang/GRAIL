@@ -1,0 +1,156 @@
+426:         self.batch_size = batch_size
+427:         self.verbose = verbose
+428:         self.optimizer = optimizer
+429:         self.weight_regularizer = weight_regularizer
+430:         self.shapelet_length = shapelet_length
+431:         self.total_lengths = total_lengths
+432:         self.max_size = max_size
+433:         self.scale = scale
+434:         self.random_state = random_state
+435: 
+436:     @property
+437:     def _n_shapelet_sizes(self):
+438:         return len(self.n_shapelets_per_size_)
+439: 
+440:     @property
+441:     def shapelets_(self):
+442:         check_is_fitted(self, '_X_fit_dims')
+443: 
+444:         total_nb_shapelets = sum(self.n_shapelets_per_size_.values())
+445:         shapelets = numpy.empty((total_nb_shapelets,), dtype=object)
+446:         nb_shapelets_found = 0
+447:         for i in range(self._n_shapelet_sizes):
+448:             layer = self.model_.get_layer("shapelets_%d" % i)
+449:             for weight in layer.get_weights()[0]:
+450:                 shapelets[nb_shapelets_found] = weight
+451:                 nb_shapelets_found += 1
+452:         return shapelets
+453: 
+454:     @property
+455:     def shapelets_as_time_series_(self):
+456:         """Set of time-series shapelets formatted as a ``tslearn`` time series
+457:         dataset.
+458: 
+459:         Examples
+460:         --------
+461:         >>> from tslearn.generators import random_walk_blobs
+462:         >>> X, y = random_walk_blobs(n_ts_per_blob=10, sz=256, d=1, n_blobs=3)
+463:         >>> model = LearningShapelets(n_shapelets_per_size={3: 2, 4: 1},
+464:         ...                       max_iter=1)
+465:         >>> _ = model.fit(X, y)
+466:         >>> model.shapelets_as_time_series_.shape
+467:         (3, 4, 1)
+468:         """
+469:         check_is_fitted(self, '_X_fit_dims')
+470:         n_shapelets_per_size = self.n_shapelets_per_size_
+471: 
+472:         total_n_shp = sum(n_shapelets_per_size.values())
+473:         shp_sz = max(n_shapelets_per_size.keys())
+474:         non_formatted_shapelets = self.shapelets_
+475:         d = non_formatted_shapelets[0].shape[1]
+476:         shapelets = numpy.zeros((total_n_shp, shp_sz, d)) + numpy.nan
+477:         for i in range(total_n_shp):
+478:             sz = non_formatted_shapelets[i].shape[0]
+479:             shapelets[i, :sz, :] = non_formatted_shapelets[i]
+480:         return shapelets
+481: 
+482:     def fit(self, X, y):
+483:         """Learn time-series shapelets.
+484: 
+485:         Parameters
+486:         ----------
+487:         X : array-like of shape=(n_ts, sz, d)
+488:             Time series dataset.
+489:         y : array-like of shape=(n_ts, )
+490:             Time series labels.
+491:         """
+492:         if not self.scale:
+493:             warnings.warn("The default value for 'scale' is set to False "
+494:                           "in version 0.4 to ensure backward compatibility, "
+495:                           "but is likely to change in a future version.",
+496:                           FutureWarning)
+497: 
+498:         X, y = check_X_y(X, y, allow_nd=True, force_all_finite=False)
+499:         X = self._preprocess_series(X)
+500:         X = check_dims(X)
+501:         self._check_series_length(X)
+502: 
+503:         y_ = self._preprocess_labels(y)
+504:         n_labels = len(self.classes_)
+505: 
+506:         if self.random_state is not None:
+507:             set_random_seed(seed=self.random_state)
+508: 
+509:         n_ts, sz, d = self._X_fit_dims = X.shape
+510: 
+511:         self.model_ = None
+512:         self.transformer_model_ = None
+513:         self.locator_model_ = None
+514: 
+515:         if self.n_shapelets_per_size is None:
+516:             self.n_shapelets_per_size_ = grabocka_params_to_shapelet_size_dict(
+517:                 n_ts,
+518:                 self._min_sz_fit,
+519:                 n_labels,
+520:                 self.shapelet_length,
+521:                 self.total_lengths
+522:             )
+523:         else:
+524:             self.n_shapelets_per_size_ = self.n_shapelets_per_size
+525: 
+526:         self._set_model_layers(X=X, n_classes=n_labels)
+527: 
+528:         h = self.model_.fit(
+529:             X,
+530:             y_,
+531:             batch_size=self.batch_size,
+532:             epochs=self.max_iter,
+533:             verbose=self.verbose
+534:         )
+535:         self.history_ = h.history
+536:         self.n_iter_ = len(self.history_.get("loss", []))
+537:         self.n_features_in_ = d
+538:         return self
+539: 
+540:     def predict(self, X):
+541:         """Predict class for a given set of time series.
+542: 
+543:         Parameters
+544:         ----------
+545:         X : array-like of shape=(n_ts, sz, d)
+546:             Time series dataset.
+547: 
+548:         Returns
+549:         -------
+550:         array of shape=(n_ts, ) or (n_ts, n_classes), depending on the shape
+551:         of the label vector provided at training time.
+552:             Index of the cluster each sample belongs to or class probability
+553:             matrix, depending on what was provided at training time.
+554:         """
+555:         check_is_fitted(self, '_X_fit_dims')
+556:         X = check_array(X, allow_nd=True, force_all_finite=False)
+557:         X = self._preprocess_series(X)
+558:         X = check_dims(X, X_fit_dims=self._X_fit_dims,
+559:                        check_n_features_only=True)
+560:         self._check_series_length(X)
+561: 
+562:         y_ind = self.predict_proba(X).argmax(axis=1)
+563:         y_label = numpy.array(
+564:             [self.classes_[ind] for ind in y_ind]
+565:         )
+566:         return y_label
+567: 
+568:     def predict_proba(self, X):
+569:         """Predict class probability for a given set of time series.
+570: 
+571:         Parameters
+572:         ----------
+573:         X : array-like of shape=(n_ts, sz, d)
+574:             Time series dataset.
+575: 
+576:         Returns
+577:         -------
+578:         array of shape=(n_ts, n_classes),
+579:             Class probability matrix.
+580:         """
+581:         check_is_fitted(self, '_X_fit_dims')

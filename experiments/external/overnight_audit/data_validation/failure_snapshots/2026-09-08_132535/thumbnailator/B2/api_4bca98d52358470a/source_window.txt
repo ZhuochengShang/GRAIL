@@ -1,0 +1,49 @@
+46: 	/**
+47: 	 * The {@link SourceSinkThumbnailTask} used to perform the task.
+48: 	 */
+49: 	private final SourceSinkThumbnailTask<File, File> task;
+50: 	
+51: 	/**
+52: 	 * Creates a {@link ThumbnailTask} in which image data is read from the
+53: 	 * specified {@link File} and is output to a specified {@link File}, using
+54: 	 * the parameters provided in the specified {@link ThumbnailParameter}.
+55: 	 * 
+56: 	 * @param param				The parameters to use to create the thumbnail.
+57: 	 * @param sourceFile		The {@link File} from which image data is read.
+58: 	 * @param destinationFile	The {@link File} to which thumbnail is written.
+59: 	 * @throws NullPointerException		If the parameter is {@code null}.
+60: 	 */
+61: 	public FileThumbnailTask(ThumbnailParameter param, File sourceFile, File destinationFile) {
+62: 		super(param);
+63: 		this.task = new SourceSinkThumbnailTask<File, File>(
+64: 				param,
+65: 				new FileImageSource(sourceFile),
+66: 				new FileImageSink(destinationFile)
+67: 		);
+68: 	}
+69: 
+70: 	@Override
+71: 	public BufferedImage read() throws IOException {
+72: 		return task.read();
+73: 	}
+74: 	
+75: 	@Override
+76: 	public void write(BufferedImage img) throws IOException {
+77: 		task.write(img);
+78: 	}
+79: 
+80: 	@Override
+81: 	public ThumbnailParameter getParam() {
+82: 		return task.getParam();
+83: 	}
+84: 
+85: 	@Override
+86: 	public File getSource() {
+87: 		return task.getSource();
+88: 	}
+89: 	
+90: 	@Override
+91: 	public File getDestination() {
+92: 		return task.getDestination();
+93: 	}
+94: }

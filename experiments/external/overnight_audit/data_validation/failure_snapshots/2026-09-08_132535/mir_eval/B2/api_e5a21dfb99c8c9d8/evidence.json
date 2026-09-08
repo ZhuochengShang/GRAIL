@@ -1,0 +1,57 @@
+{
+  "name": "tmeasure",
+  "native_row": {
+    "status": "fail",
+    "attempts": 1,
+    "pass_round": null,
+    "wall_s": 33.2,
+    "llm_calls": 1,
+    "input_tokens": 2819,
+    "output_tokens": 3855,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2819,
+        "output_tokens": 3855
+      }
+    },
+    "error_category": "runtime",
+    "error": "AssertionError: Expected precision 1.0, got 0.0",
+    "locus": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_tmeasure/api_test.py:54",
+    "doc_chars": 5711,
+    "document_sha256": "3ff36e2f9ce484ff4345edfe49c90c126612bbacae8cb493164765ce3012c52a",
+    "source": "source/mir_eval/hierarchy.py:466",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "name": "tmeasure",
+    "execution_evidence": {
+      "status": "fail",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "fail",
+          "category": "runtime",
+          "error": "AssertionError: Expected precision 1.0, got 0.0"
+        }
+      ],
+      "error_category": "runtime",
+      "error": "AssertionError: Expected precision 1.0, got 0.0",
+      "code": "import numpy as np\nimport mir_eval\n\n# Construct a deterministic hierarchical segmentation input\n# The reference has 2 levels, the estimate has 1 level.\n# Both cover the exact same time duration [0.0, 30.0].\nref_hier = [\n    np.array([[0.0, 30.0]]), \n    np.array([[0.0, 15.0], [15.0, 30.0]])\n]\nest_hier = [\n    np.array([[0.0, 30.0]])\n]\n\n# Compute tree measures\nt_precision, t_recall, t_measure = mir_eval.hierarchy.tmeasure(\n    ref_hier, est_hier, window=15.0, frame_size=0.1\n)\n\n# Since the estimate perfectly matches the top level of the reference but misses the finer level,\n# precision should be 1.0, recall should be 0.5, and the F1-measure should be ~0.666.\nassert t_precision == 1.0, f\"Expected precision 1.0, got {t_precision}\"\nassert 0.4 < t_recall < 0.6, f\"Expected recall ~0.5, got {t_recall}\"\nassert 0.6 < t_measure < 0.7, f\"Expected f-measure ~0.66, got {t_measure}\"\n\nprint(f\"__CHECK__ tmeasure {t_precision:.4f}, {t_recall:.4f}, {t_measure:.4f}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_tmeasure/api_test.py",
+      "exit_code": 1,
+      "stdout_tail": "",
+      "stderr_tail": "__RUN_ERR__ AssertionError: Expected precision 1.0, got 0.0\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_tmeasure/api_test.py\", line 67, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_tmeasure/api_test.py\", line 62, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_tmeasure/api_test.py\", line 54, in api_test\n    assert t_precision == 1.0, f\"Expected precision 1.0, got {t_precision}\"\nAssertionError: Expected precision 1.0, got 0.0\n"
+    },
+    "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6"
+  },
+  "retained_binding": "recorded_code_prefix_present",
+  "retained_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_tmeasure/api_test.py",
+  "retained_sha256": "af7856db7f93b859abd6a2c6fd5f3074cdcf7ed92dd8355acd4606cba54af1bc",
+  "source_window": {
+    "path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/source/mir_eval/hierarchy.py",
+    "full_file_sha256": "11080d0beac18d9ac39752e893b8208855e813caa36b3bb8d165094ca8c46bd7",
+    "first_line": 451,
+    "last_line": 606,
+    "other_sites": 0
+  }
+}

@@ -1,0 +1,100 @@
+94: 				}
+95: 			}
+96: 		}
+97: 
+98: 		return null;
+99: 	}
+100: 
+101: 	/**
+102: 	 * Returns the orientation obtained from the Exif metadata.
+103: 	 *
+104: 	 * @param exifData		A byte array containing Exif data.
+105: 	 * @return				The orientation information obtained from the
+106: 	 * 						Exif metadata, as a {@link Orientation} enum.
+107: 	 * 						Returns {@code null} if no orientation is found.
+108: 	 */
+109: 	public static Orientation getOrientationFromExif(byte[] exifData) {
+110: 		// Needed to make byte-wise reading easier.
+111: 		ByteBuffer buffer = ByteBuffer.wrap(exifData);
+112: 
+113: 		byte[] exifId = new byte[4];
+114: 		buffer.get(exifId);
+115: 
+116: 		if (!EXIF_MAGIC_STRING.equals(new String(exifId))) {
+117: 			return null;
+118: 		}
+119: 
+120: 		// read the \0 after the Exif
+121: 		buffer.get();
+122: 		// read the padding byte
+123: 		buffer.get();
+124: 
+125: 		byte[] tiffHeader = new byte[8];
+126: 		buffer.get(tiffHeader);
+127: 
+128: 		/*
+129: 		 * The first 2 bytes of the TIFF header contains either:
+130: 		 *   "II" for Intel byte alignment (little endian), or
+131: 		 *   "MM" for Motorola byte alignment (big endian)
+132: 		 */
+133: 		ByteOrder bo;
+134: 		if (tiffHeader[0] == 'I' && tiffHeader[1] == 'I') {
+135: 			bo = ByteOrder.LITTLE_ENDIAN;
+136: 		} else {
+137: 			bo = ByteOrder.BIG_ENDIAN;
+138: 		}
+139: 
+140: 		byte[] numFields = new byte[2];
+141: 		buffer.get(numFields);
+142: 
+143: 		int nFields = ByteBuffer.wrap(numFields).order(bo).getShort();
+144: 
+145: 		byte[] ifd = new byte[12];
+146: 		for (int i = 0; i < nFields; i++) {
+147: 			buffer.get(ifd);
+148: 			IfdStructure ifdStructure = readIFD(ifd, bo);
+149: 
+150: 			// Return the orientation from the orientation IFD
+151: 			if (ifdStructure.getTag() == 0x0112) {
+152: 				return Orientation.typeOf(ifdStructure.getOffsetValue());
+153: 			}
+154: 		}
+155: 
+156: 		return null;
+157: 	}
+158: 
+159: 	private static IfdStructure readIFD(byte[] ifd, ByteOrder bo) {
+160: 		ByteBuffer buffer = ByteBuffer.wrap(ifd).order(bo);
+161: 
+162: 		short tag = buffer.getShort();
+163: 		short type = buffer.getShort();
+164: 		int count = buffer.getInt();
+165: 
+166: 		IfdType ifdType = IfdType.typeOf(type);
+167: 		int offsetValue = 0;
+168: 		
+169: 		/*
+170: 		 * Per section 4.6.2 of the Exif Spec, if value is smaller than
+171: 		 * 4 bytes, it will exist in the earlier byte.
+172: 		 */
+173: 		int byteSize = count * ifdType.size();
+174: 
+175: 		if (byteSize <= 4) {
+176: 			if (ifdType == IfdType.SHORT) {
+177: 				for (int i = 0; i < count; i++) {
+178: 					offsetValue = buffer.getShort();
+179: 				}
+180: 			} else if (ifdType == IfdType.BYTE || ifdType == IfdType.ASCII || ifdType == IfdType.UNDEFINED) {
+181: 				for (int i = 0; i < count; i++) {
+182: 					offsetValue = buffer.get();
+183: 				}
+184: 			} else {
+185: 				offsetValue = buffer.getInt();
+186: 			}
+187: 		} else {
+188: 			offsetValue = buffer.getInt();
+189: 		}
+190: 		
+191: 		return new IfdStructure(tag, type, count, offsetValue);
+192: 	}
+193: }

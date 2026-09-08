@@ -1,0 +1,156 @@
+854:     contingency = _contingency_matrix(reference_indices, estimated_indices).astype(
+855:         float
+856:     )
+857:     contingency = np.array(contingency, dtype="float")
+858:     # Calculate the MI for the two clusterings
+859:     mi = _mutual_info_score(
+860:         reference_indices, estimated_indices, contingency=contingency
+861:     )
+862:     # Calculate the expected value for the mutual information
+863:     # Calculate entropy for each labeling
+864:     h_true, h_pred = _entropy(reference_indices), _entropy(estimated_indices)
+865:     nmi = mi / max(np.sqrt(h_true * h_pred), 1e-10)
+866:     return nmi
+867: 
+868: 
+869: def mutual_information(
+870:     reference_intervals,
+871:     reference_labels,
+872:     estimated_intervals,
+873:     estimated_labels,
+874:     frame_size=0.1,
+875: ):
+876:     """Frame-clustering segmentation: mutual information metrics.
+877: 
+878:     Examples
+879:     --------
+880:     >>> (ref_intervals,
+881:     ...  ref_labels) = mir_eval.io.load_labeled_intervals('ref.lab')
+882:     >>> (est_intervals,
+883:     ...  est_labels) = mir_eval.io.load_labeled_intervals('est.lab')
+884:     >>> # Trim or pad the estimate to match reference timing
+885:     >>> (ref_intervals,
+886:     ...  ref_labels) = mir_eval.util.adjust_intervals(ref_intervals,
+887:     ...                                               ref_labels,
+888:     ...                                               t_min=0)
+889:     >>> (est_intervals,
+890:     ...  est_labels) = mir_eval.util.adjust_intervals(
+891:     ...     est_intervals, est_labels, t_min=0, t_max=ref_intervals.max())
+892:     >>> mi, ami, nmi = mir_eval.structure.mutual_information(ref_intervals,
+893:     ...                                                      ref_labels,
+894:     ...                                                      est_intervals,
+895:     ...                                                      est_labels)
+896: 
+897:     Parameters
+898:     ----------
+899:     reference_intervals : np.ndarray, shape=(n, 2)
+900:         reference segment intervals, in the format returned by
+901:         :func:`mir_eval.io.load_labeled_intervals`.
+902:     reference_labels : list, shape=(n,)
+903:         reference segment labels, in the format returned by
+904:         :func:`mir_eval.io.load_labeled_intervals`.
+905:     estimated_intervals : np.ndarray, shape=(m, 2)
+906:         estimated segment intervals, in the format returned by
+907:         :func:`mir_eval.io.load_labeled_intervals`.
+908:     estimated_labels : list, shape=(m,)
+909:         estimated segment labels, in the format returned by
+910:         :func:`mir_eval.io.load_labeled_intervals`.
+911:     frame_size : float > 0
+912:         length (in seconds) of frames for clustering
+913:         (Default value = 0.1)
+914: 
+915:     Returns
+916:     -------
+917:     MI : float > 0
+918:         Mutual information between segmentations
+919:     AMI : float
+920:         Adjusted mutual information between segmentations.
+921:     NMI : float > 0
+922:         Normalize mutual information between segmentations
+923: 
+924:     """
+925:     validate_structure(
+926:         reference_intervals, reference_labels, estimated_intervals, estimated_labels
+927:     )
+928: 
+929:     # Check for empty annotations.  Don't need to check labels because
+930:     # validate_structure makes sure they're the same size as intervals
+931:     if reference_intervals.size == 0 or estimated_intervals.size == 0:
+932:         return 0.0, 0.0, 0.0
+933: 
+934:     # Generate the cluster labels
+935:     y_ref = util.intervals_to_samples(
+936:         reference_intervals, reference_labels, sample_size=frame_size
+937:     )[-1]
+938: 
+939:     y_ref = util.index_labels(y_ref)[0]
+940: 
+941:     # Map to index space
+942:     y_est = util.intervals_to_samples(
+943:         estimated_intervals, estimated_labels, sample_size=frame_size
+944:     )[-1]
+945: 
+946:     y_est = util.index_labels(y_est)[0]
+947: 
+948:     # Mutual information
+949:     mutual_info = _mutual_info_score(y_ref, y_est)
+950: 
+951:     # Adjusted mutual information
+952:     adj_mutual_info = _adjusted_mutual_info_score(y_ref, y_est)
+953: 
+954:     # Normalized mutual information
+955:     norm_mutual_info = _normalized_mutual_info_score(y_ref, y_est)
+956: 
+957:     return mutual_info, adj_mutual_info, norm_mutual_info
+958: 
+959: 
+960: def nce(
+961:     reference_intervals,
+962:     reference_labels,
+963:     estimated_intervals,
+964:     estimated_labels,
+965:     frame_size=0.1,
+966:     beta=1.0,
+967:     marginal=False,
+968: ):
+969:     """Frame-clustering segmentation: normalized conditional entropy
+970: 
+971:     Computes cross-entropy of cluster assignment, normalized by the
+972:     max-entropy.
+973: 
+974:     Examples
+975:     --------
+976:     >>> (ref_intervals,
+977:     ...  ref_labels) = mir_eval.io.load_labeled_intervals('ref.lab')
+978:     >>> (est_intervals,
+979:     ...  est_labels) = mir_eval.io.load_labeled_intervals('est.lab')
+980:     >>> # Trim or pad the estimate to match reference timing
+981:     >>> (ref_intervals,
+982:     ...  ref_labels) = mir_eval.util.adjust_intervals(ref_intervals,
+983:     ...                                               ref_labels,
+984:     ...                                               t_min=0)
+985:     >>> (est_intervals,
+986:     ...  est_labels) = mir_eval.util.adjust_intervals(
+987:     ...     est_intervals, est_labels, t_min=0, t_max=ref_intervals.max())
+988:     >>> S_over, S_under, S_F = mir_eval.structure.nce(ref_intervals,
+989:     ...                                               ref_labels,
+990:     ...                                               est_intervals,
+991:     ...                                               est_labels)
+992: 
+993:     Parameters
+994:     ----------
+995:     reference_intervals : np.ndarray, shape=(n, 2)
+996:         reference segment intervals, in the format returned by
+997:         :func:`mir_eval.io.load_labeled_intervals`.
+998:     reference_labels : list, shape=(n,)
+999:         reference segment labels, in the format returned by
+1000:         :func:`mir_eval.io.load_labeled_intervals`.
+1001:     estimated_intervals : np.ndarray, shape=(m, 2)
+1002:         estimated segment intervals, in the format returned by
+1003:         :func:`mir_eval.io.load_labeled_intervals`.
+1004:     estimated_labels : list, shape=(m,)
+1005:         estimated segment labels, in the format returned by
+1006:         :func:`mir_eval.io.load_labeled_intervals`.
+1007:     frame_size : float > 0
+1008:         length (in seconds) of frames for clustering
+1009:         (Default value = 0.1)

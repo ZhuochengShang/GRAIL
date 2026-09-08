@@ -1,0 +1,26 @@
+net.coobird.thumbnailator.ThumbnailParameter param = new net.coobird.thumbnailator.ThumbnailParameter(
+        new java.awt.Dimension(50, 50),
+        null,
+        true,
+        "png",
+        net.coobird.thumbnailator.ThumbnailParameter.DEFAULT_FORMAT_TYPE,
+        net.coobird.thumbnailator.ThumbnailParameter.DEFAULT_QUALITY,
+        java.awt.image.BufferedImage.TYPE_INT_ARGB,
+        null,
+        net.coobird.thumbnailator.resizers.Resizers.PROGRESSIVE,
+        true,
+        true
+);
+
+java.io.File inputFile = new java.io.File(grid_png);
+java.io.File outputFile = outputPath.resolve("task_out.png").toFile();
+
+net.coobird.thumbnailator.tasks.FileThumbnailTask task = new net.coobird.thumbnailator.tasks.FileThumbnailTask(param, inputFile, outputFile);
+
+java.awt.image.BufferedImage img = task.read();
+assert img != null : "Read image must not be null";
+
+task.write(img);
+
+assert outputFile.exists() : "Output file must be created";
+assert outputFile.length() > 0 : "Output file must not be emp

@@ -1,0 +1,156 @@
+78: def validate(reference_key, estimated_key):
+79:     """Check that the input annotations to a metric are valid key strings and
+80:     throws helpful errors if not.
+81: 
+82:     Parameters
+83:     ----------
+84:     reference_key : str
+85:         Reference key string.
+86:     estimated_key : str
+87:         Estimated key string.
+88:     """
+89:     for key in [reference_key, estimated_key]:
+90:         validate_key(key)
+91: 
+92: 
+93: def split_key_string(key):
+94:     """Split a key string (of the form, e.g. ``'C# major'``), into a tuple of
+95:     ``(key, mode)`` where ``key`` is is an integer representing the semitone
+96:     distance from C.
+97: 
+98:     Parameters
+99:     ----------
+100:     key : str
+101:         String representing a key.
+102: 
+103:     Returns
+104:     -------
+105:     key : int
+106:         Number of semitones above C.
+107:     mode : str
+108:         String representing the mode.
+109:     """
+110:     if key.lower() != "x":
+111:         key, mode = key.split()
+112:     else:
+113:         mode = None
+114:     return KEY_TO_SEMITONE[key.lower()], mode
+115: 
+116: 
+117: def weighted_score(reference_key, estimated_key, allow_descending_fifths=False):
+118:     """Compute a heuristic score which is weighted according to the
+119:     relationship of the reference and estimated key, as follows:
+120: 
+121:     +------------------------------------------------------+-------+
+122:     | Relationship                                         | Score |
+123:     +------------------------------------------------------+-------+
+124:     | Same key and mode                                    | 1.0   |
+125:     +------------------------------------------------------+-------+
+126:     | Estimated key is a perfect fifth above reference key | 0.5   |
+127:     +------------------------------------------------------+-------+
+128:     | Relative major/minor (same key signature)            | 0.3   |
+129:     +------------------------------------------------------+-------+
+130:     | Parallel major/minor (same key)                      | 0.2   |
+131:     +------------------------------------------------------+-------+
+132:     | Other                                                | 0.0   |
+133:     +------------------------------------------------------+-------+
+134: 
+135:     When specifying allow_descending_fifths=True, the scoring changes so that
+136:     keys that are a perfect fifth above or below the reference key score 0.5
+137:     points. This is consistent with the scoring used for MIREX since 2017.
+138:     In the future, the default behaviour will change to use the new method by
+139:     default.
+140: 
+141:     Examples
+142:     --------
+143:     >>> ref_key = mir_eval.io.load_key('ref.txt')
+144:     >>> est_key = mir_eval.io.load_key('est.txt')
+145:     >>> score = mir_eval.key.weighted_score(ref_key, est_key,
+146:     ...                                     allow_descending_fifths=True)
+147: 
+148:     Parameters
+149:     ----------
+150:     reference_key : str
+151:         Reference key string.
+152:     estimated_key : str
+153:         Estimated key string.
+154:     allow_descending_fifths : bool
+155:         Specifies whether to score descending fifth errors or not.
+156: 
+157:     Returns
+158:     -------
+159:     score : float
+160:         Score representing how closely related the keys are.
+161:     """
+162:     # Notify users of difference between default behaviour in mir_eval and
+163:     # the scoring used by MIREX since 2017
+164:     if not allow_descending_fifths:
+165:         warnings.warn(
+166:             "The selected key scoring method does not match that "
+167:             "currently used by MIREX. To use the same method, specify "
+168:             "allow_descending_fifths=True. The default behaviour will "
+169:             "change to allow_descending_fifths=True in the future."
+170:         )
+171: 
+172:     validate(reference_key, estimated_key)
+173:     reference_key, reference_mode = split_key_string(reference_key)
+174:     estimated_key, estimated_mode = split_key_string(estimated_key)
+175:     # If keys are the same, return 1.
+176:     if reference_key == estimated_key and reference_mode == estimated_mode:
+177:         return 1.0
+178:     # If reference or estimated key are x and they are not the same key
+179:     # then the result is 'Other'.
+180:     if reference_key is None or estimated_key is None:
+181:         return 0.0
+182:     # If keys are the same mode and a perfect fifth up (7 semitones)
+183:     if estimated_mode == reference_mode and (estimated_key - reference_key) % 12 == 7:
+184:         return 0.5
+185:     # If keys are the same mode and a perfect fifth down (7 semitones)
+186:     if (
+187:         allow_descending_fifths
+188:         and estimated_mode == reference_mode
+189:         and (reference_key - estimated_key) % 12 == 7
+190:     ):
+191:         return 0.5
+192:     # Estimated key is relative minor of reference key (9 semitones)
+193:     if (
+194:         estimated_mode != reference_mode == "major"
+195:         and (estimated_key - reference_key) % 12 == 9
+196:     ):
+197:         return 0.3
+198:     # Estimated key is relative major of reference key (3 semitones)
+199:     if (
+200:         estimated_mode != reference_mode == "minor"
+201:         and (estimated_key - reference_key) % 12 == 3
+202:     ):
+203:         return 0.3
+204:     # If keys are in different modes and parallel (same key name)
+205:     if estimated_mode != reference_mode and reference_key == estimated_key:
+206:         return 0.2
+207:     # Otherwise return 0
+208:     return 0.0
+209: 
+210: 
+211: def evaluate(reference_key, estimated_key, allow_descending_fifths=False, **kwargs):
+212:     """Compute all metrics for the given reference and estimated annotations.
+213: 
+214:     Examples
+215:     --------
+216:     >>> ref_key = mir_eval.io.load_key('reference.txt')
+217:     >>> est_key = mir_eval.io.load_key('estimated.txt')
+218:     >>> scores = mir_eval.key.evaluate(ref_key, est_key
+219:     ...                                allow_descending_fifths=True)
+220: 
+221:     Parameters
+222:     ----------
+223:     reference_key : str
+224:         Reference key string.
+225:     estimated_key : str
+226:         Estimated key string.
+227:     allow_descending_fifths : bool
+228:         Specifies whether to score descending fifth errors or not.
+229:     **kwargs
+230:         Additional keyword arguments which will be passed to the
+231:         appropriate metric or preprocessing functions.
+232: 
+233:     Returns

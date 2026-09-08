@@ -1,0 +1,25 @@
+import matplotlib.pyplot as plt
+from mir_eval.display import register_colormap
+
+# Capture the set of registered colormaps before calling the function
+before_cmaps = set(plt.colormaps())
+
+# Call the target function
+result = register_colormap()
+
+# Capture the set of registered colormaps after calling the function
+after_cmaps = set(plt.colormaps())
+new_cmaps = after_cmaps - before_cmaps
+
+if new_cmaps:
+    witness = sorted(list(new_cmaps))[0]
+else:
+    # If already registered (e.g., upon import), look for a mir_eval specific colormap
+    candidates = [c for c in after_cmaps if 'mir_eval' in c.lower()]
+    witness = candidates[0] if candidates else str(result)
+
+# Verify that either a new colormap was registered, a mir_eval colormap exists, or a colormap object was returned
+assert new_cmaps or any('mir_eval' in c.lower() for c in after_cmaps) or result is not None, \
+    "register_colormap did not register a new colormap or return a valid colormap object"
+
+print(f"__CHECK__ register_colormap

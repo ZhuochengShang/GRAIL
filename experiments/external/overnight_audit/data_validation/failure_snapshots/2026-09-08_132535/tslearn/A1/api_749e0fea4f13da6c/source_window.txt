@@ -1,0 +1,156 @@
+1472:     --------
+1473:     dtw : Get the similarity score for DTW
+1474:     subsequence_cost_matrix: Calculate the required cost matrix
+1475:     subsequence_path: Calculate a matching path manually
+1476:     """
+1477:     be = instantiate_backend(be, subseq, longseq)
+1478:     subseq = to_time_series(subseq, be=be)
+1479:     longseq = to_time_series(longseq, be=be)
+1480:     acc_cost_mat = subsequence_cost_matrix(subseq=subseq, longseq=longseq, be=be)
+1481:     global_optimal_match = be.argmin(acc_cost_mat[-1, :])
+1482:     path = subsequence_path(acc_cost_mat, global_optimal_match, be=be)
+1483:     return path, be.sqrt(acc_cost_mat[-1, :][global_optimal_match])
+1484: 
+1485: 
+1486: @njit()
+1487: def njit_sakoe_chiba_mask(sz1, sz2, radius=1):
+1488:     """Compute the Sakoe-Chiba mask.
+1489: 
+1490:     Parameters
+1491:     ----------
+1492:     sz1 : int
+1493:         The size of the first time series
+1494:     sz2 : int
+1495:         The size of the second time series.
+1496:     radius : int
+1497:         The radius of the band.
+1498: 
+1499:     Returns
+1500:     -------
+1501:     mask : array-like, shape=(sz1, sz2)
+1502:         Sakoe-Chiba mask.
+1503: 
+1504:     Examples
+1505:     --------
+1506:     >>> njit_sakoe_chiba_mask(4, 4, 1)
+1507:     array([[ True,  True, False, False],
+1508:            [ True,  True,  True, False],
+1509:            [False,  True,  True,  True],
+1510:            [False, False,  True,  True]])
+1511:     >>> njit_sakoe_chiba_mask(7, 3, 1)
+1512:     array([[ True,  True, False],
+1513:            [ True,  True,  True],
+1514:            [ True,  True,  True],
+1515:            [ True,  True,  True],
+1516:            [ True,  True,  True],
+1517:            [ True,  True,  True],
+1518:            [False,  True,  True]])
+1519:     """
+1520:     mask = numpy.full((sz1, sz2), False)
+1521:     if sz1 > sz2:
+1522:         width = sz1 - sz2 + radius
+1523:         for i in prange(sz2):
+1524:             lower = max(0, i - radius)
+1525:             upper = min(sz1, i + width) + 1
+1526:             mask[lower:upper, i] = True
+1527:     else:
+1528:         width = sz2 - sz1 + radius
+1529:         for i in prange(sz1):
+1530:             lower = max(0, i - radius)
+1531:             upper = min(sz2, i + width) + 1
+1532:             mask[i, lower:upper] = True
+1533:     return mask
+1534: 
+1535: 
+1536: def sakoe_chiba_mask(sz1, sz2, radius=1, be=None):
+1537:     """Compute the Sakoe-Chiba mask.
+1538: 
+1539:     Parameters
+1540:     ----------
+1541:     sz1 : int
+1542:         The size of the first time series
+1543:     sz2 : int
+1544:         The size of the second time series.
+1545:     radius : int
+1546:         The radius of the band.
+1547:     be : Backend object or string or None
+1548:         Backend. If `be` is an instance of the class `NumPyBackend` or the string `"numpy"`,
+1549:         the NumPy backend is used.
+1550:         If `be` is an instance of the class `PyTorchBackend` or the string `"pytorch"`,
+1551:         the PyTorch backend is used.
+1552:         If `be` is `None`, the backend is determined by the input arrays.
+1553:         See our :ref:`dedicated user-guide page <backend>` for more information.
+1554: 
+1555:     Returns
+1556:     -------
+1557:     mask : array-like, shape=(sz1, sz2)
+1558:         Sakoe-Chiba mask.
+1559: 
+1560:     Examples
+1561:     --------
+1562:     >>> sakoe_chiba_mask(4, 4, 1)
+1563:     array([[ True,  True, False, False],
+1564:            [ True,  True,  True, False],
+1565:            [False,  True,  True,  True],
+1566:            [False, False,  True,  True]])
+1567:     >>> sakoe_chiba_mask(7, 3, 1)
+1568:     array([[ True,  True, False],
+1569:            [ True,  True,  True],
+1570:            [ True,  True,  True],
+1571:            [ True,  True,  True],
+1572:            [ True,  True,  True],
+1573:            [ True,  True,  True],
+1574:            [False,  True,  True]])
+1575:     """
+1576:     warnings.warn(
+1577:         "This method is deprecated, use tslearn.metrics.sakoe_chiba_mask instead.",
+1578:         DeprecationWarning
+1579:     )
+1580: 
+1581:     be = instantiate_backend(be)
+1582:     mask = be.full((sz1, sz2), False)
+1583:     if sz1 > sz2:
+1584:         width = sz1 - sz2 + radius
+1585:         for i in range(sz2):
+1586:             lower = max(0, i - radius)
+1587:             upper = min(sz1, i + width) + 1
+1588:             mask[lower:upper, i] = True
+1589:     else:
+1590:         width = sz2 - sz1 + radius
+1591:         for i in range(sz1):
+1592:             lower = max(0, i - radius)
+1593:             upper = min(sz2, i + width) + 1
+1594:             mask[i, lower:upper] = True
+1595:     return mask
+1596: 
+1597: 
+1598: @njit()
+1599: def _njit_itakura_mask(sz1, sz2, max_slope=2.0):
+1600:     """Compute the Itakura mask without checking that the constraints
+1601:     are feasible. In most cases, you should use itakura_mask instead.
+1602: 
+1603:     Parameters
+1604:     ----------
+1605:     sz1 : int
+1606:         The size of the first time series
+1607: 
+1608:     sz2 : int
+1609:         The size of the second time series.
+1610: 
+1611:     max_slope : float (default = 2)
+1612:         The maximum slope of the parallelogram.
+1613: 
+1614:     Returns
+1615:     -------
+1616:     mask : array-like, shape=(sz1, sz2)
+1617:         Itakura mask.
+1618:     """
+1619:     min_slope = 1 / float(max_slope)
+1620:     max_slope *= float(sz1) / float(sz2)
+1621:     min_slope *= float(sz1) / float(sz2)
+1622: 
+1623:     lower_bound = numpy.empty((2, sz2))
+1624:     lower_bound[0] = min_slope * numpy.arange(sz2)
+1625:     lower_bound[1] = (sz1 - 1) - max_slope * (sz2 - 1) + max_slope * numpy.arange(sz2)
+1626:     lower_bound_ = numpy.empty(sz2)
+1627:     for i in prange(sz2):

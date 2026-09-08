@@ -1,0 +1,43 @@
+1: """
+2: The :mod:`tslearn.backend` module provides multiple backends.
+3: The backends provided are NumPy and PyTorch.
+4: """
+5: import os
+6: import logging
+7: from importlib import import_module
+8: 
+9: from .backend import Backend, cast, instantiate_backend, select_backend
+10: 
+11: 
+12: def check_keras_backend():
+13:     """
+14:     Select a backend based on installed packages
+15:     when none is explicitly selected.
+16: 
+17:     """
+18:     if not os.environ.get("KERAS_BACKEND"):
+19:         for keras_backend in ["torch", "tensorflow", "jax"]:
+20:             try:
+21:                 import_module(keras_backend)
+22:                 os.environ["KERAS_BACKEND"] = keras_backend
+23:                 logging.info((
+24:                     "Using {} as Keras backend, may be overloaded through " +
+25:                     "the `KERAS_BACKEND` environment variable.").format(
+26:                     keras_backend
+27:                 ))
+28:                 break
+29:             except ModuleNotFoundError:
+30:                 logging.debug(
+31:                     "Skipping {} backend for Keras: not installed".format(keras_backend)
+32:                 )
+33:         else:
+34:             raise ImportError("No Keras backend installed")
+35: 
+36: 
+37: __all__ = [
+38:     "Backend",
+39:     "cast",
+40:     "instantiate_backend",
+41:     "select_backend",
+42:     'check_keras_backend'
+43: ]

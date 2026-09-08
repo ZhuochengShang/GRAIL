@@ -1,0 +1,156 @@
+147:         array of event times (float)
+148: 
+149:     """
+150:     # Use our universal function to load in the events
+151:     events = load_delimited(filename, [float], delimiter=delimiter, comment=comment)
+152:     events = np.array(events)
+153:     # Validate them, but throw a warning in place of an error
+154:     try:
+155:         util.validate_events(events)
+156:     except ValueError as error:
+157:         warnings.warn(error.args[0])
+158: 
+159:     return events
+160: 
+161: 
+162: def load_labeled_events(filename, delimiter=r"\s+", comment="#"):
+163:     r"""Import labeled time-stamp events from an annotation file.  The file should
+164:     consist of two columns; the first having numeric values corresponding to
+165:     the event times and the second having string labels for each event.  This
+166:     is primarily useful for processing labeled events which lack duration, such
+167:     as beats with metric beat number or onsets with an instrument label.
+168: 
+169:     Parameters
+170:     ----------
+171:     filename : str or `os.Pathlike`
+172:         Path to the annotation file
+173: 
+174:     delimiter : str
+175:         Separator regular expression.
+176:         By default, lines will be split by any amount of whitespace.
+177: 
+178:     comment : str or None
+179:         Comment regular expression.
+180:         Any lines beginning with this string or pattern will be ignored.
+181: 
+182:         Setting to `None` disables comments.
+183: 
+184:     Returns
+185:     -------
+186:     event_times : np.ndarray
+187:         array of event times (float)
+188:     labels : list of str
+189:         list of labels
+190: 
+191:     """
+192:     # Use our universal function to load in the events
+193:     events, labels = load_delimited(
+194:         filename, [float, str], delimiter=delimiter, comment=comment
+195:     )
+196:     events = np.array(events)
+197:     # Validate them, but throw a warning in place of an error
+198:     try:
+199:         util.validate_events(events)
+200:     except ValueError as error:
+201:         warnings.warn(error.args[0])
+202: 
+203:     return events, labels
+204: 
+205: 
+206: def load_intervals(filename, delimiter=r"\s+", comment="#"):
+207:     r"""Import intervals from an annotation file.  The file should consist of two
+208:     columns of numeric values corresponding to start and end time of each
+209:     interval.  This is primarily useful for processing events which span a
+210:     duration, such as segmentation, chords, or instrument activation.
+211: 
+212:     Parameters
+213:     ----------
+214:     filename : str or `os.Pathlike`
+215:         Path to the annotation file
+216: 
+217:     delimiter : str
+218:         Separator regular expression.
+219:         By default, lines will be split by any amount of whitespace.
+220: 
+221:     comment : str or None
+222:         Comment regular expression.
+223:         Any lines beginning with this string or pattern will be ignored.
+224: 
+225:         Setting to `None` disables comments.
+226: 
+227:     Returns
+228:     -------
+229:     intervals : np.ndarray, shape=(n_events, 2)
+230:         array of event start and end times
+231: 
+232:     """
+233:     # Use our universal function to load in the events
+234:     starts, ends = load_delimited(
+235:         filename, [float, float], delimiter=delimiter, comment=comment
+236:     )
+237:     # Stack into an interval matrix
+238:     intervals = np.array([starts, ends]).T
+239:     # Validate them, but throw a warning in place of an error
+240:     try:
+241:         util.validate_intervals(intervals)
+242:     except ValueError as error:
+243:         warnings.warn(error.args[0])
+244: 
+245:     return intervals
+246: 
+247: 
+248: def load_labeled_intervals(filename, delimiter=r"\s+", comment="#"):
+249:     r"""Import labeled intervals from an annotation file.  The file should consist
+250:     of three columns: Two consisting of numeric values corresponding to start
+251:     and end time of each interval and a third corresponding to the label of
+252:     each interval.  This is primarily useful for processing events which span a
+253:     duration, such as segmentation, chords, or instrument activation.
+254: 
+255:     Parameters
+256:     ----------
+257:     filename : str or `os.Pathlike`
+258:         Path to the annotation file
+259: 
+260:     delimiter : str
+261:         Separator regular expression.
+262:         By default, lines will be split by any amount of whitespace.
+263: 
+264:     comment : str or None
+265:         Comment regular expression.
+266:         Any lines beginning with this string or pattern will be ignored.
+267: 
+268:         Setting to `None` disables comments.
+269: 
+270:     Returns
+271:     -------
+272:     intervals : np.ndarray, shape=(n_events, 2)
+273:         array of event start and end time
+274:     labels : list of str
+275:         list of labels
+276: 
+277:     """
+278:     # Use our universal function to load in the events
+279:     starts, ends, labels = load_delimited(
+280:         filename, [float, float, str], delimiter=delimiter, comment=comment
+281:     )
+282:     # Stack into an interval matrix
+283:     intervals = np.array([starts, ends]).T
+284:     # Validate them, but throw a warning in place of an error
+285:     try:
+286:         util.validate_intervals(intervals)
+287:     except ValueError as error:
+288:         warnings.warn(error.args[0])
+289: 
+290:     return intervals, labels
+291: 
+292: 
+293: def load_time_series(filename, delimiter=r"\s+", comment="#"):
+294:     r"""Import a time series from an annotation file.  The file should consist of
+295:     two columns of numeric values corresponding to the time and value of each
+296:     sample of the time series.
+297: 
+298:     Parameters
+299:     ----------
+300:     filename : str or `os.Pathlike`
+301:         Path to the annotation file
+302: 

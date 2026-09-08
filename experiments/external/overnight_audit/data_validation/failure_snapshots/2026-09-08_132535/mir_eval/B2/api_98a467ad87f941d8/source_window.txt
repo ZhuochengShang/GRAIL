@@ -1,0 +1,156 @@
+858:         unvoiced_freqs.extend(freqs[~voicings])
+859: 
+860:     # Plot the voiced frequencies
+861:     ax.scatter(voiced_times, voiced_freqs, **style_voiced)
+862: 
+863:     # Plot the unvoiced frequencies
+864:     if unvoiced:
+865:         ax.scatter(unvoiced_times, unvoiced_freqs, **style_unvoiced)
+866: 
+867:     # Tick at integer midi notes
+868:     if midi:
+869:         ax.yaxis.set_minor_locator(MultipleLocator(1))
+870:     return ax
+871: 
+872: 
+873: def piano_roll(intervals, pitches=None, midi=None, ax=None, **kwargs):
+874:     """Plot a quantized piano roll as intervals
+875: 
+876:     Parameters
+877:     ----------
+878:     intervals : np.ndarray, shape=(n, 2)
+879:         timing intervals for notes
+880: 
+881:     pitches : np.ndarray, shape=(n,), optional
+882:         pitches of notes (in Hz).
+883: 
+884:     midi : np.ndarray, shape=(n,), optional
+885:         pitches of notes (in MIDI numbers).
+886: 
+887:         At least one of ``pitches`` or ``midi`` must be provided.
+888: 
+889:     ax : matplotlib.pyplot.axes
+890:         An axis handle on which to draw the intervals.
+891:         If none is provided, a new set of axes is created.
+892: 
+893:     **kwargs
+894:         Additional keyword arguments to :func:`labeled_intervals`.
+895: 
+896:     Returns
+897:     -------
+898:     ax : matplotlib.pyplot.axes._subplots.AxesSubplot
+899:         A handle to the (possibly constructed) plot axes
+900:     """
+901:     if midi is None:
+902:         if pitches is None:
+903:             raise ValueError("At least one of `midi` or `pitches` " "must be provided.")
+904: 
+905:         midi = hz_to_midi(pitches)
+906: 
+907:     scale = np.arange(128)
+908:     ax = labeled_intervals(
+909:         intervals,
+910:         np.round(midi).astype(int),
+911:         label_set=scale,
+912:         tick=False,
+913:         ax=ax,
+914:         **kwargs,
+915:     )
+916: 
+917:     # Minor tick at each semitone
+918:     ax.yaxis.set_minor_locator(MultipleLocator(1))
+919: 
+920:     return ax
+921: 
+922: 
+923: def separation(
+924:     sources,
+925:     fs=22050,
+926:     labels=None,
+927:     alpha=0.75,
+928:     ax=None,
+929:     rasterized=True,
+930:     edgecolors="None",
+931:     shading="gouraud",
+932:     prop_cycle=None,
+933:     **kwargs,
+934: ):
+935:     """Source-separation visualization
+936: 
+937:     Parameters
+938:     ----------
+939:     sources : np.ndarray, shape=(nsrc, nsampl)
+940:         A list of waveform buffers corresponding to each source
+941:     fs : number > 0
+942:         The sampling rate
+943:     labels : list of strings
+944:         An optional list of descriptors corresponding to each source
+945:     alpha : float in [0, 1]
+946:         Maximum alpha (opacity) of spectrogram values.
+947:     ax : matplotlib.pyplot.axes
+948:         An axis handle on which to draw the spectrograms.
+949:         If none is provided, a new set of axes is created.
+950:     rasterized : bool
+951:         If `True`, the spectrogram is rasterized.
+952:     edgecolors : str or None
+953:         The color of the edges of the spectrogram patches.
+954:         Set to "None" (default) to disable edge coloring.
+955:     shading : str
+956:         The shading method to use for the spectrogram.
+957:         See `matplotlib.pyplot.pcolormesh` for valid options.
+958:     prop_cycle : cycle.Cycler
+959:         An optional property cycle object to specify colors for each signal.
+960:         If not provided, the default property cycler will be retrieved from matplotlib.
+961:     **kwargs
+962:         Additional keyword arguments to ``scipy.signal.spectrogram``
+963: 
+964:     Returns
+965:     -------
+966:     ax
+967:         The axis handle for this plot
+968:     """
+969:     # Get the axes handle
+970:     ax, new_axes = __get_axes(ax=ax)
+971: 
+972:     # Make sure we have at least two dimensions
+973:     sources = np.atleast_2d(sources)
+974: 
+975:     if labels is None:
+976:         labels = [f"Source {_:d}" for _ in range(len(sources))]
+977: 
+978:     kwargs.setdefault("scaling", "spectrum")
+979: 
+980:     # The cumulative spectrogram across sources
+981:     # is used to establish the reference power
+982:     # for each individual source
+983:     cumspec = None
+984:     specs = []
+985:     for i, src in enumerate(sources):
+986:         freqs, times, spec = spectrogram(src, fs=fs, **kwargs)
+987: 
+988:         specs.append(spec)
+989:         if cumspec is None:
+990:             cumspec = spec.copy()
+991:         else:
+992:             cumspec += spec
+993: 
+994:     ref_max = cumspec.max()
+995:     ref_min = ref_max * 1e-6
+996: 
+997:     color_conv = ColorConverter()
+998: 
+999:     if prop_cycle is None:
+1000:         __AXMAP[ax].setdefault("prop_cycle", mpl.rcParams["axes.prop_cycle"])
+1001:         __AXMAP[ax].setdefault("prop_iter", iter(mpl.rcParams["axes.prop_cycle"]))
+1002:     elif "prop_iter" not in __AXMAP[ax]:
+1003:         __AXMAP[ax]["prop_cycle"] = prop_cycle
+1004:         __AXMAP[ax]["prop_iter"] = iter(prop_cycle)
+1005: 
+1006:     prop_cycle = __AXMAP[ax]["prop_cycle"]
+1007:     prop_iter = __AXMAP[ax]["prop_iter"]
+1008: 
+1009:     for i, spec in enumerate(specs):
+1010:         # For each source, grab a new color from the cycler
+1011:         # Then construct a colormap that interpolates from
+1012:         # [transparent white -> new color]
+1013:         # Advance the property iterator if we can, restart it if we must

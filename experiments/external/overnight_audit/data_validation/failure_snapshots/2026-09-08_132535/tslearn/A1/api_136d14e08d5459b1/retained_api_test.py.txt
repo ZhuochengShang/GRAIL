@@ -1,0 +1,66 @@
+"""Shared infrastructure-only scaffold for tslearn's full-surface 2x2.
+
+This exact file is used in A1, A2, B1, and B2. It intentionally imports no
+tested tslearn API because discovering the public import is part of the
+audience task in every cell.
+"""
+
+from pathlib import Path
+import sys
+import traceback
+
+import numpy as np
+
+
+def run():
+    # Typed repository fixture path and condition-specific output directory:
+    trace_npz = r"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/.cached_datasets/Trace.npz"
+    output_dir = r"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/output"
+
+    # pre-loaded typed inputs (comprehension.execute.preamble)
+    Path(output_dir).mkdir(parents=True, exist_ok=True)
+    _trace = np.load(trace_npz)
+    _balanced = np.array([0, 4, 1, 17, 3, 13, 2, 5], dtype=int)
+    X = _trace["X_train"][_balanced, :40, :]  # type: balanced time-series dataset ndarray (8, 40, 1)
+    X2 = _trace["X_test"][:4, :32, :]  # type: second dataset ndarray (4, 32, 1)
+    s1 = X[0].ravel()  # type: 1-D series ndarray (40,)
+    s2 = X[1].ravel()  # type: 1-D series ndarray (40,)
+    y = _trace["y_train"][_balanced]  # type: four balanced labels, two examples per class
+    tiny_matrix = np.arange(12.0).reshape(3, 4)  # type: deterministic numeric matrix
+
+    # Keep audience imports local so they cannot shadow fixture construction.
+    def api_test():
+        # TODO API_TEST_START
+        from tslearn.early_classification import early_classification_cost
+        import numpy as np
+
+        # Create deterministic inputs for early classification evaluation
+        y_true = np.array([0, 1, 0, 1])
+        y_pred = np.array([0, 1, 0, 1])  # Perfect predictions
+        predicted_t = np.array([10, 20, 30, 40])  # Time steps at which predictions were made
+
+        # When alpha=0.0, the cost only considers accuracy. 
+        # Since predictions are perfect, the cost should be exactly 0.0.
+        cost_zero = early_classification_cost(y_true, y_pred, predicted_t, 0.0)
+        assert cost_zero == 0.0, f"Expected cost 0.0 for perfect predictions and alpha=0, got {cost_zero}"
+
+        # When alpha=1.0, the cost only considers the time penalty.
+        # Since predicted_t values are positive, the cost must be strictly positive.
+        cost_alpha = early_classification_cost(y_true, y_pred, predicted_t, 1.0)
+        assert cost_alpha > 0.0, f"Expected positive cost for alpha=1.0, got {cost_alpha}"
+
+        print(f"__CHECK__ early_classification_cost {cost_zero}_{cost_alpha:.4f}")
+        # TODO API_TEST_END
+        pass
+
+    api_test()
+
+
+if __name__ == "__main__":
+    try:
+        run()
+        print("__DONE__")
+    except Exception as exc:  # noqa: BLE001 - execution boundary
+        sys.stderr.write("__RUN_ERR__ " + type(exc).__name__ + ": " + str(exc) + "\n")
+        traceback.print_exc()
+        raise SystemExit(1)

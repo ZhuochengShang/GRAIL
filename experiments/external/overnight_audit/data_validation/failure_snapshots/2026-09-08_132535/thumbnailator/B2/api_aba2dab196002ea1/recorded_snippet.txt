@@ -1,0 +1,18 @@
+net.coobird.thumbnailator.ThumbnailParameter param = null;
+try {
+    // ThumbnailParameter is required to instantiate a ThumbnailTask, but its constructor 
+    // signature varies across versions. We use reflection to safely instantiate it.
+    java.lang.reflect.Constructor<?>[] constructors = net.coobird.thumbnailator.ThumbnailParameter.class.getDeclaredConstructors();
+    java.lang.reflect.Constructor<?> best = null;
+    for (java.lang.reflect.Constructor<?> c : constructors) {
+        if (best == null || c.getParameterTypes().length > best.getParameterTypes().length) {
+            best = c;
+        }
+    }
+    if (best != null) {
+        best.setAccessible(true);
+        Object[] args = new Object[best.getParameterTypes().length];
+        Class<?>[] types = best.getParameterTypes();
+        for (int i = 0; i < types.length; i++) {
+            if (types[i] == java.awt.Dimension.class) args[i] = new java.awt.Dimension(100, 100);
+            else if (types[i] == boolean.class) args[i] 

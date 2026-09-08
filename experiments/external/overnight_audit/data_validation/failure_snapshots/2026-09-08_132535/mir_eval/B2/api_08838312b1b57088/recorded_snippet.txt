@@ -1,0 +1,21 @@
+import os
+import numpy as np
+import mir_eval
+
+# Create a deterministic tempo annotation file in the provided output directory
+tempo_file = os.path.join(output_dir, "test_tempo.txt")
+with open(tempo_file, "w") as f:
+    f.write("# This is a comment line\n")
+    f.write("60.0 120.0 0.5\n")
+
+# Load the tempo annotations
+tempi, weight = mir_eval.io.load_tempo(tempo_file)
+
+# Verify the loaded data matches the written file
+assert isinstance(tempi, np.ndarray), "tempi should be a NumPy array"
+assert tempi.shape == (2,), f"Expected 2 tempo values, got {tempi.shape[0]}"
+assert np.allclose(tempi, [60.0, 120.0]), "Parsed tempi values do not match expected"
+assert isinstance(weight, float), "weight should be a float"
+assert weight == 0.5, "Parsed weight does not match expected"
+
+print(f"__CHECK__ load_tempo {tempi.tolist()} {weight}")

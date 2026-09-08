@@ -1,0 +1,24 @@
+import os
+import mir_eval
+
+# Navigate from the known beat_reference_file to the pattern reference file
+data_dir = os.path.dirname(os.path.dirname(beat_reference_file))
+pattern_file = os.path.join(data_dir, 'pattern', 'reference.txt')
+
+# Load the MIREX 2013 formatted pattern file
+patterns = mir_eval.io.load_patterns(pattern_file)
+
+# Verify the deeply nested list structure: list[list[list[tuple[float, float]]]]
+assert isinstance(patterns, list), "Output must be a list of patterns"
+assert len(patterns) > 0, "Should load at least one pattern"
+
+first_pattern = patterns[0]
+assert isinstance(first_pattern, list), "Each pattern must be a list of occurrences"
+assert len(first_pattern) > 0, "Pattern should have at least one occurrence"
+
+first_occurrence = first_pattern[0]
+assert isinstance(first_occurrence, list), "Each occurrence must be a list of events"
+assert len(first_occurrence) > 0, "Occurrence should have at least one event"
+
+first_event = first_occurrence[0]
+assert isinstance(first_even

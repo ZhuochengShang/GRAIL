@@ -1,0 +1,156 @@
+2: from sklearn.metrics.cluster import silhouette_score as sklearn_silhouette
+3: from scipy.spatial.distance import cdist
+4: import numpy
+5: 
+6: from tslearn.backend import instantiate_backend
+7: from tslearn.bases import TimeSeriesMixin
+8: from tslearn.metrics import _cdist_dtw, _cdist_soft_dtw_normalized
+9: from tslearn.preprocessing import TimeSeriesResampler
+10: from tslearn.utils import to_time_series_dataset
+11: from tslearn.utils.utils import _to_time_series
+12: 
+13: 
+14: __author__ = 'Romain Tavenard romain.tavenard[at]univ-rennes2.fr'
+15: 
+16: 
+17: class EmptyClusterError(Exception):
+18:     def __init__(self, message=""):
+19:         super().__init__()
+20:         self.message = message
+21: 
+22:     def __str__(self):
+23:         if len(self.message) > 0:
+24:             suffix = " (%s)" % self.message
+25:         else:
+26:             suffix = ""
+27:         return "Cluster assignments lead to at least one empty cluster" + \
+28:                suffix
+29: 
+30: 
+31: def _check_no_empty_cluster(labels, n_clusters):
+32:     """Check that all clusters have at least one sample assigned.
+33:     """
+34: 
+35:     for k in range(n_clusters):
+36:         if numpy.sum(labels == k) == 0:
+37:             raise EmptyClusterError
+38: 
+39: 
+40: def _check_full_length(centroids):
+41:     """Check that provided centroids are full-length (ie. not padded with
+42:     nans).
+43: 
+44:     If some centroids are found to be padded with nans, TimeSeriesResampler is
+45:     used to resample the centroids.
+46:     """
+47:     resampler = TimeSeriesResampler(sz=centroids.shape[1])
+48:     return resampler.fit_transform(centroids)
+49: 
+50: 
+51: def _compute_inertia(distances, assignments, squared=True):
+52:     """Derive inertia (average of squared distances) from pre-computed
+53:     distances and assignments.
+54: 
+55:     Examples
+56:     --------
+57:     >>> dists = numpy.array([[1., 2., 0.5], [0., 3., 1.]])
+58:     >>> assign = numpy.array([2, 0])
+59:     >>> float(_compute_inertia(dists, assign))
+60:     0.125
+61:     """
+62:     n_ts = distances.shape[0]
+63:     if squared:
+64:         return numpy.sum(distances[numpy.arange(n_ts),
+65:                                    assignments] ** 2) / n_ts
+66:     else:
+67:         return numpy.sum(distances[numpy.arange(n_ts), assignments]) / n_ts
+68: 
+69: 
+70: def silhouette_score(X, labels, metric=None, sample_size=None,
+71:                      metric_params=None, n_jobs=None, verbose=0,
+72:                      random_state=None, **kwds):
+73:     """Compute the mean Silhouette Coefficient of all samples (cf.  [1]_ and
+74:     [2]_).
+75: 
+76:     Read more in the `scikit-learn documentation
+77:     <http://scikit-learn.org/stable/modules/clustering.html\
+78:     #silhouette-coefficient>`_.
+79: 
+80:     Parameters
+81:     ----------
+82:     X : array [n_ts, n_ts] if metric == "precomputed", or, \
+83:              [n_ts, sz, d] otherwise
+84:         Array of pairwise distances between time series, or a time series
+85:         dataset.
+86:     labels : array, shape = [n_ts]
+87:          Predicted labels for each time series.
+88:     metric : string, callable or None (default: None)
+89:         The metric to use when calculating distance between time series.
+90:         Should be one of {'dtw', 'softdtw', 'euclidean'} or a callable distance
+91:         function or None.
+92:         If 'softdtw' is passed, a normalized version of Soft-DTW is used that
+93:         is defined as `sdtw_(x,y) := sdtw(x,y) - 1/2(sdtw(x,x)+sdtw(y,y))`.
+94:         If X is the distance array itself, use ``metric="precomputed"``.
+95:         If None, dtw is used.
+96:     sample_size : int or None (default: None)
+97:         The size of the sample to use when computing the Silhouette Coefficient
+98:         on a random subset of the data.
+99:         If ``sample_size is None``, no sampling is used.
+100:     metric_params : dict or None (default: None)
+101:         Parameter values for the chosen metric.
+102:         For metrics that accept parallelization of the cross-distance matrix
+103:         computations, `n_jobs` key passed in `metric_params` is overridden by
+104:         the `n_jobs` argument.
+105: 
+106:     n_jobs : int or None, optional (default=None)
+107:         The number of jobs to run in parallel for cross-distance matrix
+108:         computations.
+109:         Ignored if the cross-distance matrix cannot be computed using
+110:         parallelization.
+111:         ``None`` means 1 unless in a :obj:`joblib.parallel_backend` context.
+112:         ``-1`` means using all processors. See scikit-learns'
+113:         `Glossary <https://scikit-learn.org/stable/glossary.html#term-n_jobs>`_
+114:         for more details.
+115: 
+116:     verbose : int (default: 0)
+117:         If nonzero, print information about the inertia while learning
+118:         the model and joblib progress messages are printed.
+119: 
+120:     random_state : int, RandomState instance or None, optional (default: None)
+121:         The generator used to randomly select a subset of samples.  If int,
+122:         random_state is the seed used by the random number generator; If
+123:         RandomState instance, random_state is the random number generator; If
+124:         None, the random number generator is the RandomState instance used by
+125:         `np.random`. Used when ``sample_size is not None``.
+126:     **kwds : optional keyword parameters
+127:         Any further parameters are passed directly to the distance function,
+128:         just as for the `metric_params` parameter.
+129: 
+130:     Returns
+131:     -------
+132:     silhouette : float
+133:         Mean Silhouette Coefficient for all samples.
+134: 
+135:     References
+136:     ----------
+137:     .. [1] `Peter J. Rousseeuw (1987). "Silhouettes: a Graphical Aid to the
+138:        Interpretation and Validation of Cluster Analysis". Computational
+139:        and Applied Mathematics 20: 53-65.
+140:        <http://www.sciencedirect.com/science/article/pii/0377042787901257>`_
+141:     .. [2] `Wikipedia entry on the Silhouette Coefficient
+142:            <https://en.wikipedia.org/wiki/Silhouette_(clustering)>`_
+143: 
+144:     Examples
+145:     --------
+146:     >>> from tslearn.generators import random_walks
+147:     >>> from tslearn.metrics import cdist_dtw
+148:     >>> from tslearn.metrics import dtw
+149:     >>> numpy.random.seed(0)
+150:     >>> X = random_walks(n_ts=20, sz=16, d=1)
+151:     >>> labels = numpy.random.randint(2, size=20)
+152:     >>> float(silhouette_score(X, labels, metric="dtw")) # doctest: +ELLIPSIS
+153:     0.13383800...
+154:     >>> float(silhouette_score(X, labels, metric="euclidean"))  # doctest: +ELLIPSIS
+155:     0.09126917...
+156:     >>> float(silhouette_score(X, labels, metric="softdtw"))  # doctest: +ELLIPSIS
+157:     0.17953934...
