@@ -1,0 +1,141 @@
+{
+  "summary": {
+    "repository": "tslearn",
+    "cell": "A1",
+    "api": "njit_lcss_accumulated_matrix",
+    "outcome": "Setup/import blocked",
+    "test_execution": "Setup/import failed; target execution not established",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 34.7,
+    "retained_checkpoint_events": 2,
+    "retained_attempt_total_s": 634.3,
+    "retained_504_events": 1,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "error": "missing module/import: No module named 'tslearn.metrics.lcss'",
+    "details": "api_details/f5715136f7629e9bd390.json"
+  },
+  "native_row": {
+    "name": "njit_lcss_accumulated_matrix",
+    "doc_source": "original",
+    "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+    "execution_evidence": {
+      "status": "fail",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "fail",
+          "category": "infra",
+          "error": "missing module/import: No module named 'tslearn.metrics.lcss'"
+        }
+      ],
+      "error_category": "infra",
+      "error": "missing module/import: No module named 'tslearn.metrics.lcss'",
+      "code": "import numpy as np\nfrom tslearn.metrics.lcss import njit_lcss_accumulated_matrix\n\n# Prepare small 2D time series (n_timestamps, n_features)\ns1_small = s1[:5].reshape(-1, 1).astype(np.float64)\ns2_small = s1[:5].reshape(-1, 1).astype(np.float64)\n\n# LCSS uses a mask where finite values indicate valid alignment paths\nmask = np.zeros((5, 5), dtype=np.float64)\neps = 0.5\n\n# Compute the accumulated cost matrix\nacc_mat = njit_lcss_accumulated_matrix(s1_small, s2_small, eps, mask)\n\n# The accumulated matrix should have an extra row and column for base cases\nassert acc_mat.shape == (6, 6), f\"Expected shape (6, 6), got {acc_mat.shape}\"\n\n# Since s1_small and s2_small are identical, the longest common subsequence length should be 5\nlcss_score = acc_mat[-1, -1]\nassert lcss_score == 5.0, f\"Expected LCSS of 5.0 for identical series, got {lcss_score}\"\n\nprint(f\"__CHECK__ njit_lcss_accumulated_matrix {acc_mat.shape} {lcss_score}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_njit_lcss_accumulated_matrix/api_test.py",
+      "exit_code": 1,
+      "stdout_tail": "",
+      "stderr_tail": "__RUN_ERR__ ModuleNotFoundError: No module named 'tslearn.metrics.lcss'\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_njit_lcss_accumulated_matrix/api_test.py\", line 64, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_njit_lcss_accumulated_matrix/api_test.py\", line 59, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_njit_lcss_accumulated_matrix/api_test.py\", line 35, in api_test\n    from tslearn.metrics.lcss import njit_lcss_accumulated_matrix\nModuleNotFoundError: No module named 'tslearn.metrics.lcss'\n"
+    },
+    "status": "fail",
+    "attempts": 1,
+    "pass_round": null,
+    "wall_s": 34.7,
+    "llm_calls": 1,
+    "input_tokens": 1379,
+    "output_tokens": 4234,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 1379,
+        "output_tokens": 4234
+      }
+    },
+    "error_category": "infra",
+    "error": "missing module/import: No module named 'tslearn.metrics.lcss'",
+    "locus": "",
+    "doc_chars": 110,
+    "document_sha256": "88e057294bf301f5211f579b23bfe798d698c62954ec259da1ada9d2f9d5cd9a",
+    "source": "tslearn/tslearn/metrics/dtw_variants.py:2233",
+    "source_other_sites": 0,
+    "codebase_frames": null
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/comprehension_progress.jsonl",
+  "source_sha256": "40d5a3d667362bb5fb7ea0d8a6fa92db5ad90c7e1aa3eb8ccc679fc6ed1cbff4",
+  "checkpoint_events": [
+    {
+      "name": "njit_lcss_accumulated_matrix",
+      "doc_source": "original",
+      "experiment_fingerprint": "964a2ec0df73c3b53c3966c9213dedb1a12bf7e39ad1b8d7d1ddd561ba53212b",
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 599.6,
+      "llm_calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "by_model": {},
+      "error_category": "llm-error",
+      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "locus": "",
+      "doc_chars": 110,
+      "document_sha256": "88e057294bf301f5211f579b23bfe798d698c62954ec259da1ada9d2f9d5cd9a",
+      "source": "tslearn/tslearn/metrics/dtw_variants.py:2233",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    },
+    {
+      "name": "njit_lcss_accumulated_matrix",
+      "doc_source": "original",
+      "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "infra",
+            "error": "missing module/import: No module named 'tslearn.metrics.lcss'"
+          }
+        ],
+        "error_category": "infra",
+        "error": "missing module/import: No module named 'tslearn.metrics.lcss'",
+        "code": "import numpy as np\nfrom tslearn.metrics.lcss import njit_lcss_accumulated_matrix\n\n# Prepare small 2D time series (n_timestamps, n_features)\ns1_small = s1[:5].reshape(-1, 1).astype(np.float64)\ns2_small = s1[:5].reshape(-1, 1).astype(np.float64)\n\n# LCSS uses a mask where finite values indicate valid alignment paths\nmask = np.zeros((5, 5), dtype=np.float64)\neps = 0.5\n\n# Compute the accumulated cost matrix\nacc_mat = njit_lcss_accumulated_matrix(s1_small, s2_small, eps, mask)\n\n# The accumulated matrix should have an extra row and column for base cases\nassert acc_mat.shape == (6, 6), f\"Expected shape (6, 6), got {acc_mat.shape}\"\n\n# Since s1_small and s2_small are identical, the longest common subsequence length should be 5\nlcss_score = acc_mat[-1, -1]\nassert lcss_score == 5.0, f\"Expected LCSS of 5.0 for identical series, got {lcss_score}\"\n\nprint(f\"__CHECK__ njit_lcss_accumulated_matrix {acc_mat.shape} {lcss_score}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_njit_lcss_accumulated_matrix/api_test.py",
+        "exit_code": 1,
+        "stdout_tail": "",
+        "stderr_tail": "__RUN_ERR__ ModuleNotFoundError: No module named 'tslearn.metrics.lcss'\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_njit_lcss_accumulated_matrix/api_test.py\", line 64, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_njit_lcss_accumulated_matrix/api_test.py\", line 59, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_njit_lcss_accumulated_matrix/api_test.py\", line 35, in api_test\n    from tslearn.metrics.lcss import njit_lcss_accumulated_matrix\nModuleNotFoundError: No module named 'tslearn.metrics.lcss'\n"
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 34.7,
+      "llm_calls": 1,
+      "input_tokens": 1379,
+      "output_tokens": 4234,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1379,
+          "output_tokens": 4234
+        }
+      },
+      "error_category": "infra",
+      "error": "missing module/import: No module named 'tslearn.metrics.lcss'",
+      "locus": "",
+      "doc_chars": 110,
+      "document_sha256": "88e057294bf301f5211f579b23bfe798d698c62954ec259da1ada9d2f9d5cd9a",
+      "source": "tslearn/tslearn/metrics/dtw_variants.py:2233",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

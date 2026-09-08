@@ -1,0 +1,97 @@
+{
+  "summary": {
+    "repository": "Thumbnailator",
+    "cell": "A2",
+    "api": "getTag",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 41.4,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 41.4,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "error": null,
+    "details": "api_details/370bd1fb74723564bb5f.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 41.4,
+    "llm_calls": 1,
+    "input_tokens": 1704,
+    "output_tokens": 5092,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 1704,
+        "output_tokens": 5092
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 1987,
+    "document_sha256": "5a859b76597c7ebe90a4b98c7d0dfee320b25d2df1e995cc30c4b347b9d6922c",
+    "source": "source/src/main/java/net/coobird/thumbnailator/util/exif/IfdStructure.java:63",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "name": "getTag",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "net.coobird.thumbnailator.util.exif.IfdStructure ifdStructure = null;\ntry {\n    // Use reflection to instantiate in case the constructor is package-private\n    java.lang.reflect.Constructor<net.coobird.thumbnailator.util.exif.IfdStructure> ctor = \n        net.coobird.thumbnailator.util.exif.IfdStructure.class.getDeclaredConstructor(int.class, int.class, int.class, int.class);\n    ctor.setAccessible(true);\n    // Parameters: tag, type, count, valueOffset\n    ifdStructure = ctor.newInstance(0x42, 3, 1, 0);\n} catch (Exception e) {\n    throw new RuntimeException(\"Failed to instantiate IfdStructure\", e);\n}\n\nint tag = ifdStructure.getTag();\n\nassert tag == 0x42 : \"Tag did not match the expected constructed value\";\nassert tag >= 0x00 && tag <= 0xFF : \"Tag is outside the documented 0x00 to 0xFF range\";\n\nSystem.out.println(\"__CHECK__ getTag \" + tag);",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/.aideal_exec/A2/run_getTag/ApiTest.java",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ getTag 66\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "d0a4b20f3e5d3ea0caf7b1501a9bf2fb4d4f11ac7d844517d7b5d67874427464"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/docs/eval/A2/comprehension.json",
+  "source_sha256": "b6aa0c714a7c8a076f415ed0dae0e6b3126ad774bc94aab394ec1036974003d7",
+  "checkpoint_events": [
+    {
+      "name": "getTag",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "d0a4b20f3e5d3ea0caf7b1501a9bf2fb4d4f11ac7d844517d7b5d67874427464",
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 41.4,
+      "llm_calls": 1,
+      "input_tokens": 1704,
+      "output_tokens": 5092,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1704,
+          "output_tokens": 5092
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 1987,
+      "document_sha256": "5a859b76597c7ebe90a4b98c7d0dfee320b25d2df1e995cc30c4b347b9d6922c",
+      "source": "source/src/main/java/net/coobird/thumbnailator/util/exif/IfdStructure.java:63",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

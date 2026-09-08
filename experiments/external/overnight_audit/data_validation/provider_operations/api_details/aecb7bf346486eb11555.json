@@ -1,0 +1,154 @@
+{
+  "summary": {
+    "repository": "Thumbnailator",
+    "cell": "A1",
+    "api": "getSize",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 34.2,
+    "retained_checkpoint_events": 3,
+    "retained_attempt_total_s": 2498.7,
+    "retained_504_events": 1,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "error": null,
+    "details": "api_details/aecb7bf346486eb11555.json"
+  },
+  "native_row": {
+    "name": "getSize",
+    "doc_source": "original",
+    "experiment_fingerprint": "b3f55a8b3e67c862b177dad68ab837550254e5f262c7bf4387c9a25ecd9241ed",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "net.coobird.thumbnailator.geometry.Size size = new net.coobird.thumbnailator.geometry.AbsoluteSize(42, 42);\nnet.coobird.thumbnailator.geometry.Region region = new net.coobird.thumbnailator.geometry.Region(\n    net.coobird.thumbnailator.geometry.Positions.BOTTOM_RIGHT,\n    size\n);\n\nnet.coobird.thumbnailator.geometry.Size retrievedSize = region.getSize();\njava.awt.Dimension dim = retrievedSize.calculate(100, 100);\n\nassert dim.width == 42 && dim.height == 42 : \"Retrieved size should match the initialized AbsoluteSize of 42x42\";\nSystem.out.println(\"__CHECK__ getSize \" + dim.width + \"x\" + dim.height);",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A1/experiments/external/thumbnailator/.aideal_exec/A1/run_getSize/ApiTest.java",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ getSize 42x42\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 34.2,
+    "llm_calls": 1,
+    "input_tokens": 4837,
+    "output_tokens": 4113,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 4837,
+        "output_tokens": 4113
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 12000,
+    "document_sha256": "a2d756c1d5779271f73237a971c6afb27146221fe848d78c72f54491e69d0266",
+    "source": "source/src/main/java/net/coobird/thumbnailator/ThumbnailParameter.java:808",
+    "source_other_sites": 1,
+    "codebase_frames": null
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A1/experiments/external/thumbnailator/.aideal_exec/A1/comprehension_progress.jsonl",
+  "source_sha256": "cedb0b75c5981e954ac3f3ca3b785263a58d036c3a869549c85b54858b07eaf4",
+  "checkpoint_events": [
+    {
+      "name": "getSize",
+      "doc_source": "original",
+      "experiment_fingerprint": "6361a90a8d15196e1351e3b191a2908f96c8a6a6a6bdf9b683903311f4c2940e",
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 599.2,
+      "llm_calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "by_model": {},
+      "error_category": "llm-error",
+      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "locus": "",
+      "doc_chars": 12000,
+      "document_sha256": "a2d756c1d5779271f73237a971c6afb27146221fe848d78c72f54491e69d0266",
+      "source": "source/src/main/java/net/coobird/thumbnailator/ThumbnailParameter.java:808",
+      "source_other_sites": 1,
+      "codebase_frames": null
+    },
+    {
+      "name": "getSize",
+      "doc_source": "original",
+      "experiment_fingerprint": "6361a90a8d15196e1351e3b191a2908f96c8a6a6a6bdf9b683903311f4c2940e",
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 1865.3,
+      "llm_calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "by_model": {},
+      "error_category": "llm-error",
+      "error": "ReadTimeout: The read operation timed out",
+      "locus": "",
+      "doc_chars": 12000,
+      "document_sha256": "a2d756c1d5779271f73237a971c6afb27146221fe848d78c72f54491e69d0266",
+      "source": "source/src/main/java/net/coobird/thumbnailator/ThumbnailParameter.java:808",
+      "source_other_sites": 1,
+      "codebase_frames": null
+    },
+    {
+      "name": "getSize",
+      "doc_source": "original",
+      "experiment_fingerprint": "b3f55a8b3e67c862b177dad68ab837550254e5f262c7bf4387c9a25ecd9241ed",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "net.coobird.thumbnailator.geometry.Size size = new net.coobird.thumbnailator.geometry.AbsoluteSize(42, 42);\nnet.coobird.thumbnailator.geometry.Region region = new net.coobird.thumbnailator.geometry.Region(\n    net.coobird.thumbnailator.geometry.Positions.BOTTOM_RIGHT,\n    size\n);\n\nnet.coobird.thumbnailator.geometry.Size retrievedSize = region.getSize();\njava.awt.Dimension dim = retrievedSize.calculate(100, 100);\n\nassert dim.width == 42 && dim.height == 42 : \"Retrieved size should match the initialized AbsoluteSize of 42x42\";\nSystem.out.println(\"__CHECK__ getSize \" + dim.width + \"x\" + dim.height);",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A1/experiments/external/thumbnailator/.aideal_exec/A1/run_getSize/ApiTest.java",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ getSize 42x42\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 34.2,
+      "llm_calls": 1,
+      "input_tokens": 4837,
+      "output_tokens": 4113,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 4837,
+          "output_tokens": 4113
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 12000,
+      "document_sha256": "a2d756c1d5779271f73237a971c6afb27146221fe848d78c72f54491e69d0266",
+      "source": "source/src/main/java/net/coobird/thumbnailator/ThumbnailParameter.java:808",
+      "source_other_sites": 1,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

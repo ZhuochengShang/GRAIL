@@ -1,0 +1,111 @@
+{
+  "summary": {
+    "repository": "mir_eval",
+    "cell": "B2",
+    "api": "three_layer_FPR",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 18.5,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 18.5,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "error": null,
+    "details": "api_details/11c99c07d02dbcacbf2b.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 18.5,
+    "llm_calls": 1,
+    "input_tokens": 2232,
+    "output_tokens": 2012,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2232,
+        "output_tokens": 2012
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 3371,
+    "document_sha256": "3b1fbfaacf00a700a32c31793634408f464f7ea7b9a8e9b46995c64115cd8eb6",
+    "source": "source/mir_eval/pattern.py:382",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "name": "three_layer_FPR",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "import mir_eval\n\n# Create deterministic in-memory pattern lists.\n# Format: list of patterns, where each pattern is a list of occurrences,\n# and each occurrence is a list of (onset, pitch) tuples.\nref_patterns = [\n    [\n        [(1.0, 60.0), (2.0, 62.0)],\n        [(3.0, 60.0), (4.0, 62.0)]\n    ]\n]\nest_patterns = [\n    [\n        [(1.0, 60.0), (2.0, 62.0)],\n        [(3.0, 60.0), (4.0, 62.0)]\n    ]\n]\n\nf_measure, precision, recall = mir_eval.pattern.three_layer_FPR(\n    ref_patterns, \n    est_patterns\n)\n\n# Since the estimated patterns perfectly match the reference patterns,\n# the three-layer F1, Precision, and Recall should all be exactly 1.0.\nassert f_measure == 1.0, f\"Expected F-measure 1.0, got {f_measure}\"\nassert precision == 1.0, f\"Expected Precision 1.0, got {precision}\"\nassert recall == 1.0, f\"Expected Recall 1.0, got {recall}\"\n\nprint(f\"__CHECK__ three_layer_FPR {f_measure:.2f}, {precision:.2f}, {recall:.2f}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_three_layer_FPR/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ three_layer_FPR 1.00, 1.00, 1.00\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/comprehension.json",
+  "source_sha256": "c25a74155511d59ffa5583bce3975fae3a254ce3e3bc65948dcfbd8f61d51736",
+  "checkpoint_events": [
+    {
+      "name": "three_layer_FPR",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import mir_eval\n\n# Create deterministic in-memory pattern lists.\n# Format: list of patterns, where each pattern is a list of occurrences,\n# and each occurrence is a list of (onset, pitch) tuples.\nref_patterns = [\n    [\n        [(1.0, 60.0), (2.0, 62.0)],\n        [(3.0, 60.0), (4.0, 62.0)]\n    ]\n]\nest_patterns = [\n    [\n        [(1.0, 60.0), (2.0, 62.0)],\n        [(3.0, 60.0), (4.0, 62.0)]\n    ]\n]\n\nf_measure, precision, recall = mir_eval.pattern.three_layer_FPR(\n    ref_patterns, \n    est_patterns\n)\n\n# Since the estimated patterns perfectly match the reference patterns,\n# the three-layer F1, Precision, and Recall should all be exactly 1.0.\nassert f_measure == 1.0, f\"Expected F-measure 1.0, got {f_measure}\"\nassert precision == 1.0, f\"Expected Precision 1.0, got {precision}\"\nassert recall == 1.0, f\"Expected Recall 1.0, got {recall}\"\n\nprint(f\"__CHECK__ three_layer_FPR {f_measure:.2f}, {precision:.2f}, {recall:.2f}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_three_layer_FPR/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ three_layer_FPR 1.00, 1.00, 1.00\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 18.5,
+      "llm_calls": 1,
+      "input_tokens": 2232,
+      "output_tokens": 2012,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2232,
+          "output_tokens": 2012
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3371,
+      "document_sha256": "3b1fbfaacf00a700a32c31793634408f464f7ea7b9a8e9b46995c64115cd8eb6",
+      "source": "source/mir_eval/pattern.py:382",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

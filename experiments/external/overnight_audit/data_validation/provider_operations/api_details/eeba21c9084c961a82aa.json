@@ -1,0 +1,111 @@
+{
+  "summary": {
+    "repository": "mir_eval",
+    "cell": "B2",
+    "api": "resample_multipitch",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 19.3,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 19.3,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "error": null,
+    "details": "api_details/eeba21c9084c961a82aa.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 19.3,
+    "llm_calls": 1,
+    "input_tokens": 2374,
+    "output_tokens": 2454,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2374,
+        "output_tokens": 2454
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 3907,
+    "document_sha256": "11b6dfef7b508bef81c06296671c701ffbc7d59a6c86ba84d7f66687d53daabd",
+    "source": "source/mir_eval/multipitch.py:101",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "name": "resample_multipitch",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "import numpy as np\nimport mir_eval\n\ntimes_mp = np.array([0.00, 0.01, 0.02, 0.03])\nfreqs_mp = [\n    np.array([200.0]),\n    np.array([]),\n    np.array([300.0, 400.0, 500.0]),\n    np.array([300.0, 500.0]),\n]\ntarget_times_mp = np.array([0.001, 0.002, 0.01, 0.029, 0.05])\n\nactual_freqs = mir_eval.multipitch.resample_multipitch(times_mp, freqs_mp, target_times_mp)\n\nassert len(actual_freqs) == len(target_times_mp), \"Output length must match target_times length\"\nassert np.array_equal(actual_freqs[0], np.array([200.0])), \"0.001 should map to nearest 0.00\"\nassert np.array_equal(actual_freqs[1], np.array([200.0])), \"0.002 should map to nearest 0.00\"\nassert np.array_equal(actual_freqs[2], np.array([])), \"0.01 should map exactly to 0.01\"\nassert np.array_equal(actual_freqs[3], np.array([300.0, 500.0])), \"0.029 should map to nearest 0.03\"\nassert np.array_equal(actual_freqs[4], np.array([])), \"0.05 is out of bounds and should return empty\"\n\nprint(f\"__CHECK__ resample_multipitch {len(actual_freqs)}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_resample_multipitch/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ resample_multipitch 5\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/comprehension.json",
+  "source_sha256": "c25a74155511d59ffa5583bce3975fae3a254ce3e3bc65948dcfbd8f61d51736",
+  "checkpoint_events": [
+    {
+      "name": "resample_multipitch",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import numpy as np\nimport mir_eval\n\ntimes_mp = np.array([0.00, 0.01, 0.02, 0.03])\nfreqs_mp = [\n    np.array([200.0]),\n    np.array([]),\n    np.array([300.0, 400.0, 500.0]),\n    np.array([300.0, 500.0]),\n]\ntarget_times_mp = np.array([0.001, 0.002, 0.01, 0.029, 0.05])\n\nactual_freqs = mir_eval.multipitch.resample_multipitch(times_mp, freqs_mp, target_times_mp)\n\nassert len(actual_freqs) == len(target_times_mp), \"Output length must match target_times length\"\nassert np.array_equal(actual_freqs[0], np.array([200.0])), \"0.001 should map to nearest 0.00\"\nassert np.array_equal(actual_freqs[1], np.array([200.0])), \"0.002 should map to nearest 0.00\"\nassert np.array_equal(actual_freqs[2], np.array([])), \"0.01 should map exactly to 0.01\"\nassert np.array_equal(actual_freqs[3], np.array([300.0, 500.0])), \"0.029 should map to nearest 0.03\"\nassert np.array_equal(actual_freqs[4], np.array([])), \"0.05 is out of bounds and should return empty\"\n\nprint(f\"__CHECK__ resample_multipitch {len(actual_freqs)}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_resample_multipitch/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ resample_multipitch 5\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 19.3,
+      "llm_calls": 1,
+      "input_tokens": 2374,
+      "output_tokens": 2454,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2374,
+          "output_tokens": 2454
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3907,
+      "document_sha256": "11b6dfef7b508bef81c06296671c701ffbc7d59a6c86ba84d7f66687d53daabd",
+      "source": "source/mir_eval/multipitch.py:101",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

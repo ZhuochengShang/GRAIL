@@ -1,0 +1,112 @@
+{
+  "summary": {
+    "repository": "Thumbnailator",
+    "cell": "B2",
+    "api": "resize",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 60.5,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 60.5,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "error": null,
+    "details": "api_details/b9639b302d7819f7e633.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 60.5,
+    "llm_calls": 1,
+    "input_tokens": 1982,
+    "output_tokens": 6308,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 1982,
+        "output_tokens": 6308
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 3365,
+    "document_sha256": "fb621b28ce52b13c2987554af745e284aa7fc4162d32d5e86ab365b2b5678bbd",
+    "source": "source/src/main/java/net/coobird/thumbnailator/resizers/AbstractResizer.java:98",
+    "source_other_sites": 6,
+    "codebase_frames": null,
+    "evidence_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced",
+    "name": "resize",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "java.awt.Graphics2D g2d = destinationImage.createGraphics();\ng2d.setColor(java.awt.Color.MAGENTA);\ng2d.fillRect(0, 0, destinationImage.getWidth(), destinationImage.getHeight());\ng2d.dispose();\n\nint beforeColor = destinationImage.getRGB(0, 0);\n\nnet.coobird.thumbnailator.resizers.Resizer resizer = new net.coobird.thumbnailator.resizers.ProgressiveBilinearResizer();\nresizer.resize(sourceImage, destinationImage);\n\nboolean changed = false;\nfor (int y = 0; y < destinationImage.getHeight(); y++) {\n    for (int x = 0; x < destinationImage.getWidth(); x++) {\n        if (destinationImage.getRGB(x, y) != beforeColor) {\n            changed = true;\n            break;\n        }\n    }\n    if (changed) break;\n}\n\nassert changed : \"Destination image was not modified by resize operation\";\nSystem.out.println(\"__CHECK__ resize \" + changed);",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_resize/ApiTest.java",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ resize true\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/docs/eval/B2/comprehension.json",
+  "source_sha256": "edf6f845e49a5b57436a68b7845e73ce578cec0a033cf20a196eae38705feb3a",
+  "checkpoint_events": [
+    {
+      "name": "resize",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "java.awt.Graphics2D g2d = destinationImage.createGraphics();\ng2d.setColor(java.awt.Color.MAGENTA);\ng2d.fillRect(0, 0, destinationImage.getWidth(), destinationImage.getHeight());\ng2d.dispose();\n\nint beforeColor = destinationImage.getRGB(0, 0);\n\nnet.coobird.thumbnailator.resizers.Resizer resizer = new net.coobird.thumbnailator.resizers.ProgressiveBilinearResizer();\nresizer.resize(sourceImage, destinationImage);\n\nboolean changed = false;\nfor (int y = 0; y < destinationImage.getHeight(); y++) {\n    for (int x = 0; x < destinationImage.getWidth(); x++) {\n        if (destinationImage.getRGB(x, y) != beforeColor) {\n            changed = true;\n            break;\n        }\n    }\n    if (changed) break;\n}\n\nassert changed : \"Destination image was not modified by resize operation\";\nSystem.out.println(\"__CHECK__ resize \" + changed);",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_resize/ApiTest.java",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ resize true\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 60.5,
+      "llm_calls": 1,
+      "input_tokens": 1982,
+      "output_tokens": 6308,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1982,
+          "output_tokens": 6308
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3365,
+      "document_sha256": "fb621b28ce52b13c2987554af745e284aa7fc4162d32d5e86ab365b2b5678bbd",
+      "source": "source/src/main/java/net/coobird/thumbnailator/resizers/AbstractResizer.java:98",
+      "source_other_sites": 6,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

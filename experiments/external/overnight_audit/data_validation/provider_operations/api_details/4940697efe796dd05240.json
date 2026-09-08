@@ -1,0 +1,133 @@
+{
+  "summary": {
+    "repository": "mir_eval",
+    "cell": "B2",
+    "api": "load_patterns",
+    "outcome": "Execution failed",
+    "test_execution": "Test process returned exit code 1; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 26.3,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 26.3,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "error": "FileNotFoundError: [Errno 2] No such file or directory: '/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/source/tests/data/pattern/reference.txt'",
+    "details": "api_details/4940697efe796dd05240.json"
+  },
+  "native_row": {
+    "status": "fail",
+    "attempts": 1,
+    "pass_round": null,
+    "wall_s": 26.3,
+    "llm_calls": 1,
+    "input_tokens": 2844,
+    "output_tokens": 3083,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2844,
+        "output_tokens": 3083
+      }
+    },
+    "error_category": "runtime",
+    "error": "FileNotFoundError: [Errno 2] No such file or directory: '/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/source/tests/data/pattern/reference.txt'",
+    "locus": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/source/mir_eval/io.py:26",
+    "doc_chars": 4859,
+    "document_sha256": "a3df10bff9eaf6c4b833c67df393629ab7708a7716dea290003c0197c5940eba",
+    "source": "source/mir_eval/io.py:331",
+    "source_other_sites": 0,
+    "codebase_frames": [
+      "source/mir_eval/io.py:380",
+      "source/mir_eval/io.py:26"
+    ],
+    "name": "load_patterns",
+    "execution_evidence": {
+      "status": "fail",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "fail",
+          "category": "runtime",
+          "error": "FileNotFoundError: [Errno 2] No such file or directory: '/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval",
+          "codebase_frames": [
+            "source/mir_eval/io.py:380",
+            "source/mir_eval/io.py:26"
+          ]
+        }
+      ],
+      "error_category": "runtime",
+      "error": "FileNotFoundError: [Errno 2] No such file or directory: '/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/source/tests/data/pattern/reference.txt'",
+      "code": "import os\nimport mir_eval\n\n# Navigate from the known beat_reference_file to the pattern reference file\ndata_dir = os.path.dirname(os.path.dirname(beat_reference_file))\npattern_file = os.path.join(data_dir, 'pattern', 'reference.txt')\n\n# Load the MIREX 2013 formatted pattern file\npatterns = mir_eval.io.load_patterns(pattern_file)\n\n# Verify the deeply nested list structure: list[list[list[tuple[float, float]]]]\nassert isinstance(patterns, list), \"Output must be a list of patterns\"\nassert len(patterns) > 0, \"Should load at least one pattern\"\n\nfirst_pattern = patterns[0]\nassert isinstance(first_pattern, list), \"Each pattern must be a list of occurrences\"\nassert len(first_pattern) > 0, \"Pattern should have at least one occurrence\"\n\nfirst_occurrence = first_pattern[0]\nassert isinstance(first_occurrence, list), \"Each occurrence must be a list of events\"\nassert len(first_occurrence) > 0, \"Occurrence should have at least one event\"\n\nfirst_event = first_occurrence[0]\nassert isinstance(first_even",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_load_patterns/api_test.py",
+      "exit_code": 1,
+      "stdout_tail": "",
+      "stderr_tail": "__RUN_ERR__ FileNotFoundError: [Errno 2] No such file or directory: '/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/source/tests/data/pattern/reference.txt'\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_load_patterns/api_test.py\", line 70, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_load_patterns/api_test.py\", line 65, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_load_patterns/api_test.py\", line 41, in api_test\n    patterns = mir_eval.io.load_patterns(pattern_file)\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/source/mir_eval/io.py\", line 380, in load_patterns\n    with _open(filename, mode=\"r\") as input_file:\n  File \"/Users/clockorangezoe/miniconda3/envs/geo_llm_spark/lib/python3.10/contextlib.py\", line 135, in __enter__\n    return next(self.gen)\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/source/mir_eval/io.py\", line 26, in _open\n    with open(file_or_path, **kwargs) as file_desc:\nFileNotFoundError: [Errno 2] No such file or directory: '/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/source/tests/data/pattern/reference.txt'\n"
+    },
+    "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/comprehension.json",
+  "source_sha256": "c25a74155511d59ffa5583bce3975fae3a254ce3e3bc65948dcfbd8f61d51736",
+  "checkpoint_events": [
+    {
+      "name": "load_patterns",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "runtime",
+            "error": "FileNotFoundError: [Errno 2] No such file or directory: '/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval",
+            "codebase_frames": [
+              "source/mir_eval/io.py:380",
+              "source/mir_eval/io.py:26"
+            ]
+          }
+        ],
+        "error_category": "runtime",
+        "error": "FileNotFoundError: [Errno 2] No such file or directory: '/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/source/tests/data/pattern/reference.txt'",
+        "code": "import os\nimport mir_eval\n\n# Navigate from the known beat_reference_file to the pattern reference file\ndata_dir = os.path.dirname(os.path.dirname(beat_reference_file))\npattern_file = os.path.join(data_dir, 'pattern', 'reference.txt')\n\n# Load the MIREX 2013 formatted pattern file\npatterns = mir_eval.io.load_patterns(pattern_file)\n\n# Verify the deeply nested list structure: list[list[list[tuple[float, float]]]]\nassert isinstance(patterns, list), \"Output must be a list of patterns\"\nassert len(patterns) > 0, \"Should load at least one pattern\"\n\nfirst_pattern = patterns[0]\nassert isinstance(first_pattern, list), \"Each pattern must be a list of occurrences\"\nassert len(first_pattern) > 0, \"Pattern should have at least one occurrence\"\n\nfirst_occurrence = first_pattern[0]\nassert isinstance(first_occurrence, list), \"Each occurrence must be a list of events\"\nassert len(first_occurrence) > 0, \"Occurrence should have at least one event\"\n\nfirst_event = first_occurrence[0]\nassert isinstance(first_even",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_load_patterns/api_test.py",
+        "exit_code": 1,
+        "stdout_tail": "",
+        "stderr_tail": "__RUN_ERR__ FileNotFoundError: [Errno 2] No such file or directory: '/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/source/tests/data/pattern/reference.txt'\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_load_patterns/api_test.py\", line 70, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_load_patterns/api_test.py\", line 65, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_load_patterns/api_test.py\", line 41, in api_test\n    patterns = mir_eval.io.load_patterns(pattern_file)\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/source/mir_eval/io.py\", line 380, in load_patterns\n    with _open(filename, mode=\"r\") as input_file:\n  File \"/Users/clockorangezoe/miniconda3/envs/geo_llm_spark/lib/python3.10/contextlib.py\", line 135, in __enter__\n    return next(self.gen)\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/source/mir_eval/io.py\", line 26, in _open\n    with open(file_or_path, **kwargs) as file_desc:\nFileNotFoundError: [Errno 2] No such file or directory: '/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/source/tests/data/pattern/reference.txt'\n"
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 26.3,
+      "llm_calls": 1,
+      "input_tokens": 2844,
+      "output_tokens": 3083,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2844,
+          "output_tokens": 3083
+        }
+      },
+      "error_category": "runtime",
+      "error": "FileNotFoundError: [Errno 2] No such file or directory: '/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/source/tests/data/pattern/reference.txt'",
+      "locus": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/source/mir_eval/io.py:26",
+      "doc_chars": 4859,
+      "document_sha256": "a3df10bff9eaf6c4b833c67df393629ab7708a7716dea290003c0197c5940eba",
+      "source": "source/mir_eval/io.py:331",
+      "source_other_sites": 0,
+      "codebase_frames": [
+        "source/mir_eval/io.py:380",
+        "source/mir_eval/io.py:26"
+      ]
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

@@ -1,0 +1,119 @@
+{
+  "summary": {
+    "repository": "mir_eval",
+    "cell": "B2",
+    "api": "cemgil",
+    "outcome": "Execution failed",
+    "test_execution": "Test process returned exit code 1; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 17.0,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 17.0,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "error": "AssertionError: Expected perfect score to be ~1.0, got 0.0",
+    "details": "api_details/6efb68a0191acbc05cb3.json"
+  },
+  "native_row": {
+    "status": "fail",
+    "attempts": 1,
+    "pass_round": null,
+    "wall_s": 17.0,
+    "llm_calls": 1,
+    "input_tokens": 2371,
+    "output_tokens": 1855,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2371,
+        "output_tokens": 1855
+      }
+    },
+    "error_category": "runtime",
+    "error": "AssertionError: Expected perfect score to be ~1.0, got 0.0",
+    "locus": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_cemgil/api_test.py:48",
+    "doc_chars": 3968,
+    "document_sha256": "190edd6fd12face5d668b1264eafa0321a6f5dfd66fe5bac9bd99fa7eb97da65",
+    "source": "source/mir_eval/beat.py:176",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "name": "cemgil",
+    "execution_evidence": {
+      "status": "fail",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "fail",
+          "category": "runtime",
+          "error": "AssertionError: Expected perfect score to be ~1.0, got 0.0"
+        }
+      ],
+      "error_category": "runtime",
+      "error": "AssertionError: Expected perfect score to be ~1.0, got 0.0",
+      "code": "import mir_eval\nimport numpy as np\n\n# Preprocess inputs as required by standard MIR evaluation practices\nref_beats = mir_eval.beat.trim_beats(ref_events)\nest_beats = mir_eval.beat.trim_beats(est_events)\n\n# Compute Cemgil's score\ncemgil_score, cemgil_max = mir_eval.beat.cemgil(ref_beats, est_beats)\n\n# Strong oracle: identical inputs should yield a perfect score of 1.0\nperfect_score, perfect_max = mir_eval.beat.cemgil(ref_beats, ref_beats)\n\nassert isinstance(cemgil_score, float), \"cemgil_score must be a float\"\nassert isinstance(cemgil_max, float), \"cemgil_max must be a float\"\nassert perfect_score > 0.99, f\"Expected perfect score to be ~1.0, got {perfect_score}\"\nassert 0.0 <= cemgil_score <= 1.0, \"cemgil_score should be bounded between 0 and 1\"\n\nprint(f\"__CHECK__ cemgil {cemgil_score:.4f}, {cemgil_max:.4f}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_cemgil/api_test.py",
+      "exit_code": 1,
+      "stdout_tail": "",
+      "stderr_tail": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/source/mir_eval/beat.py:90: UserWarning: Reference beats are empty.\n  warnings.warn(\"Reference beats are empty.\")\n/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/source/mir_eval/beat.py:92: UserWarning: Estimated beats are empty.\n  warnings.warn(\"Estimated beats are empty.\")\n__RUN_ERR__ AssertionError: Expected perfect score to be ~1.0, got 0.0\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_cemgil/api_test.py\", line 60, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_cemgil/api_test.py\", line 55, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_cemgil/api_test.py\", line 48, in api_test\n    assert perfect_score > 0.99, f\"Expected perfect score to be ~1.0, got {perfect_score}\"\nAssertionError: Expected perfect score to be ~1.0, got 0.0\n"
+    },
+    "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/comprehension.json",
+  "source_sha256": "c25a74155511d59ffa5583bce3975fae3a254ce3e3bc65948dcfbd8f61d51736",
+  "checkpoint_events": [
+    {
+      "name": "cemgil",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "runtime",
+            "error": "AssertionError: Expected perfect score to be ~1.0, got 0.0"
+          }
+        ],
+        "error_category": "runtime",
+        "error": "AssertionError: Expected perfect score to be ~1.0, got 0.0",
+        "code": "import mir_eval\nimport numpy as np\n\n# Preprocess inputs as required by standard MIR evaluation practices\nref_beats = mir_eval.beat.trim_beats(ref_events)\nest_beats = mir_eval.beat.trim_beats(est_events)\n\n# Compute Cemgil's score\ncemgil_score, cemgil_max = mir_eval.beat.cemgil(ref_beats, est_beats)\n\n# Strong oracle: identical inputs should yield a perfect score of 1.0\nperfect_score, perfect_max = mir_eval.beat.cemgil(ref_beats, ref_beats)\n\nassert isinstance(cemgil_score, float), \"cemgil_score must be a float\"\nassert isinstance(cemgil_max, float), \"cemgil_max must be a float\"\nassert perfect_score > 0.99, f\"Expected perfect score to be ~1.0, got {perfect_score}\"\nassert 0.0 <= cemgil_score <= 1.0, \"cemgil_score should be bounded between 0 and 1\"\n\nprint(f\"__CHECK__ cemgil {cemgil_score:.4f}, {cemgil_max:.4f}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_cemgil/api_test.py",
+        "exit_code": 1,
+        "stdout_tail": "",
+        "stderr_tail": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/source/mir_eval/beat.py:90: UserWarning: Reference beats are empty.\n  warnings.warn(\"Reference beats are empty.\")\n/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/source/mir_eval/beat.py:92: UserWarning: Estimated beats are empty.\n  warnings.warn(\"Estimated beats are empty.\")\n__RUN_ERR__ AssertionError: Expected perfect score to be ~1.0, got 0.0\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_cemgil/api_test.py\", line 60, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_cemgil/api_test.py\", line 55, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_cemgil/api_test.py\", line 48, in api_test\n    assert perfect_score > 0.99, f\"Expected perfect score to be ~1.0, got {perfect_score}\"\nAssertionError: Expected perfect score to be ~1.0, got 0.0\n"
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 17.0,
+      "llm_calls": 1,
+      "input_tokens": 2371,
+      "output_tokens": 1855,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2371,
+          "output_tokens": 1855
+        }
+      },
+      "error_category": "runtime",
+      "error": "AssertionError: Expected perfect score to be ~1.0, got 0.0",
+      "locus": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_cemgil/api_test.py:48",
+      "doc_chars": 3968,
+      "document_sha256": "190edd6fd12face5d668b1264eafa0321a6f5dfd66fe5bac9bd99fa7eb97da65",
+      "source": "source/mir_eval/beat.py:176",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

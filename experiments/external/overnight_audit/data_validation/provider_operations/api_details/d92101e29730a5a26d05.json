@@ -1,0 +1,97 @@
+{
+  "summary": {
+    "repository": "Thumbnailator",
+    "cell": "A2",
+    "api": "setOutputFormatName",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 15.2,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 15.2,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "error": null,
+    "details": "api_details/d92101e29730a5a26d05.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 15.2,
+    "llm_calls": 1,
+    "input_tokens": 1801,
+    "output_tokens": 1789,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 1801,
+        "output_tokens": 1789
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 2565,
+    "document_sha256": "5e217847f9ba4551aeb89fd44fe60784becba99a47e17c919af845777dc0a72c",
+    "source": "source/src/main/java/net/coobird/thumbnailator/tasks/io/ImageSink.java:61",
+    "source_other_sites": 3,
+    "codebase_frames": null,
+    "name": "setOutputFormatName",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "net.coobird.thumbnailator.tasks.io.OutputStreamImageSink sink = new net.coobird.thumbnailator.tasks.io.OutputStreamImageSink(imageBytes);\nsink.setOutputFormatName(\"png\");\n\ntry {\n    sink.write(sourceImage);\n} catch (java.io.IOException e) {\n    throw new RuntimeException(e);\n}\n\nbyte[] outBytes = imageBytes.toByteArray();\nassert outBytes.length > 8 : \"Output bytes should be written\";\n// Verify PNG magic number: 89 50 4E 47\nassert outBytes[0] == (byte) 0x89 && outBytes[1] == (byte) 0x50 && outBytes[2] == (byte) 0x4E && outBytes[3] == (byte) 0x47 : \"Output should be encoded in PNG format\";\n\nSystem.out.println(\"__CHECK__ setOutputFormatName \" + outBytes.length);",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/.aideal_exec/A2/run_setOutputFormatName/ApiTest.java",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ setOutputFormatName 100\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "d0a4b20f3e5d3ea0caf7b1501a9bf2fb4d4f11ac7d844517d7b5d67874427464"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/docs/eval/A2/comprehension.json",
+  "source_sha256": "b6aa0c714a7c8a076f415ed0dae0e6b3126ad774bc94aab394ec1036974003d7",
+  "checkpoint_events": [
+    {
+      "name": "setOutputFormatName",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "d0a4b20f3e5d3ea0caf7b1501a9bf2fb4d4f11ac7d844517d7b5d67874427464",
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 15.2,
+      "llm_calls": 1,
+      "input_tokens": 1801,
+      "output_tokens": 1789,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1801,
+          "output_tokens": 1789
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 2565,
+      "document_sha256": "5e217847f9ba4551aeb89fd44fe60784becba99a47e17c919af845777dc0a72c",
+      "source": "source/src/main/java/net/coobird/thumbnailator/tasks/io/ImageSink.java:61",
+      "source_other_sites": 3,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

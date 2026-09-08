@@ -1,6 +1,6 @@
 # A2 source-only recovery
 
-Updated: 2026-09-08T13:37:58.171456-07:00
+Updated: 2026-09-08T13:45:31.428547-07:00
 
 Fixed eligible-failure denominator: 22. A2 is round zero; five new proposals maximum; stuck threshold two.
 
@@ -10,7 +10,7 @@ Fixed eligible-failure denominator: 22. A2 is round zero; five new proposals max
 | ThumbnailMaker | recovered_native | 1 | /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/thumbnailator/3fe01b3536324b3252b28fced5b3557f3a6256f162fb7548eb376b14ca5f2ea0/project/.aideal_recovery/7209569634fa1c64fba31b40167ecac9c5c501fc421de8200ab06bb0cbce1b42/recovery.json |
 | UnsupportedFormatException | recovered_native | 1 | /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/thumbnailator/3fe01b3536324b3252b28fced5b3557f3a6256f162fb7548eb376b14ca5f2ea0/project/.aideal_recovery/b104d8df651294e4a6208df6cba2f6bcf097bf8185cb6ed086d1ed065e00c00e/recovery.json |
 | clear | recovered_native | 1 | /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/thumbnailator/3fe01b3536324b3252b28fced5b3557f3a6256f162fb7548eb376b14ca5f2ea0/project/.aideal_recovery/69500b4fa41a0aa71f28383fe70b75fd5f5c24ec868bfe0892aa8dd201a50c79/recovery.json |
-| createOutputStream | provider_blocked | 1 | /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/thumbnailator/3fe01b3536324b3252b28fced5b3557f3a6256f162fb7548eb376b14ca5f2ea0/project/.aideal_recovery/89d3f19f1343cbd9cfbbb5a705fc9a4a413848e9d4dbdb313fe1c87041e12f31/recovery.json |
+| createOutputStream | recovered_native | 4 | /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/thumbnailator/3fe01b3536324b3252b28fced5b3557f3a6256f162fb7548eb376b14ca5f2ea0/project/.aideal_recovery/89d3f19f1343cbd9cfbbb5a705fc9a4a413848e9d4dbdb313fe1c87041e12f31/recovery.json |
 | defaultResizer | recovered_native | 2 | /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/thumbnailator/3fe01b3536324b3252b28fced5b3557f3a6256f162fb7548eb376b14ca5f2ea0/project/.aideal_recovery/4dc7dfe705e62ce766b6c12e0b64b5f3766d906aee345e5145d7ec57aa3be7fb/recovery.json |
 | defaultResizerFactory | recovered_native | 2 | /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/thumbnailator/3fe01b3536324b3252b28fced5b3557f3a6256f162fb7548eb376b14ca5f2ea0/project/.aideal_recovery/de0fb5e282d62b64612c4020d394ff0b6576aec5c7aaf64cd13d5c64a1d9270e/recovery.json |
 | filters | recovered_native | 2 | /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/thumbnailator/3fe01b3536324b3252b28fced5b3557f3a6256f162fb7548eb376b14ca5f2ea0/project/.aideal_recovery/b4e238aab29f43c0887153a3e48ff53310e91420e9dd2ad001fed09dc26962e8/recovery.json |

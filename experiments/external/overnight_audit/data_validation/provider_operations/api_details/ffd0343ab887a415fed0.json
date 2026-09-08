@@ -1,0 +1,111 @@
+{
+  "summary": {
+    "repository": "mir_eval",
+    "cell": "B2",
+    "api": "midi_to_chroma",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 11.8,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 11.8,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "error": null,
+    "details": "api_details/ffd0343ab887a415fed0.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 11.8,
+    "llm_calls": 1,
+    "input_tokens": 2152,
+    "output_tokens": 1176,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2152,
+        "output_tokens": 1176
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 2877,
+    "document_sha256": "6ab0ac54683d58f627a77e5bb5e16cf660a7e4e3986e911f4a49ed7a47c065ec",
+    "source": "source/mir_eval/multipitch.py:173",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "name": "midi_to_chroma",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "import mir_eval.multipitch\nimport numpy as np\n\nmidi_frequencies = [\n    np.array([69.0]),  # A4 -> chroma 9.0\n    np.array([]),      # Silence\n    np.array([57.0, 76.5]),  # A3 -> chroma 9.0, E5 + 50 cents -> chroma 4.5\n]\n\nactual_chroma = mir_eval.multipitch.midi_to_chroma(midi_frequencies)\n\nassert len(actual_chroma) == len(midi_frequencies), \"Output list length must match input list length\"\nassert np.allclose(actual_chroma[0], [9.0]), \"69.0 should wrap to 9.0\"\nassert actual_chroma[1].size == 0, \"Empty array should remain empty\"\nassert np.allclose(actual_chroma[2], [9.0, 4.5]), \"57.0 and 76.5 should wrap to 9.0 and 4.5\"\n\nprint(f\"__CHECK__ midi_to_chroma {actual_chroma[0][0]}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_midi_to_chroma/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ midi_to_chroma 9.0\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/comprehension.json",
+  "source_sha256": "c25a74155511d59ffa5583bce3975fae3a254ce3e3bc65948dcfbd8f61d51736",
+  "checkpoint_events": [
+    {
+      "name": "midi_to_chroma",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import mir_eval.multipitch\nimport numpy as np\n\nmidi_frequencies = [\n    np.array([69.0]),  # A4 -> chroma 9.0\n    np.array([]),      # Silence\n    np.array([57.0, 76.5]),  # A3 -> chroma 9.0, E5 + 50 cents -> chroma 4.5\n]\n\nactual_chroma = mir_eval.multipitch.midi_to_chroma(midi_frequencies)\n\nassert len(actual_chroma) == len(midi_frequencies), \"Output list length must match input list length\"\nassert np.allclose(actual_chroma[0], [9.0]), \"69.0 should wrap to 9.0\"\nassert actual_chroma[1].size == 0, \"Empty array should remain empty\"\nassert np.allclose(actual_chroma[2], [9.0, 4.5]), \"57.0 and 76.5 should wrap to 9.0 and 4.5\"\n\nprint(f\"__CHECK__ midi_to_chroma {actual_chroma[0][0]}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_midi_to_chroma/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ midi_to_chroma 9.0\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 11.8,
+      "llm_calls": 1,
+      "input_tokens": 2152,
+      "output_tokens": 1176,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2152,
+          "output_tokens": 1176
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 2877,
+      "document_sha256": "6ab0ac54683d58f627a77e5bb5e16cf660a7e4e3986e911f4a49ed7a47c065ec",
+      "source": "source/mir_eval/multipitch.py:173",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

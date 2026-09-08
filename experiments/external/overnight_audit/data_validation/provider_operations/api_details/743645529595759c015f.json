@@ -1,0 +1,112 @@
+{
+  "summary": {
+    "repository": "Thumbnailator",
+    "cell": "B2",
+    "api": "resizerFactory",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 26.3,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 26.3,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "error": null,
+    "details": "api_details/743645529595759c015f.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 26.3,
+    "llm_calls": 1,
+    "input_tokens": 2277,
+    "output_tokens": 3184,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2277,
+        "output_tokens": 3184
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 4314,
+    "document_sha256": "0bffe50dae17e0e2b356d8714d4acc5d9f62b49a02c0da2319e2e604f82995a1",
+    "source": "source/src/main/java/net/coobird/thumbnailator/Thumbnails.java:1348",
+    "source_other_sites": 2,
+    "codebase_frames": null,
+    "evidence_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced",
+    "name": "resizerFactory",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "java.util.concurrent.atomic.AtomicBoolean factoryInvoked = new java.util.concurrent.atomic.AtomicBoolean(false);\njava.util.concurrent.atomic.AtomicBoolean resizerInvoked = new java.util.concurrent.atomic.AtomicBoolean(false);\n\nnet.coobird.thumbnailator.resizers.Resizer customResizer = new net.coobird.thumbnailator.resizers.Resizer() {\n    @Override\n    public void resize(java.awt.image.BufferedImage srcImage, java.awt.image.BufferedImage destImage) {\n        resizerInvoked.set(true);\n        java.awt.Graphics2D g = destImage.createGraphics();\n        g.drawImage(srcImage, 0, 0, destImage.getWidth(), destImage.getHeight(), null);\n        g.dispose();\n    }\n};\n\nnet.coobird.thumbnailator.resizers.ResizerFactory customFactory = new net.coobird.thumbnailator.resizers.ResizerFactory() {\n    @Override\n    public net.coobird.thumbnailator.resizers.Resizer getResizer() {\n        factoryInvoked.set(true);\n        return customResizer;\n    }\n    \n    @Override\n    public net.coobird.thumbnailator.resizers.Resizer getResizer(java.awt.Dimension originalSize, java.awt.Dimension thumbnailSize) {\n        factoryInvoked.set(true);\n        return customResizer;\n    }\n};\n\njava.awt.image.BufferedImage result = net.coobird.thumbnailator.Thumbnails.of(sourceImage)\n    .size(50, 50)\n    .resizerFactory(customFactory)\n    .asBufferedImage();\n\nassert factoryInvoked.get() : \"Custom ResizerFactory was not invoked by the builder\";\nassert resizerInvoked.get() : \"Custom Resizer was not invoked during image generation\";\nassert result.getWidth() == 50 || result.getHeight() == 50 : \"Resulting image dimensions do not match the requested size\";\n\nSystem.out.println(\"__CHECK__ resizerFactory \" + factoryInvoked.get() + \"-\" + resizerInvoked.get());",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_resizerFactory/ApiTest.java",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ resizerFactory true-true\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/docs/eval/B2/comprehension.json",
+  "source_sha256": "edf6f845e49a5b57436a68b7845e73ce578cec0a033cf20a196eae38705feb3a",
+  "checkpoint_events": [
+    {
+      "name": "resizerFactory",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "java.util.concurrent.atomic.AtomicBoolean factoryInvoked = new java.util.concurrent.atomic.AtomicBoolean(false);\njava.util.concurrent.atomic.AtomicBoolean resizerInvoked = new java.util.concurrent.atomic.AtomicBoolean(false);\n\nnet.coobird.thumbnailator.resizers.Resizer customResizer = new net.coobird.thumbnailator.resizers.Resizer() {\n    @Override\n    public void resize(java.awt.image.BufferedImage srcImage, java.awt.image.BufferedImage destImage) {\n        resizerInvoked.set(true);\n        java.awt.Graphics2D g = destImage.createGraphics();\n        g.drawImage(srcImage, 0, 0, destImage.getWidth(), destImage.getHeight(), null);\n        g.dispose();\n    }\n};\n\nnet.coobird.thumbnailator.resizers.ResizerFactory customFactory = new net.coobird.thumbnailator.resizers.ResizerFactory() {\n    @Override\n    public net.coobird.thumbnailator.resizers.Resizer getResizer() {\n        factoryInvoked.set(true);\n        return customResizer;\n    }\n    \n    @Override\n    public net.coobird.thumbnailator.resizers.Resizer getResizer(java.awt.Dimension originalSize, java.awt.Dimension thumbnailSize) {\n        factoryInvoked.set(true);\n        return customResizer;\n    }\n};\n\njava.awt.image.BufferedImage result = net.coobird.thumbnailator.Thumbnails.of(sourceImage)\n    .size(50, 50)\n    .resizerFactory(customFactory)\n    .asBufferedImage();\n\nassert factoryInvoked.get() : \"Custom ResizerFactory was not invoked by the builder\";\nassert resizerInvoked.get() : \"Custom Resizer was not invoked during image generation\";\nassert result.getWidth() == 50 || result.getHeight() == 50 : \"Resulting image dimensions do not match the requested size\";\n\nSystem.out.println(\"__CHECK__ resizerFactory \" + factoryInvoked.get() + \"-\" + resizerInvoked.get());",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_resizerFactory/ApiTest.java",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ resizerFactory true-true\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 26.3,
+      "llm_calls": 1,
+      "input_tokens": 2277,
+      "output_tokens": 3184,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2277,
+          "output_tokens": 3184
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 4314,
+      "document_sha256": "0bffe50dae17e0e2b356d8714d4acc5d9f62b49a02c0da2319e2e604f82995a1",
+      "source": "source/src/main/java/net/coobird/thumbnailator/Thumbnails.java:1348",
+      "source_other_sites": 2,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

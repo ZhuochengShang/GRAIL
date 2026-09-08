@@ -1,0 +1,150 @@
+{
+  "summary": {
+    "repository": "Thumbnailator",
+    "cell": "B2",
+    "api": "getType",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 18.3,
+    "retained_checkpoint_events": 2,
+    "retained_attempt_total_s": 617.4,
+    "retained_504_events": 1,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "error": null,
+    "details": "api_details/d9b0370b42ab2d2f9d9b.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 18.3,
+    "llm_calls": 1,
+    "input_tokens": 1911,
+    "output_tokens": 2013,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 1911,
+        "output_tokens": 2013
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 3084,
+    "document_sha256": "a848cda5c4136d93ab77d2ace92a06690f2ac76f2b919651eb2097212138aaf0",
+    "source": "source/src/main/java/net/coobird/thumbnailator/ThumbnailParameter.java:850",
+    "source_other_sites": 1,
+    "codebase_frames": null,
+    "name": "getType",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "java.awt.image.BufferedImage thumbnail = net.coobird.thumbnailator.Thumbnails.of(sourceImage)\n        .size(32, 32)\n        .imageType(java.awt.image.BufferedImage.TYPE_INT_ARGB)\n        .asBufferedImage();\n\nint type = thumbnail.getType();\n\nassert type == java.awt.image.BufferedImage.TYPE_INT_ARGB : \"Expected TYPE_INT_ARGB, got \" + type;\nSystem.out.println(\"__CHECK__ getType \" + type);",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_getType/ApiTest.java",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ getType 2\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/docs/eval/B2/comprehension.json",
+  "source_sha256": "edf6f845e49a5b57436a68b7845e73ce578cec0a033cf20a196eae38705feb3a",
+  "checkpoint_events": [
+    {
+      "name": "getType",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "llm-error",
+            "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}"
+          }
+        ],
+        "error_category": "llm-error",
+        "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+        "code": "",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_getType/ApiTest.java",
+        "exit_code": null,
+        "stdout_tail": "",
+        "stderr_tail": ""
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 599.1,
+      "llm_calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "by_model": {},
+      "error_category": "llm-error",
+      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "locus": "",
+      "doc_chars": 3084,
+      "document_sha256": "a848cda5c4136d93ab77d2ace92a06690f2ac76f2b919651eb2097212138aaf0",
+      "source": "source/src/main/java/net/coobird/thumbnailator/ThumbnailParameter.java:850",
+      "source_other_sites": 1,
+      "codebase_frames": null
+    },
+    {
+      "name": "getType",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "java.awt.image.BufferedImage thumbnail = net.coobird.thumbnailator.Thumbnails.of(sourceImage)\n        .size(32, 32)\n        .imageType(java.awt.image.BufferedImage.TYPE_INT_ARGB)\n        .asBufferedImage();\n\nint type = thumbnail.getType();\n\nassert type == java.awt.image.BufferedImage.TYPE_INT_ARGB : \"Expected TYPE_INT_ARGB, got \" + type;\nSystem.out.println(\"__CHECK__ getType \" + type);",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_getType/ApiTest.java",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ getType 2\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 18.3,
+      "llm_calls": 1,
+      "input_tokens": 1911,
+      "output_tokens": 2013,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1911,
+          "output_tokens": 2013
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3084,
+      "document_sha256": "a848cda5c4136d93ab77d2ace92a06690f2ac76f2b919651eb2097212138aaf0",
+      "source": "source/src/main/java/net/coobird/thumbnailator/ThumbnailParameter.java:850",
+      "source_other_sites": 1,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

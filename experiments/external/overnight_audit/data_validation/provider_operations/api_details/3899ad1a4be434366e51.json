@@ -1,0 +1,101 @@
+{
+  "summary": {
+    "repository": "Thumbnailator",
+    "cell": "A2",
+    "api": "defaultResizer",
+    "outcome": "Execution failed",
+    "test_execution": "Test process returned exit code 1; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 16.1,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 16.1,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "error": "IllegalStateException: Maker not ready to make thumbnail.",
+    "details": "api_details/3899ad1a4be434366e51.json"
+  },
+  "native_row": {
+    "status": "fail",
+    "attempts": 1,
+    "pass_round": null,
+    "wall_s": 16.1,
+    "llm_calls": 1,
+    "input_tokens": 1636,
+    "output_tokens": 1886,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 1636,
+        "output_tokens": 1886
+      }
+    },
+    "error_category": "runtime",
+    "error": "IllegalStateException: Maker not ready to make thumbnail.",
+    "locus": "ApiTest.java:56",
+    "doc_chars": 1915,
+    "document_sha256": "f1ae03a849bd6d77a7449d07fe347175f9e7fd7ce9855d77cd7e0a4863e696b0",
+    "source": "source/src/main/java/net/coobird/thumbnailator/makers/ThumbnailMaker.java:263",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "name": "defaultResizer",
+    "execution_evidence": {
+      "status": "fail",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "fail",
+          "category": "runtime",
+          "error": "IllegalStateException: Maker not ready to make thumbnail."
+        }
+      ],
+      "error_category": "runtime",
+      "error": "IllegalStateException: Maker not ready to make thumbnail.",
+      "code": "net.coobird.thumbnailator.makers.FixedSizeThumbnailMaker maker = new net.coobird.thumbnailator.makers.FixedSizeThumbnailMaker(50, 50);\nnet.coobird.thumbnailator.makers.ThumbnailMaker returnedMaker = maker.defaultResizer();\n\nassert returnedMaker == maker : \"Expected fluent return of the same ThumbnailMaker instance\";\n\njava.awt.image.BufferedImage result = returnedMaker.make(sourceImage);\n\nassert result != null : \"Resulting image should not be null\";\nassert result.getWidth() <= 50 && result.getHeight() <= 50 : \"Image should fit within 50x50\";\nassert result.getWidth() == 50 || result.getHeight() == 50 : \"At least one dimension should be exactly 50\";\n\nSystem.out.println(\"__CHECK__ defaultResizer \" + result.getWidth() + \"x\" + result.getHeight());",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/.aideal_exec/A2/run_defaultResizer/ApiTest.java",
+      "exit_code": 1,
+      "stdout_tail": "",
+      "stderr_tail": "__RUN_ERR__ IllegalStateException: Maker not ready to make thumbnail.\njava.lang.IllegalStateException: Maker not ready to make thumbnail.\n\tat net.coobird.thumbnailator.makers.ThumbnailMaker.makeThumbnail(Unknown Source)\n\tat net.coobird.thumbnailator.makers.FixedSizeThumbnailMaker.make(Unknown Source)\n\tat ApiTest.main(ApiTest.java:56)\n"
+    },
+    "experiment_fingerprint": "d0a4b20f3e5d3ea0caf7b1501a9bf2fb4d4f11ac7d844517d7b5d67874427464"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/docs/eval/A2/comprehension.json",
+  "source_sha256": "b6aa0c714a7c8a076f415ed0dae0e6b3126ad774bc94aab394ec1036974003d7",
+  "checkpoint_events": [
+    {
+      "name": "defaultResizer",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "d0a4b20f3e5d3ea0caf7b1501a9bf2fb4d4f11ac7d844517d7b5d67874427464",
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 16.1,
+      "llm_calls": 1,
+      "input_tokens": 1636,
+      "output_tokens": 1886,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1636,
+          "output_tokens": 1886
+        }
+      },
+      "error_category": "runtime",
+      "error": "IllegalStateException: Maker not ready to make thumbnail.",
+      "locus": "ApiTest.java:56",
+      "doc_chars": 1915,
+      "document_sha256": "f1ae03a849bd6d77a7449d07fe347175f9e7fd7ce9855d77cd7e0a4863e696b0",
+      "source": "source/src/main/java/net/coobird/thumbnailator/makers/ThumbnailMaker.java:263",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

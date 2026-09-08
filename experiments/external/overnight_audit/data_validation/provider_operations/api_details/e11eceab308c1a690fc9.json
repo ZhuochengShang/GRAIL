@@ -1,0 +1,111 @@
+{
+  "summary": {
+    "repository": "mir_eval",
+    "cell": "B2",
+    "api": "validate",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 25.8,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 25.8,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "error": null,
+    "details": "api_details/e11eceab308c1a690fc9.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 25.8,
+    "llm_calls": 1,
+    "input_tokens": 2978,
+    "output_tokens": 2973,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2978,
+        "output_tokens": 2973
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 6384,
+    "document_sha256": "bdd15047d8f2cccd9bff0eaae6d20f981a8154defe50c2e2c9fc1a3987de9de9",
+    "source": "source/mir_eval/transcription_velocity.py:62",
+    "source_other_sites": 11,
+    "codebase_frames": null,
+    "name": "validate",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "import mir_eval\nimport numpy as np\nimport warnings\n\n# Ensure events are sorted and unique to satisfy onset validation rules\nref_onsets = np.unique(ref_events)\nest_onsets = np.unique(est_events)\n\nwith warnings.catch_warnings():\n    warnings.simplefilter(\"ignore\", UserWarning)\n    # validate acts as an assertion and returns None on success\n    result = mir_eval.onset.validate(ref_onsets, est_onsets)\n\nassert result is None, \"validate should return None for well-formed inputs\"\nprint(f\"__CHECK__ validate {result}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_validate/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ validate None\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/comprehension.json",
+  "source_sha256": "c25a74155511d59ffa5583bce3975fae3a254ce3e3bc65948dcfbd8f61d51736",
+  "checkpoint_events": [
+    {
+      "name": "validate",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import mir_eval\nimport numpy as np\nimport warnings\n\n# Ensure events are sorted and unique to satisfy onset validation rules\nref_onsets = np.unique(ref_events)\nest_onsets = np.unique(est_events)\n\nwith warnings.catch_warnings():\n    warnings.simplefilter(\"ignore\", UserWarning)\n    # validate acts as an assertion and returns None on success\n    result = mir_eval.onset.validate(ref_onsets, est_onsets)\n\nassert result is None, \"validate should return None for well-formed inputs\"\nprint(f\"__CHECK__ validate {result}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_validate/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ validate None\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 25.8,
+      "llm_calls": 1,
+      "input_tokens": 2978,
+      "output_tokens": 2973,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2978,
+          "output_tokens": 2973
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 6384,
+      "document_sha256": "bdd15047d8f2cccd9bff0eaae6d20f981a8154defe50c2e2c9fc1a3987de9de9",
+      "source": "source/mir_eval/transcription_velocity.py:62",
+      "source_other_sites": 11,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

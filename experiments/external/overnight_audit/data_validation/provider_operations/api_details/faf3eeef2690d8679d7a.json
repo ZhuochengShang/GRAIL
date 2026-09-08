@@ -1,0 +1,111 @@
+{
+  "summary": {
+    "repository": "mir_eval",
+    "cell": "B2",
+    "api": "merge_chord_intervals",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 18.4,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 18.4,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "error": null,
+    "details": "api_details/faf3eeef2690d8679d7a.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 18.4,
+    "llm_calls": 1,
+    "input_tokens": 2348,
+    "output_tokens": 1994,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2348,
+        "output_tokens": 1994
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 3617,
+    "document_sha256": "ef5aee76189aa63d3b3f53c21fcc81060be9836c88cbb300b672b610568a587a",
+    "source": "source/mir_eval/chord.py:1490",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "name": "merge_chord_intervals",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "import mir_eval\nimport numpy as np\n\nmerged_intervals = mir_eval.chord.merge_chord_intervals(ref_intervals, ref_labels)\n\nassert isinstance(merged_intervals, np.ndarray)\nassert merged_intervals.ndim == 2 and merged_intervals.shape[1] == 2\nassert merged_intervals.shape[0] <= ref_intervals.shape[0]\n\nif len(ref_intervals) > 0:\n    # The overall start and end times of the sequence should be preserved\n    assert np.isclose(merged_intervals[0, 0], ref_intervals[0, 0])\n    assert np.isclose(merged_intervals[-1, 1], ref_intervals[-1, 1])\n\nprint(f\"__CHECK__ merge_chord_intervals {merged_intervals.shape[0]}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_merge_chord_intervals/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ merge_chord_intervals 4\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/comprehension.json",
+  "source_sha256": "c25a74155511d59ffa5583bce3975fae3a254ce3e3bc65948dcfbd8f61d51736",
+  "checkpoint_events": [
+    {
+      "name": "merge_chord_intervals",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import mir_eval\nimport numpy as np\n\nmerged_intervals = mir_eval.chord.merge_chord_intervals(ref_intervals, ref_labels)\n\nassert isinstance(merged_intervals, np.ndarray)\nassert merged_intervals.ndim == 2 and merged_intervals.shape[1] == 2\nassert merged_intervals.shape[0] <= ref_intervals.shape[0]\n\nif len(ref_intervals) > 0:\n    # The overall start and end times of the sequence should be preserved\n    assert np.isclose(merged_intervals[0, 0], ref_intervals[0, 0])\n    assert np.isclose(merged_intervals[-1, 1], ref_intervals[-1, 1])\n\nprint(f\"__CHECK__ merge_chord_intervals {merged_intervals.shape[0]}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_merge_chord_intervals/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ merge_chord_intervals 4\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 18.4,
+      "llm_calls": 1,
+      "input_tokens": 2348,
+      "output_tokens": 1994,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2348,
+          "output_tokens": 1994
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3617,
+      "document_sha256": "ef5aee76189aa63d3b3f53c21fcc81060be9836c88cbb300b672b610568a587a",
+      "source": "source/mir_eval/chord.py:1490",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

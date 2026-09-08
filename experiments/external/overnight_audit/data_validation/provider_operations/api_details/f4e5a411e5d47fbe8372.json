@@ -1,0 +1,180 @@
+{
+  "summary": {
+    "repository": "tslearn",
+    "cell": "A1",
+    "api": "call",
+    "outcome": "Setup/import blocked",
+    "test_execution": "Setup/import failed; target execution not established",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 35.6,
+    "retained_checkpoint_events": 3,
+    "retained_attempt_total_s": 1234.3,
+    "retained_504_events": 2,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "error": "missing module/import: No module named 'tensorflow'",
+    "details": "api_details/f4e5a411e5d47fbe8372.json"
+  },
+  "native_row": {
+    "name": "call",
+    "doc_source": "original",
+    "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+    "execution_evidence": {
+      "status": "fail",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "fail",
+          "category": "infra",
+          "error": "missing module/import: No module named 'tensorflow'"
+        }
+      ],
+      "error_category": "infra",
+      "error": "missing module/import: No module named 'tensorflow'",
+      "code": "import numpy as np\nimport tensorflow as tf\nfrom tslearn.shapelets import GlobalMinPooling1D\n\n# GlobalMinPooling1D is a custom Keras layer in tslearn.\n# We instantiate it and directly invoke its `call` method.\nlayer = GlobalMinPooling1D()\n\n# Create a small deterministic tensor: 1 sample, 3 timesteps, 2 features\ninputs = tf.constant([[[3.0, 5.0], \n                       [1.0, 6.0], \n                       [4.0, 2.0]]], dtype=tf.float32)\n\n# Execute the call method\nres = layer.call(inputs).numpy()\n\n# The layer computes the minimum over the time dimension (axis 1)\n# Feature 0: min(3.0, 1.0, 4.0) = 1.0\n# Feature 1: min(5.0, 6.0, 2.0) = 2.0\nassert res.shape == (1, 2), f\"Expected shape (1, 2), got {res.shape}\"\nassert np.allclose(res, [[1.0, 2.0]]), f\"Expected [[1.0, 2.0]], got {res}\"\n\nprint(f\"__CHECK__ call {res.tolist()}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_call/api_test.py",
+      "exit_code": 1,
+      "stdout_tail": "",
+      "stderr_tail": "__RUN_ERR__ ModuleNotFoundError: No module named 'tensorflow'\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_call/api_test.py\", line 65, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_call/api_test.py\", line 60, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_call/api_test.py\", line 35, in api_test\n    import tensorflow as tf\nModuleNotFoundError: No module named 'tensorflow'\n"
+    },
+    "status": "fail",
+    "attempts": 1,
+    "pass_round": null,
+    "wall_s": 35.6,
+    "llm_calls": 1,
+    "input_tokens": 1307,
+    "output_tokens": 4361,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 1307,
+        "output_tokens": 4361
+      }
+    },
+    "error_category": "infra",
+    "error": "missing module/import: No module named 'tensorflow'",
+    "locus": "",
+    "doc_chars": 86,
+    "document_sha256": "4a3660267b63f156f9c0ac9f275d714a1720d00806eb92e577f3222ce1142c67",
+    "source": "tslearn/tslearn/shapelets/shapelets.py:89",
+    "source_other_sites": 3,
+    "codebase_frames": null
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/comprehension_progress.jsonl",
+  "source_sha256": "40d5a3d667362bb5fb7ea0d8a6fa92db5ad90c7e1aa3eb8ccc679fc6ed1cbff4",
+  "checkpoint_events": [
+    {
+      "name": "call",
+      "doc_source": "original",
+      "experiment_fingerprint": "964a2ec0df73c3b53c3966c9213dedb1a12bf7e39ad1b8d7d1ddd561ba53212b",
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 599.5,
+      "llm_calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "by_model": {},
+      "error_category": "llm-error",
+      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "locus": "",
+      "doc_chars": 86,
+      "document_sha256": "4a3660267b63f156f9c0ac9f275d714a1720d00806eb92e577f3222ce1142c67",
+      "source": "tslearn/tslearn/shapelets/shapelets.py:89",
+      "source_other_sites": 3,
+      "codebase_frames": null
+    },
+    {
+      "name": "call",
+      "doc_source": "original",
+      "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "llm-error",
+            "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}"
+          }
+        ],
+        "error_category": "llm-error",
+        "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+        "code": "",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_call/api_test.py",
+        "exit_code": null,
+        "stdout_tail": "",
+        "stderr_tail": ""
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 599.2,
+      "llm_calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "by_model": {},
+      "error_category": "llm-error",
+      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "locus": "",
+      "doc_chars": 86,
+      "document_sha256": "4a3660267b63f156f9c0ac9f275d714a1720d00806eb92e577f3222ce1142c67",
+      "source": "tslearn/tslearn/shapelets/shapelets.py:89",
+      "source_other_sites": 3,
+      "codebase_frames": null
+    },
+    {
+      "name": "call",
+      "doc_source": "original",
+      "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "infra",
+            "error": "missing module/import: No module named 'tensorflow'"
+          }
+        ],
+        "error_category": "infra",
+        "error": "missing module/import: No module named 'tensorflow'",
+        "code": "import numpy as np\nimport tensorflow as tf\nfrom tslearn.shapelets import GlobalMinPooling1D\n\n# GlobalMinPooling1D is a custom Keras layer in tslearn.\n# We instantiate it and directly invoke its `call` method.\nlayer = GlobalMinPooling1D()\n\n# Create a small deterministic tensor: 1 sample, 3 timesteps, 2 features\ninputs = tf.constant([[[3.0, 5.0], \n                       [1.0, 6.0], \n                       [4.0, 2.0]]], dtype=tf.float32)\n\n# Execute the call method\nres = layer.call(inputs).numpy()\n\n# The layer computes the minimum over the time dimension (axis 1)\n# Feature 0: min(3.0, 1.0, 4.0) = 1.0\n# Feature 1: min(5.0, 6.0, 2.0) = 2.0\nassert res.shape == (1, 2), f\"Expected shape (1, 2), got {res.shape}\"\nassert np.allclose(res, [[1.0, 2.0]]), f\"Expected [[1.0, 2.0]], got {res}\"\n\nprint(f\"__CHECK__ call {res.tolist()}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_call/api_test.py",
+        "exit_code": 1,
+        "stdout_tail": "",
+        "stderr_tail": "__RUN_ERR__ ModuleNotFoundError: No module named 'tensorflow'\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_call/api_test.py\", line 65, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_call/api_test.py\", line 60, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_call/api_test.py\", line 35, in api_test\n    import tensorflow as tf\nModuleNotFoundError: No module named 'tensorflow'\n"
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 35.6,
+      "llm_calls": 1,
+      "input_tokens": 1307,
+      "output_tokens": 4361,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1307,
+          "output_tokens": 4361
+        }
+      },
+      "error_category": "infra",
+      "error": "missing module/import: No module named 'tensorflow'",
+      "locus": "",
+      "doc_chars": 86,
+      "document_sha256": "4a3660267b63f156f9c0ac9f275d714a1720d00806eb92e577f3222ce1142c67",
+      "source": "tslearn/tslearn/shapelets/shapelets.py:89",
+      "source_other_sites": 3,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

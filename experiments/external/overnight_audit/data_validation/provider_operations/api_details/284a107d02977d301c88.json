@@ -1,0 +1,111 @@
+{
+  "summary": {
+    "repository": "mir_eval",
+    "cell": "B2",
+    "api": "merge_labeled_intervals",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 25.4,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 25.4,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "error": null,
+    "details": "api_details/284a107d02977d301c88.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 25.4,
+    "llm_calls": 1,
+    "input_tokens": 2624,
+    "output_tokens": 2880,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2624,
+        "output_tokens": 2880
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 4238,
+    "document_sha256": "b84ad91bd258bd0700e0806fbc80f15044aa3e7477ccc6d805b163e6396eb92d",
+    "source": "source/mir_eval/util.py:481",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "name": "merge_labeled_intervals",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "import numpy as np\nfrom mir_eval import util\n\nx_intervals = np.copy(ref_intervals)\ny_intervals = np.copy(est_intervals)\nx_labels = list(ref_labels)\ny_labels = list(est_labels)\n\n# Force exact same global time span to satisfy the function's requirement\ncommon_start = min(x_intervals[0, 0], y_intervals[0, 0])\ncommon_end = max(x_intervals[-1, 1], y_intervals[-1, 1])\nx_intervals[0, 0] = common_start\ny_intervals[0, 0] = common_start\nx_intervals[-1, 1] = common_end\ny_intervals[-1, 1] = common_end\n\nnew_intvs, new_x_labels, new_y_labels = util.merge_labeled_intervals(\n    x_intervals, x_labels, y_intervals, y_labels\n)\n\nassert new_intvs.ndim == 2 and new_intvs.shape[1] == 2, \"Merged intervals should be a 2D array with 2 columns\"\nassert len(new_intvs) == len(new_x_labels) == len(new_y_labels), \"Labels length must match the new intervals length\"\nassert np.isclose(new_intvs[0, 0], common_start), \"Merged intervals must start at the common start time\"\nassert np.isclose(new_intvs[-1, 1], common_end), \"Merged intervals must end at the common end time\"\nassert len(new_intvs) >= max(len(x_intervals), len(y_intervals)), \"Merged sequence should be at least as fine-grained as the inputs\"\n\nprint(f\"__CHECK__ merge_labeled_intervals {len(new_intvs)}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_merge_labeled_intervals/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ merge_labeled_intervals 7\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/comprehension.json",
+  "source_sha256": "c25a74155511d59ffa5583bce3975fae3a254ce3e3bc65948dcfbd8f61d51736",
+  "checkpoint_events": [
+    {
+      "name": "merge_labeled_intervals",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import numpy as np\nfrom mir_eval import util\n\nx_intervals = np.copy(ref_intervals)\ny_intervals = np.copy(est_intervals)\nx_labels = list(ref_labels)\ny_labels = list(est_labels)\n\n# Force exact same global time span to satisfy the function's requirement\ncommon_start = min(x_intervals[0, 0], y_intervals[0, 0])\ncommon_end = max(x_intervals[-1, 1], y_intervals[-1, 1])\nx_intervals[0, 0] = common_start\ny_intervals[0, 0] = common_start\nx_intervals[-1, 1] = common_end\ny_intervals[-1, 1] = common_end\n\nnew_intvs, new_x_labels, new_y_labels = util.merge_labeled_intervals(\n    x_intervals, x_labels, y_intervals, y_labels\n)\n\nassert new_intvs.ndim == 2 and new_intvs.shape[1] == 2, \"Merged intervals should be a 2D array with 2 columns\"\nassert len(new_intvs) == len(new_x_labels) == len(new_y_labels), \"Labels length must match the new intervals length\"\nassert np.isclose(new_intvs[0, 0], common_start), \"Merged intervals must start at the common start time\"\nassert np.isclose(new_intvs[-1, 1], common_end), \"Merged intervals must end at the common end time\"\nassert len(new_intvs) >= max(len(x_intervals), len(y_intervals)), \"Merged sequence should be at least as fine-grained as the inputs\"\n\nprint(f\"__CHECK__ merge_labeled_intervals {len(new_intvs)}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_merge_labeled_intervals/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ merge_labeled_intervals 7\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 25.4,
+      "llm_calls": 1,
+      "input_tokens": 2624,
+      "output_tokens": 2880,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2624,
+          "output_tokens": 2880
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 4238,
+      "document_sha256": "b84ad91bd258bd0700e0806fbc80f15044aa3e7477ccc6d805b163e6396eb92d",
+      "source": "source/mir_eval/util.py:481",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

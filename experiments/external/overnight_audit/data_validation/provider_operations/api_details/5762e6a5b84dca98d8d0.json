@@ -1,0 +1,112 @@
+{
+  "summary": {
+    "repository": "Thumbnailator",
+    "cell": "B2",
+    "api": "getSize",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 22.3,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 22.3,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "error": null,
+    "details": "api_details/5762e6a5b84dca98d8d0.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 22.3,
+    "llm_calls": 1,
+    "input_tokens": 1741,
+    "output_tokens": 2855,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 1741,
+        "output_tokens": 2855
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 2417,
+    "document_sha256": "bfe6d5d35a5f8603ec3c62ab4dcd2de3e005597464a0eec67bae6d83173fb3c5",
+    "source": "source/src/main/java/net/coobird/thumbnailator/ThumbnailParameter.java:808",
+    "source_other_sites": 1,
+    "codebase_frames": null,
+    "evidence_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced",
+    "name": "getSize",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "net.coobird.thumbnailator.builders.ThumbnailParameterBuilder builder1 = new net.coobird.thumbnailator.builders.ThumbnailParameterBuilder();\nbuilder1.size(123, 456);\nnet.coobird.thumbnailator.ThumbnailParameter param1 = builder1.build();\njava.awt.Dimension size1 = param1.getSize();\n\nnet.coobird.thumbnailator.builders.ThumbnailParameterBuilder builder2 = new net.coobird.thumbnailator.builders.ThumbnailParameterBuilder();\nbuilder2.scale(0.5);\nnet.coobird.thumbnailator.ThumbnailParameter param2 = builder2.build();\njava.awt.Dimension size2 = param2.getSize();\n\nassert size1 != null : \"Expected non-null size for explicit dimensions\";\nassert size1.width == 123 && size1.height == 456 : \"Incorrect explicit size\";\nassert size2 == null : \"Expected null size for scaled parameter\";\n\nSystem.out.println(\"__CHECK__ getSize \" + size1.width + \"x\" + size1.height + \", scaled size: \" + size2);",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_getSize/ApiTest.java",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ getSize 123x456, scaled size: null\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/docs/eval/B2/comprehension.json",
+  "source_sha256": "edf6f845e49a5b57436a68b7845e73ce578cec0a033cf20a196eae38705feb3a",
+  "checkpoint_events": [
+    {
+      "name": "getSize",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "net.coobird.thumbnailator.builders.ThumbnailParameterBuilder builder1 = new net.coobird.thumbnailator.builders.ThumbnailParameterBuilder();\nbuilder1.size(123, 456);\nnet.coobird.thumbnailator.ThumbnailParameter param1 = builder1.build();\njava.awt.Dimension size1 = param1.getSize();\n\nnet.coobird.thumbnailator.builders.ThumbnailParameterBuilder builder2 = new net.coobird.thumbnailator.builders.ThumbnailParameterBuilder();\nbuilder2.scale(0.5);\nnet.coobird.thumbnailator.ThumbnailParameter param2 = builder2.build();\njava.awt.Dimension size2 = param2.getSize();\n\nassert size1 != null : \"Expected non-null size for explicit dimensions\";\nassert size1.width == 123 && size1.height == 456 : \"Incorrect explicit size\";\nassert size2 == null : \"Expected null size for scaled parameter\";\n\nSystem.out.println(\"__CHECK__ getSize \" + size1.width + \"x\" + size1.height + \", scaled size: \" + size2);",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_getSize/ApiTest.java",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ getSize 123x456, scaled size: null\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 22.3,
+      "llm_calls": 1,
+      "input_tokens": 1741,
+      "output_tokens": 2855,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1741,
+          "output_tokens": 2855
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 2417,
+      "document_sha256": "bfe6d5d35a5f8603ec3c62ab4dcd2de3e005597464a0eec67bae6d83173fb3c5",
+      "source": "source/src/main/java/net/coobird/thumbnailator/ThumbnailParameter.java:808",
+      "source_other_sites": 1,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

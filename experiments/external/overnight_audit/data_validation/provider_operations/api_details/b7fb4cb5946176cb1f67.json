@@ -1,0 +1,111 @@
+{
+  "summary": {
+    "repository": "mir_eval",
+    "cell": "B2",
+    "api": "first_n_three_layer_P",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 18.8,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 18.8,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "error": null,
+    "details": "api_details/b7fb4cb5946176cb1f67.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 18.8,
+    "llm_calls": 1,
+    "input_tokens": 2651,
+    "output_tokens": 2271,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2651,
+        "output_tokens": 2271
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 4388,
+    "document_sha256": "48dea6feeb1ea3e2fe166db38271b01e73b60d20583900a4ca4d8ff52f3c3183",
+    "source": "source/mir_eval/pattern.py:509",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "name": "first_n_three_layer_P",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "import tempfile\nimport os\nimport mir_eval\n\nwith tempfile.TemporaryDirectory() as tmpdir:\n    ref_file = os.path.join(tmpdir, \"ref_pattern.txt\")\n    est_file = os.path.join(tmpdir, \"est_pattern.txt\")\n    \n    # Write identical pattern data to both reference and estimate files\n    pattern_data = \"pattern 1\\n0.5, 1.5\\n2.5, 3.5\\npattern 2\\n4.5, 5.5\\n6.5, 7.5\\n\"\n    with open(ref_file, \"w\") as f:\n        f.write(pattern_data)\n    with open(est_file, \"w\") as f:\n        f.write(pattern_data)\n        \n    # Load patterns using the required I/O helper\n    ref_patterns = mir_eval.io.load_patterns(ref_file)\n    est_patterns = mir_eval.io.load_patterns(est_file)\n    \n    # Compute the first n three-layer precision\n    precision = mir_eval.pattern.first_n_three_layer_P(\n        ref_patterns, \n        est_patterns, \n        n=5\n    )\n    \n    # Verify the result is a float and equals 1.0 for identical patterns\n    assert isinstance(precision, float), f\"Expected float, got {type(precision)}\"\n    assert abs(precision - 1.0) < 1e-7, f\"Expected precision 1.0 for identical patterns, got {precision}\"\n    \n    print(f\"__CHECK__ first_n_three_layer_P {precision}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_first_n_three_layer_P/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ first_n_three_layer_P 1.0\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/comprehension.json",
+  "source_sha256": "c25a74155511d59ffa5583bce3975fae3a254ce3e3bc65948dcfbd8f61d51736",
+  "checkpoint_events": [
+    {
+      "name": "first_n_three_layer_P",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import tempfile\nimport os\nimport mir_eval\n\nwith tempfile.TemporaryDirectory() as tmpdir:\n    ref_file = os.path.join(tmpdir, \"ref_pattern.txt\")\n    est_file = os.path.join(tmpdir, \"est_pattern.txt\")\n    \n    # Write identical pattern data to both reference and estimate files\n    pattern_data = \"pattern 1\\n0.5, 1.5\\n2.5, 3.5\\npattern 2\\n4.5, 5.5\\n6.5, 7.5\\n\"\n    with open(ref_file, \"w\") as f:\n        f.write(pattern_data)\n    with open(est_file, \"w\") as f:\n        f.write(pattern_data)\n        \n    # Load patterns using the required I/O helper\n    ref_patterns = mir_eval.io.load_patterns(ref_file)\n    est_patterns = mir_eval.io.load_patterns(est_file)\n    \n    # Compute the first n three-layer precision\n    precision = mir_eval.pattern.first_n_three_layer_P(\n        ref_patterns, \n        est_patterns, \n        n=5\n    )\n    \n    # Verify the result is a float and equals 1.0 for identical patterns\n    assert isinstance(precision, float), f\"Expected float, got {type(precision)}\"\n    assert abs(precision - 1.0) < 1e-7, f\"Expected precision 1.0 for identical patterns, got {precision}\"\n    \n    print(f\"__CHECK__ first_n_three_layer_P {precision}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_first_n_three_layer_P/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ first_n_three_layer_P 1.0\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 18.8,
+      "llm_calls": 1,
+      "input_tokens": 2651,
+      "output_tokens": 2271,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2651,
+          "output_tokens": 2271
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 4388,
+      "document_sha256": "48dea6feeb1ea3e2fe166db38271b01e73b60d20583900a4ca4d8ff52f3c3183",
+      "source": "source/mir_eval/pattern.py:509",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

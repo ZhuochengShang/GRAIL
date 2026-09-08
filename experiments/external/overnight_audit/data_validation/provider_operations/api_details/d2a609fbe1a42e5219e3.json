@@ -1,0 +1,111 @@
+{
+  "summary": {
+    "repository": "mir_eval",
+    "cell": "B2",
+    "api": "resample_melody_series",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 25.2,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 25.2,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "error": null,
+    "details": "api_details/d2a609fbe1a42e5219e3.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 25.2,
+    "llm_calls": 1,
+    "input_tokens": 2579,
+    "output_tokens": 2986,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2579,
+        "output_tokens": 2986
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 4881,
+    "document_sha256": "c2003b436088e4bded6139af9462459c2cd10b3885a02bff8eb60f3e7ba7ee40",
+    "source": "source/mir_eval/melody.py:220",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "name": "resample_melody_series",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "import numpy as np\nimport mir_eval\n\n# Ensure we have monotonically increasing times and matching lengths\nt = np.sort(np.unique(times))\nn = min(len(t), len(ref_freqs))\n\n# Fallback to a minimal valid sequence if provided arrays are too small for interpolation\nif n < 2:\n    t = np.array([0.0, 0.1, 0.2, 0.3])\n    f = np.array([440.0, 0.0, 440.0, 880.0])\n    n = 4\nelse:\n    t = t[:n]\n    f = ref_freqs[:n]\n\n# Derive voicing from frequencies (0 typically indicates unvoiced)\nv = (f > 0).astype(float)\n\n# Create a new timebase for resampling\ntimes_new = np.linspace(t[0], t[-1], n * 2)\n\n# Perform the resampling\nres_freqs, res_voicing = mir_eval.melody.resample_melody_series(t, f, v, times_new)\n\n# Verify output shapes match the new timebase\nassert res_freqs.shape == times_new.shape, \"Output frequency array shape mismatch.\"\nassert res_voicing.shape == times_new.shape, \"Output voicing array shape mismatch.\"\n\n# Verify the documented optimization: \"If times and times_new are equivalent, no resampling will be performed.\"\nres_f2, res_v2 = mir_eval.melody.resample_melody_series(t, f, v, t)\nassert np.array_equal(res_f2, f), \"Frequencies should be unchanged when times == times_new\"\nassert np.array_equal(res_v2, v), \"Voicing should be unchanged when times == times_new\"\n\nprint(f\"__CHECK__ resample_melody_series {res_freqs.shape[0]}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_resample_melody_series/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ resample_melody_series 10\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/comprehension.json",
+  "source_sha256": "c25a74155511d59ffa5583bce3975fae3a254ce3e3bc65948dcfbd8f61d51736",
+  "checkpoint_events": [
+    {
+      "name": "resample_melody_series",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import numpy as np\nimport mir_eval\n\n# Ensure we have monotonically increasing times and matching lengths\nt = np.sort(np.unique(times))\nn = min(len(t), len(ref_freqs))\n\n# Fallback to a minimal valid sequence if provided arrays are too small for interpolation\nif n < 2:\n    t = np.array([0.0, 0.1, 0.2, 0.3])\n    f = np.array([440.0, 0.0, 440.0, 880.0])\n    n = 4\nelse:\n    t = t[:n]\n    f = ref_freqs[:n]\n\n# Derive voicing from frequencies (0 typically indicates unvoiced)\nv = (f > 0).astype(float)\n\n# Create a new timebase for resampling\ntimes_new = np.linspace(t[0], t[-1], n * 2)\n\n# Perform the resampling\nres_freqs, res_voicing = mir_eval.melody.resample_melody_series(t, f, v, times_new)\n\n# Verify output shapes match the new timebase\nassert res_freqs.shape == times_new.shape, \"Output frequency array shape mismatch.\"\nassert res_voicing.shape == times_new.shape, \"Output voicing array shape mismatch.\"\n\n# Verify the documented optimization: \"If times and times_new are equivalent, no resampling will be performed.\"\nres_f2, res_v2 = mir_eval.melody.resample_melody_series(t, f, v, t)\nassert np.array_equal(res_f2, f), \"Frequencies should be unchanged when times == times_new\"\nassert np.array_equal(res_v2, v), \"Voicing should be unchanged when times == times_new\"\n\nprint(f\"__CHECK__ resample_melody_series {res_freqs.shape[0]}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_resample_melody_series/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ resample_melody_series 10\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 25.2,
+      "llm_calls": 1,
+      "input_tokens": 2579,
+      "output_tokens": 2986,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2579,
+          "output_tokens": 2986
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 4881,
+      "document_sha256": "c2003b436088e4bded6139af9462459c2cd10b3885a02bff8eb60f3e7ba7ee40",
+      "source": "source/mir_eval/melody.py:220",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

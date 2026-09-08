@@ -1,0 +1,141 @@
+{
+  "summary": {
+    "repository": "tslearn",
+    "cell": "A1",
+    "api": "fix_force_all_finite_warning",
+    "outcome": "Setup/import blocked",
+    "test_execution": "Setup/import failed; target execution not established",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 345.8,
+    "retained_checkpoint_events": 2,
+    "retained_attempt_total_s": 945.4,
+    "retained_504_events": 1,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "error": "missing module/import: cannot import name 'fix_force_all_finite_warning' from 'tslearn.utils' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/utils/__ini",
+    "details": "api_details/4d0975c23025ffe7a1b4.json"
+  },
+  "native_row": {
+    "name": "fix_force_all_finite_warning",
+    "doc_source": "original",
+    "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+    "execution_evidence": {
+      "status": "fail",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "fail",
+          "category": "infra",
+          "error": "missing module/import: cannot import name 'fix_force_all_finite_warning' from 'tslearn.utils' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tsl"
+        }
+      ],
+      "error_category": "infra",
+      "error": "missing module/import: cannot import name 'fix_force_all_finite_warning' from 'tslearn.utils' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/utils/__ini",
+      "code": "from tslearn.utils import fix_force_all_finite_warning\n\n# The function is a compatibility helper for scikit-learn's force_all_finite parameter,\n# which transitioned from accepting False to \"allow-nan\" in version 1.3.\ntry:\n    res = fix_force_all_finite_warning()\nexcept TypeError:\n    # Fallback in case it requires an explicit argument in some versions\n    res = fix_force_all_finite_warning(True)\n\n# Verify it returns one of the expected valid values for the force_all_finite parameter\nassert res in (False, \"allow-nan\", True), f\"Unexpected return value for force_all_finite: {res}\"\n\nprint(f\"__CHECK__ fix_force_all_finite_warning {res}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_fix_force_all_finite_warning/api_test.py",
+      "exit_code": 1,
+      "stdout_tail": "",
+      "stderr_tail": "__RUN_ERR__ ImportError: cannot import name 'fix_force_all_finite_warning' from 'tslearn.utils' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/utils/__init__.py)\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_fix_force_all_finite_warning/api_test.py\", line 56, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_fix_force_all_finite_warning/api_test.py\", line 51, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_fix_force_all_finite_warning/api_test.py\", line 34, in api_test\n    from tslearn.utils import fix_force_all_finite_warning\nImportError: cannot import name 'fix_force_all_finite_warning' from 'tslearn.utils' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/utils/__init__.py)\n"
+    },
+    "status": "fail",
+    "attempts": 1,
+    "pass_round": null,
+    "wall_s": 345.8,
+    "llm_calls": 1,
+    "input_tokens": 1371,
+    "output_tokens": 3617,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 1371,
+        "output_tokens": 3617
+      }
+    },
+    "error_category": "infra",
+    "error": "missing module/import: cannot import name 'fix_force_all_finite_warning' from 'tslearn.utils' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/utils/__ini",
+    "locus": "",
+    "doc_chars": 110,
+    "document_sha256": "6fad4e3636012ab089e8438f51ef4d50243c5881875f09bb473dc69758925a20",
+    "source": "tslearn/tslearn/utils/utils.py:24",
+    "source_other_sites": 0,
+    "codebase_frames": null
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/comprehension_progress.jsonl",
+  "source_sha256": "40d5a3d667362bb5fb7ea0d8a6fa92db5ad90c7e1aa3eb8ccc679fc6ed1cbff4",
+  "checkpoint_events": [
+    {
+      "name": "fix_force_all_finite_warning",
+      "doc_source": "original",
+      "experiment_fingerprint": "964a2ec0df73c3b53c3966c9213dedb1a12bf7e39ad1b8d7d1ddd561ba53212b",
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 599.6,
+      "llm_calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "by_model": {},
+      "error_category": "llm-error",
+      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "locus": "",
+      "doc_chars": 110,
+      "document_sha256": "6fad4e3636012ab089e8438f51ef4d50243c5881875f09bb473dc69758925a20",
+      "source": "tslearn/tslearn/utils/utils.py:24",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    },
+    {
+      "name": "fix_force_all_finite_warning",
+      "doc_source": "original",
+      "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "infra",
+            "error": "missing module/import: cannot import name 'fix_force_all_finite_warning' from 'tslearn.utils' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tsl"
+          }
+        ],
+        "error_category": "infra",
+        "error": "missing module/import: cannot import name 'fix_force_all_finite_warning' from 'tslearn.utils' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/utils/__ini",
+        "code": "from tslearn.utils import fix_force_all_finite_warning\n\n# The function is a compatibility helper for scikit-learn's force_all_finite parameter,\n# which transitioned from accepting False to \"allow-nan\" in version 1.3.\ntry:\n    res = fix_force_all_finite_warning()\nexcept TypeError:\n    # Fallback in case it requires an explicit argument in some versions\n    res = fix_force_all_finite_warning(True)\n\n# Verify it returns one of the expected valid values for the force_all_finite parameter\nassert res in (False, \"allow-nan\", True), f\"Unexpected return value for force_all_finite: {res}\"\n\nprint(f\"__CHECK__ fix_force_all_finite_warning {res}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_fix_force_all_finite_warning/api_test.py",
+        "exit_code": 1,
+        "stdout_tail": "",
+        "stderr_tail": "__RUN_ERR__ ImportError: cannot import name 'fix_force_all_finite_warning' from 'tslearn.utils' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/utils/__init__.py)\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_fix_force_all_finite_warning/api_test.py\", line 56, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_fix_force_all_finite_warning/api_test.py\", line 51, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_fix_force_all_finite_warning/api_test.py\", line 34, in api_test\n    from tslearn.utils import fix_force_all_finite_warning\nImportError: cannot import name 'fix_force_all_finite_warning' from 'tslearn.utils' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/utils/__init__.py)\n"
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 345.8,
+      "llm_calls": 1,
+      "input_tokens": 1371,
+      "output_tokens": 3617,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1371,
+          "output_tokens": 3617
+        }
+      },
+      "error_category": "infra",
+      "error": "missing module/import: cannot import name 'fix_force_all_finite_warning' from 'tslearn.utils' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/utils/__ini",
+      "locus": "",
+      "doc_chars": 110,
+      "document_sha256": "6fad4e3636012ab089e8438f51ef4d50243c5881875f09bb473dc69758925a20",
+      "source": "tslearn/tslearn/utils/utils.py:24",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

@@ -1,0 +1,112 @@
+{
+  "summary": {
+    "repository": "Thumbnailator",
+    "cell": "B2",
+    "api": "ProgressiveBilinearResizer",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 39.2,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 39.2,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "error": null,
+    "details": "api_details/893e0e0de9e53f1459e0.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 39.2,
+    "llm_calls": 1,
+    "input_tokens": 2124,
+    "output_tokens": 3592,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2124,
+        "output_tokens": 3592
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 3971,
+    "document_sha256": "94ffdb7edfeadbd7abc5acaf82f87fbc474389fe37a12f4090cecefe3d401bf2",
+    "source": "source/src/main/java/net/coobird/thumbnailator/resizers/ProgressiveBilinearResizer.java:70",
+    "source_other_sites": 1,
+    "codebase_frames": null,
+    "evidence_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced",
+    "name": "ProgressiveBilinearResizer",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "java.util.Map<java.awt.RenderingHints.Key, Object> hints = new java.util.HashMap<>();\nhints.put(java.awt.RenderingHints.KEY_RENDERING, java.awt.RenderingHints.VALUE_RENDER_QUALITY);\nhints.put(java.awt.RenderingHints.KEY_ANTIALIASING, java.awt.RenderingHints.VALUE_ANTIALIAS_ON);\n\nnet.coobird.thumbnailator.resizers.ProgressiveBilinearResizer resizer = \n    new net.coobird.thumbnailator.resizers.ProgressiveBilinearResizer(hints);\n\nint targetWidth = Math.max(1, sourceImage.getWidth() / 2);\nint targetHeight = Math.max(1, sourceImage.getHeight() / 2);\njava.awt.image.BufferedImage dest = new java.awt.image.BufferedImage(\n    targetWidth, targetHeight, java.awt.image.BufferedImage.TYPE_INT_ARGB);\n\n// Fill destination with a known color to verify it gets overwritten\njava.awt.Graphics2D g = dest.createGraphics();\ng.setColor(java.awt.Color.MAGENTA);\ng.fillRect(0, 0, targetWidth, targetHeight);\ng.dispose();\n\nint originalPixel = dest.getRGB(targetWidth / 2, targetHeight / 2);\n\nresizer.resize(sourceImage, dest);\n\nint newPixel = dest.getRGB(targetWidth / 2, targetHeight / 2);\n\nassert originalPixel != newPixel : \"Destination image was not modified by the resizer\";\n\nSystem.out.println(\"__CHECK__ ProgressiveBilinearResizer \" + targetWidth + \"x\" + targetHeight + \" pixel:\" + newPixel);",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_ProgressiveBilinearResizer/ApiTest.java",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ ProgressiveBilinearResizer 16x12 pixel:-256\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/docs/eval/B2/comprehension.json",
+  "source_sha256": "edf6f845e49a5b57436a68b7845e73ce578cec0a033cf20a196eae38705feb3a",
+  "checkpoint_events": [
+    {
+      "name": "ProgressiveBilinearResizer",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "java.util.Map<java.awt.RenderingHints.Key, Object> hints = new java.util.HashMap<>();\nhints.put(java.awt.RenderingHints.KEY_RENDERING, java.awt.RenderingHints.VALUE_RENDER_QUALITY);\nhints.put(java.awt.RenderingHints.KEY_ANTIALIASING, java.awt.RenderingHints.VALUE_ANTIALIAS_ON);\n\nnet.coobird.thumbnailator.resizers.ProgressiveBilinearResizer resizer = \n    new net.coobird.thumbnailator.resizers.ProgressiveBilinearResizer(hints);\n\nint targetWidth = Math.max(1, sourceImage.getWidth() / 2);\nint targetHeight = Math.max(1, sourceImage.getHeight() / 2);\njava.awt.image.BufferedImage dest = new java.awt.image.BufferedImage(\n    targetWidth, targetHeight, java.awt.image.BufferedImage.TYPE_INT_ARGB);\n\n// Fill destination with a known color to verify it gets overwritten\njava.awt.Graphics2D g = dest.createGraphics();\ng.setColor(java.awt.Color.MAGENTA);\ng.fillRect(0, 0, targetWidth, targetHeight);\ng.dispose();\n\nint originalPixel = dest.getRGB(targetWidth / 2, targetHeight / 2);\n\nresizer.resize(sourceImage, dest);\n\nint newPixel = dest.getRGB(targetWidth / 2, targetHeight / 2);\n\nassert originalPixel != newPixel : \"Destination image was not modified by the resizer\";\n\nSystem.out.println(\"__CHECK__ ProgressiveBilinearResizer \" + targetWidth + \"x\" + targetHeight + \" pixel:\" + newPixel);",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_ProgressiveBilinearResizer/ApiTest.java",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ ProgressiveBilinearResizer 16x12 pixel:-256\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 39.2,
+      "llm_calls": 1,
+      "input_tokens": 2124,
+      "output_tokens": 3592,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2124,
+          "output_tokens": 3592
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3971,
+      "document_sha256": "94ffdb7edfeadbd7abc5acaf82f87fbc474389fe37a12f4090cecefe3d401bf2",
+      "source": "source/src/main/java/net/coobird/thumbnailator/resizers/ProgressiveBilinearResizer.java:70",
+      "source_other_sites": 1,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

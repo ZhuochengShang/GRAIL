@@ -1,0 +1,97 @@
+{
+  "summary": {
+    "repository": "Thumbnailator",
+    "cell": "A2",
+    "api": "getAlpha",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 9.7,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 9.7,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "error": null,
+    "details": "api_details/b82be6640616fb15ee88.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 9.7,
+    "llm_calls": 1,
+    "input_tokens": 1714,
+    "output_tokens": 945,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 1714,
+        "output_tokens": 945
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 2037,
+    "document_sha256": "3ec4bc70f0a74eb691ab8af34e33e5864bbc1770bea948671a4a8b08790e1b29",
+    "source": "source/src/main/java/net/coobird/thumbnailator/filters/Transparency.java:113",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "name": "getAlpha",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "net.coobird.thumbnailator.filters.Transparency transparencyFilter = new net.coobird.thumbnailator.filters.Transparency(0.75f);\nfloat alpha = transparencyFilter.getAlpha();\nassert Float.compare(alpha, 0.75f) == 0 : \"Expected alpha to be 0.75f, but was \" + alpha;\nSystem.out.println(\"__CHECK__ getAlpha \" + alpha);",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/.aideal_exec/A2/run_getAlpha/ApiTest.java",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ getAlpha 0.75\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "d0a4b20f3e5d3ea0caf7b1501a9bf2fb4d4f11ac7d844517d7b5d67874427464"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/docs/eval/A2/comprehension.json",
+  "source_sha256": "b6aa0c714a7c8a076f415ed0dae0e6b3126ad774bc94aab394ec1036974003d7",
+  "checkpoint_events": [
+    {
+      "name": "getAlpha",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "d0a4b20f3e5d3ea0caf7b1501a9bf2fb4d4f11ac7d844517d7b5d67874427464",
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 9.7,
+      "llm_calls": 1,
+      "input_tokens": 1714,
+      "output_tokens": 945,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1714,
+          "output_tokens": 945
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 2037,
+      "document_sha256": "3ec4bc70f0a74eb691ab8af34e33e5864bbc1770bea948671a4a8b08790e1b29",
+      "source": "source/src/main/java/net/coobird/thumbnailator/filters/Transparency.java:113",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

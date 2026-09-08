@@ -1,0 +1,97 @@
+{
+  "summary": {
+    "repository": "Thumbnailator",
+    "cell": "A2",
+    "api": "Watermark",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 54.8,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 54.8,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "error": null,
+    "details": "api_details/00c187891470e0797f0e.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 54.8,
+    "llm_calls": 1,
+    "input_tokens": 2303,
+    "output_tokens": 8374,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2303,
+        "output_tokens": 8374
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 4175,
+    "document_sha256": "ed3fea64679faa3070a6cc5dd3e195a87089e6036926236ab12c2cfbf3de52cc",
+    "source": "source/src/main/java/net/coobird/thumbnailator/filters/Watermark.java:76",
+    "source_other_sites": 1,
+    "codebase_frames": null,
+    "name": "Watermark",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "int expectedColor = 0xFF123456;\nint watermarkSize = 10;\nint insets = 5;\n\njava.awt.image.BufferedImage watermarkImg = new java.awt.image.BufferedImage(\n    watermarkSize, watermarkSize, java.awt.image.BufferedImage.TYPE_INT_ARGB);\njava.awt.Graphics2D g2d = watermarkImg.createGraphics();\ng2d.setColor(new java.awt.Color(expectedColor, true));\ng2d.fillRect(0, 0, watermarkSize, watermarkSize);\ng2d.dispose();\n\nnet.coobird.thumbnailator.filters.Watermark watermark = new net.coobird.thumbnailator.filters.Watermark(\n    net.coobird.thumbnailator.geometry.Positions.BOTTOM_RIGHT, \n    watermarkImg, \n    1.0f, \n    insets\n);\n\njava.awt.image.BufferedImage result = net.coobird.thumbnailator.Thumbnails.of(sourceImage)\n    .scale(1.0)\n    .addFilter(watermark)\n    .asBufferedImage();\n\nint w = result.getWidth();\nint h = result.getHeight();\nint checkX = Math.max(0, w - insets - (watermarkSize / 2));\nint checkY = Math.max(0, h - insets - (watermarkSize / 2));\n\nint rgb = result.getRGB(checkX, checkY);\nint rDiff = Math.abs(((rgb >> 16) & 0xFF) - ((expectedColor >> 16) & 0xFF));\nint gDiff = Math.abs(((rgb >> 8) & 0xFF) - ((expectedColor >> 8) & 0xFF));\nint bDiff = Math.abs((rgb & 0xFF) - (expectedColor & 0xFF));\n\nassert rDiff < 15 && gDiff < 15 && bDiff < 15 : \"Watermark color mismatch: \" + Integer.toHexString(rgb);\nSystem.out.println(\"__CHECK__ Watermark \" + Integer.toHexString(rgb));",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/.aideal_exec/A2/run_Watermark/ApiTest.java",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ Watermark ff123456\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "d0a4b20f3e5d3ea0caf7b1501a9bf2fb4d4f11ac7d844517d7b5d67874427464"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/docs/eval/A2/comprehension.json",
+  "source_sha256": "b6aa0c714a7c8a076f415ed0dae0e6b3126ad774bc94aab394ec1036974003d7",
+  "checkpoint_events": [
+    {
+      "name": "Watermark",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "d0a4b20f3e5d3ea0caf7b1501a9bf2fb4d4f11ac7d844517d7b5d67874427464",
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 54.8,
+      "llm_calls": 1,
+      "input_tokens": 2303,
+      "output_tokens": 8374,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2303,
+          "output_tokens": 8374
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 4175,
+      "document_sha256": "ed3fea64679faa3070a6cc5dd3e195a87089e6036926236ab12c2cfbf3de52cc",
+      "source": "source/src/main/java/net/coobird/thumbnailator/filters/Watermark.java:76",
+      "source_other_sites": 1,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

@@ -1,6 +1,6 @@
 # AIDEAL: three separate stages
 
-2026-09-08T13:39:44.071381-07:00
+2026-09-08T13:54:44.786731-07:00
 
 A1/A2 are zero-fix controls. S_A2 repairs snippets from A2 failures. Independent README repair produces fresh zero-fix B2. S_B2 repairs only eligible B2 failures.
 
@@ -10,12 +10,12 @@ A1/A2 are zero-fix controls. S_A2 repairs snippets from A2 failures. Independent
 | mir_eval | A2 | native complete | 135 | 148 |
 | mir_eval | B2 | native complete | 137 | 148 |
 | mir_eval | S_A2 | {'recovered_native': 13} | 13 | 13 |
-| mir_eval | S_B2 | {'recovered_native': 4, 'pending': 7} | 4 | 11 |
+| mir_eval | S_B2 | {'recovered_native': 8, 'pending': 3} | 8 | 11 |
 | thumbnailator | A1 | native partial | 129 | 149 |
 | thumbnailator | A2 | native complete | 127 | 149 |
 | thumbnailator | B2 | native complete | 139 | 149 |
-| thumbnailator | S_A2 | {'recovered_native': 19, 'provider_blocked': 1, 'stuck': 2} | 19 | 22 |
-| thumbnailator | S_B2 | {'recovered_native': 4, 'pending': 6} | 4 | 10 |
+| thumbnailator | S_A2 | {'recovered_native': 20, 'stuck': 2} | 20 | 22 |
+| thumbnailator | S_B2 | {'recovered_native': 7, 'stuck': 1, 'pending': 2} | 7 | 10 |
 | tslearn | A1 | native partial | 121 | 235 |
 | tslearn | A2 | native partial | 175 | 235 |
 | tslearn | B2 | pending native evidence | — | — |

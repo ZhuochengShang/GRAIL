@@ -1,0 +1,111 @@
+{
+  "summary": {
+    "repository": "mir_eval",
+    "cell": "B2",
+    "api": "sevenths",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 16.3,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 16.3,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "error": null,
+    "details": "api_details/3748771e4c5f05b521e2.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 16.3,
+    "llm_calls": 1,
+    "input_tokens": 2883,
+    "output_tokens": 1724,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2883,
+        "output_tokens": 1724
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 5739,
+    "document_sha256": "c264a87398ec15c5ce6f5dcf73bcc720e125d77f078a1fa60daf3220a0cb662c",
+    "source": "source/mir_eval/chord.py:1236",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "name": "sevenths",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "import mir_eval\nimport numpy as np\n\n# Adjust estimated intervals to reference boundaries\nest_intervals_adj, est_labels_adj = mir_eval.util.adjust_intervals(\n    est_intervals, est_labels, \n    ref_intervals.min(), ref_intervals.max(), \n    mir_eval.chord.NO_CHORD, mir_eval.chord.NO_CHORD\n)\n\n# Merge into a common time grid\nintervals, ref_labels_merged, est_labels_merged = mir_eval.util.merge_labeled_intervals(\n    ref_intervals, ref_labels, est_intervals_adj, est_labels_adj\n)\n\n# Compute sevenths comparisons\ncomparisons = mir_eval.chord.sevenths(ref_labels_merged, est_labels_merged)\n\n# Aggregate into a final weighted accuracy score\ndurations = mir_eval.util.intervals_to_durations(intervals)\nscore = mir_eval.chord.weighted_accuracy(comparisons, durations)\n\n# Verify the results\nassert isinstance(comparisons, np.ndarray), \"Comparisons should be a numpy array\"\nassert comparisons.shape == (len(ref_labels_merged),), \"Comparisons length must match merged labels\"\nassert np.all((comparisons == -1.0) | ((comparisons >= 0.0) & (comparisons <= 1.0))), \"Scores must be in [0.0, 1.0] or -1.0\"\nassert 0.0 <= score <= 1.0, \"Weighted accuracy score must be in [0.0, 1.0]\"\n\nprint(f\"__CHECK__ sevenths {score:.4f}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_sevenths/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ sevenths 0.9700\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/comprehension.json",
+  "source_sha256": "c25a74155511d59ffa5583bce3975fae3a254ce3e3bc65948dcfbd8f61d51736",
+  "checkpoint_events": [
+    {
+      "name": "sevenths",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import mir_eval\nimport numpy as np\n\n# Adjust estimated intervals to reference boundaries\nest_intervals_adj, est_labels_adj = mir_eval.util.adjust_intervals(\n    est_intervals, est_labels, \n    ref_intervals.min(), ref_intervals.max(), \n    mir_eval.chord.NO_CHORD, mir_eval.chord.NO_CHORD\n)\n\n# Merge into a common time grid\nintervals, ref_labels_merged, est_labels_merged = mir_eval.util.merge_labeled_intervals(\n    ref_intervals, ref_labels, est_intervals_adj, est_labels_adj\n)\n\n# Compute sevenths comparisons\ncomparisons = mir_eval.chord.sevenths(ref_labels_merged, est_labels_merged)\n\n# Aggregate into a final weighted accuracy score\ndurations = mir_eval.util.intervals_to_durations(intervals)\nscore = mir_eval.chord.weighted_accuracy(comparisons, durations)\n\n# Verify the results\nassert isinstance(comparisons, np.ndarray), \"Comparisons should be a numpy array\"\nassert comparisons.shape == (len(ref_labels_merged),), \"Comparisons length must match merged labels\"\nassert np.all((comparisons == -1.0) | ((comparisons >= 0.0) & (comparisons <= 1.0))), \"Scores must be in [0.0, 1.0] or -1.0\"\nassert 0.0 <= score <= 1.0, \"Weighted accuracy score must be in [0.0, 1.0]\"\n\nprint(f\"__CHECK__ sevenths {score:.4f}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_sevenths/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ sevenths 0.9700\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 16.3,
+      "llm_calls": 1,
+      "input_tokens": 2883,
+      "output_tokens": 1724,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2883,
+          "output_tokens": 1724
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 5739,
+      "document_sha256": "c264a87398ec15c5ce6f5dcf73bcc720e125d77f078a1fa60daf3220a0cb662c",
+      "source": "source/mir_eval/chord.py:1236",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

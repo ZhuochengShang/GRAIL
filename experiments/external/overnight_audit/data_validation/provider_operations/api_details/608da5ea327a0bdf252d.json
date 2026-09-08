@@ -1,0 +1,133 @@
+{
+  "summary": {
+    "repository": "tslearn",
+    "cell": "A1",
+    "api": "time_series_to_str",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 16.0,
+    "retained_checkpoint_events": 2,
+    "retained_attempt_total_s": 615.6,
+    "retained_504_events": 1,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "error": null,
+    "details": "api_details/608da5ea327a0bdf252d.json"
+  },
+  "native_row": {
+    "name": "time_series_to_str",
+    "doc_source": "original",
+    "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "from tslearn.utils import time_series_to_str\n\n# Convert a single time series (from the balanced dataset) to its string representation\nts = X[0]\ns_str = time_series_to_str(ts)\n\n# Verify the output is a string and contains formatted data\nassert isinstance(s_str, str), \"Output must be a string\"\nassert len(s_str) > 0, \"String representation should not be empty\"\n\n# A time series of shape (40, 1) should produce at least 40 tokens when split by whitespace\ntokens = s_str.split()\nassert len(tokens) >= ts.shape[0], f\"Expected at least {ts.shape[0]} tokens, got {len(tokens)}\"\n\nprint(f\"__CHECK__ time_series_to_str {len(tokens)}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_time_series_to_str/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ time_series_to_str 40\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 16.0,
+    "llm_calls": 1,
+    "input_tokens": 1355,
+    "output_tokens": 1534,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 1355,
+        "output_tokens": 1534
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 100,
+    "document_sha256": "cca725b8c5d8dc177dde66a0d42446bfdaef1b7a43b5e8594c4c615060682e31",
+    "source": "tslearn/tslearn/utils/utils.py:289",
+    "source_other_sites": 0,
+    "codebase_frames": null
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/comprehension_progress.jsonl",
+  "source_sha256": "40d5a3d667362bb5fb7ea0d8a6fa92db5ad90c7e1aa3eb8ccc679fc6ed1cbff4",
+  "checkpoint_events": [
+    {
+      "name": "time_series_to_str",
+      "doc_source": "original",
+      "experiment_fingerprint": "964a2ec0df73c3b53c3966c9213dedb1a12bf7e39ad1b8d7d1ddd561ba53212b",
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 599.6,
+      "llm_calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "by_model": {},
+      "error_category": "llm-error",
+      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "locus": "",
+      "doc_chars": 100,
+      "document_sha256": "cca725b8c5d8dc177dde66a0d42446bfdaef1b7a43b5e8594c4c615060682e31",
+      "source": "tslearn/tslearn/utils/utils.py:289",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    },
+    {
+      "name": "time_series_to_str",
+      "doc_source": "original",
+      "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "from tslearn.utils import time_series_to_str\n\n# Convert a single time series (from the balanced dataset) to its string representation\nts = X[0]\ns_str = time_series_to_str(ts)\n\n# Verify the output is a string and contains formatted data\nassert isinstance(s_str, str), \"Output must be a string\"\nassert len(s_str) > 0, \"String representation should not be empty\"\n\n# A time series of shape (40, 1) should produce at least 40 tokens when split by whitespace\ntokens = s_str.split()\nassert len(tokens) >= ts.shape[0], f\"Expected at least {ts.shape[0]} tokens, got {len(tokens)}\"\n\nprint(f\"__CHECK__ time_series_to_str {len(tokens)}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_time_series_to_str/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ time_series_to_str 40\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 16.0,
+      "llm_calls": 1,
+      "input_tokens": 1355,
+      "output_tokens": 1534,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1355,
+          "output_tokens": 1534
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 100,
+      "document_sha256": "cca725b8c5d8dc177dde66a0d42446bfdaef1b7a43b5e8594c4c615060682e31",
+      "source": "tslearn/tslearn/utils/utils.py:289",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

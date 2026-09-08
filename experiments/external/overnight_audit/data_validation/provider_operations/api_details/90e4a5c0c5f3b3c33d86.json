@@ -1,0 +1,97 @@
+{
+  "summary": {
+    "repository": "Thumbnailator",
+    "cell": "A2",
+    "api": "fromFiles",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 32.0,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 32.0,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "error": null,
+    "details": "api_details/90e4a5c0c5f3b3c33d86.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 32.0,
+    "llm_calls": 1,
+    "input_tokens": 2103,
+    "output_tokens": 4014,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2103,
+        "output_tokens": 4014
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 3714,
+    "document_sha256": "2853a7f9a8bea2fe9eb7026dfc8b0ad199f6cec7cfd12764b9e8ec89bd1a5ee5",
+    "source": "source/src/main/java/net/coobird/thumbnailator/Thumbnails.java:309",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "name": "fromFiles",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "java.io.File outDir = new java.io.File(output_dir);\nif (!outDir.exists()) {\n    outDir.mkdirs();\n}\n\n// Copy fixtures to the output directory to avoid polluting the source directory\njava.io.File f1 = new java.io.File(outDir, \"fromFiles_test1.png\");\njava.io.File f2 = new java.io.File(outDir, \"fromFiles_test2.jpg\");\njava.nio.file.Files.copy(new java.io.File(grid_png).toPath(), f1.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);\njava.nio.file.Files.copy(new java.io.File(grid_jpeg).toPath(), f2.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);\n\njava.util.List<java.io.File> sources = java.util.Arrays.asList(f1, f2);\n\n// Initialize the pipeline from the collection of files\njava.util.List<java.io.File> results = net.coobird.thumbnailator.Thumbnails.fromFiles(sources)\n        .size(42, 42)\n        .asFiles(net.coobird.thumbnailator.name.Rename.PREFIX_DOT_THUMBNAIL);\n\nassert results != null && results.size() == 2 : \"Expected exactly 2 generated thumbnail files\";\nassert results.get(0).exists() : \"First thumbnail file must exist on disk\";\nassert results.get(1).exists() : \"Second thumbnail file must exist on disk\";\nassert results.get(0).getName().startsWith(\"thumbnail.\") : \"First thumbnail should have the correct rename prefix\";\nassert results.get(1).getName().startsWith(\"thumbnail.\") : \"Second thumbnail should have the correct rename prefix\";\n\njava.awt.image.BufferedImage thumb1 = javax.imageio.ImageIO.read(results.get(0));\nassert thumb1 != null : \"Thumbnail 1 should be readable as an image\";\nassert thumb1.getWidth() <= 42 && thumb1.getHeight() <= 42 : \"Thumbnail dimensions should be constrained to 42x42\";\n\nSystem.out.println(\"__CHECK__ fromFiles \" + results.size() + \" files generated, first is \" + results.get(0).getName());",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/.aideal_exec/A2/run_fromFiles/ApiTest.java",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ fromFiles 2 files generated, first is thumbnail.fromFiles_test1.png\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "d0a4b20f3e5d3ea0caf7b1501a9bf2fb4d4f11ac7d844517d7b5d67874427464"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/docs/eval/A2/comprehension.json",
+  "source_sha256": "b6aa0c714a7c8a076f415ed0dae0e6b3126ad774bc94aab394ec1036974003d7",
+  "checkpoint_events": [
+    {
+      "name": "fromFiles",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "d0a4b20f3e5d3ea0caf7b1501a9bf2fb4d4f11ac7d844517d7b5d67874427464",
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 32.0,
+      "llm_calls": 1,
+      "input_tokens": 2103,
+      "output_tokens": 4014,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2103,
+          "output_tokens": 4014
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3714,
+      "document_sha256": "2853a7f9a8bea2fe9eb7026dfc8b0ad199f6cec7cfd12764b9e8ec89bd1a5ee5",
+      "source": "source/src/main/java/net/coobird/thumbnailator/Thumbnails.java:309",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

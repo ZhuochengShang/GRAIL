@@ -1,0 +1,101 @@
+{
+  "summary": {
+    "repository": "Thumbnailator",
+    "cell": "A2",
+    "api": "getExifOrientation",
+    "outcome": "Execution failed",
+    "test_execution": "Test process returned exit code 1; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 19.4,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 19.4,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "error": "NullPointerException: null",
+    "details": "api_details/2f44063bbec84b5e109a.json"
+  },
+  "native_row": {
+    "status": "fail",
+    "attempts": 1,
+    "pass_round": null,
+    "wall_s": 19.4,
+    "llm_calls": 1,
+    "input_tokens": 2168,
+    "output_tokens": 2266,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2168,
+        "output_tokens": 2266
+      }
+    },
+    "error_category": "runtime",
+    "error": "NullPointerException: null",
+    "locus": "ApiTest.java:64",
+    "doc_chars": 4039,
+    "document_sha256": "5497d2e076f4f2ed6c7c25d823060f37002ebfc69ad9b8a8015770faf3ba4622",
+    "source": "source/src/main/java/net/coobird/thumbnailator/util/exif/ExifUtils.java:69",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "name": "getExifOrientation",
+    "execution_evidence": {
+      "status": "fail",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "fail",
+          "category": "runtime",
+          "error": "NullPointerException: null"
+        }
+      ],
+      "error_category": "runtime",
+      "error": "NullPointerException: null",
+      "code": "java.util.Iterator<javax.imageio.ImageReader> readers = javax.imageio.ImageIO.getImageReadersByFormatName(\"jpg\");\nassert readers.hasNext() : \"No JPEG reader found\";\njavax.imageio.ImageReader reader = readers.next();\n\nnet.coobird.thumbnailator.util.exif.Orientation orientation = null;\ntry (javax.imageio.stream.ImageInputStream iis = javax.imageio.ImageIO.createImageInputStream(new java.io.File(exif_jpeg))) {\n    reader.setInput(iis);\n    orientation = net.coobird.thumbnailator.util.exif.ExifUtils.getExifOrientation(reader, 0);\n} finally {\n    reader.dispose();\n}\n\nassert orientation != null : \"Expected EXIF orientation to be present in exif_jpeg\";\nSystem.out.println(\"__CHECK__ getExifOrientation \" + orientation.name());",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/.aideal_exec/A2/run_getExifOrientation/ApiTest.java",
+      "exit_code": 1,
+      "stdout_tail": "",
+      "stderr_tail": "__RUN_ERR__ NullPointerException: null\njava.lang.NullPointerException\n\tat ApiTest.main(ApiTest.java:64)\n"
+    },
+    "experiment_fingerprint": "d0a4b20f3e5d3ea0caf7b1501a9bf2fb4d4f11ac7d844517d7b5d67874427464"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/docs/eval/A2/comprehension.json",
+  "source_sha256": "b6aa0c714a7c8a076f415ed0dae0e6b3126ad774bc94aab394ec1036974003d7",
+  "checkpoint_events": [
+    {
+      "name": "getExifOrientation",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "d0a4b20f3e5d3ea0caf7b1501a9bf2fb4d4f11ac7d844517d7b5d67874427464",
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 19.4,
+      "llm_calls": 1,
+      "input_tokens": 2168,
+      "output_tokens": 2266,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2168,
+          "output_tokens": 2266
+        }
+      },
+      "error_category": "runtime",
+      "error": "NullPointerException: null",
+      "locus": "ApiTest.java:64",
+      "doc_chars": 4039,
+      "document_sha256": "5497d2e076f4f2ed6c7c25d823060f37002ebfc69ad9b8a8015770faf3ba4622",
+      "source": "source/src/main/java/net/coobird/thumbnailator/util/exif/ExifUtils.java:69",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

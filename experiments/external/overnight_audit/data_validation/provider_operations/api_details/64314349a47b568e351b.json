@@ -1,0 +1,112 @@
+{
+  "summary": {
+    "repository": "Thumbnailator",
+    "cell": "B2",
+    "api": "BicubicResizer",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 22.7,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 22.7,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "error": null,
+    "details": "api_details/64314349a47b568e351b.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 22.7,
+    "llm_calls": 1,
+    "input_tokens": 2008,
+    "output_tokens": 2648,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2008,
+        "output_tokens": 2648
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 3297,
+    "document_sha256": "dc861d83f3db91f706e6a9f05b4c02c740618175dfb766ec181e73a67f0da50b",
+    "source": "source/src/main/java/net/coobird/thumbnailator/resizers/BicubicResizer.java:51",
+    "source_other_sites": 1,
+    "codebase_frames": null,
+    "evidence_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced",
+    "name": "BicubicResizer",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "java.awt.image.BufferedImage dest = new java.awt.image.BufferedImage(10, 10, java.awt.image.BufferedImage.TYPE_INT_ARGB);\njava.awt.Graphics2D g = dest.createGraphics();\ng.setColor(new java.awt.Color(123, 45, 67, 255));\ng.fillRect(0, 0, 10, 10);\ng.dispose();\n\nint originalRgb = dest.getRGB(5, 5);\n\njava.util.Map<java.awt.RenderingHints.Key, Object> hints = new java.util.HashMap<>();\nhints.put(java.awt.RenderingHints.KEY_ANTIALIASING, java.awt.RenderingHints.VALUE_ANTIALIAS_ON);\nhints.put(java.awt.RenderingHints.KEY_RENDERING, java.awt.RenderingHints.VALUE_RENDER_QUALITY);\nhints.put(java.awt.RenderingHints.KEY_INTERPOLATION, java.awt.RenderingHints.VALUE_INTERPOLATION_BICUBIC);\n\nnet.coobird.thumbnailator.resizers.BicubicResizer resizer = new net.coobird.thumbnailator.resizers.BicubicResizer(hints);\nresizer.resize(sourceImage, dest);\n\nint newRgb = dest.getRGB(5, 5);\nassert originalRgb != newRgb : \"Destination image should be modified by the resizer\";\n\nSystem.out.println(\"__CHECK__ BicubicResizer modified pixel from \" + originalRgb + \" to \" + newRgb);",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_BicubicResizer/ApiTest.java",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ BicubicResizer modified pixel from -8704701 to -256\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/docs/eval/B2/comprehension.json",
+  "source_sha256": "edf6f845e49a5b57436a68b7845e73ce578cec0a033cf20a196eae38705feb3a",
+  "checkpoint_events": [
+    {
+      "name": "BicubicResizer",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "java.awt.image.BufferedImage dest = new java.awt.image.BufferedImage(10, 10, java.awt.image.BufferedImage.TYPE_INT_ARGB);\njava.awt.Graphics2D g = dest.createGraphics();\ng.setColor(new java.awt.Color(123, 45, 67, 255));\ng.fillRect(0, 0, 10, 10);\ng.dispose();\n\nint originalRgb = dest.getRGB(5, 5);\n\njava.util.Map<java.awt.RenderingHints.Key, Object> hints = new java.util.HashMap<>();\nhints.put(java.awt.RenderingHints.KEY_ANTIALIASING, java.awt.RenderingHints.VALUE_ANTIALIAS_ON);\nhints.put(java.awt.RenderingHints.KEY_RENDERING, java.awt.RenderingHints.VALUE_RENDER_QUALITY);\nhints.put(java.awt.RenderingHints.KEY_INTERPOLATION, java.awt.RenderingHints.VALUE_INTERPOLATION_BICUBIC);\n\nnet.coobird.thumbnailator.resizers.BicubicResizer resizer = new net.coobird.thumbnailator.resizers.BicubicResizer(hints);\nresizer.resize(sourceImage, dest);\n\nint newRgb = dest.getRGB(5, 5);\nassert originalRgb != newRgb : \"Destination image should be modified by the resizer\";\n\nSystem.out.println(\"__CHECK__ BicubicResizer modified pixel from \" + originalRgb + \" to \" + newRgb);",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_BicubicResizer/ApiTest.java",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ BicubicResizer modified pixel from -8704701 to -256\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 22.7,
+      "llm_calls": 1,
+      "input_tokens": 2008,
+      "output_tokens": 2648,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2008,
+          "output_tokens": 2648
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3297,
+      "document_sha256": "dc861d83f3db91f706e6a9f05b4c02c740618175dfb766ec181e73a67f0da50b",
+      "source": "source/src/main/java/net/coobird/thumbnailator/resizers/BicubicResizer.java:51",
+      "source_other_sites": 1,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

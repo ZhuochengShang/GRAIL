@@ -1,0 +1,111 @@
+{
+  "summary": {
+    "repository": "mir_eval",
+    "cell": "B2",
+    "api": "scale_degree_to_bitmap",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 13.9,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 13.9,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "error": null,
+    "details": "api_details/014be210bb8567aaf49c.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 13.9,
+    "llm_calls": 1,
+    "input_tokens": 2344,
+    "output_tokens": 1441,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2344,
+        "output_tokens": 1441
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 3826,
+    "document_sha256": "f23d5f8d601dfa86079e45f3427059529ca61532cc34f5f2b36b5e03bd0a7a39",
+    "source": "source/mir_eval/chord.py:211",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "name": "scale_degree_to_bitmap",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "import mir_eval\nimport numpy as np\n\nbitmap = mir_eval.chord.scale_degree_to_bitmap('#5', modulo=True, length=12)\n\nassert isinstance(bitmap, np.ndarray), \"Output must be a numpy array\"\nassert bitmap.shape == (12,), \"Output length must match the length parameter\"\nassert bitmap[8] == 1, \"The augmented 5th should be at index 8\"\nassert np.sum(np.abs(bitmap)) == 1, \"Only one bit should be set for a single scale degree\"\n\nprint(f\"__CHECK__ scale_degree_to_bitmap {bitmap.tolist()}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_scale_degree_to_bitmap/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ scale_degree_to_bitmap [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0]\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/comprehension.json",
+  "source_sha256": "c25a74155511d59ffa5583bce3975fae3a254ce3e3bc65948dcfbd8f61d51736",
+  "checkpoint_events": [
+    {
+      "name": "scale_degree_to_bitmap",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import mir_eval\nimport numpy as np\n\nbitmap = mir_eval.chord.scale_degree_to_bitmap('#5', modulo=True, length=12)\n\nassert isinstance(bitmap, np.ndarray), \"Output must be a numpy array\"\nassert bitmap.shape == (12,), \"Output length must match the length parameter\"\nassert bitmap[8] == 1, \"The augmented 5th should be at index 8\"\nassert np.sum(np.abs(bitmap)) == 1, \"Only one bit should be set for a single scale degree\"\n\nprint(f\"__CHECK__ scale_degree_to_bitmap {bitmap.tolist()}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_scale_degree_to_bitmap/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ scale_degree_to_bitmap [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0]\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 13.9,
+      "llm_calls": 1,
+      "input_tokens": 2344,
+      "output_tokens": 1441,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2344,
+          "output_tokens": 1441
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3826,
+      "document_sha256": "f23d5f8d601dfa86079e45f3427059529ca61532cc34f5f2b36b5e03bd0a7a39",
+      "source": "source/mir_eval/chord.py:211",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

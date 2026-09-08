@@ -1,0 +1,141 @@
+{
+  "summary": {
+    "repository": "tslearn",
+    "cell": "A1",
+    "api": "is_array",
+    "outcome": "Execution failed",
+    "test_execution": "Test process returned exit code 1; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 29.0,
+    "retained_checkpoint_events": 2,
+    "retained_attempt_total_s": 628.4,
+    "retained_504_events": 1,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "error": "AttributeError: module 'tslearn.backend.numpy_backend' has no attribute 'is_array'",
+    "details": "api_details/3b2c3a8988631d5bbcb4.json"
+  },
+  "native_row": {
+    "name": "is_array",
+    "doc_source": "original",
+    "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+    "execution_evidence": {
+      "status": "fail",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "fail",
+          "category": "runtime",
+          "error": "AttributeError: module 'tslearn.backend.numpy_backend' has no attribute 'is_array'"
+        }
+      ],
+      "error_category": "runtime",
+      "error": "AttributeError: module 'tslearn.backend.numpy_backend' has no attribute 'is_array'",
+      "code": "from tslearn.backend import numpy_backend\n\n# X is a pre-loaded numpy array\nres_true = numpy_backend.is_array(X)\nres_false = numpy_backend.is_array([1, 2, 3])\n\nassert res_true is True, \"X should be recognized as an array by the numpy backend\"\nassert res_false is False, \"A standard Python list should not be recognized as an array by the numpy backend\"\n\nprint(f\"__CHECK__ is_array {res_true}, {res_false}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_is_array/api_test.py",
+      "exit_code": 1,
+      "stdout_tail": "",
+      "stderr_tail": "__RUN_ERR__ AttributeError: module 'tslearn.backend.numpy_backend' has no attribute 'is_array'\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_is_array/api_test.py\", line 52, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_is_array/api_test.py\", line 47, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_is_array/api_test.py\", line 37, in api_test\n    res_true = numpy_backend.is_array(X)\nAttributeError: module 'tslearn.backend.numpy_backend' has no attribute 'is_array'\n"
+    },
+    "status": "fail",
+    "attempts": 1,
+    "pass_round": null,
+    "wall_s": 29.0,
+    "llm_calls": 1,
+    "input_tokens": 1323,
+    "output_tokens": 2446,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 1323,
+        "output_tokens": 2446
+      }
+    },
+    "error_category": "runtime",
+    "error": "AttributeError: module 'tslearn.backend.numpy_backend' has no attribute 'is_array'",
+    "locus": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_is_array/api_test.py:37",
+    "doc_chars": 90,
+    "document_sha256": "5e22d7f8368d45e095138dd15f06ee46c9680aff00a54e257dfe708c0d0a5202",
+    "source": "tslearn/tslearn/backend/numpy_backend.py:102",
+    "source_other_sites": 0,
+    "codebase_frames": null
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/comprehension_progress.jsonl",
+  "source_sha256": "40d5a3d667362bb5fb7ea0d8a6fa92db5ad90c7e1aa3eb8ccc679fc6ed1cbff4",
+  "checkpoint_events": [
+    {
+      "name": "is_array",
+      "doc_source": "original",
+      "experiment_fingerprint": "964a2ec0df73c3b53c3966c9213dedb1a12bf7e39ad1b8d7d1ddd561ba53212b",
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 599.4,
+      "llm_calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "by_model": {},
+      "error_category": "llm-error",
+      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "locus": "",
+      "doc_chars": 90,
+      "document_sha256": "5e22d7f8368d45e095138dd15f06ee46c9680aff00a54e257dfe708c0d0a5202",
+      "source": "tslearn/tslearn/backend/numpy_backend.py:102",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    },
+    {
+      "name": "is_array",
+      "doc_source": "original",
+      "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "runtime",
+            "error": "AttributeError: module 'tslearn.backend.numpy_backend' has no attribute 'is_array'"
+          }
+        ],
+        "error_category": "runtime",
+        "error": "AttributeError: module 'tslearn.backend.numpy_backend' has no attribute 'is_array'",
+        "code": "from tslearn.backend import numpy_backend\n\n# X is a pre-loaded numpy array\nres_true = numpy_backend.is_array(X)\nres_false = numpy_backend.is_array([1, 2, 3])\n\nassert res_true is True, \"X should be recognized as an array by the numpy backend\"\nassert res_false is False, \"A standard Python list should not be recognized as an array by the numpy backend\"\n\nprint(f\"__CHECK__ is_array {res_true}, {res_false}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_is_array/api_test.py",
+        "exit_code": 1,
+        "stdout_tail": "",
+        "stderr_tail": "__RUN_ERR__ AttributeError: module 'tslearn.backend.numpy_backend' has no attribute 'is_array'\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_is_array/api_test.py\", line 52, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_is_array/api_test.py\", line 47, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_is_array/api_test.py\", line 37, in api_test\n    res_true = numpy_backend.is_array(X)\nAttributeError: module 'tslearn.backend.numpy_backend' has no attribute 'is_array'\n"
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 29.0,
+      "llm_calls": 1,
+      "input_tokens": 1323,
+      "output_tokens": 2446,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1323,
+          "output_tokens": 2446
+        }
+      },
+      "error_category": "runtime",
+      "error": "AttributeError: module 'tslearn.backend.numpy_backend' has no attribute 'is_array'",
+      "locus": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_is_array/api_test.py:37",
+      "doc_chars": 90,
+      "document_sha256": "5e22d7f8368d45e095138dd15f06ee46c9680aff00a54e257dfe708c0d0a5202",
+      "source": "tslearn/tslearn/backend/numpy_backend.py:102",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

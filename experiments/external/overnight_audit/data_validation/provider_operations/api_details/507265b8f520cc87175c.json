@@ -1,0 +1,111 @@
+{
+  "summary": {
+    "repository": "mir_eval",
+    "cell": "B2",
+    "api": "offset_precision_recall_f1",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 66.3,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 66.3,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "error": null,
+    "details": "api_details/507265b8f520cc87175c.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 66.3,
+    "llm_calls": 1,
+    "input_tokens": 3104,
+    "output_tokens": 6885,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 3104,
+        "output_tokens": 6885
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 6415,
+    "document_sha256": "cabf0d807ecf7cf350ed094eac58c88d6b1ab2d1bbbbc975acf86536240de586",
+    "source": "source/mir_eval/transcription.py:705",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "name": "offset_precision_recall_f1",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "import mir_eval\nimport numpy as np\n\n# 1. Execute on the provided in-scope arrays (slicing to ensure (n, 2) shape)\np_prov, r_prov, f_prov = mir_eval.transcription.offset_precision_recall_f1(\n    ref_intervals[:, :2], est_intervals[:, :2]\n)\n\n# 2. Execute on a deliberately small input for a deterministic correctness check\n# Note 1: offset 1.0, duration 1.0 -> tolerance max(0.05, 0.2*1.0) = 0.2\n# Note 2: offset 3.0, duration 1.0 -> tolerance max(0.05, 0.2*1.0) = 0.2\nref_data = np.array([[0.0, 1.0], [2.0, 3.0]])\n\n# Est Note 1: offset 1.05 -> diff 0.05 <= 0.2 (Match)\n# Est Note 2: offset 3.50 -> diff 0.50 > 0.2 (Mismatch)\nest_data = np.array([[0.1, 1.05], [2.1, 3.5]])\n\nprecision, recall, f_measure = mir_eval.transcription.offset_precision_recall_f1(\n    ref_data, est_data\n)\n\n# 3. Validate the deterministic property\nassert precision == 0.5, f\"Expected precision 0.5, got {precision}\"\nassert recall == 0.5, f\"Expected recall 0.5, got {recall}\"\nassert f_measure == 0.5, f\"Expected f_measure 0.5, got {f_measure}\"\n\nprint(f\"__CHECK__ offset_precision_recall_f1 {precision}, {recall}, {f_measure} (provided f1: {f_prov:.4f})\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_offset_precision_recall_f1/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ offset_precision_recall_f1 0.5, 0.5, 0.5 (provided f1: 1.0000)\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/comprehension.json",
+  "source_sha256": "c25a74155511d59ffa5583bce3975fae3a254ce3e3bc65948dcfbd8f61d51736",
+  "checkpoint_events": [
+    {
+      "name": "offset_precision_recall_f1",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import mir_eval\nimport numpy as np\n\n# 1. Execute on the provided in-scope arrays (slicing to ensure (n, 2) shape)\np_prov, r_prov, f_prov = mir_eval.transcription.offset_precision_recall_f1(\n    ref_intervals[:, :2], est_intervals[:, :2]\n)\n\n# 2. Execute on a deliberately small input for a deterministic correctness check\n# Note 1: offset 1.0, duration 1.0 -> tolerance max(0.05, 0.2*1.0) = 0.2\n# Note 2: offset 3.0, duration 1.0 -> tolerance max(0.05, 0.2*1.0) = 0.2\nref_data = np.array([[0.0, 1.0], [2.0, 3.0]])\n\n# Est Note 1: offset 1.05 -> diff 0.05 <= 0.2 (Match)\n# Est Note 2: offset 3.50 -> diff 0.50 > 0.2 (Mismatch)\nest_data = np.array([[0.1, 1.05], [2.1, 3.5]])\n\nprecision, recall, f_measure = mir_eval.transcription.offset_precision_recall_f1(\n    ref_data, est_data\n)\n\n# 3. Validate the deterministic property\nassert precision == 0.5, f\"Expected precision 0.5, got {precision}\"\nassert recall == 0.5, f\"Expected recall 0.5, got {recall}\"\nassert f_measure == 0.5, f\"Expected f_measure 0.5, got {f_measure}\"\n\nprint(f\"__CHECK__ offset_precision_recall_f1 {precision}, {recall}, {f_measure} (provided f1: {f_prov:.4f})\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_offset_precision_recall_f1/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ offset_precision_recall_f1 0.5, 0.5, 0.5 (provided f1: 1.0000)\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 66.3,
+      "llm_calls": 1,
+      "input_tokens": 3104,
+      "output_tokens": 6885,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 3104,
+          "output_tokens": 6885
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 6415,
+      "document_sha256": "cabf0d807ecf7cf350ed094eac58c88d6b1ab2d1bbbbc975acf86536240de586",
+      "source": "source/mir_eval/transcription.py:705",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

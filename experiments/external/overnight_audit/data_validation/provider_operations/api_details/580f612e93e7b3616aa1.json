@@ -1,0 +1,97 @@
+{
+  "summary": {
+    "repository": "Thumbnailator",
+    "cell": "A2",
+    "api": "isKeepAspectRatio",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 17.2,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 17.2,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "error": null,
+    "details": "api_details/580f612e93e7b3616aa1.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 17.2,
+    "llm_calls": 1,
+    "input_tokens": 1747,
+    "output_tokens": 2115,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 1747,
+        "output_tokens": 2115
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 2424,
+    "document_sha256": "383b0a95d4bbe19ae0c8ece76b9ed99db32bbf34e59400286dba2b09fd14c754",
+    "source": "source/src/main/java/net/coobird/thumbnailator/ThumbnailParameter.java:861",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "name": "isKeepAspectRatio",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "net.coobird.thumbnailator.builders.ThumbnailParameterBuilder builder = new net.coobird.thumbnailator.builders.ThumbnailParameterBuilder();\nbuilder.size(100, 100);\n\nbuilder.keepAspectRatio(true);\nnet.coobird.thumbnailator.ThumbnailParameter paramTrue = builder.build();\nboolean keepRatioTrue = paramTrue.isKeepAspectRatio();\n\nbuilder.keepAspectRatio(false);\nnet.coobird.thumbnailator.ThumbnailParameter paramFalse = builder.build();\nboolean keepRatioFalse = paramFalse.isKeepAspectRatio();\n\nassert keepRatioTrue : \"Expected keepAspectRatio to be true when configured as true\";\nassert !keepRatioFalse : \"Expected keepAspectRatio to be false when configured as false\";\n\nSystem.out.println(\"__CHECK__ isKeepAspectRatio \" + keepRatioTrue + \"_\" + keepRatioFalse);",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/.aideal_exec/A2/run_isKeepAspectRatio/ApiTest.java",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ isKeepAspectRatio true_false\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "d0a4b20f3e5d3ea0caf7b1501a9bf2fb4d4f11ac7d844517d7b5d67874427464"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/docs/eval/A2/comprehension.json",
+  "source_sha256": "b6aa0c714a7c8a076f415ed0dae0e6b3126ad774bc94aab394ec1036974003d7",
+  "checkpoint_events": [
+    {
+      "name": "isKeepAspectRatio",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "d0a4b20f3e5d3ea0caf7b1501a9bf2fb4d4f11ac7d844517d7b5d67874427464",
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 17.2,
+      "llm_calls": 1,
+      "input_tokens": 1747,
+      "output_tokens": 2115,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1747,
+          "output_tokens": 2115
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 2424,
+      "document_sha256": "383b0a95d4bbe19ae0c8ece76b9ed99db32bbf34e59400286dba2b09fd14c754",
+      "source": "source/src/main/java/net/coobird/thumbnailator/ThumbnailParameter.java:861",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

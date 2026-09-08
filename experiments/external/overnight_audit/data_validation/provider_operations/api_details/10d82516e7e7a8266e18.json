@@ -1,0 +1,111 @@
+{
+  "summary": {
+    "repository": "mir_eval",
+    "cell": "B2",
+    "api": "information_gain",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 22.5,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 22.5,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "error": null,
+    "details": "api_details/10d82516e7e7a8266e18.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 22.5,
+    "llm_calls": 1,
+    "input_tokens": 2350,
+    "output_tokens": 2384,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2350,
+        "output_tokens": 2384
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 3968,
+    "document_sha256": "2f65480c025f5f7249ae035b44a78ab6d6a85bb957c0ae8cb5c91a8c332801be",
+    "source": "source/mir_eval/beat.py:585",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "name": "information_gain",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "import math\nimport mir_eval\n\n# Trim early beats (before 5s by default) as required by the evaluation standard\nref_beats_trimmed = mir_eval.beat.trim_beats(ref_events)\nest_beats_trimmed = mir_eval.beat.trim_beats(est_events)\n\n# Compute the information gain metric\nscore = mir_eval.beat.information_gain(ref_beats_trimmed, est_beats_trimmed, bins=41)\n\n# Verify correctness: identical beats should yield an error histogram with all mass in one bin (entropy = 0).\n# The information gain (K-L divergence to uniform) should therefore be exactly log2(bins).\nif len(ref_beats_trimmed) > 2:\n    score_identical = mir_eval.beat.information_gain(ref_beats_trimmed, ref_beats_trimmed, bins=41)\n    expected_max_ig = math.log2(41)\n    assert math.isclose(score_identical, expected_max_ig, rel_tol=1e-5), \\\n        f\"Expected max information gain {expected_max_ig}, got {score_identical}\"\n\nprint(f\"__CHECK__ information_gain {score:.4f}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_information_gain/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ information_gain 0.0000\n__DONE__\n",
+      "stderr_tail": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/source/mir_eval/beat.py:90: UserWarning: Reference beats are empty.\n  warnings.warn(\"Reference beats are empty.\")\n/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/source/mir_eval/beat.py:92: UserWarning: Estimated beats are empty.\n  warnings.warn(\"Estimated beats are empty.\")\n"
+    },
+    "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/comprehension.json",
+  "source_sha256": "c25a74155511d59ffa5583bce3975fae3a254ce3e3bc65948dcfbd8f61d51736",
+  "checkpoint_events": [
+    {
+      "name": "information_gain",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import math\nimport mir_eval\n\n# Trim early beats (before 5s by default) as required by the evaluation standard\nref_beats_trimmed = mir_eval.beat.trim_beats(ref_events)\nest_beats_trimmed = mir_eval.beat.trim_beats(est_events)\n\n# Compute the information gain metric\nscore = mir_eval.beat.information_gain(ref_beats_trimmed, est_beats_trimmed, bins=41)\n\n# Verify correctness: identical beats should yield an error histogram with all mass in one bin (entropy = 0).\n# The information gain (K-L divergence to uniform) should therefore be exactly log2(bins).\nif len(ref_beats_trimmed) > 2:\n    score_identical = mir_eval.beat.information_gain(ref_beats_trimmed, ref_beats_trimmed, bins=41)\n    expected_max_ig = math.log2(41)\n    assert math.isclose(score_identical, expected_max_ig, rel_tol=1e-5), \\\n        f\"Expected max information gain {expected_max_ig}, got {score_identical}\"\n\nprint(f\"__CHECK__ information_gain {score:.4f}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_information_gain/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ information_gain 0.0000\n__DONE__\n",
+        "stderr_tail": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/source/mir_eval/beat.py:90: UserWarning: Reference beats are empty.\n  warnings.warn(\"Reference beats are empty.\")\n/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/source/mir_eval/beat.py:92: UserWarning: Estimated beats are empty.\n  warnings.warn(\"Estimated beats are empty.\")\n"
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 22.5,
+      "llm_calls": 1,
+      "input_tokens": 2350,
+      "output_tokens": 2384,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2350,
+          "output_tokens": 2384
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3968,
+      "document_sha256": "2f65480c025f5f7249ae035b44a78ab6d6a85bb957c0ae8cb5c91a8c332801be",
+      "source": "source/mir_eval/beat.py:585",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

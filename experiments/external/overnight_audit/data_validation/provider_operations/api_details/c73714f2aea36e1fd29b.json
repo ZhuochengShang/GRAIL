@@ -1,0 +1,111 @@
+{
+  "summary": {
+    "repository": "mir_eval",
+    "cell": "B2",
+    "api": "intervals_to_boundaries",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 18.0,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 18.0,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "error": null,
+    "details": "api_details/c73714f2aea36e1fd29b.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 18.0,
+    "llm_calls": 1,
+    "input_tokens": 2037,
+    "output_tokens": 1688,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2037,
+        "output_tokens": 1688
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 2573,
+    "document_sha256": "65284d4156bcc85e2a983f120ea05322e4048554b7a04de9576633f10c8970e8",
+    "source": "source/mir_eval/util.py:221",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "name": "intervals_to_boundaries",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "from mir_eval.util import intervals_to_boundaries\nimport numpy as np\n\nboundaries = intervals_to_boundaries(ref_intervals, q=4)\n\nassert isinstance(boundaries, np.ndarray)\nassert boundaries.ndim == 1\nassert boundaries.shape[0] == ref_intervals.shape[0] + 1\nassert boundaries[0] == np.round(ref_intervals[0, 0], 4)\nassert boundaries[-1] == np.round(ref_intervals[-1, 1], 4)\n\nprint(f\"__CHECK__ intervals_to_boundaries {boundaries.shape[0]}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_intervals_to_boundaries/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ intervals_to_boundaries 5\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/comprehension.json",
+  "source_sha256": "c25a74155511d59ffa5583bce3975fae3a254ce3e3bc65948dcfbd8f61d51736",
+  "checkpoint_events": [
+    {
+      "name": "intervals_to_boundaries",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "from mir_eval.util import intervals_to_boundaries\nimport numpy as np\n\nboundaries = intervals_to_boundaries(ref_intervals, q=4)\n\nassert isinstance(boundaries, np.ndarray)\nassert boundaries.ndim == 1\nassert boundaries.shape[0] == ref_intervals.shape[0] + 1\nassert boundaries[0] == np.round(ref_intervals[0, 0], 4)\nassert boundaries[-1] == np.round(ref_intervals[-1, 1], 4)\n\nprint(f\"__CHECK__ intervals_to_boundaries {boundaries.shape[0]}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_intervals_to_boundaries/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ intervals_to_boundaries 5\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 18.0,
+      "llm_calls": 1,
+      "input_tokens": 2037,
+      "output_tokens": 1688,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2037,
+          "output_tokens": 1688
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 2573,
+      "document_sha256": "65284d4156bcc85e2a983f120ea05322e4048554b7a04de9576633f10c8970e8",
+      "source": "source/mir_eval/util.py:221",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

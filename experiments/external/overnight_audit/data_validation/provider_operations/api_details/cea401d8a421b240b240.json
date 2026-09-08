@@ -1,0 +1,111 @@
+{
+  "summary": {
+    "repository": "mir_eval",
+    "cell": "B2",
+    "api": "p_score",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 16.1,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 16.1,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "error": null,
+    "details": "api_details/cea401d8a421b240b240.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 16.1,
+    "llm_calls": 1,
+    "input_tokens": 2355,
+    "output_tokens": 1942,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2355,
+        "output_tokens": 1942
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 3319,
+    "document_sha256": "99dd04ae05463c87a959d0593aa148ef9089b9a23a7165706e193a596690e1f7",
+    "source": "source/mir_eval/beat.py:329",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "name": "p_score",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "import mir_eval\nimport numpy as np\n\nscore = mir_eval.beat.p_score(ref_events, est_events)\nperfect_score = mir_eval.beat.p_score(ref_events, ref_events)\n\nif len(ref_events) > 1:\n    assert np.isclose(perfect_score, 1.0), f\"Expected perfect score to be 1.0, got {perfect_score}\"\nelse:\n    assert perfect_score == 0.0, f\"Expected 0.0 for arrays with <= 1 element, got {perfect_score}\"\n\nprint(f\"__CHECK__ p_score {score:.4f}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_p_score/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ p_score 1.0000\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/comprehension.json",
+  "source_sha256": "c25a74155511d59ffa5583bce3975fae3a254ce3e3bc65948dcfbd8f61d51736",
+  "checkpoint_events": [
+    {
+      "name": "p_score",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import mir_eval\nimport numpy as np\n\nscore = mir_eval.beat.p_score(ref_events, est_events)\nperfect_score = mir_eval.beat.p_score(ref_events, ref_events)\n\nif len(ref_events) > 1:\n    assert np.isclose(perfect_score, 1.0), f\"Expected perfect score to be 1.0, got {perfect_score}\"\nelse:\n    assert perfect_score == 0.0, f\"Expected 0.0 for arrays with <= 1 element, got {perfect_score}\"\n\nprint(f\"__CHECK__ p_score {score:.4f}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_p_score/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ p_score 1.0000\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 16.1,
+      "llm_calls": 1,
+      "input_tokens": 2355,
+      "output_tokens": 1942,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2355,
+          "output_tokens": 1942
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3319,
+      "document_sha256": "99dd04ae05463c87a959d0593aa148ef9089b9a23a7165706e193a596690e1f7",
+      "source": "source/mir_eval/beat.py:329",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

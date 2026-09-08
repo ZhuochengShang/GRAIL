@@ -1,0 +1,97 @@
+{
+  "summary": {
+    "repository": "Thumbnailator",
+    "cell": "A2",
+    "api": "getHeightScalingFactor",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 12.3,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 12.3,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "error": null,
+    "details": "api_details/a3acdb259c1d9440f9ea.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 12.3,
+    "llm_calls": 1,
+    "input_tokens": 1795,
+    "output_tokens": 1409,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 1795,
+        "output_tokens": 1409
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 2599,
+    "document_sha256": "5bce2bd55bb707d8d3c208e75cd91131a16a9cf9c0ac6a137bb12e0bb1a85ea7",
+    "source": "source/src/main/java/net/coobird/thumbnailator/ThumbnailParameter.java:840",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "name": "getHeightScalingFactor",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "net.coobird.thumbnailator.builders.ThumbnailParameterBuilder builder1 = new net.coobird.thumbnailator.builders.ThumbnailParameterBuilder();\nbuilder1.scale(0.75);\nnet.coobird.thumbnailator.ThumbnailParameter param1 = builder1.build();\ndouble scale1 = param1.getHeightScalingFactor();\n\nnet.coobird.thumbnailator.builders.ThumbnailParameterBuilder builder2 = new net.coobird.thumbnailator.builders.ThumbnailParameterBuilder();\nbuilder2.size(100, 100);\nnet.coobird.thumbnailator.ThumbnailParameter param2 = builder2.build();\ndouble scale2 = param2.getHeightScalingFactor();\n\nassert scale1 == 0.75 : \"Expected height scaling factor to be 0.75, got \" + scale1;\nassert Double.isNaN(scale2) : \"Expected height scaling factor to be NaN when size is set, got \" + scale2;\n\nSystem.out.println(\"__CHECK__ getHeightScalingFactor \" + scale1 + \", \" + scale2);",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/.aideal_exec/A2/run_getHeightScalingFactor/ApiTest.java",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ getHeightScalingFactor 0.75, NaN\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "d0a4b20f3e5d3ea0caf7b1501a9bf2fb4d4f11ac7d844517d7b5d67874427464"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/docs/eval/A2/comprehension.json",
+  "source_sha256": "b6aa0c714a7c8a076f415ed0dae0e6b3126ad774bc94aab394ec1036974003d7",
+  "checkpoint_events": [
+    {
+      "name": "getHeightScalingFactor",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "d0a4b20f3e5d3ea0caf7b1501a9bf2fb4d4f11ac7d844517d7b5d67874427464",
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 12.3,
+      "llm_calls": 1,
+      "input_tokens": 1795,
+      "output_tokens": 1409,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1795,
+          "output_tokens": 1409
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 2599,
+      "document_sha256": "5bce2bd55bb707d8d3c208e75cd91131a16a9cf9c0ac6a137bb12e0bb1a85ea7",
+      "source": "source/src/main/java/net/coobird/thumbnailator/ThumbnailParameter.java:840",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

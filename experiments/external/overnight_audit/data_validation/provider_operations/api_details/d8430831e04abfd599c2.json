@@ -1,0 +1,97 @@
+{
+  "summary": {
+    "repository": "Thumbnailator",
+    "cell": "A2",
+    "api": "scale",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 13.7,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 13.7,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "error": null,
+    "details": "api_details/d8430831e04abfd599c2.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 13.7,
+    "llm_calls": 1,
+    "input_tokens": 2378,
+    "output_tokens": 1566,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2378,
+        "output_tokens": 1566
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 4526,
+    "document_sha256": "c374b43abae47a895169d7926c5efbd4f0136fd33246002d169e88734656698c",
+    "source": "source/src/main/java/net/coobird/thumbnailator/Thumbnails.java:1023",
+    "source_other_sites": 5,
+    "codebase_frames": null,
+    "name": "scale",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "int origW = sourceImage.getWidth();\nint origH = sourceImage.getHeight();\ndouble scaleW = 0.5;\ndouble scaleH = 0.25;\n\njava.awt.image.BufferedImage result = net.coobird.thumbnailator.Thumbnails.of(sourceImage)\n    .scale(scaleW, scaleH)\n    .asBufferedImage();\n\nint w = result.getWidth();\nint h = result.getHeight();\n\nlong expectedW = Math.max(1, Math.round(origW * scaleW));\nlong expectedH = Math.max(1, Math.round(origH * scaleH));\n\nassert Math.abs(w - expectedW) <= 1 : \"Scaled width \" + w + \" does not match expected ~\" + expectedW;\nassert Math.abs(h - expectedH) <= 1 : \"Scaled height \" + h + \" does not match expected ~\" + expectedH;\n\nSystem.out.println(\"__CHECK__ scale \" + w + \"x\" + h);",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/.aideal_exec/A2/run_scale/ApiTest.java",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ scale 16x6\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "d0a4b20f3e5d3ea0caf7b1501a9bf2fb4d4f11ac7d844517d7b5d67874427464"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/docs/eval/A2/comprehension.json",
+  "source_sha256": "b6aa0c714a7c8a076f415ed0dae0e6b3126ad774bc94aab394ec1036974003d7",
+  "checkpoint_events": [
+    {
+      "name": "scale",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "d0a4b20f3e5d3ea0caf7b1501a9bf2fb4d4f11ac7d844517d7b5d67874427464",
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 13.7,
+      "llm_calls": 1,
+      "input_tokens": 2378,
+      "output_tokens": 1566,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2378,
+          "output_tokens": 1566
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 4526,
+      "document_sha256": "c374b43abae47a895169d7926c5efbd4f0136fd33246002d169e88734656698c",
+      "source": "source/src/main/java/net/coobird/thumbnailator/Thumbnails.java:1023",
+      "source_other_sites": 5,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

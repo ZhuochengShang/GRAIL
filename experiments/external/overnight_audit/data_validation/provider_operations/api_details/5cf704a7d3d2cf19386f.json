@@ -1,0 +1,111 @@
+{
+  "summary": {
+    "repository": "mir_eval",
+    "cell": "B2",
+    "api": "rotate_bitmap_to_root",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 24.8,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 24.8,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "error": null,
+    "details": "api_details/5cf704a7d3d2cf19386f.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 24.8,
+    "llm_calls": 1,
+    "input_tokens": 2378,
+    "output_tokens": 3044,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2378,
+        "output_tokens": 3044
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 3493,
+    "document_sha256": "4bb58745f2d4ff795556a99a133bae50b3bbea133526b8edc503a2dc647d237b",
+    "source": "source/mir_eval/chord.py:559",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "name": "rotate_bitmap_to_root",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "import numpy as np\nimport mir_eval\n\n# A major triad relative chord shape: root (0), major third (4), perfect fifth (7)\nrelative_quality = np.array([1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0])\nchord_root = 2  # Absolute pitch class for D\n\n# Rotate the relative bitmap to the absolute root\nabsolute_bitmap = mir_eval.chord.rotate_bitmap_to_root(relative_quality, chord_root)\n\n# Expected absolute bitmap for D Major: D (2), F# (6), A (9)\nexpected_bitmap = np.array([0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0])\n\nassert absolute_bitmap.shape == (12,), f\"Expected shape (12,), got {absolute_bitmap.shape}\"\nassert np.array_equal(absolute_bitmap, expected_bitmap), f\"Expected {expected_bitmap}, got {absolute_bitmap}\"\n\nprint(f\"__CHECK__ rotate_bitmap_to_root {absolute_bitmap.tolist()}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_rotate_bitmap_to_root/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ rotate_bitmap_to_root [0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0]\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/comprehension.json",
+  "source_sha256": "c25a74155511d59ffa5583bce3975fae3a254ce3e3bc65948dcfbd8f61d51736",
+  "checkpoint_events": [
+    {
+      "name": "rotate_bitmap_to_root",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import numpy as np\nimport mir_eval\n\n# A major triad relative chord shape: root (0), major third (4), perfect fifth (7)\nrelative_quality = np.array([1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0])\nchord_root = 2  # Absolute pitch class for D\n\n# Rotate the relative bitmap to the absolute root\nabsolute_bitmap = mir_eval.chord.rotate_bitmap_to_root(relative_quality, chord_root)\n\n# Expected absolute bitmap for D Major: D (2), F# (6), A (9)\nexpected_bitmap = np.array([0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0])\n\nassert absolute_bitmap.shape == (12,), f\"Expected shape (12,), got {absolute_bitmap.shape}\"\nassert np.array_equal(absolute_bitmap, expected_bitmap), f\"Expected {expected_bitmap}, got {absolute_bitmap}\"\n\nprint(f\"__CHECK__ rotate_bitmap_to_root {absolute_bitmap.tolist()}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_rotate_bitmap_to_root/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ rotate_bitmap_to_root [0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0]\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 24.8,
+      "llm_calls": 1,
+      "input_tokens": 2378,
+      "output_tokens": 3044,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2378,
+          "output_tokens": 3044
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3493,
+      "document_sha256": "4bb58745f2d4ff795556a99a133bae50b3bbea133526b8edc503a2dc647d237b",
+      "source": "source/mir_eval/chord.py:559",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

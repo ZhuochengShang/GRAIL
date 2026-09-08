@@ -1,0 +1,111 @@
+{
+  "summary": {
+    "repository": "mir_eval",
+    "cell": "B2",
+    "api": "time_frequency",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 37.4,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 37.4,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "error": null,
+    "details": "api_details/cc4407cc2fed78e2afdf.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 37.4,
+    "llm_calls": 1,
+    "input_tokens": 3041,
+    "output_tokens": 4237,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 3041,
+        "output_tokens": 4237
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 6072,
+    "document_sha256": "3731c9b3f6ff8d29e6d03322df47884ab0f91a79329220c26187b2355f68407a",
+    "source": "source/mir_eval/sonify.py:64",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "name": "time_frequency",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "import mir_eval\nimport numpy as np\n\n# Prepare valid inputs from provided variables, ensuring correct shapes and types\nt_starts = times.flatten()[:10] if times.size > 0 else np.linspace(0, 1, 10)\nt_starts = np.abs(t_starts)\nt_starts.sort()\n# Use 2D intervals [start, end] to unambiguously define time bounds\nt_intervals = np.column_stack((t_starts, t_starts + 0.1))\n\nf = ref_freqs.flatten()[:5] if ref_freqs.size > 0 else np.array([440.0, 880.0])\nf = np.abs(f) + 100.0  # Ensure positive frequencies\n\n# gram shape must strictly match (len(frequencies), len(times))\ngram = np.ones((len(f), len(t_intervals)))\n\nfs = 8000\n# Explicitly calculate and cast length to integer\nlength = int(fs * (t_intervals[-1, 1] + 0.5))\n\nsignal = mir_eval.sonify.time_frequency(\n    gram,\n    f,\n    t_intervals,\n    fs,\n    length=length\n)\n\n# Validate the deterministic properties of the synthesized signal\nassert isinstance(signal, np.ndarray), \"Output must be a numpy array\"\nassert signal.ndim == 1, \"Output must be a 1D array\"\nassert signal.shape[0] == length, f\"Expected length {length}, got {signal.shape[0]}\"\n\nprint(f\"__CHECK__ time_frequency {signal.shape[0]}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_time_frequency/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ time_frequency 20800\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/comprehension.json",
+  "source_sha256": "c25a74155511d59ffa5583bce3975fae3a254ce3e3bc65948dcfbd8f61d51736",
+  "checkpoint_events": [
+    {
+      "name": "time_frequency",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import mir_eval\nimport numpy as np\n\n# Prepare valid inputs from provided variables, ensuring correct shapes and types\nt_starts = times.flatten()[:10] if times.size > 0 else np.linspace(0, 1, 10)\nt_starts = np.abs(t_starts)\nt_starts.sort()\n# Use 2D intervals [start, end] to unambiguously define time bounds\nt_intervals = np.column_stack((t_starts, t_starts + 0.1))\n\nf = ref_freqs.flatten()[:5] if ref_freqs.size > 0 else np.array([440.0, 880.0])\nf = np.abs(f) + 100.0  # Ensure positive frequencies\n\n# gram shape must strictly match (len(frequencies), len(times))\ngram = np.ones((len(f), len(t_intervals)))\n\nfs = 8000\n# Explicitly calculate and cast length to integer\nlength = int(fs * (t_intervals[-1, 1] + 0.5))\n\nsignal = mir_eval.sonify.time_frequency(\n    gram,\n    f,\n    t_intervals,\n    fs,\n    length=length\n)\n\n# Validate the deterministic properties of the synthesized signal\nassert isinstance(signal, np.ndarray), \"Output must be a numpy array\"\nassert signal.ndim == 1, \"Output must be a 1D array\"\nassert signal.shape[0] == length, f\"Expected length {length}, got {signal.shape[0]}\"\n\nprint(f\"__CHECK__ time_frequency {signal.shape[0]}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_time_frequency/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ time_frequency 20800\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 37.4,
+      "llm_calls": 1,
+      "input_tokens": 3041,
+      "output_tokens": 4237,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 3041,
+          "output_tokens": 4237
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 6072,
+      "document_sha256": "3731c9b3f6ff8d29e6d03322df47884ab0f91a79329220c26187b2355f68407a",
+      "source": "source/mir_eval/sonify.py:64",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

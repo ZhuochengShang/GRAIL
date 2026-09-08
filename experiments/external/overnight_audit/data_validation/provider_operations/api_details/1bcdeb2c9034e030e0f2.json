@@ -1,0 +1,112 @@
+{
+  "summary": {
+    "repository": "Thumbnailator",
+    "cell": "B2",
+    "api": "URLImageSource",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 16.6,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 16.6,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "error": null,
+    "details": "api_details/1bcdeb2c9034e030e0f2.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 16.6,
+    "llm_calls": 1,
+    "input_tokens": 2025,
+    "output_tokens": 1705,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2025,
+        "output_tokens": 1705
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 3490,
+    "document_sha256": "eb18dbf8cd83481339d815652309a46e7cfadfedb3764a6e1a98c90d8b8b366d",
+    "source": "source/src/main/java/net/coobird/thumbnailator/tasks/io/URLImageSource.java:99",
+    "source_other_sites": 3,
+    "codebase_frames": null,
+    "evidence_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced",
+    "name": "URLImageSource",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "java.io.File file = new java.io.File(grid_png);\njava.net.URL url = file.toURI().toURL();\nnet.coobird.thumbnailator.tasks.io.URLImageSource source = new net.coobird.thumbnailator.tasks.io.URLImageSource(url, java.net.Proxy.NO_PROXY);\njava.awt.image.BufferedImage img = source.read();\n\njava.awt.image.BufferedImage expected = javax.imageio.ImageIO.read(file);\nassert img != null : \"Read image is null\";\nassert img.getWidth() == expected.getWidth() : \"Width mismatch\";\nassert img.getHeight() == expected.getHeight() : \"Height mismatch\";\n\nSystem.out.println(\"__CHECK__ URLImageSource \" + img.getWidth() + \"x\" + img.getHeight());",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_URLImageSource/ApiTest.java",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ URLImageSource 100x100\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/docs/eval/B2/comprehension.json",
+  "source_sha256": "edf6f845e49a5b57436a68b7845e73ce578cec0a033cf20a196eae38705feb3a",
+  "checkpoint_events": [
+    {
+      "name": "URLImageSource",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "java.io.File file = new java.io.File(grid_png);\njava.net.URL url = file.toURI().toURL();\nnet.coobird.thumbnailator.tasks.io.URLImageSource source = new net.coobird.thumbnailator.tasks.io.URLImageSource(url, java.net.Proxy.NO_PROXY);\njava.awt.image.BufferedImage img = source.read();\n\njava.awt.image.BufferedImage expected = javax.imageio.ImageIO.read(file);\nassert img != null : \"Read image is null\";\nassert img.getWidth() == expected.getWidth() : \"Width mismatch\";\nassert img.getHeight() == expected.getHeight() : \"Height mismatch\";\n\nSystem.out.println(\"__CHECK__ URLImageSource \" + img.getWidth() + \"x\" + img.getHeight());",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_URLImageSource/ApiTest.java",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ URLImageSource 100x100\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 16.6,
+      "llm_calls": 1,
+      "input_tokens": 2025,
+      "output_tokens": 1705,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2025,
+          "output_tokens": 1705
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3490,
+      "document_sha256": "eb18dbf8cd83481339d815652309a46e7cfadfedb3764a6e1a98c90d8b8b366d",
+      "source": "source/src/main/java/net/coobird/thumbnailator/tasks/io/URLImageSource.java:99",
+      "source_other_sites": 3,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

@@ -1,0 +1,97 @@
+{
+  "summary": {
+    "repository": "Thumbnailator",
+    "cell": "A2",
+    "api": "Canvas",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 20.8,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 20.8,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "error": null,
+    "details": "api_details/a516984016d82454274c.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 20.8,
+    "llm_calls": 1,
+    "input_tokens": 2358,
+    "output_tokens": 2180,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2358,
+        "output_tokens": 2180
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 4747,
+    "document_sha256": "f53bee4ae9828b40315bed900f7ed327360fdc48f75785896ef112326b65fc71",
+    "source": "source/src/main/java/net/coobird/thumbnailator/filters/Canvas.java:144",
+    "source_other_sites": 3,
+    "codebase_frames": null,
+    "name": "Canvas",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "int originalWidth = sourceImage.getWidth();\nint originalHeight = sourceImage.getHeight();\nint canvasWidth = originalWidth + 100;\nint canvasHeight = originalHeight + 100;\n\nnet.coobird.thumbnailator.filters.Canvas canvasFilter = new net.coobird.thumbnailator.filters.Canvas(\n    canvasWidth, canvasHeight, \n    net.coobird.thumbnailator.geometry.Positions.CENTER, \n    false, \n    java.awt.Color.BLUE\n);\n\njava.awt.image.BufferedImage result = canvasFilter.apply(sourceImage);\n\nassert result.getWidth() == canvasWidth : \"Expected canvas width \" + canvasWidth + \", got \" + result.getWidth();\nassert result.getHeight() == canvasHeight : \"Expected canvas height \" + canvasHeight + \", got \" + result.getHeight();\nassert result.getRGB(0, 0) == java.awt.Color.BLUE.getRGB() : \"Expected blue background at (0,0)\";\n\nSystem.out.println(\"__CHECK__ Canvas \" + result.getWidth() + \"x\" + result.getHeight() + \", bg=\" + result.getRGB(0, 0));",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/.aideal_exec/A2/run_Canvas/ApiTest.java",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ Canvas 132x124, bg=-16776961\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "d0a4b20f3e5d3ea0caf7b1501a9bf2fb4d4f11ac7d844517d7b5d67874427464"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/docs/eval/A2/comprehension.json",
+  "source_sha256": "b6aa0c714a7c8a076f415ed0dae0e6b3126ad774bc94aab394ec1036974003d7",
+  "checkpoint_events": [
+    {
+      "name": "Canvas",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "d0a4b20f3e5d3ea0caf7b1501a9bf2fb4d4f11ac7d844517d7b5d67874427464",
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 20.8,
+      "llm_calls": 1,
+      "input_tokens": 2358,
+      "output_tokens": 2180,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2358,
+          "output_tokens": 2180
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 4747,
+      "document_sha256": "f53bee4ae9828b40315bed900f7ed327360fdc48f75785896ef112326b65fc71",
+      "source": "source/src/main/java/net/coobird/thumbnailator/filters/Canvas.java:144",
+      "source_other_sites": 3,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}
