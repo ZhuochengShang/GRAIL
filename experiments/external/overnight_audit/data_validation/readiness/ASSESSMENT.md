@@ -1,6 +1,6 @@
 # AIDEAL readiness assessment and improvement queue
 
-Updated: 2026-09-08T22:10:28.468975+00:00
+Updated: 2026-09-08T22:25:29.963375+00:00
 
 **Measured scope:** how documentation affects an LLM’s API use under a fixed harness. Overall agent readiness is not yet fully measured; no composite score is assigned.
 
@@ -8,7 +8,7 @@ Updated: 2026-09-08T22:10:28.468975+00:00
 |---|---|---|---|---|---|
 | mir_eval | 1/148 provisional | 135/148 final | pending (148 APIs) | 137/148 final | WITHHELD/PARTIAL |
 | thumbnailator | 130/149 final | 127/149 final | pending (149 APIs) | 139/149 final | WITHHELD/PARTIAL |
-| tslearn | 3/235 provisional | 175/235 final | pending (235 APIs) | 0/235 provisional | WITHHELD/PARTIAL |
+| tslearn | 3/235 provisional | 175/235 final | pending (235 APIs) | 1/235 provisional | WITHHELD/PARTIAL |
 
 Provisional counts retain pending and provider-error APIs in the denominator. Final counts are native pass/all-API results. Cross-cell effects require the separate matched-comparison release checks.
 
@@ -35,14 +35,14 @@ Provisional counts retain pending and provider-error APIs in the denominator. Fi
 | thumbnailator | input-or-output-path | 4 |
 | thumbnailator | unknown | 47 |
 | tslearn | api-identity-or-version | 19 |
-| tslearn | assertion-or-behavior | 16 |
+| tslearn | assertion-or-behavior | 15 |
 | tslearn | input-contract-or-api-call | 10 |
 | tslearn | provider | 34 |
 | tslearn | unknown | 26 |
 
-## Reviewable improvements (208)
+## Reviewable improvements (207)
 
-Review states: `{'open': 207, 'proposed': 1}`. Observation errors: 0. Inactive reviewed IDs retained: 0.
+Review states: `{'open': 206, 'proposed': 1}`. Observation errors: 0. Inactive reviewed IDs retained: 0.
 
 Each card separates native failure, diagnosis confidence, proposed action, validation and review decisions. Provider barriers concern execution infrastructure; they are not automatically codebase or documentation defects.
 
@@ -255,7 +255,6 @@ Each card separates native failure, diagnosis confidence, proposed action, valid
 | [tslearn: to_cesium_dataset](suggestions/7e892c56816236b0eeff.md) | A2 | needs_diagnosis | low | open |
 | [tslearn: to_pickle](suggestions/fbf9d5a6bd05cc38a021.md) | A2 | needs_diagnosis | medium | open |
 | [tslearn: uniform](suggestions/8e82751fb4e01235d481.md) | A2 | needs_diagnosis | medium | open |
-| [tslearn: decision_function](suggestions/b32764811d7212d93a8a.md) | B2 | needs_diagnosis | medium | open |
 
 ## Human and agent workflow
 

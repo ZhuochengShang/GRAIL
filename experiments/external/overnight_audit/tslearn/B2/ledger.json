@@ -3,55 +3,60 @@
   "expected": 235,
   "counts": {
     "pending": 234,
-    "pass": 1
+    "fail": 1
   },
-  "fingerprint": "aea6936c5b6d3924676ad6f76165a235aeabaf145e222ec94a97f78913e4d57a",
+  "fingerprint": "bda65124dd0f2b12e79f4356354f45f2cadb82eefc33b81a22074412de3ca513",
   "errors": [],
-  "failure_categories": {},
+  "failure_categories": {
+    "unknown": 1
+  },
   "recorded_provider_errors_all_fingerprints": 0,
   "observed_fingerprints": [
-    "aea6936c5b6d3924676ad6f76165a235aeabaf145e222ec94a97f78913e4d57a"
+    "bda65124dd0f2b12e79f4356354f45f2cadb82eefc33b81a22074412de3ca513"
   ],
   "all_checkpoint_events": [
     {
-      "name": "decision_function",
+      "name": "get_cluster_probas",
       "doc_source": "aideal",
-      "experiment_fingerprint": "aea6936c5b6d3924676ad6f76165a235aeabaf145e222ec94a97f78913e4d57a",
-      "execution_evidence": "pass",
-      "status": "pass",
+      "experiment_fingerprint": "bda65124dd0f2b12e79f4356354f45f2cadb82eefc33b81a22074412de3ca513",
+      "execution_evidence": "fail [runtime]: ValueError: The least populated class in y has only 1 member, which is too few. The minimum number of groups for any class cannot be less th",
+      "status": "fail",
       "attempts": 1,
-      "pass_round": 0,
-      "wall_s": 8.6,
+      "pass_round": null,
+      "wall_s": 13.3,
       "llm_calls": 1,
-      "input_tokens": 2336,
-      "output_tokens": 555,
+      "input_tokens": 2641,
+      "output_tokens": 1348,
       "by_model": {
         "google:gemini-3.1-pro-preview": {
           "calls": 1,
-          "input_tokens": 2336,
-          "output_tokens": 555
+          "input_tokens": 2641,
+          "output_tokens": 1348
         }
       },
-      "error_category": null,
-      "error": null,
-      "locus": null,
-      "doc_chars": 3359,
-      "document_sha256": "07731332f4ba306ae67d1690510d21e944091b3d6a5ee3d71ae6c3a2decf1065",
-      "source": "tslearn/tslearn/svm/svm.py:352",
+      "error_category": "runtime",
+      "error": "ValueError: The least populated class in y has only 1 member, which is too few. The minimum number of groups for any class cannot be less than 2.",
+      "locus": "/Users/clockorangezoe/miniconda3/envs/geo_llm_spark/lib/python3.10/site-packages/sklearn/model_selection/_split.py:2342",
+      "doc_chars": 4031,
+      "document_sha256": "18ae74abbcbeb49fc886ee6ac2f7f6bba7e384e4f0e0bc750c42564f4a73ed96",
+      "source": "tslearn/tslearn/early_classification/early_classification.py:215",
       "source_other_sites": 0,
-      "codebase_frames": null,
+      "codebase_frames": [
+        "tslearn/tslearn/early_classification/early_classification.py:172"
+      ],
       "checkpoint_line": 1
     }
   ],
   "repair_summary": {
     "attempted": 60,
-    "processed": 27,
-    "doc_fixed": 18,
+    "processed": 35,
+    "doc_fixed": 25,
     "doc_rounds": 5,
     "retry_rounds": 0,
     "outcomes": {
-      "doc-fixed": 18,
+      "doc-fixed": 25,
       "not-testable": 8,
+      "still-failing": 1,
       "in-progress": 1
     },
     "blocked": null
@@ -3186,31 +3191,18 @@
     },
     {
       "api": "decision_function",
-      "status": "pass",
-      "primary_category": "pass",
+      "status": "pending",
+      "primary_category": "pending",
       "runner_category": null,
-      "category_reason": "",
+      "category_reason": "Not yet observed.",
       "error": null,
-      "source": "tslearn/tslearn/svm/svm.py:352",
-      "doc_chars": 3359,
-      "checkpoint_attempts": 1,
+      "source": null,
+      "doc_chars": null,
+      "checkpoint_attempts": 0,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 1,
-      "attempt_history": [
-        {
-          "checkpoint_line": 1,
-          "status": "pass",
-          "error_category": null,
-          "error": null,
-          "attempts": 1,
-          "wall_s": 8.6,
-          "llm_calls": 1,
-          "input_tokens": 2336,
-          "output_tokens": 555,
-          "pass_round": 0
-        }
-      ],
+      "recorded_successful_llm_calls": 0,
+      "attempt_history": [],
       "repair_status": "doc-fixed",
       "doc_rounds_used": 2,
       "doc_rounds": [
@@ -3445,13 +3437,68 @@
       "provider_internal_retries": null,
       "recorded_successful_llm_calls": 0,
       "attempt_history": [],
-      "repair_status": "in-progress",
-      "doc_rounds_used": null,
-      "doc_rounds": [],
+      "repair_status": "doc-fixed",
+      "doc_rounds_used": 1,
+      "doc_rounds": [
+        {
+          "round": 0,
+          "deep_dive": {
+            "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/deepdive/dtw_barycenter_averaging_one_init.md",
+            "tokens": {
+              "in": 5808,
+              "out": 4385
+            },
+            "wall_s": 32.6
+          },
+          "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: ADVANCED-LOW-LEVEL.\nHarness testability: TESTABLE.\nScoring recommendation: include only in advanced/internal bucket.\n\nROOT CAUSE:\nThe documentation incorrectly suggested importing `dtw_barycenter_averaging_one_init` from `tslearn.barycenters`. This function is a",
+          "diagnosis_changed": true,
+          "entry_chars": {
+            "old": 5637,
+            "new": 4363
+          },
+          "retry_status": "pass",
+          "error_category": null,
+          "error_head": "pass",
+          "error_progressed": true
+        }
+      ],
       "repair_evidence": {
-        "status": "in-progress",
+        "status": "doc-fixed",
         "created_from_missing": false,
-        "doc_rounds": []
+        "rounds_used": 1,
+        "doc_rounds": [
+          {
+            "round": 0,
+            "deep_dive": {
+              "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/deepdive/dtw_barycenter_averaging_one_init.md",
+              "tokens": {
+                "in": 5808,
+                "out": 4385
+              },
+              "wall_s": 32.6
+            },
+            "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: ADVANCED-LOW-LEVEL.\nHarness testability: TESTABLE.\nScoring recommendation: include only in advanced/internal bucket.\n\nROOT CAUSE:\nThe documentation incorrectly suggested importing `dtw_barycenter_averaging_one_init` from `tslearn.barycenters`. This function is a",
+            "diagnosis_changed": true,
+            "entry_chars": {
+              "old": 5637,
+              "new": 4363
+            },
+            "retry_status": "pass",
+            "error_category": null,
+            "error_head": "pass",
+            "error_progressed": true
+          }
+        ],
+        "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: ADVANCED-LOW-LEVEL.\nHarness testability: TESTABLE.\nScoring recommendation: include only in advanced/internal bucket.\n\nROOT CAUSE:\nThe documentation incorrectly suggested importing `dtw_barycenter_averaging_one_init` from `tslearn.barycenters`. This function is a",
+        "entry_chars": {
+          "old": 5637,
+          "new": 4363
+        },
+        "wall_s": 77.5,
+        "tokens": {
+          "in": 20464,
+          "out": 9372
+        }
       }
     },
     {
@@ -3658,10 +3705,69 @@
       "provider_internal_retries": null,
       "recorded_successful_llm_calls": 0,
       "attempt_history": [],
-      "repair_status": null,
-      "doc_rounds_used": null,
-      "doc_rounds": [],
-      "repair_evidence": {}
+      "repair_status": "doc-fixed",
+      "doc_rounds_used": 1,
+      "doc_rounds": [
+        {
+          "round": 0,
+          "deep_dive": {
+            "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/deepdive/early_predict_proba.md",
+            "tokens": {
+              "in": 5925,
+              "out": 2933
+            },
+            "wall_s": 23.9
+          },
+          "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING\nHarness testability: TESTABLE\nScoring recommendation: include in main user-facing denominator\n\nROOT CAUSE:\nThe snippet failed due to a flawed assertion that assumed the number of columns in the returned probabilities array would exactly match `len(np",
+          "diagnosis_changed": true,
+          "entry_chars": {
+            "old": 4754,
+            "new": 4191
+          },
+          "retry_status": "pass",
+          "error_category": null,
+          "error_head": "pass",
+          "error_progressed": true
+        }
+      ],
+      "repair_evidence": {
+        "status": "doc-fixed",
+        "created_from_missing": false,
+        "rounds_used": 1,
+        "doc_rounds": [
+          {
+            "round": 0,
+            "deep_dive": {
+              "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/deepdive/early_predict_proba.md",
+              "tokens": {
+                "in": 5925,
+                "out": 2933
+              },
+              "wall_s": 23.9
+            },
+            "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING\nHarness testability: TESTABLE\nScoring recommendation: include in main user-facing denominator\n\nROOT CAUSE:\nThe snippet failed due to a flawed assertion that assumed the number of columns in the returned probabilities array would exactly match `len(np",
+            "diagnosis_changed": true,
+            "entry_chars": {
+              "old": 4754,
+              "new": 4191
+            },
+            "retry_status": "pass",
+            "error_category": null,
+            "error_head": "pass",
+            "error_progressed": true
+          }
+        ],
+        "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING\nHarness testability: TESTABLE\nScoring recommendation: include in main user-facing denominator\n\nROOT CAUSE:\nThe snippet failed due to a flawed assertion that assumed the number of columns in the returned probabilities array would exactly match `len(np",
+        "entry_chars": {
+          "old": 4754,
+          "new": 4191
+        },
+        "wall_s": 166.5,
+        "tokens": {
+          "in": 20703,
+          "out": 21356
+        }
+      }
     },
     {
       "api": "euclidean_barycenter",
@@ -3696,10 +3802,80 @@
       "provider_internal_retries": null,
       "recorded_successful_llm_calls": 0,
       "attempt_history": [],
-      "repair_status": null,
-      "doc_rounds_used": null,
-      "doc_rounds": [],
-      "repair_evidence": {}
+      "repair_status": "still-failing (no-improvement stop)",
+      "doc_rounds_used": 2,
+      "doc_rounds": [
+        {
+          "round": 0,
+          "deep_dive": {
+            "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/deepdive/extract_from_zip_url.md",
+            "tokens": {
+              "in": 3164,
+              "out": 4420
+            },
+            "wall_s": 35.4
+          },
+          "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: INTERNAL-FRAMEWORK.\nHarness testability: TESTABLE-WITH-LOW-LEVEL-CONSTRUCTION.\nScoring recommendation: include only in advanced/internal bucket.\n\nROOT CAUSE:\nThe documentation incorrectly implies that all failures are caught and return `None`. In reality, the so",
+          "diagnosis_changed": true,
+          "outcome": "rewrite-rejected (fabricated: absolute, pathname2url, writestr)"
+        },
+        {
+          "round": 1,
+          "deep_dive": {
+            "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/deepdive/extract_from_zip_url.md",
+            "tokens": {
+              "in": 3195,
+              "out": 4474
+            },
+            "wall_s": 34.8
+          },
+          "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: ADVANCED-LOW-LEVEL\nHarness testability: TESTABLE-WITH-LOW-LEVEL-CONSTRUCTION\nScoring recommendation: include only in advanced/internal bucket\n\nROOT CAUSE:\nThe documentation incorrectly implies that all failures return `None`. In reality, `urllib.request.urlretri",
+          "diagnosis_changed": true,
+          "outcome": "rewrite-rejected (fabricated: as_uri)"
+        }
+      ],
+      "repair_evidence": {
+        "status": "still-failing (no-improvement stop)",
+        "created_from_missing": false,
+        "rounds_used": 2,
+        "doc_rounds": [
+          {
+            "round": 0,
+            "deep_dive": {
+              "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/deepdive/extract_from_zip_url.md",
+              "tokens": {
+                "in": 3164,
+                "out": 4420
+              },
+              "wall_s": 35.4
+            },
+            "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: INTERNAL-FRAMEWORK.\nHarness testability: TESTABLE-WITH-LOW-LEVEL-CONSTRUCTION.\nScoring recommendation: include only in advanced/internal bucket.\n\nROOT CAUSE:\nThe documentation incorrectly implies that all failures are caught and return `None`. In reality, the so",
+            "diagnosis_changed": true,
+            "outcome": "rewrite-rejected (fabricated: absolute, pathname2url, writestr)"
+          },
+          {
+            "round": 1,
+            "deep_dive": {
+              "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/deepdive/extract_from_zip_url.md",
+              "tokens": {
+                "in": 3195,
+                "out": 4474
+              },
+              "wall_s": 34.8
+            },
+            "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: ADVANCED-LOW-LEVEL\nHarness testability: TESTABLE-WITH-LOW-LEVEL-CONSTRUCTION\nScoring recommendation: include only in advanced/internal bucket\n\nROOT CAUSE:\nThe documentation incorrectly implies that all failures return `None`. In reality, `urllib.request.urlretri",
+            "diagnosis_changed": true,
+            "outcome": "rewrite-rejected (fabricated: as_uri)"
+          }
+        ],
+        "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: ADVANCED-LOW-LEVEL\nHarness testability: TESTABLE-WITH-LOW-LEVEL-CONSTRUCTION\nScoring recommendation: include only in advanced/internal bucket\n\nROOT CAUSE:\nThe documentation incorrectly implies that all failures return `None`. In reality, `urllib.request.urlretri",
+        "entry_chars": null,
+        "wall_s": 153.8,
+        "tokens": {
+          "in": 25319,
+          "out": 19707
+        }
+      }
     },
     {
       "api": "fit",
@@ -3772,10 +3948,69 @@
       "provider_internal_retries": null,
       "recorded_successful_llm_calls": 0,
       "attempt_history": [],
-      "repair_status": null,
-      "doc_rounds_used": null,
-      "doc_rounds": [],
-      "repair_evidence": {}
+      "repair_status": "doc-fixed",
+      "doc_rounds_used": 1,
+      "doc_rounds": [
+        {
+          "round": 0,
+          "deep_dive": {
+            "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/deepdive/fix_force_all_finite_warning.md",
+            "tokens": {
+              "in": 4699,
+              "out": 2102
+            },
+            "wall_s": 18.2
+          },
+          "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: INTERNAL-FRAMEWORK.\nHarness testability: TESTABLE-WITH-LOW-LEVEL-CONSTRUCTION.\nScoring recommendation: include only in advanced/internal bucket.\n\nROOT CAUSE:\nThe documentation incorrectly suggests importing `fix_force_all_finite_warning` from the public `tslearn",
+          "diagnosis_changed": true,
+          "entry_chars": {
+            "old": 2545,
+            "new": 3210
+          },
+          "retry_status": "pass",
+          "error_category": null,
+          "error_head": "pass",
+          "error_progressed": true
+        }
+      ],
+      "repair_evidence": {
+        "status": "doc-fixed",
+        "created_from_missing": false,
+        "rounds_used": 1,
+        "doc_rounds": [
+          {
+            "round": 0,
+            "deep_dive": {
+              "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/deepdive/fix_force_all_finite_warning.md",
+              "tokens": {
+                "in": 4699,
+                "out": 2102
+              },
+              "wall_s": 18.2
+            },
+            "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: INTERNAL-FRAMEWORK.\nHarness testability: TESTABLE-WITH-LOW-LEVEL-CONSTRUCTION.\nScoring recommendation: include only in advanced/internal bucket.\n\nROOT CAUSE:\nThe documentation incorrectly suggests importing `fix_force_all_finite_warning` from the public `tslearn",
+            "diagnosis_changed": true,
+            "entry_chars": {
+              "old": 2545,
+              "new": 3210
+            },
+            "retry_status": "pass",
+            "error_category": null,
+            "error_head": "pass",
+            "error_progressed": true
+          }
+        ],
+        "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: INTERNAL-FRAMEWORK.\nHarness testability: TESTABLE-WITH-LOW-LEVEL-CONSTRUCTION.\nScoring recommendation: include only in advanced/internal bucket.\n\nROOT CAUSE:\nThe documentation incorrectly suggests importing `fix_force_all_finite_warning` from the public `tslearn",
+        "entry_chars": {
+          "old": 2545,
+          "new": 3210
+        },
+        "wall_s": 53.4,
+        "tokens": {
+          "in": 15832,
+          "out": 6143
+        }
+      }
     },
     {
       "api": "forward",
@@ -3867,10 +4102,69 @@
       "provider_internal_retries": null,
       "recorded_successful_llm_calls": 0,
       "attempt_history": [],
-      "repair_status": null,
-      "doc_rounds_used": null,
-      "doc_rounds": [],
-      "repair_evidence": {}
+      "repair_status": "doc-fixed",
+      "doc_rounds_used": 1,
+      "doc_rounds": [
+        {
+          "round": 0,
+          "deep_dive": {
+            "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/deepdive/from_cesium_dataset.md",
+            "tokens": {
+              "in": 4076,
+              "out": 2852
+            },
+            "wall_s": 22.1
+          },
+          "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING.\nHarness testability: TESTABLE.\nScoring recommendation: include in main user-facing denominator.\n\nROOT CAUSE:\nThe snippet failed because the test environment does not have the optional `cesium` dependency installed, causing `from_cesium_dataset` to d",
+          "diagnosis_changed": true,
+          "entry_chars": {
+            "old": 3806,
+            "new": 3068
+          },
+          "retry_status": "pass",
+          "error_category": null,
+          "error_head": "pass",
+          "error_progressed": true
+        }
+      ],
+      "repair_evidence": {
+        "status": "doc-fixed",
+        "created_from_missing": false,
+        "rounds_used": 1,
+        "doc_rounds": [
+          {
+            "round": 0,
+            "deep_dive": {
+              "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/deepdive/from_cesium_dataset.md",
+              "tokens": {
+                "in": 4076,
+                "out": 2852
+              },
+              "wall_s": 22.1
+            },
+            "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING.\nHarness testability: TESTABLE.\nScoring recommendation: include in main user-facing denominator.\n\nROOT CAUSE:\nThe snippet failed because the test environment does not have the optional `cesium` dependency installed, causing `from_cesium_dataset` to d",
+            "diagnosis_changed": true,
+            "entry_chars": {
+              "old": 3806,
+              "new": 3068
+            },
+            "retry_status": "pass",
+            "error_category": null,
+            "error_head": "pass",
+            "error_progressed": true
+          }
+        ],
+        "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING.\nHarness testability: TESTABLE.\nScoring recommendation: include in main user-facing denominator.\n\nROOT CAUSE:\nThe snippet failed because the test environment does not have the optional `cesium` dependency installed, causing `from_cesium_dataset` to d",
+        "entry_chars": {
+          "old": 3806,
+          "new": 3068
+        },
+        "wall_s": 67.9,
+        "tokens": {
+          "in": 16374,
+          "out": 8188
+        }
+      }
     },
     {
       "api": "from_hdf5",
@@ -3905,10 +4199,69 @@
       "provider_internal_retries": null,
       "recorded_successful_llm_calls": 0,
       "attempt_history": [],
-      "repair_status": null,
-      "doc_rounds_used": null,
-      "doc_rounds": [],
-      "repair_evidence": {}
+      "repair_status": "doc-fixed",
+      "doc_rounds_used": 1,
+      "doc_rounds": [
+        {
+          "round": 0,
+          "deep_dive": {
+            "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/deepdive/from_json.md",
+            "tokens": {
+              "in": 3095,
+              "out": 2975
+            },
+            "wall_s": 23.4
+          },
+          "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING.\nHarness testability: TESTABLE.\nScoring recommendation: include in main user-facing denominator.\n\nROOT CAUSE:\nThe snippet failed because it attempted to serialize an unfitted `TimeSeriesKMeans` model using `to_json` to set up the test file for `from_",
+          "diagnosis_changed": true,
+          "entry_chars": {
+            "old": 3135,
+            "new": 3545
+          },
+          "retry_status": "pass",
+          "error_category": null,
+          "error_head": "pass",
+          "error_progressed": true
+        }
+      ],
+      "repair_evidence": {
+        "status": "doc-fixed",
+        "created_from_missing": false,
+        "rounds_used": 1,
+        "doc_rounds": [
+          {
+            "round": 0,
+            "deep_dive": {
+              "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/deepdive/from_json.md",
+              "tokens": {
+                "in": 3095,
+                "out": 2975
+              },
+              "wall_s": 23.4
+            },
+            "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING.\nHarness testability: TESTABLE.\nScoring recommendation: include in main user-facing denominator.\n\nROOT CAUSE:\nThe snippet failed because it attempted to serialize an unfitted `TimeSeriesKMeans` model using `to_json` to set up the test file for `from_",
+            "diagnosis_changed": true,
+            "entry_chars": {
+              "old": 3135,
+              "new": 3545
+            },
+            "retry_status": "pass",
+            "error_category": null,
+            "error_head": "pass",
+            "error_progressed": true
+          }
+        ],
+        "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING.\nHarness testability: TESTABLE.\nScoring recommendation: include in main user-facing denominator.\n\nROOT CAUSE:\nThe snippet failed because it attempted to serialize an unfitted `TimeSeriesKMeans` model using `to_json` to set up the test file for `from_",
+        "entry_chars": {
+          "old": 3135,
+          "new": 3545
+        },
+        "wall_s": 65.4,
+        "tokens": {
+          "in": 14335,
+          "out": 8040
+        }
+      }
     },
     {
       "api": "from_numpy",
@@ -3943,10 +4296,111 @@
       "provider_internal_retries": null,
       "recorded_successful_llm_calls": 0,
       "attempt_history": [],
-      "repair_status": null,
-      "doc_rounds_used": null,
-      "doc_rounds": [],
-      "repair_evidence": {}
+      "repair_status": "doc-fixed",
+      "doc_rounds_used": 2,
+      "doc_rounds": [
+        {
+          "round": 0,
+          "deep_dive": {
+            "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/deepdive/from_pickle.md",
+            "tokens": {
+              "in": 2365,
+              "out": 3260
+            },
+            "wall_s": 26.5
+          },
+          "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING.\nHarness testability: TESTABLE.\nScoring recommendation: include in main user-facing denominator.\n\nROOT CAUSE:\nThe documentation's example incorrectly used standard `pickle.dump(model, f)` to serialize the model. However, `tslearn`'s `from_pickle` exp",
+          "diagnosis_changed": true,
+          "entry_chars": {
+            "old": 2556,
+            "new": 2971
+          },
+          "retry_status": "fail",
+          "error_category": "runtime",
+          "error_head": "fail [runtime]: NotFittedError: This TimeSeriesKMeans instance is not fitted yet. Call 'fit' with appropriate arguments before using this estimator.",
+          "error_progressed": true
+        },
+        {
+          "round": 1,
+          "deep_dive": {
+            "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/deepdive/from_pickle.md",
+            "tokens": {
+              "in": 2679,
+              "out": 3089
+            },
+            "wall_s": 26.7
+          },
+          "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING.\nHarness testability: TESTABLE.\nScoring recommendation: include in main user-facing denominator.\n\nROOT CAUSE:\nThe documentation contains an error in its example: it attempts to save an unfitted model, which raises a `NotFittedError` because `tslearn`",
+          "diagnosis_changed": true,
+          "entry_chars": {
+            "old": 2556,
+            "new": 3660
+          },
+          "retry_status": "pass",
+          "error_category": null,
+          "error_head": "pass",
+          "error_progressed": true
+        }
+      ],
+      "repair_evidence": {
+        "status": "doc-fixed",
+        "created_from_missing": false,
+        "rounds_used": 2,
+        "doc_rounds": [
+          {
+            "round": 0,
+            "deep_dive": {
+              "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/deepdive/from_pickle.md",
+              "tokens": {
+                "in": 2365,
+                "out": 3260
+              },
+              "wall_s": 26.5
+            },
+            "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING.\nHarness testability: TESTABLE.\nScoring recommendation: include in main user-facing denominator.\n\nROOT CAUSE:\nThe documentation's example incorrectly used standard `pickle.dump(model, f)` to serialize the model. However, `tslearn`'s `from_pickle` exp",
+            "diagnosis_changed": true,
+            "entry_chars": {
+              "old": 2556,
+              "new": 2971
+            },
+            "retry_status": "fail",
+            "error_category": "runtime",
+            "error_head": "fail [runtime]: NotFittedError: This TimeSeriesKMeans instance is not fitted yet. Call 'fit' with appropriate arguments before using this estimator.",
+            "error_progressed": true
+          },
+          {
+            "round": 1,
+            "deep_dive": {
+              "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/deepdive/from_pickle.md",
+              "tokens": {
+                "in": 2679,
+                "out": 3089
+              },
+              "wall_s": 26.7
+            },
+            "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING.\nHarness testability: TESTABLE.\nScoring recommendation: include in main user-facing denominator.\n\nROOT CAUSE:\nThe documentation contains an error in its example: it attempts to save an unfitted model, which raises a `NotFittedError` because `tslearn`",
+            "diagnosis_changed": true,
+            "entry_chars": {
+              "old": 2556,
+              "new": 3660
+            },
+            "retry_status": "pass",
+            "error_category": null,
+            "error_head": "pass",
+            "error_progressed": true
+          }
+        ],
+        "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING.\nHarness testability: TESTABLE.\nScoring recommendation: include in main user-facing denominator.\n\nROOT CAUSE:\nThe documentation contains an error in its example: it attempts to save an unfitted model, which raises a `NotFittedError` because `tslearn`",
+        "entry_chars": {
+          "old": 2556,
+          "new": 3660
+        },
+        "wall_s": 149.5,
+        "tokens": {
+          "in": 24584,
+          "out": 17360
+        }
+      }
     },
     {
       "api": "from_pyflux_dataset",
@@ -4114,29 +4568,192 @@
       "provider_internal_retries": null,
       "recorded_successful_llm_calls": 0,
       "attempt_history": [],
-      "repair_status": null,
-      "doc_rounds_used": null,
-      "doc_rounds": [],
-      "repair_evidence": {}
+      "repair_status": "doc-fixed",
+      "doc_rounds_used": 2,
+      "doc_rounds": [
+        {
+          "round": 0,
+          "deep_dive": {
+            "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/deepdive/get_backend.md",
+            "tokens": {
+              "in": 2702,
+              "out": 1960
+            },
+            "wall_s": 17.7
+          },
+          "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: ADVANCED/LOW-LEVEL.\nHarness testability: TESTABLE.\nScoring recommendation: include only in advanced/internal bucket.\n\nROOT CAUSE:\nThe documentation contained an error by instructing the user to import `NumPyBackend` and `PyTorchBackend` directly from `tslearn.ba",
+          "diagnosis_changed": true,
+          "entry_chars": {
+            "old": 2851,
+            "new": 2993
+          },
+          "retry_status": "fail",
+          "error_category": "runtime",
+          "error_head": "fail [runtime]: AssertionError: Expected NumpyBackend, got NumPyBackend",
+          "error_progressed": true
+        },
+        {
+          "round": 1,
+          "deep_dive": {
+            "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/deepdive/get_backend.md",
+            "tokens": {
+              "in": 2868,
+              "out": 1810
+            },
+            "wall_s": 15.0
+          },
+          "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: ADVANCED/LOW-LEVEL\nHarness testability: TESTABLE-WITH-LOW-LEVEL-CONSTRUCTION\nScoring recommendation: include only in advanced/internal bucket\n\nROOT CAUSE:\nThe documentation contains an error regarding the exact class name of the numpy backend. It incorrectly ins",
+          "diagnosis_changed": true,
+          "entry_chars": {
+            "old": 2851,
+            "new": 3173
+          },
+          "retry_status": "pass",
+          "error_category": null,
+          "error_head": "pass",
+          "error_progressed": true
+        }
+      ],
+      "repair_evidence": {
+        "status": "doc-fixed",
+        "created_from_missing": false,
+        "rounds_used": 2,
+        "doc_rounds": [
+          {
+            "round": 0,
+            "deep_dive": {
+              "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/deepdive/get_backend.md",
+              "tokens": {
+                "in": 2702,
+                "out": 1960
+              },
+              "wall_s": 17.7
+            },
+            "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: ADVANCED/LOW-LEVEL.\nHarness testability: TESTABLE.\nScoring recommendation: include only in advanced/internal bucket.\n\nROOT CAUSE:\nThe documentation contained an error by instructing the user to import `NumPyBackend` and `PyTorchBackend` directly from `tslearn.ba",
+            "diagnosis_changed": true,
+            "entry_chars": {
+              "old": 2851,
+              "new": 2993
+            },
+            "retry_status": "fail",
+            "error_category": "runtime",
+            "error_head": "fail [runtime]: AssertionError: Expected NumpyBackend, got NumPyBackend",
+            "error_progressed": true
+          },
+          {
+            "round": 1,
+            "deep_dive": {
+              "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/deepdive/get_backend.md",
+              "tokens": {
+                "in": 2868,
+                "out": 1810
+              },
+              "wall_s": 15.0
+            },
+            "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: ADVANCED/LOW-LEVEL\nHarness testability: TESTABLE-WITH-LOW-LEVEL-CONSTRUCTION\nScoring recommendation: include only in advanced/internal bucket\n\nROOT CAUSE:\nThe documentation contains an error regarding the exact class name of the numpy backend. It incorrectly ins",
+            "diagnosis_changed": true,
+            "entry_chars": {
+              "old": 2851,
+              "new": 3173
+            },
+            "retry_status": "pass",
+            "error_category": null,
+            "error_head": "pass",
+            "error_progressed": true
+          }
+        ],
+        "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: ADVANCED/LOW-LEVEL\nHarness testability: TESTABLE-WITH-LOW-LEVEL-CONSTRUCTION\nScoring recommendation: include only in advanced/internal bucket\n\nROOT CAUSE:\nThe documentation contains an error regarding the exact class name of the numpy backend. It incorrectly ins",
+        "entry_chars": {
+          "old": 2851,
+          "new": 3173
+        },
+        "wall_s": 101.4,
+        "tokens": {
+          "in": 23714,
+          "out": 11610
+        }
+      }
     },
     {
       "api": "get_cluster_probas",
-      "status": "pending",
-      "primary_category": "pending",
-      "runner_category": null,
-      "category_reason": "Not yet observed.",
-      "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "status": "fail",
+      "primary_category": "unknown",
+      "runner_category": "runtime",
+      "category_reason": "Observed runtime; doc attribution requires source, document, and snippet review.",
+      "error": "ValueError: The least populated class in y has only 1 member, which is too few. The minimum number of groups for any class cannot be less than 2.",
+      "source": "tslearn/tslearn/early_classification/early_classification.py:215",
+      "doc_chars": 4031,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
-      "repair_status": null,
-      "doc_rounds_used": null,
-      "doc_rounds": [],
-      "repair_evidence": {}
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 1,
+          "status": "fail",
+          "error_category": "runtime",
+          "error": "ValueError: The least populated class in y has only 1 member, which is too few. The minimum number of groups for any class cannot be less than 2.",
+          "attempts": 1,
+          "wall_s": 13.3,
+          "llm_calls": 1,
+          "input_tokens": 2641,
+          "output_tokens": 1348,
+          "pass_round": null
+        }
+      ],
+      "repair_status": "in-progress",
+      "doc_rounds_used": 1,
+      "doc_rounds": [
+        {
+          "round": 0,
+          "deep_dive": {
+            "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/deepdive/get_cluster_probas.md",
+            "tokens": {
+              "in": 6523,
+              "out": 3153
+            },
+            "wall_s": 25.6
+          },
+          "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING.\nHarness testability: TESTABLE.\nScoring recommendation: include in main user-facing denominator.\n\nROOT CAUSE:\nThe snippet failed because it relied on the harness-provided `X` and `y` variables, which did not contain at least 2 samples per class. `Non",
+          "diagnosis_changed": true,
+          "entry_chars": {
+            "old": 5024,
+            "new": 4031
+          },
+          "retry_status": "fail",
+          "error_category": "runtime",
+          "error_head": "fail [runtime]: ValueError: The least populated class in y has only 1 member, which is too few. The minimum number of groups for any class cannot be less th",
+          "error_progressed": true
+        }
+      ],
+      "repair_evidence": {
+        "status": "in-progress",
+        "created_from_missing": false,
+        "rounds_used": 1,
+        "doc_rounds": [
+          {
+            "round": 0,
+            "deep_dive": {
+              "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/deepdive/get_cluster_probas.md",
+              "tokens": {
+                "in": 6523,
+                "out": 3153
+              },
+              "wall_s": 25.6
+            },
+            "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING.\nHarness testability: TESTABLE.\nScoring recommendation: include in main user-facing denominator.\n\nROOT CAUSE:\nThe snippet failed because it relied on the harness-provided `X` and `y` variables, which did not contain at least 2 samples per class. `Non",
+            "diagnosis_changed": true,
+            "entry_chars": {
+              "old": 5024,
+              "new": 4031
+            },
+            "retry_status": "fail",
+            "error_category": "runtime",
+            "error_head": "fail [runtime]: ValueError: The least populated class in y has only 1 member, which is too few. The minimum number of groups for any class cannot be less th",
+            "error_progressed": true
+          }
+        ]
+      }
     },
     {
       "api": "get_config",
@@ -6141,8 +6758,8 @@
   "evidence": [
     {
       "path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/docfix.json",
-      "sha256": "350750bdd863a3c962855d1fd31549e08f443b207d560ffa5da9f215adf765d8",
-      "snapshot": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_overnight_evidence_audit/experiments/external/overnight_audit/snapshots/350750bdd863a3c962855d1fd31549e08f443b207d560ffa5da9f215adf765d8"
+      "sha256": "868d7601860c6d3c3daa2f9c4081ea6a601d9d96c5230183089fd156346e518a",
+      "snapshot": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_overnight_evidence_audit/experiments/external/overnight_audit/snapshots/868d7601860c6d3c3daa2f9c4081ea6a601d9d96c5230183089fd156346e518a"
     }
   ]
 }
