@@ -1,3 +1,5 @@
+**Input handoff correction:** [Verified A2 errors and CLI paths](INPUT_HANDOFF_CORRECTION.md) supersedes the initial-error-seeding caveat below for repositories whose handoff status is `prepared`. The document-round restart limitation remains.
+
 # AIDEAL separated-stage experiment report
 
 Snapshot `<timestamp/timezone>`; protocol `aideal-separated-recovery-v3`;
