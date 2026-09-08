@@ -3,8 +3,8 @@
   "expected": 235,
   "counts": {
     "pass": 71,
-    "fail": 60,
-    "pending": 104
+    "fail": 61,
+    "pending": 103
   },
   "fingerprint": "964a2ec0df73c3b53c3966c9213dedb1a12bf7e39ad1b8d7d1ddd561ba53212b",
   "errors": [],
@@ -12,9 +12,9 @@
     "test/scaffold": 11,
     "unknown": 13,
     "api-identity": 9,
-    "llm-error": 27
+    "llm-error": 28
   },
-  "recorded_provider_errors_all_fingerprints": 27,
+  "recorded_provider_errors_all_fingerprints": 28,
   "observed_fingerprints": [
     "964a2ec0df73c3b53c3966c9213dedb1a12bf7e39ad1b8d7d1ddd561ba53212b"
   ],
@@ -3538,6 +3538,28 @@
       "source_other_sites": 1,
       "codebase_frames": null,
       "checkpoint_line": 131
+    },
+    {
+      "name": "get_early_predict_generator",
+      "doc_source": "original",
+      "experiment_fingerprint": "964a2ec0df73c3b53c3966c9213dedb1a12bf7e39ad1b8d7d1ddd561ba53212b",
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 599.7,
+      "llm_calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "by_model": {},
+      "error_category": "llm-error",
+      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "locus": "",
+      "doc_chars": 109,
+      "document_sha256": "63e48026dcf411cde245f6f4aa5db3b45ada96a15ce35b15613783dc48f5a2d5",
+      "source": "tslearn/tslearn/early_classification/early_classification.py:627",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 132
     }
   ],
   "repair_summary": {
@@ -7744,18 +7766,31 @@
     },
     {
       "api": "get_early_predict_generator",
-      "status": "pending",
-      "primary_category": "pending",
-      "runner_category": null,
-      "category_reason": "Not yet observed.",
-      "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
-      "provider_error_attempts": 0,
+      "status": "fail",
+      "primary_category": "llm-error",
+      "runner_category": "llm-error",
+      "category_reason": "Provider outcome; retry, never count as a documentation failure.",
+      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "source": "tslearn/tslearn/early_classification/early_classification.py:627",
+      "doc_chars": 109,
+      "checkpoint_attempts": 1,
+      "provider_error_attempts": 1,
       "provider_internal_retries": null,
       "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "attempt_history": [
+        {
+          "checkpoint_line": 132,
+          "status": "fail",
+          "error_category": "llm-error",
+          "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+          "attempts": 1,
+          "wall_s": 599.7,
+          "llm_calls": 0,
+          "input_tokens": 0,
+          "output_tokens": 0,
+          "pass_round": null
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],

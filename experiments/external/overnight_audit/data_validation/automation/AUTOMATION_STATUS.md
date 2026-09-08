@@ -1,6 +1,6 @@
 # Automation status and deadline forecast
 
-Updated: 2026-09-07T19:38:54.172328-07:00. Hours to Wednesday 11 AM: 39.35.
+Updated: 2026-09-07T19:54:09.761408-07:00. Hours to Wednesday 11 AM: 39.10.
 
 **Whole-pipeline completion time remains unverified.** Estimates below cover remaining comprehension only; generation, document repair, and final validation are additional. Scenarios are not confidence intervals.
 
@@ -10,18 +10,18 @@ Updated: 2026-09-07T19:38:54.172328-07:00. Hours to Wednesday 11 AM: 39.35.
 | mir_eval/A2 | 0 | complete | 0.00 / 0.00 / 0.00 |
 | mir_eval/B1 | 148 | insufficient_observations | unknown |
 | mir_eval/B2 | 148 | insufficient_observations | unknown |
-| thumbnailator/A1 | 103 | estimated | 0.47 / 1.31 / 2.62 |
+| thumbnailator/A1 | 102 | estimated | 0.46 / 1.93 / 3.85 |
 | thumbnailator/A2 | 0 | complete | 0.00 / 0.00 / 0.00 |
 | thumbnailator/B1 | 149 | insufficient_observations | unknown |
 | thumbnailator/B2 | 149 | insufficient_observations | unknown |
-| tslearn/A1 | 133 | estimated | 0.41 / 6.61 / 55.37 |
-| tslearn/A2 | 159 | estimated | 0.45 / 0.71 / 2.09 |
+| tslearn/A1 | 131 | estimated | 0.45 / 9.05 / 59.52 |
+| tslearn/A2 | 103 | estimated | 0.29 / 0.43 / 1.15 |
 | tslearn/B1 | 235 | insufficient_observations | unknown |
 | tslearn/B2 | 235 | insufficient_observations | unknown |
 
-Failure review queue: 204 entries. Mutable cross-condition path conflicts: 0.
+Failure review queue: 224 entries. Mutable cross-condition path conflicts: 0.
 Deadline risks: mir_eval/A1: estimated
-Observation errors: 0. Observer health: `{"results": {"age_seconds": 33.0, "stale": false}, "data": {"age_seconds": 17.8, "stale": false}}`.
+Observation errors: 0. Observer health: `{"results": {"age_seconds": 42.0, "stale": false}, "data": {"age_seconds": 6.9, "stale": false}}`.
 
 - [Failure review queue](failure_review_queue.json): suggested causes, evidence, confidence, attempts and repair rounds.
 - [Resolved configuration bundles](config_bundles.json): actual profile, direct YAML layers, fixture bindings and recorded environments.

@@ -1,14 +1,14 @@
 # AIDEAL readiness assessment and improvement queue
 
-Updated: 2026-09-08T02:38:43.883822+00:00
+Updated: 2026-09-08T02:53:45.323742+00:00
 
 **Measured scope:** how documentation affects an LLM’s API use under a fixed harness. Overall agent readiness is not yet fully measured; no composite score is assigned.
 
 | Repository | A1 | A2 | B1 | B2 | Matched comparison |
 |---|---|---|---|---|---|
 | mir_eval | 67/148 provisional | 135/148 final | pending (148 APIs) | pending (148 APIs) | WITHHELD/PARTIAL |
-| thumbnailator | 39/149 provisional | 127/149 final | pending (149 APIs) | pending (149 APIs) | WITHHELD/PARTIAL |
-| tslearn | 70/235 provisional | 54/235 provisional | pending (235 APIs) | pending (235 APIs) | WITHHELD/PARTIAL |
+| thumbnailator | 40/149 provisional | 127/149 final | pending (149 APIs) | pending (149 APIs) | WITHHELD/PARTIAL |
+| tslearn | 71/235 provisional | 95/235 provisional | pending (235 APIs) | pending (235 APIs) | WITHHELD/PARTIAL |
 
 Provisional counts retain pending and provider-error APIs in the denominator. Final counts are native pass/all-API results. Cross-cell effects require the separate matched-comparison release checks.
 
@@ -34,17 +34,17 @@ Provisional counts retain pending and provider-error APIs in the denominator. Fi
 | mir_eval | test/scaffold | 5 |
 | mir_eval | unknown | 9 |
 | thumbnailator | input-or-output-path | 1 |
-| thumbnailator | provider | 1 |
+| thumbnailator | provider | 2 |
 | thumbnailator | unknown | 28 |
-| tslearn | api-identity-or-version | 17 |
-| tslearn | assertion-or-behavior | 11 |
-| tslearn | input-contract-or-api-call | 5 |
-| tslearn | provider | 26 |
-| tslearn | unknown | 21 |
+| tslearn | api-identity-or-version | 21 |
+| tslearn | assertion-or-behavior | 13 |
+| tslearn | input-contract-or-api-call | 7 |
+| tslearn | provider | 29 |
+| tslearn | unknown | 29 |
 
-## Reviewable improvements (204)
+## Reviewable improvements (224)
 
-Review states: `{'open': 203, 'proposed': 1}`. Observation errors: 0. Inactive reviewed IDs retained: 0.
+Review states: `{'open': 223, 'proposed': 1}`. Observation errors: 0. Inactive reviewed IDs retained: 0.
 
 Each card separates native failure, diagnosis confidence, proposed action, validation and review decisions. Provider barriers concern execution infrastructure; they are not automatically codebase or documentation defects.
 
@@ -82,6 +82,7 @@ Each card separates native failure, diagnosis confidence, proposed action, valid
 | [mir_eval: validate_voicing](suggestions/e0708b0abc31ac82b20f.md) | A1 | execution_blocker | high | open |
 | [mir_eval: vmeasure](suggestions/24f231e5d234a7e41345.md) | A1 | execution_blocker | high | open |
 | [thumbnailator: build](suggestions/3f447775fd599b0e1381.md) | A1 | execution_blocker | high | open |
+| [thumbnailator: clear](suggestions/3f911dbe0befc683e80e.md) | A1 | execution_blocker | high | open |
 | [tslearn: PatchingLayer](suggestions/492a7a8c40fbef8c50dd.md) | A1 | execution_blocker | high | open |
 | [tslearn: SquaredEuclidean](suggestions/9cb2806d53f90d5dc13a.md) | A1 | execution_blocker | high | open |
 | [tslearn: TimeSeriesDBSCAN](suggestions/1268880b6e8ce0e28497.md) | A1 | execution_blocker | high | open |
@@ -108,6 +109,9 @@ Each card separates native failure, diagnosis confidence, proposed action, valid
 | [tslearn: from_numpy](suggestions/a9a5f5305a9c56f56d78.md) | A1 | execution_blocker | high | open |
 | [tslearn: from_pickle](suggestions/64d5f423ce89ffd24885.md) | A1 | execution_blocker | high | open |
 | [tslearn: gamma_soft_dtw](suggestions/438ddac357b01927a578.md) | A1 | execution_blocker | high | open |
+| [tslearn: get_backend](suggestions/5b561e6f3abaf83879f5.md) | A1 | execution_blocker | high | open |
+| [tslearn: get_early_predict_generator](suggestions/da327bb49da71d852107.md) | A1 | execution_blocker | high | open |
+| [tslearn: compute](suggestions/4a28af1f1c30cd779151.md) | A2 | execution_blocker | high | open |
 | [mir_eval: deprecated](suggestions/8c1892028fee0fa4c019.md) | A2 | reviewed_barrier | reviewed | open |
 | [mir_eval: first_n_three_layer_P](suggestions/1350063ad65ccf061962.md) | A2 | reviewed_barrier | reviewed | open |
 | [mir_eval: load_key](suggestions/436854cbe884009d1ba7.md) | A2 | reviewed_barrier | reviewed | open |
@@ -232,6 +236,7 @@ Each card separates native failure, diagnosis confidence, proposed action, valid
 | [tslearn: dual_coef_](suggestions/a41b60921e77b0ccd729.md) | A1 | needs_diagnosis | low | open |
 | [tslearn: early_classification_cost](suggestions/18f431a907cd00761972.md) | A1 | needs_diagnosis | medium | open |
 | [tslearn: from_cesium_dataset](suggestions/74e41bf5593381100866.md) | A1 | needs_diagnosis | low | open |
+| [tslearn: get_config](suggestions/fb7d4835a71492d56456.md) | A1 | needs_diagnosis | medium | open |
 | [tslearn: BaseModelPackage](suggestions/f995a70ba75a6f818ba5.md) | A2 | needs_diagnosis | medium | open |
 | [tslearn: EmptyClusterError](suggestions/3bb29d868c529bcad84e.md) | A2 | needs_diagnosis | medium | open |
 | [tslearn: GlobalArgminPooling1D](suggestions/7fec39a7ce54e7122bf8.md) | A2 | needs_diagnosis | low | open |
@@ -254,6 +259,21 @@ Each card separates native failure, diagnosis confidence, proposed action, valid
 | [tslearn: build](suggestions/f73b986047aa6c515b80.md) | A2 | needs_diagnosis | low | open |
 | [tslearn: call](suggestions/5de88051085748a6a12c.md) | A2 | needs_diagnosis | low | open |
 | [tslearn: classes_](suggestions/efd4b7603a59dd4ac085.md) | A2 | needs_diagnosis | medium | open |
+| [tslearn: compute_output_shape](suggestions/e11427e7509aeb1fabff.md) | A2 | needs_diagnosis | low | open |
+| [tslearn: cydist_1d_sax](suggestions/2e76ea80776db663eb78.md) | A2 | needs_diagnosis | low | open |
+| [tslearn: decision_function](suggestions/90f1882d52407388781f.md) | A2 | needs_diagnosis | low | open |
+| [tslearn: dtw_barycenter_averaging_one_init](suggestions/c58de824dd094aad07bc.md) | A2 | needs_diagnosis | medium | open |
+| [tslearn: early_predict_proba](suggestions/1d9195b5c2bf45a1c7da.md) | A2 | needs_diagnosis | medium | open |
+| [tslearn: extract_from_zip_url](suggestions/556446f978a96da3cd17.md) | A2 | needs_diagnosis | low | open |
+| [tslearn: fix_force_all_finite_warning](suggestions/19d92b0287f41c177588.md) | A2 | needs_diagnosis | medium | open |
+| [tslearn: from_cesium_dataset](suggestions/983fb54c898d2b3bb990.md) | A2 | needs_diagnosis | low | open |
+| [tslearn: from_hdf5](suggestions/db7a06f2638d29b9e384.md) | A2 | needs_diagnosis | low | open |
+| [tslearn: from_json](suggestions/c00cb00d746fa1ffa697.md) | A2 | needs_diagnosis | low | open |
+| [tslearn: from_pickle](suggestions/0f71db7bc37749a20233.md) | A2 | needs_diagnosis | medium | open |
+| [tslearn: get_backend](suggestions/1f1c9231449a82dd76e1.md) | A2 | needs_diagnosis | medium | open |
+| [tslearn: get_cluster_probas](suggestions/dbbbd6d4fe034fb71a4c.md) | A2 | needs_diagnosis | medium | open |
+| [tslearn: get_config](suggestions/e7e4aeb1e4da6544276e.md) | A2 | needs_diagnosis | low | open |
+| [tslearn: get_early_predict_proba_generator](suggestions/c7c8a7deba0271c30c59.md) | A2 | needs_diagnosis | medium | open |
 
 ## Human and agent workflow
 

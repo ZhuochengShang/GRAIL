@@ -2,17 +2,17 @@
   "status": "partial",
   "expected": 149,
   "counts": {
-    "pass": 39,
-    "fail": 8,
-    "pending": 102
+    "pass": 40,
+    "fail": 9,
+    "pending": 100
   },
   "fingerprint": "6361a90a8d15196e1351e3b191a2908f96c8a6a6a6bdf9b683903311f4c2940e",
   "errors": [],
   "failure_categories": {
     "unknown": 7,
-    "llm-error": 1
+    "llm-error": 2
   },
-  "recorded_provider_errors_all_fingerprints": 18,
+  "recorded_provider_errors_all_fingerprints": 19,
   "observed_fingerprints": [
     "15c376d07a2bd95bed6ae5382e8496d08bd567178ca2809a3dbb968b9c22d900",
     "6361a90a8d15196e1351e3b191a2908f96c8a6a6a6bdf9b683903311f4c2940e",
@@ -9570,6 +9570,56 @@
       "source_other_sites": 14,
       "codebase_frames": null,
       "checkpoint_line": 345
+    },
+    {
+      "name": "clear",
+      "doc_source": "original",
+      "experiment_fingerprint": "6361a90a8d15196e1351e3b191a2908f96c8a6a6a6bdf9b683903311f4c2940e",
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 599.2,
+      "llm_calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "by_model": {},
+      "error_category": "llm-error",
+      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "locus": "",
+      "doc_chars": 87,
+      "document_sha256": "2dfbdd5e7aa133f958ba30561a01dad2a3dc6a96de620f5dccf5363d2652fce6",
+      "source": "source/src/main/java/net/coobird/thumbnailator/util/Configurations.java:130",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 346
+    },
+    {
+      "name": "copy",
+      "doc_source": "original",
+      "experiment_fingerprint": "6361a90a8d15196e1351e3b191a2908f96c8a6a6a6bdf9b683903311f4c2940e",
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 14.8,
+      "llm_calls": 1,
+      "input_tokens": 4841,
+      "output_tokens": 1529,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 4841,
+          "output_tokens": 1529
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 12000,
+      "document_sha256": "f283f7e006c4bfbff26c616afd0064b9d13e6c6129ca5c1b5a3a9d123c687f31",
+      "source": "source/src/main/java/net/coobird/thumbnailator/util/BufferedImages.java:63",
+      "source_other_sites": 1,
+      "codebase_frames": null,
+      "checkpoint_line": 347
     }
   ],
   "repair_summary": {
@@ -11088,18 +11138,31 @@
     },
     {
       "api": "clear",
-      "status": "pending",
-      "primary_category": "pending",
-      "runner_category": null,
-      "category_reason": "Not yet observed.",
-      "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
-      "provider_error_attempts": 0,
+      "status": "fail",
+      "primary_category": "llm-error",
+      "runner_category": "llm-error",
+      "category_reason": "Provider outcome; retry, never count as a documentation failure.",
+      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "source": "source/src/main/java/net/coobird/thumbnailator/util/Configurations.java:130",
+      "doc_chars": 87,
+      "checkpoint_attempts": 1,
+      "provider_error_attempts": 1,
       "provider_internal_retries": null,
       "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "attempt_history": [
+        {
+          "checkpoint_line": 346,
+          "status": "fail",
+          "error_category": "llm-error",
+          "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+          "attempts": 1,
+          "wall_s": 599.2,
+          "llm_calls": 0,
+          "input_tokens": 0,
+          "output_tokens": 0,
+          "pass_round": null
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -11107,18 +11170,31 @@
     },
     {
       "api": "copy",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "source/src/main/java/net/coobird/thumbnailator/util/BufferedImages.java:63",
+      "doc_chars": 12000,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 347,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 14.8,
+          "llm_calls": 1,
+          "input_tokens": 4841,
+          "output_tokens": 1529,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],

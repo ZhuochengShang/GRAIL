@@ -27,9 +27,9 @@ Effects withheld until all four matched final cells and their repair/test eviden
 
 ### A1
 
-Primary failure categories: {"llm-error": 1, "unknown": 7}.
+Primary failure categories: {"llm-error": 2, "unknown": 7}.
 
-Recorded provider-error attempts across all checkpoint fingerprints: 18. Provider-internal retries are not recorded by the existing client and cannot be inferred from the configured limit. Watchdog logs retain process attempts; checkpoint attempts and document-fix rounds are separate ledger fields.
+Recorded provider-error attempts across all checkpoint fingerprints: 19. Provider-internal retries are not recorded by the existing client and cannot be inferred from the configured limit. Watchdog logs retain process attempts; checkpoint attempts and document-fix rounds are separate ledger fields.
 
 - `ConsecutivelyNumberedFilenames`: unknown; native=runtime; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `source/src/main/java/net/coobird/thumbnailator/name/ConsecutivelyNumberedFilenames.java:295`. Error: `IOException: Specified path is not a directory or does not exist.`. Review: Observed runtime; doc attribution requires source, document, and snippet review.
 - `FileThumbnailTask`: unknown; native=compile; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `source/src/main/java/net/coobird/thumbnailator/tasks/FileThumbnailTask.java:61`. Error: `/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A1/experiments/external/thumbnailator/.aideal_exec/A1/run_FileThumbnailTask/ApiTest.java:61: error: variable args is already defined in method main(String[])`. Review: Observed compile; doc attribution requires source, document, and snippet review.
@@ -39,6 +39,7 @@ Recorded provider-error attempts across all checkpoint fingerprints: 18. Provide
 - `alphaInterpolation`: unknown; native=compile; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `source/src/main/java/net/coobird/thumbnailator/Thumbnails.java:1379`. Error: `/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A1/experiments/external/thumbnailator/.aideal_exec/A1/run_alphaInterpolation/ApiTest.java:55: error: incompatible types: Object cannot be converted to AlphaInterpolation`. Review: Observed compile; doc attribution requires source, document, and snippet review.
 - `asFiles`: unknown; native=runtime; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `source/src/main/java/net/coobird/thumbnailator/Thumbnails.java:2519`. Error: `FileNotFoundException: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A1/experiments/external/thumbnailator/.aideal_exec/A1/output/thumbnail.png/out_asFiles.png (Not a directory)`. Review: Observed runtime; doc attribution requires source, document, and snippet review.
 - `build`: llm-error; native=llm-error; checkpoint attempts=1; provider-error attempts=1; document rounds=None; repair=None. Source: `source/src/main/java/net/coobird/thumbnailator/builders/BufferedImageBuilder.java:110`. Error: `ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}`. Review: Provider outcome; retry, never count as a documentation failure.
+- `clear`: llm-error; native=llm-error; checkpoint attempts=1; provider-error attempts=1; document rounds=None; repair=None. Source: `source/src/main/java/net/coobird/thumbnailator/util/Configurations.java:130`. Error: `ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}`. Review: Provider outcome; retry, never count as a documentation failure.
 
 ### A2
 
