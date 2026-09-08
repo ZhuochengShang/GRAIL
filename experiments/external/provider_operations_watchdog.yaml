@@ -1,0 +1,24 @@
+version: 2
+max_parallel: 1
+retry_delay_seconds: 60
+env:
+  PYTHONPATH: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/grail-agent/src:/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal
+jobs:
+- id: provider_operations_report
+  cwd: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal
+  branch: aideal/external-2x2-infra
+  environment_inventory: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_setup/experiments/external/mir_eval/docs/eval/setup/environment_inventory.txt
+  command:
+  - /Users/clockorangezoe/miniconda3/envs/geo_llm_spark/bin/python
+  - -m
+  - experiments.external.provider_retry.report
+  - --workspace-parent
+  - /Users/clockorangezoe/Documents/phd_projects/code/geoAI
+  - --out
+  - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_overnight_evidence_audit/experiments/external/overnight_audit/data_validation/provider_operations
+  - --watch
+  result: .aideal_exec/provider_operations_report.stdout
+  complete:
+    kind: exit_zero
+  max_restarts: 0
+  max_runtime_seconds: 0
