@@ -1,0 +1,2085 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>AIDEAL pipeline and code review</title><style>body{margin:0;background:#f5f7fb;color:#192b40;font:16px/1.65 system-ui}main{max-width:1120px;margin:auto;padding:32px}h1{font-size:2.2rem;line-height:1.2}h2{margin-top:3rem;border-top:1px solid #cbd5e1;padding-top:1.2rem}h3{color:#164e63}a{color:#075985}table{display:block;overflow:auto;border-collapse:collapse;margin:1.3rem 0;font-size:.92rem}td,th{padding:10px 14px;border:1px solid #d6dfe9;vertical-align:top}th{background:#e5edf5;text-align:left}pre{overflow:auto;background:#132438;color:#e2e8f0;padding:18px;border-radius:8px;font-size:13px;line-height:1.55}code{font-size:.9em}details{background:white;border:1px solid #cbd5e1;border-radius:8px;padding:14px;margin:12px 0}summary{cursor:pointer;font-weight:650;overflow-wrap:anywhere}.diagram{background:white;border-radius:14px;padding:10px;margin:22px 0}.diagram svg{width:100%;max-height:880px}input{padding:12px;font:inherit;width:calc(100% - 28px);border:1px solid #94a3b8;border-radius:6px}nav{display:flex;gap:20px;flex-wrap:wrap;background:#e0f2fe;padding:14px;border-radius:8px}.notice{background:#fff1d6;padding:16px;border-left:4px solid #b45309}@media print{main{padding:0}nav,input{display:none}pre{white-space:pre-wrap}details{break-inside:avoid}}</style></head><body><main><nav><a href="https://github.com/ZhuochengShang/GRAIL/blob/3db92a919b74cd3e822132f83f3a3aa9a1fb95a9/AIDEAL_PIPELINE_CODE_REVIEW_2026-09-08.md">Markdown version</a><a href="#codebook">Browse code excerpts</a><a href="https://github.com/ZhuochengShang/GRAIL/blob/3db92a919b74cd3e822132f83f3a3aa9a1fb95a9/experiments/external/code_review/evidence_20260908.json">Offline findings</a></nav><p class="notice">Dated review snapshot. Findings are open; no running experiment was modified. Code excerpts are for inspection, not an execution interface.</p><h1>AIDEAL: implementation review and current pipeline</h1>
+<p>Reviewed September 8, 2026, approximately 16:08 PDT. This document describes the
+current separated-stage study, superseding older four-cell diagrams for current
+execution. It does not change the measured protocol or any running worker.</p>
+<p><strong>Verdict:</strong> the main stage separation is implemented and running, with useful
+checkpoint, isolation and provenance checks. It is not yet a fully robust,
+portable experiment framework. The review found specific gaps below. Passing
+tests alone did not reveal all of them.</p>
+<p>The offline suite passed <strong>86 tests in 1.98 seconds</strong>. Seven additional isolated
+probes reproduced failure modes without calling Gemini or running repository API
+experiments. <a href="https://github.com/ZhuochengShang/GRAIL/blob/3db92a919b74cd3e822132f83f3a3aa9a1fb95a9/experiments/external/code_review/checks.py">Probe code</a> ·
+<a href="https://github.com/ZhuochengShang/GRAIL/blob/3db92a919b74cd3e822132f83f3a3aa9a1fb95a9/experiments/external/code_review/evidence_20260908.json">Probe results</a>.</p>
+<h2>1. Findings, in priority order</h2>
+<h3>R1 — High: checkpoint identity omits delivered prompt/profile inputs</h3>
+<p><a href="#code-cb8a8462d037">_comprehension_fingerprint_components</a>
+hashes the Python prompt loader, source, fixtures, scaffold, document and execution
+settings, but not the actual prompt Markdown or project-profile contents loaded
+by <a href="#code-776d8863b3ff">prompts.load</a>. The transport/setup
+amendment is also outside the historical native identity, and
+<a href="#code-b20e9297a90b">matched</a> does not enforce it.</p>
+<p><strong>Reproduced:</strong> changing the temporary prompt or profile changed rendered model
+input while leaving the native fingerprint unchanged. A synthetic A2/B2 pair
+with different extra transport metadata still passed the matching gate.</p>
+<p>The current A2/B2 prompt and profile files match within all three repositories;
+<a href="https://github.com/ZhuochengShang/GRAIL/blob/3db92a919b74cd3e822132f83f3a3aa9a1fb95a9/experiments/external/code_review/current_prompt_profile_identity.json">resolved paths and hashes</a>
+record that limited consistency check. It is not a historical request transcript.</p>
+<p><strong>Impact:</strong> the code does not enforce the claim that every material treatment
+change invalidates reuse. Current worktree consistency is useful evidence, but
+cannot replace historical request identity. The actual study intentionally mixes
+historical and newly instrumented provider retries; that amendment must remain
+visible, and transport-recovered cases must be analyzed separately.</p>
+<p><strong>Correction for a new schema:</strong> bind resolved prompt files, profile bytes,
+effective generation/transport/setup policy and per-request rendered prompt
+hashes. Explicitly permit only registered A2-to-B2 differences. Do not silently
+upgrade or invalidate the checkpoints currently being used.</p>
+<h3>R2 — High: a test timeout does not guarantee child-process cleanup</h3>
+<p><a href="#code-f3d5572eaad0">_comprehension_execute</a> invokes a shell
+with <code>subprocess.run(..., shell=True, timeout=...)</code>. Timing out kills the immediate
+process; it does not guarantee termination of descendants. A bounded toy child
+continued and wrote its temporary marker after the shell timed out.</p>
+<p><strong>Impact:</strong> a timed-out generated program can continue consuming resources or
+writing after the harness moves to the next API. This is a demonstrated runner
+failure mode, not evidence that a current experiment child is orphaned.</p>
+<p><strong>Correction:</strong> own a process group/session per API, terminate and reap its tree
+on timeout, and record cleanup evidence. Validate with a child-spawning test in
+an isolated runner revision before enrolling future measured work.</p>
+<h3>R3 — Medium: fresh B2 progress is hidden by the report reader</h3>
+<p><a href="#code-fa2310722e99">collect</a> requires a
+<code>checkpoint_compatibility.json</code> when no final JSON exists. A fresh run normally
+does not need that legacy migration file. <a href="#code-4f2a2be0a0fc">publish</a>
+then labels absent collected evidence as “Not started / no native results.”</p>
+<p><strong>Observed:</strong> tslearn B2 started at 16:00:06 and had 21 checkpoint outcomes at
+16:04, while the new dashboard said “Not started.” Native execution is proceeding;
+the dashboard state is wrong. Never use that label alone as execution evidence.</p>
+<p><strong>Correction:</strong> distinguish not started, active before first result, active with
+fresh checkpoints, incompatible evidence, and final results. Read fresh journals
+under a verified run identity without requiring a migration proof. Keep raw
+provisional progress separate if full identity is not yet available.</p>
+<h3>R4 — Medium: generated invalid imports are classified as infrastructure</h3>
+<p><a href="#code-e5a1fc29754c">_classify_error_py</a> maps any ImportError
+or ModuleNotFoundError to <code>infra</code>. <a href="#code-d9ba2a62d3b6">eligible</a>
+excludes <code>infra</code> from source recovery. The real tslearn <code>jacobian_product</code> example
+imports unavailable <code>squared_distance_profile</code> from an installed target module.</p>
+<p><strong>Impact:</strong> 32/32 source recoveries do not mean all 60 A2 failures were repaired.
+The 28 import/setup-classified cases are outside that cohort; some can be generated
+API-name mistakes rather than environment defects. Full-manifest scores retain
+them, but the recovery denominator is a conditional selection.</p>
+<p><strong>Correction:</strong> preserve native categories, add reviewed root-cause labels and
+verify installed package/target ownership before blaming setup. Register a new
+expanded cohort if these cases are later admitted; do not change this cohort
+retroactively.</p>
+<h3>R5 — Medium: document rounds are not a lifetime budget across restarts</h3>
+<p><a href="#code-51fa0b42a194">doc_fix_run</a> retries unfinished APIs, then
+reinitializes <code>rounds_trail</code>, stagnation and the <code>range(doc_rounds)</code> loop. It can
+treat the document left on disk as its restart baseline. Source recovery has a
+stronger persisted round history in <a href="#code-df7d806a98c5">recover</a>.</p>
+<p><strong>Impact:</strong> five document rounds means five per invocation, not a proven lifetime
+maximum of five distinct rewrite/validation rounds. Restart logs can contain
+attempts missing from the final per-API summary. The append-log audit found no API
+with more than five recorded round starts in the current three B2 runs at review
+time; the restart failure mode nevertheless exists in the implementation.</p>
+<p><strong>Correction:</strong> persist original entry, current draft, completed rounds, stopping
+state, and unfinished phase before continuing. Keep attempt and round IDs separate.
+This changes measured recovery behavior and needs a registered revision.</p>
+<h3>R6 — Medium: malformed bootstrap policy fails open</h3>
+<p>The JSON parse and config selection in <a href="#code-2071388e1978">BOOTSTRAP</a>
+occur before its fail-closed <code>try</code>. Python reports a sitecustomize exception and
+continues startup. The isolated malformed-policy probe exited zero and executed
+the test CLI body without activating the adapter.</p>
+<p><strong>Impact:</strong> corrupt policy can silently remove expected retry telemetry/settings.
+No corruption was observed in the installed policies. Atomic writes reduce the
+likelihood, but do not provide the missing failure behavior.</p>
+<p><strong>Correction:</strong> validate policy parsing/schema and activation as one guarded
+bootstrap operation; fail clearly for intended enrolled invocations. Preserve
+normal unrelated Python startup. Test missing, malformed and tampered policies.</p>
+<h3>Design limits that remain explicit</h3>
+<ul>
+<li>Native acceptance checks process exit and marker strings. It does not prove
+the target API was reached or that the model's assertion is meaningful.</li>
+<li>Worktree and path isolation are ownership controls, not an OS sandbox around
+generated code. The test process inherits the configured environment.</li>
+<li>Review actors are locally declared labels, not authenticated identities.
+The review queue is a local workflow, not an access-control system.</li>
+<li>The core still has large modules: <code>readme_agent.py</code> 2,776 lines,
+<code>doc_checks.py</code> 1,878 and <code>docfix.py</code> 707 at this snapshot. The newer recovery,
+transport and reporting modules are separated by responsibility. A portable
+product still needs a gradual core split and removal of machine-specific YAML.</li>
+</ul>
+<table>
+<thead>
+<tr>
+  <th>Review dimension</th>
+  <th>Assessment</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Correctness</td>
+  <td>Main pipeline matches the intended treatments; the six findings require correction or explicit qualification.</td>
+</tr>
+<tr>
+  <td>Security/isolation</td>
+  <td>Local trusted-workspace execution; output ownership checks are useful but not process containment or authenticated approval.</td>
+</tr>
+<tr>
+  <td>Performance</td>
+  <td>Bounded recovery proposals, checkpoint reuse and shared admission help; provider latency and cleanup gaps remain. No load benchmark was performed.</td>
+</tr>
+<tr>
+  <td>Maintainability</td>
+  <td>New modules are reasonably small; old core modules, versioned worktree copies and absolute runtime paths still need cleanup.</td>
+</tr>
+</tbody>
+</table>
+<h2>2. Full pipeline: evidence flow versus scheduling</h2>
+<div class="diagram"><svg viewBox="0 0 1060 845" role="img" aria-label="AIDEAL evidence flow with automatic, LLM and human stages"><defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8" fill="#64748b"/></marker></defs><path d="M510,75 L510,100" fill="none" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow)"/><path d="M370,130 L180,195" fill="none" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow)"/><path d="M650,130 L840,195" fill="none" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow)"/><path d="M840,255 L840,285" fill="none" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow)"/><path d="M840,345 L840,375" fill="none" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow)"/><path d="M755,435 L510,475" fill="none" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow)"/><path d="M840,435 L840,475" fill="none" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow)"/><path d="M840,535 L840,570" fill="none" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow)"/><path d="M840,630 L840,665" fill="none" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow)"/><path d="M180,255 L180,665" fill="none" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow)"/><path d="M370,505 L180,665" fill="none" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow)"/><path d="M700,600 L320,680" fill="none" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow)"/><path d="M700,695 L320,695" fill="none" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow)"/><path d="M180,725 L180,765" fill="none" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow)"/><rect x="370" y="15" width="280" height="60" rx="10" fill="#fef3c7" stroke="#94a3b8"/><text x="510" y="39" text-anchor="middle" font-size="15" font-weight="650">Human: research choices</text><text x="510" y="60" text-anchor="middle" font-size="12">Question, protocol, budget</text><rect x="370" y="100" width="280" height="60" rx="10" fill="#e0f2fe" stroke="#94a3b8"/><text x="510" y="124" text-anchor="middle" font-size="15" font-weight="650">Resolve and freeze inputs</text><text x="510" y="145" text-anchor="middle" font-size="12">YAML, source, manifest, fixtures</text><rect x="40" y="195" width="280" height="60" rx="10" fill="#ede9fe" stroke="#94a3b8"/><text x="180" y="219" text-anchor="middle" font-size="15" font-weight="650">A1: original README</text><text x="180" y="240" text-anchor="middle" font-size="12">Audience writes tests; zero fixes</text><rect x="700" y="195" width="280" height="60" rx="10" fill="#ede9fe" stroke="#94a3b8"/><text x="840" y="219" text-anchor="middle" font-size="15" font-weight="650">Generate README</text><text x="840" y="240" text-anchor="middle" font-size="12">Author uses source/test evidence</text><rect x="700" y="285" width="280" height="60" rx="10" fill="#ede9fe" stroke="#94a3b8"/><text x="840" y="309" text-anchor="middle" font-size="15" font-weight="650">A2: generated README</text><text x="840" y="330" text-anchor="middle" font-size="12">Audience writes tests; zero fixes</text><rect x="700" y="375" width="280" height="60" rx="10" fill="#e0f2fe" stroke="#94a3b8"/><text x="840" y="399" text-anchor="middle" font-size="15" font-weight="650">Freeze completed A2</text><text x="840" y="420" text-anchor="middle" font-size="12">Keep eligible and excluded failures</text><rect x="370" y="475" width="280" height="60" rx="10" fill="#ede9fe" stroke="#94a3b8"/><text x="510" y="499" text-anchor="middle" font-size="15" font-weight="650">S_A2: source recovery</text><text x="510" y="520" text-anchor="middle" font-size="12">One diagnosis; up to 5 new fixes</text><rect x="700" y="475" width="280" height="60" rx="10" fill="#ede9fe" stroke="#94a3b8"/><text x="840" y="499" text-anchor="middle" font-size="15" font-weight="650">Independent README repair</text><text x="840" y="520" text-anchor="middle" font-size="12">A2 evidence; up to 5 doc rounds</text><rect x="700" y="570" width="280" height="60" rx="10" fill="#ede9fe" stroke="#94a3b8"/><text x="840" y="594" text-anchor="middle" font-size="15" font-weight="650">B2: fresh full-manifest tests</text><text x="840" y="615" text-anchor="middle" font-size="12">Rewritten README; zero fixes</text><rect x="700" y="665" width="280" height="60" rx="10" fill="#ede9fe" stroke="#94a3b8"/><text x="840" y="689" text-anchor="middle" font-size="15" font-weight="650">S_B2: source recovery</text><text x="840" y="710" text-anchor="middle" font-size="12">B2 failures; up to 5 new fixes</text><rect x="40" y="665" width="280" height="60" rx="10" fill="#e0f2fe" stroke="#94a3b8"/><text x="180" y="689" text-anchor="middle" font-size="15" font-weight="650">Evidence and readiness</text><text x="180" y="710" text-anchor="middle" font-size="12">Separate scores, replay and timings</text><rect x="40" y="765" width="280" height="60" rx="10" fill="#fef3c7" stroke="#94a3b8"/><text x="180" y="789" text-anchor="middle" font-size="15" font-weight="650">Human reviews improvements</text><text x="180" y="810" text-anchor="middle" font-size="12">Human/agent implements; reevaluate</text><path d="M650,505 L700,505" stroke="#64748b" stroke-dasharray="4" marker-end="url(#arrow)"/><text x="675" y="460" text-anchor="middle" font-size="11">scheduled after S_A2</text></svg></div>
+
+<p>Blue = automatic · Purple = LLM · Amber = human/review. Dotted edge = scheduling, not transfer of source-recovery answers.</p>
+<p>The dotted edge is scheduling only. Both repair treatments start from A2 evidence;
+the README worker does not receive S_A2's successful tests or diagnosis.</p>
+<p><strong>Actual scheduling:</strong> each repository's driver adopts A1/A2 workers, waits only
+for its A2, runs its first S_A2 batch, then README repair and fresh B2. A1 can keep
+running concurrently. The supplemental scheduler admits each ready repository's
+S_B2 and residual S_A2 provider retries independently of unrelated repositories.
+The implementation additionally verifies that the initial S_A2 pass has no
+pending/running rows before admitting S_B2. There is no B1 treatment.</p>
+<h2>3. What each stage measures</h2>
+<table>
+<thead>
+<tr>
+  <th>Stage</th>
+  <th>What the LLM sees</th>
+  <th>What it may change</th>
+  <th>Budget and result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>A1</td>
+  <td>Original relevant docs, profile, receiver/input/harness context</td>
+  <td>New test snippet</td>
+  <td>One generation attempt per successful provider invocation; zero snippet fixes; native pass/fail on full manifest.</td>
+</tr>
+<tr>
+  <td>README generation</td>
+  <td>Source/signatures, relevant original docs and extracted test evidence</td>
+  <td>Generated README entries</td>
+  <td>Generation checkpoint protocol; separate from the five-round recovery budget.</td>
+</tr>
+<tr>
+  <td>A2</td>
+  <td>Generated relevant docs plus the same kind of harness context</td>
+  <td>New test snippet</td>
+  <td>Zero snippet fixes; all manifest names retained.</td>
+</tr>
+<tr>
+  <td>S_A2</td>
+  <td>Frozen failing A2 snippet/error, generated docs, source-grounded diagnosis</td>
+  <td>Test snippet only</td>
+  <td>A2 is round zero, then at most five new proposals; eligible failure cohort only.</td>
+</tr>
+<tr>
+  <td>README repair</td>
+  <td>A2-selected failure evidence, source/types/call sites, current document draft</td>
+  <td>Generated README entry</td>
+  <td>Deep dive, diagnosis, rewrite, then zero-snippet-fix validation; five configured rounds per invocation.</td>
+</tr>
+<tr>
+  <td>B2</td>
+  <td>Rewritten relevant docs plus harness context</td>
+  <td>Fresh test snippet</td>
+  <td>Fresh full-manifest zero-fix measurement; does not reuse successful repair-validation snippets as final answers.</td>
+</tr>
+<tr>
+  <td>S_B2</td>
+  <td>Frozen failing B2 snippet/error and a newly generated source diagnosis</td>
+  <td>Test snippet only</td>
+  <td>Same source-recovery algorithm/budget as S_A2, different frozen failure cohort.</td>
+</tr>
+<tr>
+  <td>Replay</td>
+  <td>Saved generated code, pinned fixture/harness evidence</td>
+  <td>Only explicit isolated diagnostic factors</td>
+  <td>No LLM; native and replay outcomes remain separate.</td>
+</tr>
+<tr>
+  <td>Readiness/review</td>
+  <td>Evidence ledgers and candidate diagnoses</td>
+  <td>Suggestions and recorded review decisions</td>
+  <td>No universal score or automatic library rewrite.</td>
+</tr>
+</tbody>
+</table>
+<p>“Deep dive” here means deterministic retrieval of bounded source windows, type
+definitions and call sites followed by an LLM report. It is not an unrestricted
+agent browsing the entire repository. S_A2/S_B2 cache one successful diagnosis per
+API; document repair can generate a fresh deep dive each round. None of these
+stages autonomously edits the library implementation.</p>
+<h2>4. Code reference map and reading order</h2>
+<table>
+<thead>
+<tr>
+  <th style="text-align:right">Read</th>
+  <th>Component and entry point</th>
+  <th>Responsibility</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:right">1</td>
+  <td><a href="#code-da14f4ec7d96">config._load_layered / load_config</a></td>
+  <td>Defaults → directly listed adapters/layers → condition YAML. Nested extends is not recursive.</td>
+</tr>
+<tr>
+  <td style="text-align:right">2</td>
+  <td><a href="#code-889a64cb309d">profile.load_profile / require_profile</a></td>
+  <td>Resolve required project role, constraints and context.</td>
+</tr>
+<tr>
+  <td style="text-align:right">3</td>
+  <td><a href="#code-4efc74c7509a">readme_agent.public_api_surface</a>, <a href="#code-6ce7eb919d0a">public_api_details</a></td>
+  <td>Static public-name discovery and definition/signature provenance; frozen manifests determine these runs.</td>
+</tr>
+<tr>
+  <td style="text-align:right">4</td>
+  <td><a href="#code-e66482cc7c22">readme_agent.find_or_create</a>, <a href="#code-5738de982320">run_resumable_readme.main</a></td>
+  <td>Generate/checkpoint document entries from extracted evidence.</td>
+</tr>
+<tr>
+  <td style="text-align:right">5</td>
+  <td><a href="#code-776d8863b3ff">prompts.load</a></td>
+  <td>Resolve override/default prompt and format profile plus stage inputs.</td>
+</tr>
+<tr>
+  <td style="text-align:right">6</td>
+  <td><a href="#code-943abb5ecdc5">doc_checks.comprehension_check</a></td>
+  <td>Select document/manifest and route to executable evaluation.</td>
+</tr>
+<tr>
+  <td style="text-align:right">7</td>
+  <td><a href="#code-77ae489c3b12">doc_checks._execute_sample_data</a>, <a href="#code-a4fe14945865">_resolve_preamble</a></td>
+  <td>Resolve paths, bindings and preloaded inputs. Warnings are not full per-API input-contract validation.</td>
+</tr>
+<tr>
+  <td style="text-align:right">8</td>
+  <td><a href="#code-73bcdff6d0f7">doc_checks._comprehension_execute</a></td>
+  <td>Generate snippet, splice scaffold, run command, classify error, persist checkpoints and metrics.</td>
+</tr>
+<tr>
+  <td style="text-align:right">9</td>
+  <td><a href="#code-4956505f4774">recovery.driver.main</a>, <a href="#code-e1c790329930">b2_jobs</a></td>
+  <td>Preserve baseline workers; schedule A2 recovery → README repair → fresh B2.</td>
+</tr>
+<tr>
+  <td style="text-align:right">10</td>
+  <td><a href="#code-1e9fe173b390">recovery.validation.validate</a>, <a href="#code-f56816231b36">snapshot.runtime_environment</a></td>
+  <td>Check baseline/copy identity, fixture/source hashes, imports and runtime package versions.</td>
+</tr>
+<tr>
+  <td style="text-align:right">11</td>
+  <td><a href="#code-6285f676142f">recovery.runner.run</a>, <a href="#code-df7d806a98c5">engine.recover</a></td>
+  <td>Build source-recovery context and maintain proposal/event/state history.</td>
+</tr>
+<tr>
+  <td style="text-align:right">12</td>
+  <td><a href="#code-f867a5e54418">docfix_input_handoff.prepare</a></td>
+  <td>Bind A2-only error seeds and correct CLI path resolution before document repair.</td>
+</tr>
+<tr>
+  <td style="text-align:right">13</td>
+  <td><a href="#code-0657b0d3e317">deepdive.deep_dive_run</a>, <a href="#code-ce72eba5b4c1">docfix.doc_fix_run</a></td>
+  <td>Source-grounded diagnosis and iterative README editing/validation.</td>
+</tr>
+<tr>
+  <td style="text-align:right">14</td>
+  <td><a href="#code-098ea485296a">post_b2.evidence.inspect</a>, <a href="#code-ece53d41d2b2">stage.one</a></td>
+  <td>Admit complete matched B2 and recover one eligible API at a time.</td>
+</tr>
+<tr>
+  <td style="text-align:right">15</td>
+  <td><a href="#code-05cae7a711f4">post_b2.stage.same_source_treatment / compare</a></td>
+  <td>Compare source policies and preserve separate native/composite endpoints.</td>
+</tr>
+<tr>
+  <td style="text-align:right">16</td>
+  <td><a href="#code-6ab5dcec1cf7">Supervisor</a>, <a href="#code-78e5f0fd00c1">admission.slot</a></td>
+  <td>Own workers, retries, dependencies and supplemental concurrency.</td>
+</tr>
+<tr>
+  <td style="text-align:right">17</td>
+  <td><a href="#code-218fd960f92e">llm.invoke_text</a>, <a href="#code-c0e1cf3b431f">transport.Recorder / install</a></td>
+  <td>Provider calls, explicit retry amendment and request/SDK telemetry.</td>
+</tr>
+<tr>
+  <td style="text-align:right">18</td>
+  <td><a href="#code-906e26320ed8">input_contract.prepare / guidance</a></td>
+  <td>Prospective file/output checks; explicit guidance is staged, not injected into frozen prompts.</td>
+</tr>
+<tr>
+  <td style="text-align:right">19</td>
+  <td><a href="#code-4f2a2be0a0fc">provider_retry.report.publish</a></td>
+  <td>Per-API timing and readable outcomes; fresh-run limitation R3 applies.</td>
+</tr>
+<tr>
+  <td style="text-align:right">20</td>
+  <td><a href="#code-97d3a9f16001">readiness.model.assess / suggestion</a>, <a href="#code-15cfbf2cda20">review.validate / record</a></td>
+  <td>Capability assessment, evidence-backed queue and reviewed implementation workflow.</td>
+</tr>
+</tbody>
+</table>
+<p>Six core files (<code>config</code>, <code>doc_checks</code>, <code>docfix</code>, <code>deepdive</code>, <code>llm</code>, <code>readme_agent</code>)
+were byte-identical between main and all six current A2/B2 worktrees at review
+time. This supports using the linked main files to read those implementations.
+The separate sitecustomize transport adapter is not one of those core files.</p>
+<h2>5. The repair loops, precisely</h2>
+<p>Source loop, in <a href="#code-df7d806a98c5">engine.recover</a>:</p>
+<pre><code class="language-text">verify identity; resume a prior state if compatible
+reuse terminal state; otherwise obtain/cache one diagnosis
+for next new proposal number through 5:
+    generate and execute a snippet using prior failure + diagnosis
+    provider failure -&gt; record event, pause; do not consume a code-fix round
+    native pass -&gt; recovered_native
+    infrastructure classification -&gt; infra_blocked
+    last two proposal outcomes have equal category + first 160 error characters -&gt; stuck
+    fifth unsuccessful proposal -&gt; exhausted
+    persist state and continue only when still running
+</code></pre>
+<p><code>stuck=2</code> counts two consecutive equal failure signatures among new proposals,
+not two watchdog retries, not necessarily identical code, and not necessarily
+two equal diagnoses. A changed signature can keep the loop running through five.</p>
+<p>Document loop, in <a href="#code-ce72eba5b4c1">doc_fix_run</a>: source deep
+dive → diagnosis → entry rewrite → fabricated-member screen → zero-fix audience
+validation. It keeps a passing revision and reverts unsuccessful repair at the
+API level. Its stagnation rule considers diagnosis and execution-error progress;
+it is different from the source loop's signature rule. A locally passing revision
+does not guarantee that fresh B2 will preserve every former pass. B2 regression
+counts are therefore required. Restart caveat R5 applies.</p>
+<h2>6. Prompt and data boundaries</h2>
+<table>
+<thead>
+<tr>
+  <th>Prompt</th>
+  <th>Role / function</th>
+  <th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><a href="https://github.com/ZhuochengShang/GRAIL/blob/3db92a919b74cd3e822132f83f3a3aa9a1fb95a9/grail-agent/src/aideal/default_prompts/aideal/readme_entry.md">readme_entry.md</a></td>
+  <td>Author / find_or_create</td>
+  <td>Explain an API using extracted repository evidence.</td>
+</tr>
+<tr>
+  <td><a href="https://github.com/ZhuochengShang/GRAIL/blob/3db92a919b74cd3e822132f83f3a3aa9a1fb95a9/grail-agent/src/aideal/default_prompts/aideal/comprehension_write_exec.md">comprehension_write_exec.md</a></td>
+  <td>Audience / comprehension</td>
+  <td>Generate a body snippet from documentation, input variables, receiver and execution hints.</td>
+</tr>
+<tr>
+  <td><a href="https://github.com/ZhuochengShang/GRAIL/blob/3db92a919b74cd3e822132f83f3a3aa9a1fb95a9/grail-agent/src/aideal/default_prompts/aideal/deep_dive.md">deep_dive.md</a></td>
+  <td>Fixer / deep_dive_run</td>
+  <td>Diagnose from bounded source/types/call sites/history.</td>
+</tr>
+<tr>
+  <td><a href="https://github.com/ZhuochengShang/GRAIL/blob/3db92a919b74cd3e822132f83f3a3aa9a1fb95a9/grail-agent/src/aideal/default_prompts/aideal/docfix_diagnose.md">docfix_diagnose.md</a></td>
+  <td>Fixer / doc_fix_run</td>
+  <td>Decide what documentation information or other barrier explains the failure.</td>
+</tr>
+<tr>
+  <td><a href="https://github.com/ZhuochengShang/GRAIL/blob/3db92a919b74cd3e822132f83f3a3aa9a1fb95a9/grail-agent/src/aideal/default_prompts/aideal/docfix_rewrite.md">docfix_rewrite.md</a></td>
+  <td>Fixer / doc_fix_run</td>
+  <td>Propose a revised API entry for execution validation.</td>
+</tr>
+</tbody>
+</table>
+<p>Source recovery deliberately adapts the audience prompt to accept the supplied
+diagnosis and appends the previous snippet/error. That treatment belongs only to
+S_A2/S_B2. Baseline first attempts do not receive historical failure-log feedback.
+The author, audience and fixer roles currently resolve to the same Gemini model;
+their supplied context and task differ. Operator skills guide Codex, not Gemini's
+runtime prompts. The readiness publisher itself uses deterministic analysis.</p>
+<table>
+<thead>
+<tr>
+  <th>Repository</th>
+  <th>Effective B2 layers after defaults</th>
+  <th>Declared data</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>mir_eval</td>
+  <td>python → aideal.yaml → aideal_B2.yaml</td>
+  <td>beat ref00.txt/est00.txt; chord ref00.lab; melody ref00.txt; preloaded arrays from the configured preamble.</td>
+</tr>
+<tr>
+  <td>Thumbnailator</td>
+  <td>java → aideal.yaml → aideal_B2.yaml</td>
+  <td>grid.png, grid.jpg, Exif/original.jpg; preloaded image/output bindings.</td>
+</tr>
+<tr>
+  <td>tslearn</td>
+  <td>python → aideal.yaml → aideal_full235_base.yaml → aideal_B2_full235.yaml</td>
+  <td>Cached Trace.npz; full235 scaffold and project_profile_full235.yaml.</td>
+</tr>
+</tbody>
+</table>
+<p>The manifest sizes are 148, 149 and 235 API names. A name can have multiple
+definition/owner/overload records; this is not an exhaustive overload-by-input
+cross-product. YAML paths plus fixture hashes establish which declared files are
+available. They do not prove every generated snippet chose a suitable file,
+shape, dtype, units, format or assertion. An API may also receive synthetic input
+constructed by the snippet; that code is part of the evidence.</p>
+<h2>7. Autonomy, human review and portability</h2>
+<p>The supervisors, state transitions, checkpoint reuse, process execution and
+reports are automatic deterministic code. LLM calls write docs/tests and propose
+diagnoses/repairs within supplied context. AIDEAL is currently a bounded
+LLM-assisted workflow rather than a general codebase-navigation agent.</p>
+<p>Human decisions define the research question, accepted treatment/budget changes,
+semantic interpretation and approval of broader improvements. The queue permits
+a human or an agent to propose a plan; a human selects the executor; that executor
+submits change, validation and comparison artifacts; a human accepts or requests
+changes. Assigning an agent in the queue does not launch it. Authorized routine
+operations do not require repeated human permission.</p>
+<p>The strongest current readiness measurement is documentation-conditioned API use
+under a prepared harness. Autonomous discovery/installation and held-out multi-API
+workflows are not measured. No universal readiness score should be inferred.</p>
+<p>Future cleanup should split documentation extraction/generation from inventory,
+and split comprehension prompt building, process running, classification and
+checkpointing. First preserve behavior with contract tests and versioned input
+schemas. Do not refactor the live frozen engine. POSIX locks, absolute Java/Python
+paths and repo-specific adapters need explicit portability work; core transport
+helpers alone do not make the entire study relocatable.</p>
+<h2>8. Validation and review status</h2>
+<pre><code class="language-sh">env PYTHONPATH=grail-agent/src:. python -m pytest -q \
+  experiments/external/provider_retry experiments/external/recovery \
+  experiments/external/post_b2/test_post_b2.py experiments/external/readiness \
+  grail-agent/tests/test_llm_transport.py grail-agent/tests/test_provider_deadline.py \
+  experiments/external/test_watchdog_adoption.py
+
+env PYTHONPATH=grail-agent/src:. python experiments/external/code_review/checks.py \
+  --out /tmp/aideal_review_evidence.json
+</code></pre>
+<p>Use the existing experiment interpreter. The first command passed 86 tests;
+the second reports known gaps rather than certifying the implementation. None of
+the review changes modifies live worker code, protocol hashes or result scores.
+This review creates documentation and offline diagnostics only. The findings are
+open; the recommended fixes above are not claimed deployed.</p>
+<h2 id="codebook">Code excerpts in reading order</h2><label for="query">Filter files or code</label><input id="query" placeholder="e.g. recover, fingerprint, docfix"><div><details class="snippet" id="code-cb8a8462d037"><summary>grail-agent/src/aideal/doc_checks.py:62</summary><p>Snapshot excerpt, lines 62–117. <a href="https://github.com/ZhuochengShang/GRAIL/blob/3db92a919b74cd3e822132f83f3a3aa9a1fb95a9/grail-agent/src/aideal/doc_checks.py">Open full source file</a></p><pre><code>  62  def _comprehension_fingerprint_components(
+  63          cfg: AidealConfig, *, ex: dict, doc_source: str, doc_scope: str,
+  64          max_fix_rounds: int, manifest_sha256: str, document_sha256: str,
+  65          scaffold_file: Path, sample_data: dict, class_context: bool,
+  66          timeout: int) -&gt; dict:
+  67      &quot;&quot;&quot;Return every material input that makes a checkpoint reusable.
+  68  
+  69      A checkpoint is experimental evidence, not merely a performance cache. A
+  70      model, YAML, scaffold, source, fixture, interpreter, or engine change must
+  71      create a new fingerprint so an overnight watchdog cannot silently mix
+  72      conditions after a restart.
+  73      &quot;&quot;&quot;
+  74      import glob
+  75      import os
+  76  
+  77      source_paths: list[Path] = []
+  78      for pattern in cfg.source_globs:
+  79          source_paths.extend(Path(p) for p in glob.glob(
+  80              str(cfg.root / pattern), recursive=True))
+  81      # output_dir is a writable destination supplied to snippets, not input
+  82      # evidence. Its location remains in execute_config; its changing contents
+  83      # must never invalidate completed API checkpoints.
+  84      from urllib.parse import unquote, urlparse
+  85      fixture_paths = [Path(unquote(urlparse(str(value)).path)
+  86                            if str(value).startswith(&quot;file://&quot;) else str(value))
+  87                       for key, value in sample_data.items() if key != &quot;output_dir&quot;]
+  88      engine_dir = Path(__file__).resolve().parent
+  89      engine_paths = [engine_dir / name for name in (
+  90          &quot;config.py&quot;, &quot;doc_checks.py&quot;, &quot;llm.py&quot;, &quot;prompts.py&quot;, &quot;readme_agent.py&quot;,
+  91          &quot;checkpoint_compatibility.py&quot;, &quot;provider_deadline.py&quot;)]
+  92      audience = cfg.model_for_role(&quot;audience&quot;)
+  93      fixer = cfg.model_for_role(&quot;fixer&quot;)
+  94      return {
+  95          &quot;schema&quot;: 3,
+  96          &quot;project&quot;: cfg.project_name,
+  97          &quot;language&quot;: cfg.language,
+  98          &quot;doc_source&quot;: doc_source,
+  99          &quot;doc_scope&quot;: doc_scope,
+ 100          &quot;max_fix_rounds&quot;: max_fix_rounds,
+ 101          &quot;manifest_sha256&quot;: manifest_sha256,
+ 102          &quot;document_sha256&quot;: document_sha256,
+ 103          &quot;models&quot;: {
+ 104              &quot;audience&quot;: f&quot;{audience.provider}:{audience.model}&quot;,
+ 105              &quot;fixer&quot;: f&quot;{fixer.provider}:{fixer.model}&quot;,
+ 106          },
+ 107          &quot;class_context&quot;: bool(class_context),
+ 108          &quot;timeout_s&quot;: timeout,
+ 109          &quot;execute_config&quot;: ex,
+ 110          &quot;scaffold&quot;: _sha256_files([scaffold_file], cfg.root),
+ 111          &quot;source&quot;: _sha256_files(source_paths, cfg.root),
+ 112          &quot;fixtures&quot;: _sha256_files(fixture_paths, cfg.root),
+ 113          &quot;engine&quot;: _sha256_files(engine_paths, engine_dir),
+ 114          &quot;interpreter&quot;: {
+ 115              &quot;executable&quot;: sys.executable,
+ 116              &quot;version&quot;: sys.version,
+ 117              &quot;environment_sha256&quot;: os.environ.get(&quot;AIDEAL_ENV_FINGERPRINT&quot;, &quot;&quot;),</code></pre></details><details class="snippet" id="code-776d8863b3ff"><summary>grail-agent/src/aideal/prompts.py:29</summary><p>Snapshot excerpt, lines 29–56. <a href="https://github.com/ZhuochengShang/GRAIL/blob/3db92a919b74cd3e822132f83f3a3aa9a1fb95a9/grail-agent/src/aideal/prompts.py">Open full source file</a></p><pre><code>  29  def load(cfg: AidealConfig, name: str, **kwargs) -&gt; tuple[str, str]:
+  30      &quot;&quot;&quot;Read prompts/&lt;name&gt;.md, fill placeholders, return (system, user).
+  31  
+  32      Resolution order: the project&#x27;s prompts dir (so prompt ablations work),
+  33      then the defaults shipped inside the package (so pip-installed users
+  34      work out of the box).
+  35  
+  36      `{project_context}`, `{project_name}`, `{language}`, and `{constraints}`
+  37      are auto-filled from the project profile; other placeholders come from
+  38      kwargs.
+  39      &quot;&quot;&quot;
+  40      path = prompts_dir(cfg) / f&quot;{name}.md&quot;
+  41      if not path.exists():
+  42          path = DEFAULT_PROMPTS / f&quot;{name}.md&quot;
+  43      text = path.read_text(encoding=&quot;utf-8&quot;)
+  44  
+  45      profile = load_profile(cfg)
+  46      kwargs.setdefault(&quot;project_context&quot;, project_context(profile))
+  47      kwargs.setdefault(&quot;project_name&quot;, profile.get(&quot;project&quot;, {}).get(&quot;name&quot;, cfg.project_name))
+  48      kwargs.setdefault(&quot;language&quot;, profile.get(&quot;project&quot;, {}).get(&quot;language&quot;, cfg.language))
+  49      kwargs.setdefault(&quot;constraints&quot;, &quot;\n&quot;.join(f&quot;- {c}&quot; for c in profile.get(&quot;constraints&quot;, [])) or &quot;- none&quot;)
+  50  
+  51      if &quot;USER:&quot; not in text:
+  52          raise ValueError(f&quot;{path} must contain a USER: block&quot;)
+  53      system_part, user_part = text.split(&quot;USER:&quot;, 1)
+  54      system = system_part.replace(&quot;SYSTEM:&quot;, &quot;&quot;, 1).strip()
+  55      user = user_part.strip()
+  56      return system.format(**kwargs), user.format(**kwargs)</code></pre></details><details class="snippet" id="code-b20e9297a90b"><summary>experiments/external/post_b2/evidence.py:32</summary><p>Snapshot excerpt, lines 32–54. <a href="https://github.com/ZhuochengShang/GRAIL/blob/3db92a919b74cd3e822132f83f3a3aa9a1fb95a9/experiments/external/post_b2/evidence.py">Open full source file</a></p><pre><code>  32  def matched(a2, b2, count):
+  33      for result in (a2, b2):
+  34          complete(result, count)
+  35      if set(a2[&#x27;metrics&#x27;]) != set(b2[&#x27;metrics&#x27;]):
+  36          raise ValueError(&#x27;A2/B2 API identity sets differ&#x27;)
+  37      left, lm = components(a2)
+  38      right, rm = components(b2)
+  39      keys = (&#x27;project&#x27;, &#x27;language&#x27;, &#x27;doc_source&#x27;, &#x27;doc_scope&#x27;, &#x27;max_fix_rounds&#x27;,
+  40              &#x27;manifest_sha256&#x27;, &#x27;models&#x27;, &#x27;class_context&#x27;, &#x27;timeout_s&#x27;,
+  41              &#x27;scaffold&#x27;, &#x27;source&#x27;, &#x27;fixtures&#x27;, &#x27;engine&#x27;)
+  42      for key in keys:
+  43          if left[key] != right[key]:
+  44              raise ValueError(f&#x27;A2/B2 mismatch: {key}&#x27;)
+  45      normalize = lambda ex: {k: v for k, v in ex.items() if k not in (&#x27;work_dir&#x27;, &#x27;output_dir&#x27;)}
+  46      if normalize(left[&#x27;execute_config&#x27;]) != normalize(right[&#x27;execute_config&#x27;]):
+  47          raise ValueError(&#x27;A2/B2 execution policy differs&#x27;)
+  48      for key in (&#x27;executable&#x27;, &#x27;version&#x27;):
+  49          if left[&#x27;interpreter&#x27;][key] != right[&#x27;interpreter&#x27;][key]:
+  50              raise ValueError(f&#x27;A2/B2 interpreter differs: {key}&#x27;)
+  51      return {&#x27;A2_compatibility&#x27;: lm, &#x27;B2_compatibility&#x27;: rm,
+  52              &#x27;environment_inventory_hashes&#x27;: [p[&#x27;interpreter&#x27;][&#x27;environment_sha256&#x27;] for p in (left, right)],
+  53              &#x27;limitation&#x27;: &#x27;Inventory paths/cell labels can differ; runtime packages/imports are checked separately. &#x27;
+  54                            &#x27;Historical script binding and baseline semantic validity remain qualified.&#x27;}</code></pre></details><details class="snippet" id="code-f3d5572eaad0"><summary>grail-agent/src/aideal/doc_checks.py:1455</summary><p>Snapshot excerpt, lines 1449–1504. <a href="https://github.com/ZhuochengShang/GRAIL/blob/3db92a919b74cd3e822132f83f3a3aa9a1fb95a9/grail-agent/src/aideal/doc_checks.py">Open full source file</a></p><pre><code>1449              scala = _fill_scaffold(scaffold.replace(&quot;// AIDEAL_DATA_BINDINGS&quot;, bindings)
+1450                                     .replace(&quot;# AIDEAL_DATA_BINDINGS&quot;, bindings),
+1451                                     snippet, region, placeholders)
+1452              scala_file.write_text(scala, encoding=&quot;utf-8&quot;)
+1453              try:
+1454                  # shell=True so the `scalac &amp;&amp; jar &amp;&amp; spark-submit` pipeline runs
+1455                  proc = subprocess.run(cmd, shell=True, cwd=work_dir, capture_output=True,
+1456                                        text=True, timeout=timeout, env=dict(os.environ))
+1457                  out, err_out, rc = proc.stdout, proc.stderr, proc.returncode
+1458              except subprocess.TimeoutExpired as e:
+1459                  # TimeoutExpired carries the captured streams as BYTES even with
+1460                  # text=True — concatenating raw killed the 2026-07-01 full run
+1461                  # (&quot;can&#x27;t concat str to bytes&quot; at plotImage, ~120 APIs in).
+1462                  def _txt(b):
+1463                      return b.decode(&quot;utf-8&quot;, &quot;ignore&quot;) if isinstance(b, (bytes, bytearray)) else (b or &quot;&quot;)
+1464                  out, err_out, rc = _txt(e.stdout), _txt(e.stderr) + &quot;\n[timeout]&quot;, 124
+1465              last_run = {&quot;stdout&quot;: out or &quot;&quot;, &quot;stderr&quot;: err_out or &quot;&quot;, &quot;exit_code&quot;: rc}
+1466              merged = (out or &quot;&quot;) + &quot;\n&quot; + (err_out or &quot;&quot;)
+1467              ran = (rc == 0) and (success_marker in merged if success_marker else True) \
+1468                  and not (error_marker and error_marker in merged) \
+1469                  and (check_marker in merged if require_correctness else True)
+1470              if ran:
+1471                  rounds_trace.append({&quot;round&quot;: attempt, &quot;status&quot;: &quot;pass&quot;})
+1472                  _sys.stderr.write(f&quot;  [{entry.name}] round {attempt}: PASS\n&quot;); _sys.stderr.flush()
+1473                  # record the PASSING snippet: a compiled-and-ran example is the
+1474                  # strongest grounding -&gt; `aideal augment` folds it into the entry.
+1475                  log.append(run_id=run_id, step=&quot;readme-exec-test&quot;, language=cfg.language,
+1476                             task=task, status=&quot;pass&quot;, function=entry.name,
+1477                             code=snippet.strip()[:1500], round=attempt)
+1478                  # if this took a retry, also log the fix (error -&gt; working code)
+1479                  if attempt &gt; 0 and last:
+1480                      log.append(run_id=run_id, step=&quot;readme-exec-test&quot;, language=cfg.language,
+1481                                 task=task, status=&quot;fixed&quot;, function=entry.name,
+1482                                 error_category=last.get(&quot;cat&quot;, &quot;&quot;), error=last.get(&quot;msg&quot;, &quot;&quot;),
+1483                                 root_cause=last.get(&quot;locus&quot;, &quot;&quot;), code=last.get(&quot;code&quot;, &quot;&quot;),
+1484                                 suggested_fix_code=snippet.strip()[:1000], round=attempt)
+1485                  break
+1486              cat, msg, locus = _classify_error(merged, rc, error_marker,
+1487                                                language=cfg.language)
+1488              # coarse cat (compile/runtime/timeout) drives metrics/report; the shared
+1489              # FIX_GUIDE adds a FINER, actionable hint (e.g. type-mismatch -&gt; &quot;pick the
+1490              # geoTiff[T] that matches the raster&quot;). Stored so failures_for replays it
+1491              # into the next round, the same way the demo agent converges.
+1492              from .fix_guide import classify as _classify_fix
+1493              _, fix_hint = _classify_fix(merged)
+1494              # ran clean but omitted the correctness witness -&gt; tell the model exactly
+1495              # what&#x27;s missing instead of a vague &quot;unknown&quot; (Phase-A gate).
+1496              if (require_correctness and rc == 0 and check_marker not in merged
+1497                      and not (error_marker and error_marker in merged)):
+1498                  cat = &quot;no-correctness-check&quot;
+1499                  msg = (f&quot;ran without a correctness check: no &#x27;{check_marker}&#x27; witness printed. &quot;
+1500                         f&quot;End the snippet with require(&lt;result non-degenerate&gt;, ...) then &quot;
+1501                         f&quot;println(\&quot;{check_marker} {entry.name} \&quot; + &lt;witness&gt;).&quot;)
+1502                  fix_hint = msg
+1503              frames = _codebase_frames(merged, file_index)
+1504              last = {&quot;cat&quot;: cat, &quot;msg&quot;: msg, &quot;locus&quot;: locus,</code></pre></details><details class="snippet" id="code-fa2310722e99"><summary>experiments/external/assertion_replay/evidence.py:20</summary><p>Snapshot excerpt, lines 19–54. <a href="https://github.com/ZhuochengShang/GRAIL/blob/3db92a919b74cd3e822132f83f3a3aa9a1fb95a9/experiments/external/assertion_replay/evidence.py">Open full source file</a></p><pre><code>  19  def collect(project, cell):
+  20      &quot;&quot;&quot;Final result wins; incomplete A1 uses its explicitly approved legacy group.&quot;&quot;&quot;
+  21      final = project / f&quot;docs/eval/{cell}/comprehension.json&quot;
+  22      if final.exists():
+  23          raw = final.read_bytes()
+  24          data = json.loads(raw)
+  25          rows = {n: dict(m, name=n, execution_evidence=data[&quot;details&quot;].get(n),
+  26                         experiment_fingerprint=m.get(&quot;evidence_fingerprint&quot;) or data[&quot;run&quot;][&quot;experiment_fingerprint&quot;])
+  27                  for n, m in data[&quot;metrics&quot;].items()}
+  28          components = data[&quot;run&quot;][&quot;fingerprint_components&quot;]
+  29          source = final
+  30          complete = True
+  31      else:
+  32          checkpoint = project / f&quot;.aideal_exec/{cell}/comprehension_progress.jsonl&quot;
+  33          compatibility = checkpoint.parent / &quot;checkpoint_compatibility.json&quot;
+  34          if not checkpoint.exists() or not compatibility.exists():
+  35              return None
+  36          proof = read(compatibility)
+  37          components = proof[&quot;current_components&quot;]
+  38          raw = checkpoint.read_bytes()
+  39          # A writer may be appending its final line. Ignore only that incomplete line.
+  40          lines = raw.splitlines(keepends=True)
+  41          journal = [json.loads(line) for line in lines if line.endswith(b&quot;\n&quot;)]
+  42          rows = {r[&quot;name&quot;]: r for r in journal if r[&quot;experiment_fingerprint&quot;] == proof[&quot;legacy_fingerprint&quot;]}
+  43          rows.update({r[&quot;name&quot;]: r for r in journal if r[&quot;experiment_fingerprint&quot;] == digest(components)})
+  44          source, complete = checkpoint, False
+  45      # Older retries saved complete detail for a few rows. Bind only matching fingerprints.
+  46      for archived in sorted((project / f&quot;docs/eval/{cell}/retry_attempts&quot;).glob(&quot;*.json&quot;)):
+  47          old = read(archived)
+  48          fp = old.get(&quot;run&quot;, {}).get(&quot;experiment_fingerprint&quot;)
+  49          for name, detail in old.get(&quot;details&quot;, {}).items():
+  50              row = rows.get(name)
+  51              if row and row[&quot;experiment_fingerprint&quot;] == fp and not isinstance(row.get(&quot;execution_evidence&quot;), dict):
+  52                  row[&quot;execution_evidence&quot;] = detail
+  53      return {&quot;cell&quot;: cell, &quot;project&quot;: str(project), &quot;complete&quot;: complete, &quot;rows&quot;: rows,
+  54              &quot;components&quot;: components, &quot;source_path&quot;: str(source), &quot;source_sha256&quot;: digest(raw)}</code></pre></details><details class="snippet" id="code-4f2a2be0a0fc"><summary>experiments/external/provider_retry/report.py:72</summary><p>Snapshot excerpt, lines 72–127. <a href="https://github.com/ZhuochengShang/GRAIL/blob/3db92a919b74cd3e822132f83f3a3aa9a1fb95a9/experiments/external/provider_retry/report.py">Open full source file</a></p><pre><code>  72  def publish(parent,out):
+  73      out.mkdir(parents=True,exist_ok=True)
+  74      details=out/&#x27;api_details&#x27;;details.mkdir(exist_ok=True)
+  75      rows,cells,recoveries,rollout=[],[],[],[]
+  76      for repo,prefix,relative in REPOS:
+  77          for cell in [&#x27;A1&#x27;,&#x27;A2&#x27;,&#x27;B2&#x27;]:
+  78              worktree=parent/(prefix+&#x27;_&#x27;+cell);project=worktree/relative
+  79              evidence=collect(project,cell)
+  80              if evidence is None:
+  81                  cells.append({&#x27;repository&#x27;:repo,&#x27;cell&#x27;:cell,&#x27;state&#x27;:&#x27;Not started / no native results&#x27;,
+  82                                &#x27;n&#x27;:0,&#x27;statuses&#x27;:{}})
+  83                  continue
+  84              native=evidence[&#x27;rows&#x27;];fps={r[&#x27;experiment_fingerprint&#x27;] for r in native.values()}
+  85              history=defaultdict(list)
+  86              for r in lines(project/f&#x27;.aideal_exec/{cell}/comprehension_progress.jsonl&#x27;):
+  87                  if r.get(&#x27;experiment_fingerprint&#x27;) in fps:history[r[&#x27;name&#x27;]].append(r)
+  88              transport=defaultdict(list)
+  89              enrolled=[]
+  90              for p in sorted((worktree/&#x27;.aideal_exec/provider_transport_v2&#x27;).glob(&#x27;events-*.jsonl&#x27;)):
+  91                  for event in lines(p):
+  92                      if event.get(&#x27;event&#x27;)==&#x27;worker_enrolled&#x27;:enrolled.append(event[&#x27;pid&#x27;])
+  93                      if event.get(&#x27;api&#x27;):transport[event[&#x27;api&#x27;]].append(event)
+  94              if (worktree/&#x27;grail-agent/src/aideal_transport_policy.json&#x27;).exists():
+  95                  rollout.append({&#x27;repository&#x27;:repo,&#x27;cell&#x27;:cell,&#x27;observed_enrolled_worker_pids&#x27;:enrolled,
+  96                                  &#x27;state&#x27;:&#x27;New transport observed in worker logs&#x27; if enrolled else
+  97                                  &#x27;Installed; awaiting next natural worker start&#x27;})
+  98              statuses=Counter(outcome(r) for r in native.values())
+  99              wait=statuses.get(&#x27;Waiting for provider / retry&#x27;,0)
+ 100              cells.append({&#x27;repository&#x27;:repo,&#x27;cell&#x27;:cell,&#x27;n&#x27;:len(native),&#x27;statuses&#x27;:dict(statuses),
+ 101                            &#x27;state&#x27;:f&#x27;{wait} provider cases unresolved&#x27; if wait else
+ 102                            &#x27;Native evaluation finished (failures still count)&#x27; if evidence[&#x27;complete&#x27;] else
+ 103                            &#x27;Awaiting final artifact; no provider failures in collected rows&#x27;})
+ 104              for api,n in native.items():
+ 105                  h=history[api];events=transport[api];timing=provider_timing(events)
+ 106                  path=details/f&#x27;{digest([repo,cell,api])[:20]}.json&#x27;
+ 107                  latest=n.get(&#x27;wall_s&#x27;)
+ 108                  item={&#x27;repository&#x27;:repo,&#x27;cell&#x27;:cell,&#x27;api&#x27;:api,&#x27;outcome&#x27;:outcome(n),
+ 109                        &#x27;test_execution&#x27;:execution(n),&#x27;target_api_reached&#x27;:&#x27;Not independently verified&#x27;,
+ 110                        &#x27;latest_native_attempt_s&#x27;:latest,
+ 111                        &#x27;retained_checkpoint_events&#x27;:len(h),
+ 112                        &#x27;retained_attempt_total_s&#x27;:round(sum(r.get(&#x27;wall_s&#x27;,0) or 0 for r in h),3) if h else None,
+ 113                        &#x27;retained_504_events&#x27;:sum(provider_event_kind(r)==&#x27;recorded_504&#x27; for r in h),
+ 114                        &#x27;retained_cooldown_deferrals&#x27;:sum(provider_event_kind(r)==&#x27;deferral_no_request&#x27; for r in h),
+ 115                        &#x27;historical_idle_retry_s&#x27;:None,
+ 116                        &#x27;measured_provider_invocations&#x27;:len(timing),
+ 117                        &#x27;last_provider_s&#x27;:timing[-1].get(&#x27;provider_wall_s&#x27;) if timing else None,
+ 118                        &#x27;last_retry_interval_s&#x27;:timing[-1].get(&#x27;since_previous_provider_end_s&#x27;) if timing else None,
+ 119                        &#x27;next_provider_retry_epoch&#x27;:timing[-1].get(&#x27;retry_after_epoch&#x27;) if timing else None,
+ 120                        &#x27;transport_policy&#x27;:timing[-1][&#x27;policy_sha256&#x27;] if timing else &#x27;Historical/uninstrumented&#x27;,
+ 121                        &#x27;error&#x27;:n.get(&#x27;error&#x27;,&#x27;&#x27;),&#x27;details&#x27;:str(path.relative_to(out))}
+ 122                  atomic(path,{&#x27;summary&#x27;:item,&#x27;native_row&#x27;:n,&#x27;source_path&#x27;:evidence[&#x27;source_path&#x27;],
+ 123                               &#x27;source_sha256&#x27;:evidence[&#x27;source_sha256&#x27;],&#x27;checkpoint_events&#x27;:h,
+ 124                               &#x27;provider_timing&#x27;:timing,&#x27;transport_events&#x27;:events,
+ 125                               &#x27;timing_note&#x27;:&#x27;Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success.&#x27;})
+ 126                  rows.append(item)
+ 127          audit=parent/&#x27;GRAIL_overnight_evidence_audit/experiments/external/overnight_audit/data_validation&#x27;</code></pre></details><details class="snippet" id="code-e5a1fc29754c"><summary>grail-agent/src/aideal/doc_checks.py:902</summary><p>Snapshot excerpt, lines 902–924. <a href="https://github.com/ZhuochengShang/GRAIL/blob/3db92a919b74cd3e822132f83f3a3aa9a1fb95a9/grail-agent/src/aideal/doc_checks.py">Open full source file</a></p><pre><code> 902  def _classify_error_py(merged: str, rc: int, error_marker: str) -&gt; tuple[str, str, str]:
+ 903      &quot;&quot;&quot;Python flavor of _classify_error. compile = SyntaxError/IndentationError
+ 904      (the file never ran); infra = missing third-party module (env problem, not a
+ 905      doc problem — excluded from the doc-quality denominator like JVM
+ 906      NoClassDefFoundError); runtime = everything raised while running.&quot;&quot;&quot;
+ 907      import re as _re
+ 908      m = _re.search(r&quot;(?:ModuleNotFoundError|ImportError)[:\s]+(.+)&quot;, merged)
+ 909      if m:
+ 910          return &quot;infra&quot;, f&quot;missing module/import: {m.group(1).strip()[:200]}&quot;, &quot;&quot;
+ 911      m = _re.search(r&quot;^(?:SyntaxError|IndentationError|TabError)[:\s]+(.+)$&quot;, merged, _re.M)
+ 912      if m:
+ 913          loc = _re.search(r&#x27;File &quot;([^&quot;]+)&quot;, line (\d+)&#x27;, merged)
+ 914          return &quot;compile&quot;, m.group(0).strip()[:300], (f&quot;{loc.group(1)}:{loc.group(2)}&quot; if loc else &quot;&quot;)
+ 915      if error_marker and error_marker in merged:
+ 916          line = next((l for l in merged.splitlines() if error_marker in l), &quot;&quot;).strip()
+ 917          msg = line.split(error_marker, 1)[-1].strip()
+ 918          frames = _re.findall(r&#x27;File &quot;([^&quot;]+\.py)&quot;, line (\d+)&#x27;, merged)
+ 919          locus = f&quot;{frames[-1][0]}:{frames[-1][1]}&quot; if frames else &quot;&quot;
+ 920          return &quot;runtime&quot;, msg or &quot;runtime error&quot;, locus
+ 921      m = _re.search(r&quot;^(\w*(?:Error|Exception)\b.*)$&quot;, merged, _re.M)
+ 922      if m:
+ 923          return &quot;runtime&quot;, m.group(1).strip()[:300], &quot;&quot;
+ 924      return &quot;unknown&quot;, (merged.strip()[-300:] or f&quot;exit {rc}&quot;), &quot;&quot;</code></pre></details><details class="snippet" id="code-d9ba2a62d3b6"><summary>experiments/external/recovery/validation.py:36</summary><p>Snapshot excerpt, lines 36–46. <a href="https://github.com/ZhuochengShang/GRAIL/blob/3db92a919b74cd3e822132f83f3a3aa9a1fb95a9/experiments/external/recovery/validation.py">Open full source file</a></p><pre><code>  36  def eligible(result, api):
+  37      run, metrics = result.get(&#x27;run&#x27;, {}), result.get(&#x27;metrics&#x27;, {})
+  38      if (run.get(&#x27;max_fix_rounds&#x27;) != 0 or not run.get(&#x27;fingerprint_components&#x27;)
+  39              or not metrics or run.get(&#x27;api_count&#x27;) != len(metrics)
+  40              or any(m.get(&#x27;status&#x27;) not in (&#x27;pass&#x27;, &#x27;fail&#x27;) or
+  41                     m.get(&#x27;error_category&#x27;) == &#x27;llm-error&#x27; for m in metrics.values())):
+  42          raise ValueError(&#x27;baseline must be a complete zero-round result without provider failures&#x27;)
+  43      row = metrics.get(api, {})
+  44      if row.get(&#x27;status&#x27;) != &#x27;fail&#x27; or row.get(&#x27;error_category&#x27;) not in policy()[&#x27;eligible_categories&#x27;]:
+  45          raise ValueError(&#x27;API is not an eligible baseline execution failure&#x27;)
+  46      return row</code></pre></details><details class="snippet" id="code-51fa0b42a194"><summary>grail-agent/src/aideal/docfix.py:440</summary><p>Snapshot excerpt, lines 434–489. <a href="https://github.com/ZhuochengShang/GRAIL/blob/3db92a919b74cd3e822132f83f3a3aa9a1fb95a9/grail-agent/src/aideal/docfix.py">Open full source file</a></p><pre><code> 434          except Exception:
+ 435              pass
+ 436          return run_report
+ 437  
+ 438      _flush()
+ 439      for i, name in enumerate(targets, 1):
+ 440          if name in results and not results[name].get(&quot;status&quot;, &quot;&quot;).startswith(
+ 441                  (&quot;llm-error&quot;, &quot;in-progress&quot;)):
+ 442              continue
+ 443          t0 = time.time()
+ 444          u0 = usage_snapshot()
+ 445          # If a process dies after inserting a B1 entry but before finalizing
+ 446          # the API, the partial catalog now contains that name. Preserve the
+ 447          # original &quot;created from missing&quot; identity in the incremental report
+ 448          # so resume still knows to remove the entry if all repair rounds fail.
+ 449          prior_result = results.get(name) or {}
+ 450          created = bool(prior_result.get(&quot;created_from_missing&quot;, name not in entries))
+ 451          results[name] = {
+ 452              &quot;status&quot;: &quot;in-progress&quot;,
+ 453              &quot;created_from_missing&quot;: created,
+ 454              &quot;doc_rounds&quot;: prior_result.get(&quot;doc_rounds&quot;, []),
+ 455          }
+ 456          _flush()
+ 457          if created:
+ 458              # What the audience actually read. Full-doc mode deliberately keeps
+ 459              # the entire bundle here; legacy mode may use the configured cap.
+ 460              original_body = (&quot;(No catalog entry exists. The audience read the &quot;
+ 461                               &quot;ORIGINAL project documentation&quot;
+ 462                               + (&quot; IN FULL (full-doc mode)&quot; if full_doc else &quot;&quot;)
+ 463                               + &quot;; content below.)\n&quot;
+ 464                               + _clip(cfg.original_readme_text(limit=None))
+ 465                               + f&quot;\n\nTarget function: `{name}`&quot;)
+ 466          else:
+ 467              original_body = entries[name].body
+ 468          window, others = _source_window(cfg, name)
+ 469          type_ctx = _type_context(cfg, name)[:7000]
+ 470          receiver = _receiver_hint(name, owner_map) or &quot;(not resolved)&quot;
+ 471          # newest failure evidence for round 0
+ 472          rows = [r for r in log.entries()
+ 473                  if r.get(&quot;function&quot;) == name and r.get(&quot;status&quot;) == &quot;fail&quot;]
+ 474          last = rows[-1] if rows else {}
+ 475          cur_error = (last.get(&quot;error&quot;) or &quot;(no recorded error)&quot;)[:1500]
+ 476          cur_cat = last.get(&quot;error_category&quot;, &quot;unknown&quot;)
+ 477          cur_snippet = (last.get(&quot;code&quot;) or &quot;(snippet not recorded)&quot;)[:2000]
+ 478          cur_frames = &quot;, &quot;.join(last.get(&quot;frames&quot;, []) or []) or &quot;(none)&quot;
+ 479          current_body = original_body          # draft carried across rounds
+ 480          prev_err_sig = _err_sig(cur_cat, cur_error)
+ 481          prev_diag_sig = None
+ 482          stagnant = 0
+ 483          rounds_trail: list[dict] = []
+ 484          passed = False
+ 485          outcome = None            # set on early terminal verdicts
+ 486          for rnd in range(doc_rounds):
+ 487              _sys.stderr.write(f&quot;[docfix {i}/{len(targets)}] {name} round {rnd + 1}/&quot;
+ 488                                f&quot;{doc_rounds}: deep-dive -&gt; diagnose -&gt; rewrite -&gt; run\n&quot;)
+ 489              _sys.stderr.flush()</code></pre></details><details class="snippet" id="code-df7d806a98c5"><summary>experiments/external/recovery/engine.py:27</summary><p>Snapshot excerpt, lines 27–82. <a href="https://github.com/ZhuochengShang/GRAIL/blob/3db92a919b74cd3e822132f83f3a3aa9a1fb95a9/experiments/external/recovery/engine.py">Open full source file</a></p><pre><code>  27  def recover(identity, initial, out, *, diagnose, attempt, max_rounds=5, stuck=2):
+  28      &quot;&quot;&quot;Callbacks must preserve their own artifacts before returning.
+  29  
+  30      `attempt(round, previous, diagnosis)` returns status/category/code/error and
+  31      evidence paths. Provider errors are events, never credited code-fix rounds.
+  32      A caller must hold the output lock and validate immutable inputs each time.
+  33      &quot;&quot;&quot;
+  34      if not 1 &lt;= max_rounds &lt;= 5 or not 0 &lt;= stuck &lt;= max_rounds:
+  35          raise ValueError(&#x27;require 1..5 code rounds and 0..max_rounds stuck threshold; 0 disables&#x27;)
+  36      out = Path(out)
+  37      out.mkdir(parents=True, exist_ok=True)
+  38      path = out / &#x27;recovery.json&#x27;
+  39      fingerprint = digest({&#x27;identity&#x27;: identity, &#x27;max_rounds&#x27;: max_rounds,
+  40                            &#x27;stuck&#x27;: stuck, &#x27;initial&#x27;: initial})
+  41      state = json.loads(path.read_text()) if path.exists() else {
+  42          &#x27;fingerprint&#x27;: fingerprint, &#x27;identity&#x27;: identity, &#x27;initial&#x27;: initial,
+  43          &#x27;events&#x27;: [], &#x27;rounds&#x27;: [], &#x27;status&#x27;: &#x27;pending&#x27;, &#x27;diagnosis&#x27;: None,
+  44          &#x27;max_rounds&#x27;: max_rounds, &#x27;stuck_threshold&#x27;: stuck, &#x27;stop_reason&#x27;: None,
+  45          &#x27;semantic_validation&#x27;: &#x27;needs_independent_review&#x27;, &#x27;headline_credit&#x27;: False}
+  46      if state[&#x27;fingerprint&#x27;] != fingerprint:
+  47          raise ValueError(&#x27;changed recovery inputs; use a new output namespace&#x27;)
+  48      if state[&#x27;status&#x27;] in (&#x27;recovered_native&#x27;, &#x27;exhausted&#x27;, &#x27;stuck&#x27;, &#x27;infra_blocked&#x27;):
+  49          return state
+  50      save(path, state)
+  51      if state[&#x27;diagnosis&#x27;] is None:
+  52          try:
+  53              state[&#x27;diagnosis&#x27;] = diagnose()
+  54          except Exception as exc:
+  55              state[&#x27;events&#x27;].append({&#x27;stage&#x27;: &#x27;deep_dive&#x27;, &#x27;error&#x27;: str(exc),
+  56                                      &#x27;status&#x27;: &#x27;blocked&#x27;})
+  57              state[&#x27;status&#x27;] = &#x27;blocked&#x27;
+  58              save(path, state)
+  59              return state
+  60          save(path, state)
+  61      previous = state[&#x27;rounds&#x27;][-1] if state[&#x27;rounds&#x27;] else initial
+  62      for number in range(len(state[&#x27;rounds&#x27;]) + 1, max_rounds + 1):
+  63          row = attempt(number, previous, state[&#x27;diagnosis&#x27;])
+  64          row = dict(row, code_fix_round=number)
+  65          state[&#x27;events&#x27;].append(row)
+  66          if row.get(&#x27;category&#x27;) == &#x27;llm-error&#x27;:
+  67              state[&#x27;status&#x27;] = &#x27;provider_blocked&#x27;
+  68              save(path, state)
+  69              return state
+  70          state[&#x27;rounds&#x27;].append(row)
+  71          state[&#x27;status&#x27;] = &#x27;running&#x27;
+  72          if row[&#x27;status&#x27;] == &#x27;pass&#x27;:
+  73              state[&#x27;status&#x27;] = &#x27;recovered_native&#x27;
+  74          elif row.get(&#x27;category&#x27;) == &#x27;infra&#x27;:
+  75              state[&#x27;status&#x27;] = &#x27;infra_blocked&#x27;
+  76          elif stuck and len(state[&#x27;rounds&#x27;]) &gt;= stuck:
+  77              recent = state[&#x27;rounds&#x27;][-stuck:]
+  78              if len({(r.get(&#x27;category&#x27;), r.get(&#x27;error&#x27;, &#x27;&#x27;)[:160]) for r in recent}) == 1:
+  79                  state[&#x27;status&#x27;] = &#x27;stuck&#x27;
+  80                  state[&#x27;stop_reason&#x27;] = f&#x27;{stuck} consecutive equal category/error-prefix observations&#x27;
+  81          if state[&#x27;status&#x27;] == &#x27;running&#x27; and number == max_rounds:
+  82              state[&#x27;status&#x27;] = &#x27;exhausted&#x27;</code></pre></details><details class="snippet" id="code-2071388e1978"><summary>experiments/external/provider_retry/enroll.py:15</summary><p>Snapshot excerpt, lines 9–51. <a href="https://github.com/ZhuochengShang/GRAIL/blob/3db92a919b74cd3e822132f83f3a3aa9a1fb95a9/experiments/external/provider_retry/enroll.py">Open full source file</a></p><pre><code>   9  import json
+  10  from pathlib import Path
+  11  
+  12  from .transport import atomic, sha
+  13  
+  14  
+  15  BOOTSTRAP = &#x27;&#x27;&#x27;# AIDEAL explicit transport-v2 bootstrap; enrolled config only.
+  16  from pathlib import Path as _Path
+  17  import hashlib as _hashlib
+  18  import json as _json
+  19  import sys as _sys
+  20  _base = _Path(__file__).resolve().parent
+  21  _policy_path = _base / &quot;aideal_transport_policy.json&quot;
+  22  if _policy_path.exists():
+  23      _policy = _json.loads(_policy_path.read_text())
+  24      if (&quot;comprehension&quot; in _sys.argv and &quot;--resume&quot; in _sys.argv
+  25              and &quot;--config&quot; in _sys.argv
+  26              and str(_Path(_sys.argv[_sys.argv.index(&quot;--config&quot;)+1]).resolve()) == _policy[&quot;config&quot;]):
+  27          try:
+  28              _module = _base / &quot;_aideal_transport_retry.py&quot;
+  29              if _hashlib.sha256(_module.read_bytes()).hexdigest() != _policy[&quot;adapter_sha256&quot;]:
+  30                  raise RuntimeError(&quot;Transport adapter hash mismatch&quot;)
+  31              if _hashlib.sha256((_base / &quot;_aideal_input_contract.py&quot;).read_bytes()).hexdigest() != _policy[&quot;input_contract_sha256&quot;]:
+  32                  raise RuntimeError(&quot;Input contract hash mismatch&quot;)
+  33              from _aideal_transport_retry import install as _install
+  34              _install(_policy_path)
+  35          except Exception as _exc:
+  36              _sys.stderr.write(&quot;AIDEAL transport bootstrap failed: &quot; + type(_exc).__name__ + &quot;\\n&quot;)
+  37              raise SystemExit(78)
+  38  &#x27;&#x27;&#x27;
+  39  
+  40  
+  41  def enroll(worktree, config, output, harness_setup=None):
+  42      worktree, config, output = worktree.resolve(), config.resolve(), output.resolve()
+  43      if not config.is_file() or not config.is_relative_to(worktree):
+  44          raise ValueError(&#x27;Config must exist inside enrolled worktree&#x27;)
+  45      source = worktree / &#x27;grail-agent/src&#x27;
+  46      if not (source / &#x27;aideal/llm.py&#x27;).is_file():
+  47          raise ValueError(&#x27;Expected existing AIDEAL engine&#x27;)
+  48      payload = Path(__file__).with_name(&#x27;transport.py&#x27;).read_bytes()
+  49      contract = Path(__file__).with_name(&#x27;input_contract.py&#x27;).read_bytes()
+  50      policy = {&#x27;enabled&#x27;:True,&#x27;version&#x27;:&#x27;aideal-provider-transport-v2&#x27;,&#x27;config&#x27;:str(config),
+  51                &#x27;output&#x27;:str(output),&#x27;request_timeout_s&#x27;:600,&#x27;sdk_attempts&#x27;:1,</code></pre></details><details class="snippet" id="code-da14f4ec7d96"><summary>grail-agent/src/aideal/config.py:187</summary><p>Snapshot excerpt, lines 187–198. <a href="https://github.com/ZhuochengShang/GRAIL/blob/3db92a919b74cd3e822132f83f3a3aa9a1fb95a9/grail-agent/src/aideal/config.py">Open full source file</a></p><pre><code> 187  def _load_layered(config_path: Path) -&gt; dict:
+ 188      &quot;&quot;&quot;Build the effective raw config: framework defaults, then each adapter in
+ 189      `extends:`, then the project file itself (highest precedence).&quot;&quot;&quot;
+ 190      project_raw = yaml.safe_load(config_path.read_text(encoding=&quot;utf-8&quot;)) or {}
+ 191      merged: dict = {}
+ 192      if DEFAULTS_PATH.exists():
+ 193          merged = yaml.safe_load(DEFAULTS_PATH.read_text(encoding=&quot;utf-8&quot;)) or {}
+ 194      for name in project_raw.get(&quot;extends&quot;, []) or []:
+ 195          adapter = _resolve_adapter(name, config_path.parent)
+ 196          if adapter is not None:
+ 197              merged = _deep_merge(merged, yaml.safe_load(adapter.read_text(encoding=&quot;utf-8&quot;)) or {})
+ 198      return _deep_merge(merged, project_raw)</code></pre></details><details class="snippet" id="code-889a64cb309d"><summary>grail-agent/src/aideal/profile.py:47</summary><p>Snapshot excerpt, lines 41–83. <a href="https://github.com/ZhuochengShang/GRAIL/blob/3db92a919b74cd3e822132f83f3a3aa9a1fb95a9/grail-agent/src/aideal/profile.py">Open full source file</a></p><pre><code>  41  
+  42  
+  43  def profile_path(cfg: AidealConfig) -&gt; Path:
+  44      sub = cfg.raw.get(&quot;files&quot;, {}).get(&quot;project_profile&quot;, &quot;configs/project_profile.yaml&quot;)
+  45      return (cfg.root / sub).resolve()
+  46  
+  47  
+  48  def load_profile(cfg: AidealConfig) -&gt; dict:
+  49      path = profile_path(cfg)
+  50      if not path.exists():
+  51          return {}
+  52      return yaml.safe_load(path.read_text(encoding=&quot;utf-8&quot;)) or {}
+  53  
+  54  
+  55  def missing_fields(profile: dict) -&gt; list[str]:
+  56      missing = []
+  57      for dotted in REQUIRED_FIELDS:
+  58          node: object = profile
+  59          for part in dotted.split(&quot;.&quot;):
+  60              node = node.get(part) if isinstance(node, dict) else None
+  61          text = &quot; &quot;.join(map(str, node)) if isinstance(node, list) else str(node or &quot;&quot;)
+  62          if not node or &quot;TODO&quot; in text:
+  63              missing.append(dotted)
+  64      return missing
+  65  
+  66  
+  67  def require_profile(cfg: AidealConfig) -&gt; dict:
+  68      &quot;&quot;&quot;Gate for LLM-based steps: raise with guidance if the profile is incomplete.&quot;&quot;&quot;
+  69      profile = load_profile(cfg)
+  70      missing = missing_fields(profile)
+  71      if missing:
+  72          raise SystemExit(
+  73              f&quot;project profile incomplete ({profile_path(cfg)}): fill {missing}. &quot;
+  74              &quot;Run `python -m aideal.cli init` to create the template.&quot;
+  75          )
+  76      return profile
+  77  
+  78  
+  79  AGENTS_SNIPPET = &quot;&quot;&quot;\
+  80  ## AIDEAL (LLM-readiness tooling)
+  81  
+  82  This repo uses AIDEAL. Conventions for coding agents:
+  83  </code></pre></details><details class="snippet" id="code-4efc74c7509a"><summary>grail-agent/src/aideal/readme_agent.py:1173</summary><p>Snapshot excerpt, lines 1173–1228. <a href="https://github.com/ZhuochengShang/GRAIL/blob/3db92a919b74cd3e822132f83f3a3aa9a1fb95a9/grail-agent/src/aideal/readme_agent.py">Open full source file</a></p><pre><code>1173  def public_api_surface(cfg: AidealConfig, override_filter: str | None = None) -&gt; set[str]:
+1174      &quot;&quot;&quot;Public API names, optionally narrowed to the INTENDED API by a general,
+1175      codebase-agnostic `surface_filter` (pass override_filter=&#x27;all&#x27; for the raw
+1176      discovered surface):
+1177        all                       - every visible public def (raw surface)
+1178        documented                - has a doc comment (author signalled intent)
+1179        non_override              - not an `override` (excludes inherited/interface impls)
+1180        documented_non_override   - both (tightest intended-API set)
+1181      Default `all` (back-compat).&quot;&quot;&quot;
+1182      model = visibility_model(cfg)
+1183      flt = (override_filter or cfg.surface_filter or &quot;all&quot;).lower()
+1184      if flt in (&quot;intent_score&quot;, &quot;intent&quot;):
+1185          return {n for n, info in intent_scores(cfg).items() if info[&quot;selected&quot;]}
+1186      if flt in (&quot;intended_llm&quot;, &quot;intent_llm&quot;):
+1187          return intended_api_llm(cfg)[0]
+1188      file_cache: dict[str, list[str]] = {}
+1189      all_names: set[str] = set()
+1190      documented: set[str] = set()
+1191      non_override: set[str] = set()
+1192      py_identities = _python_qualified_identities(cfg) if cfg.language.lower() == &quot;python&quot; else None
+1193      for name, prefix, path, i, _line in _iter_defs(cfg):
+1194          if name in cfg.exclude_names or not _is_public(name, prefix, model):
+1195              continue
+1196          if py_identities is not None:
+1197              rel = str(Path(path).relative_to(cfg.root)).replace(&quot;\\&quot;, &quot;/&quot;)
+1198              if (rel, i + 1, name) not in py_identities:
+1199                  continue
+1200          all_names.add(name)
+1201          if not re.search(r&quot;\boverride\b&quot;, prefix):
+1202              non_override.add(name)
+1203          if flt.startswith(&quot;documented&quot;):
+1204              lines = file_cache.setdefault(
+1205                  path, Path(path).read_text(encoding=&quot;utf-8&quot;, errors=&quot;ignore&quot;).splitlines())
+1206              if _doc_at(cfg, lines, i).strip():
+1207                  documented.add(name)
+1208      # Intent signals, in order of preference: documentation, then tests (a unit
+1209      # test exercising an API is also author intent). Structural `non_override`
+1210      # is the last resort because it&#x27;s over-inclusive (can&#x27;t tell API from
+1211      # internal helper). So `documented` degrades: docs -&gt; tested -&gt; non_override
+1212      # -&gt; all, never empty.
+1213      def _tested() -&gt; set[str]:
+1214          if not cfg.test_globs:
+1215              return set()
+1216          names = set()
+1217          for g in cfg.test_globs:
+1218              for p in globmod.glob(str(cfg.root / g), recursive=True):
+1219                  txt = Path(p).read_text(encoding=&quot;utf-8&quot;, errors=&quot;ignore&quot;)
+1220                  for nm in all_names:
+1221                      if nm not in names and re.search(rf&quot;\b{re.escape(nm)}\s*[\(\[]|\.{re.escape(nm)}\b&quot;, txt):
+1222                          names.add(nm)
+1223          return names
+1224  
+1225      if flt == &quot;documented&quot;:
+1226          return documented or _tested() or non_override or all_names
+1227      if flt == &quot;tested&quot;:
+1228          return _tested() or documented or non_override or all_names</code></pre></details><details class="snippet" id="code-6ce7eb919d0a"><summary>grail-agent/src/aideal/readme_agent.py:2070</summary><p>Snapshot excerpt, lines 2070–2117. <a href="https://github.com/ZhuochengShang/GRAIL/blob/3db92a919b74cd3e822132f83f3a3aa9a1fb95a9/grail-agent/src/aideal/readme_agent.py">Open full source file</a></p><pre><code>2070  def public_api_details(cfg: AidealConfig) -&gt; list[dict]:
+2071      &quot;&quot;&quot;Per-definition records for the surface: name, signature, params, return,
+2072      description, visibility, file, line. One record per definition site (not
+2073      collapsed), so overloads across classes stay distinct.&quot;&quot;&quot;
+2074      model = visibility_model(cfg)
+2075      py_identities = _python_qualified_identities(cfg) if cfg.language.lower() == &quot;python&quot; else {}
+2076      file_cache: dict[str, list[str]] = {}
+2077      out: list[dict] = []
+2078      for name, prefix, path, i, line in _iter_defs(cfg):
+2079          if name in cfg.exclude_names:
+2080              continue
+2081          public = _is_public(name, prefix, model)
+2082          lines = file_cache.setdefault(
+2083              path, Path(path).read_text(encoding=&quot;utf-8&quot;, errors=&quot;ignore&quot;).splitlines())
+2084          m = re.compile(cfg.public_def_regex).search(line)
+2085          rel = str(Path(path).relative_to(cfg.root))
+2086          identity = py_identities.get((rel, i + 1, name), {})
+2087          if cfg.language.lower() == &quot;python&quot; and not identity:
+2088              continue
+2089          if cfg.language.lower() == &quot;python&quot;:
+2090              # Python signatures come from AST, not the Scala-style colon
+2091              # parser: in ``class X(Base): \&quot;\&quot;\&quot;doc\&quot;\&quot;\&quot;`` the colon starts
+2092              # the body, not a return type, and Base is inheritance rather than
+2093              # a constructor parameter.
+2094              raw = identity.get(&quot;signature&quot;, name)
+2095              params = identity.get(&quot;params&quot;, [])
+2096              ret = identity.get(&quot;returns&quot;, &quot;&quot;)
+2097          else:
+2098              raw, params, ret = _signature_at(lines, i, m.start() if m else 0,
+2099                                               m.end(1) if m else 0)
+2100              if cfg.language.lower() == &quot;java&quot;:
+2101                  params = [_java_param_record(p[&quot;name&quot;]) for p in params]
+2102                  ret = _java_return_type(raw, name)
+2103          out.append({
+2104              &quot;name&quot;: name,
+2105              &quot;qualified_name&quot;: identity.get(&quot;qualified_name&quot;, name),
+2106              &quot;module&quot;: identity.get(&quot;module&quot;, &quot;&quot;),
+2107              &quot;owner&quot;: identity.get(&quot;owner&quot;, &quot;&quot;),
+2108              &quot;definition_kind&quot;: identity.get(&quot;kind&quot;, &quot;&quot;),
+2109              &quot;visibility&quot;: &quot;public&quot; if public else &quot;non-public&quot;,
+2110              &quot;signature&quot;: raw,
+2111              &quot;params&quot;: params,
+2112              &quot;returns&quot;: ret,
+2113              &quot;description&quot;: _doc_at(cfg, lines, i),
+2114              &quot;file&quot;: rel,
+2115              &quot;line&quot;: i + 1,
+2116          })
+2117      return out</code></pre></details><details class="snippet" id="code-e66482cc7c22"><summary>grail-agent/src/aideal/readme_agent.py:2375</summary><p>Snapshot excerpt, lines 2375–2430. <a href="https://github.com/ZhuochengShang/GRAIL/blob/3db92a919b74cd3e822132f83f3a3aa9a1fb95a9/grail-agent/src/aideal/readme_agent.py">Open full source file</a></p><pre><code>2375  def find_or_create(cfg: AidealConfig, generate: bool = False, max_generated: int = 10,
+2376                     force: bool = False, resume: bool = False) -&gt; dict:
+2377      &quot;&quot;&quot;Return status of the LLM readme; create a skeleton if missing.
+2378  
+2379      If the readme already exists it is returned as-is, UNLESS `force=True`
+2380      (regenerate/overwrite) — use this to rerun `--generate` over an existing
+2381      file instead of getting an instant &quot;found&quot; no-op.&quot;&quot;&quot;
+2382      if cfg.llm_readme.exists() and not force and not resume:
+2383          entries = parse_readme(cfg.llm_readme)
+2384          return {
+2385              &quot;action&quot;: &quot;found&quot;,
+2386              &quot;path&quot;: str(cfg.llm_readme),
+2387              &quot;api_entries&quot;: len(entries),
+2388              &quot;apis&quot;: [e.name for e in entries],
+2389              &quot;note&quot;: &quot;already exists; pass --force to regenerate/overwrite&quot;,
+2390          }
+2391  
+2392      # group every definition site by name (overloads stay together), restricted
+2393      # to the intended-API surface (cfg.surface_filter) so we document the real
+2394      # API, not the raw regex surface.
+2395      allowed = public_api_surface(cfg)
+2396      by_name: dict[str, list[dict]] = {}
+2397      for d in public_api_details(cfg):
+2398          if d[&quot;visibility&quot;] == &quot;public&quot; and d[&quot;name&quot;] in allowed:
+2399              by_name.setdefault(d[&quot;name&quot;], []).append(d)
+2400      surface = sorted(by_name)
+2401      lang = cfg.language.lower()
+2402      _intro = (&quot;Generated skeleton — fill the TODOs.&quot; if not generate
+2403                else &quot;Generated from the API surface, project profile, and distilled docs.&quot;)
+2404      header = f&quot;# {cfg.project_name} — LLM_readme\n\nLLM-facing API documentation. {_intro}\n\n&quot;
+2405      targets = surface[:max_generated] if (generate and max_generated) else surface
+2406      failures: list[dict] = []
+2407      cfg.llm_readme.parent.mkdir(parents=True, exist_ok=True)
+2408  
+2409      if generate:
+2410          # Durable generation identity. A partial README is safe to resume only
+2411          # when its source/config/model inputs still match. This prevents an old
+2412          # pilot (or a changed knowledge YAML) from being silently mixed into a
+2413          # production all-API document.
+2414          import hashlib as _hashlib
+2415          import json as _json
+2416          import os as _os
+2417          import sys as _sysmod
+2418  
+2419          def _generation_files_hash(paths: list[Path], root: Path) -&gt; dict:
+2420              digest = _hashlib.sha256()
+2421              files = sorted(set(p.resolve() for p in paths if p.is_file()), key=str)
+2422              for path in files:
+2423                  try:
+2424                      label = path.relative_to(root.resolve())
+2425                  except ValueError:
+2426                      label = path
+2427                  digest.update(str(label).encode(&quot;utf-8&quot;))
+2428                  digest.update(b&quot;\0&quot;)
+2429                  digest.update(path.read_bytes())
+2430                  digest.update(b&quot;\0&quot;)</code></pre></details><details class="snippet" id="code-5738de982320"><summary>experiments/external/run_resumable_readme.py:14</summary><p>Snapshot excerpt, lines 14–30. <a href="https://github.com/ZhuochengShang/GRAIL/blob/3db92a919b74cd3e822132f83f3a3aa9a1fb95a9/experiments/external/run_resumable_readme.py">Open full source file</a></p><pre><code>  14  def main() -&gt; int:
+  15      parser = argparse.ArgumentParser()
+  16      parser.add_argument(&quot;--config&quot;, required=True, type=Path)
+  17      parser.add_argument(&quot;--limit&quot;, default=&quot;0&quot;)
+  18      parser.add_argument(&quot;--role&quot;, action=&quot;append&quot;, default=[])
+  19      args = parser.parse_args()
+  20      cfg = load_config(args.config)
+  21      state = cfg.root / &quot;.aideal_exec/readme_generation_state.json&quot;
+  22      mode = &quot;--resume&quot; if state.is_file() and cfg.llm_readme.is_file() else &quot;--force&quot;
+  23      command = [
+  24          sys.executable, &quot;-m&quot;, &quot;aideal.cli&quot;, &quot;--config&quot;, str(args.config),
+  25          &quot;readme&quot;, &quot;--generate&quot;, &quot;--limit&quot;, str(args.limit), mode,
+  26      ]
+  27      for role in args.role:
+  28          command.extend([&quot;--role&quot;, role])
+  29      os.execvpe(command[0], command, dict(os.environ))
+  30      return 127</code></pre></details><details class="snippet" id="code-943abb5ecdc5"><summary>grail-agent/src/aideal/doc_checks.py:433</summary><p>Snapshot excerpt, lines 433–488. <a href="https://github.com/ZhuochengShang/GRAIL/blob/3db92a919b74cd3e822132f83f3a3aa9a1fb95a9/grail-agent/src/aideal/doc_checks.py">Open full source file</a></p><pre><code> 433  def comprehension_check(cfg: AidealConfig, sample: int | None = None, seed: int = 42,
+ 434                          doc_source: str = &quot;aideal&quot;, execute: bool = False,
+ 435                          show_code: bool = False, api: str | None = None,
+ 436                          class_context: bool | None = None,
+ 437                          rerun_failed: bool = False,
+ 438                          max_fix_rounds: int | None = None,
+ 439                          resume: bool = False,
+ 440                          timeout_s: int | None = None,
+ 441                          full_doc: bool | None = None,
+ 442                          doc_scope: str | None = None,
+ 443                          manifest: str | None = None) -&gt; dict:
+ 444      &quot;&quot;&quot;Given only the documentation, the audience model writes code; the author
+ 445      model grades strictly against the doc. Failures go to the error log.
+ 446  
+ 447      rerun_failed: restrict the inventory to functions whose MOST-RECENT outcome in
+ 448               error_log is `fail` (via _exec_status_map — `fixed`/`pass` are skipped).
+ 449               Lets you re-test just the last run&#x27;s failures instead of the whole
+ 450               surface. Applies to both --execute and the LLM-graded path.
+ 451  
+ 452      doc_source:
+ 453        &quot;aideal&quot;   - per-API entries from LLM_readme.md (the AIDEAL format)
+ 454        &quot;original&quot; - the project&#x27;s ORIGINAL readme as the only context, with
+ 455                     target functions sampled from the code surface. This is
+ 456                     the baseline condition for original-vs-AIDEAL comparisons.
+ 457      execute: if True, the audience snippet is compiled/run via the configured
+ 458               `comprehension.execute` command instead of being LLM-graded —
+ 459               real execution ground truth. Defaults to ALL documented APIs.
+ 460      class_context: INDEX-FIRST read path. When on (CLI --class-context or config
+ 461               comprehension.class_context), each tested API&#x27;s body is prefixed with
+ 462               its catalogue class header (how to obtain the receiver + one verified
+ 463               sibling&#x27;s real call pattern) instead of the bare per-API body — the A/B
+ 464               lever against the ~53% receiver/entry-point failure class. None -&gt; config.
+ 465      &quot;&quot;&quot;
+ 466      from .llm import invoke_text
+ 467      from .profile import require_profile
+ 468      from .prompts import load as load_prompt
+ 469      from .readme_agent import _class_context_body
+ 470  
+ 471      require_profile(cfg)  # user must have entered project/target-user/domain fields
+ 472      if full_doc is None:
+ 473          full_doc = bool((cfg.comprehension or {}).get(&quot;full_doc&quot;, False))
+ 474      doc_scope = doc_scope or (&quot;full&quot; if full_doc else &quot;entry&quot;)
+ 475      if doc_scope not in {&quot;full&quot;, &quot;relevant&quot;, &quot;entry&quot;}:
+ 476          raise ValueError(f&quot;unknown doc_scope={doc_scope!r}&quot;)
+ 477      if doc_scope == &quot;full&quot;:
+ 478          full_doc = True
+ 479      elif doc_scope == &quot;relevant&quot;:
+ 480          full_doc = False
+ 481      manifest_names = _load_manifest(cfg, manifest)
+ 482      inventory, shared_doc, err = _comprehension_inventory(
+ 483          cfg, doc_source, manifest=manifest_names, full_doc=full_doc,
+ 484          doc_scope=doc_scope)
+ 485      if err:
+ 486          return err
+ 487      if full_doc and not execute:
+ 488          return {&quot;check&quot;: &quot;comprehension&quot;, &quot;passed&quot;: False, &quot;score&quot;: 0.0,</code></pre></details><details class="snippet" id="code-77ae489c3b12"><summary>grail-agent/src/aideal/doc_checks.py:852</summary><p>Snapshot excerpt, lines 852–899. <a href="https://github.com/ZhuochengShang/GRAIL/blob/3db92a919b74cd3e822132f83f3a3aa9a1fb95a9/grail-agent/src/aideal/doc_checks.py">Open full source file</a></p><pre><code> 852  def _execute_sample_data(cfg: AidealConfig, ex: dict) -&gt; tuple[dict[str, str], str, list[str]]:
+ 853      &quot;&quot;&quot;Resolve sample-data bindings for prompts/scaffolds. Uses the configured
+ 854      `sample_data` if present; otherwise auto-discovers a `fixtures/` folder.
+ 855      Always provides an `output_dir` binding so write APIs have a target.
+ 856  
+ 857      Returns (sample_data, available_inputs, warnings). `warnings` flags typed inputs
+ 858      whose path is missing or whose extension contradicts the binding&#x27;s declared type
+ 859      (see _validate_sample_data); they&#x27;re also echoed to stderr so a mis-pinned input is
+ 860      obvious on the console, not buried in a downstream compile/runtime failure.&quot;&quot;&quot;
+ 861      def _resolve(v):
+ 862          if isinstance(v, dict):
+ 863              package = v.get(&quot;package&quot;)
+ 864              resource = v.get(&quot;resource&quot;)
+ 865              if not package or not resource:
+ 866                  raise ValueError(&quot;sample_data mapping requires both &#x27;package&#x27; and &#x27;resource&#x27;&quot;)
+ 867              from importlib.resources import files
+ 868              target = files(str(package)).joinpath(str(resource))
+ 869              if not target.is_file():
+ 870                  raise FileNotFoundError(
+ 871                      f&quot;package resource not found: {package}:{resource}&quot;)
+ 872              return str(target)
+ 873          v = str(v)
+ 874          return str((cfg.root / v).resolve()) if (not v.startswith(&quot;/&quot;) and &quot;/&quot; in v) else v
+ 875  
+ 876      use_uri = ex.get(&quot;local_uris&quot;, True)
+ 877  
+ 878      def _as_uri(p):
+ 879          p = str(p)
+ 880          if &quot;://&quot; in p:
+ 881              return p
+ 882          return f&quot;file://{p}&quot; if (use_uri and p.startswith(&quot;/&quot;)) else p
+ 883  
+ 884      # fixtures auto-discovery is the base; explicit `sample_data` entries OVERRIDE
+ 885      # per binding — so you can pin just raster_tif and let geojson/csv auto-fill.
+ 886      configured = dict(_discover_fixtures(cfg, ex))
+ 887      configured.update(ex.get(&quot;sample_data&quot;, {}) or {})
+ 888      configured.setdefault(&quot;output_dir&quot;, ex.get(&quot;output_dir&quot;, &quot;/tmp/aideal_apitest_out&quot;))
+ 889      sample_data = {k: _as_uri(_resolve(v)) for k, v in configured.items()}
+ 890      available_inputs = &quot;\n&quot;.join(f&quot;- {k} = {p}&quot; for k, p in sample_data.items()) or &quot;(none configured)&quot;
+ 891      # type/existence check on the input paths (raster_tif must be a .tif, etc.) so a
+ 892      # bad binding is caught here, not as an opaque Scala error deep in the run.
+ 893      warnings = _validate_sample_data(sample_data)
+ 894      if warnings:
+ 895          import sys
+ 896          for w in warnings:
+ 897              sys.stderr.write(f&quot;  [sample_data] WARNING: {w}\n&quot;)
+ 898          sys.stderr.flush()
+ 899      return sample_data, available_inputs, warnings</code></pre></details><details class="snippet" id="code-a4fe14945865"><summary>grail-agent/src/aideal/doc_checks.py:760</summary><p>Snapshot excerpt, lines 760–810. <a href="https://github.com/ZhuochengShang/GRAIL/blob/3db92a919b74cd3e822132f83f3a3aa9a1fb95a9/grail-agent/src/aideal/doc_checks.py">Open full source file</a></p><pre><code> 760  def _resolve_preamble(cfg: AidealConfig, ex: dict, sample_data: dict) -&gt; str:
+ 761      &quot;&quot;&quot;Return the typed-input preamble. `preamble: auto` LLM-generates it ONCE
+ 762      (cached to docs/preamble.scala) from the codebase&#x27;s own documented reader
+ 763      APIs — so NO human writes Scala. A literal string is used as-is (still
+ 764      supported). Any failure (no key/profile) degrades to &#x27;&#x27; so the model just
+ 765      writes its own I/O guided by io_hints.
+ 766  
+ 767      Hardened grounding: readers are ranked by how many documented ops CONSUME their
+ 768      return type, shadow readers (return type consumed by nothing — the classic
+ 769      JavaRasterRDD/JavaSpatialRDD wrappers) are dropped, the model is told the target
+ 770      consumed types explicitly, and any generated line binding to an unconsumed type
+ 771      is filtered out. This is the general fix for the reader name-collision that made
+ 772      `auto` load Java wrappers and force snippets to invent .toRDD/.toRasterRDD.&quot;&quot;&quot;
+ 773      raw = (ex.get(&quot;preamble&quot;, &quot;&quot;) or &quot;&quot;)
+ 774      if raw.strip().lower() != &quot;auto&quot;:
+ 775          return raw.strip()
+ 776      cache = cfg.llm_readme.parent / &quot;preamble.scala&quot;
+ 777      if cache.exists():
+ 778          return cache.read_text(encoding=&quot;utf-8&quot;).strip()
+ 779      try:
+ 780          from .llm import invoke_text
+ 781          from .readme_agent import parse_readme, public_api_details
+ 782          from .profile import require_profile
+ 783          require_profile(cfg)
+ 784          counts = _consumed_type_counts(cfg)
+ 785          ret_of = {d[&quot;name&quot;]: _base_type(d.get(&quot;returns&quot;, &quot;&quot;)) for d in public_api_details(cfg)}
+ 786          cands = [e for e in parse_readme(cfg.llm_readme)
+ 787                   if re.search(r&quot;read|geoTiff|geojson|load|shapefile|spatialFile|wkt|import&quot;, e.name, re.I)]
+ 788          useful_names = _useful_readers([e.name for e in cands], ret_of, counts)
+ 789          by_name = {e.name: e for e in cands}
+ 790          readers = ([by_name[n] for n in useful_names] or cands)[:8]
+ 791          target_set = sorted({ret_of.get(e.name, &quot;&quot;) for e in readers if ret_of.get(e.name)})
+ 792          targets = &quot;, &quot;.join(target_set) or &quot;the library&#x27;s core input types&quot;
+ 793          kinds = &quot;, &quot;.join(sorted(sample_data))
+ 794          system = (f&quot;You write {cfg.language} that loads sample inputs into typed variables, &quot;
+ 795                    &quot;using ONLY the reader APIs documented below. Output only code, no fences, &quot;
+ 796                    &quot;one `val &lt;name&gt;: &lt;Type&gt; = &lt;reader&gt;(&lt;pathVar&gt;)` per usable input. Load into the &quot;
+ 797                    f&quot;types the library&#x27;s operations CONSUME ({targets}); do NOT use a reader that &quot;
+ 798                    &quot;returns a type not in that list (e.g. a Java* wrapper the operations don&#x27;t accept).&quot;)
+ 799          user = (f&quot;Path variables in scope: {kinds}\n\nTarget consumed types: {targets}\n\n&quot;
+ 800                  &quot;Documented reader APIs:\n&quot; + &quot;\n\n&quot;.join(e.body for e in readers)
+ 801                  + &quot;\n\nWrite the load statements.&quot;)
+ 802          code = invoke_text(cfg.model_for_role(&quot;author&quot;), system, user).strip()
+ 803          code = re.sub(r&quot;^```\w*\n?|```$&quot;, &quot;&quot;, code, flags=re.MULTILINE).strip()
+ 804          code = _drop_unconsumed_lines(code, counts)
+ 805          if code:
+ 806              cache.parent.mkdir(parents=True, exist_ok=True)
+ 807              cache.write_text(code, encoding=&quot;utf-8&quot;)
+ 808          return code
+ 809      except Exception:
+ 810          return &quot;&quot;</code></pre></details><details class="snippet" id="code-73bcdff6d0f7"><summary>grail-agent/src/aideal/doc_checks.py:1063</summary><p>Snapshot excerpt, lines 1063–1118. <a href="https://github.com/ZhuochengShang/GRAIL/blob/3db92a919b74cd3e822132f83f3a3aa9a1fb95a9/grail-agent/src/aideal/doc_checks.py">Open full source file</a></p><pre><code>1063  def _comprehension_execute(cfg: AidealConfig, inventory, sample, seed, doc_source: str,
+1064                             show_code: bool = False, class_context: bool = False,
+1065                             max_fix_rounds: int | None = None,
+1066                             resume: bool = False, timeout_s: int | None = None,
+1067                             shared_doc: str | None = None,
+1068                             doc_scope: str = &quot;entry&quot;) -&gt; dict:
+1069      &quot;&quot;&quot;Compile/run each API&#x27;s audience snippet via the configured command.
+1070      PASS = the program runs (success_marker present, exit 0). Real failures
+1071      (compile/runtime) are logged with the actual error text.
+1072  
+1073      class_context: INDEX-FIRST — prefix each API&#x27;s body with its catalogue class
+1074      header (receiver + a verified sibling&#x27;s real call pattern) so the snippet writer
+1075      stops inventing the receiver/entry point. Complements the existing `{receiver}`
+1076      TYPE hint with a proven, compiled example. Off -&gt; bare per-API body (baseline).&quot;&quot;&quot;
+1077      import os
+1078      import shlex
+1079      import subprocess
+1080      import tempfile
+1081      from pathlib import Path
+1082      from .llm import invoke_text
+1083      from .prompts import load as load_prompt
+1084  
+1085      from .llm import usage_snapshot, usage_delta
+1086      import time as _time
+1087  
+1088      ex = cfg.comprehension.get(&quot;execute&quot;, {}) if cfg.comprehension else {}
+1089      manifest_inventory_n = len(inventory)
+1090      cmd_template = ex.get(&quot;command&quot;, &quot;&quot;)
+1091      scaffold_path = ex.get(&quot;scaffold&quot;, &quot;&quot;)
+1092      if not cmd_template or not scaffold_path:
+1093          return {&quot;check&quot;: &quot;comprehension&quot;, &quot;mode&quot;: &quot;execute&quot;, &quot;passed&quot;: False, &quot;score&quot;: 0.0,
+1094                  &quot;details&quot;: {&quot;error&quot;: &quot;configure comprehension.execute.{command,scaffold} in aideal.yaml&quot;}}
+1095      scaffold_file = (cfg.root / scaffold_path).resolve()
+1096      if not scaffold_file.exists():
+1097          return {&quot;check&quot;: &quot;comprehension&quot;, &quot;mode&quot;: &quot;execute&quot;, &quot;passed&quot;: False, &quot;score&quot;: 0.0,
+1098                  &quot;details&quot;: {&quot;error&quot;: f&quot;scaffold not found: {scaffold_file}&quot;}}
+1099      scaffold = scaffold_file.read_text(encoding=&quot;utf-8&quot;, errors=&quot;ignore&quot;)
+1100      region = ex.get(&quot;region&quot;, [&quot;// TODO API_TEST_START&quot;, &quot;// TODO API_TEST_END&quot;])
+1101  
+1102      # Build the project&#x27;s own uberjar ONCE, then run snippets against that single
+1103      # jar (no hand-listed dependency jars). build runs in build_cwd; {uberjar}
+1104      # in the command is replaced with the resolved jar path.
+1105      import glob as _glob
+1106      build_cwd = (cfg.root / ex.get(&quot;build_cwd&quot;, &quot;.&quot;)).resolve()
+1107      build_cmd = ex.get(&quot;build&quot;, &quot;&quot;)
+1108      build_info = None
+1109      if build_cmd:
+1110          try:
+1111              bp = subprocess.run(shlex.split(build_cmd), cwd=build_cwd, capture_output=True,
+1112                                  text=True, timeout=int(ex.get(&quot;build_timeout_seconds&quot;, 1800) or 1800))
+1113          except FileNotFoundError as e:
+1114              return {&quot;check&quot;: &quot;comprehension&quot;, &quot;mode&quot;: &quot;execute&quot;, &quot;passed&quot;: False, &quot;score&quot;: 0.0,
+1115                      &quot;details&quot;: {&quot;error&quot;: f&quot;build tool not found ({e.filename}). Install Maven on &quot;
+1116                                  &quot;PATH, or set comprehension.execute.build: &#x27;&#x27; and point `uberjar` &quot;
+1117                                  &quot;at a prebuilt jar.&quot;}}
+1118          except subprocess.TimeoutExpired:</code></pre></details><details class="snippet" id="code-4956505f4774"><summary>experiments/external/recovery/driver.py:134</summary><p>Snapshot excerpt, lines 134–189. <a href="https://github.com/ZhuochengShang/GRAIL/blob/3db92a919b74cd3e822132f83f3a3aa9a1fb95a9/experiments/external/recovery/driver.py">Open full source file</a></p><pre><code> 134  def main():
+ 135      parser = argparse.ArgumentParser(description=__doc__)
+ 136      parser.add_argument(&#x27;repo&#x27;, choices=[&#x27;mir_eval&#x27;, &#x27;thumbnailator&#x27;, &#x27;tslearn&#x27;])
+ 137      parser.add_argument(&#x27;--freeze-worktree&#x27;, type=Path, required=True)
+ 138      parser.add_argument(&#x27;--work&#x27;, type=Path, required=True)
+ 139      parser.add_argument(&#x27;--out&#x27;, type=Path, required=True)
+ 140      parser.add_argument(&#x27;--preflight&#x27;, action=&#x27;store_true&#x27;)
+ 141      args = parser.parse_args()
+ 142      repo, setup = args.repo, args.freeze_worktree.resolve()
+ 143      relative, prefix, baselines = layout(repo, setup)
+ 144      worktrees = {cell: setup.parent / f&#x27;{prefix}_{cell}&#x27; for cell in (&#x27;A1&#x27;, &#x27;A2&#x27;)}
+ 145      if not baselines.is_file() or any(not p.is_dir() for p in worktrees.values()):
+ 146          raise ValueError(&#x27;v2 continuation requires existing baseline plan and worktrees&#x27;)
+ 147      module = adapter(repo, setup)
+ 148      expected = module.FREEZE_BRANCH if repo == &#x27;tslearn&#x27; else module.REPOS[repo][&#x27;freeze_branch&#x27;]
+ 149      if module.git(setup, &#x27;branch&#x27;, &#x27;--show-current&#x27;).stdout.strip() != expected:
+ 150          raise ValueError(&#x27;unexpected freeze branch&#x27;)
+ 151      if args.preflight:
+ 152          print(json.dumps({&#x27;baseline_plan&#x27;: str(baselines), &#x27;original_repair&#x27;: False,
+ 153              &#x27;stages&#x27;: [&#x27;reuse/adopt A1+A2&#x27;, &#x27;A2 source-only recovery&#x27;, &#x27;A2 README repair&#x27;, &#x27;fresh B2&#x27;, &#x27;report&#x27;]}))
+ 154          return
+ 155      args.out.mkdir(parents=True, exist_ok=True)
+ 156      with (args.out / &#x27;driver.lock&#x27;).open(&#x27;a&#x27;) as lock:
+ 157          fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+ 158          reporter_stop, reporter_thread = reporting.start(repo, setup, prefix, relative, args.out)
+ 159          # Caller first retires only legacy controllers. This adopts surviving API
+ 160          # workers; it never provisions or rewrites their environments/configs.
+ 161          supervisor = Supervisor(baselines)
+ 162          baseline_outcome = {}
+ 163          def supervise_baselines():
+ 164              try:
+ 165                  baseline_outcome[&#x27;returncode&#x27;] = supervisor.run()
+ 166              except Exception as exc:
+ 167                  baseline_outcome[&#x27;error&#x27;] = str(exc)
+ 168          baseline_thread = threading.Thread(target=supervise_baselines, daemon=True)
+ 169          baseline_thread.start()
+ 170          while supervisor.state[&#x27;jobs&#x27;][f&#x27;{repo}_A2_zero&#x27;][&#x27;status&#x27;] != &#x27;succeeded&#x27;:
+ 171              if not baseline_thread.is_alive():
+ 172                  raise RuntimeError(f&#x27;A2 continuation incomplete: {baseline_outcome}&#x27;)
+ 173              time.sleep(1)
+ 174          # A1 is a parallel control, never a dependency of A2 repair.
+ 175          completed_cell(repo, &#x27;A2&#x27;, worktrees[&#x27;A2&#x27;], module, relative)
+ 176          project = worktrees[&#x27;A2&#x27;] / relative
+ 177          suffix = &#x27;_full235&#x27; if repo == &#x27;tslearn&#x27; else &#x27;&#x27;
+ 178          # Independent branch from frozen A2, not from repaired docs or B2 errors.
+ 179          plan = args.out / &#x27;b2_watchdog.yaml&#x27;
+ 180          if plan.exists():
+ 181              # B2 may still have a surviving worker after a controller crash.
+ 182              # Adopt it before permitting any additional source-recovery calls.
+ 183              state = json.loads((args.out / &#x27;source/summary.json&#x27;).read_text())
+ 184          else:
+ 185              try:
+ 186                  state = batch(project / f&#x27;configs/aideal_A2{suffix}.yaml&#x27;,
+ 187                      project / &#x27;docs/eval/A2/comprehension.json&#x27;, repo, args.work,
+ 188                      args.out / &#x27;source&#x27;, execute=True)
+ 189              except Exception as exc:</code></pre></details><details class="snippet" id="code-e1c790329930"><summary>experiments/external/recovery/driver.py:45</summary><p>Snapshot excerpt, lines 45–83. <a href="https://github.com/ZhuochengShang/GRAIL/blob/3db92a919b74cd3e822132f83f3a3aa9a1fb95a9/experiments/external/recovery/driver.py">Open full source file</a></p><pre><code>  45  def b2_jobs(repo, setup, worktrees, module, relative):
+  46      &quot;&quot;&quot;There is deliberately no original-document repair job in v2.&quot;&quot;&quot;
+  47      parent = worktrees[&#x27;A2&#x27;]
+  48      start = module.git(parent, &#x27;rev-parse&#x27;, &#x27;HEAD&#x27;).stdout.strip()
+  49      if repo == &#x27;tslearn&#x27;:
+  50          wt = module.ensure_worktree(setup, &#x27;B2&#x27;, start)
+  51          source = module.ensure_source(setup, wt)
+  52          inventory = wt / relative / &#x27;docs/eval/setup/environment_B2.txt&#x27;
+  53          if not inventory.exists():
+  54              inventory = module.environment_inventory(wt, &#x27;B2&#x27;, source)
+  55          before = wt / relative / &#x27;docs/eval/B2/PASS_TO_PASS_BEFORE.md&#x27;
+  56          if not before.exists():
+  57              module.upstream_tests(wt, &#x27;B2&#x27;, &#x27;before&#x27;, source)
+  58          jobs = [module.repair_job(wt, &#x27;B2&#x27;, inventory),
+  59                  module.validation_job(wt, &#x27;B2&#x27;, inventory, [&#x27;tslearn_B2_repair&#x27;]),
+  60                  module.comprehension_job(wt, &#x27;B2&#x27;, inventory, [&#x27;tslearn_B2_validate_readme&#x27;])]
+  61      else:
+  62          branch = f&#x27;aideal/{repo}-B2&#x27;
+  63          wt = module.ensure_worktree(setup, branch, setup.parent / f&#x27;GRAIL_{repo}_B2&#x27;, start)
+  64          inventory = wt / relative / &#x27;docs/eval/setup/environment_B2.txt&#x27;
+  65          if not inventory.exists():
+  66              inventory = module.ensure_source(setup, wt, repo, module.REPOS[repo], &#x27;B2&#x27;)
+  67          repair = module.make_job(repo, wt, branch, &#x27;B2&#x27;, inventory, repair=True)
+  68          fresh = module.make_job(repo, wt, branch, &#x27;B2&#x27;, inventory)
+  69          fresh[&#x27;depends_on&#x27;] = [repair[&#x27;id&#x27;]]
+  70          jobs = [repair, fresh]
+  71      baseline_result = parent / relative / &#x27;docs/eval/A2/comprehension.json&#x27;
+  72      inherited_result = wt / relative / &#x27;docs/eval/A2/comprehension.json&#x27;
+  73      if not inherited_result.exists():
+  74          inherited_result.parent.mkdir(parents=True, exist_ok=True)
+  75          shutil.copy2(baseline_result, inherited_result)
+  76      if file_sha(inherited_result) != file_sha(baseline_result):
+  77          raise ValueError(&#x27;B2 worktree contains a different A2 baseline result&#x27;)
+  78      target = wt / relative / &#x27;docs/eval/B2/LLM_readme.md&#x27;
+  79      if not target.exists():
+  80          target.parent.mkdir(parents=True, exist_ok=True)
+  81          shutil.copy2(parent / relative / &#x27;docs/eval/A2/LLM_readme.md&#x27;, target)
+  82      worktrees[&#x27;B2&#x27;] = wt
+  83      return jobs</code></pre></details><details class="snippet" id="code-1e9fe173b390"><summary>experiments/external/recovery/validation.py:49</summary><p>Snapshot excerpt, lines 49–104. <a href="https://github.com/ZhuochengShang/GRAIL/blob/3db92a919b74cd3e822132f83f3a3aa9a1fb95a9/experiments/external/recovery/validation.py">Open full source file</a></p><pre><code>  49  def validate(base, cfg, result, api, manifest):
+  50      metric = eligible(result, api)
+  51      if base.root == cfg.root or base.root in cfg.root.parents or cfg.root in base.root.parents:
+  52          raise ValueError(&#x27;recovery requires a separate, non-nested project copy/worktree&#x27;)
+  53      if cfg.raw != base.raw:
+  54          raise ValueError(&#x27;isolated config must be an exact effective-config copy; outputs are isolated by runner&#x27;)
+  55      run = result[&#x27;run&#x27;]
+  56      fp, migration = components(result)
+  57      names = _load_manifest(base, manifest)
+  58      if not names or set(names) != set(result[&#x27;metrics&#x27;]):
+  59          raise ValueError(&#x27;manifest identities differ from baseline&#x27;)
+  60      if _load_manifest(cfg, manifest) != names:
+  61          raise ValueError(&#x27;isolated manifest differs from baseline&#x27;)
+  62      if hashlib.sha256(&#x27;\n&#x27;.join(names).encode()).hexdigest() != run[&#x27;manifest_sha256&#x27;]:
+  63          raise ValueError(&#x27;ordered manifest differs from baseline&#x27;)
+  64      doc, scope = result[&#x27;doc_source&#x27;], run[&#x27;doc_scope&#x27;]
+  65      if scope not in (&#x27;relevant&#x27;, &#x27;full&#x27;):
+  66          raise ValueError(&#x27;unsupported baseline document scope&#x27;)
+  67      base_ex = base.comprehension[&#x27;execute&#x27;]
+  68      for label, current in [(&#x27;baseline&#x27;, base), (&#x27;isolated&#x27;, cfg)]:
+  69          ex = current.comprehension[&#x27;execute&#x27;]
+  70          def normalized(value):
+  71              return {k: v for k, v in value.items() if k not in (&#x27;work_dir&#x27;, &#x27;output_dir&#x27;)}
+  72          if normalized(ex) != normalized(fp[&#x27;execute_config&#x27;]):
+  73              raise ValueError(f&#x27;{label}: execution config differs from recorded baseline&#x27;)
+  74          if ex.get(&#x27;build&#x27;):
+  75              raise ValueError(&#x27;recovery requires an already built harness; build separately before freezing&#x27;)
+  76          paths = [Path(p) for g in current.source_globs
+  77                   for p in glob.glob(str(current.root / g), recursive=True)]
+  78          scaffold = current.root / ex[&#x27;scaffold&#x27;]
+  79          bindings, _, _ = _execute_sample_data(current, ex)
+  80          from urllib.parse import unquote, urlparse
+  81          fixtures = [Path(unquote(urlparse(p).path) if p.startswith(&#x27;file://&#x27;) else p)
+  82                      for k, p in bindings.items() if k != &#x27;output_dir&#x27;]
+  83          docs = [*current.original_readme_files]
+  84          if current.llm_readme.exists():
+  85              docs.append(current.llm_readme)
+  86          if any(current.root not in p.resolve().parents for p in paths + fixtures + docs + [scaffold]):
+  87              raise ValueError(f&#x27;{label}: source/document/fixture/scaffold escapes its project root&#x27;)
+  88          for key, actual in [(&#x27;source&#x27;, _sha256_files(paths, current.root)),
+  89                              (&#x27;scaffold&#x27;, _sha256_files([scaffold], current.root)),
+  90                              (&#x27;fixtures&#x27;, _sha256_files(fixtures, current.root))]:
+  91              if actual != fp[key]:
+  92                  raise ValueError(f&#x27;{label}: {key} differs or historical fixture hash included outputs&#x27;)
+  93          if document_hash(current, doc, names, scope) != run[&#x27;document_sha256&#x27;]:
+  94              raise ValueError(f&#x27;{label}: delivered documentation differs from baseline&#x27;)
+  95          for role in (&#x27;audience&#x27;, &#x27;fixer&#x27;):
+  96              spec = current.model_for_role(role)
+  97              if f&#x27;{spec.provider}:{spec.model}&#x27; != run[&#x27;models&#x27;][role]:
+  98                  raise ValueError(f&#x27;{label}: {role} model differs from baseline&#x27;)
+  99          profile = current.root / current.raw[&#x27;files&#x27;][&#x27;project_profile&#x27;]
+ 100          if file_sha(profile) != file_sha(base.root / base.raw[&#x27;files&#x27;][&#x27;project_profile&#x27;]):
+ 101              raise ValueError(&#x27;project profile differs between baseline and recovery&#x27;)
+ 102      # This extension must use the same executable engine as the frozen cell.
+ 103      import aideal.doc_checks as native
+ 104      directory = Path(native.__file__).parent</code></pre></details><details class="snippet" id="code-f56816231b36"><summary>experiments/external/recovery/snapshot.py:44</summary><p>Snapshot excerpt, lines 44–86. <a href="https://github.com/ZhuochengShang/GRAIL/blob/3db92a919b74cd3e822132f83f3a3aa9a1fb95a9/experiments/external/recovery/snapshot.py">Open full source file</a></p><pre><code>  44  def runtime_environment(base, cfg, result, repo):
+  45      &quot;&quot;&quot;Use existing packages; prove the target imports from the private copy.&quot;&quot;&quot;
+  46      expected = result[&#x27;run&#x27;][&#x27;fingerprint_components&#x27;][&#x27;interpreter&#x27;]
+  47      if expected[&#x27;executable&#x27;] != sys.executable or expected[&#x27;version&#x27;] != sys.version:
+  48          raise ValueError(&#x27;runner interpreter differs from A2&#x27;)
+  49      inventory = Path(os.environ.get(&#x27;AIDEAL_RECOVERY_ENV_INVENTORY&#x27;,
+  50                                      base.root / &#x27;docs/eval/setup/environment_A2.txt&#x27;))
+  51      if file_sha(inventory) != expected[&#x27;environment_sha256&#x27;]:
+  52          raise ValueError(&#x27;A2 environment inventory differs from baseline fingerprint&#x27;)
+  53      env = dict(os.environ, AIDEAL_ENV_FINGERPRINT=expected[&#x27;environment_sha256&#x27;],
+  54                 PYTHONDONTWRITEBYTECODE=&#x27;1&#x27;)
+  55      if repo == &#x27;thumbnailator&#x27;:
+  56          ex = cfg.comprehension[&#x27;execute&#x27;]
+  57          relative = Path(ex.get(&#x27;build_cwd&#x27;, &#x27;source&#x27;)) / ex[&#x27;uberjar&#x27;]
+  58          if file_sha(base.root / relative) != file_sha(cfg.root / relative):
+  59              raise ValueError(&#x27;copied built dependency differs from baseline&#x27;)
+  60          return env, {&#x27;jar_sha256&#x27;: file_sha(cfg.root / relative),
+  61                       &#x27;assertion_policy&#x27;: &#x27;native unchanged; independent assertions-on replay required&#x27;}
+  62      source_name = &#x27;tslearn&#x27; if repo == &#x27;tslearn&#x27; else &#x27;source&#x27;
+  63      probe = (&#x27;import importlib,importlib.metadata as m,json; &#x27;
+  64               f&#x27;p=importlib.import_module({repo!r}); &#x27;
+  65               &#x27;print(json.dumps({&quot;target&quot;:p.__file__,&quot;packages&quot;:sorted(&#x27;
+  66               &#x27;(d.metadata[&quot;Name&quot;],d.version) for d in m.distributions())}))&#x27;)
+  67      results = []
+  68      for current in (base, cfg):
+  69          source = current.root / source_name
+  70          interpreter = (source / &#x27;.venv/bin/python&#x27;) if repo == &#x27;mir_eval&#x27; else Path(sys.executable)
+  71          current_env = dict(env, PYTHONPATH=str(source), MPLBACKEND=&#x27;Agg&#x27;,
+  72                             NUMBA_THREADING_LAYER=&#x27;workqueue&#x27;, OPENBLAS_NUM_THREADS=&#x27;1&#x27;,
+  73                             OMP_NUM_THREADS=&#x27;1&#x27;, NUMBA_NUM_THREADS=&#x27;1&#x27;)
+  74          output = subprocess.check_output([str(interpreter), &#x27;-c&#x27;, probe],
+  75              cwd=current.root, env=current_env, text=True, timeout=60)
+  76          record = json.loads(output)
+  77          if source.resolve() not in Path(record[&#x27;target&#x27;]).resolve().parents:
+  78              raise ValueError(f&#x27;{repo} imports from another checkout: {record[&quot;target&quot;]}&#x27;)
+  79          results.append(record)
+  80      # Editable metadata may appear twice after a physical copy; require the
+  81      # same name/version set and retain raw inventories to expose duplicates.
+  82      if set(map(tuple, results[0][&#x27;packages&#x27;])) != set(map(tuple, results[1][&#x27;packages&#x27;])):
+  83          raise ValueError(&#x27;copied runtime package versions differ from A2 runtime&#x27;)
+  84      env[&#x27;PYTHONPATH&#x27;] = str(cfg.root / source_name) + os.pathsep + env.get(&#x27;PYTHONPATH&#x27;, &#x27;&#x27;)
+  85      return env, {&#x27;baseline&#x27;: results[0], &#x27;isolated&#x27;: results[1],
+  86                   &#x27;limitation&#x27;: &#x27;package/import identity check, not API-specific semantic validation&#x27;}</code></pre></details><details class="snippet" id="code-6285f676142f"><summary>experiments/external/recovery/runner.py:41</summary><p>Snapshot excerpt, lines 41–96. <a href="https://github.com/ZhuochengShang/GRAIL/blob/3db92a919b74cd3e822132f83f3a3aa9a1fb95a9/experiments/external/recovery/runner.py">Open full source file</a></p><pre><code>  41  def run(cfg, base, result, api, mode, manifest, *, execute=False, max_rounds=5, stuck=2):
+  42      if mode not in (&#x27;feedback&#x27;, &#x27;source&#x27;):
+  43          raise ValueError(&#x27;mode must be feedback or source&#x27;)
+  44      accepted = policy()
+  45      if (max_rounds != accepted[&#x27;max_code_fix_rounds&#x27;] or stuck != accepted[&#x27;stuck_rounds&#x27;]):
+  46          raise ValueError(&#x27;study limits are fixed at the protocol YAML values; alternatives require a separate protocol&#x27;)
+  47      if not 1 &lt;= max_rounds &lt;= 5 or not 0 &lt;= stuck &lt;= max_rounds:
+  48          raise ValueError(&#x27;require 1..5 code rounds and stuck threshold 0..max_rounds&#x27;)
+  49      identity, initial = validate(base, cfg, result, api, manifest)
+  50      identity.update(mode=mode, max_code_fix_rounds=max_rounds, stuck_rounds=stuck,
+  51                      runner_sha256=file_sha(Path(__file__)),
+  52                      engine_sha256=file_sha(Path(__file__).with_name(&#x27;engine.py&#x27;)),
+  53                      validation_sha256=file_sha(Path(__file__).with_name(&#x27;validation.py&#x27;)))
+  54      identity[&#x27;compatibility_adapter_sha256&#x27;] = file_sha(Path(__file__).with_name(&#x27;compatibility.py&#x27;))
+  55      if not execute:
+  56          return {&#x27;status&#x27;: &#x27;preflight_passed&#x27;, &#x27;identity&#x27;: identity,
+  57                  &#x27;admission&#x27;: &#x27;A2-only continuation driver; baseline completion and isolated runtime required&#x27;,
+  58                  &#x27;limitations&#x27;: [&#x27;saved script association and runtime packages need review&#x27;,
+  59                                  &#x27;passing generated assertions require independent semantic review&#x27;]}
+  60      expected = result[&#x27;run&#x27;][&#x27;fingerprint_components&#x27;][&#x27;interpreter&#x27;]
+  61      if sys.version != expected[&#x27;version&#x27;] or sys.executable != expected[&#x27;executable&#x27;]:
+  62          raise ValueError(&#x27;AIDEAL interpreter differs from baseline&#x27;)
+  63      import os
+  64      # Retain the account-wide gate. Never invent a recovery-specific quota pool.
+  65      if cfg.model_for_role(&#x27;fixer&#x27;).provider == &#x27;google&#x27;:
+  66          if not os.environ.get(&#x27;AIDEAL_GOOGLE_RATE_STATE&#x27;) or float(os.environ.get(&#x27;AIDEAL_GOOGLE_MIN_INTERVAL_S&#x27;, &#x27;0&#x27;)) &lt; 3:
+  67              raise ValueError(&#x27;set the existing shared Google rate-state path and interval &gt;=3s&#x27;)
+  68      if os.environ.get(&#x27;AIDEAL_ENV_FINGERPRINT&#x27;) != expected[&#x27;environment_sha256&#x27;]:
+  69          raise ValueError(&#x27;supply the validated baseline-compatible environment fingerprint&#x27;)
+  70      out = cfg.root / &#x27;.aideal_recovery&#x27; / digest(identity)
+  71      if cfg.root not in out.resolve().parents:
+  72          raise ValueError(&#x27;recovery output escapes its isolated project root&#x27;)
+  73      out.mkdir(parents=True, exist_ok=True)
+  74      with (out / &#x27;.lock&#x27;).open(&#x27;a&#x27;) as lock:
+  75          fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+  76          source_prompt = prompt_file(cfg, &#x27;comprehension_write_exec&#x27;).read_text()
+  77          if mode == &#x27;source&#x27;:
+  78              phrase = &#x27;Use ONLY the documentation provided.&#x27;
+  79              if phrase not in source_prompt:
+  80                  raise ValueError(&#x27;custom prompt requires an explicit reviewed source-recovery adaptation&#x27;)
+  81              source_prompt = source_prompt.replace(phrase,
+  82                  &#x27;Use the documentation and the supplied source-grounded diagnosis. &#x27;
+  83                  &#x27;Treat its inferences as unverified; do not invent unavailable APIs.&#x27;)
+  84          source_prompt += (&#x27;\n\nRecovery boundary: repair the API-use snippet only. &#x27;
+  85                            &#x27;Keep the fixtures, preloaded values, harness and library unchanged. &#x27;
+  86                            &#x27;Do not weaken checks, bypass the target call, or replace an assertion &#x27;
+  87                            &#x27;with a success print. Report success through the existing witness.\n&#x27;)
+  88          # Never teach the fixer to write into the retained baseline&#x27;s paths.
+  89          initial = dict(initial, code=initial[&#x27;code&#x27;].replace(str(base.root), str(cfg.root)),
+  90                         error=initial[&#x27;error&#x27;].replace(str(base.root), str(cfg.root)))
+  91  
+  92          def diagnose():
+  93              if mode == &#x27;feedback&#x27;:
+  94                  return {&#x27;mode&#x27;: mode, &#x27;report_text&#x27;: &#x27;&#x27;, &#x27;llm_calls&#x27;: 0}
+  95              cached = out / &#x27;diagnosis.json&#x27;
+  96              if cached.exists():</code></pre></details><details class="snippet" id="code-f867a5e54418"><summary>experiments/external/docfix_input_handoff.py:45</summary><p>Snapshot excerpt, lines 45–100. <a href="https://github.com/ZhuochengShang/GRAIL/blob/3db92a919b74cd3e822132f83f3a3aa9a1fb95a9/experiments/external/docfix_input_handoff.py">Open full source file</a></p><pre><code>  45  def prepare(repo, parent):
+  46      prefix, relative, count = REPOSITORIES[repo]
+  47      a2 = Path(parent) / f&#x27;{prefix}_A2&#x27; / relative
+  48      wt = Path(parent) / f&#x27;{prefix}_B2&#x27;
+  49      root = wt / relative
+  50      if not (wt / &#x27;.git&#x27;).is_file():
+  51          raise ValueError(&#x27;waiting for the existing controller to create its B2 worktree&#x27;)
+  52      original = a2 / &#x27;docs/eval/A2/comprehension.json&#x27;
+  53      inherited = root / &#x27;docs/eval/A2/comprehension.json&#x27;
+  54      result = json.loads(original.read_text())
+  55      complete(result, count)
+  56      if file_sha(original) != file_sha(inherited):
+  57          raise ValueError(&#x27;B2 must inherit the exact completed A2 result before admission&#x27;)
+  58      suffix = &#x27;_full235&#x27; if repo == &#x27;tslearn&#x27; else &#x27;&#x27;
+  59      base = load_config(a2 / f&#x27;configs/aideal_A2{suffix}.yaml&#x27;)
+  60      cfg = load_config(root / f&#x27;configs/aideal_B2{suffix}.yaml&#x27;)
+  61      alias = wt / &#x27;docs/eval&#x27;
+  62      proof_path = root / &#x27;docs/eval/B2/A2_INPUT_HANDOFF.json&#x27;
+  63      target = root / &#x27;docs/eval&#x27;
+  64      if alias.is_symlink() or alias.exists():
+  65          if not alias.is_symlink() or alias.resolve() != target.resolve() or not proof_path.exists():
+  66              raise ValueError(&#x27;existing CLI path was not released by this handoff; inspect before writing&#x27;)
+  67          proof = json.loads(proof_path.read_text())
+  68          prefix_bytes = cfg.error_log.read_bytes()[:proof[&#x27;seed_bytes&#x27;]]
+  69          import hashlib
+  70          if proof[&#x27;A2_sha256&#x27;] != file_sha(original) or hashlib.sha256(prefix_bytes).hexdigest() != proof[&#x27;seed_sha256&#x27;]:
+  71              raise ValueError(&#x27;A2 handoff identity or seeded error-log prefix changed&#x27;)
+  72          return proof
+  73      if (root / &#x27;docs/eval/B2/docfix.json&#x27;).exists():
+  74          raise ValueError(&#x27;document work already exists without the verified handoff&#x27;)
+  75      rows, bindings = seed_rows(result, base)
+  76      # Map only the private project path; preserve the baseline error/code in
+  77      # the A2 artifact and record the mapping, never import S_A2 recovery work.
+  78      raw = &#x27;&#x27;.join(json.dumps(row, ensure_ascii=False) + &#x27;\n&#x27; for row in rows)
+  79      raw = raw.replace(str(base.root), str(cfg.root))
+  80      seed = raw.encode()
+  81      if cfg.error_log.exists() and cfg.error_log.read_bytes() != seed:
+  82          raise ValueError(&#x27;B2 error log already has other evidence; refusing to overwrite&#x27;)
+  83      cfg.error_log.parent.mkdir(parents=True, exist_ok=True)
+  84      if not cfg.error_log.exists():
+  85          tmp = cfg.error_log.with_suffix(&#x27;.seed.tmp&#x27;)
+  86          tmp.write_bytes(seed)
+  87          tmp.replace(cfg.error_log)
+  88      proof = {&#x27;repo&#x27;: repo, &#x27;A2_sha256&#x27;: file_sha(original), &#x27;A2_fingerprint&#x27;: result[&#x27;run&#x27;][&#x27;experiment_fingerprint&#x27;],
+  89               &#x27;seed_sha256&#x27;: file_sha(cfg.error_log), &#x27;seed_bytes&#x27;: len(seed), &#x27;seeded_failures&#x27;: len(rows),
+  90               &#x27;apis&#x27;: bindings, &#x27;error_log&#x27;: str(cfg.error_log), &#x27;read_alias&#x27;: str(alias),
+  91               &#x27;alias_target&#x27;: str(target), &#x27;path_mapping&#x27;: [str(base.root), str(cfg.root)],
+  92               &#x27;source_recovery_evidence_used&#x27;: False, &#x27;provider_calls&#x27;: 0,
+  93               &#x27;limitation&#x27;: &#x27;Legacy saved snippets can be unbound; prefix/missing associations remain explicit.&#x27;}
+  94      proof_path.parent.mkdir(parents=True, exist_ok=True)
+  95      save(proof_path, proof)
+  96      # Releasing the CLI alias LAST lets the unchanged watchdog retry only
+  97      # after both seed evidence and its proof exist. No worker is restarted.
+  98      alias.parent.mkdir(parents=True, exist_ok=True)
+  99      alias.symlink_to(os.path.relpath(target, alias.parent), target_is_directory=True)
+ 100      return proof</code></pre></details><details class="snippet" id="code-0657b0d3e317"><summary>grail-agent/src/aideal/deepdive.py:61</summary><p>Snapshot excerpt, lines 61–102. <a href="https://github.com/ZhuochengShang/GRAIL/blob/3db92a919b74cd3e822132f83f3a3aa9a1fb95a9/grail-agent/src/aideal/deepdive.py">Open full source file</a></p><pre><code>  61  def deep_dive_run(cfg: AidealConfig, api: str, out_dir: str = &quot;docs/deepdive&quot;,
+  62                    context_only: bool = False, return_text: bool = False) -&gt; dict:
+  63      from .docfix import _source_window, _type_context
+  64      from .readme_agent import parse_readme
+  65  
+  66      window, others = _source_window(cfg, api, before=30, after=160)
+  67      types = _type_context(cfg, api, max_types=6, lines_per_type=45)
+  68      calls = _call_sites(cfg, api)
+  69      history = _failure_history(cfg, api)
+  70      entry = next((e.body for e in parse_readme(cfg.llm_readme) if e.name == api),
+  71                   &quot;(no catalog entry)&quot;)
+  72      if context_only:
+  73          ctx = (f&quot;== SOURCE ==\n{window}\n\n== TYPES ==\n{types}\n\n&quot;
+  74                 f&quot;== CALL SITES ==\n{calls}\n\n== HISTORY ==\n{history}&quot;)
+  75          return {&quot;api&quot;: api, &quot;context_chars&quot;: len(ctx), &quot;context_preview&quot;: ctx[:1500]}
+  76  
+  77      from .llm import invoke_text, usage_snapshot, usage_delta
+  78      from .prompts import load as load_prompt
+  79      from .profile import require_profile
+  80      require_profile(cfg)
+  81      spec = cfg.model_for_role(&quot;fixer&quot;)
+  82      t0, u0 = time.time(), usage_snapshot()
+  83      report = invoke_text(spec, *load_prompt(
+  84          cfg, &quot;aideal/deep_dive&quot;,
+  85          api_name=api, source_window=window[:14000], other_sites=others,
+  86          type_context=types[:10000], call_sites=calls[:6000],
+  87          entry_body=entry[:5000], failure_history=history[:4000]))
+  88      u = usage_delta(u0)
+  89      out = Path(cfg.root) / out_dir
+  90      out.mkdir(parents=True, exist_ok=True)
+  91      dest = out / f&quot;{api}.md&quot;
+  92      header = (f&quot;# Deep-dive: `{api}`\n\nmodel: {spec.provider}:{spec.model} · &quot;
+  93                f&quot;tokens in={u[&#x27;input_tokens&#x27;]:,} out={u[&#x27;output_tokens&#x27;]:,} · &quot;
+  94                f&quot;wall {time.time()-t0:.0f}s · {time.strftime(&#x27;%Y-%m-%d %H:%M&#x27;)}\n\n---\n\n&quot;)
+  95      dest.write_text(header + report, encoding=&quot;utf-8&quot;)
+  96      out = {&quot;api&quot;: api, &quot;report&quot;: str(dest),
+  97             &quot;model&quot;: f&quot;{spec.provider}:{spec.model}&quot;,
+  98             &quot;tokens&quot;: {&quot;in&quot;: u[&quot;input_tokens&quot;], &quot;out&quot;: u[&quot;output_tokens&quot;]},
+  99             &quot;wall_s&quot;: round(time.time() - t0, 1)}
+ 100      if return_text:
+ 101          out[&quot;report_text&quot;] = report
+ 102      return out</code></pre></details><details class="snippet" id="code-ce72eba5b4c1"><summary>grail-agent/src/aideal/docfix.py:315</summary><p>Snapshot excerpt, lines 315–370. <a href="https://github.com/ZhuochengShang/GRAIL/blob/3db92a919b74cd3e822132f83f3a3aa9a1fb95a9/grail-agent/src/aideal/docfix.py">Open full source file</a></p><pre><code> 315  def doc_fix_run(cfg: AidealConfig, apis: list[str] | None = None,
+ 316                  max_apis: int | None = None, retry_rounds: int = 2,
+ 317                  timeout_s: int | None = None, dry_run: bool = False,
+ 318                  from_results: str | Path | None = None,
+ 319                  report_path: str | Path | None = None,
+ 320                  deep_dive_first: bool = False,
+ 321                  deep_dive_out: str = &quot;docs/deepdive&quot;,
+ 322                  doc_rounds: int = 1,
+ 323                  doc_stuck: int = 2,
+ 324                  create_missing: bool = False,
+ 325                  doc_source: str = &quot;aideal&quot;,
+ 326                  full_doc: bool | None = None,
+ 327                  doc_scope: str | None = None,
+ 328                  manifest: str | None = None) -&gt; dict:
+ 329      &quot;&quot;&quot;Doc-repair routing over failed APIs. Returns a report dict.
+ 330  
+ 331      doc_rounds=1 → the classic single pass (diagnose → rewrite → retry).
+ 332      doc_rounds&gt;1 → ITERATIVE deep-dive repair (2026-07-13 design): per API,
+ 333      up to N rounds of
+ 334  
+ 335          deep-dive (fresh, sees the newest failure + current draft)
+ 336          → diagnose → rewrite entry → run the API against the NEW doc
+ 337            (retry_rounds snippet fixes; 0 = clean pass-or-not doc measurement)
+ 338  
+ 339      with a per-round UNDERSTANDING CHECK: `diagnosis_changed` (root-cause text
+ 340      moved vs previous round) and `error_progressed` (the failure signature
+ 341      changed after the rewrite). If NEITHER improves for `doc_stuck`
+ 342      consecutive rounds, the API stops early — rounds must earn themselves.
+ 343      The draft entry is kept across rounds so each round builds on the last;
+ 344      the catalog is only left changed if the API finally PASSES (all-rounds
+ 345      fail → revert to the original entry: monotonically non-worse).
+ 346      After every round the incremental JSON report AND the readable
+ 347      fix-report markdown are refreshed, so the log is checkable mid-run.&quot;&quot;&quot;
+ 348      from .llm import invoke_text, usage_snapshot, usage_delta
+ 349      from .prompts import load as load_prompt
+ 350      from .profile import require_profile
+ 351      from .readme_agent import parse_readme, _exec_status_map
+ 352      from .doc_checks import comprehension_check, _owner_map, _receiver_hint
+ 353  
+ 354      require_profile(cfg)
+ 355      entries = {e.name: e for e in parse_readme(cfg.llm_readme)} \
+ 356          if cfg.llm_readme.exists() else {}
+ 357      if apis:
+ 358          targets = [a for a in apis if a in entries]
+ 359          missing = [a for a in apis if a not in entries]
+ 360      elif from_results:
+ 361          targets, missing = _failed_apis_from_results(from_results, set(entries))
+ 362      else:
+ 363          failed = {fn for fn, s in _exec_status_map(cfg).items() if s == &quot;fail&quot;}
+ 364          targets = sorted(n for n in failed if n in entries)
+ 365          missing = []
+ 366      if create_missing and missing:
+ 367          # ORIGINAL-README ARM: no catalog entry exists — the loop CREATES one.
+ 368          # Round-0 &quot;current doc&quot; = the original README excerpt the audience saw.
+ 369          targets = sorted(set(targets) | set(missing))
+ 370          missing = []</code></pre></details><details class="snippet" id="code-098ea485296a"><summary>experiments/external/post_b2/evidence.py:74</summary><p>Snapshot excerpt, lines 74–125. <a href="https://github.com/ZhuochengShang/GRAIL/blob/3db92a919b74cd3e822132f83f3a3aa9a1fb95a9/experiments/external/post_b2/evidence.py">Open full source file</a></p><pre><code>  74  def inspect(repo, parent, upstream):
+  75      &quot;&quot;&quot;Require this repository&#x27;s completed B2; A1/source retries are independent.&quot;&quot;&quot;
+  76      prefix, relative, count = REPOSITORIES[repo]
+  77      roots = {cell: Path(parent) / f&#x27;{prefix}_{cell}&#x27; / relative for cell in (&#x27;A2&#x27;, &#x27;B2&#x27;)}
+  78      files = {cell: root / f&#x27;docs/eval/{cell}/comprehension.json&#x27; for cell, root in roots.items()}
+  79      a2, b2 = (read(files[cell]) for cell in (&#x27;A2&#x27;, &#x27;B2&#x27;))
+  80      proof = matched(a2, b2, count)
+  81      upstream = Path(upstream) / repo
+  82      plan_path = upstream / &#x27;b2_watchdog.yaml&#x27;
+  83      plan = yaml.safe_load(plan_path.read_text())
+  84      jobs = {job[&#x27;id&#x27;]: job for job in plan[&#x27;jobs&#x27;]}
+  85      states = read(plan_path.with_suffix(&#x27;.state.json&#x27;))[&#x27;jobs&#x27;]
+  86      if not jobs or any(states.get(job, {}).get(&#x27;status&#x27;) != &#x27;succeeded&#x27; for job in jobs):
+  87          raise ValueError(&#x27;priority B2 jobs have not all succeeded&#x27;)
+  88      repair, fresh = jobs[f&#x27;{repo}_B2_repair&#x27;], jobs[f&#x27;{repo}_B2_zero&#x27;]
+  89      for flag, value in [(&#x27;--from-results&#x27;, &#x27;docs/eval/A2/comprehension.json&#x27;),
+  90                          (&#x27;--doc-rounds&#x27;, &#x27;5&#x27;), (&#x27;--doc-stuck&#x27;, &#x27;2&#x27;), (&#x27;--retry-rounds&#x27;, &#x27;0&#x27;)]:
+  91          command_option(repair[&#x27;command&#x27;], flag, value)
+  92      command_option(fresh[&#x27;command&#x27;], &#x27;--max-fix-rounds&#x27;, &#x27;0&#x27;)
+  93      command_option(fresh[&#x27;command&#x27;], &#x27;--doc&#x27;, &#x27;aideal&#x27;)
+  94      command_option(fresh[&#x27;command&#x27;], &#x27;--doc-scope&#x27;, &#x27;relevant&#x27;)
+  95      if &#x27;--deep-dive-first&#x27; not in repair[&#x27;command&#x27;] or &#x27;--create-missing&#x27; in repair[&#x27;command&#x27;]:
+  96          raise ValueError(&#x27;unexpected generated-document repair treatment&#x27;)
+  97      inherited = roots[&#x27;B2&#x27;] / &#x27;docs/eval/A2/comprehension.json&#x27;
+  98      if file_sha(inherited) != file_sha(files[&#x27;A2&#x27;]):
+  99          raise ValueError(&#x27;README repair did not inherit the frozen A2 result&#x27;)
+ 100      doc = read(roots[&#x27;B2&#x27;] / &#x27;docs/eval/B2/docfix.json&#x27;)
+ 101      if (doc.get(&#x27;attempted&#x27;) is None or doc.get(&#x27;processed&#x27;) != doc[&#x27;attempted&#x27;] or doc.get(&#x27;blocked&#x27;)
+ 102              or any(str(r.get(&#x27;status&#x27;, &#x27;&#x27;)).startswith((&#x27;in-progress&#x27;, &#x27;llm-error&#x27;))
+ 103                     for r in doc.get(&#x27;apis&#x27;, {}).values())):
+ 104          raise ValueError(&#x27;document repair is incomplete&#x27;)
+ 105      source = read(upstream / &#x27;source/summary.json&#x27;)
+ 106      if any(row.get(&#x27;status&#x27;) in (&#x27;pending&#x27;, &#x27;running&#x27;) for row in source[&#x27;apis&#x27;].values()):
+ 107          raise ValueError(&#x27;initial A2 source pass has not finished&#x27;)
+ 108      if source.get(&#x27;identity&#x27;):
+ 109          if (source[&#x27;identity&#x27;][&#x27;baseline_sha256&#x27;] != file_sha(files[&#x27;A2&#x27;])
+ 110                  or source[&#x27;identity&#x27;][&#x27;protocol&#x27;] != policy()):
+ 111              raise ValueError(&#x27;A2 source policy or baseline identity differs&#x27;)
+ 112          if set(source[&#x27;apis&#x27;]) != set(cohort(a2)[0]):
+ 113              raise ValueError(&#x27;A2 source denominator differs from eligible A2 failures&#x27;)
+ 114      elif not source.get(&#x27;statuses&#x27;, {}).get(&#x27;preflight_blocked&#x27;):
+ 115          raise ValueError(&#x27;missing A2 source identity without a recorded preflight block&#x27;)
+ 116      names, exclusions = cohort(b2)
+ 117      suffix = &#x27;_full235&#x27; if repo == &#x27;tslearn&#x27; else &#x27;&#x27;
+ 118      inventory = Path(fresh[&#x27;environment_inventory&#x27;])
+ 119      if not inventory.is_absolute():
+ 120          inventory = Path(fresh[&#x27;cwd&#x27;]) / inventory
+ 121      return {&#x27;repo&#x27;: repo, &#x27;root&#x27;: roots[&#x27;B2&#x27;], &#x27;config&#x27;: roots[&#x27;B2&#x27;] / f&#x27;configs/aideal_B2{suffix}.yaml&#x27;,
+ 122              &#x27;A2&#x27;: a2, &#x27;B2&#x27;: b2, &#x27;files&#x27;: files, &#x27;source&#x27;: source, &#x27;inventory&#x27;: inventory,
+ 123              &#x27;names&#x27;: names, &#x27;exclusions&#x27;: exclusions, &#x27;matched&#x27;: proof,
+ 124              &#x27;identity&#x27;: {&#x27;A2_sha256&#x27;: file_sha(files[&#x27;A2&#x27;]), &#x27;B2_sha256&#x27;: file_sha(files[&#x27;B2&#x27;]),
+ 125                           &#x27;cohort_sha256&#x27;: digest(names), &#x27;b2_plan_sha256&#x27;: file_sha(plan_path)}}</code></pre></details><details class="snippet" id="code-ece53d41d2b2"><summary>experiments/external/post_b2/stage.py:83</summary><p>Snapshot excerpt, lines 83–137. <a href="https://github.com/ZhuochengShang/GRAIL/blob/3db92a919b74cd3e822132f83f3a3aa9a1fb95a9/experiments/external/post_b2/stage.py">Open full source file</a></p><pre><code>  83  def one(info, work, out, state, *, execute=True):
+  84      &quot;&quot;&quot;Return after at most one API; other repositories can then make progress.&quot;&quot;&quot;
+  85      pending = [name for name, row in state[&#x27;apis&#x27;].items()
+  86                 if row[&#x27;status&#x27;] not in TERMINAL and row.get(&#x27;retry_after&#x27;, 0) &lt;= time.time()]
+  87      if not pending:
+  88          return False
+  89      name = pending[0]
+  90      state[&#x27;active_api&#x27;] = name
+  91      publish(out, state)
+  92      try:
+  93          base = load_config(info[&#x27;config&#x27;])
+  94          root = freeze(base, info[&#x27;B2&#x27;], Path(work))
+  95          cfg = load_config(root / &#x27;configs&#x27; / info[&#x27;config&#x27;].name)
+  96          # B2 job inventories can be cell-specific or inherited from the frozen
+  97          # controller. Select only an existing file with the recorded hash.
+  98          import os
+  99          expected = info[&#x27;B2&#x27;][&#x27;run&#x27;][&#x27;fingerprint_components&#x27;][&#x27;interpreter&#x27;][&#x27;environment_sha256&#x27;]
+ 100          choices = [info[&#x27;inventory&#x27;], *sorted((base.root / &#x27;docs/eval/setup&#x27;).glob(&#x27;environment_*.txt&#x27;)),
+ 101                     Path(os.environ.get(&#x27;AIDEAL_RECOVERY_ENV_INVENTORY&#x27;, &#x27;/nonexistent&#x27;))]
+ 102          inventory = next((p for p in choices if p.is_file() and file_sha(p) == expected), None)
+ 103          if inventory is None:
+ 104              raise ValueError(&#x27;no inventory binds the B2 runtime fingerprint&#x27;)
+ 105          with environment(dict(os.environ, AIDEAL_RECOVERY_ENV_INVENTORY=str(inventory))):
+ 106              env, runtime = runtime_environment(base, cfg, info[&#x27;B2&#x27;], info[&#x27;repo&#x27;])
+ 107          save(Path(out) / &#x27;runtime.json&#x27;, runtime)
+ 108          preflight = run(cfg, base, info[&#x27;B2&#x27;], name, &#x27;source&#x27;, &#x27;docs/eval/api_manifest.json&#x27;, execute=False)
+ 109          same_source_treatment(info[&#x27;source&#x27;], preflight[&#x27;identity&#x27;])
+ 110          # Same runner, prompts, stopping rule and native engine as S_A2. No
+ 111          # S_A2 code/diagnosis is supplied: round zero and context come from B2.
+ 112          with environment(env):
+ 113              row = run(cfg, base, info[&#x27;B2&#x27;], name, &#x27;source&#x27;, &#x27;docs/eval/api_manifest.json&#x27;, execute=execute)
+ 114          for cell in (&#x27;A2&#x27;, &#x27;B2&#x27;):
+ 115              if file_sha(info[&#x27;files&#x27;][cell]) != info[&#x27;identity&#x27;][f&#x27;{cell}_sha256&#x27;]:
+ 116                  raise ValueError(f&#x27;{cell} native evidence changed during recovery&#x27;)
+ 117          record = {&#x27;status&#x27;: row[&#x27;status&#x27;], &#x27;code_fix_rounds&#x27;: len(row.get(&#x27;rounds&#x27;, [])),
+ 118                    &#x27;provider_events&#x27;: sum(e.get(&#x27;category&#x27;) == &#x27;llm-error&#x27; for e in row.get(&#x27;events&#x27;, [])),
+ 119                    &#x27;diagnostic_block_events&#x27;: sum(e.get(&#x27;stage&#x27;) == &#x27;deep_dive&#x27; for e in row.get(&#x27;events&#x27;, [])),
+ 120                    &#x27;stop_reason&#x27;: row.get(&#x27;stop_reason&#x27;), &#x27;identity&#x27;: row.get(&#x27;identity&#x27;)}
+ 121          for key in (&#x27;wall_s&#x27;, &#x27;llm_calls&#x27;, &#x27;input_tokens&#x27;, &#x27;output_tokens&#x27;):
+ 122              record[key] = sum(r.get(key) or 0 for r in row.get(&#x27;rounds&#x27;, []))
+ 123          record[&#x27;cost_scope&#x27;] = &#x27;recorded code proposals only; diagnosis/provider evidence retained separately&#x27;
+ 124          record[&#x27;retry_after&#x27;] = time.time() + 300 if row[&#x27;status&#x27;] in (&#x27;provider_blocked&#x27;, &#x27;blocked&#x27;) else 0
+ 125          case = Path(out) / &#x27;cases&#x27; / (digest(name) + &#x27;.json&#x27;)
+ 126          case.parent.mkdir(exist_ok=True)
+ 127          save(case, {**row, &#x27;stage&#x27;: &#x27;S_B2&#x27;, &#x27;baseline_cell&#x27;: &#x27;B2&#x27;})
+ 128          record[&#x27;evidence_file&#x27;] = str(case.relative_to(out))
+ 129          state[&#x27;apis&#x27;][name] = record
+ 130          state[&#x27;snapshot&#x27;] = str(root)
+ 131      except Exception as exc:
+ 132          state[&#x27;apis&#x27;][name] = {&#x27;status&#x27;: &#x27;preflight_blocked&#x27;, &#x27;error&#x27;: f&#x27;{type(exc).__name__}: {exc}&#x27;,
+ 133                                &#x27;credit&#x27;: False}
+ 134      finally:
+ 135          state.pop(&#x27;active_api&#x27;, None)
+ 136          publish(out, state)
+ 137      return True</code></pre></details><details class="snippet" id="code-05cae7a711f4"><summary>experiments/external/post_b2/stage.py:140</summary><p>Snapshot excerpt, lines 140–147. <a href="https://github.com/ZhuochengShang/GRAIL/blob/3db92a919b74cd3e822132f83f3a3aa9a1fb95a9/experiments/external/post_b2/stage.py">Open full source file</a></p><pre><code> 140  def same_source_treatment(source, current):
+ 141      keys = (&#x27;mode&#x27;, &#x27;max_code_fix_rounds&#x27;, &#x27;stuck_rounds&#x27;, &#x27;runner_sha256&#x27;, &#x27;engine_sha256&#x27;,
+ 142              &#x27;validation_sha256&#x27;, &#x27;compatibility_adapter_sha256&#x27;, &#x27;protocol_sha256&#x27;,
+ 143              &#x27;prompt_sha256&#x27;, &#x27;context_engine&#x27;)
+ 144      for row in source[&#x27;apis&#x27;].values():
+ 145          prior = row.get(&#x27;identity&#x27;)
+ 146          if prior and any(prior[key] != current[key] for key in keys):
+ 147              raise ValueError(&#x27;S_A2/S_B2 source prompt, engine or stopping policy differs&#x27;)</code></pre></details><details class="snippet" id="code-6ab5dcec1cf7"><summary>experiments/external/run_condition_watchdog.py:106</summary><p>Snapshot excerpt, lines 106–149. <a href="https://github.com/ZhuochengShang/GRAIL/blob/3db92a919b74cd3e822132f83f3a3aa9a1fb95a9/experiments/external/run_condition_watchdog.py">Open full source file</a></p><pre><code> 106      def __init__(self, plan_path: Path, state_path: Path | None = None):
+ 107          self.plan_path = plan_path.resolve()
+ 108          self.plan_bytes = self.plan_path.read_bytes()
+ 109          self.plan_sha = hashlib.sha256(self.plan_bytes).hexdigest()
+ 110          self.plan = yaml.safe_load(self.plan_bytes) or {}
+ 111          self.plan_dir = self.plan_path.parent
+ 112          self.state_path = (state_path or self.plan_path.with_suffix(&quot;.state.json&quot;)).resolve()
+ 113          self.log_path = self.state_path.with_suffix(&quot;.log&quot;)
+ 114          self.jobs = {job[&quot;id&quot;]: job for job in self.plan.get(&quot;jobs&quot;, [])}
+ 115          if not self.jobs or len(self.jobs) != len(self.plan.get(&quot;jobs&quot;, [])):
+ 116              raise ValueError(&quot;plan jobs need unique non-empty ids&quot;)
+ 117          self.max_parallel = int(self.plan.get(&quot;max_parallel&quot;, 3))
+ 118          self.retry_delay = int(self.plan.get(&quot;retry_delay_seconds&quot;, 300))
+ 119          self.active: dict[str, dict] = {}
+ 120          self.inherited_env = dict(os.environ)
+ 121          self.stopping = False
+ 122          self.state = load_json(self.state_path)
+ 123          if self.state and self.state.get(&quot;plan_sha256&quot;) != self.plan_sha:
+ 124              raise RuntimeError(
+ 125                  f&quot;plan changed since {self.state_path}; use a new state path to avoid mixing runs&quot;)
+ 126          if not self.state:
+ 127              self.state = {&quot;schema&quot;: 1, &quot;plan&quot;: str(self.plan_path),
+ 128                            &quot;plan_sha256&quot;: self.plan_sha, &quot;jobs&quot;: {}}
+ 129          for job_id in self.jobs:
+ 130              row = self.state[&quot;jobs&quot;].setdefault(
+ 131                  job_id, {&quot;status&quot;: &quot;pending&quot;, &quot;attempts&quot;: 0})
+ 132              if row.get(&quot;status&quot;) == &quot;running&quot;:
+ 133                  try:
+ 134                      from experiments.external.watchdog_adoption import adopt
+ 135                  except ModuleNotFoundError:
+ 136                      from watchdog_adoption import adopt
+ 137                  proc = adopt(row, command_list(self.jobs[job_id][&#x27;command&#x27;]))
+ 138                  if proc is not None:
+ 139                      final = result_path(self.jobs[job_id], self.plan_dir)
+ 140                      self.active[job_id] = {
+ 141                          &#x27;proc&#x27;: proc, &#x27;cwd&#x27;: self.cwd(self.jobs[job_id]),
+ 142                          &#x27;final&#x27;: final, &#x27;tmp&#x27;: final.with_suffix(final.suffix + &#x27;.tmp&#x27;),
+ 143                          &#x27;stdout&#x27;: None, &#x27;stderr&#x27;: None, &#x27;started&#x27;: time.time()}
+ 144                      row[&#x27;adopted_processes&#x27;] = proc.tracked
+ 145                      row[&#x27;supervisor_recovery&#x27;] = &#x27;observing surviving job and descendants; no relaunch&#x27;
+ 146                  else:
+ 147                      row[&quot;status&quot;] = &quot;pending&quot;
+ 148                  row[&quot;recovered_after_supervisor_restart&quot;] = True
+ 149          self._save()</code></pre></details><details class="snippet" id="code-78e5f0fd00c1"><summary>experiments/external/post_b2/admission.py:31</summary><p>Snapshot excerpt, lines 31–58. <a href="https://github.com/ZhuochengShang/GRAIL/blob/3db92a919b74cd3e822132f83f3a3aa9a1fb95a9/experiments/external/post_b2/admission.py">Open full source file</a></p><pre><code>  31  def slot(upstream, purpose):
+  32      # This is a configured local concurrency cap, not a claimed Gemini quota.
+  33      path = Path(os.environ.get(&#x27;AIDEAL_GOOGLE_RECOVERY_ADMISSION_LOCK&#x27;,
+  34                                 &#x27;/tmp/aideal_google_recovery_admission.lock&#x27;))
+  35      path.parent.mkdir(parents=True, exist_ok=True)
+  36      with path.open(&#x27;a+&#x27;) as lock:
+  37          try:
+  38              fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+  39          except BlockingIOError:
+  40              yield False
+  41              return
+  42          try:
+  43              reserved = native_reservation(upstream)
+  44              if reserved + 1 &gt; 6:
+  45                  yield False
+  46                  return
+  47              if (not os.environ.get(&#x27;AIDEAL_GOOGLE_RATE_STATE&#x27;)
+  48                      or float(os.environ.get(&#x27;AIDEAL_GOOGLE_MIN_INTERVAL_S&#x27;, &#x27;0&#x27;)) &lt; 3):
+  49                  raise ValueError(&#x27;existing shared Google request-start gate is required&#x27;)
+  50              lock.seek(0)
+  51              lock.truncate()
+  52              json.dump({&#x27;pid&#x27;: os.getpid(), &#x27;purpose&#x27;: purpose, &#x27;started_epoch&#x27;: time.time(),
+  53                         &#x27;native_reserved&#x27;: reserved, &#x27;supplemental_slots&#x27;: 1,
+  54                         &#x27;local_study_max_callers&#x27;: 6}, lock)
+  55              lock.flush()
+  56              yield True
+  57          finally:
+  58              fcntl.flock(lock, fcntl.LOCK_UN)</code></pre></details><details class="snippet" id="code-218fd960f92e"><summary>grail-agent/src/aideal/llm.py:138</summary><p>Snapshot excerpt, lines 138–184. <a href="https://github.com/ZhuochengShang/GRAIL/blob/3db92a919b74cd3e822132f83f3a3aa9a1fb95a9/grail-agent/src/aideal/llm.py">Open full source file</a></p><pre><code> 138  def invoke_text(spec: ModelSpec, system: str, user: str) -&gt; str:
+ 139      &quot;&quot;&quot;One-shot text completion; returns the model&#x27;s text content and adds the
+ 140      provider-reported token usage to the module accumulator.&quot;&quot;&quot;
+ 141      llm = get_chat_model(spec)
+ 142      _wait_for_provider_slot(spec)
+ 143      from .provider_deadline import provider_deadline
+ 144      import sys
+ 145      budget = 0.0
+ 146      if spec.provider.lower() == &quot;google&quot;:
+ 147          budget = (float(os.environ.get(&quot;AIDEAL_GOOGLE_REQUEST_TIMEOUT_S&quot;, &quot;300&quot;))
+ 148                    * max(1, int(os.environ.get(&quot;AIDEAL_GOOGLE_MAX_RETRIES&quot;, &quot;2&quot;))) + 30)
+ 149      started = time.monotonic()
+ 150      print(f&quot;[provider] start model={spec.provider}:{spec.model} wall_limit_s={budget:g}&quot;,
+ 151            file=sys.stderr, flush=True)
+ 152      try:
+ 153          with provider_deadline(budget):
+ 154              resp = llm.invoke([(&quot;system&quot;, system), (&quot;user&quot;, user)])
+ 155      except Exception as exc:
+ 156          print(f&quot;[provider] failed type={type(exc).__name__} wall_s={time.monotonic()-started:.1f}&quot;,
+ 157                file=sys.stderr, flush=True)
+ 158          raise
+ 159      print(f&quot;[provider] complete wall_s={time.monotonic()-started:.1f}&quot;, file=sys.stderr, flush=True)
+ 160      u = getattr(resp, &quot;usage_metadata&quot;, None) or {}
+ 161      _USAGE[&quot;calls&quot;] += 1
+ 162      _USAGE[&quot;input_tokens&quot;] += int(u.get(&quot;input_tokens&quot;) or 0)
+ 163      _USAGE[&quot;output_tokens&quot;] += int(u.get(&quot;output_tokens&quot;) or 0)
+ 164      m = _USAGE[&quot;by_model&quot;].setdefault(
+ 165          f&quot;{spec.provider}:{spec.model}&quot;,
+ 166          {&quot;calls&quot;: 0, &quot;input_tokens&quot;: 0, &quot;output_tokens&quot;: 0})
+ 167      m[&quot;calls&quot;] += 1
+ 168      m[&quot;input_tokens&quot;] += int(u.get(&quot;input_tokens&quot;) or 0)
+ 169      m[&quot;output_tokens&quot;] += int(u.get(&quot;output_tokens&quot;) or 0)
+ 170      c = resp.content
+ 171      if isinstance(c, str):
+ 172          return c
+ 173      if isinstance(c, list):
+ 174          # Responses-API (codex) and some providers return CONTENT BLOCKS —
+ 175          # [{&#x27;type&#x27;:&#x27;text&#x27;,&#x27;text&#x27;:...}, ...]. str(list) here poisoned codex
+ 176          # snippets (&quot;[{&#x27;type&#x27;: &#x27;text&#x27;, ...&quot;) — join the text blocks instead.
+ 177          parts = []
+ 178          for b in c:
+ 179              if isinstance(b, dict):
+ 180                  parts.append(b.get(&quot;text&quot;) or b.get(&quot;content&quot;) or &quot;&quot;)
+ 181              elif isinstance(b, str):
+ 182                  parts.append(b)
+ 183          return &quot;&quot;.join(parts)
+ 184      return str(c)</code></pre></details><details class="snippet" id="code-c0e1cf3b431f"><summary>experiments/external/provider_retry/transport.py:44</summary><p>Snapshot excerpt, lines 44–99. <a href="https://github.com/ZhuochengShang/GRAIL/blob/3db92a919b74cd3e822132f83f3a3aa9a1fb95a9/experiments/external/provider_retry/transport.py">Open full source file</a></p><pre><code>  44  class Recorder:
+  45      def __init__(self, root, policy):
+  46          self.root, self.policy = Path(root), policy
+  47          self.root.mkdir(parents=True, exist_ok=True)
+  48          (self.root / &#x27;requests&#x27;).mkdir(exist_ok=True)
+  49          self.metadata = {&#x27;transport_version&#x27;: policy[&#x27;version&#x27;], &#x27;policy_sha256&#x27;: sha(policy),
+  50                           &#x27;adapter_sha256&#x27;: sha(Path(__file__).read_bytes()), &#x27;pid&#x27;: os.getpid()}
+  51  
+  52      def event(self, kind, **fields):
+  53          record = dict(self.metadata, event=kind, epoch=time.time(), **fields)
+  54          # Per-process journal plus flock also protects threads and PID reuse.
+  55          with (self.root / f&#x27;events-{os.getpid()}.jsonl&#x27;).open(&#x27;a&#x27;) as stream:
+  56              fcntl.flock(stream, fcntl.LOCK_EX)
+  57              stream.write(json.dumps(record, sort_keys=True) + &#x27;\n&#x27;)
+  58              stream.flush()
+  59  
+  60      def invoke(self, original, spec, system, user):
+  61          if spec.provider.lower() != &#x27;google&#x27;:
+  62              return original(spec, system, user)
+  63          key = sha([spec.provider, spec.model, system, user])
+  64          match = re.search(r&#x27;RECEIVER\s+—\s+call `([^`]+)`&#x27;, user)
+  65          api = match[1] if match else None
+  66          context = {&#x27;invocation_id&#x27;: uuid.uuid4().hex, &#x27;request_key&#x27;: key, &#x27;api&#x27;: api,
+  67                     &#x27;model&#x27;: f&#x27;{spec.provider}:{spec.model}&#x27;,
+  68                     &#x27;prompt_chars&#x27;: len(system)+len(user), &#x27;prompt_sha256&#x27;: sha([system, user]),
+  69                     &#x27;request_timeout_s&#x27;: self.policy[&#x27;request_timeout_s&#x27;], &#x27;sdk_attempts&#x27;: 1,
+  70                     &#x27;outer_deadline_s&#x27;: self.policy[&#x27;request_timeout_s&#x27;] + 30}
+  71          state_path = self.root / &#x27;requests&#x27; / f&#x27;{key}.json&#x27;
+  72          with state_path.with_suffix(&#x27;.lock&#x27;).open(&#x27;a&#x27;) as lock:
+  73              try:
+  74                  fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+  75              except BlockingIOError:
+  76                  self.event(&#x27;admission_deferred&#x27;, **context, reason=&#x27;identical request already active&#x27;)
+  77                  raise ProviderCooldown(&#x27;Identical request already active; no request sent&#x27;)
+  78              state = json.loads(state_path.read_text()) if state_path.exists() else {}
+  79              if state.get(&#x27;retry_after&#x27;, 0) &gt; time.time():
+  80                  self.event(&#x27;cooldown_deferred&#x27;, **context, retry_after=state[&#x27;retry_after&#x27;],
+  81                             previous_code=state.get(&#x27;last_code&#x27;))
+  82                  raise ProviderCooldown(f&quot;Previous provider {state.get(&#x27;last_code&#x27;)}; retry after epoch &quot;
+  83                                         f&quot;{state[&#x27;retry_after&#x27;]:.3f}; no request sent&quot;)
+  84              started = time.monotonic()
+  85              self.event(&#x27;invocation_start&#x27;, **context, previous_end_epoch=state.get(&#x27;ended_at&#x27;))
+  86              token = CONTEXT.set((self, context))
+  87              try:
+  88                  response = original(spec, system, user)
+  89              except BaseException as exc:
+  90                  code = getattr(exc, &#x27;code&#x27;, None)
+  91                  code = code if isinstance(code, int) else None
+  92                  transient = code in (408,429,500,502,503,504) or isinstance(exc, TimeoutError)
+  93                  failures = state.get(&#x27;consecutive_transient&#x27;, 0) + 1 if transient else 0
+  94                  ended = time.time()
+  95                  state.update(consecutive_transient=failures, last_code=code,
+  96                               ended_at=ended, retry_after=ended+delay(failures,self.policy) if transient else 0)
+  97                  atomic(state_path, state)
+  98                  self.event(&#x27;invocation_error&#x27;, **context, error_type=type(exc).__name__, http_status=code,
+  99                             wall_s=time.monotonic()-started, retry_after=state[&#x27;retry_after&#x27;])</code></pre></details><details class="snippet" id="code-906e26320ed8"><summary>experiments/external/provider_retry/input_contract.py:6</summary><p>Snapshot excerpt, lines 6–21. <a href="https://github.com/ZhuochengShang/GRAIL/blob/3db92a919b74cd3e822132f83f3a3aa9a1fb95a9/experiments/external/provider_retry/input_contract.py">Open full source file</a></p><pre><code>   6  def prepare(project, input_files, output_directory):
+   7      project=Path(project).resolve()
+   8      output=Path(output_directory).resolve()
+   9      if not output.is_relative_to(project / &#x27;.aideal_exec&#x27;):
+  10          raise ValueError(&#x27;Output must belong to this project execution directory&#x27;)
+  11      checked={}
+  12      for name,relative in input_files.items():
+  13          path=(project/relative).resolve()
+  14          if not path.is_relative_to(project) or not path.is_file():
+  15              raise ValueError(f&#x27;Configured input {name} is missing or outside project&#x27;)
+  16          checked[name]={&#x27;path&#x27;:str(path),&#x27;kind&#x27;:&#x27;input_file&#x27;,
+  17                         &#x27;sha256&#x27;:hashlib.sha256(path.read_bytes()).hexdigest()}
+  18      # Only scaffold-owned output setup; do not touch fixtures or generated snippets.
+  19      output.mkdir(parents=True,exist_ok=True)
+  20      checked[&#x27;output_dir&#x27;]={&#x27;path&#x27;:str(output),&#x27;kind&#x27;:&#x27;output_directory&#x27;,&#x27;exists&#x27;:output.is_dir()}
+  21      return checked</code></pre></details><details class="snippet" id="code-97d3a9f16001"><summary>experiments/external/readiness/model.py:13</summary><p>Snapshot excerpt, lines 13–42. <a href="https://github.com/ZhuochengShang/GRAIL/blob/3db92a919b74cd3e822132f83f3a3aa9a1fb95a9/experiments/external/readiness/model.py">Open full source file</a></p><pre><code>  13  def assess(ledger, data, config):
+  14      rows = ledger.get(&#x27;rows&#x27;, [])
+  15      count = ledger.get(&#x27;expected&#x27;, 0)
+  16      errors = list(ledger.get(&#x27;errors&#x27;, []))
+  17      if len(rows) != count or count &lt;= 0 or len({r[&#x27;api&#x27;] for r in rows}) != count:
+  18          errors.append(&#x27;Missing, duplicate, or inconsistent API denominator&#x27;)
+  19      counts = Counter(r.get(&#x27;status&#x27;, &#x27;pending&#x27;) for r in rows)
+  20      provider = sum(r.get(&#x27;runner_category&#x27;) == &#x27;llm-error&#x27; for r in rows)
+  21      complete = (ledger.get(&#x27;status&#x27;) == &#x27;complete&#x27; and not errors and not provider
+  22                  and bool(ledger.get(&#x27;fingerprint&#x27;)) and counts[&#x27;pass&#x27;]+counts[&#x27;fail&#x27;] == count)
+  23      return {
+  24          &#x27;status&#x27;: &#x27;invalid_evidence&#x27; if errors else &#x27;complete_measurement&#x27; if complete else &#x27;partial_measurement&#x27;,
+  25          &#x27;scope&#x27;: &#x27;documentation-conditioned API execution under the fixed harness&#x27;,
+  26          &#x27;denominator&#x27;: count, &#x27;counts&#x27;: dict(counts), &#x27;unresolved_provider_apis&#x27;: provider,
+  27          &#x27;final_raw_pass_percent&#x27;: 100*counts[&#x27;pass&#x27;]/count if complete else None,
+  28          &#x27;provisional_passes&#x27;: counts[&#x27;pass&#x27;],
+  29          &#x27;fingerprint&#x27;: ledger.get(&#x27;fingerprint&#x27;), &#x27;errors&#x27;: errors,
+  30          &#x27;dimensions&#x27;: {
+  31              &#x27;discovery&#x27;: {&#x27;status&#x27;: &#x27;not_measured&#x27;, &#x27;reason&#x27;: &#x27;Target API is supplied; independent agent search is not tested.&#x27;},
+  32              &#x27;setup_and_inputs&#x27;: {&#x27;status&#x27;: &#x27;partial_evidence&#x27;, &#x27;fixture_audit&#x27;: data.get(&#x27;status&#x27;, &#x27;missing&#x27;),
+  33                                   &#x27;config_audit&#x27;: config.get(&#x27;status&#x27;, &#x27;missing&#x27;),
+  34                                   &#x27;limitations&#x27;: data.get(&#x27;limitations&#x27;, []) + data.get(&#x27;failures&#x27;, []) + config.get(&#x27;warnings&#x27;, []),
+  35                                   &#x27;reason&#x27;: &#x27;Prepared harness and fixture identity do not measure autonomous installation or per-API input suitability.&#x27;},
+  36              &#x27;api_execution&#x27;: {&#x27;status&#x27;: &#x27;measured&#x27; if complete else &#x27;provisional&#x27;,
+  37                                &#x27;reason&#x27;: &#x27;Native execution and witness checks; not an independent semantic certificate.&#x27;},
+  38              &#x27;workflow_completion&#x27;: {&#x27;status&#x27;: &#x27;not_measured&#x27;, &#x27;reason&#x27;: &#x27;No held-out multi-API workflow benchmark is included.&#x27;},
+  39              &#x27;verification_and_recovery&#x27;: {&#x27;status&#x27;: &#x27;partial_evidence&#x27;,
+  40                                           &#x27;reason&#x27;: &#x27;Assertions, diagnostics and retry histories exist; independent oracle validity and agent recovery capability are not established.&#x27;}},
+  41          &#x27;overall_readiness_score&#x27;: None,
+  42          &#x27;interpretation&#x27;: &#x27;These results describe a codebase-agent-task-environment combination, not universal codebase quality.&#x27;}</code></pre></details><details class="snippet" id="code-15cfbf2cda20"><summary>experiments/external/readiness/review.py:42</summary><p>Snapshot excerpt, lines 42–70. <a href="https://github.com/ZhuochengShang/GRAIL/blob/3db92a919b74cd3e822132f83f3a3aa9a1fb95a9/experiments/external/readiness/review.py">Open full source file</a></p><pre><code>  42  def validate(card, events, decision):
+  43      if decision.get(&#x27;evidence_version&#x27;) != card[&#x27;evidence_version&#x27;]:
+  44          raise ValueError(&#x27;Stale evidence version: inspect the current suggestion again&#x27;)
+  45      if not decision.get(&#x27;actor&#x27;) or decision.get(&#x27;actor_type&#x27;) not in (&#x27;human&#x27;, &#x27;agent&#x27;) or not decision.get(&#x27;note&#x27;):
+  46          raise ValueError(&#x27;An actor, actor_type (human/agent), and review note are required&#x27;)
+  47      action = decision.get(&#x27;action&#x27;)
+  48      current = state(card, events)
+  49      status = current[&#x27;status&#x27;]
+  50      if action == &#x27;propose&#x27;:
+  51          plan = decision.get(&#x27;plan&#x27;, {})
+  52          if any(not plan.get(k) for k in (&#x27;summary&#x27;, &#x27;files&#x27;, &#x27;validation&#x27;, &#x27;risks&#x27;, &#x27;isolation&#x27;)):
+  53              raise ValueError(&#x27;A concrete plan needs summary, files, validation, risks, and isolation&#x27;)
+  54          if not isinstance(plan[&#x27;files&#x27;], list) or not all(isinstance(x, str) for x in plan[&#x27;files&#x27;]):
+  55              raise ValueError(&#x27;Plan files must be a list of paths to review&#x27;)
+  56      elif action == &#x27;approve_plan&#x27;:
+  57          if status != &#x27;proposed&#x27; or decision[&#x27;actor_type&#x27;] != &#x27;human&#x27; or decision.get(&#x27;executor&#x27;) not in (&#x27;human&#x27;, &#x27;agent&#x27;):
+  58              raise ValueError(&#x27;Human review of a concrete proposal and a human/agent executor are required&#x27;)
+  59      elif action == &#x27;submit_result&#x27;:
+  60          if status != &#x27;approved_for_implementation&#x27; or decision[&#x27;actor_type&#x27;] != current[&#x27;executor&#x27;]:
+  61              raise ValueError(&#x27;Only the assigned executor can submit work under the approved plan&#x27;)
+  62          result = decision.get(&#x27;result&#x27;, {})
+  63          if result.get(&#x27;validation_status&#x27;) != &#x27;passed&#x27; or any(not result.get(k) for k in (&#x27;change&#x27;, &#x27;validation&#x27;, &#x27;comparison&#x27;)):
+  64              raise ValueError(&#x27;Submission requires change, validation and before/after comparison artifacts plus declared passed validation&#x27;)
+  65      elif action == &#x27;accept_result&#x27;:
+  66          if status != &#x27;awaiting_result_review&#x27; or decision[&#x27;actor_type&#x27;] != &#x27;human&#x27;:
+  67              raise ValueError(&#x27;Human review of submitted validation evidence is required to accept a result&#x27;)
+  68      elif action not in (&#x27;defer&#x27;, &#x27;reject&#x27;, &#x27;request_changes&#x27;):
+  69          raise ValueError(f&#x27;Unknown review action: {action}&#x27;)
+  70      return current</code></pre></details></div></main><script>document.getElementById("query").addEventListener("input",function(){let q=this.value.toLowerCase();document.querySelectorAll(".snippet").forEach(e=>{e.hidden=!e.textContent.toLowerCase().includes(q)})});document.querySelectorAll("a[href^="#code-"]").forEach(a=>a.addEventListener("click",()=>{let d=document.getElementById(a.hash.slice(1));if(d)d.open=true}));</script></body></html>
