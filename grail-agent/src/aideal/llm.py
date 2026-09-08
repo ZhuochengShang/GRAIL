@@ -140,7 +140,23 @@ def invoke_text(spec: ModelSpec, system: str, user: str) -> str:
     provider-reported token usage to the module accumulator."""
     llm = get_chat_model(spec)
     _wait_for_provider_slot(spec)
-    resp = llm.invoke([("system", system), ("user", user)])
+    from .provider_deadline import provider_deadline
+    import sys
+    budget = 0.0
+    if spec.provider.lower() == "google":
+        budget = (float(os.environ.get("AIDEAL_GOOGLE_REQUEST_TIMEOUT_S", "300"))
+                  * max(1, int(os.environ.get("AIDEAL_GOOGLE_MAX_RETRIES", "2"))) + 30)
+    started = time.monotonic()
+    print(f"[provider] start model={spec.provider}:{spec.model} wall_limit_s={budget:g}",
+          file=sys.stderr, flush=True)
+    try:
+        with provider_deadline(budget):
+            resp = llm.invoke([("system", system), ("user", user)])
+    except Exception as exc:
+        print(f"[provider] failed type={type(exc).__name__} wall_s={time.monotonic()-started:.1f}",
+              file=sys.stderr, flush=True)
+        raise
+    print(f"[provider] complete wall_s={time.monotonic()-started:.1f}", file=sys.stderr, flush=True)
     u = getattr(resp, "usage_metadata", None) or {}
     _USAGE["calls"] += 1
     _USAGE["input_tokens"] += int(u.get("input_tokens") or 0)
