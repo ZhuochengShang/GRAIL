@@ -1,27 +1,27 @@
 # Automation status and deadline forecast
 
-Updated: 2026-09-08T05:19:43.856232-07:00. Hours to Wednesday 11 AM: 29.67.
+Updated: 2026-09-08T05:34:59.727078-07:00. Hours to Wednesday 11 AM: 29.42.
 
 **Whole-pipeline completion time remains unverified.** Estimates below cover remaining comprehension only; generation, document repair, and final validation are additional. Scenarios are not confidence intervals.
 
 | Repository/cell | Remaining APIs | State | Optimistic / likely / conservative hours |
 |---|---:|---|---|
-| mir_eval/A1 | 147 | estimated | 24.47 / 722.84 / 1470.00 |
+| mir_eval/A1 | 147 | estimated | 24.47 / 722.82 / 1470.00 |
 | mir_eval/A2 | 0 | complete | 0.00 / 0.00 / 0.00 |
 | mir_eval/B1 | 148 | insufficient_observations | unknown |
 | mir_eval/B2 | 0 | complete | 0.00 / 0.00 / 0.00 |
-| thumbnailator/A1 | 146 | estimated | 24.30 / 707.01 / 1464.62 |
+| thumbnailator/A1 | 146 | estimated | 24.30 / 707.08 / 1464.62 |
 | thumbnailator/A2 | 0 | complete | 0.00 / 0.00 / 0.00 |
 | thumbnailator/B1 | 149 | insufficient_observations | unknown |
 | thumbnailator/B2 | 0 | complete | 0.00 / 0.00 / 0.00 |
-| tslearn/A1 | 229 | estimated | 38.11 / 200.41 / 458.31 |
-| tslearn/A2 | 234 | estimated | 38.97 / 1055.17 / 2191.64 |
+| tslearn/A1 | 228 | estimated | 37.94 / 199.45 / 456.30 |
+| tslearn/A2 | 234 | estimated | 38.97 / 1094.14 / 2269.92 |
 | tslearn/B1 | 235 | insufficient_observations | unknown |
 | tslearn/B2 | 235 | insufficient_observations | unknown |
 
-Failure review queue: 126 entries. Mutable cross-condition path conflicts: 0.
+Failure review queue: 129 entries. Mutable cross-condition path conflicts: 0.
 Deadline risks: mir_eval/A1: estimated; thumbnailator/A1: estimated; tslearn/A1: estimated; tslearn/A2: estimated
-Observation errors: 0. Observer health: `{"results": {"age_seconds": 29.4, "stale": false}, "data": {"age_seconds": 46.5, "stale": false}}`.
+Observation errors: 0. Observer health: `{"results": {"age_seconds": 37.2, "stale": false}, "data": {"age_seconds": 27.6, "stale": false}}`.
 
 - [Failure review queue](failure_review_queue.json): suggested causes, evidence, confidence, attempts and repair rounds.
 - [Resolved configuration bundles](config_bundles.json): actual profile, direct YAML layers, fixture bindings and recorded environments.

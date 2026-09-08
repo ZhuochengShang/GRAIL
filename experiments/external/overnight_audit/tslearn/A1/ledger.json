@@ -2,18 +2,19 @@
   "status": "partial",
   "expected": 235,
   "counts": {
-    "pending": 199,
-    "fail": 35,
+    "pending": 196,
+    "fail": 38,
     "pass": 1
   },
   "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
   "errors": [],
   "failure_categories": {
-    "llm-error": 30,
+    "llm-error": 32,
     "unknown": 3,
-    "api-identity": 2
+    "api-identity": 2,
+    "test/scaffold": 1
   },
-  "recorded_provider_errors_all_fingerprints": 77,
+  "recorded_provider_errors_all_fingerprints": 79,
   "observed_fingerprints": [
     "964a2ec0df73c3b53c3966c9213dedb1a12bf7e39ad1b8d7d1ddd561ba53212b",
     "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea"
@@ -7828,6 +7829,132 @@
       "source_other_sites": 0,
       "codebase_frames": null,
       "checkpoint_line": 271
+    },
+    {
+      "name": "mse",
+      "doc_source": "original",
+      "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "llm-error",
+            "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}"
+          }
+        ],
+        "error_category": "llm-error",
+        "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+        "code": "",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_mse/api_test.py",
+        "exit_code": null,
+        "stdout_tail": "",
+        "stderr_tail": ""
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 599.5,
+      "llm_calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "by_model": {},
+      "error_category": "llm-error",
+      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "locus": "",
+      "doc_chars": 85,
+      "document_sha256": "6455331e0b58c89e18ffbf1340950b1cba17163b1182f88b0bf45d15d8ee2bbe",
+      "source": "tslearn/tslearn/metrics/performance.py:83",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 272
+    },
+    {
+      "name": "njit_lcss_accumulated_matrix",
+      "doc_source": "original",
+      "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "infra",
+            "error": "missing module/import: No module named 'tslearn.metrics.lcss'"
+          }
+        ],
+        "error_category": "infra",
+        "error": "missing module/import: No module named 'tslearn.metrics.lcss'",
+        "code": "import numpy as np\nfrom tslearn.metrics.lcss import njit_lcss_accumulated_matrix\n\n# Prepare small 2D time series (n_timestamps, n_features)\ns1_small = s1[:5].reshape(-1, 1).astype(np.float64)\ns2_small = s1[:5].reshape(-1, 1).astype(np.float64)\n\n# LCSS uses a mask where finite values indicate valid alignment paths\nmask = np.zeros((5, 5), dtype=np.float64)\neps = 0.5\n\n# Compute the accumulated cost matrix\nacc_mat = njit_lcss_accumulated_matrix(s1_small, s2_small, eps, mask)\n\n# The accumulated matrix should have an extra row and column for base cases\nassert acc_mat.shape == (6, 6), f\"Expected shape (6, 6), got {acc_mat.shape}\"\n\n# Since s1_small and s2_small are identical, the longest common subsequence length should be 5\nlcss_score = acc_mat[-1, -1]\nassert lcss_score == 5.0, f\"Expected LCSS of 5.0 for identical series, got {lcss_score}\"\n\nprint(f\"__CHECK__ njit_lcss_accumulated_matrix {acc_mat.shape} {lcss_score}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_njit_lcss_accumulated_matrix/api_test.py",
+        "exit_code": 1,
+        "stdout_tail": "",
+        "stderr_tail": "__RUN_ERR__ ModuleNotFoundError: No module named 'tslearn.metrics.lcss'\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_njit_lcss_accumulated_matrix/api_test.py\", line 64, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_njit_lcss_accumulated_matrix/api_test.py\", line 59, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_njit_lcss_accumulated_matrix/api_test.py\", line 35, in api_test\n    from tslearn.metrics.lcss import njit_lcss_accumulated_matrix\nModuleNotFoundError: No module named 'tslearn.metrics.lcss'\n"
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 34.7,
+      "llm_calls": 1,
+      "input_tokens": 1379,
+      "output_tokens": 4234,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1379,
+          "output_tokens": 4234
+        }
+      },
+      "error_category": "infra",
+      "error": "missing module/import: No module named 'tslearn.metrics.lcss'",
+      "locus": "",
+      "doc_chars": 110,
+      "document_sha256": "88e057294bf301f5211f579b23bfe798d698c62954ec259da1ada9d2f9d5cd9a",
+      "source": "tslearn/tslearn/metrics/dtw_variants.py:2233",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 273
+    },
+    {
+      "name": "njit_sakoe_chiba_mask",
+      "doc_source": "original",
+      "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "llm-error",
+            "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}"
+          }
+        ],
+        "error_category": "llm-error",
+        "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+        "code": "",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_njit_sakoe_chiba_mask/api_test.py",
+        "exit_code": null,
+        "stdout_tail": "",
+        "stderr_tail": ""
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 599.8,
+      "llm_calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "by_model": {},
+      "error_category": "llm-error",
+      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "locus": "",
+      "doc_chars": 103,
+      "document_sha256": "dc0cc3ef4d718b90379890c18ed05d2acad1a3cbef7eb2b1853b3eea134d0d7d",
+      "source": "tslearn/tslearn/metrics/dtw_variants.py:1487",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 274
     }
   ],
   "repair_summary": {
@@ -11540,18 +11667,31 @@
     },
     {
       "api": "mse",
-      "status": "pending",
-      "primary_category": "pending",
-      "runner_category": null,
-      "category_reason": "Not yet observed.",
-      "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
-      "provider_error_attempts": 0,
+      "status": "fail",
+      "primary_category": "llm-error",
+      "runner_category": "llm-error",
+      "category_reason": "Provider outcome; retry, never count as a documentation failure.",
+      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "source": "tslearn/tslearn/metrics/performance.py:83",
+      "doc_chars": 85,
+      "checkpoint_attempts": 1,
+      "provider_error_attempts": 1,
       "provider_internal_retries": null,
       "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "attempt_history": [
+        {
+          "checkpoint_line": 272,
+          "status": "fail",
+          "error_category": "llm-error",
+          "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+          "attempts": 1,
+          "wall_s": 599.5,
+          "llm_calls": 0,
+          "input_tokens": 0,
+          "output_tokens": 0,
+          "pass_round": null
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -11635,18 +11775,31 @@
     },
     {
       "api": "njit_lcss_accumulated_matrix",
-      "status": "pending",
-      "primary_category": "pending",
-      "runner_category": null,
-      "category_reason": "Not yet observed.",
-      "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "status": "fail",
+      "primary_category": "test/scaffold",
+      "runner_category": "infra",
+      "category_reason": "Runner classified this as infrastructure.",
+      "error": "missing module/import: No module named 'tslearn.metrics.lcss'",
+      "source": "tslearn/tslearn/metrics/dtw_variants.py:2233",
+      "doc_chars": 110,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 273,
+          "status": "fail",
+          "error_category": "infra",
+          "error": "missing module/import: No module named 'tslearn.metrics.lcss'",
+          "attempts": 1,
+          "wall_s": 34.7,
+          "llm_calls": 1,
+          "input_tokens": 1379,
+          "output_tokens": 4234,
+          "pass_round": null
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -11673,18 +11826,31 @@
     },
     {
       "api": "njit_sakoe_chiba_mask",
-      "status": "pending",
-      "primary_category": "pending",
-      "runner_category": null,
-      "category_reason": "Not yet observed.",
-      "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
-      "provider_error_attempts": 0,
+      "status": "fail",
+      "primary_category": "llm-error",
+      "runner_category": "llm-error",
+      "category_reason": "Provider outcome; retry, never count as a documentation failure.",
+      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "source": "tslearn/tslearn/metrics/dtw_variants.py:1487",
+      "doc_chars": 103,
+      "checkpoint_attempts": 1,
+      "provider_error_attempts": 1,
       "provider_internal_retries": null,
       "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "attempt_history": [
+        {
+          "checkpoint_line": 274,
+          "status": "fail",
+          "error_category": "llm-error",
+          "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+          "attempts": 1,
+          "wall_s": 599.8,
+          "llm_calls": 0,
+          "input_tokens": 0,
+          "output_tokens": 0,
+          "pass_round": null
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
