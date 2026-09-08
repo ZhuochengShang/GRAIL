@@ -1,6 +1,6 @@
 # AIDEAL readiness assessment and improvement queue
 
-Updated: 2026-09-08T11:34:33.326650+00:00
+Updated: 2026-09-08T11:49:34.504800+00:00
 
 **Measured scope:** how documentation affects an LLM’s API use under a fixed harness. Overall agent readiness is not yet fully measured; no composite score is assigned.
 
@@ -37,11 +37,11 @@ Provisional counts retain pending and provider-error APIs in the denominator. Fi
 | thumbnailator | unknown | 31 |
 | tslearn | api-identity-or-version | 3 |
 | tslearn | input-contract-or-api-call | 2 |
-| tslearn | provider | 29 |
+| tslearn | provider | 30 |
 
-## Reviewable improvements (123)
+## Reviewable improvements (124)
 
-Review states: `{'open': 122, 'proposed': 1}`. Observation errors: 0. Inactive reviewed IDs retained: 0.
+Review states: `{'open': 123, 'proposed': 1}`. Observation errors: 0. Inactive reviewed IDs retained: 0.
 
 Each card separates native failure, diagnosis confidence, proposed action, validation and review decisions. Provider barriers concern execution infrastructure; they are not automatically codebase or documentation defects.
 
@@ -105,6 +105,7 @@ Each card separates native failure, diagnosis confidence, proposed action, valid
 | [tslearn: get_early_predict_proba_generator](suggestions/3ae2ab1db15f8c5ceb1e.md) | A1 | execution_blocker | high | open |
 | [tslearn: is_float](suggestions/0b0c74d7bbfc877ac3f6.md) | A1 | execution_blocker | high | open |
 | [tslearn: is_float32](suggestions/e4a6a53c15dc8f409272.md) | A1 | execution_blocker | high | open |
+| [tslearn: is_numpy](suggestions/585c5d6b183ad80a9a85.md) | A1 | execution_blocker | high | open |
 | [tslearn: compute](suggestions/4a28af1f1c30cd779151.md) | A2 | execution_blocker | high | open |
 | [tslearn: jacobian_product](suggestions/5eb42a36285bbdb40258.md) | A2 | execution_blocker | high | open |
 | [tslearn: predict_class_and_earliness](suggestions/d2ff189e60095b0de249.md) | A2 | execution_blocker | high | open |
