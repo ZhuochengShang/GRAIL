@@ -1,6 +1,6 @@
 # Thumbnailator native outcomes and isolated assertion replay
 
-Updated: 2026-09-08T08:51:52.954174-07:00
+Updated: 2026-09-08T09:05:54.821073-07:00
 
 No native score is replaced. Both replay variants use identical code, copied fixture bytes, a fresh output root and Java 8 isolation; only `-da` versus `-ea` differs.
 

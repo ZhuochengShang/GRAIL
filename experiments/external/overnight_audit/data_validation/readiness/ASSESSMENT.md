@@ -1,6 +1,6 @@
 # AIDEAL readiness assessment and improvement queue
 
-Updated: 2026-09-08T15:51:54.278850+00:00
+Updated: 2026-09-08T16:06:55.640561+00:00
 
 **Measured scope:** how documentation affects an LLM’s API use under a fixed harness. Overall agent readiness is not yet fully measured; no composite score is assigned.
 
