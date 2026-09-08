@@ -1,14 +1,14 @@
 # AIDEAL readiness assessment and improvement queue
 
-Updated: 2026-09-08T03:38:50.024237+00:00
+Updated: 2026-09-08T03:54:51.589400+00:00
 
 **Measured scope:** how documentation affects an LLM’s API use under a fixed harness. Overall agent readiness is not yet fully measured; no composite score is assigned.
 
 | Repository | A1 | A2 | B1 | B2 | Matched comparison |
 |---|---|---|---|---|---|
 | mir_eval | 67/148 provisional | 135/148 final | pending (148 APIs) | pending (148 APIs) | WITHHELD/PARTIAL |
-| thumbnailator | 90/149 provisional | 127/149 final | pending (149 APIs) | pending (149 APIs) | WITHHELD/PARTIAL |
-| tslearn | 74/235 provisional | 8/235 provisional | pending (235 APIs) | pending (235 APIs) | WITHHELD/PARTIAL |
+| thumbnailator | 104/149 provisional | 127/149 final | pending (149 APIs) | pending (149 APIs) | WITHHELD/PARTIAL |
+| tslearn | 74/235 provisional | 52/235 provisional | pending (235 APIs) | pending (235 APIs) | WITHHELD/PARTIAL |
 
 Provisional counts retain pending and provider-error APIs in the denominator. Final counts are native pass/all-API results. Cross-cell effects require the separate matched-comparison release checks.
 
@@ -34,17 +34,17 @@ Provisional counts retain pending and provider-error APIs in the denominator. Fi
 | mir_eval | test/scaffold | 5 |
 | mir_eval | unknown | 9 |
 | thumbnailator | input-or-output-path | 2 |
-| thumbnailator | provider | 5 |
-| thumbnailator | unknown | 33 |
-| tslearn | api-identity-or-version | 19 |
-| tslearn | assertion-or-behavior | 6 |
-| tslearn | input-contract-or-api-call | 2 |
-| tslearn | provider | 32 |
-| tslearn | unknown | 20 |
+| thumbnailator | provider | 6 |
+| thumbnailator | unknown | 35 |
+| tslearn | api-identity-or-version | 23 |
+| tslearn | assertion-or-behavior | 10 |
+| tslearn | input-contract-or-api-call | 5 |
+| tslearn | provider | 33 |
+| tslearn | unknown | 24 |
 
-## Reviewable improvements (213)
+## Reviewable improvements (232)
 
-Review states: `{'open': 212, 'proposed': 1}`. Observation errors: 0. Inactive reviewed IDs retained: 0.
+Review states: `{'open': 231, 'proposed': 1}`. Observation errors: 0. Inactive reviewed IDs retained: 0.
 
 Each card separates native failure, diagnosis confidence, proposed action, validation and review decisions. Provider barriers concern execution infrastructure; they are not automatically codebase or documentation defects.
 
@@ -86,6 +86,7 @@ Each card separates native failure, diagnosis confidence, proposed action, valid
 | [thumbnailator: createOutputStream](suggestions/8c69e4aae53d75a4ecbd.md) | A1 | execution_blocker | high | open |
 | [thumbnailator: format](suggestions/a4ae9b56216ff3fc31e1.md) | A1 | execution_blocker | high | open |
 | [thumbnailator: getSize](suggestions/8ee1c82133dfcdb52307.md) | A1 | execution_blocker | high | open |
+| [thumbnailator: isKeepAspectRatio](suggestions/2536a98d196bfd517fcd.md) | A1 | execution_blocker | high | open |
 | [tslearn: PatchingLayer](suggestions/492a7a8c40fbef8c50dd.md) | A1 | execution_blocker | high | open |
 | [tslearn: SquaredEuclidean](suggestions/9cb2806d53f90d5dc13a.md) | A1 | execution_blocker | high | open |
 | [tslearn: TimeSeriesDBSCAN](suggestions/1268880b6e8ce0e28497.md) | A1 | execution_blocker | high | open |
@@ -118,6 +119,7 @@ Each card separates native failure, diagnosis confidence, proposed action, valid
 | [tslearn: is_array](suggestions/e1024e725bbecccd33ed.md) | A1 | execution_blocker | high | open |
 | [tslearn: is_float](suggestions/0b0c74d7bbfc877ac3f6.md) | A1 | execution_blocker | high | open |
 | [tslearn: is_float32](suggestions/e4a6a53c15dc8f409272.md) | A1 | execution_blocker | high | open |
+| [tslearn: is_numpy](suggestions/585c5d6b183ad80a9a85.md) | A1 | execution_blocker | high | open |
 | [mir_eval: deprecated](suggestions/8c1892028fee0fa4c019.md) | A2 | reviewed_barrier | reviewed | open |
 | [mir_eval: first_n_three_layer_P](suggestions/1350063ad65ccf061962.md) | A2 | reviewed_barrier | reviewed | open |
 | [mir_eval: load_key](suggestions/436854cbe884009d1ba7.md) | A2 | reviewed_barrier | reviewed | open |
@@ -194,6 +196,8 @@ Each card separates native failure, diagnosis confidence, proposed action, valid
 | [thumbnailator: getExifOrientation](suggestions/21091435f0dc321f37a9.md) | A1 | needs_diagnosis | low | open |
 | [thumbnailator: getParam](suggestions/7a961ff4cb09e9b60bbe.md) | A1 | needs_diagnosis | low | open |
 | [thumbnailator: getSourceRegion](suggestions/02d5d206d8aafbc672ff.md) | A1 | needs_diagnosis | low | open |
+| [thumbnailator: keepAspectRatio](suggestions/cf4fae30d2fbbc61ab70.md) | A1 | needs_diagnosis | low | open |
+| [thumbnailator: make](suggestions/afd3fa4d36040d0f8661.md) | A1 | needs_diagnosis | low | open |
 | [thumbnailator: Pipeline](suggestions/bef11a67152a2a4d29da.md) | A2 | needs_diagnosis | low | open |
 | [thumbnailator: ThumbnailMaker](suggestions/c03bfc3c50c6bd4fe7f4.md) | A2 | needs_diagnosis | low | open |
 | [thumbnailator: UnsupportedFormatException](suggestions/015a729896c83e876640.md) | A2 | needs_diagnosis | low | open |
@@ -257,12 +261,27 @@ Each card separates native failure, diagnosis confidence, proposed action, valid
 | [tslearn: inv_transform_paa](suggestions/a44b4ec0aad52bf06da7.md) | A1 | needs_diagnosis | medium | open |
 | [tslearn: inv_transform_sax](suggestions/8b3b78113a8ea76d8445.md) | A1 | needs_diagnosis | medium | open |
 | [tslearn: is_float64](suggestions/545702fa480e865ad66f.md) | A1 | needs_diagnosis | medium | open |
+| [tslearn: is_pytorch](suggestions/9abd9792d2738f2a7ece.md) | A1 | needs_diagnosis | medium | open |
 | [tslearn: BaseModelPackage](suggestions/f995a70ba75a6f818ba5.md) | A2 | needs_diagnosis | medium | open |
 | [tslearn: EmptyClusterError](suggestions/3bb29d868c529bcad84e.md) | A2 | needs_diagnosis | medium | open |
 | [tslearn: GlobalArgminPooling1D](suggestions/7fec39a7ce54e7122bf8.md) | A2 | needs_diagnosis | low | open |
 | [tslearn: GlobalMinPooling1D](suggestions/4019272c56a19f2872ad.md) | A2 | needs_diagnosis | low | open |
 | [tslearn: KNeighborsTimeSeriesMixin](suggestions/66288f871906a29f15a8.md) | A2 | needs_diagnosis | medium | open |
 | [tslearn: LearningShapelets](suggestions/a03010ee7627aa0f49c8.md) | A2 | needs_diagnosis | low | open |
+| [tslearn: LocalSquaredDistanceLayer](suggestions/06a7cd0158af8a0604f8.md) | A2 | needs_diagnosis | low | open |
+| [tslearn: NonMyopicEarlyClassifier](suggestions/4f037ac09d68fff30b4d.md) | A2 | needs_diagnosis | medium | open |
+| [tslearn: NumPyBackend](suggestions/3bc2e78380cd347e066f.md) | A2 | needs_diagnosis | medium | open |
+| [tslearn: NumPyRandom](suggestions/d50d93cf638187995e0f.md) | A2 | needs_diagnosis | medium | open |
+| [tslearn: PatchingLayer](suggestions/d0957863ecb711faa6c8.md) | A2 | needs_diagnosis | low | open |
+| [tslearn: PyTorchBackend](suggestions/d2a2e06b853eef716bb1.md) | A2 | needs_diagnosis | medium | open |
+| [tslearn: PyTorchRandom](suggestions/900f8f4a475dc62bb350.md) | A2 | needs_diagnosis | medium | open |
+| [tslearn: PyTorchTesting](suggestions/e75daed6c7429f1a1048.md) | A2 | needs_diagnosis | medium | open |
+| [tslearn: SoftDTW](suggestions/3eb071d1a1ee8cb916a7.md) | A2 | needs_diagnosis | medium | open |
+| [tslearn: SquaredEuclidean](suggestions/3f27f4b6cc2ff519a694.md) | A2 | needs_diagnosis | medium | open |
+| [tslearn: TimeSeriesSVMMixin](suggestions/0f6325e1b4f2389d4abb.md) | A2 | needs_diagnosis | medium | open |
+| [tslearn: TsLearnTags](suggestions/00dd44f6e4ef414dbbf4.md) | A2 | needs_diagnosis | medium | open |
+| [tslearn: build](suggestions/f73b986047aa6c515b80.md) | A2 | needs_diagnosis | low | open |
+| [tslearn: call](suggestions/5de88051085748a6a12c.md) | A2 | needs_diagnosis | low | open |
 
 ## Human and agent workflow
 
