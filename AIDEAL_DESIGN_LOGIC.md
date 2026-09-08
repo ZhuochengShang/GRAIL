@@ -216,3 +216,23 @@ triage; `contracts.py` checks input metadata and AST evidence; `quota.py` admits
 future transport attempts; `observe.py` reads and writes passive reports.
 See [automation usage and limitations](experiments/external/automation/README.md)
 and [report data methods](experiments/external/FINAL_REPORT_DATA_AND_API_METHODS.md).
+
+
+## Authorized isolated assertion replay
+
+The user authorized a secondary Thumbnailator replay while native experiments continue. `experiments/external/assertion_replay/evidence.py` reads and binds retained code; `execute.py` copies fixture bytes and runs assertions-off/on controls in separate writable roots; `report.py` preserves separate native and replay outcomes. `__main__.py` owns locking, assertion/isolation preflight and resumable polling. No LLM is involved.
+
+```mermaid
+flowchart LR
+  N[Native evidence] --> S[Snapshot code and hashes]
+  S --> I[Copy fixtures and isolate writes]
+  I --> OFF[Assertions-off control]
+  I --> ON[Assertions-on replay]
+  OFF --> R[Separate native and replay report]
+  ON --> R
+  R --> H[Human reviews correctness and improvements]
+```
+
+The replay supervisor owns `thumbnailator_replay_watchdog.v2.state.json`, its own logs and `data_validation/assertion_replay`. The original state preserves a preflight failure before any replay child launched. The active watcher picks up later A1 and final B1/B2 results without changing measured workers or documentation-repair decisions. Its process runs at low CPU priority with one Java child at a time and makes no provider calls.
+
+Assertions-on acceptance does not certify independent oracle validity or the entire documentation-repair pipeline. Historical code-binding gaps, case-insensitive retained-path collisions and fresh-output effects remain explicit. See [the replay method](experiments/external/assertion_replay/README.md).

@@ -293,3 +293,17 @@ sensitivity question, not an optimization claim or extra scheduled experiment.
 Replay only observed histories; mark unobserved continuations censored. Do not
 combine different thresholds into one matched comparison. The recovery rule
 (equal category/error prefix) differs from the documentation rule above.
+
+
+## Secondary execution replay (separate from native study)
+
+| Cell | Native pass / native API outcomes | Replayed / native API outcomes | Assertions-off pass / replayed | Assertions-on pass / replayed | Off-pass → on-fail | Unbound historical snippets | Unavailable evidence |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| A1 | | | | | | | |
+| A2 | | | | | | | |
+| B1 | | | | | | | |
+| B2 | | | | | | | |
+
+Preserve code/fixture/library hashes, exact commands, effective assertion flags, isolation policy and preflight evidence. Distinguish assertion-toggle effects from failures also present in the assertions-off control. Report provider outcomes without stale test reuse; explain case collisions, truncated code evidence, source recovery and cache-compatibility decisions. Historical cache files are not additional API samples.
+
+A replay alone cannot certify the entire documentation-repair pipeline: native repair decisions remain unchanged. Assertions-on acceptance is not independently certified correctness. Current replay evidence belongs to `data_validation/assertion_replay/`; its findings remain outside native headline scores.
