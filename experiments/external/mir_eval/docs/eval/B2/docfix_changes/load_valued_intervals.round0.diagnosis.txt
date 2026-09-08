@@ -1,0 +1,31 @@
+AUDIENCE & TESTABILITY:
+API audience: USER-FACING
+Harness testability: TESTABLE
+Scoring recommendation: include in main user-facing denominator
+
+ROOT CAUSE:
+The snippet failed due to an environment assumption: it attempted to write a test file to an `output_dir` variable that was either undefined or pointed to a non-existent directory in the test harness. The documentation correctly notes that `filename` accepts an open file descriptor, but it should explicitly mention that in-memory file-like objects like `io.StringIO` are supported, allowing for safe, filesystem-free testing without relying on temporary directories.
+
+CORRECT USAGE:
+```python
+mock_file = io.StringIO(
+    "# start end pitch\n"
+    "0.0 1.0 100.0\n"
+    "1.0 2.5 200.5\n"
+    "3.0 4.0 300.0\n"
+)
+
+intervals, values = load_valued_intervals(mock_file)
+
+assert intervals.shape == (3, 2)
+assert values.shape == (3,)
+```
+
+REQUIRED TYPES & IMPORTS:
+`io.StringIO`
+`numpy.ndarray`
+
+DOC MUST SAY:
+- `filename` accepts in-memory file-like objects such as `io.StringIO`.
+- For testing or dynamic data loading, use `io.StringIO` rather than attempting to write temporary files to the filesystem.
+- Do not assume the existence of an `output_dir` or write access to the filesystem in test snippets.
