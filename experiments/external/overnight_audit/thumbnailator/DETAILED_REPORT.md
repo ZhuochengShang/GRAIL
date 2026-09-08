@@ -27,7 +27,7 @@ Effects withheld until all four matched final cells and their repair/test eviden
 
 ### A1
 
-Primary failure categories: {"llm-error": 8, "unknown": 15}.
+Primary failure categories: {"llm-error": 8, "unknown": 17}.
 
 Recorded provider-error attempts across all checkpoint fingerprints: 16. Provider-internal retries are not recorded by the existing client and cannot be inferred from the configured limit. Watchdog logs retain process attempts; checkpoint attempts and document-fix rounds are separate ledger fields.
 
@@ -54,6 +54,8 @@ Recorded provider-error attempts across all checkpoint fingerprints: 16. Provide
 - `getSize`: llm-error; native=llm-error; checkpoint attempts=1; provider-error attempts=1; document rounds=None; repair=None. Source: `source/src/main/java/net/coobird/thumbnailator/ThumbnailParameter.java:808`. Error: `ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}`. Review: Provider outcome; retry, never count as a documentation failure.
 - `init`: llm-error; native=llm-error; checkpoint attempts=1; provider-error attempts=1; document rounds=None; repair=None. Source: `source/src/main/java/net/coobird/thumbnailator/util/Configurations.java:108`. Error: `ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}`. Review: Provider outcome; retry, never count as a documentation failure.
 - `isKeepAspectRatio`: llm-error; native=llm-error; checkpoint attempts=1; provider-error attempts=1; document rounds=None; repair=None. Source: `source/src/main/java/net/coobird/thumbnailator/ThumbnailParameter.java:861`. Error: `ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}`. Review: Provider outcome; retry, never count as a documentation failure.
+- `iterator`: unknown; native=runtime; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `source/src/main/java/net/coobird/thumbnailator/name/ConsecutivelyNumberedFilenames.java:343`. Error: `IOException: Specified path is not a directory or does not exist.`. Review: Observed runtime; doc attribution requires source, document, and snippet review.
+- `keepAspectRatio`: unknown; native=runtime; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `source/src/main/java/net/coobird/thumbnailator/Thumbnails.java:1491`. Error: `IllegalStateException: Maker not ready to make thumbnail.`. Review: Observed runtime; doc attribution requires source, document, and snippet review.
 
 ### A2
 
