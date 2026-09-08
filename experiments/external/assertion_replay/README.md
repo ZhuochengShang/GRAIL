@@ -67,3 +67,7 @@ python3 -m unittest experiments.external.assertion_replay.test_replay
 Native source paths/hashes, code bindings, relocation mappings, fixture/JAR
 hashes, exact commands, exit codes and output tails are in `cases/*.json`.
 `summary.json`, `REPORT.md`, and `REPLAY.html` show the separate denominators.
+Historical case files are retained after parser or evidence revisions. Count
+only the cases referenced by the current summary, not every file in `cases/`.
+The September 7 Java-octal-literal parser fix has an explicit compatibility
+record proving byte-identical relocated source/mappings for reused executions.

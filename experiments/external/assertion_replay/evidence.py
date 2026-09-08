@@ -96,6 +96,10 @@ def relocate(source, project, fixtures):
             replacements.append({"from": original, "to": "fixtures/" + name + Path(relative).suffix})
     # Output bindings, including any other project-local absolute path literals.
     def replace(match):
+        # Java accepts escapes (e.g. octal byte strings) which JSON does not.
+        # Only project path literals need decoding; leave all test literals intact.
+        if not match.group().startswith(json.dumps(str(project))[:-1] + "/"):
+            return match.group()
         value = json.loads(match.group())
         if value.startswith(str(project) + "/"):
             relative = "project/" + value[len(str(project)) + 1:]

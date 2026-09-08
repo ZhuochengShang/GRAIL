@@ -39,6 +39,11 @@ class ReplayTests(unittest.TestCase):
         event.update(exit_code=0, stderr="")
         self.assertEqual(outcome(event, {}), "pass")
 
+    def test_java_octal_literal_is_preserved(self):
+        source = r'String exif = "Exif\0\0"; String path = "/project/output";'
+        changed, _ = relocate(source, Path("/project"), {})
+        self.assertIn(r'"Exif\0\0"', changed)
+
     def test_missing_cells_and_unbound_evidence_are_explicit(self):
         with tempfile.TemporaryDirectory() as temp:
             publish(Path(temp), {"A1": {"complete": False, "source_sha256": "test", "records": [
