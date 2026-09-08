@@ -27,9 +27,9 @@ Effects withheld until all four matched final cells and their repair/test eviden
 
 ### A1
 
-Primary failure categories: {"llm-error": 5, "unknown": 15}.
+Primary failure categories: {"llm-error": 6, "unknown": 15}.
 
-Recorded provider-error attempts across all checkpoint fingerprints: 13. Provider-internal retries are not recorded by the existing client and cannot be inferred from the configured limit. Watchdog logs retain process attempts; checkpoint attempts and document-fix rounds are separate ledger fields.
+Recorded provider-error attempts across all checkpoint fingerprints: 14. Provider-internal retries are not recorded by the existing client and cannot be inferred from the configured limit. Watchdog logs retain process attempts; checkpoint attempts and document-fix rounds are separate ledger fields.
 
 - `ConsecutivelyNumberedFilenames`: unknown; native=runtime; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `source/src/main/java/net/coobird/thumbnailator/name/ConsecutivelyNumberedFilenames.java:295`. Error: `IOException: Specified path is not a directory or does not exist.`. Review: Observed runtime; doc attribution requires source, document, and snippet review.
 - `FileThumbnailTask`: unknown; native=compile; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `source/src/main/java/net/coobird/thumbnailator/tasks/FileThumbnailTask.java:61`. Error: `/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A1/experiments/external/thumbnailator/.aideal_exec/A1/run_FileThumbnailTask/ApiTest.java:61: error: variable args is already defined in method main(String[])`. Review: Observed compile; doc attribution requires source, document, and snippet review.
@@ -51,6 +51,7 @@ Recorded provider-error attempts across all checkpoint fingerprints: 13. Provide
 - `getExifOrientation`: unknown; native=runtime; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `source/src/main/java/net/coobird/thumbnailator/util/exif/ExifUtils.java:69`. Error: `IllegalStateException: Input not set`. Review: Observed runtime; doc attribution requires source, document, and snippet review.
 - `getOutputFormat`: unknown; native=runtime; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `source/src/main/java/net/coobird/thumbnailator/ThumbnailParameter.java:878`. Error: `IllegalArgumentException: Resizer cannot be null`. Review: Observed runtime; doc attribution requires source, document, and snippet review.
 - `getResizerFactory`: unknown; native=compile; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `source/src/main/java/net/coobird/thumbnailator/ThumbnailParameter.java:942`. Error: `/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A1/experiments/external/thumbnailator/.aideal_exec/A1/run_getResizerFactory/ApiTest.java:55: error: variable args is already defined in method main(String[])`. Review: Observed compile; doc attribution requires source, document, and snippet review.
+- `getSize`: llm-error; native=llm-error; checkpoint attempts=1; provider-error attempts=1; document rounds=None; repair=None. Source: `source/src/main/java/net/coobird/thumbnailator/ThumbnailParameter.java:808`. Error: `ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}`. Review: Provider outcome; retry, never count as a documentation failure.
 
 ### A2
 
