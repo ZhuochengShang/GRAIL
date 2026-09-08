@@ -1,0 +1,20 @@
+AUDIENCE & TESTABILITY:
+API audience: ADVANCED-LOW-LEVEL
+Harness testability: TESTABLE
+Scoring recommendation: include only in advanced/internal bucket
+
+ROOT CAUSE:
+The snippet failed because it hallucinated methods that were not in the documentation or source window (`size(int, int)`, `build()`, and `getQuality()`). The compiler threw a "cannot find symbol" error when attempting to call `builder.size(100, 100)`. The test should only instantiate the builder and invoke the `quality` method being tested.
+
+CORRECT USAGE:
+```java
+net.coobird.thumbnailator.builders.ThumbnailParameterBuilder builder = new net.coobird.thumbnailator.builders.ThumbnailParameterBuilder();
+net.coobird.thumbnailator.builders.ThumbnailParameterBuilder returnedBuilder = builder.quality(0.75f);
+```
+
+REQUIRED TYPES & IMPORTS:
+net.coobird.thumbnailator.builders.ThumbnailParameterBuilder
+
+DOC MUST SAY:
+- The `ThumbnailParameterBuilder` can be instantiated directly using its public no-argument constructor `new ThumbnailParameterBuilder()`.
+- Do not invent or call undocumented methods such as `size()`, `build()`, or `getQuality()` to verify the state; simply call `quality(float)` and optionally assert that it returns the same builder instance for chaining.

@@ -1,0 +1,24 @@
+AUDIENCE & TESTABILITY:
+API audience: INTERNAL-FRAMEWORK.
+Harness testability: TESTABLE.
+Scoring recommendation: include only in advanced/internal bucket.
+
+ROOT CAUSE:
+The snippet misread the behavior of the function by assuming it reduces extended chords all the way down to triads (e.g., `"maj9"` to `"maj"` and `{"7", "9"}`). The source code explicitly maps `"maj9"` to its 7th chord equivalent `"maj7"` and extracts only the upper extension `{"9"}`.
+
+CORRECT USAGE:
+```python
+import mir_eval.chord
+
+base_quality, extensions = mir_eval.chord.reduce_extended_quality("maj9")
+
+assert base_quality == "maj7"
+assert extensions == {"9"}
+```
+
+REQUIRED TYPES & IMPORTS:
+`mir_eval.chord`
+
+DOC MUST SAY:
+- The function maps extended qualities to their 7th chord equivalents (e.g., `"maj9"` maps to `"maj7"` and `{"9"}`), not to triads.
+- If the quality is not in the predefined reduction dictionary, it returns the original quality and an empty set.

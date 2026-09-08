@@ -1,0 +1,23 @@
+AUDIENCE & TESTABILITY:
+API audience: USER-FACING.
+Harness testability: TESTABLE.
+Scoring recommendation: include in main user-facing denominator.
+
+ROOT CAUSE:
+The snippet failed in its own assertion logic because it applied the bitwise AND operator (`&`) to the arrays returned by `to_cent_voicing`. Although the documentation describes the inputs as "boolean voicing arrays", they are often float arrays in practice, causing `&` to raise a `TypeError`. Furthermore, the documentation unnecessarily instructed the user to use `to_cent_voicing` to generate inputs, rather than passing simple `numpy.ndarray` objects directly.
+
+CORRECT USAGE:
+```python
+ref_voicing = np.array([True, True, False, False])
+est_voicing = np.array([True, False, True, False])
+
+recall = mir_eval.melody.voicing_recall(ref_voicing, est_voicing)
+```
+
+REQUIRED TYPES & IMPORTS:
+`numpy.ndarray`
+
+DOC MUST SAY:
+- `ref_voicing` and `est_voicing` can be constructed directly as 1D `numpy.ndarray` objects (boolean or numeric) of the same length.
+- Do not require the use of `to_cent_voicing` to generate inputs; simple numpy arrays are sufficient and preferred for minimal testing.
+- If computing expected values manually in tests, avoid using the bitwise AND operator (`&`) on the arrays, as they may be numeric (float) arrays; use multiplication (`*`) or `np.logical_and` instead.

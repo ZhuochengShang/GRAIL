@@ -1,0 +1,28 @@
+AUDIENCE & TESTABILITY:
+API audience: ADVANCED-LOW-LEVEL
+Harness testability: TESTABLE-WITH-LOW-LEVEL-CONSTRUCTION
+Scoring recommendation: include only in advanced/internal bucket
+
+ROOT CAUSE:
+The snippet failed because it attempted to verify the result by calling `calculate(100, 100)` on the `Region` object, but the arguments provided do not match the method's signature in this version of the library. The documentation did not instruct the user to call `calculate`, and the snippet hallucinated this verification step. The `region` method itself was called correctly.
+
+CORRECT USAGE:
+```java
+net.coobird.thumbnailator.geometry.Region expectedRegion = new net.coobird.thumbnailator.geometry.Region(
+    new net.coobird.thumbnailator.geometry.Coordinate(10, 15),
+    new net.coobird.thumbnailator.geometry.AbsoluteSize(50, 60)
+);
+net.coobird.thumbnailator.builders.ThumbnailParameterBuilder builder = new net.coobird.thumbnailator.builders.ThumbnailParameterBuilder();
+builder.region(expectedRegion);
+```
+
+REQUIRED TYPES & IMPORTS:
+net.coobird.thumbnailator.builders.ThumbnailParameterBuilder
+net.coobird.thumbnailator.geometry.Region
+net.coobird.thumbnailator.geometry.Coordinate
+net.coobird.thumbnailator.geometry.AbsoluteSize
+
+DOC MUST SAY:
+- The `region` method is called on a `ThumbnailParameterBuilder` instance and returns the builder itself.
+- Do not attempt to call `calculate` on the `Region` object to verify bounds, as its signature may vary or be incompatible with simple `(int, int)` arguments.
+- To test the API, simply instantiate a `ThumbnailParameterBuilder`, create a `Region` using `Coordinate` and `AbsoluteSize`, and pass it to `region()`.

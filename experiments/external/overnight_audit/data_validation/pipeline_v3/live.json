@@ -1,14 +1,21 @@
 {
   "protocol": "aideal-separated-recovery-v3",
-  "updated_at": "2026-09-08T12:58:59.759396-07:00",
+  "updated_at": "2026-09-08T13:24:13.349012-07:00",
   "scheduler": {
-    "state": "waiting_priority",
+    "state": "post_B2_recovery",
     "repositories": {
-      "mir_eval": "priority complete",
-      "thumbnailator": "ValueError: A2 source work/retries still pending; preserve its provider capacity",
+      "mir_eval": {
+        "recovered_native": 1,
+        "pending": 10
+      },
+      "thumbnailator": {
+        "recovered_native": 1,
+        "pending": 9
+      },
       "tslearn": "FileNotFoundError: [Errno 2] No such file or directory: '/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A2/experiments/tslearn/docs/eval/A2/comprehension.json'"
     },
     "max_parallel": 1,
+    "scheduling": "independent repository admission; source retries do not depend on A1",
     "admit_until": "2026-09-09T10:15:00-07:00",
     "source_implementation": {
       "recovery/runner.py": "0b5d7370459006a623d7084ab5c63a2ecdaa953fc2494a65627175671b994abf",
@@ -24,7 +31,7 @@
       "native_v2": {
         "protocol": "aideal-a2-repair-v2",
         "repo": "mir_eval",
-        "updated_at": "2026-09-08T12:58:53.523097-07:00",
+        "updated_at": "2026-09-08T13:23:55.179424-07:00",
         "B1": "omitted by user; original README has no repair loop",
         "cells": {
           "A1": {
@@ -38,7 +45,7 @@
               "infra": 2
             },
             "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_A1/experiments/external/mir_eval/.aideal_exec/A1/comprehension_progress.jsonl",
-            "source_sha256": "f0489be15880766c39089b7d29420f19154abfce8be6e0b5731f21ba38ef8788"
+            "source_sha256": "1ea76877f25a68a2ac2fe38ab0c58fe3d2c7a835d6b87bbfea42e5f0ba8d9360"
           },
           "A2": {
             "state": "native complete",
@@ -1564,14 +1571,1529 @@
           "recovered_native": 13
         }
       },
-      "S_B2": {},
-      "comparison": {}
+      "S_B2": {
+        "protocol": "aideal-separated-recovery-v3",
+        "stage": "S_B2",
+        "baseline_cell": "B2",
+        "repo": "mir_eval",
+        "identity": {
+          "A2_sha256": "9cd63bb063ac44bbab577c2862eda88a1cca62af72a4f69804a44b85c8b5a295",
+          "B2_sha256": "c25a74155511d59ffa5583bce3975fae3a254ce3e3bc65948dcfbd8f61d51736",
+          "cohort_sha256": "09feedb523c3ef802519ea860839313aa3fcf8efa7dc8d11fcff4bc10cb1289c",
+          "b2_plan_sha256": "b5f5011c09c7b17de0d605188987a058365c6c225303f882f8b3eba7752b5ce9",
+          "protocol_sha256": "3001c4c0f1ae85bcc466d099b1f2b8ad7dfb7ba79e8e5fdd7c5f98e259962982",
+          "adapter": {
+            "source_retry.py": "3a7530176ba3e7dde6e2491c8cd6f7294db7bee8def9a4815d6ace0ae9d4510f",
+            "test_post_b2.py": "0abaed6a6c0b8af3f13d4a135f184898c7e03a2418ce611467bb9c70eba93362",
+            "__init__.py": "39879b1f1a7a3cb2295395b0f9b88f59734b06ae01ae7ab197ea4303ec333fae",
+            "admission.py": "953911c68b16c6dfabb088b3f7871b5a47697a746ede553ee6507ed362ef3f49",
+            "stage.py": "e54e87dfc31b1046603722bd37877f6c8799ca8855b00c9fa00bc7631ca03927",
+            "evidence.py": "c51facc8cee54b9a546245981164958281b6134489e8c0cc1419c8a25b210a01",
+            "__main__.py": "6a6301fe74e5cc07a88cc8a0006dbf234a03e6526725038fea1d548ec3b05ae0",
+            "report.py": "6788e5611430f0d01747714c60160f5ebe6bed36b5c56279ac005c52e86b308a"
+          }
+        },
+        "matched_inputs": {
+          "A2_compatibility": {
+            "legacy_fingerprint": "ea2bfacf7be649de61c9ef34386a0c1981e61766f231e06367304ff9caa25571",
+            "current_fingerprint": "ac291361c00b17e14ad9ecffbb6bda4cca40abafe15c33c5eca8003b1b35c08e",
+            "record": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_A2/experiments/external/mir_eval/.aideal_exec/A2/checkpoint_compatibility.json",
+            "record_sha256": "74b86e8269e2558f8d1af0b5ca7abe35764c43eff8c25d887175f528b6af2378",
+            "selection_policy": "latest fully attempted reproducible group, else latest reproducible group; never select by score or combine legacy groups",
+            "reason": "Reviewed schema-3 output-hash repair and bounded provider transport; model, prompts, scoring and logical fix budgets unchanged",
+            "baseline_fingerprint": "ea2bfacf7be649de61c9ef34386a0c1981e61766f231e06367304ff9caa25571",
+            "historical_output_aggregate_differs": false,
+            "limitation": "Input bytes are checked against the reviewed input-only proof; historical output contents and runtime state are not reconstructed. This is a supplementary recovery result, not certification of baseline execution."
+          },
+          "B2_compatibility": null,
+          "environment_inventory_hashes": [
+            "a839100702a0add90e91527f187a3360b3c8ec38021b5bf1ecc313f9fb3844a1",
+            "a839100702a0add90e91527f187a3360b3c8ec38021b5bf1ecc313f9fb3844a1"
+          ],
+          "limitation": "Inventory paths/cell labels can differ; runtime packages/imports are checked separately. Historical script binding and baseline semantic validity remain qualified."
+        },
+        "baseline_result": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/comprehension.json",
+        "exclusions": {},
+        "apis": {
+          "cemgil": {
+            "status": "recovered_native",
+            "code_fix_rounds": 1,
+            "provider_events": 0,
+            "diagnostic_block_events": 0,
+            "stop_reason": null,
+            "identity": {
+              "baseline_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+              "baseline_result_sha256": "97f7083e443691efc6aa2d86f763a8397b04aaae71dcda38104b230fc31719e4",
+              "api": "cemgil",
+              "script_sha256": "f33cf6cff5f16cc801f53df1c59b6560114aa6d5493ffe38c241277f0048c101",
+              "prompt_sha256": {
+                "comprehension_write_exec": "f557fcc5d4534cdfa6e596066b2106fd4d9f1ed459be8afccb8676070275c501",
+                "deep_dive": "bcaacb96d675d8e898784eea65319e5ded213c06eb8578f5e40627fd3adce504"
+              },
+              "current_effective_config_sha256": "77981af87cc53634ccb0f62a5f6073c77fe9359ff5ee5e540b7049c16268ef98",
+              "current_profile_sha256": "560a6da75cd464fd3c47d55a08fd848f1f7576f843ac7fca551f7afae3bdd4b0",
+              "upstream_test_context": {
+                "sha256": "f24ad3849965243154e9c0f1502af354540a17ca401734f96b806ee34a5163a4",
+                "file_count": 19
+              },
+              "context_engine": {
+                "deepdive.py": "11b4bd8f2c2761c17c43d43a4747ee3660173c94c1a621811c8f720e13898c73",
+                "docfix.py": "1d2f7cf6acdf9455ede12acdf35dcb93d91aa5bc7fe05514fbf783a5eca877b9"
+              },
+              "protocol_sha256": "b6caeb1e279ff5f30bd90547071380caf7efd19a54ea2f5972fddd266f91b5a2",
+              "source": {
+                "sha256": "30c5d1632077b02939819dbb8dc76fa72096d5a5f5b45e77468b96d14050d705",
+                "file_count": 19
+              },
+              "document_sha256": "16378129a2dcc44df1ea2e71a2cfbf3ffb532b635b367e5feb2e9e58602a8cb8",
+              "script_binding": "retained_matches_native_failure_prefix",
+              "baseline_compatibility": null,
+              "mode": "source",
+              "max_code_fix_rounds": 5,
+              "stuck_rounds": 2,
+              "runner_sha256": "0b5d7370459006a623d7084ab5c63a2ecdaa953fc2494a65627175671b994abf",
+              "engine_sha256": "6d9f4310015755d44f7e002ef5add7fb29dfaad0685c7e9d61ca495c1cddeaf1",
+              "validation_sha256": "6b57fe6df9a3049e7b76fbe76ca8042f885bcd507d87040a28032401879cdeb9",
+              "compatibility_adapter_sha256": "86d978d07814e35310da027da25d1e59bafd84dd350be5f66dc278050b1d43f9"
+            },
+            "wall_s": 13.5,
+            "llm_calls": 1,
+            "input_tokens": 4071,
+            "output_tokens": 1436,
+            "cost_scope": "recorded code proposals only; diagnosis/provider evidence retained separately",
+            "retry_after": 0,
+            "evidence_file": "cases/7a86f8010e0a6028a64341c814eb4e9484e6084f9466f47ff080115a5ac614e0.json"
+          },
+          "hierarchy": {
+            "status": "pending"
+          },
+          "load_key": {
+            "status": "pending"
+          },
+          "load_patterns": {
+            "status": "pending"
+          },
+          "load_ragged_time_series": {
+            "status": "pending"
+          },
+          "load_tempo": {
+            "status": "pending"
+          },
+          "load_wav": {
+            "status": "pending"
+          },
+          "piano_roll": {
+            "status": "pending"
+          },
+          "precision_recall_f1_overlap": {
+            "status": "pending"
+          },
+          "ticker_pitch": {
+            "status": "pending"
+          },
+          "tmeasure": {
+            "status": "pending"
+          }
+        },
+        "headline_credit": false,
+        "semantic_validation": "needs_independent_review",
+        "updated_at": "2026-09-08T13:21:45.535714-07:00",
+        "statuses": {
+          "recovered_native": 1,
+          "pending": 10
+        },
+        "native_recovery_by_round": {
+          "0": 0,
+          "1": 1,
+          "2": 1,
+          "3": 1,
+          "4": 1,
+          "5": 1
+        },
+        "observed_code_proposal_totals": {
+          "code_fix_rounds": 1,
+          "provider_events": 0,
+          "diagnostic_block_events": 0,
+          "wall_s": 13.5,
+          "llm_calls": 1,
+          "input_tokens": 4071,
+          "output_tokens": 1436
+        },
+        "snapshot": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v3/mir_eval/97f7083e443691efc6aa2d86f763a8397b04aaae71dcda38104b230fc31719e4/project"
+      },
+      "comparison": {
+        "schema": 1,
+        "protocol": "aideal-separated-recovery-v3",
+        "identity": {
+          "A2_sha256": "9cd63bb063ac44bbab577c2862eda88a1cca62af72a4f69804a44b85c8b5a295",
+          "B2_sha256": "c25a74155511d59ffa5583bce3975fae3a254ce3e3bc65948dcfbd8f61d51736",
+          "cohort_sha256": "09feedb523c3ef802519ea860839313aa3fcf8efa7dc8d11fcff4bc10cb1289c",
+          "b2_plan_sha256": "b5f5011c09c7b17de0d605188987a058365c6c225303f882f8b3eba7752b5ce9",
+          "protocol_sha256": "3001c4c0f1ae85bcc466d099b1f2b8ad7dfb7ba79e8e5fdd7c5f98e259962982",
+          "adapter": {
+            "source_retry.py": "3a7530176ba3e7dde6e2491c8cd6f7294db7bee8def9a4815d6ace0ae9d4510f",
+            "test_post_b2.py": "0abaed6a6c0b8af3f13d4a135f184898c7e03a2418ce611467bb9c70eba93362",
+            "__init__.py": "39879b1f1a7a3cb2295395b0f9b88f59734b06ae01ae7ab197ea4303ec333fae",
+            "admission.py": "953911c68b16c6dfabb088b3f7871b5a47697a746ede553ee6507ed362ef3f49",
+            "stage.py": "e54e87dfc31b1046603722bd37877f6c8799ca8855b00c9fa00bc7631ca03927",
+            "evidence.py": "c51facc8cee54b9a546245981164958281b6134489e8c0cc1419c8a25b210a01",
+            "__main__.py": "6a6301fe74e5cc07a88cc8a0006dbf234a03e6526725038fea1d548ec3b05ae0",
+            "report.py": "6788e5611430f0d01747714c60160f5ebe6bed36b5c56279ac005c52e86b308a"
+          }
+        },
+        "full_manifest_N": 148,
+        "F_A2": 13,
+        "F_B2": 11,
+        "B2_native_pass": 137,
+        "S_B2_recovered": 1,
+        "B2_plus_S_B2_composite_native_pass": 138,
+        "on_F_A2": {
+          "S_A2_recovered": 13,
+          "B2_pass": 6,
+          "B2_plus_S_B2_pass": 6
+        },
+        "apis": {
+          "IntervalFormatter": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "InvalidChordException": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "absolute_error": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "adjust_events": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "adjust_intervals": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "ari": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "average_overlap_ratio": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "boundaries_to_intervals": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "bss_eval_images": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "bss_eval_images_framewise": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "bss_eval_sources": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "bss_eval_sources_framewise": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "cemgil": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "fail",
+            "S_B2": "recovered_native",
+            "B2_regression": true,
+            "S_A2_rounds": null,
+            "S_B2_rounds": 1
+          },
+          "chords": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "chroma": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "clicks": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "compute_accuracy": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "compute_err_score": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "compute_num_freqs": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "compute_num_true_positives": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "constant_hop_timebase": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "continuity": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "deprecated": {
+            "A2": "fail",
+            "S_A2": "recovered_native",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": 1,
+            "S_B2_rounds": null
+          },
+          "detection": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "deviation": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "directional_hamming_distance": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "encode": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "encode_many": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "establishment_FPR": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "evaluate": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "events": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "f_measure": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "filter_kwargs": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "first_n_target_proportion_R": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "first_n_three_layer_P": {
+            "A2": "fail",
+            "S_A2": "recovered_native",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": 1,
+            "S_B2_rounds": null
+          },
+          "freq_to_voicing": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "frequencies_to_midi": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "generate_labels": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "goto": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "has_kwargs": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "hierarchy": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "fail",
+            "S_B2": "pending",
+            "B2_regression": true,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "hz2cents": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "hz_to_midi": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "index_labels": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "information_gain": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "interpolate_intervals": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "intersect_files": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "intervals_to_boundaries": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "intervals_to_durations": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "intervals_to_samples": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "join": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "karaoke_perceptual_metric": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "labeled_intervals": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "lmeasure": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "load_delimited": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "load_events": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "load_intervals": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "load_key": {
+            "A2": "fail",
+            "S_A2": "recovered_native",
+            "B2": "fail",
+            "S_B2": "pending",
+            "B2_regression": false,
+            "S_A2_rounds": 1,
+            "S_B2_rounds": null
+          },
+          "load_labeled_events": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "load_labeled_intervals": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "load_patterns": {
+            "A2": "fail",
+            "S_A2": "recovered_native",
+            "B2": "fail",
+            "S_B2": "pending",
+            "B2_regression": false,
+            "S_A2_rounds": 2,
+            "S_B2_rounds": null
+          },
+          "load_ragged_time_series": {
+            "A2": "fail",
+            "S_A2": "recovered_native",
+            "B2": "fail",
+            "S_B2": "pending",
+            "B2_regression": false,
+            "S_A2_rounds": 1,
+            "S_B2_rounds": null
+          },
+          "load_tempo": {
+            "A2": "fail",
+            "S_A2": "recovered_native",
+            "B2": "fail",
+            "S_B2": "pending",
+            "B2_regression": false,
+            "S_A2_rounds": 1,
+            "S_B2_rounds": null
+          },
+          "load_time_series": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "load_valued_intervals": {
+            "A2": "fail",
+            "S_A2": "recovered_native",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": 2,
+            "S_B2_rounds": null
+          },
+          "load_wav": {
+            "A2": "fail",
+            "S_A2": "recovered_native",
+            "B2": "fail",
+            "S_B2": "pending",
+            "B2_regression": false,
+            "S_A2_rounds": 1,
+            "S_B2_rounds": null
+          },
+          "majmin": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "majmin_inv": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "match_events": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "match_note_offsets": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "match_note_onsets": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "match_notes": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "merge_chord_intervals": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "merge_labeled_intervals": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "metrics": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "midi_to_chroma": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "midi_to_hz": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "mirex": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "multipitch": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "mutual_information": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "nce": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "occurrence_FPR": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "offset_precision_recall_f1": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "onset_precision_recall_f1": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "overall_accuracy": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "overseg": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "p_score": {
+            "A2": "fail",
+            "S_A2": "recovered_native",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": 1,
+            "S_B2_rounds": null
+          },
+          "pairwise": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "percentage_correct": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "percentage_correct_segments": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "piano_roll": {
+            "A2": "fail",
+            "S_A2": "recovered_native",
+            "B2": "fail",
+            "S_B2": "pending",
+            "B2_regression": false,
+            "S_A2_rounds": 1,
+            "S_B2_rounds": null
+          },
+          "pitch": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "pitch_class_to_semitone": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "pitch_contour": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "precision_recall_f1_overlap": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "fail",
+            "S_B2": "pending",
+            "B2_regression": true,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "quality_to_bitmap": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "rand_index": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "raw_chroma_accuracy": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "raw_pitch_accuracy": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "reduce_extended_quality": {
+            "A2": "fail",
+            "S_A2": "recovered_native",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": 1,
+            "S_B2_rounds": null
+          },
+          "register_colormap": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "resample_melody_series": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "resample_multipitch": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "root": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "rotate_bitmap_to_root": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "rotate_bitmaps_to_roots": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "scale_degree_to_bitmap": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "scale_degree_to_semitone": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "seg": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "segments": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "separation": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "sevenths": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "sevenths_inv": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "sort_labeled_intervals": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "split": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "split_key_string": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "standard_FPR": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "tetrads": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "tetrads_inv": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "thirds": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "thirds_inv": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "three_layer_FPR": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "ticker_notes": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "ticker_pitch": {
+            "A2": "fail",
+            "S_A2": "recovered_native",
+            "B2": "fail",
+            "S_B2": "pending",
+            "B2_regression": false,
+            "S_A2_rounds": 1,
+            "S_B2_rounds": null
+          },
+          "time_frequency": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "tmeasure": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "fail",
+            "S_B2": "pending",
+            "B2_regression": true,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "to_cent_voicing": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "triads": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "triads_inv": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "trim_beats": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "underseg": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "validate": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "validate_boundary": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "validate_chord_label": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "validate_events": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "validate_frequencies": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "validate_hier_intervals": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "validate_intervals": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "validate_key": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "validate_structure": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "validate_tempi": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "validate_voicing": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "vmeasure": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "voicing_false_alarm": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "voicing_measures": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "voicing_recall": {
+            "A2": "fail",
+            "S_A2": "recovered_native",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": 1,
+            "S_B2_rounds": null
+          },
+          "weighted_accuracy": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "weighted_score": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          }
+        },
+        "interpretation": "Paired descriptive outcomes on F_A2; conditional recovery on F_B2. Composite is not a fresh-reader score or an equal-cost causal effect. Native acceptance is not semantic certification."
+      }
     },
     "thumbnailator": {
       "native_v2": {
         "protocol": "aideal-a2-repair-v2",
         "repo": "thumbnailator",
-        "updated_at": "2026-09-08T12:58:35.118016-07:00",
+        "updated_at": "2026-09-08T13:24:07.494287-07:00",
         "B1": "omitted by user; original README has no repair loop",
         "cells": {
           "A1": {
@@ -1584,7 +3106,7 @@
               "llm-error": 3
             },
             "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A1/experiments/external/thumbnailator/.aideal_exec/A1/comprehension_progress.jsonl",
-            "source_sha256": "4e16bdd5de4557ae83d1be1afc2c71d7ff20727848b9dc3a7a124ad91ee53052"
+            "source_sha256": "d8b87e4f63f3da4bb83a08c6a9e843aa8beccdc1485dbb699d3f7ea5df089463"
           },
           "A2": {
             "state": "native complete",
@@ -2821,7 +4343,7 @@
           "semantic_validation": "needs_independent_review",
           "headline_credit": false,
           "snapshot": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/thumbnailator/3fe01b3536324b3252b28fced5b3557f3a6256f162fb7548eb376b14ca5f2ea0/project",
-          "updated_at": "2026-09-08T01:40:08.269802-07:00",
+          "updated_at": "2026-09-08T13:22:25.737077-07:00",
           "native_recovery_by_round": {
             "0": 0,
             "1": 12,
@@ -4055,7 +5577,7 @@
         "semantic_validation": "needs_independent_review",
         "headline_credit": false,
         "snapshot": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/thumbnailator/3fe01b3536324b3252b28fced5b3557f3a6256f162fb7548eb376b14ca5f2ea0/project",
-        "updated_at": "2026-09-08T01:40:08.269802-07:00",
+        "updated_at": "2026-09-08T13:22:25.737077-07:00",
         "native_recovery_by_round": {
           "0": 0,
           "1": 12,
@@ -4070,14 +5592,1535 @@
           "stuck": 2
         }
       },
-      "S_B2": {},
-      "comparison": {}
+      "S_B2": {
+        "protocol": "aideal-separated-recovery-v3",
+        "stage": "S_B2",
+        "baseline_cell": "B2",
+        "repo": "thumbnailator",
+        "identity": {
+          "A2_sha256": "b6aa0c714a7c8a076f415ed0dae0e6b3126ad774bc94aab394ec1036974003d7",
+          "B2_sha256": "edf6f845e49a5b57436a68b7845e73ce578cec0a033cf20a196eae38705feb3a",
+          "cohort_sha256": "d3ac8a045f16080153405611bd5b74939bcb2f4821686a834a77034fec7a1e72",
+          "b2_plan_sha256": "5f7fe35968da587a1c15a6d88bfea27ac456d42d0e775d03dca101397cbcd9ba",
+          "protocol_sha256": "3001c4c0f1ae85bcc466d099b1f2b8ad7dfb7ba79e8e5fdd7c5f98e259962982",
+          "adapter": {
+            "source_retry.py": "3a7530176ba3e7dde6e2491c8cd6f7294db7bee8def9a4815d6ace0ae9d4510f",
+            "test_post_b2.py": "0abaed6a6c0b8af3f13d4a135f184898c7e03a2418ce611467bb9c70eba93362",
+            "__init__.py": "39879b1f1a7a3cb2295395b0f9b88f59734b06ae01ae7ab197ea4303ec333fae",
+            "admission.py": "953911c68b16c6dfabb088b3f7871b5a47697a746ede553ee6507ed362ef3f49",
+            "stage.py": "e54e87dfc31b1046603722bd37877f6c8799ca8855b00c9fa00bc7631ca03927",
+            "evidence.py": "c51facc8cee54b9a546245981164958281b6134489e8c0cc1419c8a25b210a01",
+            "__main__.py": "6a6301fe74e5cc07a88cc8a0006dbf234a03e6526725038fea1d548ec3b05ae0",
+            "report.py": "6788e5611430f0d01747714c60160f5ebe6bed36b5c56279ac005c52e86b308a"
+          }
+        },
+        "matched_inputs": {
+          "A2_compatibility": {
+            "legacy_fingerprint": "d971d2e35fa95d00383ed681a422e3e9be0e9c50f413fbd5b4f138cab53335d5",
+            "current_fingerprint": "ccd8b2fea805f32559fe2255eb3afe70c5b91857b059eec6803338006fe8fbc3",
+            "record": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/.aideal_exec/A2/checkpoint_compatibility.json",
+            "record_sha256": "512a7db8e118968898be274147632c7dc95a3799947eb791e2f76fe6cd2b6cf1",
+            "selection_policy": "latest fully attempted reproducible group, else latest reproducible group; never select by score or combine legacy groups",
+            "reason": "Reviewed schema-3 output-hash repair and bounded provider transport; model, prompts, scoring and logical fix budgets unchanged",
+            "baseline_fingerprint": "d0a4b20f3e5d3ea0caf7b1501a9bf2fb4d4f11ac7d844517d7b5d67874427464",
+            "historical_output_aggregate_differs": true,
+            "limitation": "Input bytes are checked against the reviewed input-only proof; historical output contents and runtime state are not reconstructed. This is a supplementary recovery result, not certification of baseline execution."
+          },
+          "B2_compatibility": null,
+          "environment_inventory_hashes": [
+            "ce091255ef57bfdcfec8d0cb1c8fc0ac947d623304dcfedc48f299a6a52f0517",
+            "ce091255ef57bfdcfec8d0cb1c8fc0ac947d623304dcfedc48f299a6a52f0517"
+          ],
+          "limitation": "Inventory paths/cell labels can differ; runtime packages/imports are checked separately. Historical script binding and baseline semantic validity remain qualified."
+        },
+        "baseline_result": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/docs/eval/B2/comprehension.json",
+        "exclusions": {},
+        "apis": {
+          "FileImageSink": {
+            "status": "recovered_native",
+            "code_fix_rounds": 1,
+            "provider_events": 0,
+            "diagnostic_block_events": 0,
+            "stop_reason": null,
+            "identity": {
+              "baseline_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced",
+              "baseline_result_sha256": "cbb0fa561b1ec94f166769f6529b72168da91317d117dd8fbe29f492eafc092e",
+              "api": "FileImageSink",
+              "script_sha256": "1d4e96423b7d701f1a957e362b2c9cd2530de11e2f3305658085b6e3ed3c05af",
+              "prompt_sha256": {
+                "comprehension_write_exec": "f557fcc5d4534cdfa6e596066b2106fd4d9f1ed459be8afccb8676070275c501",
+                "deep_dive": "bcaacb96d675d8e898784eea65319e5ded213c06eb8578f5e40627fd3adce504"
+              },
+              "current_effective_config_sha256": "fe8f26ff850b1cf12154c95ed30eddc6f7ea3f6701e941a01af16a1afbf52e49",
+              "current_profile_sha256": "3634d4cf658d0e7f1a55582155ac335e419ed1ef0f6a1fe3f6cd84ea248e407a",
+              "upstream_test_context": {
+                "sha256": "3c7bd8eeb02331e4f7861881eaa727d35f017400d43dced6a28acf2bcc718e6c",
+                "file_count": 47
+              },
+              "context_engine": {
+                "deepdive.py": "11b4bd8f2c2761c17c43d43a4747ee3660173c94c1a621811c8f720e13898c73",
+                "docfix.py": "1d2f7cf6acdf9455ede12acdf35dcb93d91aa5bc7fe05514fbf783a5eca877b9"
+              },
+              "protocol_sha256": "b6caeb1e279ff5f30bd90547071380caf7efd19a54ea2f5972fddd266f91b5a2",
+              "source": {
+                "sha256": "1821f27510c501483e6f087ea458fdaa8c2464c67043c694918c3abe7836a131",
+                "file_count": 79
+              },
+              "document_sha256": "dcf0cc033d1aef6b9b140702bf5963fdb7a0017587cd72fd3f7d727416d16eff",
+              "script_binding": "retained_matches_native_failure_prefix",
+              "baseline_compatibility": null,
+              "mode": "source",
+              "max_code_fix_rounds": 5,
+              "stuck_rounds": 2,
+              "runner_sha256": "0b5d7370459006a623d7084ab5c63a2ecdaa953fc2494a65627175671b994abf",
+              "engine_sha256": "6d9f4310015755d44f7e002ef5add7fb29dfaad0685c7e9d61ca495c1cddeaf1",
+              "validation_sha256": "6b57fe6df9a3049e7b76fbe76ca8042f885bcd507d87040a28032401879cdeb9",
+              "compatibility_adapter_sha256": "86d978d07814e35310da027da25d1e59bafd84dd350be5f66dc278050b1d43f9"
+            },
+            "wall_s": 13.8,
+            "llm_calls": 1,
+            "input_tokens": 3874,
+            "output_tokens": 1223,
+            "cost_scope": "recorded code proposals only; diagnosis/provider evidence retained separately",
+            "retry_after": 0,
+            "evidence_file": "cases/c372af91113e5d6f5bbc9bb81fca4beae2b492598b835e000e6ca729aac273b0.json"
+          },
+          "FileThumbnailTask": {
+            "status": "pending"
+          },
+          "allowOverwrite": {
+            "status": "pending"
+          },
+          "clear": {
+            "status": "pending"
+          },
+          "createOutputStream": {
+            "status": "pending"
+          },
+          "fitWithinDimenions": {
+            "status": "pending"
+          },
+          "formatType": {
+            "status": "pending"
+          },
+          "getDestination": {
+            "status": "pending"
+          },
+          "getSourceRegion": {
+            "status": "pending"
+          },
+          "init": {
+            "status": "pending"
+          }
+        },
+        "headline_credit": false,
+        "semantic_validation": "needs_independent_review",
+        "updated_at": "2026-09-08T13:22:25.551542-07:00",
+        "statuses": {
+          "recovered_native": 1,
+          "pending": 9
+        },
+        "native_recovery_by_round": {
+          "0": 0,
+          "1": 1,
+          "2": 1,
+          "3": 1,
+          "4": 1,
+          "5": 1
+        },
+        "observed_code_proposal_totals": {
+          "code_fix_rounds": 1,
+          "provider_events": 0,
+          "diagnostic_block_events": 0,
+          "wall_s": 13.8,
+          "llm_calls": 1,
+          "input_tokens": 3874,
+          "output_tokens": 1223
+        },
+        "snapshot": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v3/thumbnailator/cbb0fa561b1ec94f166769f6529b72168da91317d117dd8fbe29f492eafc092e/project"
+      },
+      "comparison": {
+        "schema": 1,
+        "protocol": "aideal-separated-recovery-v3",
+        "identity": {
+          "A2_sha256": "b6aa0c714a7c8a076f415ed0dae0e6b3126ad774bc94aab394ec1036974003d7",
+          "B2_sha256": "edf6f845e49a5b57436a68b7845e73ce578cec0a033cf20a196eae38705feb3a",
+          "cohort_sha256": "d3ac8a045f16080153405611bd5b74939bcb2f4821686a834a77034fec7a1e72",
+          "b2_plan_sha256": "5f7fe35968da587a1c15a6d88bfea27ac456d42d0e775d03dca101397cbcd9ba",
+          "protocol_sha256": "3001c4c0f1ae85bcc466d099b1f2b8ad7dfb7ba79e8e5fdd7c5f98e259962982",
+          "adapter": {
+            "source_retry.py": "3a7530176ba3e7dde6e2491c8cd6f7294db7bee8def9a4815d6ace0ae9d4510f",
+            "test_post_b2.py": "0abaed6a6c0b8af3f13d4a135f184898c7e03a2418ce611467bb9c70eba93362",
+            "__init__.py": "39879b1f1a7a3cb2295395b0f9b88f59734b06ae01ae7ab197ea4303ec333fae",
+            "admission.py": "953911c68b16c6dfabb088b3f7871b5a47697a746ede553ee6507ed362ef3f49",
+            "stage.py": "e54e87dfc31b1046603722bd37877f6c8799ca8855b00c9fa00bc7631ca03927",
+            "evidence.py": "c51facc8cee54b9a546245981164958281b6134489e8c0cc1419c8a25b210a01",
+            "__main__.py": "6a6301fe74e5cc07a88cc8a0006dbf234a03e6526725038fea1d548ec3b05ae0",
+            "report.py": "6788e5611430f0d01747714c60160f5ebe6bed36b5c56279ac005c52e86b308a"
+          }
+        },
+        "full_manifest_N": 149,
+        "F_A2": 22,
+        "F_B2": 10,
+        "B2_native_pass": 139,
+        "S_B2_recovered": 1,
+        "B2_plus_S_B2_composite_native_pass": 140,
+        "on_F_A2": {
+          "S_A2_recovered": 18,
+          "B2_pass": 16,
+          "B2_plus_S_B2_pass": 16
+        },
+        "apis": {
+          "AbsoluteSize": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "BicubicResizer": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "BilinearResizer": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "BufferedImageBuilder": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "BufferedImageSource": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "Canvas": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "Caption": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "Colorize": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "ConsecutivelyNumberedFilenames": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "Coordinate": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "FileImageSink": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "fail",
+            "S_B2": "recovered_native",
+            "B2_regression": true,
+            "S_A2_rounds": null,
+            "S_B2_rounds": 1
+          },
+          "FileImageSource": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "FileThumbnailTask": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "fail",
+            "S_B2": "pending",
+            "B2_regression": true,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "FixedResizerFactory": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "FixedSizeThumbnailMaker": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "IfdStructure": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "InputStreamImageSource": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "NullResizer": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "OutputStreamImageSink": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "Pipeline": {
+            "A2": "fail",
+            "S_A2": "recovered_native",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": 1,
+            "S_B2_rounds": null
+          },
+          "ProgressiveBilinearResizer": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "Region": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "RelativeSize": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "ScaledThumbnailMaker": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "SourceSinkThumbnailTask": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "StreamThumbnailTask": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "ThumbnailMaker": {
+            "A2": "fail",
+            "S_A2": "recovered_native",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": 1,
+            "S_B2_rounds": null
+          },
+          "ThumbnailParameter": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "ThumbnailParameterBuilder": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "Transparency": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "URLImageSource": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "UnsupportedFormatException": {
+            "A2": "fail",
+            "S_A2": "recovered_native",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": 1,
+            "S_B2_rounds": null
+          },
+          "Watermark": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "add": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "addAll": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "addFilter": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "addFilters": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "addFirst": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "allowOverwrite": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "fail",
+            "S_B2": "pending",
+            "B2_regression": true,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "alphaInterpolation": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "antialiasing": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "apply": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "asBufferedImage": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "asBufferedImages": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "asFiles": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "build": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "calculate": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "clear": {
+            "A2": "fail",
+            "S_A2": "recovered_native",
+            "B2": "fail",
+            "S_B2": "pending",
+            "B2_regression": false,
+            "S_A2_rounds": 1,
+            "S_B2_rounds": null
+          },
+          "copy": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "createOutputStream": {
+            "A2": "fail",
+            "S_A2": "provider_blocked",
+            "B2": "fail",
+            "S_B2": "pending",
+            "B2_regression": false,
+            "S_A2_rounds": 1,
+            "S_B2_rounds": null
+          },
+          "createThumbnail": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "createThumbnails": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "createThumbnailsAsCollection": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "crop": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "defaultImageType": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "defaultResizer": {
+            "A2": "fail",
+            "S_A2": "recovered_native",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": 2,
+            "S_B2_rounds": null
+          },
+          "defaultResizerFactory": {
+            "A2": "fail",
+            "S_A2": "recovered_native",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": 2,
+            "S_B2_rounds": null
+          },
+          "determineOutputFormat": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "dithering": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "filters": {
+            "A2": "fail",
+            "S_A2": "recovered_native",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": 2,
+            "S_B2_rounds": null
+          },
+          "fitWithinDimenions": {
+            "A2": "fail",
+            "S_A2": "recovered_native",
+            "B2": "fail",
+            "S_B2": "pending",
+            "B2_regression": false,
+            "S_A2_rounds": 2,
+            "S_B2_rounds": null
+          },
+          "fitWithinDimensions": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "forceSize": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "format": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "formatType": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "fail",
+            "S_B2": "pending",
+            "B2_regression": true,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "fromFilenames": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "fromFiles": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "fromImages": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "fromInputStreams": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "fromURLs": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "getAlpha": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "getBoolean": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "getCount": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "getDestination": {
+            "A2": "fail",
+            "S_A2": "recovered_native",
+            "B2": "fail",
+            "S_B2": "pending",
+            "B2_regression": false,
+            "S_A2_rounds": 2,
+            "S_B2_rounds": null
+          },
+          "getExifOrientation": {
+            "A2": "fail",
+            "S_A2": "recovered_native",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": 2,
+            "S_B2_rounds": null
+          },
+          "getFilterForOrientation": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "getFilters": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "getFormatName": {
+            "A2": "fail",
+            "S_A2": "recovered_native",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": 1,
+            "S_B2_rounds": null
+          },
+          "getHeightScalingFactor": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "getImageFilters": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "getInputFormatName": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "getInstance": {
+            "A2": "fail",
+            "S_A2": "recovered_native",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": 1,
+            "S_B2_rounds": null
+          },
+          "getKey": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "getOffsetValue": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "getOrientationFromExif": {
+            "A2": "fail",
+            "S_A2": "recovered_native",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": 1,
+            "S_B2_rounds": null
+          },
+          "getOutputFormat": {
+            "A2": "fail",
+            "S_A2": "recovered_native",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": 1,
+            "S_B2_rounds": null
+          },
+          "getOutputFormatType": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "getOutputQuality": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "getParam": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "getPosition": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "getProxy": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "getRenderingHints": {
+            "A2": "fail",
+            "S_A2": "stuck",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": 2,
+            "S_B2_rounds": null
+          },
+          "getResizer": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "getResizerFactory": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "getSink": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "getSize": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "getSource": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "getSourceRegion": {
+            "A2": "fail",
+            "S_A2": "stuck",
+            "B2": "fail",
+            "S_B2": "pending",
+            "B2_regression": false,
+            "S_A2_rounds": 2,
+            "S_B2_rounds": null
+          },
+          "getSupportedOutputFormatTypes": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "getSupportedOutputFormats": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "getTag": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "getType": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "getValue": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "getWidthScalingFactor": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "height": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "if": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "imageType": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "init": {
+            "A2": "fail",
+            "S_A2": "recovered_native",
+            "B2": "fail",
+            "S_B2": "pending",
+            "B2_regression": false,
+            "S_A2_rounds": 1,
+            "S_B2_rounds": null
+          },
+          "isKeepAspectRatio": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "isOffset": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "isSupportedOutputFormat": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "isSupportedOutputFormatType": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "isValue": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "iterableBufferedImages": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "iterator": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "keepAspectRatio": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "make": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "newRotator": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "of": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "outputFormat": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "outputFormatType": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "outputQuality": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "preferredOutputFormatName": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "quality": {
+            "A2": "fail",
+            "S_A2": "recovered_native",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": 1,
+            "S_B2_rounds": null
+          },
+          "read": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "region": {
+            "A2": "fail",
+            "S_A2": "recovered_native",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": 1,
+            "S_B2_rounds": null
+          },
+          "rendering": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "resize": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "resizer": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "resizerFactory": {
+            "A2": "fail",
+            "S_A2": "recovered_native",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": 1,
+            "S_B2_rounds": null
+          },
+          "rotate": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "scale": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "scalingMode": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "setOutputFormatName": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "setThumbnailParameter": {
+            "A2": "fail",
+            "S_A2": "provider_blocked",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": 0,
+            "S_B2_rounds": null
+          },
+          "size": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "sourceRegion": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "toFile": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "toFiles": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "toOutputStream": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "toOutputStreams": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "typeOf": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "useExifOrientation": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "useOriginalFormat": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "useOriginalImageType": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "value": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "watermark": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "width": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          },
+          "write": {
+            "A2": "pass",
+            "S_A2": "not_in_cohort",
+            "B2": "pass",
+            "S_B2": "not_in_cohort",
+            "B2_regression": false,
+            "S_A2_rounds": null,
+            "S_B2_rounds": null
+          }
+        },
+        "interpretation": "Paired descriptive outcomes on F_A2; conditional recovery on F_B2. Composite is not a fresh-reader score or an equal-cost causal effect. Native acceptance is not semantic certification."
+      }
     },
     "tslearn": {
       "native_v2": {
         "protocol": "aideal-a2-repair-v2",
         "repo": "tslearn",
-        "updated_at": "2026-09-08T12:58:38.547523-07:00",
+        "updated_at": "2026-09-08T13:24:12.107316-07:00",
         "B1": "omitted by user; original README has no repair loop",
         "cells": {
           "A1": {
@@ -4090,7 +7133,7 @@
               "llm-error": 34
             },
             "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/comprehension_progress.jsonl",
-            "source_sha256": "78c03da5b1c7b9bb8af99432b654f75bea7d2d2b278d1556fd359b8f9a78285a"
+            "source_sha256": "768c4d837f8604514b195b8653af7c512ea240c5a2f40b946d5add5414a0251f"
           },
           "A2": {
             "state": "native partial",
@@ -4102,7 +7145,7 @@
               "llm-error": 2
             },
             "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A2/experiments/tslearn/.aideal_exec/A2/comprehension_progress.jsonl",
-            "source_sha256": "485958c522d8032d27d3e6586dbbc3f9b05a488f6fa065557760baacd6a0f474"
+            "source_sha256": "f626a07e111248cb6d95826092c5597468d95f363e1b6a5e3cb10551bb9e59e8"
           },
           "B2": {
             "state": "pending native evidence"
@@ -4125,6 +7168,8 @@
     "mir_eval": {
       "report_present": true,
       "attempted": 13,
+      "A2_error_seed_prefix_verified": true,
+      "seeded_failure_count": 13,
       "processed": 13,
       "doc_round_starts_in_append_log": {
         "deprecated": 1,
@@ -4155,13 +7200,15 @@
       "source_report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/docfix.json",
       "limitations": [
         "Five doc rounds are configured per API invocation; unfinished APIs can restart. Actual attempts and provider retries must be audited from the append log.",
-        "A2 selects document targets; the legacy repairer reads initial error context from its B2 error log. A2 snippet/error seeding is not certified by target selection.",
+        "A2 error-log seed binding is reported separately; retained legacy snippet associations remain qualified.",
         "Document repair can include infrastructure failures; source recovery excludes them."
       ]
     },
     "thumbnailator": {
       "report_present": true,
       "attempted": 22,
+      "A2_error_seed_prefix_verified": true,
+      "seeded_failure_count": 22,
       "processed": 22,
       "doc_round_starts_in_append_log": {
         "Pipeline": 1,
@@ -4211,13 +7258,15 @@
       "source_report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/docs/eval/B2/docfix.json",
       "limitations": [
         "Five doc rounds are configured per API invocation; unfinished APIs can restart. Actual attempts and provider retries must be audited from the append log.",
-        "A2 selects document targets; the legacy repairer reads initial error context from its B2 error log. A2 snippet/error seeding is not certified by target selection.",
+        "A2 error-log seed binding is reported separately; retained legacy snippet associations remain qualified.",
         "Document repair can include infrastructure failures; source recovery excludes them."
       ]
     },
     "tslearn": {
       "report_present": false,
       "attempted": null,
+      "A2_error_seed_prefix_verified": false,
+      "seeded_failure_count": null,
       "processed": null,
       "doc_round_starts_in_append_log": {},
       "validation_outcomes_in_append_log": {},
@@ -4227,7 +7276,7 @@
       "source_report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/docfix.json",
       "limitations": [
         "Five doc rounds are configured per API invocation; unfinished APIs can restart. Actual attempts and provider retries must be audited from the append log.",
-        "A2 selects document targets; the legacy repairer reads initial error context from its B2 error log. A2 snippet/error seeding is not certified by target selection.",
+        "A2 error-log seed binding is reported separately; retained legacy snippet associations remain qualified.",
         "Document repair can include infrastructure failures; source recovery excludes them."
       ]
     }

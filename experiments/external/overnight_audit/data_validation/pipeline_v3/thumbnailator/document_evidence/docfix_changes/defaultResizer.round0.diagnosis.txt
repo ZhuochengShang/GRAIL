@@ -1,0 +1,26 @@
+AUDIENCE & TESTABILITY:
+API audience: ADVANCED/LOW-LEVEL
+Harness testability: TESTABLE-WITH-LOW-LEVEL-CONSTRUCTION
+Scoring recommendation: include only in advanced/internal bucket
+
+ROOT CAUSE:
+The documentation failed to mention that `ThumbnailMaker` uses a readiness tracker that requires all parameters to be set before calling `make()`. While `defaultResizer()` satisfies the resizer requirement, the image type requirement remains unset, causing `make()` to throw an `IllegalStateException: Maker not ready to make thumbnail`. The caller must also satisfy the image type requirement (e.g., by calling `defaultImageType()`) before execution.
+
+CORRECT USAGE:
+```java
+net.coobird.thumbnailator.makers.FixedSizeThumbnailMaker maker = new net.coobird.thumbnailator.makers.FixedSizeThumbnailMaker(50, 50);
+net.coobird.thumbnailator.makers.ThumbnailMaker returnedMaker = maker.defaultResizer();
+returnedMaker.defaultImageType();
+
+java.awt.image.BufferedImage result = returnedMaker.make(sourceImage);
+```
+
+REQUIRED TYPES & IMPORTS:
+net.coobird.thumbnailator.makers.FixedSizeThumbnailMaker
+net.coobird.thumbnailator.makers.ThumbnailMaker
+java.awt.image.BufferedImage
+
+DOC MUST SAY:
+- `ThumbnailMaker` uses a readiness tracker and requires all configuration parameters to be set before calling `make()`.
+- Calling `defaultResizer()` only satisfies the resizer requirement; callers must also satisfy the image type requirement (e.g., by calling `defaultImageType()`) to avoid an `IllegalStateException` during execution.
+- `ThumbnailMaker` is an abstract class and must be instantiated via a concrete subclass like `FixedSizeThumbnailMaker`.
