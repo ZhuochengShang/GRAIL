@@ -1,0 +1,189 @@
+{
+  "api": "getKey",
+  "cell": "A2",
+  "native": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 11.5,
+    "llm_calls": 1,
+    "input_tokens": 1785,
+    "output_tokens": 1294,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 1785,
+        "output_tokens": 1294
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 2423,
+    "document_sha256": "30a69215f2927c816ae5fb0946f6d93fdb0a26cf933c8b57e2c17bb2b4aa8da0",
+    "source": "source/src/main/java/net/coobird/thumbnailator/resizers/configurations/ResizerConfiguration.java:44",
+    "source_other_sites": 4,
+    "codebase_frames": null,
+    "name": "getKey",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "java.awt.RenderingHints.Key ditherKey = net.coobird.thumbnailator.resizers.configurations.Dithering.ENABLE.getKey();\njava.awt.RenderingHints.Key aaKey = net.coobird.thumbnailator.resizers.configurations.Antialiasing.ON.getKey();\njava.awt.RenderingHints.Key alphaKey = net.coobird.thumbnailator.resizers.configurations.AlphaInterpolation.DEFAULT.getKey();\njava.awt.RenderingHints.Key renderKey = net.coobird.thumbnailator.resizers.configurations.Rendering.DEFAULT.getKey();\n\nassert ditherKey == java.awt.RenderingHints.KEY_DITHERING : \"Dithering key mismatch\";\nassert aaKey == java.awt.RenderingHints.KEY_ANTIALIASING : \"Antialiasing key mismatch\";\nassert alphaKey == java.awt.RenderingHints.KEY_ALPHA_INTERPOLATION : \"Alpha interpolation key mismatch\";\nassert renderKey == java.awt.RenderingHints.KEY_RENDERING : \"Rendering key mismatch\";\n\nSystem.out.println(\"__CHECK__ getKey \" + (ditherKey == java.awt.RenderingHints.KEY_DITHERING) + \"_\" + (aaKey == java.awt.RenderingHints.KEY_ANTIALIASING));",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/.aideal_exec/A2/run_getKey/ApiTest.java",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ getKey true_true\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "d0a4b20f3e5d3ea0caf7b1501a9bf2fb4d4f11ac7d844517d7b5d67874427464"
+  },
+  "available": true,
+  "source": "import java.awt.Color;\nimport java.awt.Graphics2D;\nimport java.awt.image.BufferedImage;\nimport java.io.ByteArrayInputStream;\nimport java.io.ByteArrayOutputStream;\nimport java.io.File;\nimport java.nio.file.Files;\nimport java.nio.file.Path;\nimport java.nio.file.Paths;\nimport java.util.Arrays;\n\nimport javax.imageio.ImageIO;\n\nimport net.coobird.thumbnailator.*;\nimport net.coobird.thumbnailator.builders.*;\nimport net.coobird.thumbnailator.filters.*;\nimport net.coobird.thumbnailator.geometry.*;\nimport net.coobird.thumbnailator.makers.*;\nimport net.coobird.thumbnailator.name.*;\nimport net.coobird.thumbnailator.resizers.*;\nimport net.coobird.thumbnailator.resizers.configurations.*;\nimport net.coobird.thumbnailator.tasks.*;\nimport net.coobird.thumbnailator.tasks.io.*;\nimport net.coobird.thumbnailator.util.*;\nimport net.coobird.thumbnailator.util.exif.*;\n\npublic final class ApiTest {\n    private ApiTest() {}\n\n    public static void main(String[] args) {\n        try {\n            String grid_png = \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/source/src/test/resources/Thumbnailator/grid.png\";\n    String grid_jpeg = \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/source/src/test/resources/Thumbnailator/grid.jpg\";\n    String exif_jpeg = \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/source/src/test/resources/Exif/original.jpg\";\n    String output_dir = \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/.aideal_exec/A2/output\";\n\n    // pre-loaded typed inputs (comprehension.execute.preamble)\n    BufferedImage sourceImage = new BufferedImage(32, 24, BufferedImage.TYPE_INT_RGB);\n    Graphics2D graphics = sourceImage.createGraphics();\n    graphics.setColor(Color.BLUE);\n    graphics.fillRect(0, 0, 32, 24);\n    graphics.setColor(Color.YELLOW);\n    graphics.fillRect(8, 6, 16, 12);\n    graphics.dispose();\n    BufferedImage destinationImage = new BufferedImage(16, 12, BufferedImage.TYPE_INT_RGB);\n    ByteArrayOutputStream imageBytes = new ByteArrayOutputStream();\n    Path outputPath = Paths.get(output_dir, \"thumbnail.png\");\n    Files.createDirectories(outputPath.getParent());\n\n            // TODO API_TEST_START\n            java.awt.RenderingHints.Key ditherKey = net.coobird.thumbnailator.resizers.configurations.Dithering.ENABLE.getKey();\n            java.awt.RenderingHints.Key aaKey = net.coobird.thumbnailator.resizers.configurations.Antialiasing.ON.getKey();\n            java.awt.RenderingHints.Key alphaKey = net.coobird.thumbnailator.resizers.configurations.AlphaInterpolation.DEFAULT.getKey();\n            java.awt.RenderingHints.Key renderKey = net.coobird.thumbnailator.resizers.configurations.Rendering.DEFAULT.getKey();\n\n            assert ditherKey == java.awt.RenderingHints.KEY_DITHERING : \"Dithering key mismatch\";\n            assert aaKey == java.awt.RenderingHints.KEY_ANTIALIASING : \"Antialiasing key mismatch\";\n            assert alphaKey == java.awt.RenderingHints.KEY_ALPHA_INTERPOLATION : \"Alpha interpolation key mismatch\";\n            assert renderKey == java.awt.RenderingHints.KEY_RENDERING : \"Rendering key mismatch\";\n\n            System.out.println(\"__CHECK__ getKey \" + (ditherKey == java.awt.RenderingHints.KEY_DITHERING) + \"_\" + (aaKey == java.awt.RenderingHints.KEY_ANTIALIASING));\n            // TODO API_TEST_END\n            System.out.println(\"__DONE__\");\n        } catch (Throwable exc) {\n            System.err.println(\"__RUN_ERR__ \" + exc.getClass().getSimpleName()\n                    + \": \" + exc.getMessage());\n            exc.printStackTrace(System.err);\n            System.exit(1);\n        }\n    }\n}\n",
+  "binding": "full_native_code",
+  "retained_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/.aideal_exec/A2/run_getKey/ApiTest.java",
+  "retained_sha256": "dc91cf3602d93e6c40f69294ecbf0cbaabf5e7128e6868481487d5c6cbd78888",
+  "native_code_sha256": "1ef227404d69f98c0fe6b9c90dda3717ca57a1f305bbe25d62b8e7c513125f90",
+  "recovered_from_native_code": false,
+  "replay": {
+    "compile": {
+      "command": [
+        "/Library/Java/JavaVirtualMachines/jdk-1.8.jdk/Contents/Home/bin/javac",
+        "-cp",
+        "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/.aideal_exec/thumbnailator_assertion_replay/A2/fc3c332d74435ec178fa-c295c377/library.jar",
+        "-d",
+        "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/.aideal_exec/thumbnailator_assertion_replay/A2/fc3c332d74435ec178fa-c295c377/classes",
+        "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/.aideal_exec/thumbnailator_assertion_replay/A2/fc3c332d74435ec178fa-c295c377/ApiTest.java"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "",
+      "wall_s": 0.267
+    },
+    "provenance": {
+      "jar_sha256": "301ec8c9293b0904addb916db64fdfb384b7ae8b76ccb09903e94a806fcea8b7",
+      "source_sha256": "5eb678c7f95e3693a83204196e34286b39282902ba396b434d51e8ae3d9500c7",
+      "path_replacements": [
+        {
+          "from": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/source/src/test/resources/Thumbnailator/grid.png",
+          "to": "fixtures/grid_png.png"
+        },
+        {
+          "from": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/source/src/test/resources/Thumbnailator/grid.jpg",
+          "to": "fixtures/grid_jpeg.jpg"
+        },
+        {
+          "from": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/source/src/test/resources/Exif/original.jpg",
+          "to": "fixtures/exif_jpeg.jpg"
+        },
+        {
+          "from": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/.aideal_exec/A2/output",
+          "to": "project/.aideal_exec/A2/output"
+        }
+      ],
+      "fixtures": {
+        "grid_png": {
+          "source": "source/src/test/resources/Thumbnailator/grid.png",
+          "sha256": "810ca84718b8e4e6dabd0c8178dc2e4909a92abb63e24831d22cef6d74853608"
+        },
+        "grid_jpeg": {
+          "source": "source/src/test/resources/Thumbnailator/grid.jpg",
+          "sha256": "b84a5be546bfd573b17045dd8e6459d3b265f464dcbe07b40f8205e4f9b305e2"
+        },
+        "exif_jpeg": {
+          "source": "source/src/test/resources/Exif/original.jpg",
+          "sha256": "24c144238c49076bfe6eed9a10ca6189fda5a8d9c2d9c43f68381f094806b7e7"
+        }
+      }
+    },
+    "variants": {
+      "assertions_off": {
+        "command": [
+          "/Library/Java/JavaVirtualMachines/jdk-1.8.jdk/Contents/Home/bin/java",
+          "-da",
+          "-Xmx256m",
+          "-Djava.awt.headless=true",
+          "-Djava.security.manager",
+          "-Djava.security.policy==/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/.aideal_exec/thumbnailator_assertion_replay/A2/fc3c332d74435ec178fa-c295c377/assertions_off.policy",
+          "-Djava.io.tmpdir=/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/.aideal_exec/thumbnailator_assertion_replay/A2/fc3c332d74435ec178fa-c295c377/assertions_off/tmp",
+          "-Duser.home=/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/.aideal_exec/thumbnailator_assertion_replay/A2/fc3c332d74435ec178fa-c295c377/assertions_off",
+          "-Daideal.replay.root=/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/.aideal_exec/thumbnailator_assertion_replay/A2/fc3c332d74435ec178fa-c295c377/assertions_off",
+          "-cp",
+          "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/.aideal_exec/thumbnailator_assertion_replay/A2/fc3c332d74435ec178fa-c295c377/classes:/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/.aideal_exec/thumbnailator_assertion_replay/A2/fc3c332d74435ec178fa-c295c377/library.jar",
+          "ApiTest"
+        ],
+        "exit_code": 0,
+        "stdout": "__CHECK__ getKey true_true\n__DONE__\n",
+        "stderr": "",
+        "wall_s": 0.469,
+        "outcome": "pass"
+      },
+      "assertions_on": {
+        "command": [
+          "/Library/Java/JavaVirtualMachines/jdk-1.8.jdk/Contents/Home/bin/java",
+          "-ea",
+          "-Xmx256m",
+          "-Djava.awt.headless=true",
+          "-Djava.security.manager",
+          "-Djava.security.policy==/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/.aideal_exec/thumbnailator_assertion_replay/A2/fc3c332d74435ec178fa-c295c377/assertions_on.policy",
+          "-Djava.io.tmpdir=/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/.aideal_exec/thumbnailator_assertion_replay/A2/fc3c332d74435ec178fa-c295c377/assertions_on/tmp",
+          "-Duser.home=/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/.aideal_exec/thumbnailator_assertion_replay/A2/fc3c332d74435ec178fa-c295c377/assertions_on",
+          "-Daideal.replay.root=/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/.aideal_exec/thumbnailator_assertion_replay/A2/fc3c332d74435ec178fa-c295c377/assertions_on",
+          "-cp",
+          "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/.aideal_exec/thumbnailator_assertion_replay/A2/fc3c332d74435ec178fa-c295c377/classes:/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/.aideal_exec/thumbnailator_assertion_replay/A2/fc3c332d74435ec178fa-c295c377/library.jar",
+          "ApiTest"
+        ],
+        "exit_code": 1,
+        "stdout": "",
+        "stderr": "__RUN_ERR__ AssertionError: Rendering key mismatch\njava.lang.AssertionError: Rendering key mismatch\n\tat ApiTest.main(ApiTest.java:59)\n",
+        "wall_s": 0.483,
+        "outcome": "assertion_failure"
+      }
+    }
+  },
+  "protocol": {
+    "version": "thumbnailator-assertion-replay-v1",
+    "java_version": "java version \"1.8.0_381\"\nJava(TM) SE Runtime Environment (build 1.8.0_381-b09)\nJava HotSpot(TM) 64-Bit Server VM (build 25.381-b09, mixed mode)\n",
+    "engine": {
+      "execute.py": "43a04b545ae0bd39836bb1d0075e46cca9d590e72cab3d55dd8f48ed8f4653ed",
+      "evidence.py": "6f8d7a7b73bba62487530085ed614303a9f886a1ba9962880f3041115e55110e",
+      "__main__.py": "9727d86212b02dabad98615dd102504a0d20aa0650a6cebc24cbdd82cb521e45"
+    },
+    "llm_calls": 0,
+    "code_fix_rounds": 0
+  },
+  "captured_native_source": {
+    "path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/docs/eval/A2/comprehension.json",
+    "sha256": "b6aa0c714a7c8a076f415ed0dae0e6b3126ad774bc94aab394ec1036974003d7"
+  },
+  "evidence_file": "cases/492a0d96f6cf56dbc1ca29a405ac34da6bc0584053ab2761e12f1e521d99dd9b.json",
+  "cache_compatibility": {
+    "executed_protocol": {
+      "version": "thumbnailator-assertion-replay-v1",
+      "java_version": "java version \"1.8.0_381\"\nJava(TM) SE Runtime Environment (build 1.8.0_381-b09)\nJava HotSpot(TM) 64-Bit Server VM (build 25.381-b09, mixed mode)\n",
+      "engine": {
+        "execute.py": "43a04b545ae0bd39836bb1d0075e46cca9d590e72cab3d55dd8f48ed8f4653ed",
+        "evidence.py": "6f8d7a7b73bba62487530085ed614303a9f886a1ba9962880f3041115e55110e",
+        "__main__.py": "9727d86212b02dabad98615dd102504a0d20aa0650a6cebc24cbdd82cb521e45"
+      },
+      "llm_calls": 0,
+      "code_fix_rounds": 0
+    },
+    "accepted_protocol": {
+      "version": "thumbnailator-assertion-replay-v1",
+      "java_version": "java version \"1.8.0_381\"\nJava(TM) SE Runtime Environment (build 1.8.0_381-b09)\nJava HotSpot(TM) 64-Bit Server VM (build 25.381-b09, mixed mode)\n",
+      "engine": {
+        "execute.py": "43a04b545ae0bd39836bb1d0075e46cca9d590e72cab3d55dd8f48ed8f4653ed",
+        "evidence.py": "ee78d13f0082ef471d4057877b459c8fce2aa7a2a417fa3b47505add08a61b61",
+        "__main__.py": "9727d86212b02dabad98615dd102504a0d20aa0650a6cebc24cbdd82cb521e45"
+      },
+      "llm_calls": 0,
+      "code_fix_rounds": 0
+    },
+    "prior_evidence": "cases/fc3c332d74435ec178fadba8afa1d646f4f399f6c94f7df332fc525f2dd8eb63.json",
+    "reason": "Only path-literal decoder changed; exact relocated source hash and mapping match. Execution engine, Java version, native row, library and fixture bytes match."
+  }
+}

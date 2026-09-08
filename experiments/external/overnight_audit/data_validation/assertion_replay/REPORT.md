@@ -1,0 +1,323 @@
+# Thumbnailator native outcomes and isolated assertion replay
+
+Updated: 2026-09-07T23:41:38.476104-07:00
+
+No native score is replaced. Both replay variants use identical code, copied fixture bytes, a fresh output root and Java 8 isolation; only `-da` versus `-ea` differs.
+
+| Cell | Native state | Native pass / API outcomes | Replayed | Assertions-on pass | Off pass → on fail | Unbound retained replays |
+|---|---|---:|---:|---:|---:|---:|
+| A1 | native partial | 128/149 | 142 | 111 | 14 | 139 |
+| A2 | native complete | 127/149 | 149 | 114 | 6 | 0 |
+| B1 | awaiting native evidence | — | — | — | — | — |
+| B2 | awaiting native evidence | — | — | — | — | — |
+
+## Interpretation
+
+- Assertion-enabled acceptance is not an independently validated correctness oracle.
+- This replay cannot certify the entire documentation-repair pipeline; it does not rerun repair decisions.
+- Native results remain unchanged. Isolation and fresh per-test outputs may change outcomes; the assertions-off control exposes this.
+- Legacy retained snippets without full native code or a matching failure prefix are unbound diagnostic evidence.
+- B cells are processed automatically when final native results appear; absence is pending, not zero success.
+
+## API outcomes
+
+| Cell | API | Native | Off replay | On replay | Evidence binding |
+|---|---|---|---|---|---|
+| A1 | `AbsoluteSize` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `BicubicResizer` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `BilinearResizer` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `BufferedImageBuilder` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `BufferedImageSource` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `Canvas` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `Caption` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `Colorize` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `ConsecutivelyNumberedFilenames` | fail | runtime_failure | runtime_failure | retained_unbound_legacy |
+| A1 | `Coordinate` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `FileImageSink` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `FileImageSource` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `FileThumbnailTask` | fail | compile_failure | compile_failure | retained_unbound_legacy |
+| A1 | `FixedResizerFactory` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `FixedSizeThumbnailMaker` | fail | runtime_failure | runtime_failure | retained_unbound_legacy |
+| A1 | `IfdStructure` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `InputStreamImageSource` | pass | pass | assertion_failure | retained_unbound_legacy |
+| A1 | `NullResizer` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `OutputStreamImageSink` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `Pipeline` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `ProgressiveBilinearResizer` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `Region` | pass | not_replayed | not_replayed | case-colliding retained path without native code binding |
+| A1 | `RelativeSize` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `ScaledThumbnailMaker` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `SourceSinkThumbnailTask` | pass | pass | assertion_failure | retained_unbound_legacy |
+| A1 | `StreamThumbnailTask` | pass | pass | assertion_failure | retained_unbound_legacy |
+| A1 | `ThumbnailMaker` | fail | runtime_failure | runtime_failure | retained_unbound_legacy |
+| A1 | `ThumbnailParameter` | fail | compile_failure | compile_failure | retained_unbound_legacy |
+| A1 | `ThumbnailParameterBuilder` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `Transparency` | pass | pass | assertion_failure | retained_unbound_legacy |
+| A1 | `URLImageSource` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `UnsupportedFormatException` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `Watermark` | pass | not_replayed | not_replayed | case-colliding retained path without native code binding |
+| A1 | `add` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `addAll` | pass | pass | assertion_failure | retained_unbound_legacy |
+| A1 | `addFilter` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `addFilters` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `addFirst` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `allowOverwrite` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `alphaInterpolation` | fail | compile_failure | compile_failure | retained_unbound_legacy |
+| A1 | `antialiasing` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `apply` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `asBufferedImage` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `asBufferedImages` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `asFiles` | fail | runtime_failure | runtime_failure | retained_unbound_legacy |
+| A1 | `build` | fail | compile_failure | compile_failure | retained_matches_native_failure_prefix |
+| A1 | `calculate` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `clear` | fail | not_replayed | not_replayed | provider failure; stale retained files are not this attempt |
+| A1 | `copy` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `createOutputStream` | fail | not_replayed | not_replayed | provider failure; stale retained files are not this attempt |
+| A1 | `createThumbnail` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `createThumbnails` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `createThumbnailsAsCollection` | pass | pass | assertion_failure | retained_unbound_legacy |
+| A1 | `crop` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `defaultImageType` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `defaultResizer` | fail | runtime_failure | runtime_failure | retained_unbound_legacy |
+| A1 | `defaultResizerFactory` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `determineOutputFormat` | fail | runtime_failure | runtime_failure | retained_unbound_legacy |
+| A1 | `dithering` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `filters` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `fitWithinDimenions` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `fitWithinDimensions` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `forceSize` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `format` | fail | not_replayed | not_replayed | provider failure; stale retained files are not this attempt |
+| A1 | `formatType` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `fromFilenames` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `fromFiles` | pass | pass | assertion_failure | retained_unbound_legacy |
+| A1 | `fromImages` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `fromInputStreams` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `fromURLs` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `getAlpha` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `getBoolean` | pass | pass | assertion_failure | retained_unbound_legacy |
+| A1 | `getCount` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `getDestination` | fail | compile_failure | compile_failure | retained_unbound_legacy |
+| A1 | `getExifOrientation` | fail | runtime_failure | runtime_failure | retained_unbound_legacy |
+| A1 | `getFilterForOrientation` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `getFilters` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `getFormatName` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `getHeightScalingFactor` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `getImageFilters` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `getInputFormatName` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `getInstance` | pass | pass | assertion_failure | retained_unbound_legacy |
+| A1 | `getKey` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `getOffsetValue` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `getOrientationFromExif` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `getOutputFormat` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `getOutputFormatType` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `getOutputQuality` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `getParam` | fail | compile_failure | compile_failure | retained_unbound_legacy |
+| A1 | `getPosition` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `getProxy` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `getRenderingHints` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `getResizer` | pass | pass | assertion_failure | retained_unbound_legacy |
+| A1 | `getResizerFactory` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `getSink` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `getSize` | pass | pass | pass | full_native_code |
+| A1 | `getSource` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `getSourceRegion` | fail | compile_failure | compile_failure | retained_unbound_legacy |
+| A1 | `getSupportedOutputFormatTypes` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `getSupportedOutputFormats` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `getTag` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `getType` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `getValue` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `getWidthScalingFactor` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `height` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `if` | pass | pass | assertion_failure | retained_unbound_legacy |
+| A1 | `imageType` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `init` | pass | pass | assertion_failure | retained_unbound_legacy |
+| A1 | `isKeepAspectRatio` | pass | pass | pass | full_native_code |
+| A1 | `isOffset` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `isSupportedOutputFormat` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `isSupportedOutputFormatType` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `isValue` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `iterableBufferedImages` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `iterator` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `keepAspectRatio` | fail | runtime_failure | runtime_failure | retained_unbound_legacy |
+| A1 | `make` | fail | runtime_failure | runtime_failure | retained_unbound_legacy |
+| A1 | `newRotator` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `of` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `outputFormat` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `outputFormatType` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `outputQuality` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `preferredOutputFormatName` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `quality` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `read` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `region` | fail | not_replayed | not_replayed | provider failure; stale retained files are not this attempt |
+| A1 | `rendering` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `resize` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `resizer` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `resizerFactory` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `rotate` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `scale` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `scalingMode` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `setOutputFormatName` | pass | pass | assertion_failure | retained_unbound_legacy |
+| A1 | `setThumbnailParameter` | pass | pass | assertion_failure | retained_unbound_legacy |
+| A1 | `size` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `sourceRegion` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `toFile` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `toFiles` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `toOutputStream` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `toOutputStreams` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `typeOf` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `useExifOrientation` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `useOriginalFormat` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `useOriginalImageType` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `value` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `watermark` | pass | not_replayed | not_replayed | case-colliding retained path without native code binding |
+| A1 | `width` | pass | pass | pass | retained_unbound_legacy |
+| A1 | `write` | fail | compile_failure | compile_failure | retained_unbound_legacy |
+| A2 | `AbsoluteSize` | pass | pass | pass | full_native_code |
+| A2 | `BicubicResizer` | pass | pass | pass | full_native_code |
+| A2 | `BilinearResizer` | pass | pass | pass | full_native_code |
+| A2 | `BufferedImageBuilder` | pass | pass | pass | full_native_code |
+| A2 | `BufferedImageSource` | pass | pass | pass | full_native_code |
+| A2 | `Canvas` | pass | pass | pass | full_native_code |
+| A2 | `Caption` | pass | pass | pass | full_native_code |
+| A2 | `Colorize` | pass | pass | pass | full_native_code |
+| A2 | `ConsecutivelyNumberedFilenames` | pass | pass | pass | full_native_code |
+| A2 | `Coordinate` | pass | pass | pass | full_native_code |
+| A2 | `FileImageSink` | pass | runtime_failure | runtime_failure | full_native_code |
+| A2 | `FileImageSource` | pass | pass | pass | full_native_code |
+| A2 | `FileThumbnailTask` | pass | runtime_failure | runtime_failure | full_native_code |
+| A2 | `FixedResizerFactory` | pass | pass | pass | full_native_code |
+| A2 | `FixedSizeThumbnailMaker` | pass | pass | pass | full_native_code |
+| A2 | `IfdStructure` | pass | pass | assertion_failure | full_native_code |
+| A2 | `InputStreamImageSource` | pass | pass | pass | full_native_code |
+| A2 | `NullResizer` | pass | pass | pass | full_native_code |
+| A2 | `OutputStreamImageSink` | pass | pass | pass | full_native_code |
+| A2 | `Pipeline` | fail | compile_failure | compile_failure | retained_matches_native_failure_prefix |
+| A2 | `ProgressiveBilinearResizer` | pass | pass | pass | full_native_code |
+| A2 | `Region` | pass | pass | pass | full_native_code |
+| A2 | `RelativeSize` | pass | pass | pass | full_native_code |
+| A2 | `ScaledThumbnailMaker` | pass | pass | pass | full_native_code |
+| A2 | `SourceSinkThumbnailTask` | pass | pass | pass | full_native_code |
+| A2 | `StreamThumbnailTask` | pass | pass | pass | full_native_code |
+| A2 | `ThumbnailMaker` | fail | compile_failure | compile_failure | retained_matches_native_failure_prefix |
+| A2 | `ThumbnailParameter` | pass | pass | pass | full_native_code |
+| A2 | `ThumbnailParameterBuilder` | pass | pass | pass | full_native_code |
+| A2 | `Transparency` | pass | pass | pass | full_native_code |
+| A2 | `URLImageSource` | pass | pass | pass | full_native_code |
+| A2 | `UnsupportedFormatException` | fail | runtime_failure | runtime_failure | retained_matches_native_failure_prefix |
+| A2 | `Watermark` | pass | pass | pass | full_native_code |
+| A2 | `add` | pass | pass | pass | full_native_code |
+| A2 | `addAll` | pass | pass | pass | full_native_code |
+| A2 | `addFilter` | pass | pass | pass | full_native_code |
+| A2 | `addFilters` | pass | pass | pass | full_native_code |
+| A2 | `addFirst` | pass | pass | pass | full_native_code |
+| A2 | `allowOverwrite` | pass | runtime_failure | runtime_failure | full_native_code |
+| A2 | `alphaInterpolation` | pass | pass | pass | full_native_code |
+| A2 | `antialiasing` | pass | pass | pass | full_native_code |
+| A2 | `apply` | pass | pass | pass | full_native_code |
+| A2 | `asBufferedImage` | pass | pass | pass | full_native_code |
+| A2 | `asBufferedImages` | pass | pass | pass | full_native_code |
+| A2 | `asFiles` | pass | pass | pass | full_native_code |
+| A2 | `build` | pass | pass | pass | full_native_code |
+| A2 | `calculate` | pass | pass | pass | full_native_code |
+| A2 | `clear` | fail | compile_failure | compile_failure | retained_matches_native_failure_prefix |
+| A2 | `copy` | pass | pass | pass | full_native_code |
+| A2 | `createOutputStream` | fail | compile_failure | compile_failure | retained_matches_native_failure_prefix |
+| A2 | `createThumbnail` | pass | pass | pass | full_native_code |
+| A2 | `createThumbnails` | pass | pass | pass | full_native_code |
+| A2 | `createThumbnailsAsCollection` | pass | runtime_failure | runtime_failure | full_native_code |
+| A2 | `crop` | pass | pass | pass | full_native_code |
+| A2 | `defaultImageType` | pass | pass | pass | full_native_code |
+| A2 | `defaultResizer` | fail | runtime_failure | runtime_failure | retained_matches_native_failure_prefix |
+| A2 | `defaultResizerFactory` | fail | runtime_failure | runtime_failure | retained_matches_native_failure_prefix |
+| A2 | `determineOutputFormat` | pass | runtime_failure | runtime_failure | full_native_code |
+| A2 | `dithering` | pass | pass | pass | full_native_code |
+| A2 | `filters` | fail | compile_failure | compile_failure | retained_matches_native_failure_prefix |
+| A2 | `fitWithinDimenions` | fail | runtime_failure | runtime_failure | retained_matches_native_failure_prefix |
+| A2 | `fitWithinDimensions` | pass | pass | pass | full_native_code |
+| A2 | `forceSize` | pass | pass | pass | full_native_code |
+| A2 | `format` | pass | pass | pass | full_native_code |
+| A2 | `formatType` | pass | pass | pass | full_native_code |
+| A2 | `fromFilenames` | pass | pass | pass | full_native_code |
+| A2 | `fromFiles` | pass | pass | pass | full_native_code |
+| A2 | `fromImages` | pass | pass | pass | full_native_code |
+| A2 | `fromInputStreams` | pass | pass | pass | full_native_code |
+| A2 | `fromURLs` | pass | pass | pass | full_native_code |
+| A2 | `getAlpha` | pass | pass | pass | full_native_code |
+| A2 | `getBoolean` | pass | pass | assertion_failure | full_native_code |
+| A2 | `getCount` | pass | pass | pass | full_native_code |
+| A2 | `getDestination` | fail | compile_failure | compile_failure | retained_matches_native_failure_prefix |
+| A2 | `getExifOrientation` | fail | runtime_failure | assertion_failure | retained_matches_native_failure_prefix |
+| A2 | `getFilterForOrientation` | pass | pass | pass | full_native_code |
+| A2 | `getFilters` | pass | pass | pass | full_native_code |
+| A2 | `getFormatName` | fail | runtime_failure | runtime_failure | retained_matches_native_failure_prefix |
+| A2 | `getHeightScalingFactor` | pass | pass | pass | full_native_code |
+| A2 | `getImageFilters` | pass | pass | pass | full_native_code |
+| A2 | `getInputFormatName` | pass | pass | pass | full_native_code |
+| A2 | `getInstance` | fail | compile_failure | compile_failure | retained_matches_native_failure_prefix |
+| A2 | `getKey` | pass | pass | assertion_failure | full_native_code |
+| A2 | `getOffsetValue` | pass | pass | pass | full_native_code |
+| A2 | `getOrientationFromExif` | fail | runtime_failure | runtime_failure | retained_matches_native_failure_prefix |
+| A2 | `getOutputFormat` | fail | runtime_failure | runtime_failure | retained_matches_native_failure_prefix |
+| A2 | `getOutputFormatType` | pass | pass | pass | full_native_code |
+| A2 | `getOutputQuality` | pass | pass | pass | full_native_code |
+| A2 | `getParam` | pass | pass | pass | full_native_code |
+| A2 | `getPosition` | pass | pass | pass | full_native_code |
+| A2 | `getProxy` | pass | pass | pass | full_native_code |
+| A2 | `getRenderingHints` | fail | compile_failure | compile_failure | retained_matches_native_failure_prefix |
+| A2 | `getResizer` | pass | pass | assertion_failure | full_native_code |
+| A2 | `getResizerFactory` | pass | pass | pass | full_native_code |
+| A2 | `getSink` | pass | pass | pass | full_native_code |
+| A2 | `getSize` | pass | pass | pass | full_native_code |
+| A2 | `getSource` | pass | pass | pass | full_native_code |
+| A2 | `getSourceRegion` | fail | compile_failure | compile_failure | retained_matches_native_failure_prefix |
+| A2 | `getSupportedOutputFormatTypes` | pass | pass | pass | full_native_code |
+| A2 | `getSupportedOutputFormats` | pass | pass | pass | full_native_code |
+| A2 | `getTag` | pass | pass | pass | full_native_code |
+| A2 | `getType` | pass | pass | pass | full_native_code |
+| A2 | `getValue` | pass | pass | pass | full_native_code |
+| A2 | `getWidthScalingFactor` | pass | pass | pass | full_native_code |
+| A2 | `height` | pass | pass | pass | full_native_code |
+| A2 | `if` | pass | pass | pass | full_native_code |
+| A2 | `imageType` | pass | pass | pass | full_native_code |
+| A2 | `init` | fail | compile_failure | compile_failure | retained_matches_native_failure_prefix |
+| A2 | `isKeepAspectRatio` | pass | pass | pass | full_native_code |
+| A2 | `isOffset` | pass | pass | pass | full_native_code |
+| A2 | `isSupportedOutputFormat` | pass | pass | pass | full_native_code |
+| A2 | `isSupportedOutputFormatType` | pass | pass | pass | full_native_code |
+| A2 | `isValue` | pass | pass | pass | full_native_code |
+| A2 | `iterableBufferedImages` | pass | pass | pass | full_native_code |
+| A2 | `iterator` | pass | pass | pass | full_native_code |
+| A2 | `keepAspectRatio` | pass | pass | pass | full_native_code |
+| A2 | `make` | pass | pass | pass | full_native_code |
+| A2 | `newRotator` | pass | pass | pass | full_native_code |
+| A2 | `of` | pass | pass | pass | full_native_code |
+| A2 | `outputFormat` | pass | pass | pass | full_native_code |
+| A2 | `outputFormatType` | pass | pass | pass | full_native_code |
+| A2 | `outputQuality` | pass | pass | pass | full_native_code |
+| A2 | `preferredOutputFormatName` | pass | pass | runtime_failure | full_native_code |
+| A2 | `quality` | fail | compile_failure | compile_failure | retained_matches_native_failure_prefix |
+| A2 | `read` | pass | pass | pass | full_native_code |
+| A2 | `region` | fail | compile_failure | compile_failure | retained_matches_native_failure_prefix |
+| A2 | `rendering` | pass | pass | pass | full_native_code |
+| A2 | `resize` | pass | pass | pass | full_native_code |
+| A2 | `resizer` | pass | pass | pass | full_native_code |
+| A2 | `resizerFactory` | fail | compile_failure | compile_failure | retained_matches_native_failure_prefix |
+| A2 | `rotate` | pass | pass | pass | full_native_code |
+| A2 | `scale` | pass | pass | pass | full_native_code |
+| A2 | `scalingMode` | pass | pass | pass | full_native_code |
+| A2 | `setOutputFormatName` | pass | pass | pass | full_native_code |
+| A2 | `setThumbnailParameter` | fail | compile_failure | compile_failure | retained_matches_native_failure_prefix |
+| A2 | `size` | pass | pass | pass | full_native_code |
+| A2 | `sourceRegion` | pass | pass | pass | full_native_code |
+| A2 | `toFile` | pass | runtime_failure | runtime_failure | full_native_code |
+| A2 | `toFiles` | pass | runtime_failure | runtime_failure | full_native_code |
+| A2 | `toOutputStream` | pass | pass | pass | full_native_code |
+| A2 | `toOutputStreams` | pass | pass | pass | full_native_code |
+| A2 | `typeOf` | pass | pass | pass | full_native_code |
+| A2 | `useExifOrientation` | pass | pass | pass | full_native_code |
+| A2 | `useOriginalFormat` | pass | pass | pass | full_native_code |
+| A2 | `useOriginalImageType` | pass | pass | pass | full_native_code |
+| A2 | `value` | pass | pass | assertion_failure | full_native_code |
+| A2 | `watermark` | pass | pass | pass | full_native_code |
+| A2 | `width` | pass | pass | pass | full_native_code |
+| A2 | `write` | pass | pass | pass | full_native_code |

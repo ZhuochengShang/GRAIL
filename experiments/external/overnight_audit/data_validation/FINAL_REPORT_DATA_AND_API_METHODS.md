@@ -187,3 +187,16 @@ The checked-in `Exif/original.jpg` fixture has no orientation tag; a separate di
 The review separates README contradictions, generated helper mistakes, receiver setup, visibility, and input/test assumptions. It preserves compile, runtime, and provider failures separately. Timeout percentages are checkpoint-event frequencies across retry/fingerprint groups, not SDK request rates or hourly probabilities.
 
 Only reporting and isolated diagnostics changed. Current workers, fixture bindings, manifests, prompts, checkpoints, and native results were preserved. The [proposed validation revision](thumbnailator_a2_review_20260907/PROPOSED_VALIDATION_REVISION.yaml) is disabled and requires a separately reviewed matched experiment. HTML behavior and data checks passed; visual browser inspection was unavailable in this session.
+
+
+## Authorized isolated assertion replay — September 7
+
+The user authorized finishing the current experiments and prioritizing an isolated Thumbnailator replay with separate native and replay outcomes. See the [replay HTML](assertion_replay/REPLAY.html), [current outcome table](assertion_replay/REPORT.md), and [failure mechanisms](assertion_replay/FINDINGS_2026-09-07.md). This namespace is included in the automatic deadline data snapshot.
+
+A2 has 149 native API outcomes: **127 native passes, 120 assertions-off control passes, and 114 assertions-on replay passes**. Six control passes fail when assertions are enabled; seven native passes fail in both fresh isolated variants with file-path errors. The latter must not be attributed to assertion activation. The 114 replay passes are harness acceptance with assertions enabled, not an independently validated correctness score.
+
+Replay uses unchanged fixture bytes, rebased paths, independent outputs and an execution isolation preflight. It makes no Gemini calls, performs no snippet fixes, and does not feed results into the live document-repair loop. Full native passing code recovers two uppercase snippets overwritten through case-insensitive path collisions. Historical A1 snippets without sufficient native binding remain unbound diagnostics; ambiguous case collisions and provider failures are not credited as replayed native attempts. Current A1/B status belongs to the generated replay report.
+
+A Java octal-string parsing issue in the replay utility was fixed and tested. Previously completed executions were reused only after exact relocated-source and path-mapping equality checks; [the compatibility record](assertion_replay/cache_compatibility_20260907.json) preserves that repair round. The [source-informed follow-up](assertion_replay/contract_followup.json) distinguishes a Rendering key/value defect candidate from a resizer test-oracle error. These probes are outside all headline scores.
+
+**A replay alone cannot certify the entire documentation-repair pipeline.** Native repair decisions and final measurements remain their original experiment; a corrected end-to-end claim requires a separately reviewed matched protocol.

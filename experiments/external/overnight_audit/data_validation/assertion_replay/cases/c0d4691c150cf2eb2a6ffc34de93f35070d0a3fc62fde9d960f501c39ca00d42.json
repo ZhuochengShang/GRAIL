@@ -1,0 +1,104 @@
+{
+  "api": "getSourceRegion",
+  "cell": "A1",
+  "native": {
+    "name": "getSourceRegion",
+    "doc_source": "original",
+    "experiment_fingerprint": "6361a90a8d15196e1351e3b191a2908f96c8a6a6a6bdf9b683903311f4c2940e",
+    "status": "fail",
+    "attempts": 1,
+    "pass_round": null,
+    "wall_s": 37.6,
+    "llm_calls": 1,
+    "input_tokens": 4621,
+    "output_tokens": 4857,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 4621,
+        "output_tokens": 4857
+      }
+    },
+    "error_category": "compile",
+    "error": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A1/experiments/external/thumbnailator/.aideal_exec/A1/run_getSourceRegion/ApiTest.java:73: error: method calculate in class Region cannot be applied to given types;",
+    "locus": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A1/experiments/external/thumbnailator/.aideal_exec/A1/run_getSourceRegion/ApiTest.java:73",
+    "doc_chars": 12000,
+    "document_sha256": "d9c4318ca2ce8fd1894a0db780a803ec1489f5b0d5c10dce68c4fab9be832c3c",
+    "source": "source/src/main/java/net/coobird/thumbnailator/ThumbnailParameter.java:967",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "execution_evidence": "resumed: fail"
+  },
+  "available": true,
+  "source": "import java.awt.Color;\nimport java.awt.Graphics2D;\nimport java.awt.image.BufferedImage;\nimport java.io.ByteArrayInputStream;\nimport java.io.ByteArrayOutputStream;\nimport java.io.File;\nimport java.nio.file.Files;\nimport java.nio.file.Path;\nimport java.nio.file.Paths;\nimport java.util.Arrays;\n\nimport javax.imageio.ImageIO;\n\nimport net.coobird.thumbnailator.*;\nimport net.coobird.thumbnailator.builders.*;\nimport net.coobird.thumbnailator.filters.*;\nimport net.coobird.thumbnailator.geometry.*;\nimport net.coobird.thumbnailator.makers.*;\nimport net.coobird.thumbnailator.name.*;\nimport net.coobird.thumbnailator.resizers.*;\nimport net.coobird.thumbnailator.resizers.configurations.*;\nimport net.coobird.thumbnailator.tasks.*;\nimport net.coobird.thumbnailator.tasks.io.*;\nimport net.coobird.thumbnailator.util.*;\nimport net.coobird.thumbnailator.util.exif.*;\n\npublic final class ApiTest {\n    private ApiTest() {}\n\n    public static void main(String[] args) {\n        try {\n            String grid_png = \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A1/experiments/external/thumbnailator/source/src/test/resources/Thumbnailator/grid.png\";\n    String grid_jpeg = \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A1/experiments/external/thumbnailator/source/src/test/resources/Thumbnailator/grid.jpg\";\n    String exif_jpeg = \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A1/experiments/external/thumbnailator/source/src/test/resources/Exif/original.jpg\";\n    String output_dir = \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A1/experiments/external/thumbnailator/.aideal_exec/A1/output\";\n\n    // pre-loaded typed inputs (comprehension.execute.preamble)\n    BufferedImage sourceImage = new BufferedImage(32, 24, BufferedImage.TYPE_INT_RGB);\n    Graphics2D graphics = sourceImage.createGraphics();\n    graphics.setColor(Color.BLUE);\n    graphics.fillRect(0, 0, 32, 24);\n    graphics.setColor(Color.YELLOW);\n    graphics.fillRect(8, 6, 16, 12);\n    graphics.dispose();\n    BufferedImage destinationImage = new BufferedImage(16, 12, BufferedImage.TYPE_INT_RGB);\n    ByteArrayOutputStream imageBytes = new ByteArrayOutputStream();\n    Path outputPath = Paths.get(output_dir, \"thumbnail.png\");\n    Files.createDirectories(outputPath.getParent());\n\n            // TODO API_TEST_START\n            net.coobird.thumbnailator.geometry.Region region = new net.coobird.thumbnailator.geometry.Region(\n                net.coobird.thumbnailator.geometry.Positions.CENTER,\n                new net.coobird.thumbnailator.geometry.AbsoluteSize(100, 100)\n            );\n\n            net.coobird.thumbnailator.ThumbnailParameter param = new net.coobird.thumbnailator.ThumbnailParameter(\n                new java.awt.Dimension(200, 200),\n                region,\n                true,\n                net.coobird.thumbnailator.ThumbnailParameter.ORIGINAL_FORMAT,\n                net.coobird.thumbnailator.ThumbnailParameter.DEFAULT_FORMAT_TYPE,\n                net.coobird.thumbnailator.ThumbnailParameter.DEFAULT_QUALITY,\n                net.coobird.thumbnailator.ThumbnailParameter.DEFAULT_IMAGE_TYPE,\n                java.util.Collections.emptyList(),\n                new net.coobird.thumbnailator.resizers.ProgressiveBilinearResizer(),\n                true,\n                true\n            );\n\n            net.coobird.thumbnailator.geometry.Region retrievedRegion = param.getSourceRegion();\n            assert retrievedRegion != null : \"Source region should not be null\";\n\n            java.awt.Rectangle rect = retrievedRegion.calculate(200, 200);\n            assert rect.width == 100 && rect.height == 100 : \"Region size should be 100x100\";\n            assert rect.x == 50 && rect.y == 50 : \"Region should be centered in 200x200\";\n\n            System.out.println(\"__CHECK__ getSourceRegion \" + rect.width + \"x\" + rect.height + \" at \" + rect.x + \",\" + rect.y);\n            // TODO API_TEST_END\n            System.out.println(\"__DONE__\");\n        } catch (Throwable exc) {\n            System.err.println(\"__RUN_ERR__ \" + exc.getClass().getSimpleName()\n                    + \": \" + exc.getMessage());\n            exc.printStackTrace(System.err);\n            System.exit(1);\n        }\n    }\n}\n",
+  "binding": "retained_unbound_legacy",
+  "retained_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A1/experiments/external/thumbnailator/.aideal_exec/A1/run_getSourceRegion/ApiTest.java",
+  "retained_sha256": "d37ed43e0dcd8a97c5d229097c4ea212b9faf6a5f11706d7d6e5fa7bd6b0b492",
+  "native_code_sha256": null,
+  "recovered_from_native_code": false,
+  "replay": {
+    "compile": {
+      "command": [
+        "/Library/Java/JavaVirtualMachines/jdk-1.8.jdk/Contents/Home/bin/javac",
+        "-cp",
+        "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/.aideal_exec/thumbnailator_assertion_replay/A1/c0d4691c150cf2eb2a6f-e9ec0be1/library.jar",
+        "-d",
+        "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/.aideal_exec/thumbnailator_assertion_replay/A1/c0d4691c150cf2eb2a6f-e9ec0be1/classes",
+        "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/.aideal_exec/thumbnailator_assertion_replay/A1/c0d4691c150cf2eb2a6f-e9ec0be1/ApiTest.java"
+      ],
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/.aideal_exec/thumbnailator_assertion_replay/A1/c0d4691c150cf2eb2a6f-e9ec0be1/ApiTest.java:73: error: method calculate in class Region cannot be applied to given types;\n            java.awt.Rectangle rect = retrievedRegion.calculate(200, 200);\n                                                     ^\n  required: int,int,boolean,boolean,boolean\n  found: int,int\n  reason: actual and formal argument lists differ in length\n1 error\n",
+      "wall_s": 0.256
+    },
+    "provenance": {
+      "jar_sha256": "f056c5ccd3560f48d65fc622883c0186dd11e93cd8440b1be788708cffc71f33",
+      "source_sha256": "e8d357e4217502d412f6dfa202cd3512a6f5b8327136b9584340df9310cb9daa",
+      "path_replacements": [
+        {
+          "from": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A1/experiments/external/thumbnailator/source/src/test/resources/Thumbnailator/grid.png",
+          "to": "fixtures/grid_png.png"
+        },
+        {
+          "from": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A1/experiments/external/thumbnailator/source/src/test/resources/Thumbnailator/grid.jpg",
+          "to": "fixtures/grid_jpeg.jpg"
+        },
+        {
+          "from": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A1/experiments/external/thumbnailator/source/src/test/resources/Exif/original.jpg",
+          "to": "fixtures/exif_jpeg.jpg"
+        },
+        {
+          "from": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A1/experiments/external/thumbnailator/.aideal_exec/A1/output",
+          "to": "project/.aideal_exec/A1/output"
+        }
+      ],
+      "fixtures": {}
+    },
+    "variants": {
+      "assertions_off": {
+        "outcome": "compile_failure",
+        "exit_code": 1
+      },
+      "assertions_on": {
+        "outcome": "compile_failure",
+        "exit_code": 1
+      }
+    }
+  },
+  "protocol": {
+    "version": "thumbnailator-assertion-replay-v1",
+    "java_version": "java version \"1.8.0_381\"\nJava(TM) SE Runtime Environment (build 1.8.0_381-b09)\nJava HotSpot(TM) 64-Bit Server VM (build 25.381-b09, mixed mode)\n",
+    "engine": {
+      "execute.py": "43a04b545ae0bd39836bb1d0075e46cca9d590e72cab3d55dd8f48ed8f4653ed",
+      "evidence.py": "ee78d13f0082ef471d4057877b459c8fce2aa7a2a417fa3b47505add08a61b61",
+      "__main__.py": "9727d86212b02dabad98615dd102504a0d20aa0650a6cebc24cbdd82cb521e45"
+    },
+    "llm_calls": 0,
+    "code_fix_rounds": 0
+  },
+  "captured_native_source": {
+    "path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A1/experiments/external/thumbnailator/.aideal_exec/A1/comprehension_progress.jsonl",
+    "sha256": "a4a5c95a77e471bf9c8f00654d8380632fc9a71b4f638709d34b3abe3097b80a"
+  },
+  "evidence_file": "cases/c0d4691c150cf2eb2a6ffc34de93f35070d0a3fc62fde9d960f501c39ca00d42.json"
+}

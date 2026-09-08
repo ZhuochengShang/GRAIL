@@ -1,0 +1,189 @@
+{
+  "api": "write",
+  "cell": "A2",
+  "native": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 29.0,
+    "llm_calls": 1,
+    "input_tokens": 1929,
+    "output_tokens": 3808,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 1929,
+        "output_tokens": 3808
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 3236,
+    "document_sha256": "a65ff5956db2cff121ac7b5128c7c42a8578c42de955188d29e3e1eec8d0c94e",
+    "source": "source/src/main/java/net/coobird/thumbnailator/tasks/ThumbnailTask.java:102",
+    "source_other_sites": 8,
+    "codebase_frames": null,
+    "name": "write",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();\nnet.coobird.thumbnailator.tasks.io.OutputStreamImageSink sink = new net.coobird.thumbnailator.tasks.io.OutputStreamImageSink(baos);\nsink.setOutputFormatName(\"png\");\n\ntry {\n    sink.write(sourceImage);\n} catch (net.coobird.thumbnailator.tasks.UnsupportedFormatException e) {\n    System.err.println(\"Format not supported by JVM Image I/O: \" + e.getMessage());\n    return;\n} catch (java.io.IOException e) {\n    System.err.println(\"Failed to write thumbnail: \" + e.getMessage());\n    return;\n}\n\nbyte[] data = baos.toByteArray();\nassert data.length > 0 : \"Output data should not be empty\";\n\njava.awt.image.BufferedImage readBack;\ntry {\n    readBack = javax.imageio.ImageIO.read(new java.io.ByteArrayInputStream(data));\n} catch (java.io.IOException e) {\n    throw new RuntimeException(\"Failed to read back image\", e);\n}\n\nassert readBack != null : \"Should be able to read back the image\";\nassert readBack.getWidth() == sourceImage.getWidth() : \"Width should match\";\nassert readBack.getHeight() == sourceImage.getHeight() : \"Height should match\";\n\nSystem.out.println(\"__CHECK__ write \" + data.length);",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/.aideal_exec/A2/run_write/ApiTest.java",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ write 100\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "d0a4b20f3e5d3ea0caf7b1501a9bf2fb4d4f11ac7d844517d7b5d67874427464"
+  },
+  "available": true,
+  "source": "import java.awt.Color;\nimport java.awt.Graphics2D;\nimport java.awt.image.BufferedImage;\nimport java.io.ByteArrayInputStream;\nimport java.io.ByteArrayOutputStream;\nimport java.io.File;\nimport java.nio.file.Files;\nimport java.nio.file.Path;\nimport java.nio.file.Paths;\nimport java.util.Arrays;\n\nimport javax.imageio.ImageIO;\n\nimport net.coobird.thumbnailator.*;\nimport net.coobird.thumbnailator.builders.*;\nimport net.coobird.thumbnailator.filters.*;\nimport net.coobird.thumbnailator.geometry.*;\nimport net.coobird.thumbnailator.makers.*;\nimport net.coobird.thumbnailator.name.*;\nimport net.coobird.thumbnailator.resizers.*;\nimport net.coobird.thumbnailator.resizers.configurations.*;\nimport net.coobird.thumbnailator.tasks.*;\nimport net.coobird.thumbnailator.tasks.io.*;\nimport net.coobird.thumbnailator.util.*;\nimport net.coobird.thumbnailator.util.exif.*;\n\npublic final class ApiTest {\n    private ApiTest() {}\n\n    public static void main(String[] args) {\n        try {\n            String grid_png = \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/source/src/test/resources/Thumbnailator/grid.png\";\n    String grid_jpeg = \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/source/src/test/resources/Thumbnailator/grid.jpg\";\n    String exif_jpeg = \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/source/src/test/resources/Exif/original.jpg\";\n    String output_dir = \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/.aideal_exec/A2/output\";\n\n    // pre-loaded typed inputs (comprehension.execute.preamble)\n    BufferedImage sourceImage = new BufferedImage(32, 24, BufferedImage.TYPE_INT_RGB);\n    Graphics2D graphics = sourceImage.createGraphics();\n    graphics.setColor(Color.BLUE);\n    graphics.fillRect(0, 0, 32, 24);\n    graphics.setColor(Color.YELLOW);\n    graphics.fillRect(8, 6, 16, 12);\n    graphics.dispose();\n    BufferedImage destinationImage = new BufferedImage(16, 12, BufferedImage.TYPE_INT_RGB);\n    ByteArrayOutputStream imageBytes = new ByteArrayOutputStream();\n    Path outputPath = Paths.get(output_dir, \"thumbnail.png\");\n    Files.createDirectories(outputPath.getParent());\n\n            // TODO API_TEST_START\n            java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();\n            net.coobird.thumbnailator.tasks.io.OutputStreamImageSink sink = new net.coobird.thumbnailator.tasks.io.OutputStreamImageSink(baos);\n            sink.setOutputFormatName(\"png\");\n\n            try {\n                sink.write(sourceImage);\n            } catch (net.coobird.thumbnailator.tasks.UnsupportedFormatException e) {\n                System.err.println(\"Format not supported by JVM Image I/O: \" + e.getMessage());\n                return;\n            } catch (java.io.IOException e) {\n                System.err.println(\"Failed to write thumbnail: \" + e.getMessage());\n                return;\n            }\n\n            byte[] data = baos.toByteArray();\n            assert data.length > 0 : \"Output data should not be empty\";\n\n            java.awt.image.BufferedImage readBack;\n            try {\n                readBack = javax.imageio.ImageIO.read(new java.io.ByteArrayInputStream(data));\n            } catch (java.io.IOException e) {\n                throw new RuntimeException(\"Failed to read back image\", e);\n            }\n\n            assert readBack != null : \"Should be able to read back the image\";\n            assert readBack.getWidth() == sourceImage.getWidth() : \"Width should match\";\n            assert readBack.getHeight() == sourceImage.getHeight() : \"Height should match\";\n\n            System.out.println(\"__CHECK__ write \" + data.length);\n            // TODO API_TEST_END\n            System.out.println(\"__DONE__\");\n        } catch (Throwable exc) {\n            System.err.println(\"__RUN_ERR__ \" + exc.getClass().getSimpleName()\n                    + \": \" + exc.getMessage());\n            exc.printStackTrace(System.err);\n            System.exit(1);\n        }\n    }\n}\n",
+  "binding": "full_native_code",
+  "retained_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/.aideal_exec/A2/run_write/ApiTest.java",
+  "retained_sha256": "2017349a628ac3d86ebef284987ca41973701f782a605f721c00c0b6826370ac",
+  "native_code_sha256": "d8292efc8af3d6c00eb99e282121637fca64f2319de794cc7bd2bb842d1e8aeb",
+  "recovered_from_native_code": false,
+  "replay": {
+    "compile": {
+      "command": [
+        "/Library/Java/JavaVirtualMachines/jdk-1.8.jdk/Contents/Home/bin/javac",
+        "-cp",
+        "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/.aideal_exec/thumbnailator_assertion_replay/A2/963bdd22785820e554d5-925d770d/library.jar",
+        "-d",
+        "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/.aideal_exec/thumbnailator_assertion_replay/A2/963bdd22785820e554d5-925d770d/classes",
+        "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/.aideal_exec/thumbnailator_assertion_replay/A2/963bdd22785820e554d5-925d770d/ApiTest.java"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "",
+      "wall_s": 0.327
+    },
+    "provenance": {
+      "jar_sha256": "301ec8c9293b0904addb916db64fdfb384b7ae8b76ccb09903e94a806fcea8b7",
+      "source_sha256": "2c88073f1f0a46b5d00ca76280b96ffd2a880b5609b45407f230d7a99819f986",
+      "path_replacements": [
+        {
+          "from": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/source/src/test/resources/Thumbnailator/grid.png",
+          "to": "fixtures/grid_png.png"
+        },
+        {
+          "from": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/source/src/test/resources/Thumbnailator/grid.jpg",
+          "to": "fixtures/grid_jpeg.jpg"
+        },
+        {
+          "from": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/source/src/test/resources/Exif/original.jpg",
+          "to": "fixtures/exif_jpeg.jpg"
+        },
+        {
+          "from": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/.aideal_exec/A2/output",
+          "to": "project/.aideal_exec/A2/output"
+        }
+      ],
+      "fixtures": {
+        "grid_png": {
+          "source": "source/src/test/resources/Thumbnailator/grid.png",
+          "sha256": "810ca84718b8e4e6dabd0c8178dc2e4909a92abb63e24831d22cef6d74853608"
+        },
+        "grid_jpeg": {
+          "source": "source/src/test/resources/Thumbnailator/grid.jpg",
+          "sha256": "b84a5be546bfd573b17045dd8e6459d3b265f464dcbe07b40f8205e4f9b305e2"
+        },
+        "exif_jpeg": {
+          "source": "source/src/test/resources/Exif/original.jpg",
+          "sha256": "24c144238c49076bfe6eed9a10ca6189fda5a8d9c2d9c43f68381f094806b7e7"
+        }
+      }
+    },
+    "variants": {
+      "assertions_off": {
+        "command": [
+          "/Library/Java/JavaVirtualMachines/jdk-1.8.jdk/Contents/Home/bin/java",
+          "-da",
+          "-Xmx256m",
+          "-Djava.awt.headless=true",
+          "-Djava.security.manager",
+          "-Djava.security.policy==/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/.aideal_exec/thumbnailator_assertion_replay/A2/963bdd22785820e554d5-925d770d/assertions_off.policy",
+          "-Djava.io.tmpdir=/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/.aideal_exec/thumbnailator_assertion_replay/A2/963bdd22785820e554d5-925d770d/assertions_off/tmp",
+          "-Duser.home=/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/.aideal_exec/thumbnailator_assertion_replay/A2/963bdd22785820e554d5-925d770d/assertions_off",
+          "-Daideal.replay.root=/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/.aideal_exec/thumbnailator_assertion_replay/A2/963bdd22785820e554d5-925d770d/assertions_off",
+          "-cp",
+          "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/.aideal_exec/thumbnailator_assertion_replay/A2/963bdd22785820e554d5-925d770d/classes:/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/.aideal_exec/thumbnailator_assertion_replay/A2/963bdd22785820e554d5-925d770d/library.jar",
+          "ApiTest"
+        ],
+        "exit_code": 0,
+        "stdout": "__CHECK__ write 100\n__DONE__\n",
+        "stderr": "",
+        "wall_s": 0.535,
+        "outcome": "pass"
+      },
+      "assertions_on": {
+        "command": [
+          "/Library/Java/JavaVirtualMachines/jdk-1.8.jdk/Contents/Home/bin/java",
+          "-ea",
+          "-Xmx256m",
+          "-Djava.awt.headless=true",
+          "-Djava.security.manager",
+          "-Djava.security.policy==/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/.aideal_exec/thumbnailator_assertion_replay/A2/963bdd22785820e554d5-925d770d/assertions_on.policy",
+          "-Djava.io.tmpdir=/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/.aideal_exec/thumbnailator_assertion_replay/A2/963bdd22785820e554d5-925d770d/assertions_on/tmp",
+          "-Duser.home=/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/.aideal_exec/thumbnailator_assertion_replay/A2/963bdd22785820e554d5-925d770d/assertions_on",
+          "-Daideal.replay.root=/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/.aideal_exec/thumbnailator_assertion_replay/A2/963bdd22785820e554d5-925d770d/assertions_on",
+          "-cp",
+          "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/.aideal_exec/thumbnailator_assertion_replay/A2/963bdd22785820e554d5-925d770d/classes:/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/.aideal_exec/thumbnailator_assertion_replay/A2/963bdd22785820e554d5-925d770d/library.jar",
+          "ApiTest"
+        ],
+        "exit_code": 0,
+        "stdout": "__CHECK__ write 100\n__DONE__\n",
+        "stderr": "",
+        "wall_s": 0.663,
+        "outcome": "pass"
+      }
+    }
+  },
+  "protocol": {
+    "version": "thumbnailator-assertion-replay-v1",
+    "java_version": "java version \"1.8.0_381\"\nJava(TM) SE Runtime Environment (build 1.8.0_381-b09)\nJava HotSpot(TM) 64-Bit Server VM (build 25.381-b09, mixed mode)\n",
+    "engine": {
+      "execute.py": "43a04b545ae0bd39836bb1d0075e46cca9d590e72cab3d55dd8f48ed8f4653ed",
+      "evidence.py": "6f8d7a7b73bba62487530085ed614303a9f886a1ba9962880f3041115e55110e",
+      "__main__.py": "9727d86212b02dabad98615dd102504a0d20aa0650a6cebc24cbdd82cb521e45"
+    },
+    "llm_calls": 0,
+    "code_fix_rounds": 0
+  },
+  "captured_native_source": {
+    "path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/docs/eval/A2/comprehension.json",
+    "sha256": "b6aa0c714a7c8a076f415ed0dae0e6b3126ad774bc94aab394ec1036974003d7"
+  },
+  "evidence_file": "cases/97842e17382056302e6a452f693af127f12bb9f04d9dab54f4c29025437ac2f5.json",
+  "cache_compatibility": {
+    "executed_protocol": {
+      "version": "thumbnailator-assertion-replay-v1",
+      "java_version": "java version \"1.8.0_381\"\nJava(TM) SE Runtime Environment (build 1.8.0_381-b09)\nJava HotSpot(TM) 64-Bit Server VM (build 25.381-b09, mixed mode)\n",
+      "engine": {
+        "execute.py": "43a04b545ae0bd39836bb1d0075e46cca9d590e72cab3d55dd8f48ed8f4653ed",
+        "evidence.py": "6f8d7a7b73bba62487530085ed614303a9f886a1ba9962880f3041115e55110e",
+        "__main__.py": "9727d86212b02dabad98615dd102504a0d20aa0650a6cebc24cbdd82cb521e45"
+      },
+      "llm_calls": 0,
+      "code_fix_rounds": 0
+    },
+    "accepted_protocol": {
+      "version": "thumbnailator-assertion-replay-v1",
+      "java_version": "java version \"1.8.0_381\"\nJava(TM) SE Runtime Environment (build 1.8.0_381-b09)\nJava HotSpot(TM) 64-Bit Server VM (build 25.381-b09, mixed mode)\n",
+      "engine": {
+        "execute.py": "43a04b545ae0bd39836bb1d0075e46cca9d590e72cab3d55dd8f48ed8f4653ed",
+        "evidence.py": "ee78d13f0082ef471d4057877b459c8fce2aa7a2a417fa3b47505add08a61b61",
+        "__main__.py": "9727d86212b02dabad98615dd102504a0d20aa0650a6cebc24cbdd82cb521e45"
+      },
+      "llm_calls": 0,
+      "code_fix_rounds": 0
+    },
+    "prior_evidence": "cases/963bdd22785820e554d56dfb94da1be41d54c0dd0e91cf7e1ad2f7393c1bb6e8.json",
+    "reason": "Only path-literal decoder changed; exact relocated source hash and mapping match. Execution engine, Java version, native row, library and fixture bytes match."
+  }
+}

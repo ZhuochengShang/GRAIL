@@ -1,0 +1,193 @@
+{
+  "api": "UnsupportedFormatException",
+  "cell": "A2",
+  "native": {
+    "status": "fail",
+    "attempts": 1,
+    "pass_round": null,
+    "wall_s": 33.8,
+    "llm_calls": 1,
+    "input_tokens": 1871,
+    "output_tokens": 4176,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 1871,
+        "output_tokens": 4176
+      }
+    },
+    "error_category": "runtime",
+    "error": "IllegalArgumentException: Specified format is not supported: superfakeformat",
+    "locus": "ApiTest.java:63",
+    "doc_chars": 2941,
+    "document_sha256": "510e7e8ad42526b1ab2b6d9a20cee6a73f5ddb0319b5b917b781132e3aaf4173",
+    "source": "source/src/main/java/net/coobird/thumbnailator/tasks/UnsupportedFormatException.java:70",
+    "source_other_sites": 1,
+    "codebase_frames": null,
+    "name": "UnsupportedFormatException",
+    "execution_evidence": {
+      "status": "fail",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "fail",
+          "category": "runtime",
+          "error": "IllegalArgumentException: Specified format is not supported: superfakeformat"
+        }
+      ],
+      "error_category": "runtime",
+      "error": "IllegalArgumentException: Specified format is not supported: superfakeformat",
+      "code": "net.coobird.thumbnailator.tasks.UnsupportedFormatException ex1 = \n    new net.coobird.thumbnailator.tasks.UnsupportedFormatException(\"webp\");\nnet.coobird.thumbnailator.tasks.UnsupportedFormatException ex2 = \n    new net.coobird.thumbnailator.tasks.UnsupportedFormatException(\"tiff\", \"No suitable ImageWriter found\");\n\nassert ex1 != null;\nassert ex2.getMessage() != null && ex2.getMessage().contains(\"No suitable ImageWriter found\");\n\nboolean caught = false;\ntry {\n    net.coobird.thumbnailator.Thumbnails.of(sourceImage)\n        .size(32, 32)\n        .outputFormat(\"superfakeformat\")\n        .toOutputStream(imageBytes);\n} catch (net.coobird.thumbnailator.tasks.UnsupportedFormatException e) {\n    caught = true;\n} catch (java.io.IOException e) {\n    throw new RuntimeException(\"Unexpected IOException\", e);\n}\n\nassert caught : \"Expected UnsupportedFormatException to be thrown for an unsupported format\";\n\nSystem.out.println(\"__CHECK__ UnsupportedFormatException \" + caught + \", \" + ex2.getMessage())",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/.aideal_exec/A2/run_UnsupportedFormatException/ApiTest.java",
+      "exit_code": 1,
+      "stdout_tail": "",
+      "stderr_tail": "__RUN_ERR__ IllegalArgumentException: Specified format is not supported: superfakeformat\njava.lang.IllegalArgumentException: Specified format is not supported: superfakeformat\n\tat net.coobird.thumbnailator.Thumbnails$Builder.outputFormat(Unknown Source)\n\tat ApiTest.main(ApiTest.java:63)\n"
+    },
+    "experiment_fingerprint": "d0a4b20f3e5d3ea0caf7b1501a9bf2fb4d4f11ac7d844517d7b5d67874427464"
+  },
+  "available": true,
+  "source": "import java.awt.Color;\nimport java.awt.Graphics2D;\nimport java.awt.image.BufferedImage;\nimport java.io.ByteArrayInputStream;\nimport java.io.ByteArrayOutputStream;\nimport java.io.File;\nimport java.nio.file.Files;\nimport java.nio.file.Path;\nimport java.nio.file.Paths;\nimport java.util.Arrays;\n\nimport javax.imageio.ImageIO;\n\nimport net.coobird.thumbnailator.*;\nimport net.coobird.thumbnailator.builders.*;\nimport net.coobird.thumbnailator.filters.*;\nimport net.coobird.thumbnailator.geometry.*;\nimport net.coobird.thumbnailator.makers.*;\nimport net.coobird.thumbnailator.name.*;\nimport net.coobird.thumbnailator.resizers.*;\nimport net.coobird.thumbnailator.resizers.configurations.*;\nimport net.coobird.thumbnailator.tasks.*;\nimport net.coobird.thumbnailator.tasks.io.*;\nimport net.coobird.thumbnailator.util.*;\nimport net.coobird.thumbnailator.util.exif.*;\n\npublic final class ApiTest {\n    private ApiTest() {}\n\n    public static void main(String[] args) {\n        try {\n            String grid_png = \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/source/src/test/resources/Thumbnailator/grid.png\";\n    String grid_jpeg = \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/source/src/test/resources/Thumbnailator/grid.jpg\";\n    String exif_jpeg = \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/source/src/test/resources/Exif/original.jpg\";\n    String output_dir = \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/.aideal_exec/A2/output\";\n\n    // pre-loaded typed inputs (comprehension.execute.preamble)\n    BufferedImage sourceImage = new BufferedImage(32, 24, BufferedImage.TYPE_INT_RGB);\n    Graphics2D graphics = sourceImage.createGraphics();\n    graphics.setColor(Color.BLUE);\n    graphics.fillRect(0, 0, 32, 24);\n    graphics.setColor(Color.YELLOW);\n    graphics.fillRect(8, 6, 16, 12);\n    graphics.dispose();\n    BufferedImage destinationImage = new BufferedImage(16, 12, BufferedImage.TYPE_INT_RGB);\n    ByteArrayOutputStream imageBytes = new ByteArrayOutputStream();\n    Path outputPath = Paths.get(output_dir, \"thumbnail.png\");\n    Files.createDirectories(outputPath.getParent());\n\n            // TODO API_TEST_START\n            net.coobird.thumbnailator.tasks.UnsupportedFormatException ex1 = \n                new net.coobird.thumbnailator.tasks.UnsupportedFormatException(\"webp\");\n            net.coobird.thumbnailator.tasks.UnsupportedFormatException ex2 = \n                new net.coobird.thumbnailator.tasks.UnsupportedFormatException(\"tiff\", \"No suitable ImageWriter found\");\n\n            assert ex1 != null;\n            assert ex2.getMessage() != null && ex2.getMessage().contains(\"No suitable ImageWriter found\");\n\n            boolean caught = false;\n            try {\n                net.coobird.thumbnailator.Thumbnails.of(sourceImage)\n                    .size(32, 32)\n                    .outputFormat(\"superfakeformat\")\n                    .toOutputStream(imageBytes);\n            } catch (net.coobird.thumbnailator.tasks.UnsupportedFormatException e) {\n                caught = true;\n            } catch (java.io.IOException e) {\n                throw new RuntimeException(\"Unexpected IOException\", e);\n            }\n\n            assert caught : \"Expected UnsupportedFormatException to be thrown for an unsupported format\";\n\n            System.out.println(\"__CHECK__ UnsupportedFormatException \" + caught + \", \" + ex2.getMessage());\n            // TODO API_TEST_END\n            System.out.println(\"__DONE__\");\n        } catch (Throwable exc) {\n            System.err.println(\"__RUN_ERR__ \" + exc.getClass().getSimpleName()\n                    + \": \" + exc.getMessage());\n            exc.printStackTrace(System.err);\n            System.exit(1);\n        }\n    }\n}\n",
+  "binding": "retained_matches_native_failure_prefix",
+  "retained_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/.aideal_exec/A2/run_UnsupportedFormatException/ApiTest.java",
+  "retained_sha256": "7207ce9a7e0e6014bd08ee171c137590a31101b76da097d1068f6733ee72825e",
+  "native_code_sha256": "429bf094b848b72c342c76e6d555082f5296d6877cd04804ba4199f874c9b3e7",
+  "recovered_from_native_code": false,
+  "replay": {
+    "compile": {
+      "command": [
+        "/Library/Java/JavaVirtualMachines/jdk-1.8.jdk/Contents/Home/bin/javac",
+        "-cp",
+        "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/.aideal_exec/thumbnailator_assertion_replay/A2/799f97588a41871ad22f-bd015033/library.jar",
+        "-d",
+        "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/.aideal_exec/thumbnailator_assertion_replay/A2/799f97588a41871ad22f-bd015033/classes",
+        "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/.aideal_exec/thumbnailator_assertion_replay/A2/799f97588a41871ad22f-bd015033/ApiTest.java"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "",
+      "wall_s": 0.316
+    },
+    "provenance": {
+      "jar_sha256": "301ec8c9293b0904addb916db64fdfb384b7ae8b76ccb09903e94a806fcea8b7",
+      "source_sha256": "d31afcba38e48ffa3a0ea36e12db1504454ec51750ba08ccdb1d477cce0ef740",
+      "path_replacements": [
+        {
+          "from": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/source/src/test/resources/Thumbnailator/grid.png",
+          "to": "fixtures/grid_png.png"
+        },
+        {
+          "from": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/source/src/test/resources/Thumbnailator/grid.jpg",
+          "to": "fixtures/grid_jpeg.jpg"
+        },
+        {
+          "from": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/source/src/test/resources/Exif/original.jpg",
+          "to": "fixtures/exif_jpeg.jpg"
+        },
+        {
+          "from": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/.aideal_exec/A2/output",
+          "to": "project/.aideal_exec/A2/output"
+        }
+      ],
+      "fixtures": {
+        "grid_png": {
+          "source": "source/src/test/resources/Thumbnailator/grid.png",
+          "sha256": "810ca84718b8e4e6dabd0c8178dc2e4909a92abb63e24831d22cef6d74853608"
+        },
+        "grid_jpeg": {
+          "source": "source/src/test/resources/Thumbnailator/grid.jpg",
+          "sha256": "b84a5be546bfd573b17045dd8e6459d3b265f464dcbe07b40f8205e4f9b305e2"
+        },
+        "exif_jpeg": {
+          "source": "source/src/test/resources/Exif/original.jpg",
+          "sha256": "24c144238c49076bfe6eed9a10ca6189fda5a8d9c2d9c43f68381f094806b7e7"
+        }
+      }
+    },
+    "variants": {
+      "assertions_off": {
+        "command": [
+          "/Library/Java/JavaVirtualMachines/jdk-1.8.jdk/Contents/Home/bin/java",
+          "-da",
+          "-Xmx256m",
+          "-Djava.awt.headless=true",
+          "-Djava.security.manager",
+          "-Djava.security.policy==/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/.aideal_exec/thumbnailator_assertion_replay/A2/799f97588a41871ad22f-bd015033/assertions_off.policy",
+          "-Djava.io.tmpdir=/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/.aideal_exec/thumbnailator_assertion_replay/A2/799f97588a41871ad22f-bd015033/assertions_off/tmp",
+          "-Duser.home=/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/.aideal_exec/thumbnailator_assertion_replay/A2/799f97588a41871ad22f-bd015033/assertions_off",
+          "-Daideal.replay.root=/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/.aideal_exec/thumbnailator_assertion_replay/A2/799f97588a41871ad22f-bd015033/assertions_off",
+          "-cp",
+          "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/.aideal_exec/thumbnailator_assertion_replay/A2/799f97588a41871ad22f-bd015033/classes:/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/.aideal_exec/thumbnailator_assertion_replay/A2/799f97588a41871ad22f-bd015033/library.jar",
+          "ApiTest"
+        ],
+        "exit_code": 1,
+        "stdout": "",
+        "stderr": "__RUN_ERR__ IllegalArgumentException: Specified format is not supported: superfakeformat\njava.lang.IllegalArgumentException: Specified format is not supported: superfakeformat\n\tat net.coobird.thumbnailator.Thumbnails$Builder.outputFormat(Unknown Source)\n\tat ApiTest.main(ApiTest.java:63)\n",
+        "wall_s": 0.484,
+        "outcome": "runtime_failure"
+      },
+      "assertions_on": {
+        "command": [
+          "/Library/Java/JavaVirtualMachines/jdk-1.8.jdk/Contents/Home/bin/java",
+          "-ea",
+          "-Xmx256m",
+          "-Djava.awt.headless=true",
+          "-Djava.security.manager",
+          "-Djava.security.policy==/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/.aideal_exec/thumbnailator_assertion_replay/A2/799f97588a41871ad22f-bd015033/assertions_on.policy",
+          "-Djava.io.tmpdir=/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/.aideal_exec/thumbnailator_assertion_replay/A2/799f97588a41871ad22f-bd015033/assertions_on/tmp",
+          "-Duser.home=/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/.aideal_exec/thumbnailator_assertion_replay/A2/799f97588a41871ad22f-bd015033/assertions_on",
+          "-Daideal.replay.root=/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/.aideal_exec/thumbnailator_assertion_replay/A2/799f97588a41871ad22f-bd015033/assertions_on",
+          "-cp",
+          "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/.aideal_exec/thumbnailator_assertion_replay/A2/799f97588a41871ad22f-bd015033/classes:/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/.aideal_exec/thumbnailator_assertion_replay/A2/799f97588a41871ad22f-bd015033/library.jar",
+          "ApiTest"
+        ],
+        "exit_code": 1,
+        "stdout": "",
+        "stderr": "__RUN_ERR__ IllegalArgumentException: Specified format is not supported: superfakeformat\njava.lang.IllegalArgumentException: Specified format is not supported: superfakeformat\n\tat net.coobird.thumbnailator.Thumbnails$Builder.outputFormat(Unknown Source)\n\tat ApiTest.main(ApiTest.java:63)\n",
+        "wall_s": 0.52,
+        "outcome": "runtime_failure"
+      }
+    }
+  },
+  "protocol": {
+    "version": "thumbnailator-assertion-replay-v1",
+    "java_version": "java version \"1.8.0_381\"\nJava(TM) SE Runtime Environment (build 1.8.0_381-b09)\nJava HotSpot(TM) 64-Bit Server VM (build 25.381-b09, mixed mode)\n",
+    "engine": {
+      "execute.py": "43a04b545ae0bd39836bb1d0075e46cca9d590e72cab3d55dd8f48ed8f4653ed",
+      "evidence.py": "6f8d7a7b73bba62487530085ed614303a9f886a1ba9962880f3041115e55110e",
+      "__main__.py": "9727d86212b02dabad98615dd102504a0d20aa0650a6cebc24cbdd82cb521e45"
+    },
+    "llm_calls": 0,
+    "code_fix_rounds": 0
+  },
+  "captured_native_source": {
+    "path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/docs/eval/A2/comprehension.json",
+    "sha256": "b6aa0c714a7c8a076f415ed0dae0e6b3126ad774bc94aab394ec1036974003d7"
+  },
+  "evidence_file": "cases/c5e297f32ee943059fdd7c6917cdcda70d53d83b59b43293c073293eec66dc5b.json",
+  "cache_compatibility": {
+    "executed_protocol": {
+      "version": "thumbnailator-assertion-replay-v1",
+      "java_version": "java version \"1.8.0_381\"\nJava(TM) SE Runtime Environment (build 1.8.0_381-b09)\nJava HotSpot(TM) 64-Bit Server VM (build 25.381-b09, mixed mode)\n",
+      "engine": {
+        "execute.py": "43a04b545ae0bd39836bb1d0075e46cca9d590e72cab3d55dd8f48ed8f4653ed",
+        "evidence.py": "6f8d7a7b73bba62487530085ed614303a9f886a1ba9962880f3041115e55110e",
+        "__main__.py": "9727d86212b02dabad98615dd102504a0d20aa0650a6cebc24cbdd82cb521e45"
+      },
+      "llm_calls": 0,
+      "code_fix_rounds": 0
+    },
+    "accepted_protocol": {
+      "version": "thumbnailator-assertion-replay-v1",
+      "java_version": "java version \"1.8.0_381\"\nJava(TM) SE Runtime Environment (build 1.8.0_381-b09)\nJava HotSpot(TM) 64-Bit Server VM (build 25.381-b09, mixed mode)\n",
+      "engine": {
+        "execute.py": "43a04b545ae0bd39836bb1d0075e46cca9d590e72cab3d55dd8f48ed8f4653ed",
+        "evidence.py": "ee78d13f0082ef471d4057877b459c8fce2aa7a2a417fa3b47505add08a61b61",
+        "__main__.py": "9727d86212b02dabad98615dd102504a0d20aa0650a6cebc24cbdd82cb521e45"
+      },
+      "llm_calls": 0,
+      "code_fix_rounds": 0
+    },
+    "prior_evidence": "cases/799f97588a41871ad22f29f6613eea261af3d4357cfa1761f3449be12c09e9a5.json",
+    "reason": "Only path-literal decoder changed; exact relocated source hash and mapping match. Execution engine, Java version, native row, library and fixture bytes match."
+  }
+}
