@@ -2,16 +2,17 @@
   "status": "partial",
   "expected": 235,
   "counts": {
-    "pending": 215,
-    "fail": 20
+    "pending": 213,
+    "fail": 22
   },
   "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
   "errors": [],
   "failure_categories": {
-    "llm-error": 18,
-    "unknown": 2
+    "llm-error": 19,
+    "unknown": 2,
+    "api-identity": 1
   },
-  "recorded_provider_errors_all_fingerprints": 65,
+  "recorded_provider_errors_all_fingerprints": 66,
   "observed_fingerprints": [
     "964a2ec0df73c3b53c3966c9213dedb1a12bf7e39ad1b8d7d1ddd561ba53212b",
     "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea"
@@ -7166,6 +7167,92 @@
       "source_other_sites": 0,
       "codebase_frames": null,
       "checkpoint_line": 255
+    },
+    {
+      "name": "early_predict",
+      "doc_source": "original",
+      "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "llm-error",
+            "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}"
+          }
+        ],
+        "error_category": "llm-error",
+        "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+        "code": "",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_early_predict/api_test.py",
+        "exit_code": null,
+        "stdout_tail": "",
+        "stderr_tail": ""
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 599.8,
+      "llm_calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "by_model": {},
+      "error_category": "llm-error",
+      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "locus": "",
+      "doc_chars": 95,
+      "document_sha256": "a8a744794d31dcc059f291262af21eb62932a7faf77a1145f8e6388481d9a473",
+      "source": "tslearn/tslearn/early_classification/early_classification.py:574",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 256
+    },
+    {
+      "name": "fix_force_all_finite_warning",
+      "doc_source": "original",
+      "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "infra",
+            "error": "missing module/import: cannot import name 'fix_force_all_finite_warning' from 'tslearn.utils' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tsl"
+          }
+        ],
+        "error_category": "infra",
+        "error": "missing module/import: cannot import name 'fix_force_all_finite_warning' from 'tslearn.utils' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/utils/__ini",
+        "code": "from tslearn.utils import fix_force_all_finite_warning\n\n# The function is a compatibility helper for scikit-learn's force_all_finite parameter,\n# which transitioned from accepting False to \"allow-nan\" in version 1.3.\ntry:\n    res = fix_force_all_finite_warning()\nexcept TypeError:\n    # Fallback in case it requires an explicit argument in some versions\n    res = fix_force_all_finite_warning(True)\n\n# Verify it returns one of the expected valid values for the force_all_finite parameter\nassert res in (False, \"allow-nan\", True), f\"Unexpected return value for force_all_finite: {res}\"\n\nprint(f\"__CHECK__ fix_force_all_finite_warning {res}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_fix_force_all_finite_warning/api_test.py",
+        "exit_code": 1,
+        "stdout_tail": "",
+        "stderr_tail": "__RUN_ERR__ ImportError: cannot import name 'fix_force_all_finite_warning' from 'tslearn.utils' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/utils/__init__.py)\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_fix_force_all_finite_warning/api_test.py\", line 56, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_fix_force_all_finite_warning/api_test.py\", line 51, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_fix_force_all_finite_warning/api_test.py\", line 34, in api_test\n    from tslearn.utils import fix_force_all_finite_warning\nImportError: cannot import name 'fix_force_all_finite_warning' from 'tslearn.utils' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/utils/__init__.py)\n"
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 345.8,
+      "llm_calls": 1,
+      "input_tokens": 1371,
+      "output_tokens": 3617,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1371,
+          "output_tokens": 3617
+        }
+      },
+      "error_category": "infra",
+      "error": "missing module/import: cannot import name 'fix_force_all_finite_warning' from 'tslearn.utils' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/utils/__ini",
+      "locus": "",
+      "doc_chars": 110,
+      "document_sha256": "6fad4e3636012ab089e8438f51ef4d50243c5881875f09bb473dc69758925a20",
+      "source": "tslearn/tslearn/utils/utils.py:24",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 257
     }
   ],
   "repair_summary": {
@@ -9397,18 +9484,31 @@
     },
     {
       "api": "early_predict",
-      "status": "pending",
-      "primary_category": "pending",
-      "runner_category": null,
-      "category_reason": "Not yet observed.",
-      "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
-      "provider_error_attempts": 0,
+      "status": "fail",
+      "primary_category": "llm-error",
+      "runner_category": "llm-error",
+      "category_reason": "Provider outcome; retry, never count as a documentation failure.",
+      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "source": "tslearn/tslearn/early_classification/early_classification.py:574",
+      "doc_chars": 95,
+      "checkpoint_attempts": 1,
+      "provider_error_attempts": 1,
       "provider_internal_retries": null,
       "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "attempt_history": [
+        {
+          "checkpoint_line": 256,
+          "status": "fail",
+          "error_category": "llm-error",
+          "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+          "attempts": 1,
+          "wall_s": 599.8,
+          "llm_calls": 0,
+          "input_tokens": 0,
+          "output_tokens": 0,
+          "pass_round": null
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -9530,18 +9630,31 @@
     },
     {
       "api": "fix_force_all_finite_warning",
-      "status": "pending",
-      "primary_category": "pending",
-      "runner_category": null,
-      "category_reason": "Not yet observed.",
-      "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "status": "fail",
+      "primary_category": "api-identity",
+      "runner_category": "infra",
+      "category_reason": "Import/member selection failed; the runner's infrastructure label needs review.",
+      "error": "missing module/import: cannot import name 'fix_force_all_finite_warning' from 'tslearn.utils' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/utils/__ini",
+      "source": "tslearn/tslearn/utils/utils.py:24",
+      "doc_chars": 110,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 257,
+          "status": "fail",
+          "error_category": "infra",
+          "error": "missing module/import: cannot import name 'fix_force_all_finite_warning' from 'tslearn.utils' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/utils/__ini",
+          "attempts": 1,
+          "wall_s": 345.8,
+          "llm_calls": 1,
+          "input_tokens": 1371,
+          "output_tokens": 3617,
+          "pass_round": null
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
