@@ -1,0 +1,93 @@
+{
+  "fingerprint": "6a4bc93b0dbcd83bbc280e64ae341bfd28b8ea7101bfea553fbe3965f637babf",
+  "identity": {
+    "baseline_fingerprint": "366e0c64f58ebac296ba554d7ae3f9d9ca2a6b85bf15faf250291bc1c2198bb9",
+    "baseline_result_sha256": "cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab",
+    "api": "NumPyRandom",
+    "script_sha256": "be853729a1b437c4b7efdad3feb67487a004ced5224d860183c33a8c0f4ade54",
+    "prompt_sha256": {
+      "comprehension_write_exec": "f557fcc5d4534cdfa6e596066b2106fd4d9f1ed459be8afccb8676070275c501",
+      "deep_dive": "bcaacb96d675d8e898784eea65319e5ded213c06eb8578f5e40627fd3adce504"
+    },
+    "current_effective_config_sha256": "8f538c73b1313fa0053891b34eebf92d5423a22486707c2010f1cdbca48fc715",
+    "current_profile_sha256": "a9124a6c32a7bd4813d62b15ebee0bd7810d32a3f1e770cc67b21aac37b28a46",
+    "upstream_test_context": {
+      "sha256": "71eff9e405056f9b6670608d1c983b7c14f9ac268ae1869c767bf8d06b8ff241",
+      "file_count": 21
+    },
+    "context_engine": {
+      "deepdive.py": "11b4bd8f2c2761c17c43d43a4747ee3660173c94c1a621811c8f720e13898c73",
+      "docfix.py": "1d2f7cf6acdf9455ede12acdf35dcb93d91aa5bc7fe05514fbf783a5eca877b9"
+    },
+    "protocol_sha256": "b6caeb1e279ff5f30bd90547071380caf7efd19a54ea2f5972fddd266f91b5a2",
+    "source": {
+      "sha256": "90ffcaf2949df6e6efb7c82e0eb692117803de7fbb7c5d61178bc44fd411cdfc",
+      "file_count": 62
+    },
+    "document_sha256": "99563bb64e9b9f98f0fec08a242860867eed80fba8e6adf21ddee63e26efb4ff",
+    "script_binding": "retained_unbound_legacy",
+    "baseline_compatibility": null,
+    "mode": "source",
+    "max_code_fix_rounds": 5,
+    "stuck_rounds": 2,
+    "runner_sha256": "0b5d7370459006a623d7084ab5c63a2ecdaa953fc2494a65627175671b994abf",
+    "engine_sha256": "6d9f4310015755d44f7e002ef5add7fb29dfaad0685c7e9d61ca495c1cddeaf1",
+    "validation_sha256": "6b57fe6df9a3049e7b76fbe76ca8042f885bcd507d87040a28032401879cdeb9",
+    "compatibility_adapter_sha256": "86d978d07814e35310da027da25d1e59bafd84dd350be5f66dc278050b1d43f9"
+  },
+  "initial": {
+    "status": "fail",
+    "category": "runtime",
+    "error": "AssertionError: The documented contract is insufficient to verify the result",
+    "code": "\"\"\"Shared infrastructure-only scaffold for tslearn's full-surface 2x2.\n\nThis exact file is used in A1, A2, B1, and B2. It intentionally imports no\ntested tslearn API because discovering the public import is part of the\naudience task in every cell.\n\"\"\"\n\nfrom pathlib import Path\nimport sys\nimport traceback\n\nimport numpy as np\n\n\ndef run():\n    # Typed repository fixture path and condition-specific output directory:\n    trace_npz = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/tslearn/tslearn/.cached_datasets/Trace.npz\"\n    output_dir = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_exec/A2/output\"\n\n    # pre-loaded typed inputs (comprehension.execute.preamble)\n    Path(output_dir).mkdir(parents=True, exist_ok=True)\n    _trace = np.load(trace_npz)\n    _balanced = np.array([0, 4, 1, 17, 3, 13, 2, 5], dtype=int)\n    X = _trace[\"X_train\"][_balanced, :40, :]  # type: balanced time-series dataset ndarray (8, 40, 1)\n    X2 = _trace[\"X_test\"][:4, :32, :]  # type: second dataset ndarray (4, 32, 1)\n    s1 = X[0].ravel()  # type: 1-D series ndarray (40,)\n    s2 = X[1].ravel()  # type: 1-D series ndarray (40,)\n    y = _trace[\"y_train\"][_balanced]  # type: four balanced labels, two examples per class\n    tiny_matrix = np.arange(12.0).reshape(3, 4)  # type: deterministic numeric matrix\n\n    # Keep audience imports local so they cannot shadow fixture construction.\n    def api_test():\n        # TODO API_TEST_START\n        from tslearn.backend.numpy_backend import NumPyRandom\n\n        # Instantiate the NumPy random helper as per the documentation\n        np_random = NumPyRandom()\n\n        # The documentation explicitly omits specific random generation methods and warns against \n        # inventing or assuming method signatures. Therefore, there is no documented state or \n        # behavior that can be non-tautologically verified.\n        print(f\"__CHECK__ NumPyRandom {type(np_random).__name__}\")\n        assert False, \"The documented contract is insufficient to verify the result\"\n        # TODO API_TEST_END\n        pass\n\n    api_test()\n\n\nif __name__ == \"__main__\":\n    try:\n        run()\n        print(\"__DONE__\")\n    except Exception as exc:  # noqa: BLE001 - execution boundary\n        sys.stderr.write(\"__RUN_ERR__ \" + type(exc).__name__ + \": \" + str(exc) + \"\\n\")\n        traceback.print_exc()\n        raise SystemExit(1)\n"
+  },
+  "events": [
+    {
+      "status": "pass",
+      "category": null,
+      "error": null,
+      "code": "\"\"\"Shared infrastructure-only scaffold for tslearn's full-surface 2x2.\n\nThis exact file is used in A1, A2, B1, and B2. It intentionally imports no\ntested tslearn API because discovering the public import is part of the\naudience task in every cell.\n\"\"\"\n\nfrom pathlib import Path\nimport sys\nimport traceback\n\nimport numpy as np\n\n\ndef run():\n    # Typed repository fixture path and condition-specific output directory:\n    trace_npz = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/tslearn/tslearn/.cached_datasets/Trace.npz\"\n    output_dir = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/b3ac65fea5c3c3e195522ed72d5a44abd84c711f562f5b0ed8ee26b13b902d5f/round_01/attempt_0001/output\"\n\n    # pre-loaded typed inputs (comprehension.execute.preamble)\n    Path(output_dir).mkdir(parents=True, exist_ok=True)\n    _trace = np.load(trace_npz)\n    _balanced = np.array([0, 4, 1, 17, 3, 13, 2, 5], dtype=int)\n    X = _trace[\"X_train\"][_balanced, :40, :]  # type: balanced time-series dataset ndarray (8, 40, 1)\n    X2 = _trace[\"X_test\"][:4, :32, :]  # type: second dataset ndarray (4, 32, 1)\n    s1 = X[0].ravel()  # type: 1-D series ndarray (40,)\n    s2 = X[1].ravel()  # type: 1-D series ndarray (40,)\n    y = _trace[\"y_train\"][_balanced]  # type: four balanced labels, two examples per class\n    tiny_matrix = np.arange(12.0).reshape(3, 4)  # type: deterministic numeric matrix\n\n    # Keep audience imports local so they cannot shadow fixture construction.\n    def api_test():\n        # TODO API_TEST_START\n        from tslearn.backend.numpy_backend import NumPyRandom\n        import numpy as np\n\n        np_random = NumPyRandom()\n        np.random.seed(42)\n\n        rand_out = np_random.rand(2, 3)\n        randint_out = np_random.randint(0, 10, size=(4,))\n        randn_out = np_random.randn(1, 5)\n\n        assert isinstance(rand_out, np.ndarray), \"Expected numpy ndarray from rand()\"\n        assert rand_out.shape == (2, 3), f\"Expected shape (2, 3), got {rand_out.shape}\"\n        assert randint_out.shape == (4,), f\"Expected shape (4,), got {randint_out.shape}\"\n        assert randn_out.shape == (1, 5), f\"Expected shape (1, 5), got {randn_out.shape}\"\n\n        print(f\"__CHECK__ NumPyRandom {rand_out.shape}_{randint_out.shape}_{randn_out.shape}\")\n        # TODO API_TEST_END\n        pass\n\n    api_test()\n\n\nif __name__ == \"__main__\":\n    try:\n        run()\n        print(\"__DONE__\")\n    except Exception as exc:  # noqa: BLE001 - execution boundary\n        sys.stderr.write(\"__RUN_ERR__ \" + type(exc).__name__ + \": \" + str(exc) + \"\\n\")\n        traceback.print_exc()\n        raise SystemExit(1)\n",
+      "native_result": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/b3ac65fea5c3c3e195522ed72d5a44abd84c711f562f5b0ed8ee26b13b902d5f/round_01/attempt_0001/native_result.json",
+      "script_sha256": "36698730d214e5a47496d49492327d2e9f571ec5e6f38f18a6da99d6d7476174",
+      "wall_s": 10.7,
+      "llm_calls": 1,
+      "input_tokens": 3141,
+      "output_tokens": 990,
+      "code_fix_round": 1
+    }
+  ],
+  "rounds": [
+    {
+      "status": "pass",
+      "category": null,
+      "error": null,
+      "code": "\"\"\"Shared infrastructure-only scaffold for tslearn's full-surface 2x2.\n\nThis exact file is used in A1, A2, B1, and B2. It intentionally imports no\ntested tslearn API because discovering the public import is part of the\naudience task in every cell.\n\"\"\"\n\nfrom pathlib import Path\nimport sys\nimport traceback\n\nimport numpy as np\n\n\ndef run():\n    # Typed repository fixture path and condition-specific output directory:\n    trace_npz = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/tslearn/tslearn/.cached_datasets/Trace.npz\"\n    output_dir = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/b3ac65fea5c3c3e195522ed72d5a44abd84c711f562f5b0ed8ee26b13b902d5f/round_01/attempt_0001/output\"\n\n    # pre-loaded typed inputs (comprehension.execute.preamble)\n    Path(output_dir).mkdir(parents=True, exist_ok=True)\n    _trace = np.load(trace_npz)\n    _balanced = np.array([0, 4, 1, 17, 3, 13, 2, 5], dtype=int)\n    X = _trace[\"X_train\"][_balanced, :40, :]  # type: balanced time-series dataset ndarray (8, 40, 1)\n    X2 = _trace[\"X_test\"][:4, :32, :]  # type: second dataset ndarray (4, 32, 1)\n    s1 = X[0].ravel()  # type: 1-D series ndarray (40,)\n    s2 = X[1].ravel()  # type: 1-D series ndarray (40,)\n    y = _trace[\"y_train\"][_balanced]  # type: four balanced labels, two examples per class\n    tiny_matrix = np.arange(12.0).reshape(3, 4)  # type: deterministic numeric matrix\n\n    # Keep audience imports local so they cannot shadow fixture construction.\n    def api_test():\n        # TODO API_TEST_START\n        from tslearn.backend.numpy_backend import NumPyRandom\n        import numpy as np\n\n        np_random = NumPyRandom()\n        np.random.seed(42)\n\n        rand_out = np_random.rand(2, 3)\n        randint_out = np_random.randint(0, 10, size=(4,))\n        randn_out = np_random.randn(1, 5)\n\n        assert isinstance(rand_out, np.ndarray), \"Expected numpy ndarray from rand()\"\n        assert rand_out.shape == (2, 3), f\"Expected shape (2, 3), got {rand_out.shape}\"\n        assert randint_out.shape == (4,), f\"Expected shape (4,), got {randint_out.shape}\"\n        assert randn_out.shape == (1, 5), f\"Expected shape (1, 5), got {randn_out.shape}\"\n\n        print(f\"__CHECK__ NumPyRandom {rand_out.shape}_{randint_out.shape}_{randn_out.shape}\")\n        # TODO API_TEST_END\n        pass\n\n    api_test()\n\n\nif __name__ == \"__main__\":\n    try:\n        run()\n        print(\"__DONE__\")\n    except Exception as exc:  # noqa: BLE001 - execution boundary\n        sys.stderr.write(\"__RUN_ERR__ \" + type(exc).__name__ + \": \" + str(exc) + \"\\n\")\n        traceback.print_exc()\n        raise SystemExit(1)\n",
+      "native_result": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/b3ac65fea5c3c3e195522ed72d5a44abd84c711f562f5b0ed8ee26b13b902d5f/round_01/attempt_0001/native_result.json",
+      "script_sha256": "36698730d214e5a47496d49492327d2e9f571ec5e6f38f18a6da99d6d7476174",
+      "wall_s": 10.7,
+      "llm_calls": 1,
+      "input_tokens": 3141,
+      "output_tokens": 990,
+      "code_fix_round": 1
+    }
+  ],
+  "status": "recovered_native",
+  "diagnosis": {
+    "api": "NumPyRandom",
+    "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/b3ac65fea5c3c3e195522ed72d5a44abd84c711f562f5b0ed8ee26b13b902d5f/deepdive/NumPyRandom.md",
+    "model": "google:gemini-3.1-pro-preview",
+    "tokens": {
+      "in": 2504,
+      "out": 2896
+    },
+    "wall_s": 26.1,
+    "report_text": "Write the report in EXACTLY these layers:\n\nL0 AUDIENCE + TESTABILITY CLASSIFICATION\nThis API is classified as INTERNAL/FRAMEWORK. It is a backend-specific helper class designed to be instantiated internally by `NumPyBackend` (as seen in `tslearn/tslearn/backend/numpy_backend.py:29`) to abstract random number generation, rather than being exposed for direct use by end-users. \n\nIts standalone testability is TESTABLE ONLY WITH EXPLICIT LOW-LEVEL CONSTRUCTION. While it is not part of the primary public API, the class can be explicitly imported from `tslearn.backend.numpy_backend` and instantiated directly with no arguments to test its bound methods. It should be excluded from a main user-facing benchmark denominator.\n\nL1 PURPOSE\n`NumPyRandom` is a backend abstraction component that encapsulates random number generation utilities for the NumPy computational backend in `tslearn`. It sits within the library's backend dispatch system, providing a unified interface (`rand`, `randint`, `randn`) so that higher-level time-series algorithms can generate random numbers agnostically without hardcoding the underlying array library (e.g., NumPy vs. PyTorch).\n\nL2 CONTRACT\n- **Receiver**: N/A (Constructor for `NumPyRandom`).\n- **How to Obtain**: Import from `tslearn.backend.numpy_backend` and instantiate directly via `NumPyRandom()`, or access it via the `.random` attribute of an instantiated `NumPyBackend`.\n- **Parameters**: None.\n- **Return Value**: An instance of `NumPyRandom`.\n- **Visible State/Attributes**: Exposes `rand`, `randint`, and `randn` attributes, which are bound directly to their `numpy.random` counterparts.\n- **Thread-safety/Laziness**: Thread-safety depends entirely on the underlying global `numpy.random` state.\n\nL3 MECHANICS\nThe `__init__` method performs no complex logic. It simply assigns the global NumPy random functions `_np.random.rand`, `_np.random.randint`, and `_np.random.randn` to instance attributes of the same name (lines 134-136). It maintains no internal state of its own and delegates all random generation directly to NumPy.\n\nL4 CORRECT MINIMAL USAGE\n```python\nfrom tslearn.backend.numpy_backend import NumPyRandom\nimport numpy as np\n\n# 1. Construct the low-level helper explicitly\nnp_random = NumPyRandom()\n\n# 2. Set the global numpy seed for determinism, as NumPyRandom \n# delegates directly to numpy.random\nnp.random.seed(42)\n\n# 3. Exercise the bound methods to prove they delegate correctly\nrand_out = np_random.rand(2, 2)\nrandint_out = np_random.randint(0, 10, size=(3,))\nrandn_out = np_random.randn(1, 4)\n\n# 4. Assert falsifiable properties of the delegated outputs\nassert isinstance(rand_out, np.ndarray), \"Expected numpy ndarray from rand()\"\nassert rand_out.shape == (2, 2), \"Expected shape (2, 2)\"\nassert randint_out.shape == (3,), \"Expected shape (3,)\"\nassert randn_out.shape == (1, 4), \"Expected shape (1, 4)\"\n\nprint(f\"NumPyRandom verified. rand_out shape: {rand_out.shape}, randint_out shape: {randint_out.shape}\")\n```\n\nL5 FAILURE FORENSICS\nThe recorded failure `AssertionError: The documented contract is insufficient to verify the result` occurred because the previous test attempt (as reflected in the documentation's \"Valid Call Patterns\") merely instantiated the class and checked its type (`assert isinstance(np_random, NumPyRandom)`). It failed to exercise the actual functionality of the class\u2014specifically, invoking the `rand`, `randint`, and `randn` methods bound in the constructor\u2014which is required by the harness to prove the API works as intended and produces valid outputs.\n\nL6 SELF-ASSESSMENT\n- INFERENCE: `_np` in the source code is an alias for `numpy`.\n- INFERENCE: The bound methods (`rand`, `randint`, `randn`) accept the standard arguments of their `numpy.random` counterparts, as they are direct references to them.\n- Confidence in L2: 10/10 - The contract is trivially visible in the provided `__init__` source code.\n- Confidence in L3: 10/10 - The mechanics are purely assignment of standard library functions to instance attributes.\n- Confidence in L4: 10/10 - The usage snippet correctly instantiates the class and verifies the delegated methods using standard NumPy conventions.",
+    "report_sha256": "115b31e33707585ea53e26b31c2a6af4cf143e404bd42e48248bc0c5f05c25d5"
+  },
+  "max_rounds": 5,
+  "stuck_threshold": 2,
+  "stop_reason": null,
+  "semantic_validation": "needs_independent_review",
+  "headline_credit": false,
+  "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/b3ac65fea5c3c3e195522ed72d5a44abd84c711f562f5b0ed8ee26b13b902d5f/recovery.json"
+}

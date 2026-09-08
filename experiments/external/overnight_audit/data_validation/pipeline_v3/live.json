@@ -1,12 +1,17 @@
 {
   "protocol": "aideal-separated-recovery-v3",
-  "updated_at": "2026-09-08T13:54:44.786731-07:00",
+  "updated_at": "2026-09-08T14:09:45.541823-07:00",
   "scheduler": {
     "state": "post_B2_recovery",
     "repositories": {
-      "mir_eval": "priority complete",
-      "thumbnailator": "priority complete",
-      "tslearn": "FileNotFoundError: [Errno 2] No such file or directory: '/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A2/experiments/tslearn/docs/eval/A2/comprehension.json'"
+      "mir_eval": {
+        "recovered_native": 11
+      },
+      "thumbnailator": {
+        "recovered_native": 8,
+        "stuck": 2
+      },
+      "tslearn": "FileNotFoundError: [Errno 2] No such file or directory: '/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/comprehension.json'"
     },
     "max_parallel": 1,
     "scheduling": "independent repository admission; source retries do not depend on A1",
@@ -25,7 +30,7 @@
       "native_v2": {
         "protocol": "aideal-a2-repair-v2",
         "repo": "mir_eval",
-        "updated_at": "2026-09-08T13:54:26.860855-07:00",
+        "updated_at": "2026-09-08T14:09:27.714056-07:00",
         "B1": "omitted by user; original README has no repair loop",
         "cells": {
           "A1": {
@@ -39,7 +44,7 @@
               "infra": 2
             },
             "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_A1/experiments/external/mir_eval/.aideal_exec/A1/comprehension_progress.jsonl",
-            "source_sha256": "b61ece3b3f79f05d4b8d372980501340f7b8a9e6b0bbf2c1473d6e230f973922"
+            "source_sha256": "6f18f99533f3df1dd0616a5281526ac2c5de4232acc6ddd32f0951d714b6ad75"
           },
           "A2": {
             "state": "native complete",
@@ -2002,41 +2007,177 @@
             "evidence_file": "cases/98a467ad87f941d897a0654dbde9db71af15c20ed3e34d93c5e21e32643230ff.json"
           },
           "precision_recall_f1_overlap": {
-            "status": "pending"
+            "status": "recovered_native",
+            "code_fix_rounds": 1,
+            "provider_events": 0,
+            "diagnostic_block_events": 0,
+            "stop_reason": null,
+            "identity": {
+              "baseline_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+              "baseline_result_sha256": "97f7083e443691efc6aa2d86f763a8397b04aaae71dcda38104b230fc31719e4",
+              "api": "precision_recall_f1_overlap",
+              "script_sha256": "063f05970879118d005528dc3f0a9800189579c80cbb7c49afb85630eaf42d0a",
+              "prompt_sha256": {
+                "comprehension_write_exec": "f557fcc5d4534cdfa6e596066b2106fd4d9f1ed459be8afccb8676070275c501",
+                "deep_dive": "bcaacb96d675d8e898784eea65319e5ded213c06eb8578f5e40627fd3adce504"
+              },
+              "current_effective_config_sha256": "77981af87cc53634ccb0f62a5f6073c77fe9359ff5ee5e540b7049c16268ef98",
+              "current_profile_sha256": "560a6da75cd464fd3c47d55a08fd848f1f7576f843ac7fca551f7afae3bdd4b0",
+              "upstream_test_context": {
+                "sha256": "f24ad3849965243154e9c0f1502af354540a17ca401734f96b806ee34a5163a4",
+                "file_count": 19
+              },
+              "context_engine": {
+                "deepdive.py": "11b4bd8f2c2761c17c43d43a4747ee3660173c94c1a621811c8f720e13898c73",
+                "docfix.py": "1d2f7cf6acdf9455ede12acdf35dcb93d91aa5bc7fe05514fbf783a5eca877b9"
+              },
+              "protocol_sha256": "b6caeb1e279ff5f30bd90547071380caf7efd19a54ea2f5972fddd266f91b5a2",
+              "source": {
+                "sha256": "30c5d1632077b02939819dbb8dc76fa72096d5a5f5b45e77468b96d14050d705",
+                "file_count": 19
+              },
+              "document_sha256": "16378129a2dcc44df1ea2e71a2cfbf3ffb532b635b367e5feb2e9e58602a8cb8",
+              "script_binding": "retained_matches_native_failure_prefix",
+              "baseline_compatibility": null,
+              "mode": "source",
+              "max_code_fix_rounds": 5,
+              "stuck_rounds": 2,
+              "runner_sha256": "0b5d7370459006a623d7084ab5c63a2ecdaa953fc2494a65627175671b994abf",
+              "engine_sha256": "6d9f4310015755d44f7e002ef5add7fb29dfaad0685c7e9d61ca495c1cddeaf1",
+              "validation_sha256": "6b57fe6df9a3049e7b76fbe76ca8042f885bcd507d87040a28032401879cdeb9",
+              "compatibility_adapter_sha256": "86d978d07814e35310da027da25d1e59bafd84dd350be5f66dc278050b1d43f9"
+            },
+            "wall_s": 31.8,
+            "llm_calls": 1,
+            "input_tokens": 6077,
+            "output_tokens": 4881,
+            "cost_scope": "recorded code proposals only; diagnosis/provider evidence retained separately",
+            "retry_after": 0,
+            "evidence_file": "cases/5cdc828a3cb84967d67e89b77f478f08e24b4255bea080729b4602d79c4f9ae8.json"
           },
           "ticker_pitch": {
-            "status": "pending"
+            "status": "recovered_native",
+            "code_fix_rounds": 1,
+            "provider_events": 0,
+            "diagnostic_block_events": 0,
+            "stop_reason": null,
+            "identity": {
+              "baseline_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+              "baseline_result_sha256": "97f7083e443691efc6aa2d86f763a8397b04aaae71dcda38104b230fc31719e4",
+              "api": "ticker_pitch",
+              "script_sha256": "7b6164f0605b9fefc68d48da08dbfd700488e78000c5c98f32dde8636d2502ec",
+              "prompt_sha256": {
+                "comprehension_write_exec": "f557fcc5d4534cdfa6e596066b2106fd4d9f1ed459be8afccb8676070275c501",
+                "deep_dive": "bcaacb96d675d8e898784eea65319e5ded213c06eb8578f5e40627fd3adce504"
+              },
+              "current_effective_config_sha256": "77981af87cc53634ccb0f62a5f6073c77fe9359ff5ee5e540b7049c16268ef98",
+              "current_profile_sha256": "560a6da75cd464fd3c47d55a08fd848f1f7576f843ac7fca551f7afae3bdd4b0",
+              "upstream_test_context": {
+                "sha256": "f24ad3849965243154e9c0f1502af354540a17ca401734f96b806ee34a5163a4",
+                "file_count": 19
+              },
+              "context_engine": {
+                "deepdive.py": "11b4bd8f2c2761c17c43d43a4747ee3660173c94c1a621811c8f720e13898c73",
+                "docfix.py": "1d2f7cf6acdf9455ede12acdf35dcb93d91aa5bc7fe05514fbf783a5eca877b9"
+              },
+              "protocol_sha256": "b6caeb1e279ff5f30bd90547071380caf7efd19a54ea2f5972fddd266f91b5a2",
+              "source": {
+                "sha256": "30c5d1632077b02939819dbb8dc76fa72096d5a5f5b45e77468b96d14050d705",
+                "file_count": 19
+              },
+              "document_sha256": "16378129a2dcc44df1ea2e71a2cfbf3ffb532b635b367e5feb2e9e58602a8cb8",
+              "script_binding": "retained_matches_native_failure_prefix",
+              "baseline_compatibility": null,
+              "mode": "source",
+              "max_code_fix_rounds": 5,
+              "stuck_rounds": 2,
+              "runner_sha256": "0b5d7370459006a623d7084ab5c63a2ecdaa953fc2494a65627175671b994abf",
+              "engine_sha256": "6d9f4310015755d44f7e002ef5add7fb29dfaad0685c7e9d61ca495c1cddeaf1",
+              "validation_sha256": "6b57fe6df9a3049e7b76fbe76ca8042f885bcd507d87040a28032401879cdeb9",
+              "compatibility_adapter_sha256": "86d978d07814e35310da027da25d1e59bafd84dd350be5f66dc278050b1d43f9"
+            },
+            "wall_s": 10.3,
+            "llm_calls": 1,
+            "input_tokens": 3465,
+            "output_tokens": 1049,
+            "cost_scope": "recorded code proposals only; diagnosis/provider evidence retained separately",
+            "retry_after": 0,
+            "evidence_file": "cases/3547dfad8ca4e63bc6ddc89dbf8a501be49d8a866ba45b3828f1a8412c0a4757.json"
           },
           "tmeasure": {
-            "status": "pending"
+            "status": "recovered_native",
+            "code_fix_rounds": 1,
+            "provider_events": 0,
+            "diagnostic_block_events": 0,
+            "stop_reason": null,
+            "identity": {
+              "baseline_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+              "baseline_result_sha256": "97f7083e443691efc6aa2d86f763a8397b04aaae71dcda38104b230fc31719e4",
+              "api": "tmeasure",
+              "script_sha256": "af7856db7f93b859abd6a2c6fd5f3074cdcf7ed92dd8355acd4606cba54af1bc",
+              "prompt_sha256": {
+                "comprehension_write_exec": "f557fcc5d4534cdfa6e596066b2106fd4d9f1ed459be8afccb8676070275c501",
+                "deep_dive": "bcaacb96d675d8e898784eea65319e5ded213c06eb8578f5e40627fd3adce504"
+              },
+              "current_effective_config_sha256": "77981af87cc53634ccb0f62a5f6073c77fe9359ff5ee5e540b7049c16268ef98",
+              "current_profile_sha256": "560a6da75cd464fd3c47d55a08fd848f1f7576f843ac7fca551f7afae3bdd4b0",
+              "upstream_test_context": {
+                "sha256": "f24ad3849965243154e9c0f1502af354540a17ca401734f96b806ee34a5163a4",
+                "file_count": 19
+              },
+              "context_engine": {
+                "deepdive.py": "11b4bd8f2c2761c17c43d43a4747ee3660173c94c1a621811c8f720e13898c73",
+                "docfix.py": "1d2f7cf6acdf9455ede12acdf35dcb93d91aa5bc7fe05514fbf783a5eca877b9"
+              },
+              "protocol_sha256": "b6caeb1e279ff5f30bd90547071380caf7efd19a54ea2f5972fddd266f91b5a2",
+              "source": {
+                "sha256": "30c5d1632077b02939819dbb8dc76fa72096d5a5f5b45e77468b96d14050d705",
+                "file_count": 19
+              },
+              "document_sha256": "16378129a2dcc44df1ea2e71a2cfbf3ffb532b635b367e5feb2e9e58602a8cb8",
+              "script_binding": "retained_matches_native_failure_prefix",
+              "baseline_compatibility": null,
+              "mode": "source",
+              "max_code_fix_rounds": 5,
+              "stuck_rounds": 2,
+              "runner_sha256": "0b5d7370459006a623d7084ab5c63a2ecdaa953fc2494a65627175671b994abf",
+              "engine_sha256": "6d9f4310015755d44f7e002ef5add7fb29dfaad0685c7e9d61ca495c1cddeaf1",
+              "validation_sha256": "6b57fe6df9a3049e7b76fbe76ca8042f885bcd507d87040a28032401879cdeb9",
+              "compatibility_adapter_sha256": "86d978d07814e35310da027da25d1e59bafd84dd350be5f66dc278050b1d43f9"
+            },
+            "wall_s": 11.3,
+            "llm_calls": 1,
+            "input_tokens": 4574,
+            "output_tokens": 1145,
+            "cost_scope": "recorded code proposals only; diagnosis/provider evidence retained separately",
+            "retry_after": 0,
+            "evidence_file": "cases/e5a21dfb99c8c9d82d29ca9c4a9dd175910779e623ad176e6d8e12333f71c64f.json"
           }
         },
         "headline_credit": false,
         "semantic_validation": "needs_independent_review",
-        "updated_at": "2026-09-08T13:54:35.841713-07:00",
+        "updated_at": "2026-09-08T13:59:50.878776-07:00",
         "statuses": {
-          "recovered_native": 8,
-          "pending": 3
+          "recovered_native": 11
         },
         "native_recovery_by_round": {
           "0": 0,
-          "1": 6,
-          "2": 8,
-          "3": 8,
-          "4": 8,
-          "5": 8
+          "1": 9,
+          "2": 11,
+          "3": 11,
+          "4": 11,
+          "5": 11
         },
         "observed_code_proposal_totals": {
-          "code_fix_rounds": 10,
+          "code_fix_rounds": 13,
           "provider_events": 0,
           "diagnostic_block_events": 0,
-          "wall_s": 204.4,
-          "llm_calls": 10,
-          "input_tokens": 44662,
-          "output_tokens": 24255
+          "wall_s": 257.8,
+          "llm_calls": 13,
+          "input_tokens": 58778,
+          "output_tokens": 31330
         },
-        "snapshot": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v3/mir_eval/97f7083e443691efc6aa2d86f763a8397b04aaae71dcda38104b230fc31719e4/project",
-        "active_api": "precision_recall_f1_overlap"
+        "snapshot": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v3/mir_eval/97f7083e443691efc6aa2d86f763a8397b04aaae71dcda38104b230fc31719e4/project"
       },
       "comparison": {
         "schema": 1,
@@ -2062,12 +2203,12 @@
         "F_A2": 13,
         "F_B2": 11,
         "B2_native_pass": 137,
-        "S_B2_recovered": 8,
-        "B2_plus_S_B2_composite_native_pass": 145,
+        "S_B2_recovered": 11,
+        "B2_plus_S_B2_composite_native_pass": 148,
         "on_F_A2": {
           "S_A2_recovered": 13,
           "B2_pass": 6,
-          "B2_plus_S_B2_pass": 12
+          "B2_plus_S_B2_pass": 13
         },
         "apis": {
           "IntervalFormatter": {
@@ -2920,10 +3061,10 @@
             "A2": "pass",
             "S_A2": "not_in_cohort",
             "B2": "fail",
-            "S_B2": "pending",
+            "S_B2": "recovered_native",
             "B2_regression": true,
             "S_A2_rounds": null,
-            "S_B2_rounds": null
+            "S_B2_rounds": 1
           },
           "quality_to_bitmap": {
             "A2": "pass",
@@ -3181,10 +3322,10 @@
             "A2": "fail",
             "S_A2": "recovered_native",
             "B2": "fail",
-            "S_B2": "pending",
+            "S_B2": "recovered_native",
             "B2_regression": false,
             "S_A2_rounds": 1,
-            "S_B2_rounds": null
+            "S_B2_rounds": 1
           },
           "time_frequency": {
             "A2": "pass",
@@ -3199,10 +3340,10 @@
             "A2": "pass",
             "S_A2": "not_in_cohort",
             "B2": "fail",
-            "S_B2": "pending",
+            "S_B2": "recovered_native",
             "B2_regression": true,
             "S_A2_rounds": null,
-            "S_B2_rounds": null
+            "S_B2_rounds": 1
           },
           "to_cent_voicing": {
             "A2": "pass",
@@ -3410,7 +3551,7 @@
       "native_v2": {
         "protocol": "aideal-a2-repair-v2",
         "repo": "thumbnailator",
-        "updated_at": "2026-09-08T13:54:39.614310-07:00",
+        "updated_at": "2026-09-08T14:09:40.684193-07:00",
         "B1": "omitted by user; original README has no repair loop",
         "cells": {
           "A1": {
@@ -3423,7 +3564,7 @@
               "llm-error": 3
             },
             "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A1/experiments/external/thumbnailator/.aideal_exec/A1/comprehension_progress.jsonl",
-            "source_sha256": "150b945f6dad5135835a20ee1127d53997f548b184e10f8add6d2f90f0678a26"
+            "source_sha256": "ed14ee693269e4582e2cc0dcd3ec5511275b493d4d66bb6c52a1314290a86559"
           },
           "A2": {
             "state": "native complete",
@@ -6344,36 +6485,127 @@
             "evidence_file": "cases/aba2dab196002ea19a95c4c2c6517a45aa81a68c41dab1acabe1574c1d096f1c.json"
           },
           "getSourceRegion": {
-            "status": "pending"
+            "status": "stuck",
+            "code_fix_rounds": 2,
+            "provider_events": 0,
+            "diagnostic_block_events": 0,
+            "stop_reason": "2 consecutive equal category/error-prefix observations",
+            "identity": {
+              "baseline_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced",
+              "baseline_result_sha256": "cbb0fa561b1ec94f166769f6529b72168da91317d117dd8fbe29f492eafc092e",
+              "api": "getSourceRegion",
+              "script_sha256": "0635f212f96d884de2c7d54886b7e7562534048c930040bd164faf3576fe8e66",
+              "prompt_sha256": {
+                "comprehension_write_exec": "f557fcc5d4534cdfa6e596066b2106fd4d9f1ed459be8afccb8676070275c501",
+                "deep_dive": "bcaacb96d675d8e898784eea65319e5ded213c06eb8578f5e40627fd3adce504"
+              },
+              "current_effective_config_sha256": "fe8f26ff850b1cf12154c95ed30eddc6f7ea3f6701e941a01af16a1afbf52e49",
+              "current_profile_sha256": "3634d4cf658d0e7f1a55582155ac335e419ed1ef0f6a1fe3f6cd84ea248e407a",
+              "upstream_test_context": {
+                "sha256": "3c7bd8eeb02331e4f7861881eaa727d35f017400d43dced6a28acf2bcc718e6c",
+                "file_count": 47
+              },
+              "context_engine": {
+                "deepdive.py": "11b4bd8f2c2761c17c43d43a4747ee3660173c94c1a621811c8f720e13898c73",
+                "docfix.py": "1d2f7cf6acdf9455ede12acdf35dcb93d91aa5bc7fe05514fbf783a5eca877b9"
+              },
+              "protocol_sha256": "b6caeb1e279ff5f30bd90547071380caf7efd19a54ea2f5972fddd266f91b5a2",
+              "source": {
+                "sha256": "1821f27510c501483e6f087ea458fdaa8c2464c67043c694918c3abe7836a131",
+                "file_count": 79
+              },
+              "document_sha256": "dcf0cc033d1aef6b9b140702bf5963fdb7a0017587cd72fd3f7d727416d16eff",
+              "script_binding": "retained_matches_native_failure_prefix",
+              "baseline_compatibility": null,
+              "mode": "source",
+              "max_code_fix_rounds": 5,
+              "stuck_rounds": 2,
+              "runner_sha256": "0b5d7370459006a623d7084ab5c63a2ecdaa953fc2494a65627175671b994abf",
+              "engine_sha256": "6d9f4310015755d44f7e002ef5add7fb29dfaad0685c7e9d61ca495c1cddeaf1",
+              "validation_sha256": "6b57fe6df9a3049e7b76fbe76ca8042f885bcd507d87040a28032401879cdeb9",
+              "compatibility_adapter_sha256": "86d978d07814e35310da027da25d1e59bafd84dd350be5f66dc278050b1d43f9"
+            },
+            "wall_s": 86.4,
+            "llm_calls": 2,
+            "input_tokens": 7425,
+            "output_tokens": 11332,
+            "cost_scope": "recorded code proposals only; diagnosis/provider evidence retained separately",
+            "retry_after": 0,
+            "evidence_file": "cases/b1488294b1423c93bade7ea9354389d9d8ed9de248a42a22624aade13454bcfe.json"
           },
           "init": {
-            "status": "pending"
+            "status": "recovered_native",
+            "code_fix_rounds": 1,
+            "provider_events": 0,
+            "diagnostic_block_events": 0,
+            "stop_reason": null,
+            "identity": {
+              "baseline_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced",
+              "baseline_result_sha256": "cbb0fa561b1ec94f166769f6529b72168da91317d117dd8fbe29f492eafc092e",
+              "api": "init",
+              "script_sha256": "8c10f786dccfb3c4e43167112c1291146fcbc6b2c7b235998bbcad074d8c946f",
+              "prompt_sha256": {
+                "comprehension_write_exec": "f557fcc5d4534cdfa6e596066b2106fd4d9f1ed459be8afccb8676070275c501",
+                "deep_dive": "bcaacb96d675d8e898784eea65319e5ded213c06eb8578f5e40627fd3adce504"
+              },
+              "current_effective_config_sha256": "fe8f26ff850b1cf12154c95ed30eddc6f7ea3f6701e941a01af16a1afbf52e49",
+              "current_profile_sha256": "3634d4cf658d0e7f1a55582155ac335e419ed1ef0f6a1fe3f6cd84ea248e407a",
+              "upstream_test_context": {
+                "sha256": "3c7bd8eeb02331e4f7861881eaa727d35f017400d43dced6a28acf2bcc718e6c",
+                "file_count": 47
+              },
+              "context_engine": {
+                "deepdive.py": "11b4bd8f2c2761c17c43d43a4747ee3660173c94c1a621811c8f720e13898c73",
+                "docfix.py": "1d2f7cf6acdf9455ede12acdf35dcb93d91aa5bc7fe05514fbf783a5eca877b9"
+              },
+              "protocol_sha256": "b6caeb1e279ff5f30bd90547071380caf7efd19a54ea2f5972fddd266f91b5a2",
+              "source": {
+                "sha256": "1821f27510c501483e6f087ea458fdaa8c2464c67043c694918c3abe7836a131",
+                "file_count": 79
+              },
+              "document_sha256": "dcf0cc033d1aef6b9b140702bf5963fdb7a0017587cd72fd3f7d727416d16eff",
+              "script_binding": "retained_matches_native_failure_prefix",
+              "baseline_compatibility": null,
+              "mode": "source",
+              "max_code_fix_rounds": 5,
+              "stuck_rounds": 2,
+              "runner_sha256": "0b5d7370459006a623d7084ab5c63a2ecdaa953fc2494a65627175671b994abf",
+              "engine_sha256": "6d9f4310015755d44f7e002ef5add7fb29dfaad0685c7e9d61ca495c1cddeaf1",
+              "validation_sha256": "6b57fe6df9a3049e7b76fbe76ca8042f885bcd507d87040a28032401879cdeb9",
+              "compatibility_adapter_sha256": "86d978d07814e35310da027da25d1e59bafd84dd350be5f66dc278050b1d43f9"
+            },
+            "wall_s": 11.3,
+            "llm_calls": 1,
+            "input_tokens": 2894,
+            "output_tokens": 1088,
+            "cost_scope": "recorded code proposals only; diagnosis/provider evidence retained separately",
+            "retry_after": 0,
+            "evidence_file": "cases/3ca8c15d0e2eabb979f657ff8ee01111c9cc33337e716996a95b7b2216bec472.json"
           }
         },
         "headline_credit": false,
         "semantic_validation": "needs_independent_review",
-        "updated_at": "2026-09-08T13:54:35.681522-07:00",
+        "updated_at": "2026-09-08T13:59:04.471082-07:00",
         "statuses": {
-          "recovered_native": 7,
-          "stuck": 1,
-          "pending": 2
+          "recovered_native": 8,
+          "stuck": 2
         },
         "native_recovery_by_round": {
           "0": 0,
-          "1": 7,
-          "2": 7,
-          "3": 7,
-          "4": 7,
-          "5": 7
+          "1": 8,
+          "2": 8,
+          "3": 8,
+          "4": 8,
+          "5": 8
         },
         "observed_code_proposal_totals": {
-          "code_fix_rounds": 10,
+          "code_fix_rounds": 13,
           "provider_events": 0,
           "diagnostic_block_events": 0,
-          "wall_s": 240.6,
-          "llm_calls": 10,
-          "input_tokens": 34299,
-          "output_tokens": 29209
+          "wall_s": 338.3,
+          "llm_calls": 13,
+          "input_tokens": 44618,
+          "output_tokens": 41629
         },
         "snapshot": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v3/thumbnailator/cbb0fa561b1ec94f166769f6529b72168da91317d117dd8fbe29f492eafc092e/project"
       },
@@ -6401,12 +6633,12 @@
         "F_A2": 22,
         "F_B2": 10,
         "B2_native_pass": 139,
-        "S_B2_recovered": 7,
-        "B2_plus_S_B2_composite_native_pass": 146,
+        "S_B2_recovered": 8,
+        "B2_plus_S_B2_composite_native_pass": 147,
         "on_F_A2": {
           "S_A2_recovered": 20,
           "B2_pass": 16,
-          "B2_plus_S_B2_pass": 19
+          "B2_plus_S_B2_pass": 20
         },
         "apis": {
           "AbsoluteSize": {
@@ -7286,10 +7518,10 @@
             "A2": "fail",
             "S_A2": "stuck",
             "B2": "fail",
-            "S_B2": "pending",
+            "S_B2": "stuck",
             "B2_regression": false,
             "S_A2_rounds": 2,
-            "S_B2_rounds": null
+            "S_B2_rounds": 2
           },
           "getSupportedOutputFormatTypes": {
             "A2": "pass",
@@ -7376,10 +7608,10 @@
             "A2": "fail",
             "S_A2": "recovered_native",
             "B2": "fail",
-            "S_B2": "pending",
+            "S_B2": "recovered_native",
             "B2_regression": false,
             "S_A2_rounds": 1,
-            "S_B2_rounds": null
+            "S_B2_rounds": 1
           },
           "isKeepAspectRatio": {
             "A2": "pass",
@@ -7758,7 +7990,7 @@
       "native_v2": {
         "protocol": "aideal-a2-repair-v2",
         "repo": "tslearn",
-        "updated_at": "2026-09-08T13:54:15.547113-07:00",
+        "updated_at": "2026-09-08T14:09:16.798593-07:00",
         "B1": "omitted by user; original README has no repair loop",
         "cells": {
           "A1": {
@@ -7771,25 +8003,528 @@
               "llm-error": 34
             },
             "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/comprehension_progress.jsonl",
-            "source_sha256": "40d5a3d667362bb5fb7ea0d8a6fa92db5ad90c7e1aa3eb8ccc679fc6ed1cbff4"
+            "source_sha256": "f26e5a4de08381d50192a8f15e5807cd3823ecb61a3d9e00bd7839cd092e5c82"
           },
           "A2": {
-            "state": "native partial",
+            "state": "native complete",
             "api_outcomes": 235,
             "pass": 175,
             "failures": {
-              "runtime": 31,
-              "infra": 27,
-              "llm-error": 2
+              "runtime": 32,
+              "infra": 28
             },
-            "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A2/experiments/tslearn/.aideal_exec/A2/comprehension_progress.jsonl",
-            "source_sha256": "7d00d98596c7adb4dd14f0eceea76d7143779e787992b065f99af3c7a2dd69f0"
+            "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A2/experiments/tslearn/docs/eval/A2/comprehension.json",
+            "source_sha256": "9a83159955f5c8efeadf3fcd71af279eec3a07dd256918f059d17f470dbdbd48"
           },
           "B2": {
             "state": "pending native evidence"
           }
         },
-        "source_recovery": {},
+        "source_recovery": {
+          "identity": {
+            "protocol": {
+              "version": "aideal-a2-repair-v2",
+              "state": "enabled_after_complete_A2",
+              "admission": "after_A2_complete_with_A1_as_parallel_control",
+              "baseline_cells": [
+                "A2"
+              ],
+              "modes": [
+                "source"
+              ],
+              "original_document_repair": false,
+              "documentation_comparator": "B2",
+              "max_code_fix_rounds": 5,
+              "stuck_rounds": 2,
+              "stuck_rule": "consecutive_same_category_and_first_160_error_characters",
+              "stuck_threshold_basis": "provisional_cost_control_not_empirically_optimized",
+              "deep_dive_calls_per_api": 1,
+              "eligible_categories": [
+                "compile",
+                "runtime",
+                "timeout",
+                "no-correctness-check",
+                "unknown"
+              ],
+              "document_changes": false,
+              "fixture_changes": false,
+              "harness_changes": false,
+              "library_source_changes": false,
+              "headline_score_changes": false,
+              "provider_failures": "blocked_and_resumable",
+              "semantic_validation": "independent_review_required"
+            },
+            "baseline_sha256": "9a83159955f5c8efeadf3fcd71af279eec3a07dd256918f059d17f470dbdbd48",
+            "repo": "tslearn"
+          },
+          "baseline_result": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A2/experiments/tslearn/docs/eval/A2/comprehension.json",
+          "baseline_cell": "A2",
+          "cohort_sha256": "f59c786076881850678586cbb482dfb171fb8a88a1371cbe560e3b41157e483b",
+          "exclusions": {
+            "GlobalArgminPooling1D": "API is not an eligible baseline execution failure",
+            "GlobalMinPooling1D": "API is not an eligible baseline execution failure",
+            "KNeighborsTimeSeriesMixin": "API is not an eligible baseline execution failure",
+            "LearningShapelets": "API is not an eligible baseline execution failure",
+            "LocalSquaredDistanceLayer": "API is not an eligible baseline execution failure",
+            "NumPyBackend": "API is not an eligible baseline execution failure",
+            "PatchingLayer": "API is not an eligible baseline execution failure",
+            "PyTorchBackend": "API is not an eligible baseline execution failure",
+            "build": "API is not an eligible baseline execution failure",
+            "call": "API is not an eligible baseline execution failure",
+            "compute_output_shape": "API is not an eligible baseline execution failure",
+            "dtw_barycenter_averaging_one_init": "API is not an eligible baseline execution failure",
+            "fix_force_all_finite_warning": "API is not an eligible baseline execution failure",
+            "from_cesium_dataset": "API is not an eligible baseline execution failure",
+            "get_backend": "API is not an eligible baseline execution failure",
+            "get_config": "API is not an eligible baseline execution failure",
+            "get_weights": "API is not an eligible baseline execution failure",
+            "grabocka_params_to_shapelet_size_dict": "API is not an eligible baseline execution failure",
+            "inverse_transform": "API is not an eligible baseline execution failure",
+            "iscomplex": "API is not an eligible baseline execution failure",
+            "jacobian_product": "API is not an eligible baseline execution failure",
+            "lcss_accumulated_matrix": "API is not an eligible baseline execution failure",
+            "locate": "API is not an eligible baseline execution failure",
+            "pairwise_distances": "API is not an eligible baseline execution failure",
+            "set_backend": "API is not an eligible baseline execution failure",
+            "set_weights": "API is not an eligible baseline execution failure",
+            "shapelets_": "API is not an eligible baseline execution failure",
+            "to_cesium_dataset": "API is not an eligible baseline execution failure"
+          },
+          "apis": {
+            "BaseModelPackage": {
+              "status": "recovered_native",
+              "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/5f8cda7deb33f539451787d17d8188517f553131990dc9c3cc03f98ecdcea1f5/recovery.json",
+              "code_fix_rounds": 1,
+              "provider_events": 0,
+              "identity": {
+                "baseline_fingerprint": "366e0c64f58ebac296ba554d7ae3f9d9ca2a6b85bf15faf250291bc1c2198bb9",
+                "baseline_result_sha256": "cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab",
+                "api": "BaseModelPackage",
+                "script_sha256": "6b2b44cc6b3ad678d554f7deb92b99f3b1081681e9058397be291a59fc6a749b",
+                "prompt_sha256": {
+                  "comprehension_write_exec": "f557fcc5d4534cdfa6e596066b2106fd4d9f1ed459be8afccb8676070275c501",
+                  "deep_dive": "bcaacb96d675d8e898784eea65319e5ded213c06eb8578f5e40627fd3adce504"
+                },
+                "current_effective_config_sha256": "8f538c73b1313fa0053891b34eebf92d5423a22486707c2010f1cdbca48fc715",
+                "current_profile_sha256": "a9124a6c32a7bd4813d62b15ebee0bd7810d32a3f1e770cc67b21aac37b28a46",
+                "upstream_test_context": {
+                  "sha256": "71eff9e405056f9b6670608d1c983b7c14f9ac268ae1869c767bf8d06b8ff241",
+                  "file_count": 21
+                },
+                "context_engine": {
+                  "deepdive.py": "11b4bd8f2c2761c17c43d43a4747ee3660173c94c1a621811c8f720e13898c73",
+                  "docfix.py": "1d2f7cf6acdf9455ede12acdf35dcb93d91aa5bc7fe05514fbf783a5eca877b9"
+                },
+                "protocol_sha256": "b6caeb1e279ff5f30bd90547071380caf7efd19a54ea2f5972fddd266f91b5a2",
+                "source": {
+                  "sha256": "90ffcaf2949df6e6efb7c82e0eb692117803de7fbb7c5d61178bc44fd411cdfc",
+                  "file_count": 62
+                },
+                "document_sha256": "99563bb64e9b9f98f0fec08a242860867eed80fba8e6adf21ddee63e26efb4ff",
+                "script_binding": "retained_unbound_legacy",
+                "baseline_compatibility": null,
+                "mode": "source",
+                "max_code_fix_rounds": 5,
+                "stuck_rounds": 2,
+                "runner_sha256": "0b5d7370459006a623d7084ab5c63a2ecdaa953fc2494a65627175671b994abf",
+                "engine_sha256": "6d9f4310015755d44f7e002ef5add7fb29dfaad0685c7e9d61ca495c1cddeaf1",
+                "validation_sha256": "6b57fe6df9a3049e7b76fbe76ca8042f885bcd507d87040a28032401879cdeb9",
+                "compatibility_adapter_sha256": "86d978d07814e35310da027da25d1e59bafd84dd350be5f66dc278050b1d43f9"
+              },
+              "stop_reason": null,
+              "evidence_file": "cases/618f7d1a26b675f816ee64de9e875274e37b38d40dc1c769aead7eb848d43f00.json"
+            },
+            "EmptyClusterError": {
+              "status": "recovered_native",
+              "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/9295ea12ac40df058f7feeb66d5184bc21e289669f4b04bcf601035affa9860b/recovery.json",
+              "code_fix_rounds": 1,
+              "provider_events": 0,
+              "identity": {
+                "baseline_fingerprint": "366e0c64f58ebac296ba554d7ae3f9d9ca2a6b85bf15faf250291bc1c2198bb9",
+                "baseline_result_sha256": "cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab",
+                "api": "EmptyClusterError",
+                "script_sha256": "d57fb60c0dd3e9474786eeeffc055023677d0e3f00d0dbd2bb0e4bff7b3cceef",
+                "prompt_sha256": {
+                  "comprehension_write_exec": "f557fcc5d4534cdfa6e596066b2106fd4d9f1ed459be8afccb8676070275c501",
+                  "deep_dive": "bcaacb96d675d8e898784eea65319e5ded213c06eb8578f5e40627fd3adce504"
+                },
+                "current_effective_config_sha256": "8f538c73b1313fa0053891b34eebf92d5423a22486707c2010f1cdbca48fc715",
+                "current_profile_sha256": "a9124a6c32a7bd4813d62b15ebee0bd7810d32a3f1e770cc67b21aac37b28a46",
+                "upstream_test_context": {
+                  "sha256": "71eff9e405056f9b6670608d1c983b7c14f9ac268ae1869c767bf8d06b8ff241",
+                  "file_count": 21
+                },
+                "context_engine": {
+                  "deepdive.py": "11b4bd8f2c2761c17c43d43a4747ee3660173c94c1a621811c8f720e13898c73",
+                  "docfix.py": "1d2f7cf6acdf9455ede12acdf35dcb93d91aa5bc7fe05514fbf783a5eca877b9"
+                },
+                "protocol_sha256": "b6caeb1e279ff5f30bd90547071380caf7efd19a54ea2f5972fddd266f91b5a2",
+                "source": {
+                  "sha256": "90ffcaf2949df6e6efb7c82e0eb692117803de7fbb7c5d61178bc44fd411cdfc",
+                  "file_count": 62
+                },
+                "document_sha256": "99563bb64e9b9f98f0fec08a242860867eed80fba8e6adf21ddee63e26efb4ff",
+                "script_binding": "retained_unbound_legacy",
+                "baseline_compatibility": null,
+                "mode": "source",
+                "max_code_fix_rounds": 5,
+                "stuck_rounds": 2,
+                "runner_sha256": "0b5d7370459006a623d7084ab5c63a2ecdaa953fc2494a65627175671b994abf",
+                "engine_sha256": "6d9f4310015755d44f7e002ef5add7fb29dfaad0685c7e9d61ca495c1cddeaf1",
+                "validation_sha256": "6b57fe6df9a3049e7b76fbe76ca8042f885bcd507d87040a28032401879cdeb9",
+                "compatibility_adapter_sha256": "86d978d07814e35310da027da25d1e59bafd84dd350be5f66dc278050b1d43f9"
+              },
+              "stop_reason": null,
+              "evidence_file": "cases/5b30844545fdb4f918bf1f8f17020aeb9352450bac5df17c5a8a71b2f4767066.json"
+            },
+            "NonMyopicEarlyClassifier": {
+              "status": "recovered_native",
+              "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/8ed5934c16b5f72ae629f2e19f2890cc775841f20d2c6938a7ab6d167d5094cd/recovery.json",
+              "code_fix_rounds": 1,
+              "provider_events": 0,
+              "identity": {
+                "baseline_fingerprint": "366e0c64f58ebac296ba554d7ae3f9d9ca2a6b85bf15faf250291bc1c2198bb9",
+                "baseline_result_sha256": "cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab",
+                "api": "NonMyopicEarlyClassifier",
+                "script_sha256": "3e866ecc02eb266726786140c76bc50578b0a11fee2089f0f05e770103ffe27a",
+                "prompt_sha256": {
+                  "comprehension_write_exec": "f557fcc5d4534cdfa6e596066b2106fd4d9f1ed459be8afccb8676070275c501",
+                  "deep_dive": "bcaacb96d675d8e898784eea65319e5ded213c06eb8578f5e40627fd3adce504"
+                },
+                "current_effective_config_sha256": "8f538c73b1313fa0053891b34eebf92d5423a22486707c2010f1cdbca48fc715",
+                "current_profile_sha256": "a9124a6c32a7bd4813d62b15ebee0bd7810d32a3f1e770cc67b21aac37b28a46",
+                "upstream_test_context": {
+                  "sha256": "71eff9e405056f9b6670608d1c983b7c14f9ac268ae1869c767bf8d06b8ff241",
+                  "file_count": 21
+                },
+                "context_engine": {
+                  "deepdive.py": "11b4bd8f2c2761c17c43d43a4747ee3660173c94c1a621811c8f720e13898c73",
+                  "docfix.py": "1d2f7cf6acdf9455ede12acdf35dcb93d91aa5bc7fe05514fbf783a5eca877b9"
+                },
+                "protocol_sha256": "b6caeb1e279ff5f30bd90547071380caf7efd19a54ea2f5972fddd266f91b5a2",
+                "source": {
+                  "sha256": "90ffcaf2949df6e6efb7c82e0eb692117803de7fbb7c5d61178bc44fd411cdfc",
+                  "file_count": 62
+                },
+                "document_sha256": "99563bb64e9b9f98f0fec08a242860867eed80fba8e6adf21ddee63e26efb4ff",
+                "script_binding": "retained_unbound_legacy",
+                "baseline_compatibility": null,
+                "mode": "source",
+                "max_code_fix_rounds": 5,
+                "stuck_rounds": 2,
+                "runner_sha256": "0b5d7370459006a623d7084ab5c63a2ecdaa953fc2494a65627175671b994abf",
+                "engine_sha256": "6d9f4310015755d44f7e002ef5add7fb29dfaad0685c7e9d61ca495c1cddeaf1",
+                "validation_sha256": "6b57fe6df9a3049e7b76fbe76ca8042f885bcd507d87040a28032401879cdeb9",
+                "compatibility_adapter_sha256": "86d978d07814e35310da027da25d1e59bafd84dd350be5f66dc278050b1d43f9"
+              },
+              "stop_reason": null,
+              "evidence_file": "cases/4d865489be6d224fa6cadd0d2b6937a532482897eb6900076bd30bf83ae59da2.json"
+            },
+            "NumPyRandom": {
+              "status": "recovered_native",
+              "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/b3ac65fea5c3c3e195522ed72d5a44abd84c711f562f5b0ed8ee26b13b902d5f/recovery.json",
+              "code_fix_rounds": 1,
+              "provider_events": 0,
+              "identity": {
+                "baseline_fingerprint": "366e0c64f58ebac296ba554d7ae3f9d9ca2a6b85bf15faf250291bc1c2198bb9",
+                "baseline_result_sha256": "cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab",
+                "api": "NumPyRandom",
+                "script_sha256": "be853729a1b437c4b7efdad3feb67487a004ced5224d860183c33a8c0f4ade54",
+                "prompt_sha256": {
+                  "comprehension_write_exec": "f557fcc5d4534cdfa6e596066b2106fd4d9f1ed459be8afccb8676070275c501",
+                  "deep_dive": "bcaacb96d675d8e898784eea65319e5ded213c06eb8578f5e40627fd3adce504"
+                },
+                "current_effective_config_sha256": "8f538c73b1313fa0053891b34eebf92d5423a22486707c2010f1cdbca48fc715",
+                "current_profile_sha256": "a9124a6c32a7bd4813d62b15ebee0bd7810d32a3f1e770cc67b21aac37b28a46",
+                "upstream_test_context": {
+                  "sha256": "71eff9e405056f9b6670608d1c983b7c14f9ac268ae1869c767bf8d06b8ff241",
+                  "file_count": 21
+                },
+                "context_engine": {
+                  "deepdive.py": "11b4bd8f2c2761c17c43d43a4747ee3660173c94c1a621811c8f720e13898c73",
+                  "docfix.py": "1d2f7cf6acdf9455ede12acdf35dcb93d91aa5bc7fe05514fbf783a5eca877b9"
+                },
+                "protocol_sha256": "b6caeb1e279ff5f30bd90547071380caf7efd19a54ea2f5972fddd266f91b5a2",
+                "source": {
+                  "sha256": "90ffcaf2949df6e6efb7c82e0eb692117803de7fbb7c5d61178bc44fd411cdfc",
+                  "file_count": 62
+                },
+                "document_sha256": "99563bb64e9b9f98f0fec08a242860867eed80fba8e6adf21ddee63e26efb4ff",
+                "script_binding": "retained_unbound_legacy",
+                "baseline_compatibility": null,
+                "mode": "source",
+                "max_code_fix_rounds": 5,
+                "stuck_rounds": 2,
+                "runner_sha256": "0b5d7370459006a623d7084ab5c63a2ecdaa953fc2494a65627175671b994abf",
+                "engine_sha256": "6d9f4310015755d44f7e002ef5add7fb29dfaad0685c7e9d61ca495c1cddeaf1",
+                "validation_sha256": "6b57fe6df9a3049e7b76fbe76ca8042f885bcd507d87040a28032401879cdeb9",
+                "compatibility_adapter_sha256": "86d978d07814e35310da027da25d1e59bafd84dd350be5f66dc278050b1d43f9"
+              },
+              "stop_reason": null,
+              "evidence_file": "cases/5ddd1616da0c84936334938c92aa42e3e3b951b8d5d5fd6d19aa79a90436f9c7.json"
+            },
+            "PyTorchRandom": {
+              "status": "recovered_native",
+              "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/39beb1bb83453fd6aaf2f43c0dc791e131ca091c7731d2d70ed18255bb67da80/recovery.json",
+              "code_fix_rounds": 1,
+              "provider_events": 0,
+              "identity": {
+                "baseline_fingerprint": "366e0c64f58ebac296ba554d7ae3f9d9ca2a6b85bf15faf250291bc1c2198bb9",
+                "baseline_result_sha256": "cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab",
+                "api": "PyTorchRandom",
+                "script_sha256": "73c51a211794fcb2129e4c6ec4b14fc8745e0c0875d4f9640303162c5f747090",
+                "prompt_sha256": {
+                  "comprehension_write_exec": "f557fcc5d4534cdfa6e596066b2106fd4d9f1ed459be8afccb8676070275c501",
+                  "deep_dive": "bcaacb96d675d8e898784eea65319e5ded213c06eb8578f5e40627fd3adce504"
+                },
+                "current_effective_config_sha256": "8f538c73b1313fa0053891b34eebf92d5423a22486707c2010f1cdbca48fc715",
+                "current_profile_sha256": "a9124a6c32a7bd4813d62b15ebee0bd7810d32a3f1e770cc67b21aac37b28a46",
+                "upstream_test_context": {
+                  "sha256": "71eff9e405056f9b6670608d1c983b7c14f9ac268ae1869c767bf8d06b8ff241",
+                  "file_count": 21
+                },
+                "context_engine": {
+                  "deepdive.py": "11b4bd8f2c2761c17c43d43a4747ee3660173c94c1a621811c8f720e13898c73",
+                  "docfix.py": "1d2f7cf6acdf9455ede12acdf35dcb93d91aa5bc7fe05514fbf783a5eca877b9"
+                },
+                "protocol_sha256": "b6caeb1e279ff5f30bd90547071380caf7efd19a54ea2f5972fddd266f91b5a2",
+                "source": {
+                  "sha256": "90ffcaf2949df6e6efb7c82e0eb692117803de7fbb7c5d61178bc44fd411cdfc",
+                  "file_count": 62
+                },
+                "document_sha256": "99563bb64e9b9f98f0fec08a242860867eed80fba8e6adf21ddee63e26efb4ff",
+                "script_binding": "retained_unbound_legacy",
+                "baseline_compatibility": null,
+                "mode": "source",
+                "max_code_fix_rounds": 5,
+                "stuck_rounds": 2,
+                "runner_sha256": "0b5d7370459006a623d7084ab5c63a2ecdaa953fc2494a65627175671b994abf",
+                "engine_sha256": "6d9f4310015755d44f7e002ef5add7fb29dfaad0685c7e9d61ca495c1cddeaf1",
+                "validation_sha256": "6b57fe6df9a3049e7b76fbe76ca8042f885bcd507d87040a28032401879cdeb9",
+                "compatibility_adapter_sha256": "86d978d07814e35310da027da25d1e59bafd84dd350be5f66dc278050b1d43f9"
+              },
+              "stop_reason": null,
+              "evidence_file": "cases/f01d95abe3724c9fd25cedbd9292ea19c2c8956b12f0db2449c3d602907e58ee.json"
+            },
+            "PyTorchTesting": {
+              "status": "recovered_native",
+              "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/bac95cfec2ec9ed6edec0035079d987437a8f7b180f13f58cf3568afd39a89fc/recovery.json",
+              "code_fix_rounds": 1,
+              "provider_events": 0,
+              "identity": {
+                "baseline_fingerprint": "366e0c64f58ebac296ba554d7ae3f9d9ca2a6b85bf15faf250291bc1c2198bb9",
+                "baseline_result_sha256": "cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab",
+                "api": "PyTorchTesting",
+                "script_sha256": "20bc65ff0571be7a74499129df11127bf51690097c656f5043674d460ce9902e",
+                "prompt_sha256": {
+                  "comprehension_write_exec": "f557fcc5d4534cdfa6e596066b2106fd4d9f1ed459be8afccb8676070275c501",
+                  "deep_dive": "bcaacb96d675d8e898784eea65319e5ded213c06eb8578f5e40627fd3adce504"
+                },
+                "current_effective_config_sha256": "8f538c73b1313fa0053891b34eebf92d5423a22486707c2010f1cdbca48fc715",
+                "current_profile_sha256": "a9124a6c32a7bd4813d62b15ebee0bd7810d32a3f1e770cc67b21aac37b28a46",
+                "upstream_test_context": {
+                  "sha256": "71eff9e405056f9b6670608d1c983b7c14f9ac268ae1869c767bf8d06b8ff241",
+                  "file_count": 21
+                },
+                "context_engine": {
+                  "deepdive.py": "11b4bd8f2c2761c17c43d43a4747ee3660173c94c1a621811c8f720e13898c73",
+                  "docfix.py": "1d2f7cf6acdf9455ede12acdf35dcb93d91aa5bc7fe05514fbf783a5eca877b9"
+                },
+                "protocol_sha256": "b6caeb1e279ff5f30bd90547071380caf7efd19a54ea2f5972fddd266f91b5a2",
+                "source": {
+                  "sha256": "90ffcaf2949df6e6efb7c82e0eb692117803de7fbb7c5d61178bc44fd411cdfc",
+                  "file_count": 62
+                },
+                "document_sha256": "99563bb64e9b9f98f0fec08a242860867eed80fba8e6adf21ddee63e26efb4ff",
+                "script_binding": "retained_unbound_legacy",
+                "baseline_compatibility": null,
+                "mode": "source",
+                "max_code_fix_rounds": 5,
+                "stuck_rounds": 2,
+                "runner_sha256": "0b5d7370459006a623d7084ab5c63a2ecdaa953fc2494a65627175671b994abf",
+                "engine_sha256": "6d9f4310015755d44f7e002ef5add7fb29dfaad0685c7e9d61ca495c1cddeaf1",
+                "validation_sha256": "6b57fe6df9a3049e7b76fbe76ca8042f885bcd507d87040a28032401879cdeb9",
+                "compatibility_adapter_sha256": "86d978d07814e35310da027da25d1e59bafd84dd350be5f66dc278050b1d43f9"
+              },
+              "stop_reason": null,
+              "evidence_file": "cases/76c7113b5dedaf7802e5e88162e7d34d39de13695a0fef8269ec596f2df65491.json"
+            },
+            "SoftDTW": {
+              "status": "recovered_native",
+              "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/8ccb556cc2021ecadf26c26f1068d478fd8e6c00d0fbcdabd26c808d3047157d/recovery.json",
+              "code_fix_rounds": 1,
+              "provider_events": 0,
+              "identity": {
+                "baseline_fingerprint": "366e0c64f58ebac296ba554d7ae3f9d9ca2a6b85bf15faf250291bc1c2198bb9",
+                "baseline_result_sha256": "cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab",
+                "api": "SoftDTW",
+                "script_sha256": "5fdb9ae12e0866cac0e5ecf1608e67c7cb328894c02150da8a0f74f1d0c05e33",
+                "prompt_sha256": {
+                  "comprehension_write_exec": "f557fcc5d4534cdfa6e596066b2106fd4d9f1ed459be8afccb8676070275c501",
+                  "deep_dive": "bcaacb96d675d8e898784eea65319e5ded213c06eb8578f5e40627fd3adce504"
+                },
+                "current_effective_config_sha256": "8f538c73b1313fa0053891b34eebf92d5423a22486707c2010f1cdbca48fc715",
+                "current_profile_sha256": "a9124a6c32a7bd4813d62b15ebee0bd7810d32a3f1e770cc67b21aac37b28a46",
+                "upstream_test_context": {
+                  "sha256": "71eff9e405056f9b6670608d1c983b7c14f9ac268ae1869c767bf8d06b8ff241",
+                  "file_count": 21
+                },
+                "context_engine": {
+                  "deepdive.py": "11b4bd8f2c2761c17c43d43a4747ee3660173c94c1a621811c8f720e13898c73",
+                  "docfix.py": "1d2f7cf6acdf9455ede12acdf35dcb93d91aa5bc7fe05514fbf783a5eca877b9"
+                },
+                "protocol_sha256": "b6caeb1e279ff5f30bd90547071380caf7efd19a54ea2f5972fddd266f91b5a2",
+                "source": {
+                  "sha256": "90ffcaf2949df6e6efb7c82e0eb692117803de7fbb7c5d61178bc44fd411cdfc",
+                  "file_count": 62
+                },
+                "document_sha256": "99563bb64e9b9f98f0fec08a242860867eed80fba8e6adf21ddee63e26efb4ff",
+                "script_binding": "retained_unbound_legacy",
+                "baseline_compatibility": null,
+                "mode": "source",
+                "max_code_fix_rounds": 5,
+                "stuck_rounds": 2,
+                "runner_sha256": "0b5d7370459006a623d7084ab5c63a2ecdaa953fc2494a65627175671b994abf",
+                "engine_sha256": "6d9f4310015755d44f7e002ef5add7fb29dfaad0685c7e9d61ca495c1cddeaf1",
+                "validation_sha256": "6b57fe6df9a3049e7b76fbe76ca8042f885bcd507d87040a28032401879cdeb9",
+                "compatibility_adapter_sha256": "86d978d07814e35310da027da25d1e59bafd84dd350be5f66dc278050b1d43f9"
+              },
+              "stop_reason": null,
+              "evidence_file": "cases/288990af71f19b5dda9fbbde5ba88d28350396d04d826636c6afe8cc3a778433.json"
+            },
+            "SquaredEuclidean": {
+              "status": "recovered_native",
+              "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/438605590863dae1ddfc55df9d966ffb6d9f97f6c9f414fcafb497d1aec392f2/recovery.json",
+              "code_fix_rounds": 1,
+              "provider_events": 0,
+              "identity": {
+                "baseline_fingerprint": "366e0c64f58ebac296ba554d7ae3f9d9ca2a6b85bf15faf250291bc1c2198bb9",
+                "baseline_result_sha256": "cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab",
+                "api": "SquaredEuclidean",
+                "script_sha256": "d8160ba1424266d52478bcb5c291d755c52773b199c7f3bf0ebb66c432838fa2",
+                "prompt_sha256": {
+                  "comprehension_write_exec": "f557fcc5d4534cdfa6e596066b2106fd4d9f1ed459be8afccb8676070275c501",
+                  "deep_dive": "bcaacb96d675d8e898784eea65319e5ded213c06eb8578f5e40627fd3adce504"
+                },
+                "current_effective_config_sha256": "8f538c73b1313fa0053891b34eebf92d5423a22486707c2010f1cdbca48fc715",
+                "current_profile_sha256": "a9124a6c32a7bd4813d62b15ebee0bd7810d32a3f1e770cc67b21aac37b28a46",
+                "upstream_test_context": {
+                  "sha256": "71eff9e405056f9b6670608d1c983b7c14f9ac268ae1869c767bf8d06b8ff241",
+                  "file_count": 21
+                },
+                "context_engine": {
+                  "deepdive.py": "11b4bd8f2c2761c17c43d43a4747ee3660173c94c1a621811c8f720e13898c73",
+                  "docfix.py": "1d2f7cf6acdf9455ede12acdf35dcb93d91aa5bc7fe05514fbf783a5eca877b9"
+                },
+                "protocol_sha256": "b6caeb1e279ff5f30bd90547071380caf7efd19a54ea2f5972fddd266f91b5a2",
+                "source": {
+                  "sha256": "90ffcaf2949df6e6efb7c82e0eb692117803de7fbb7c5d61178bc44fd411cdfc",
+                  "file_count": 62
+                },
+                "document_sha256": "99563bb64e9b9f98f0fec08a242860867eed80fba8e6adf21ddee63e26efb4ff",
+                "script_binding": "retained_unbound_legacy",
+                "baseline_compatibility": null,
+                "mode": "source",
+                "max_code_fix_rounds": 5,
+                "stuck_rounds": 2,
+                "runner_sha256": "0b5d7370459006a623d7084ab5c63a2ecdaa953fc2494a65627175671b994abf",
+                "engine_sha256": "6d9f4310015755d44f7e002ef5add7fb29dfaad0685c7e9d61ca495c1cddeaf1",
+                "validation_sha256": "6b57fe6df9a3049e7b76fbe76ca8042f885bcd507d87040a28032401879cdeb9",
+                "compatibility_adapter_sha256": "86d978d07814e35310da027da25d1e59bafd84dd350be5f66dc278050b1d43f9"
+              },
+              "stop_reason": null,
+              "evidence_file": "cases/1ae4ff965cfce9262970630f1dd54baf8b31324a432324f568ac034aca2f825d.json"
+            },
+            "TimeSeriesSVMMixin": {
+              "status": "pending"
+            },
+            "TsLearnTags": {
+              "status": "pending"
+            },
+            "cdist_sax": {
+              "status": "pending"
+            },
+            "check_keras_backend": {
+              "status": "pending"
+            },
+            "compute": {
+              "status": "pending"
+            },
+            "cydist_1d_sax": {
+              "status": "pending"
+            },
+            "decision_function": {
+              "status": "pending"
+            },
+            "early_predict_proba": {
+              "status": "pending"
+            },
+            "extract_from_zip_url": {
+              "status": "pending"
+            },
+            "from_json": {
+              "status": "pending"
+            },
+            "from_pickle": {
+              "status": "pending"
+            },
+            "get_cluster_probas": {
+              "status": "pending"
+            },
+            "get_early_predict_proba_generator": {
+              "status": "pending"
+            },
+            "inv_transform_1d_sax": {
+              "status": "pending"
+            },
+            "inv_transform_sax": {
+              "status": "pending"
+            },
+            "is_float": {
+              "status": "pending"
+            },
+            "is_float32": {
+              "status": "pending"
+            },
+            "is_float64": {
+              "status": "pending"
+            },
+            "normal": {
+              "status": "pending"
+            },
+            "predict_class_and_earliness": {
+              "status": "pending"
+            },
+            "select_backend": {
+              "status": "pending"
+            },
+            "support_vectors_": {
+              "status": "pending"
+            },
+            "to_pickle": {
+              "status": "pending"
+            },
+            "uniform": {
+              "status": "pending"
+            }
+          },
+          "semantic_validation": "needs_independent_review",
+          "headline_credit": false,
+          "snapshot": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project",
+          "updated_at": "2026-09-08T14:08:58.071032-07:00",
+          "native_recovery_by_round": {
+            "0": 0,
+            "1": 8,
+            "2": 8,
+            "3": 8,
+            "4": 8,
+            "5": 8
+          },
+          "statuses": {
+            "recovered_native": 8,
+            "pending": 24
+          }
+        },
         "document_repair": {
           "attempted": null,
           "processed": null,
@@ -7797,7 +8532,511 @@
         },
         "interpretation": "generation effect A2-A1; documentation transfer B2-A2; source recovery has a fixed A2-failure denominator"
       },
-      "S_A2": {},
+      "S_A2": {
+        "identity": {
+          "protocol": {
+            "version": "aideal-a2-repair-v2",
+            "state": "enabled_after_complete_A2",
+            "admission": "after_A2_complete_with_A1_as_parallel_control",
+            "baseline_cells": [
+              "A2"
+            ],
+            "modes": [
+              "source"
+            ],
+            "original_document_repair": false,
+            "documentation_comparator": "B2",
+            "max_code_fix_rounds": 5,
+            "stuck_rounds": 2,
+            "stuck_rule": "consecutive_same_category_and_first_160_error_characters",
+            "stuck_threshold_basis": "provisional_cost_control_not_empirically_optimized",
+            "deep_dive_calls_per_api": 1,
+            "eligible_categories": [
+              "compile",
+              "runtime",
+              "timeout",
+              "no-correctness-check",
+              "unknown"
+            ],
+            "document_changes": false,
+            "fixture_changes": false,
+            "harness_changes": false,
+            "library_source_changes": false,
+            "headline_score_changes": false,
+            "provider_failures": "blocked_and_resumable",
+            "semantic_validation": "independent_review_required"
+          },
+          "baseline_sha256": "9a83159955f5c8efeadf3fcd71af279eec3a07dd256918f059d17f470dbdbd48",
+          "repo": "tslearn"
+        },
+        "baseline_result": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A2/experiments/tslearn/docs/eval/A2/comprehension.json",
+        "baseline_cell": "A2",
+        "cohort_sha256": "f59c786076881850678586cbb482dfb171fb8a88a1371cbe560e3b41157e483b",
+        "exclusions": {
+          "GlobalArgminPooling1D": "API is not an eligible baseline execution failure",
+          "GlobalMinPooling1D": "API is not an eligible baseline execution failure",
+          "KNeighborsTimeSeriesMixin": "API is not an eligible baseline execution failure",
+          "LearningShapelets": "API is not an eligible baseline execution failure",
+          "LocalSquaredDistanceLayer": "API is not an eligible baseline execution failure",
+          "NumPyBackend": "API is not an eligible baseline execution failure",
+          "PatchingLayer": "API is not an eligible baseline execution failure",
+          "PyTorchBackend": "API is not an eligible baseline execution failure",
+          "build": "API is not an eligible baseline execution failure",
+          "call": "API is not an eligible baseline execution failure",
+          "compute_output_shape": "API is not an eligible baseline execution failure",
+          "dtw_barycenter_averaging_one_init": "API is not an eligible baseline execution failure",
+          "fix_force_all_finite_warning": "API is not an eligible baseline execution failure",
+          "from_cesium_dataset": "API is not an eligible baseline execution failure",
+          "get_backend": "API is not an eligible baseline execution failure",
+          "get_config": "API is not an eligible baseline execution failure",
+          "get_weights": "API is not an eligible baseline execution failure",
+          "grabocka_params_to_shapelet_size_dict": "API is not an eligible baseline execution failure",
+          "inverse_transform": "API is not an eligible baseline execution failure",
+          "iscomplex": "API is not an eligible baseline execution failure",
+          "jacobian_product": "API is not an eligible baseline execution failure",
+          "lcss_accumulated_matrix": "API is not an eligible baseline execution failure",
+          "locate": "API is not an eligible baseline execution failure",
+          "pairwise_distances": "API is not an eligible baseline execution failure",
+          "set_backend": "API is not an eligible baseline execution failure",
+          "set_weights": "API is not an eligible baseline execution failure",
+          "shapelets_": "API is not an eligible baseline execution failure",
+          "to_cesium_dataset": "API is not an eligible baseline execution failure"
+        },
+        "apis": {
+          "BaseModelPackage": {
+            "status": "recovered_native",
+            "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/5f8cda7deb33f539451787d17d8188517f553131990dc9c3cc03f98ecdcea1f5/recovery.json",
+            "code_fix_rounds": 1,
+            "provider_events": 0,
+            "identity": {
+              "baseline_fingerprint": "366e0c64f58ebac296ba554d7ae3f9d9ca2a6b85bf15faf250291bc1c2198bb9",
+              "baseline_result_sha256": "cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab",
+              "api": "BaseModelPackage",
+              "script_sha256": "6b2b44cc6b3ad678d554f7deb92b99f3b1081681e9058397be291a59fc6a749b",
+              "prompt_sha256": {
+                "comprehension_write_exec": "f557fcc5d4534cdfa6e596066b2106fd4d9f1ed459be8afccb8676070275c501",
+                "deep_dive": "bcaacb96d675d8e898784eea65319e5ded213c06eb8578f5e40627fd3adce504"
+              },
+              "current_effective_config_sha256": "8f538c73b1313fa0053891b34eebf92d5423a22486707c2010f1cdbca48fc715",
+              "current_profile_sha256": "a9124a6c32a7bd4813d62b15ebee0bd7810d32a3f1e770cc67b21aac37b28a46",
+              "upstream_test_context": {
+                "sha256": "71eff9e405056f9b6670608d1c983b7c14f9ac268ae1869c767bf8d06b8ff241",
+                "file_count": 21
+              },
+              "context_engine": {
+                "deepdive.py": "11b4bd8f2c2761c17c43d43a4747ee3660173c94c1a621811c8f720e13898c73",
+                "docfix.py": "1d2f7cf6acdf9455ede12acdf35dcb93d91aa5bc7fe05514fbf783a5eca877b9"
+              },
+              "protocol_sha256": "b6caeb1e279ff5f30bd90547071380caf7efd19a54ea2f5972fddd266f91b5a2",
+              "source": {
+                "sha256": "90ffcaf2949df6e6efb7c82e0eb692117803de7fbb7c5d61178bc44fd411cdfc",
+                "file_count": 62
+              },
+              "document_sha256": "99563bb64e9b9f98f0fec08a242860867eed80fba8e6adf21ddee63e26efb4ff",
+              "script_binding": "retained_unbound_legacy",
+              "baseline_compatibility": null,
+              "mode": "source",
+              "max_code_fix_rounds": 5,
+              "stuck_rounds": 2,
+              "runner_sha256": "0b5d7370459006a623d7084ab5c63a2ecdaa953fc2494a65627175671b994abf",
+              "engine_sha256": "6d9f4310015755d44f7e002ef5add7fb29dfaad0685c7e9d61ca495c1cddeaf1",
+              "validation_sha256": "6b57fe6df9a3049e7b76fbe76ca8042f885bcd507d87040a28032401879cdeb9",
+              "compatibility_adapter_sha256": "86d978d07814e35310da027da25d1e59bafd84dd350be5f66dc278050b1d43f9"
+            },
+            "stop_reason": null,
+            "evidence_file": "cases/618f7d1a26b675f816ee64de9e875274e37b38d40dc1c769aead7eb848d43f00.json"
+          },
+          "EmptyClusterError": {
+            "status": "recovered_native",
+            "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/9295ea12ac40df058f7feeb66d5184bc21e289669f4b04bcf601035affa9860b/recovery.json",
+            "code_fix_rounds": 1,
+            "provider_events": 0,
+            "identity": {
+              "baseline_fingerprint": "366e0c64f58ebac296ba554d7ae3f9d9ca2a6b85bf15faf250291bc1c2198bb9",
+              "baseline_result_sha256": "cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab",
+              "api": "EmptyClusterError",
+              "script_sha256": "d57fb60c0dd3e9474786eeeffc055023677d0e3f00d0dbd2bb0e4bff7b3cceef",
+              "prompt_sha256": {
+                "comprehension_write_exec": "f557fcc5d4534cdfa6e596066b2106fd4d9f1ed459be8afccb8676070275c501",
+                "deep_dive": "bcaacb96d675d8e898784eea65319e5ded213c06eb8578f5e40627fd3adce504"
+              },
+              "current_effective_config_sha256": "8f538c73b1313fa0053891b34eebf92d5423a22486707c2010f1cdbca48fc715",
+              "current_profile_sha256": "a9124a6c32a7bd4813d62b15ebee0bd7810d32a3f1e770cc67b21aac37b28a46",
+              "upstream_test_context": {
+                "sha256": "71eff9e405056f9b6670608d1c983b7c14f9ac268ae1869c767bf8d06b8ff241",
+                "file_count": 21
+              },
+              "context_engine": {
+                "deepdive.py": "11b4bd8f2c2761c17c43d43a4747ee3660173c94c1a621811c8f720e13898c73",
+                "docfix.py": "1d2f7cf6acdf9455ede12acdf35dcb93d91aa5bc7fe05514fbf783a5eca877b9"
+              },
+              "protocol_sha256": "b6caeb1e279ff5f30bd90547071380caf7efd19a54ea2f5972fddd266f91b5a2",
+              "source": {
+                "sha256": "90ffcaf2949df6e6efb7c82e0eb692117803de7fbb7c5d61178bc44fd411cdfc",
+                "file_count": 62
+              },
+              "document_sha256": "99563bb64e9b9f98f0fec08a242860867eed80fba8e6adf21ddee63e26efb4ff",
+              "script_binding": "retained_unbound_legacy",
+              "baseline_compatibility": null,
+              "mode": "source",
+              "max_code_fix_rounds": 5,
+              "stuck_rounds": 2,
+              "runner_sha256": "0b5d7370459006a623d7084ab5c63a2ecdaa953fc2494a65627175671b994abf",
+              "engine_sha256": "6d9f4310015755d44f7e002ef5add7fb29dfaad0685c7e9d61ca495c1cddeaf1",
+              "validation_sha256": "6b57fe6df9a3049e7b76fbe76ca8042f885bcd507d87040a28032401879cdeb9",
+              "compatibility_adapter_sha256": "86d978d07814e35310da027da25d1e59bafd84dd350be5f66dc278050b1d43f9"
+            },
+            "stop_reason": null,
+            "evidence_file": "cases/5b30844545fdb4f918bf1f8f17020aeb9352450bac5df17c5a8a71b2f4767066.json"
+          },
+          "NonMyopicEarlyClassifier": {
+            "status": "recovered_native",
+            "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/8ed5934c16b5f72ae629f2e19f2890cc775841f20d2c6938a7ab6d167d5094cd/recovery.json",
+            "code_fix_rounds": 1,
+            "provider_events": 0,
+            "identity": {
+              "baseline_fingerprint": "366e0c64f58ebac296ba554d7ae3f9d9ca2a6b85bf15faf250291bc1c2198bb9",
+              "baseline_result_sha256": "cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab",
+              "api": "NonMyopicEarlyClassifier",
+              "script_sha256": "3e866ecc02eb266726786140c76bc50578b0a11fee2089f0f05e770103ffe27a",
+              "prompt_sha256": {
+                "comprehension_write_exec": "f557fcc5d4534cdfa6e596066b2106fd4d9f1ed459be8afccb8676070275c501",
+                "deep_dive": "bcaacb96d675d8e898784eea65319e5ded213c06eb8578f5e40627fd3adce504"
+              },
+              "current_effective_config_sha256": "8f538c73b1313fa0053891b34eebf92d5423a22486707c2010f1cdbca48fc715",
+              "current_profile_sha256": "a9124a6c32a7bd4813d62b15ebee0bd7810d32a3f1e770cc67b21aac37b28a46",
+              "upstream_test_context": {
+                "sha256": "71eff9e405056f9b6670608d1c983b7c14f9ac268ae1869c767bf8d06b8ff241",
+                "file_count": 21
+              },
+              "context_engine": {
+                "deepdive.py": "11b4bd8f2c2761c17c43d43a4747ee3660173c94c1a621811c8f720e13898c73",
+                "docfix.py": "1d2f7cf6acdf9455ede12acdf35dcb93d91aa5bc7fe05514fbf783a5eca877b9"
+              },
+              "protocol_sha256": "b6caeb1e279ff5f30bd90547071380caf7efd19a54ea2f5972fddd266f91b5a2",
+              "source": {
+                "sha256": "90ffcaf2949df6e6efb7c82e0eb692117803de7fbb7c5d61178bc44fd411cdfc",
+                "file_count": 62
+              },
+              "document_sha256": "99563bb64e9b9f98f0fec08a242860867eed80fba8e6adf21ddee63e26efb4ff",
+              "script_binding": "retained_unbound_legacy",
+              "baseline_compatibility": null,
+              "mode": "source",
+              "max_code_fix_rounds": 5,
+              "stuck_rounds": 2,
+              "runner_sha256": "0b5d7370459006a623d7084ab5c63a2ecdaa953fc2494a65627175671b994abf",
+              "engine_sha256": "6d9f4310015755d44f7e002ef5add7fb29dfaad0685c7e9d61ca495c1cddeaf1",
+              "validation_sha256": "6b57fe6df9a3049e7b76fbe76ca8042f885bcd507d87040a28032401879cdeb9",
+              "compatibility_adapter_sha256": "86d978d07814e35310da027da25d1e59bafd84dd350be5f66dc278050b1d43f9"
+            },
+            "stop_reason": null,
+            "evidence_file": "cases/4d865489be6d224fa6cadd0d2b6937a532482897eb6900076bd30bf83ae59da2.json"
+          },
+          "NumPyRandom": {
+            "status": "recovered_native",
+            "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/b3ac65fea5c3c3e195522ed72d5a44abd84c711f562f5b0ed8ee26b13b902d5f/recovery.json",
+            "code_fix_rounds": 1,
+            "provider_events": 0,
+            "identity": {
+              "baseline_fingerprint": "366e0c64f58ebac296ba554d7ae3f9d9ca2a6b85bf15faf250291bc1c2198bb9",
+              "baseline_result_sha256": "cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab",
+              "api": "NumPyRandom",
+              "script_sha256": "be853729a1b437c4b7efdad3feb67487a004ced5224d860183c33a8c0f4ade54",
+              "prompt_sha256": {
+                "comprehension_write_exec": "f557fcc5d4534cdfa6e596066b2106fd4d9f1ed459be8afccb8676070275c501",
+                "deep_dive": "bcaacb96d675d8e898784eea65319e5ded213c06eb8578f5e40627fd3adce504"
+              },
+              "current_effective_config_sha256": "8f538c73b1313fa0053891b34eebf92d5423a22486707c2010f1cdbca48fc715",
+              "current_profile_sha256": "a9124a6c32a7bd4813d62b15ebee0bd7810d32a3f1e770cc67b21aac37b28a46",
+              "upstream_test_context": {
+                "sha256": "71eff9e405056f9b6670608d1c983b7c14f9ac268ae1869c767bf8d06b8ff241",
+                "file_count": 21
+              },
+              "context_engine": {
+                "deepdive.py": "11b4bd8f2c2761c17c43d43a4747ee3660173c94c1a621811c8f720e13898c73",
+                "docfix.py": "1d2f7cf6acdf9455ede12acdf35dcb93d91aa5bc7fe05514fbf783a5eca877b9"
+              },
+              "protocol_sha256": "b6caeb1e279ff5f30bd90547071380caf7efd19a54ea2f5972fddd266f91b5a2",
+              "source": {
+                "sha256": "90ffcaf2949df6e6efb7c82e0eb692117803de7fbb7c5d61178bc44fd411cdfc",
+                "file_count": 62
+              },
+              "document_sha256": "99563bb64e9b9f98f0fec08a242860867eed80fba8e6adf21ddee63e26efb4ff",
+              "script_binding": "retained_unbound_legacy",
+              "baseline_compatibility": null,
+              "mode": "source",
+              "max_code_fix_rounds": 5,
+              "stuck_rounds": 2,
+              "runner_sha256": "0b5d7370459006a623d7084ab5c63a2ecdaa953fc2494a65627175671b994abf",
+              "engine_sha256": "6d9f4310015755d44f7e002ef5add7fb29dfaad0685c7e9d61ca495c1cddeaf1",
+              "validation_sha256": "6b57fe6df9a3049e7b76fbe76ca8042f885bcd507d87040a28032401879cdeb9",
+              "compatibility_adapter_sha256": "86d978d07814e35310da027da25d1e59bafd84dd350be5f66dc278050b1d43f9"
+            },
+            "stop_reason": null,
+            "evidence_file": "cases/5ddd1616da0c84936334938c92aa42e3e3b951b8d5d5fd6d19aa79a90436f9c7.json"
+          },
+          "PyTorchRandom": {
+            "status": "recovered_native",
+            "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/39beb1bb83453fd6aaf2f43c0dc791e131ca091c7731d2d70ed18255bb67da80/recovery.json",
+            "code_fix_rounds": 1,
+            "provider_events": 0,
+            "identity": {
+              "baseline_fingerprint": "366e0c64f58ebac296ba554d7ae3f9d9ca2a6b85bf15faf250291bc1c2198bb9",
+              "baseline_result_sha256": "cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab",
+              "api": "PyTorchRandom",
+              "script_sha256": "73c51a211794fcb2129e4c6ec4b14fc8745e0c0875d4f9640303162c5f747090",
+              "prompt_sha256": {
+                "comprehension_write_exec": "f557fcc5d4534cdfa6e596066b2106fd4d9f1ed459be8afccb8676070275c501",
+                "deep_dive": "bcaacb96d675d8e898784eea65319e5ded213c06eb8578f5e40627fd3adce504"
+              },
+              "current_effective_config_sha256": "8f538c73b1313fa0053891b34eebf92d5423a22486707c2010f1cdbca48fc715",
+              "current_profile_sha256": "a9124a6c32a7bd4813d62b15ebee0bd7810d32a3f1e770cc67b21aac37b28a46",
+              "upstream_test_context": {
+                "sha256": "71eff9e405056f9b6670608d1c983b7c14f9ac268ae1869c767bf8d06b8ff241",
+                "file_count": 21
+              },
+              "context_engine": {
+                "deepdive.py": "11b4bd8f2c2761c17c43d43a4747ee3660173c94c1a621811c8f720e13898c73",
+                "docfix.py": "1d2f7cf6acdf9455ede12acdf35dcb93d91aa5bc7fe05514fbf783a5eca877b9"
+              },
+              "protocol_sha256": "b6caeb1e279ff5f30bd90547071380caf7efd19a54ea2f5972fddd266f91b5a2",
+              "source": {
+                "sha256": "90ffcaf2949df6e6efb7c82e0eb692117803de7fbb7c5d61178bc44fd411cdfc",
+                "file_count": 62
+              },
+              "document_sha256": "99563bb64e9b9f98f0fec08a242860867eed80fba8e6adf21ddee63e26efb4ff",
+              "script_binding": "retained_unbound_legacy",
+              "baseline_compatibility": null,
+              "mode": "source",
+              "max_code_fix_rounds": 5,
+              "stuck_rounds": 2,
+              "runner_sha256": "0b5d7370459006a623d7084ab5c63a2ecdaa953fc2494a65627175671b994abf",
+              "engine_sha256": "6d9f4310015755d44f7e002ef5add7fb29dfaad0685c7e9d61ca495c1cddeaf1",
+              "validation_sha256": "6b57fe6df9a3049e7b76fbe76ca8042f885bcd507d87040a28032401879cdeb9",
+              "compatibility_adapter_sha256": "86d978d07814e35310da027da25d1e59bafd84dd350be5f66dc278050b1d43f9"
+            },
+            "stop_reason": null,
+            "evidence_file": "cases/f01d95abe3724c9fd25cedbd9292ea19c2c8956b12f0db2449c3d602907e58ee.json"
+          },
+          "PyTorchTesting": {
+            "status": "recovered_native",
+            "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/bac95cfec2ec9ed6edec0035079d987437a8f7b180f13f58cf3568afd39a89fc/recovery.json",
+            "code_fix_rounds": 1,
+            "provider_events": 0,
+            "identity": {
+              "baseline_fingerprint": "366e0c64f58ebac296ba554d7ae3f9d9ca2a6b85bf15faf250291bc1c2198bb9",
+              "baseline_result_sha256": "cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab",
+              "api": "PyTorchTesting",
+              "script_sha256": "20bc65ff0571be7a74499129df11127bf51690097c656f5043674d460ce9902e",
+              "prompt_sha256": {
+                "comprehension_write_exec": "f557fcc5d4534cdfa6e596066b2106fd4d9f1ed459be8afccb8676070275c501",
+                "deep_dive": "bcaacb96d675d8e898784eea65319e5ded213c06eb8578f5e40627fd3adce504"
+              },
+              "current_effective_config_sha256": "8f538c73b1313fa0053891b34eebf92d5423a22486707c2010f1cdbca48fc715",
+              "current_profile_sha256": "a9124a6c32a7bd4813d62b15ebee0bd7810d32a3f1e770cc67b21aac37b28a46",
+              "upstream_test_context": {
+                "sha256": "71eff9e405056f9b6670608d1c983b7c14f9ac268ae1869c767bf8d06b8ff241",
+                "file_count": 21
+              },
+              "context_engine": {
+                "deepdive.py": "11b4bd8f2c2761c17c43d43a4747ee3660173c94c1a621811c8f720e13898c73",
+                "docfix.py": "1d2f7cf6acdf9455ede12acdf35dcb93d91aa5bc7fe05514fbf783a5eca877b9"
+              },
+              "protocol_sha256": "b6caeb1e279ff5f30bd90547071380caf7efd19a54ea2f5972fddd266f91b5a2",
+              "source": {
+                "sha256": "90ffcaf2949df6e6efb7c82e0eb692117803de7fbb7c5d61178bc44fd411cdfc",
+                "file_count": 62
+              },
+              "document_sha256": "99563bb64e9b9f98f0fec08a242860867eed80fba8e6adf21ddee63e26efb4ff",
+              "script_binding": "retained_unbound_legacy",
+              "baseline_compatibility": null,
+              "mode": "source",
+              "max_code_fix_rounds": 5,
+              "stuck_rounds": 2,
+              "runner_sha256": "0b5d7370459006a623d7084ab5c63a2ecdaa953fc2494a65627175671b994abf",
+              "engine_sha256": "6d9f4310015755d44f7e002ef5add7fb29dfaad0685c7e9d61ca495c1cddeaf1",
+              "validation_sha256": "6b57fe6df9a3049e7b76fbe76ca8042f885bcd507d87040a28032401879cdeb9",
+              "compatibility_adapter_sha256": "86d978d07814e35310da027da25d1e59bafd84dd350be5f66dc278050b1d43f9"
+            },
+            "stop_reason": null,
+            "evidence_file": "cases/76c7113b5dedaf7802e5e88162e7d34d39de13695a0fef8269ec596f2df65491.json"
+          },
+          "SoftDTW": {
+            "status": "recovered_native",
+            "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/8ccb556cc2021ecadf26c26f1068d478fd8e6c00d0fbcdabd26c808d3047157d/recovery.json",
+            "code_fix_rounds": 1,
+            "provider_events": 0,
+            "identity": {
+              "baseline_fingerprint": "366e0c64f58ebac296ba554d7ae3f9d9ca2a6b85bf15faf250291bc1c2198bb9",
+              "baseline_result_sha256": "cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab",
+              "api": "SoftDTW",
+              "script_sha256": "5fdb9ae12e0866cac0e5ecf1608e67c7cb328894c02150da8a0f74f1d0c05e33",
+              "prompt_sha256": {
+                "comprehension_write_exec": "f557fcc5d4534cdfa6e596066b2106fd4d9f1ed459be8afccb8676070275c501",
+                "deep_dive": "bcaacb96d675d8e898784eea65319e5ded213c06eb8578f5e40627fd3adce504"
+              },
+              "current_effective_config_sha256": "8f538c73b1313fa0053891b34eebf92d5423a22486707c2010f1cdbca48fc715",
+              "current_profile_sha256": "a9124a6c32a7bd4813d62b15ebee0bd7810d32a3f1e770cc67b21aac37b28a46",
+              "upstream_test_context": {
+                "sha256": "71eff9e405056f9b6670608d1c983b7c14f9ac268ae1869c767bf8d06b8ff241",
+                "file_count": 21
+              },
+              "context_engine": {
+                "deepdive.py": "11b4bd8f2c2761c17c43d43a4747ee3660173c94c1a621811c8f720e13898c73",
+                "docfix.py": "1d2f7cf6acdf9455ede12acdf35dcb93d91aa5bc7fe05514fbf783a5eca877b9"
+              },
+              "protocol_sha256": "b6caeb1e279ff5f30bd90547071380caf7efd19a54ea2f5972fddd266f91b5a2",
+              "source": {
+                "sha256": "90ffcaf2949df6e6efb7c82e0eb692117803de7fbb7c5d61178bc44fd411cdfc",
+                "file_count": 62
+              },
+              "document_sha256": "99563bb64e9b9f98f0fec08a242860867eed80fba8e6adf21ddee63e26efb4ff",
+              "script_binding": "retained_unbound_legacy",
+              "baseline_compatibility": null,
+              "mode": "source",
+              "max_code_fix_rounds": 5,
+              "stuck_rounds": 2,
+              "runner_sha256": "0b5d7370459006a623d7084ab5c63a2ecdaa953fc2494a65627175671b994abf",
+              "engine_sha256": "6d9f4310015755d44f7e002ef5add7fb29dfaad0685c7e9d61ca495c1cddeaf1",
+              "validation_sha256": "6b57fe6df9a3049e7b76fbe76ca8042f885bcd507d87040a28032401879cdeb9",
+              "compatibility_adapter_sha256": "86d978d07814e35310da027da25d1e59bafd84dd350be5f66dc278050b1d43f9"
+            },
+            "stop_reason": null,
+            "evidence_file": "cases/288990af71f19b5dda9fbbde5ba88d28350396d04d826636c6afe8cc3a778433.json"
+          },
+          "SquaredEuclidean": {
+            "status": "recovered_native",
+            "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/438605590863dae1ddfc55df9d966ffb6d9f97f6c9f414fcafb497d1aec392f2/recovery.json",
+            "code_fix_rounds": 1,
+            "provider_events": 0,
+            "identity": {
+              "baseline_fingerprint": "366e0c64f58ebac296ba554d7ae3f9d9ca2a6b85bf15faf250291bc1c2198bb9",
+              "baseline_result_sha256": "cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab",
+              "api": "SquaredEuclidean",
+              "script_sha256": "d8160ba1424266d52478bcb5c291d755c52773b199c7f3bf0ebb66c432838fa2",
+              "prompt_sha256": {
+                "comprehension_write_exec": "f557fcc5d4534cdfa6e596066b2106fd4d9f1ed459be8afccb8676070275c501",
+                "deep_dive": "bcaacb96d675d8e898784eea65319e5ded213c06eb8578f5e40627fd3adce504"
+              },
+              "current_effective_config_sha256": "8f538c73b1313fa0053891b34eebf92d5423a22486707c2010f1cdbca48fc715",
+              "current_profile_sha256": "a9124a6c32a7bd4813d62b15ebee0bd7810d32a3f1e770cc67b21aac37b28a46",
+              "upstream_test_context": {
+                "sha256": "71eff9e405056f9b6670608d1c983b7c14f9ac268ae1869c767bf8d06b8ff241",
+                "file_count": 21
+              },
+              "context_engine": {
+                "deepdive.py": "11b4bd8f2c2761c17c43d43a4747ee3660173c94c1a621811c8f720e13898c73",
+                "docfix.py": "1d2f7cf6acdf9455ede12acdf35dcb93d91aa5bc7fe05514fbf783a5eca877b9"
+              },
+              "protocol_sha256": "b6caeb1e279ff5f30bd90547071380caf7efd19a54ea2f5972fddd266f91b5a2",
+              "source": {
+                "sha256": "90ffcaf2949df6e6efb7c82e0eb692117803de7fbb7c5d61178bc44fd411cdfc",
+                "file_count": 62
+              },
+              "document_sha256": "99563bb64e9b9f98f0fec08a242860867eed80fba8e6adf21ddee63e26efb4ff",
+              "script_binding": "retained_unbound_legacy",
+              "baseline_compatibility": null,
+              "mode": "source",
+              "max_code_fix_rounds": 5,
+              "stuck_rounds": 2,
+              "runner_sha256": "0b5d7370459006a623d7084ab5c63a2ecdaa953fc2494a65627175671b994abf",
+              "engine_sha256": "6d9f4310015755d44f7e002ef5add7fb29dfaad0685c7e9d61ca495c1cddeaf1",
+              "validation_sha256": "6b57fe6df9a3049e7b76fbe76ca8042f885bcd507d87040a28032401879cdeb9",
+              "compatibility_adapter_sha256": "86d978d07814e35310da027da25d1e59bafd84dd350be5f66dc278050b1d43f9"
+            },
+            "stop_reason": null,
+            "evidence_file": "cases/1ae4ff965cfce9262970630f1dd54baf8b31324a432324f568ac034aca2f825d.json"
+          },
+          "TimeSeriesSVMMixin": {
+            "status": "pending"
+          },
+          "TsLearnTags": {
+            "status": "pending"
+          },
+          "cdist_sax": {
+            "status": "pending"
+          },
+          "check_keras_backend": {
+            "status": "pending"
+          },
+          "compute": {
+            "status": "pending"
+          },
+          "cydist_1d_sax": {
+            "status": "pending"
+          },
+          "decision_function": {
+            "status": "pending"
+          },
+          "early_predict_proba": {
+            "status": "pending"
+          },
+          "extract_from_zip_url": {
+            "status": "pending"
+          },
+          "from_json": {
+            "status": "pending"
+          },
+          "from_pickle": {
+            "status": "pending"
+          },
+          "get_cluster_probas": {
+            "status": "pending"
+          },
+          "get_early_predict_proba_generator": {
+            "status": "pending"
+          },
+          "inv_transform_1d_sax": {
+            "status": "pending"
+          },
+          "inv_transform_sax": {
+            "status": "pending"
+          },
+          "is_float": {
+            "status": "pending"
+          },
+          "is_float32": {
+            "status": "pending"
+          },
+          "is_float64": {
+            "status": "pending"
+          },
+          "normal": {
+            "status": "pending"
+          },
+          "predict_class_and_earliness": {
+            "status": "pending"
+          },
+          "select_backend": {
+            "status": "pending"
+          },
+          "support_vectors_": {
+            "status": "pending"
+          },
+          "to_pickle": {
+            "status": "pending"
+          },
+          "uniform": {
+            "status": "pending"
+          }
+        },
+        "semantic_validation": "needs_independent_review",
+        "headline_credit": false,
+        "snapshot": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project",
+        "updated_at": "2026-09-08T14:08:58.071032-07:00",
+        "native_recovery_by_round": {
+          "0": 0,
+          "1": 8,
+          "2": 8,
+          "3": 8,
+          "4": 8,
+          "5": 8
+        },
+        "statuses": {
+          "recovered_native": 8,
+          "pending": 24
+        }
+      },
       "S_B2": {},
       "comparison": {}
     }

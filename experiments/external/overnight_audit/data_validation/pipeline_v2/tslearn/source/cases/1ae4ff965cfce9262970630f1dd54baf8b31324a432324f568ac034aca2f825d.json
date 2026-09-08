@@ -1,0 +1,93 @@
+{
+  "fingerprint": "de2331392ba79c2ce35b079c49b5e4fea1f65e9eebca2002d98623df29ae5d37",
+  "identity": {
+    "baseline_fingerprint": "366e0c64f58ebac296ba554d7ae3f9d9ca2a6b85bf15faf250291bc1c2198bb9",
+    "baseline_result_sha256": "cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab",
+    "api": "SquaredEuclidean",
+    "script_sha256": "d8160ba1424266d52478bcb5c291d755c52773b199c7f3bf0ebb66c432838fa2",
+    "prompt_sha256": {
+      "comprehension_write_exec": "f557fcc5d4534cdfa6e596066b2106fd4d9f1ed459be8afccb8676070275c501",
+      "deep_dive": "bcaacb96d675d8e898784eea65319e5ded213c06eb8578f5e40627fd3adce504"
+    },
+    "current_effective_config_sha256": "8f538c73b1313fa0053891b34eebf92d5423a22486707c2010f1cdbca48fc715",
+    "current_profile_sha256": "a9124a6c32a7bd4813d62b15ebee0bd7810d32a3f1e770cc67b21aac37b28a46",
+    "upstream_test_context": {
+      "sha256": "71eff9e405056f9b6670608d1c983b7c14f9ac268ae1869c767bf8d06b8ff241",
+      "file_count": 21
+    },
+    "context_engine": {
+      "deepdive.py": "11b4bd8f2c2761c17c43d43a4747ee3660173c94c1a621811c8f720e13898c73",
+      "docfix.py": "1d2f7cf6acdf9455ede12acdf35dcb93d91aa5bc7fe05514fbf783a5eca877b9"
+    },
+    "protocol_sha256": "b6caeb1e279ff5f30bd90547071380caf7efd19a54ea2f5972fddd266f91b5a2",
+    "source": {
+      "sha256": "90ffcaf2949df6e6efb7c82e0eb692117803de7fbb7c5d61178bc44fd411cdfc",
+      "file_count": 62
+    },
+    "document_sha256": "99563bb64e9b9f98f0fec08a242860867eed80fba8e6adf21ddee63e26efb4ff",
+    "script_binding": "retained_unbound_legacy",
+    "baseline_compatibility": null,
+    "mode": "source",
+    "max_code_fix_rounds": 5,
+    "stuck_rounds": 2,
+    "runner_sha256": "0b5d7370459006a623d7084ab5c63a2ecdaa953fc2494a65627175671b994abf",
+    "engine_sha256": "6d9f4310015755d44f7e002ef5add7fb29dfaad0685c7e9d61ca495c1cddeaf1",
+    "validation_sha256": "6b57fe6df9a3049e7b76fbe76ca8042f885bcd507d87040a28032401879cdeb9",
+    "compatibility_adapter_sha256": "86d978d07814e35310da027da25d1e59bafd84dd350be5f66dc278050b1d43f9"
+  },
+  "initial": {
+    "status": "fail",
+    "category": "runtime",
+    "error": "TypeError: SquaredEuclidean.__init__() missing 2 required positional arguments: 'X' and 'Y'",
+    "code": "\"\"\"Shared infrastructure-only scaffold for tslearn's full-surface 2x2.\n\nThis exact file is used in A1, A2, B1, and B2. It intentionally imports no\ntested tslearn API because discovering the public import is part of the\naudience task in every cell.\n\"\"\"\n\nfrom pathlib import Path\nimport sys\nimport traceback\n\nimport numpy as np\n\n\ndef run():\n    # Typed repository fixture path and condition-specific output directory:\n    trace_npz = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/tslearn/tslearn/.cached_datasets/Trace.npz\"\n    output_dir = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_exec/A2/output\"\n\n    # pre-loaded typed inputs (comprehension.execute.preamble)\n    Path(output_dir).mkdir(parents=True, exist_ok=True)\n    _trace = np.load(trace_npz)\n    _balanced = np.array([0, 4, 1, 17, 3, 13, 2, 5], dtype=int)\n    X = _trace[\"X_train\"][_balanced, :40, :]  # type: balanced time-series dataset ndarray (8, 40, 1)\n    X2 = _trace[\"X_test\"][:4, :32, :]  # type: second dataset ndarray (4, 32, 1)\n    s1 = X[0].ravel()  # type: 1-D series ndarray (40,)\n    s2 = X[1].ravel()  # type: 1-D series ndarray (40,)\n    y = _trace[\"y_train\"][_balanced]  # type: four balanced labels, two examples per class\n    tiny_matrix = np.arange(12.0).reshape(3, 4)  # type: deterministic numeric matrix\n\n    # Keep audience imports local so they cannot shadow fixture construction.\n    def api_test():\n        # TODO API_TEST_START\n        from tslearn.metrics.softdtw_variants import SquaredEuclidean\n\n        # Instantiate the metric object as per the documentation\n        metric = SquaredEuclidean()\n\n        # The documentation only specifies how to instantiate the factory class but does not \n        # document any properties, methods (e.g., __call__), or expected outputs for the instance.\n        print(f\"__CHECK__ SquaredEuclidean {type(metric).__name__}\")\n        assert False, \"The documented contract is insufficient to verify the result\"\n        # TODO API_TEST_END\n        pass\n\n    api_test()\n\n\nif __name__ == \"__main__\":\n    try:\n        run()\n        print(\"__DONE__\")\n    except Exception as exc:  # noqa: BLE001 - execution boundary\n        sys.stderr.write(\"__RUN_ERR__ \" + type(exc).__name__ + \": \" + str(exc) + \"\\n\")\n        traceback.print_exc()\n        raise SystemExit(1)\n"
+  },
+  "events": [
+    {
+      "status": "pass",
+      "category": null,
+      "error": null,
+      "code": "\"\"\"Shared infrastructure-only scaffold for tslearn's full-surface 2x2.\n\nThis exact file is used in A1, A2, B1, and B2. It intentionally imports no\ntested tslearn API because discovering the public import is part of the\naudience task in every cell.\n\"\"\"\n\nfrom pathlib import Path\nimport sys\nimport traceback\n\nimport numpy as np\n\n\ndef run():\n    # Typed repository fixture path and condition-specific output directory:\n    trace_npz = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/tslearn/tslearn/.cached_datasets/Trace.npz\"\n    output_dir = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/438605590863dae1ddfc55df9d966ffb6d9f97f6c9f414fcafb497d1aec392f2/round_01/attempt_0001/output\"\n\n    # pre-loaded typed inputs (comprehension.execute.preamble)\n    Path(output_dir).mkdir(parents=True, exist_ok=True)\n    _trace = np.load(trace_npz)\n    _balanced = np.array([0, 4, 1, 17, 3, 13, 2, 5], dtype=int)\n    X = _trace[\"X_train\"][_balanced, :40, :]  # type: balanced time-series dataset ndarray (8, 40, 1)\n    X2 = _trace[\"X_test\"][:4, :32, :]  # type: second dataset ndarray (4, 32, 1)\n    s1 = X[0].ravel()  # type: 1-D series ndarray (40,)\n    s2 = X[1].ravel()  # type: 1-D series ndarray (40,)\n    y = _trace[\"y_train\"][_balanced]  # type: four balanced labels, two examples per class\n    tiny_matrix = np.arange(12.0).reshape(3, 4)  # type: deterministic numeric matrix\n\n    # Keep audience imports local so they cannot shadow fixture construction.\n    def api_test():\n        # TODO API_TEST_START\n        from tslearn.metrics.softdtw_variants import SquaredEuclidean\n        import numpy as np\n\n        # Instantiate the metric object with two time series\n        sq_euc = SquaredEuclidean(s1, s2)\n\n        # Compute the pairwise squared Euclidean distance matrix\n        D = sq_euc.compute()\n\n        # Verify the output shape matches the lengths of the input time series\n        assert D.shape == (len(s1), len(s2)), f\"Expected shape {(len(s1), len(s2))}, got {D.shape}\"\n\n        # Verify the correctness of the computed squared Euclidean distance for the first pair of points\n        expected_0_0 = (s1[0] - s2[0]) ** 2\n        assert np.isclose(D[0, 0], expected_0_0), f\"Expected {expected_0_0}, got {D[0, 0]}\"\n\n        print(f\"__CHECK__ SquaredEuclidean {D.shape}\")\n        # TODO API_TEST_END\n        pass\n\n    api_test()\n\n\nif __name__ == \"__main__\":\n    try:\n        run()\n        print(\"__DONE__\")\n    except Exception as exc:  # noqa: BLE001 - execution boundary\n        sys.stderr.write(\"__RUN_ERR__ \" + type(exc).__name__ + \": \" + str(exc) + \"\\n\")\n        traceback.print_exc()\n        raise SystemExit(1)\n",
+      "native_result": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/438605590863dae1ddfc55df9d966ffb6d9f97f6c9f414fcafb497d1aec392f2/round_01/attempt_0001/native_result.json",
+      "script_sha256": "ef1c3b406c5e80df7142821f6833d84be53bbcaeb1214eac12908a7e3adab6ae",
+      "wall_s": 11.2,
+      "llm_calls": 1,
+      "input_tokens": 3044,
+      "output_tokens": 1058,
+      "code_fix_round": 1
+    }
+  ],
+  "rounds": [
+    {
+      "status": "pass",
+      "category": null,
+      "error": null,
+      "code": "\"\"\"Shared infrastructure-only scaffold for tslearn's full-surface 2x2.\n\nThis exact file is used in A1, A2, B1, and B2. It intentionally imports no\ntested tslearn API because discovering the public import is part of the\naudience task in every cell.\n\"\"\"\n\nfrom pathlib import Path\nimport sys\nimport traceback\n\nimport numpy as np\n\n\ndef run():\n    # Typed repository fixture path and condition-specific output directory:\n    trace_npz = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/tslearn/tslearn/.cached_datasets/Trace.npz\"\n    output_dir = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/438605590863dae1ddfc55df9d966ffb6d9f97f6c9f414fcafb497d1aec392f2/round_01/attempt_0001/output\"\n\n    # pre-loaded typed inputs (comprehension.execute.preamble)\n    Path(output_dir).mkdir(parents=True, exist_ok=True)\n    _trace = np.load(trace_npz)\n    _balanced = np.array([0, 4, 1, 17, 3, 13, 2, 5], dtype=int)\n    X = _trace[\"X_train\"][_balanced, :40, :]  # type: balanced time-series dataset ndarray (8, 40, 1)\n    X2 = _trace[\"X_test\"][:4, :32, :]  # type: second dataset ndarray (4, 32, 1)\n    s1 = X[0].ravel()  # type: 1-D series ndarray (40,)\n    s2 = X[1].ravel()  # type: 1-D series ndarray (40,)\n    y = _trace[\"y_train\"][_balanced]  # type: four balanced labels, two examples per class\n    tiny_matrix = np.arange(12.0).reshape(3, 4)  # type: deterministic numeric matrix\n\n    # Keep audience imports local so they cannot shadow fixture construction.\n    def api_test():\n        # TODO API_TEST_START\n        from tslearn.metrics.softdtw_variants import SquaredEuclidean\n        import numpy as np\n\n        # Instantiate the metric object with two time series\n        sq_euc = SquaredEuclidean(s1, s2)\n\n        # Compute the pairwise squared Euclidean distance matrix\n        D = sq_euc.compute()\n\n        # Verify the output shape matches the lengths of the input time series\n        assert D.shape == (len(s1), len(s2)), f\"Expected shape {(len(s1), len(s2))}, got {D.shape}\"\n\n        # Verify the correctness of the computed squared Euclidean distance for the first pair of points\n        expected_0_0 = (s1[0] - s2[0]) ** 2\n        assert np.isclose(D[0, 0], expected_0_0), f\"Expected {expected_0_0}, got {D[0, 0]}\"\n\n        print(f\"__CHECK__ SquaredEuclidean {D.shape}\")\n        # TODO API_TEST_END\n        pass\n\n    api_test()\n\n\nif __name__ == \"__main__\":\n    try:\n        run()\n        print(\"__DONE__\")\n    except Exception as exc:  # noqa: BLE001 - execution boundary\n        sys.stderr.write(\"__RUN_ERR__ \" + type(exc).__name__ + \": \" + str(exc) + \"\\n\")\n        traceback.print_exc()\n        raise SystemExit(1)\n",
+      "native_result": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/438605590863dae1ddfc55df9d966ffb6d9f97f6c9f414fcafb497d1aec392f2/round_01/attempt_0001/native_result.json",
+      "script_sha256": "ef1c3b406c5e80df7142821f6833d84be53bbcaeb1214eac12908a7e3adab6ae",
+      "wall_s": 11.2,
+      "llm_calls": 1,
+      "input_tokens": 3044,
+      "output_tokens": 1058,
+      "code_fix_round": 1
+    }
+  ],
+  "status": "recovered_native",
+  "diagnosis": {
+    "api": "SquaredEuclidean",
+    "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/438605590863dae1ddfc55df9d966ffb6d9f97f6c9f414fcafb497d1aec392f2/deepdive/SquaredEuclidean.md",
+    "model": "google:gemini-3.1-pro-preview",
+    "tokens": {
+      "in": 4478,
+      "out": 2336
+    },
+    "wall_s": 21.1,
+    "report_text": "**L0 AUDIENCE + TESTABILITY CLASSIFICATION**\n- **Audience:** ADVANCED/LOW-LEVEL. While it is exposed publicly in `tslearn.metrics`, it is primarily designed as a stateful helper object to provide distance matrices and Jacobian products for higher-level algorithms like `SoftDTW` and its barycenter computations.\n- **Testability:** TESTABLE FROM PUBLIC INPUTS. The class can be instantiated directly with standard Python lists or NumPy arrays representing time series, and its methods can be invoked without any complex setup.\n\n**L1 PURPOSE**\nThe `SquaredEuclidean` class computes and stores the pairwise squared Euclidean distance matrix between two time series. It acts as a stateful metric provider that not only calculates the distance matrix but also computes the Jacobian product required for gradient-based optimization in Soft-DTW barycenter algorithms. It sits at the lowest level of the distance computation data flow, abstracting backend-specific (NumPy, PyTorch, etc.) operations.\n\n**L2 CONTRACT**\n- **Receiver:** A `SquaredEuclidean` instance. Obtained by calling the constructor `SquaredEuclidean(X, Y, be=None, compute_with_backend=False)`.\n- **Parameters (Constructor):**\n  - `X`: array-like, shape=(m, d). The first time series.\n  - `Y`: array-like, shape=(n, d). The second time series.\n  - `be`: Backend object, string, or `None`. Specifies the computational backend (e.g., NumPy, PyTorch).\n  - `compute_with_backend`: `bool`, default=`False`. If `True`, forces computation using the specified backend. If `False`, allows conversion to NumPy for accelerated Numba JIT execution when a non-NumPy backend is provided.\n- **Return values:**\n  - `compute()`: Returns an array-like of shape `(m, n)` representing the pairwise squared Euclidean distance matrix.\n  - `jacobian_product(E)`: Returns an array-like of shape `(m, d)` representing the product of the Jacobian and the matrix `E`.\n- **Visibility:** Public.\n\n**L3 MECHANICS**\n- **Initialization:** The constructor (`tslearn/tslearn/metrics/softdtw_variants.py:1178`) initializes the backend via `instantiate_backend`. It then normalizes `X` and `Y` into 2D time-series arrays using `to_time_series` and casts them to `float64` using the backend's `cast` method.\n- **Distance Computation:** The `compute()` method delegates to the backend's `pairwise_euclidean_distances(self.X, self.Y)` and squares the result.\n- **Jacobian Product:** The `jacobian_product(E)` method allocates a zero matrix `G` of the same shape as `X`. Depending on the backend and `compute_with_backend` flag, it delegates the actual math to either the Numba-compiled `_njit_jacobian_product_sq_euc` (converting inputs to NumPy if necessary) or the backend-native `_jacobian_product_sq_euc`.\n\n**L4 CORRECT MINIMAL USAGE**\n```python\nfrom tslearn.metrics.softdtw_variants import SquaredEuclidean\n\n# Define two univariate time series\nX = [[1.0], [2.0], [2.0], [3.0]]\nY = [[1.0], [2.0], [3.0], [4.0]]\n\n# Instantiate the metric object with the time series\nsq_euc = SquaredEuclidean(X, Y)\n\n# Compute the pairwise squared Euclidean distance matrix\nD = sq_euc.compute()\n\n# Verify the output matches the docstring example\nassert D.shape == (4, 4)\nprint(D)\n```\n\n**L5 FAILURE FORENSICS**\n- **`TypeError: SquaredEuclidean.__init__() missing 2 required positional arguments: 'X' and 'Y'`**:\n  This failure occurred because the previous documentation entry was completely hallucinated. It explicitly instructed the LLM to instantiate the class without arguments (`SquaredEuclidean()`), claiming it was a \"metric object factory\". However, the source code at `tslearn/tslearn/metrics/softdtw_variants.py:1178` clearly defines the signature as `def __init__(self, X, Y, be=None, compute_with_backend=False):`, making `X` and `Y` strictly required positional arguments.\n\n**L6 SELF-ASSESSMENT**\n- **Inferences:** None. All claims are directly traceable to the provided source code, docstrings, and real call sites.\n- **Confidence Scores:**\n  - **L2 (Contract):** 10/10. The parameters, types, and return values are explicitly defined in the class docstring and method signatures.\n  - **L3 (Mechanics):** 10/10. The internal delegation to backend methods and Numba JIT functions is clearly visible in the provided source code.\n  - **L4 (Usage):** 10/10. The usage snippet perfectly mirrors the executable example provided in the official docstring at line 1197.",
+    "report_sha256": "b54e0e415bcb2a7736d6ae8bb28c0c5376bd46d8f83d184002020a90451181a4"
+  },
+  "max_rounds": 5,
+  "stuck_threshold": 2,
+  "stop_reason": null,
+  "semantic_validation": "needs_independent_review",
+  "headline_credit": false,
+  "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/438605590863dae1ddfc55df9d966ffb6d9f97f6c9f414fcafb497d1aec392f2/recovery.json"
+}

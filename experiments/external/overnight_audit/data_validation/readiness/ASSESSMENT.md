@@ -1,6 +1,6 @@
 # AIDEAL readiness assessment and improvement queue
 
-Updated: 2026-09-08T20:54:21.057316+00:00
+Updated: 2026-09-08T21:09:22.530071+00:00
 
 **Measured scope:** how documentation affects an LLM’s API use under a fixed harness. Overall agent readiness is not yet fully measured; no composite score is assigned.
 
@@ -8,7 +8,7 @@ Updated: 2026-09-08T20:54:21.057316+00:00
 |---|---|---|---|---|---|
 | mir_eval | 1/148 provisional | 135/148 final | pending (148 APIs) | 137/148 final | WITHHELD/PARTIAL |
 | thumbnailator | 2/149 provisional | 127/149 final | pending (149 APIs) | 139/149 final | WITHHELD/PARTIAL |
-| tslearn | 3/235 provisional | 0/235 provisional | pending (235 APIs) | pending (235 APIs) | WITHHELD/PARTIAL |
+| tslearn | 3/235 provisional | 175/235 final | pending (235 APIs) | pending (235 APIs) | WITHHELD/PARTIAL |
 
 Provisional counts retain pending and provider-error APIs in the denominator. Final counts are native pass/all-API results. Cross-cell effects require the separate matched-comparison release checks.
 
@@ -35,15 +35,15 @@ Provisional counts retain pending and provider-error APIs in the denominator. Fi
 | thumbnailator | input-or-output-path | 2 |
 | thumbnailator | provider | 3 |
 | thumbnailator | unknown | 31 |
-| tslearn | api-identity-or-version | 3 |
-| tslearn | assertion-or-behavior | 1 |
-| tslearn | input-contract-or-api-call | 3 |
-| tslearn | provider | 36 |
-| tslearn | unknown | 4 |
+| tslearn | api-identity-or-version | 19 |
+| tslearn | assertion-or-behavior | 15 |
+| tslearn | input-contract-or-api-call | 10 |
+| tslearn | provider | 34 |
+| tslearn | unknown | 26 |
 
-## Reviewable improvements (135)
+## Reviewable improvements (192)
 
-Review states: `{'open': 134, 'proposed': 1}`. Observation errors: 0. Inactive reviewed IDs retained: 0.
+Review states: `{'open': 191, 'proposed': 1}`. Observation errors: 0. Inactive reviewed IDs retained: 0.
 
 Each card separates native failure, diagnosis confidence, proposed action, validation and review decisions. Provider barriers concern execution infrastructure; they are not automatically codebase or documentation defects.
 
@@ -112,8 +112,6 @@ Each card separates native failure, diagnosis confidence, proposed action, valid
 | [tslearn: partial_fit](suggestions/f0c4cd50ddf3925e7c6a.md) | A1 | execution_blocker | high | open |
 | [tslearn: predict_proba_and_earliness](suggestions/2caa8ac2f3722ae16c2d.md) | A1 | execution_blocker | high | open |
 | [tslearn: save_dict](suggestions/64042927743239068f2f.md) | A1 | execution_blocker | high | open |
-| [tslearn: compute](suggestions/4a28af1f1c30cd779151.md) | A2 | execution_blocker | high | open |
-| [tslearn: jacobian_product](suggestions/5eb42a36285bbdb40258.md) | A2 | execution_blocker | high | open |
 | [mir_eval: deprecated](suggestions/8c1892028fee0fa4c019.md) | A2 | reviewed_barrier | reviewed | open |
 | [mir_eval: first_n_three_layer_P](suggestions/1350063ad65ccf061962.md) | A2 | reviewed_barrier | reviewed | open |
 | [mir_eval: load_key](suggestions/436854cbe884009d1ba7.md) | A2 | reviewed_barrier | reviewed | open |
@@ -183,7 +181,66 @@ Each card separates native failure, diagnosis confidence, proposed action, valid
 | [tslearn: njit_lcss_accumulated_matrix](suggestions/82cd652dd43be2a632db.md) | A1 | needs_diagnosis | low | open |
 | [tslearn: set_weights](suggestions/c6e70a9295e0b43a89cb.md) | A1 | needs_diagnosis | low | open |
 | [tslearn: shapelets_](suggestions/f3bf662dc22f29f79acf.md) | A1 | needs_diagnosis | low | open |
+| [tslearn: BaseModelPackage](suggestions/f995a70ba75a6f818ba5.md) | A2 | needs_diagnosis | medium | open |
+| [tslearn: EmptyClusterError](suggestions/3bb29d868c529bcad84e.md) | A2 | needs_diagnosis | medium | open |
+| [tslearn: GlobalArgminPooling1D](suggestions/7fec39a7ce54e7122bf8.md) | A2 | needs_diagnosis | low | open |
+| [tslearn: GlobalMinPooling1D](suggestions/4019272c56a19f2872ad.md) | A2 | needs_diagnosis | low | open |
+| [tslearn: KNeighborsTimeSeriesMixin](suggestions/66288f871906a29f15a8.md) | A2 | needs_diagnosis | medium | open |
+| [tslearn: LearningShapelets](suggestions/a03010ee7627aa0f49c8.md) | A2 | needs_diagnosis | low | open |
+| [tslearn: LocalSquaredDistanceLayer](suggestions/06a7cd0158af8a0604f8.md) | A2 | needs_diagnosis | low | open |
+| [tslearn: NonMyopicEarlyClassifier](suggestions/4f037ac09d68fff30b4d.md) | A2 | needs_diagnosis | medium | open |
+| [tslearn: NumPyBackend](suggestions/3bc2e78380cd347e066f.md) | A2 | needs_diagnosis | medium | open |
+| [tslearn: NumPyRandom](suggestions/d50d93cf638187995e0f.md) | A2 | needs_diagnosis | medium | open |
+| [tslearn: PatchingLayer](suggestions/d0957863ecb711faa6c8.md) | A2 | needs_diagnosis | low | open |
+| [tslearn: PyTorchBackend](suggestions/d2a2e06b853eef716bb1.md) | A2 | needs_diagnosis | medium | open |
+| [tslearn: PyTorchRandom](suggestions/900f8f4a475dc62bb350.md) | A2 | needs_diagnosis | medium | open |
+| [tslearn: PyTorchTesting](suggestions/e75daed6c7429f1a1048.md) | A2 | needs_diagnosis | medium | open |
+| [tslearn: SoftDTW](suggestions/3eb071d1a1ee8cb916a7.md) | A2 | needs_diagnosis | medium | open |
+| [tslearn: SquaredEuclidean](suggestions/3f27f4b6cc2ff519a694.md) | A2 | needs_diagnosis | medium | open |
+| [tslearn: TimeSeriesSVMMixin](suggestions/0f6325e1b4f2389d4abb.md) | A2 | needs_diagnosis | medium | open |
+| [tslearn: TsLearnTags](suggestions/00dd44f6e4ef414dbbf4.md) | A2 | needs_diagnosis | medium | open |
+| [tslearn: build](suggestions/f73b986047aa6c515b80.md) | A2 | needs_diagnosis | low | open |
+| [tslearn: call](suggestions/5de88051085748a6a12c.md) | A2 | needs_diagnosis | low | open |
+| [tslearn: cdist_sax](suggestions/0f28003de98d5ae5656c.md) | A2 | needs_diagnosis | medium | open |
+| [tslearn: check_keras_backend](suggestions/0476ec0dd20cfcfc0f3a.md) | A2 | needs_diagnosis | medium | open |
+| [tslearn: compute](suggestions/4a28af1f1c30cd779151.md) | A2 | needs_diagnosis | medium | open |
+| [tslearn: compute_output_shape](suggestions/e11427e7509aeb1fabff.md) | A2 | needs_diagnosis | low | open |
+| [tslearn: cydist_1d_sax](suggestions/2e76ea80776db663eb78.md) | A2 | needs_diagnosis | low | open |
+| [tslearn: decision_function](suggestions/90f1882d52407388781f.md) | A2 | needs_diagnosis | low | open |
+| [tslearn: dtw_barycenter_averaging_one_init](suggestions/c58de824dd094aad07bc.md) | A2 | needs_diagnosis | medium | open |
+| [tslearn: early_predict_proba](suggestions/1d9195b5c2bf45a1c7da.md) | A2 | needs_diagnosis | medium | open |
+| [tslearn: extract_from_zip_url](suggestions/556446f978a96da3cd17.md) | A2 | needs_diagnosis | low | open |
+| [tslearn: fix_force_all_finite_warning](suggestions/19d92b0287f41c177588.md) | A2 | needs_diagnosis | medium | open |
+| [tslearn: from_cesium_dataset](suggestions/983fb54c898d2b3bb990.md) | A2 | needs_diagnosis | low | open |
+| [tslearn: from_json](suggestions/c00cb00d746fa1ffa697.md) | A2 | needs_diagnosis | low | open |
+| [tslearn: from_pickle](suggestions/0f71db7bc37749a20233.md) | A2 | needs_diagnosis | medium | open |
+| [tslearn: get_backend](suggestions/1f1c9231449a82dd76e1.md) | A2 | needs_diagnosis | medium | open |
+| [tslearn: get_cluster_probas](suggestions/dbbbd6d4fe034fb71a4c.md) | A2 | needs_diagnosis | medium | open |
+| [tslearn: get_config](suggestions/e7e4aeb1e4da6544276e.md) | A2 | needs_diagnosis | low | open |
+| [tslearn: get_early_predict_proba_generator](suggestions/c7c8a7deba0271c30c59.md) | A2 | needs_diagnosis | medium | open |
+| [tslearn: get_weights](suggestions/d062f90a19b6676ec7cf.md) | A2 | needs_diagnosis | low | open |
+| [tslearn: grabocka_params_to_shapelet_size_dict](suggestions/d09163a6488511cf5a43.md) | A2 | needs_diagnosis | low | open |
+| [tslearn: inv_transform_1d_sax](suggestions/dfdfaa2f4d3624d46ed2.md) | A2 | needs_diagnosis | low | open |
+| [tslearn: inv_transform_sax](suggestions/0141328727366391a9f5.md) | A2 | needs_diagnosis | low | open |
+| [tslearn: inverse_transform](suggestions/27b2acd83b60d8ed2f90.md) | A2 | needs_diagnosis | medium | open |
+| [tslearn: is_float](suggestions/d24aaded888f4b4bfc87.md) | A2 | needs_diagnosis | medium | open |
+| [tslearn: is_float32](suggestions/b64a87449b75059926df.md) | A2 | needs_diagnosis | medium | open |
+| [tslearn: is_float64](suggestions/24b26619da067b29ed62.md) | A2 | needs_diagnosis | medium | open |
+| [tslearn: iscomplex](suggestions/ec9c6d62bb40991b43d6.md) | A2 | needs_diagnosis | medium | open |
+| [tslearn: jacobian_product](suggestions/5eb42a36285bbdb40258.md) | A2 | needs_diagnosis | medium | open |
+| [tslearn: lcss_accumulated_matrix](suggestions/a052216881cad4209ce1.md) | A2 | needs_diagnosis | medium | open |
+| [tslearn: locate](suggestions/c501d3c2fb0362ac8b0f.md) | A2 | needs_diagnosis | low | open |
+| [tslearn: normal](suggestions/e910f1e8c01175070256.md) | A2 | needs_diagnosis | medium | open |
+| [tslearn: pairwise_distances](suggestions/832fea73997fc2266b64.md) | A2 | needs_diagnosis | medium | open |
 | [tslearn: predict_class_and_earliness](suggestions/d2ff189e60095b0de249.md) | A2 | needs_diagnosis | medium | open |
+| [tslearn: select_backend](suggestions/db7d46ac6987e477fc50.md) | A2 | needs_diagnosis | medium | open |
+| [tslearn: set_backend](suggestions/75e45300371051b6a516.md) | A2 | needs_diagnosis | medium | open |
+| [tslearn: set_weights](suggestions/7eefa619cd3fce110254.md) | A2 | needs_diagnosis | low | open |
+| [tslearn: shapelets_](suggestions/c05340e86035f734bb6f.md) | A2 | needs_diagnosis | low | open |
+| [tslearn: support_vectors_](suggestions/2ac402a74c2257cb4cfd.md) | A2 | needs_diagnosis | medium | open |
+| [tslearn: to_cesium_dataset](suggestions/7e892c56816236b0eeff.md) | A2 | needs_diagnosis | low | open |
+| [tslearn: to_pickle](suggestions/fbf9d5a6bd05cc38a021.md) | A2 | needs_diagnosis | medium | open |
+| [tslearn: uniform](suggestions/8e82751fb4e01235d481.md) | A2 | needs_diagnosis | medium | open |
 
 ## Human and agent workflow
 

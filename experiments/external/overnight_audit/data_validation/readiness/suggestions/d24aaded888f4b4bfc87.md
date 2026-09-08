@@ -2,7 +2,7 @@
 
 ID: `d24aaded888f4b4bfc87` · tslearn/A2 · **open**
 
-Evidence version: `23d700c43b53a1dee542e3f17e294100b51f314ba98d962d3c612bfd38a74d26`
+Evidence version: `1d0cbfb45af4814d07f4263f320d17607421e865472ec7bff7009d01f8b71fc8`
 
 Candidate category: **assertion-or-behavior**. Confidence: **medium**.
 
@@ -13,12 +13,12 @@ Compare expected value with pinned implementation; do not weaken the assertion.
 Source: `tslearn/tslearn/backend/numpy_backend.py:106`. Native category: `runtime`.
 
 ```text
-AssertionError: Expected the backend to identify the float array X as a float type.
+AssertionError: Expected float array to be recognized as float.
 ```
 
-[Evidence ledger](../../../tslearn/A2/ledger.json) · [Saved evidence](../evidence/23d700c43b53a1dee542e3f17e294100b51f314ba98d962d3c612bfd38a74d26.json)
+[Evidence ledger](../../../tslearn/A2/ledger.json) · [Saved evidence](../evidence/1d0cbfb45af4814d07f4263f320d17607421e865472ec7bff7009d01f8b71fc8.json)
 
-Recorded attempts: 1; provider errors: 0; document rounds: None.
+Recorded attempts: 0; provider errors: 0; document rounds: None.
 
 ## Proposed action
 

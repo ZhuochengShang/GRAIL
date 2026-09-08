@@ -2,7 +2,7 @@
 
 ID: `0476ec0dd20cfcfc0f3a` · tslearn/A2 · **open**
 
-Evidence version: `898926f47e1663ef28e5ed3e17c0a973a0690fe651f1113c1e974f6eddb078db`
+Evidence version: `db07be43b72ff9d4248956656f9c2167117d534e1d1ad779ba8b0034d82decb6`
 
 Candidate category: **assertion-or-behavior**. Confidence: **medium**.
 
@@ -16,9 +16,9 @@ Source: `tslearn/tslearn/backend/__init__.py:12`. Native category: `runtime`.
 AssertionError: The documented contract is insufficient to verify the side effect of check_keras_backend
 ```
 
-[Evidence ledger](../../../tslearn/A2/ledger.json) · [Saved evidence](../evidence/898926f47e1663ef28e5ed3e17c0a973a0690fe651f1113c1e974f6eddb078db.json)
+[Evidence ledger](../../../tslearn/A2/ledger.json) · [Saved evidence](../evidence/db07be43b72ff9d4248956656f9c2167117d534e1d1ad779ba8b0034d82decb6.json)
 
-Recorded attempts: 1; provider errors: 0; document rounds: None.
+Recorded attempts: 0; provider errors: 0; document rounds: None.
 
 ## Proposed action
 

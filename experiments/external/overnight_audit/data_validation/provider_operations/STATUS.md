@@ -1,6 +1,6 @@
 # Execution status and API timing
 
-2026-09-08T13:54:05.147442-07:00
+2026-09-08T14:09:14.008691-07:00
 
 **No single “partial” label:** each unresolved case has an explicit reason. A finished evaluation can contain real failures. A provider failure is not executed code. A running test does not prove the target API was reached.
 
@@ -13,7 +13,7 @@
 | Thumbnailator | A2 | Native evaluation finished (failures still count) | 127 | 14 | 8 | 0 | 0 | 0 |
 | Thumbnailator | B2 | Native evaluation finished (failures still count) | 139 | 7 | 3 | 0 | 0 | 0 |
 | tslearn | A1 | 34 provider cases unresolved | 121 | 0 | 29 | 51 | 34 | 0 |
-| tslearn | A2 | 2 provider cases unresolved | 175 | 0 | 31 | 27 | 2 | 0 |
+| tslearn | A2 | Native evaluation finished (failures still count) | 175 | 0 | 32 | 28 | 0 | 0 |
 | tslearn | B2 | Not started / no native results | 0 | 0 | 0 | 0 | 0 | 0 |
 
 Other failures/timeouts, if present, remain explicit in summary.json and the full API table. B1 is intentionally omitted. MDAnalysis, Sedona and RDPro reruns are deferred.
@@ -27,13 +27,14 @@ New workers may use the explicitly registered 600s × 1 transport and output-dir
 ## Separate source-recovery progress
 
 - mir_eval / A2 source fixes: {'recovered_native': 13}; cohort 13 APIs.
-- mir_eval / Post-B2 source fixes: {'recovered_native': 8, 'pending': 3}; cohort 11 APIs.
+- mir_eval / Post-B2 source fixes: {'recovered_native': 11}; cohort 11 APIs.
 - Thumbnailator / A2 source fixes: {'recovered_native': 20, 'stuck': 2}; cohort 22 APIs.
-- Thumbnailator / Post-B2 source fixes: {'recovered_native': 6, 'stuck': 1, 'pending': 3}; cohort 10 APIs.
+- Thumbnailator / Post-B2 source fixes: {'recovered_native': 8, 'stuck': 2}; cohort 10 APIs.
+- tslearn / A2 source fixes: {'recovered_native': 8, 'pending': 24}; cohort 32 APIs.
 
 ## Transport rollout
 
 - mir_eval A1: Installed; awaiting next natural worker start; observed workers [].
-- Thumbnailator A1: Installed; awaiting next natural worker start; observed workers [].
+- Thumbnailator A1: New transport observed in worker logs; observed workers [16216].
 - tslearn A1: Installed; awaiting next natural worker start; observed workers [].
 - tslearn A2: New transport observed in worker logs; observed workers [12853].

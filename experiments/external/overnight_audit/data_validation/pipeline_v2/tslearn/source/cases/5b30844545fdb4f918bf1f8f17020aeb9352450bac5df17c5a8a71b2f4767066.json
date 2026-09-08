@@ -1,0 +1,93 @@
+{
+  "fingerprint": "0c2fedecbefff1970d5af0a04b7a2b8350ba85c8983ff2f70201a37abb980f22",
+  "identity": {
+    "baseline_fingerprint": "366e0c64f58ebac296ba554d7ae3f9d9ca2a6b85bf15faf250291bc1c2198bb9",
+    "baseline_result_sha256": "cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab",
+    "api": "EmptyClusterError",
+    "script_sha256": "d57fb60c0dd3e9474786eeeffc055023677d0e3f00d0dbd2bb0e4bff7b3cceef",
+    "prompt_sha256": {
+      "comprehension_write_exec": "f557fcc5d4534cdfa6e596066b2106fd4d9f1ed459be8afccb8676070275c501",
+      "deep_dive": "bcaacb96d675d8e898784eea65319e5ded213c06eb8578f5e40627fd3adce504"
+    },
+    "current_effective_config_sha256": "8f538c73b1313fa0053891b34eebf92d5423a22486707c2010f1cdbca48fc715",
+    "current_profile_sha256": "a9124a6c32a7bd4813d62b15ebee0bd7810d32a3f1e770cc67b21aac37b28a46",
+    "upstream_test_context": {
+      "sha256": "71eff9e405056f9b6670608d1c983b7c14f9ac268ae1869c767bf8d06b8ff241",
+      "file_count": 21
+    },
+    "context_engine": {
+      "deepdive.py": "11b4bd8f2c2761c17c43d43a4747ee3660173c94c1a621811c8f720e13898c73",
+      "docfix.py": "1d2f7cf6acdf9455ede12acdf35dcb93d91aa5bc7fe05514fbf783a5eca877b9"
+    },
+    "protocol_sha256": "b6caeb1e279ff5f30bd90547071380caf7efd19a54ea2f5972fddd266f91b5a2",
+    "source": {
+      "sha256": "90ffcaf2949df6e6efb7c82e0eb692117803de7fbb7c5d61178bc44fd411cdfc",
+      "file_count": 62
+    },
+    "document_sha256": "99563bb64e9b9f98f0fec08a242860867eed80fba8e6adf21ddee63e26efb4ff",
+    "script_binding": "retained_unbound_legacy",
+    "baseline_compatibility": null,
+    "mode": "source",
+    "max_code_fix_rounds": 5,
+    "stuck_rounds": 2,
+    "runner_sha256": "0b5d7370459006a623d7084ab5c63a2ecdaa953fc2494a65627175671b994abf",
+    "engine_sha256": "6d9f4310015755d44f7e002ef5add7fb29dfaad0685c7e9d61ca495c1cddeaf1",
+    "validation_sha256": "6b57fe6df9a3049e7b76fbe76ca8042f885bcd507d87040a28032401879cdeb9",
+    "compatibility_adapter_sha256": "86d978d07814e35310da027da25d1e59bafd84dd350be5f66dc278050b1d43f9"
+  },
+  "initial": {
+    "status": "fail",
+    "category": "runtime",
+    "error": "AssertionError:",
+    "code": "\"\"\"Shared infrastructure-only scaffold for tslearn's full-surface 2x2.\n\nThis exact file is used in A1, A2, B1, and B2. It intentionally imports no\ntested tslearn API because discovering the public import is part of the\naudience task in every cell.\n\"\"\"\n\nfrom pathlib import Path\nimport sys\nimport traceback\n\nimport numpy as np\n\n\ndef run():\n    # Typed repository fixture path and condition-specific output directory:\n    trace_npz = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/tslearn/tslearn/.cached_datasets/Trace.npz\"\n    output_dir = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_exec/A2/output\"\n\n    # pre-loaded typed inputs (comprehension.execute.preamble)\n    Path(output_dir).mkdir(parents=True, exist_ok=True)\n    _trace = np.load(trace_npz)\n    _balanced = np.array([0, 4, 1, 17, 3, 13, 2, 5], dtype=int)\n    X = _trace[\"X_train\"][_balanced, :40, :]  # type: balanced time-series dataset ndarray (8, 40, 1)\n    X2 = _trace[\"X_test\"][:4, :32, :]  # type: second dataset ndarray (4, 32, 1)\n    s1 = X[0].ravel()  # type: 1-D series ndarray (40,)\n    s2 = X[1].ravel()  # type: 1-D series ndarray (40,)\n    y = _trace[\"y_train\"][_balanced]  # type: four balanced labels, two examples per class\n    tiny_matrix = np.arange(12.0).reshape(3, 4)  # type: deterministic numeric matrix\n\n    # Keep audience imports local so they cannot shadow fixture construction.\n    def api_test():\n        # TODO API_TEST_START\n        from tslearn.clustering.utils import EmptyClusterError\n\n        try:\n            raise EmptyClusterError(\"Test empty cluster\")\n        except EmptyClusterError as e:\n            assert isinstance(e, Exception), \"EmptyClusterError should inherit from Exception\"\n            assert str(e) == \"Test empty cluster\", \"Exception message should match the raised message\"\n            print(f\"__CHECK__ EmptyClusterError {type(e).__name__}\")\n        # TODO API_TEST_END\n        pass\n\n    api_test()\n\n\nif __name__ == \"__main__\":\n    try:\n        run()\n        print(\"__DONE__\")\n    except Exception as exc:  # noqa: BLE001 - execution boundary\n        sys.stderr.write(\"__RUN_ERR__ \" + type(exc).__name__ + \": \" + str(exc) + \"\\n\")\n        traceback.print_exc()\n        raise SystemExit(1)\n"
+  },
+  "events": [
+    {
+      "status": "pass",
+      "category": null,
+      "error": null,
+      "code": "\"\"\"Shared infrastructure-only scaffold for tslearn's full-surface 2x2.\n\nThis exact file is used in A1, A2, B1, and B2. It intentionally imports no\ntested tslearn API because discovering the public import is part of the\naudience task in every cell.\n\"\"\"\n\nfrom pathlib import Path\nimport sys\nimport traceback\n\nimport numpy as np\n\n\ndef run():\n    # Typed repository fixture path and condition-specific output directory:\n    trace_npz = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/tslearn/tslearn/.cached_datasets/Trace.npz\"\n    output_dir = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/9295ea12ac40df058f7feeb66d5184bc21e289669f4b04bcf601035affa9860b/round_01/attempt_0001/output\"\n\n    # pre-loaded typed inputs (comprehension.execute.preamble)\n    Path(output_dir).mkdir(parents=True, exist_ok=True)\n    _trace = np.load(trace_npz)\n    _balanced = np.array([0, 4, 1, 17, 3, 13, 2, 5], dtype=int)\n    X = _trace[\"X_train\"][_balanced, :40, :]  # type: balanced time-series dataset ndarray (8, 40, 1)\n    X2 = _trace[\"X_test\"][:4, :32, :]  # type: second dataset ndarray (4, 32, 1)\n    s1 = X[0].ravel()  # type: 1-D series ndarray (40,)\n    s2 = X[1].ravel()  # type: 1-D series ndarray (40,)\n    y = _trace[\"y_train\"][_balanced]  # type: four balanced labels, two examples per class\n    tiny_matrix = np.arange(12.0).reshape(3, 4)  # type: deterministic numeric matrix\n\n    # Keep audience imports local so they cannot shadow fixture construction.\n    def api_test():\n        # TODO API_TEST_START\n        from tslearn.clustering.utils import EmptyClusterError\n\n        custom_msg = \"Test empty cluster\"\n        try:\n            raise EmptyClusterError(custom_msg)\n        except EmptyClusterError as e:\n            assert isinstance(e, Exception), \"EmptyClusterError should inherit from Exception\"\n            expected_str = f\"Cluster assignments lead to at least one empty cluster ({custom_msg})\"\n            assert str(e) == expected_str, f\"Expected '{expected_str}', got '{str(e)}'\"\n            print(f\"__CHECK__ EmptyClusterError {type(e).__name__}\")\n        # TODO API_TEST_END\n        pass\n\n    api_test()\n\n\nif __name__ == \"__main__\":\n    try:\n        run()\n        print(\"__DONE__\")\n    except Exception as exc:  # noqa: BLE001 - execution boundary\n        sys.stderr.write(\"__RUN_ERR__ \" + type(exc).__name__ + \": \" + str(exc) + \"\\n\")\n        traceback.print_exc()\n        raise SystemExit(1)\n",
+      "native_result": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/9295ea12ac40df058f7feeb66d5184bc21e289669f4b04bcf601035affa9860b/round_01/attempt_0001/native_result.json",
+      "script_sha256": "ed02b1656801d59e02e342157e870c1cbd601192204b33b4a77ef3af37cd4216",
+      "wall_s": 8.5,
+      "llm_calls": 1,
+      "input_tokens": 3051,
+      "output_tokens": 564,
+      "code_fix_round": 1
+    }
+  ],
+  "rounds": [
+    {
+      "status": "pass",
+      "category": null,
+      "error": null,
+      "code": "\"\"\"Shared infrastructure-only scaffold for tslearn's full-surface 2x2.\n\nThis exact file is used in A1, A2, B1, and B2. It intentionally imports no\ntested tslearn API because discovering the public import is part of the\naudience task in every cell.\n\"\"\"\n\nfrom pathlib import Path\nimport sys\nimport traceback\n\nimport numpy as np\n\n\ndef run():\n    # Typed repository fixture path and condition-specific output directory:\n    trace_npz = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/tslearn/tslearn/.cached_datasets/Trace.npz\"\n    output_dir = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/9295ea12ac40df058f7feeb66d5184bc21e289669f4b04bcf601035affa9860b/round_01/attempt_0001/output\"\n\n    # pre-loaded typed inputs (comprehension.execute.preamble)\n    Path(output_dir).mkdir(parents=True, exist_ok=True)\n    _trace = np.load(trace_npz)\n    _balanced = np.array([0, 4, 1, 17, 3, 13, 2, 5], dtype=int)\n    X = _trace[\"X_train\"][_balanced, :40, :]  # type: balanced time-series dataset ndarray (8, 40, 1)\n    X2 = _trace[\"X_test\"][:4, :32, :]  # type: second dataset ndarray (4, 32, 1)\n    s1 = X[0].ravel()  # type: 1-D series ndarray (40,)\n    s2 = X[1].ravel()  # type: 1-D series ndarray (40,)\n    y = _trace[\"y_train\"][_balanced]  # type: four balanced labels, two examples per class\n    tiny_matrix = np.arange(12.0).reshape(3, 4)  # type: deterministic numeric matrix\n\n    # Keep audience imports local so they cannot shadow fixture construction.\n    def api_test():\n        # TODO API_TEST_START\n        from tslearn.clustering.utils import EmptyClusterError\n\n        custom_msg = \"Test empty cluster\"\n        try:\n            raise EmptyClusterError(custom_msg)\n        except EmptyClusterError as e:\n            assert isinstance(e, Exception), \"EmptyClusterError should inherit from Exception\"\n            expected_str = f\"Cluster assignments lead to at least one empty cluster ({custom_msg})\"\n            assert str(e) == expected_str, f\"Expected '{expected_str}', got '{str(e)}'\"\n            print(f\"__CHECK__ EmptyClusterError {type(e).__name__}\")\n        # TODO API_TEST_END\n        pass\n\n    api_test()\n\n\nif __name__ == \"__main__\":\n    try:\n        run()\n        print(\"__DONE__\")\n    except Exception as exc:  # noqa: BLE001 - execution boundary\n        sys.stderr.write(\"__RUN_ERR__ \" + type(exc).__name__ + \": \" + str(exc) + \"\\n\")\n        traceback.print_exc()\n        raise SystemExit(1)\n",
+      "native_result": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/9295ea12ac40df058f7feeb66d5184bc21e289669f4b04bcf601035affa9860b/round_01/attempt_0001/native_result.json",
+      "script_sha256": "ed02b1656801d59e02e342157e870c1cbd601192204b33b4a77ef3af37cd4216",
+      "wall_s": 8.5,
+      "llm_calls": 1,
+      "input_tokens": 3051,
+      "output_tokens": 564,
+      "code_fix_round": 1
+    }
+  ],
+  "status": "recovered_native",
+  "diagnosis": {
+    "api": "EmptyClusterError",
+    "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/9295ea12ac40df058f7feeb66d5184bc21e289669f4b04bcf601035affa9860b/deepdive/EmptyClusterError.md",
+    "model": "google:gemini-3.1-pro-preview",
+    "tokens": {
+      "in": 5276,
+      "out": 1978
+    },
+    "wall_s": 18.5,
+    "report_text": "L0 AUDIENCE + TESTABILITY CLASSIFICATION\nThis API is classified as USER-FACING. While it is raised internally by the framework, users must be aware of it to catch it in robust clustering pipelines (e.g., when `n_clusters` is set too high or initialization is poor). \nStandalone testability is classified as TESTABLE FROM PUBLIC INPUTS. The exception can be directly imported, instantiated with or without a message, and its string representation can be verified without needing to run a full clustering algorithm.\n\nL1 PURPOSE\n`EmptyClusterError` is a custom exception class in `tslearn` used to signal that a clustering algorithm has reached an invalid state where at least one cluster has lost all of its assigned time-series samples. It acts as a safeguard during the iterative fitting process of clustering estimators (such as K-Means variants), aborting the process when empty clusters prevent the computation of valid centroids.\n\nL2 CONTRACT\n- **Receiver type**: N/A (this is a class definition).\n- **Parameters**:\n  - `message` (type: `str`, default: `\"\"`): An optional custom string providing additional context or hints (e.g., `\"try smaller n_cluster or better kernel parameters\"`).\n- **Return value**: An instance of `EmptyClusterError` that inherits from Python's built-in `Exception`.\n- **Visibility**: Public.\n- **Thread-safety/laziness**: Inherits standard Python exception behavior; fully evaluated upon instantiation.\n\nL3 MECHANICS\nThe class inherits from `Exception`. \n- In `__init__` (lines 18-20), it calls the parent constructor `super().__init__()` and stores the provided `message` in the instance attribute `self.message`.\n- In `__str__` (lines 22-28), it overrides the string representation. It defines a base string: `\"Cluster assignments lead to at least one empty cluster\"`. If `self.message` has a length greater than 0, it formats the custom message in parentheses and appends it to the base string. Otherwise, it returns just the base string.\n- It is raised internally by helpers like `_check_no_empty_cluster` (line 37) and directly in clustering algorithms like `kmeans.py` (line 399).\n\nL4 CORRECT MINIMAL USAGE\n```python\nfrom tslearn.clustering.utils import EmptyClusterError\n\n# 1. Test default instantiation (no message)\nerr_default = EmptyClusterError()\nexpected_default = \"Cluster assignments lead to at least one empty cluster\"\nassert str(err_default) == expected_default, f\"Expected '{expected_default}', got '{str(err_default)}'\"\n\n# 2. Test instantiation with a custom message\ncustom_msg = \"try smaller n_cluster\"\nerr_custom = EmptyClusterError(custom_msg)\nexpected_custom = f\"Cluster assignments lead to at least one empty cluster ({custom_msg})\"\nassert str(err_custom) == expected_custom, f\"Expected '{expected_custom}', got '{str(err_custom)}'\"\n\n# 3. Demonstrate catching the exception\ntry:\n    raise EmptyClusterError(\"simulated failure\")\nexcept EmptyClusterError as e:\n    assert isinstance(e, Exception)\n    print(f\"Successfully caught EmptyClusterError: {e}\")\n```\n\nL5 FAILURE FORENSICS\nThe recorded failure (`AssertionError` with the scaffold docstring) indicates that the previous execution attempt failed to provide a valid, executable test script that asserted a falsifiable property. The harness executed an empty or incomplete script that did not actually import or test `EmptyClusterError`. The minimal usage provided in L4 corrects this by explicitly importing the exception, instantiating it, and asserting its exact string representation behavior.\n\nL6 SELF-ASSESSMENT\n- **Inferences**: None. The behavior, inheritance, and string formatting are entirely explicit in the provided source code.\n- **Information needed for certainty**: None. The provided context contains the complete class definition and real call sites.\n- **Confidence L2 (Contract)**: 10/10. The `__init__` signature is fully visible and trivial.\n- **Confidence L3 (Mechanics)**: 10/10. The logic in `__str__` is basic string concatenation and length checking, which is fully visible.\n- **Confidence L4 (Minimal Usage)**: 10/10. Instantiating and catching a standard Python exception is deterministic and requires no external dependencies or complex setup.",
+    "report_sha256": "1372aeb9982f408d8acda3dc6e5870b5d3d6ba23c2c4602a0d963cd82d77f8f7"
+  },
+  "max_rounds": 5,
+  "stuck_threshold": 2,
+  "stop_reason": null,
+  "semantic_validation": "needs_independent_review",
+  "headline_credit": false,
+  "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/9295ea12ac40df058f7feeb66d5184bc21e289669f4b04bcf601035affa9860b/recovery.json"
+}
