@@ -2,7 +2,7 @@
 
 ID: `8c69e4aae53d75a4ecbd` · thumbnailator/A1 · **open**
 
-Evidence version: `6aba3ff7d087340d4e074955b823d05d3add6ba0059ca29e03c12dd60c4e9980`
+Evidence version: `e227eeb9dbf5091b0cd66739dde4a290f79555aa5256e04a024fa3e47e9b6081`
 
 Candidate category: **provider**. Confidence: **high**.
 
@@ -16,7 +16,7 @@ Source: `source/src/main/java/net/coobird/thumbnailator/tasks/io/FileImageSink.j
 ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}
 ```
 
-[Evidence ledger](../../../thumbnailator/A1/ledger.json) · [Saved evidence](../evidence/6aba3ff7d087340d4e074955b823d05d3add6ba0059ca29e03c12dd60c4e9980.json)
+[Evidence ledger](../../../thumbnailator/A1/ledger.json) · [Saved evidence](../evidence/e227eeb9dbf5091b0cd66739dde4a290f79555aa5256e04a024fa3e47e9b6081.json)
 
 Recorded attempts: 1; provider errors: 1; document rounds: None.
 
