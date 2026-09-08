@@ -1,12 +1,12 @@
 # Automation status and deadline forecast
 
-Updated: 2026-09-08T06:19:46.884945-07:00. Hours to Wednesday 11 AM: 28.67.
+Updated: 2026-09-08T06:35:02.958114-07:00. Hours to Wednesday 11 AM: 28.42.
 
 **Whole-pipeline completion time remains unverified.** Estimates below cover remaining comprehension only; generation, document repair, and final validation are additional. Scenarios are not confidence intervals.
 
 | Repository/cell | Remaining APIs | State | Optimistic / likely / conservative hours |
 |---|---:|---|---|
-| mir_eval/A1 | 147 | estimated | 24.47 / 722.75 / 1470.00 |
+| mir_eval/A1 | 147 | estimated | 24.46 / 722.72 / 1470.00 |
 | mir_eval/A2 | 0 | complete | 0.00 / 0.00 / 0.00 |
 | mir_eval/B1 | 148 | insufficient_observations | unknown |
 | mir_eval/B2 | 0 | complete | 0.00 / 0.00 / 0.00 |
@@ -15,13 +15,13 @@ Updated: 2026-09-08T06:19:46.884945-07:00. Hours to Wednesday 11 AM: 28.67.
 | thumbnailator/B1 | 149 | insufficient_observations | unknown |
 | thumbnailator/B2 | 0 | complete | 0.00 / 0.00 / 0.00 |
 | tslearn/A1 | 225 | estimated | 21.61 / 109.32 / 281.20 |
-| tslearn/A2 | 234 | estimated | 38.96 / 1133.24 / 2348.19 |
+| tslearn/A2 | 234 | estimated | 38.96 / 1133.25 / 2348.19 |
 | tslearn/B1 | 235 | insufficient_observations | unknown |
 | tslearn/B2 | 235 | insufficient_observations | unknown |
 
-Failure review queue: 135 entries. Mutable cross-condition path conflicts: 0.
+Failure review queue: 136 entries. Mutable cross-condition path conflicts: 0.
 Deadline risks: mir_eval/A1: estimated; thumbnailator/A1: estimated; tslearn/A1: estimated; tslearn/A2: estimated
-Observation errors: 0. Observer health: `{"results": {"age_seconds": 0.6, "stale": false}, "data": {"age_seconds": 39.2, "stale": false}}`.
+Observation errors: 0. Observer health: `{"results": {"age_seconds": 8.4, "stale": false}, "data": {"age_seconds": 20.9, "stale": false}}`.
 
 - [Failure review queue](failure_review_queue.json): suggested causes, evidence, confidence, attempts and repair rounds.
 - [Resolved configuration bundles](config_bundles.json): actual profile, direct YAML layers, fixture bindings and recorded environments.
