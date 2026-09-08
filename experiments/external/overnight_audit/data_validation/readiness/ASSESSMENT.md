@@ -1,6 +1,6 @@
 # AIDEAL readiness assessment and improvement queue
 
-Updated: 2026-09-08T05:31:05.198798+00:00
+Updated: 2026-09-08T05:46:06.959747+00:00
 
 **Measured scope:** how documentation affects an LLM’s API use under a fixed harness. Overall agent readiness is not yet fully measured; no composite score is assigned.
 
@@ -8,7 +8,7 @@ Updated: 2026-09-08T05:31:05.198798+00:00
 |---|---|---|---|---|---|
 | mir_eval | 68/148 provisional | 135/148 final | pending (148 APIs) | pending (148 APIs) | WITHHELD/PARTIAL |
 | thumbnailator | 127/149 provisional | 127/149 final | pending (149 APIs) | pending (149 APIs) | WITHHELD/PARTIAL |
-| tslearn | 88/235 provisional | 16/235 provisional | pending (235 APIs) | pending (235 APIs) | WITHHELD/PARTIAL |
+| tslearn | 92/235 provisional | 54/235 provisional | pending (235 APIs) | pending (235 APIs) | WITHHELD/PARTIAL |
 
 Provisional counts retain pending and provider-error APIs in the denominator. Final counts are native pass/all-API results. Cross-cell effects require the separate matched-comparison release checks.
 
@@ -36,15 +36,15 @@ Provisional counts retain pending and provider-error APIs in the denominator. Fi
 | thumbnailator | input-or-output-path | 2 |
 | thumbnailator | provider | 6 |
 | thumbnailator | unknown | 36 |
-| tslearn | api-identity-or-version | 28 |
-| tslearn | assertion-or-behavior | 11 |
-| tslearn | input-contract-or-api-call | 4 |
-| tslearn | provider | 40 |
-| tslearn | unknown | 24 |
+| tslearn | api-identity-or-version | 30 |
+| tslearn | assertion-or-behavior | 13 |
+| tslearn | input-contract-or-api-call | 6 |
+| tslearn | provider | 41 |
+| tslearn | unknown | 27 |
 
-## Reviewable improvements (244)
+## Reviewable improvements (254)
 
-Review states: `{'open': 243, 'proposed': 1}`. Observation errors: 0. Inactive reviewed IDs retained: 0.
+Review states: `{'open': 253, 'proposed': 1}`. Observation errors: 0. Inactive reviewed IDs retained: 0.
 
 Each card separates native failure, diagnosis confidence, proposed action, validation and review decisions. Provider barriers concern execution infrastructure; they are not automatically codebase or documentation defects.
 
@@ -126,6 +126,7 @@ Each card separates native failure, diagnosis confidence, proposed action, valid
 | [tslearn: njit_lcss_accumulated_matrix](suggestions/82cd652dd43be2a632db.md) | A1 | execution_blocker | high | open |
 | [tslearn: njit_sakoe_chiba_mask](suggestions/fd70f1ac5129406e5761.md) | A1 | execution_blocker | high | open |
 | [tslearn: normal](suggestions/8d62931fe716c65b2b83.md) | A1 | execution_blocker | high | open |
+| [tslearn: partial_fit](suggestions/f0c4cd50ddf3925e7c6a.md) | A1 | execution_blocker | high | open |
 | [mir_eval: deprecated](suggestions/8c1892028fee0fa4c019.md) | A2 | reviewed_barrier | reviewed | open |
 | [mir_eval: first_n_three_layer_P](suggestions/1350063ad65ccf061962.md) | A2 | reviewed_barrier | reviewed | open |
 | [mir_eval: load_key](suggestions/436854cbe884009d1ba7.md) | A2 | reviewed_barrier | reviewed | open |
@@ -280,6 +281,7 @@ Each card separates native failure, diagnosis confidence, proposed action, valid
 | [tslearn: njit_accumulated_matrix_from_dist_matrix](suggestions/f294249de8aada17af69.md) | A1 | needs_diagnosis | medium | open |
 | [tslearn: njit_lcss_accumulated_matrix_from_dist_matrix](suggestions/cf58d9000a1035ad27a0.md) | A1 | needs_diagnosis | medium | open |
 | [tslearn: normalized_cc](suggestions/7b9cdbc1d982d1e04280.md) | A1 | needs_diagnosis | medium | open |
+| [tslearn: pdist](suggestions/47b9e17eb225846e80f1.md) | A1 | needs_diagnosis | medium | open |
 | [tslearn: BaseModelPackage](suggestions/f995a70ba75a6f818ba5.md) | A2 | needs_diagnosis | medium | open |
 | [tslearn: EmptyClusterError](suggestions/3bb29d868c529bcad84e.md) | A2 | needs_diagnosis | medium | open |
 | [tslearn: GlobalArgminPooling1D](suggestions/7fec39a7ce54e7122bf8.md) | A2 | needs_diagnosis | low | open |
@@ -294,6 +296,14 @@ Each card separates native failure, diagnosis confidence, proposed action, valid
 | [tslearn: PyTorchRandom](suggestions/900f8f4a475dc62bb350.md) | A2 | needs_diagnosis | medium | open |
 | [tslearn: PyTorchTesting](suggestions/e75daed6c7429f1a1048.md) | A2 | needs_diagnosis | medium | open |
 | [tslearn: SoftDTW](suggestions/3eb071d1a1ee8cb916a7.md) | A2 | needs_diagnosis | medium | open |
+| [tslearn: SquaredEuclidean](suggestions/3f27f4b6cc2ff519a694.md) | A2 | needs_diagnosis | medium | open |
+| [tslearn: TimeSeriesMixin](suggestions/aa8648d7d75d5da46815.md) | A2 | needs_diagnosis | medium | open |
+| [tslearn: TimeSeriesResampler](suggestions/dd12fb1c790d34bcc370.md) | A2 | needs_diagnosis | medium | open |
+| [tslearn: TimeSeriesSVMMixin](suggestions/0f6325e1b4f2389d4abb.md) | A2 | needs_diagnosis | medium | open |
+| [tslearn: TsLearnTags](suggestions/00dd44f6e4ef414dbbf4.md) | A2 | needs_diagnosis | medium | open |
+| [tslearn: accumulated_matrix](suggestions/f2643d45b8ffc2210fa6.md) | A2 | needs_diagnosis | low | open |
+| [tslearn: build](suggestions/f73b986047aa6c515b80.md) | A2 | needs_diagnosis | low | open |
+| [tslearn: call](suggestions/5de88051085748a6a12c.md) | A2 | needs_diagnosis | low | open |
 
 ## Human and agent workflow
 

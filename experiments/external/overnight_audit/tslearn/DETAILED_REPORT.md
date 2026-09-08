@@ -27,9 +27,9 @@ Effects withheld until all four matched final cells and their repair/test eviden
 
 ### A1
 
-Primary failure categories: {"api-identity": 21, "llm-error": 40, "test/scaffold": 15, "unknown": 17}.
+Primary failure categories: {"api-identity": 22, "llm-error": 41, "test/scaffold": 15, "unknown": 17}.
 
-Recorded provider-error attempts across all checkpoint fingerprints: 40. Provider-internal retries are not recorded by the existing client and cannot be inferred from the configured limit. Watchdog logs retain process attempts; checkpoint attempts and document-fix rounds are separate ledger fields.
+Recorded provider-error attempts across all checkpoint fingerprints: 41. Provider-internal retries are not recorded by the existing client and cannot be inferred from the configured limit. Watchdog logs retain process attempts; checkpoint attempts and document-fix rounds are separate ledger fields.
 
 - `Backend`: test/scaffold; native=infra; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `tslearn/tslearn/backend/backend.py:55`. Error: `missing module/import: No module named 'tslearn.backends'`. Review: Runner classified this as infrastructure.
 - `BaseModelPackage`: unknown; native=runtime; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `tslearn/tslearn/bases/bases.py:78`. Error: `AttributeError: 'DummyModel' object has no attribute 'to_dict'`. Review: Observed runtime; doc attribution requires source, document, and snippet review.
@@ -124,10 +124,12 @@ Recorded provider-error attempts across all checkpoint fingerprints: 40. Provide
 - `njit_sakoe_chiba_mask`: llm-error; native=llm-error; checkpoint attempts=1; provider-error attempts=1; document rounds=None; repair=None. Source: `tslearn/tslearn/metrics/dtw_variants.py:1487`. Error: `ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}`. Review: Provider outcome; retry, never count as a documentation failure.
 - `normal`: llm-error; native=llm-error; checkpoint attempts=1; provider-error attempts=1; document rounds=None; repair=None. Source: `tslearn/tslearn/backend/pytorch_backend.py:250`. Error: `ReadTimeout: The read operation timed out`. Review: Provider outcome; retry, never count as a documentation failure.
 - `normalized_cc`: api-identity; native=infra; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `tslearn/tslearn/metrics/cycc.py:10`. Error: `missing module/import: cannot import name 'normalized_cc' from 'tslearn.metrics' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/metrics/__init__.py)`. Review: Import/member selection failed; the runner's infrastructure label needs review.
+- `partial_fit`: llm-error; native=llm-error; checkpoint attempts=1; provider-error attempts=1; document rounds=None; repair=None. Source: `tslearn/tslearn/neural_network/neural_network.py:62`. Error: `ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}`. Review: Provider outcome; retry, never count as a documentation failure.
+- `pdist`: api-identity; native=infra; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `tslearn/tslearn/backend/pytorch_backend.py:193`. Error: `missing module/import: cannot import name 'NumPyBackend' from 'tslearn.backend' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/backend/__init__.py)`. Review: Import/member selection failed; the runner's infrastructure label needs review.
 
 ### A2
 
-Primary failure categories: {"api-identity": 3, "test/scaffold": 5, "unknown": 7}.
+Primary failure categories: {"api-identity": 3, "test/scaffold": 7, "unknown": 12}.
 
 Recorded provider-error attempts across all checkpoint fingerprints: 12. Provider-internal retries are not recorded by the existing client and cannot be inferred from the configured limit. Watchdog logs retain process attempts; checkpoint attempts and document-fix rounds are separate ledger fields.
 
@@ -146,6 +148,13 @@ Recorded provider-error attempts across all checkpoint fingerprints: 12. Provide
 - `PyTorchTesting`: unknown; native=runtime; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `tslearn/tslearn/backend/pytorch_backend.py:263`. Error: `AssertionError: The documented contract is insufficient to verify the result`. Review: Observed runtime; doc attribution requires source, document, and snippet review.
 - `SoftDTW`: unknown; native=runtime; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `tslearn/tslearn/metrics/softdtw_variants.py:1068`. Error: `TypeError: SoftDTW.__init__() missing 1 required positional argument: 'D'`. Review: Observed runtime; doc attribution requires source, document, and snippet review.
 - `SquaredEuclidean`: unknown; native=runtime; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `tslearn/tslearn/metrics/softdtw_variants.py:1176`. Error: `TypeError: SquaredEuclidean.__init__() missing 2 required positional arguments: 'X' and 'Y'`. Review: Observed runtime; doc attribution requires source, document, and snippet review.
+- `TimeSeriesMixin`: unknown; native=runtime; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `tslearn/tslearn/bases/bases.py:53`. Error: `AssertionError: TimeSeriesMixin should set 'allow_nan' to True in tags`. Review: Observed runtime; doc attribution requires source, document, and snippet review.
+- `TimeSeriesResampler`: unknown; native=runtime; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `tslearn/tslearn/preprocessing/preprocessing.py:23`. Error: `AssertionError: Expected shape (4, 40, 1), got (4, 32, 1)`. Review: Observed runtime; doc attribution requires source, document, and snippet review.
+- `TimeSeriesSVMMixin`: unknown; native=runtime; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `tslearn/tslearn/svm/svm.py:20`. Error: `AttributeError: 'CustomTimeSeriesSVM' object has no attribute '_get_tags'`. Review: Observed runtime; doc attribution requires source, document, and snippet review.
+- `TsLearnTags`: unknown; native=runtime; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `tslearn/tslearn/bases/bases.py:29`. Error: `TypeError: Tags.__init__() missing 2 required positional arguments: 'estimator_type' and 'target_tags'`. Review: Observed runtime; doc attribution requires source, document, and snippet review.
+- `accumulated_matrix`: unknown; native=runtime; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `tslearn/tslearn/metrics/_dtw.py:286`. Error: `IndexError: tuple index out of range`. Review: Observed runtime; doc attribution requires source, document, and snippet review.
+- `build`: test/scaffold; native=infra; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `tslearn/tslearn/shapelets/shapelets.py:188`. Error: `missing module/import: No module named 'keras'`. Review: Runner classified this as infrastructure.
+- `call`: test/scaffold; native=infra; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `tslearn/tslearn/shapelets/shapelets.py:89`. Error: `missing module/import: No module named 'tensorflow'`. Review: Runner classified this as infrastructure.
 
 ### B1
 
