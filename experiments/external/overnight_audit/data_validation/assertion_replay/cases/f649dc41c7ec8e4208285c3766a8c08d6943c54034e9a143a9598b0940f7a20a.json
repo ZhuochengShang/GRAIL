@@ -1,0 +1,121 @@
+{
+  "api": "formatType",
+  "cell": "B2",
+  "native": {
+    "status": "fail",
+    "attempts": 1,
+    "pass_round": null,
+    "wall_s": 17.9,
+    "llm_calls": 1,
+    "input_tokens": 1757,
+    "output_tokens": 1712,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 1757,
+        "output_tokens": 1712
+      }
+    },
+    "error_category": "compile",
+    "error": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_formatType/ApiTest.java:56: error: cannot find symbol",
+    "locus": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_formatType/ApiTest.java:56",
+    "doc_chars": 2640,
+    "document_sha256": "62e8eb1b85faa759a45d3cdd0e33bf9c9269dff868f38d1a295e4edbf335b594",
+    "source": "source/src/main/java/net/coobird/thumbnailator/builders/ThumbnailParameterBuilder.java:254",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "evidence_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced",
+    "name": "formatType",
+    "execution_evidence": {
+      "status": "fail",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "fail",
+          "category": "compile",
+          "error": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_formatType/ApiTest.java:56"
+        }
+      ],
+      "error_category": "compile",
+      "error": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_formatType/ApiTest.java:56: error: cannot find symbol",
+      "code": "net.coobird.thumbnailator.builders.ThumbnailParameterBuilder builder = new net.coobird.thumbnailator.builders.ThumbnailParameterBuilder();\nbuilder.size(10, 10);\nbuilder.formatType(\"JPEG\");\nnet.coobird.thumbnailator.ThumbnailParameter param = builder.build();\n\nString actualFormatType = param.getFormatType();\nassert \"JPEG\".equals(actualFormatType) : \"Expected formatType to be JPEG, but was \" + actualFormatType;\nSystem.out.println(\"__CHECK__ formatType \" + actualFormatType);",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_formatType/ApiTest.java",
+      "exit_code": 1,
+      "stdout_tail": "",
+      "stderr_tail": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_formatType/ApiTest.java:56: error: cannot find symbol\n            String actualFormatType = param.getFormatType();\n                                           ^\n  symbol:   method getFormatType()\n  location: variable param of type ThumbnailParameter\n1 error\n"
+    },
+    "experiment_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced"
+  },
+  "available": true,
+  "source": "import java.awt.Color;\nimport java.awt.Graphics2D;\nimport java.awt.image.BufferedImage;\nimport java.io.ByteArrayInputStream;\nimport java.io.ByteArrayOutputStream;\nimport java.io.File;\nimport java.nio.file.Files;\nimport java.nio.file.Path;\nimport java.nio.file.Paths;\nimport java.util.Arrays;\n\nimport javax.imageio.ImageIO;\n\nimport net.coobird.thumbnailator.*;\nimport net.coobird.thumbnailator.builders.*;\nimport net.coobird.thumbnailator.filters.*;\nimport net.coobird.thumbnailator.geometry.*;\nimport net.coobird.thumbnailator.makers.*;\nimport net.coobird.thumbnailator.name.*;\nimport net.coobird.thumbnailator.resizers.*;\nimport net.coobird.thumbnailator.resizers.configurations.*;\nimport net.coobird.thumbnailator.tasks.*;\nimport net.coobird.thumbnailator.tasks.io.*;\nimport net.coobird.thumbnailator.util.*;\nimport net.coobird.thumbnailator.util.exif.*;\n\npublic final class ApiTest {\n    private ApiTest() {}\n\n    public static void main(String[] args) {\n        try {\n            String grid_png = \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/source/src/test/resources/Thumbnailator/grid.png\";\n    String grid_jpeg = \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/source/src/test/resources/Thumbnailator/grid.jpg\";\n    String exif_jpeg = \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/source/src/test/resources/Exif/original.jpg\";\n    String output_dir = \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/output\";\n\n    // pre-loaded typed inputs (comprehension.execute.preamble)\n    BufferedImage sourceImage = new BufferedImage(32, 24, BufferedImage.TYPE_INT_RGB);\n    Graphics2D graphics = sourceImage.createGraphics();\n    graphics.setColor(Color.BLUE);\n    graphics.fillRect(0, 0, 32, 24);\n    graphics.setColor(Color.YELLOW);\n    graphics.fillRect(8, 6, 16, 12);\n    graphics.dispose();\n    BufferedImage destinationImage = new BufferedImage(16, 12, BufferedImage.TYPE_INT_RGB);\n    ByteArrayOutputStream imageBytes = new ByteArrayOutputStream();\n    Path outputPath = Paths.get(output_dir, \"thumbnail.png\");\n    Files.createDirectories(outputPath.getParent());\n\n            // TODO API_TEST_START\n            net.coobird.thumbnailator.builders.ThumbnailParameterBuilder builder = new net.coobird.thumbnailator.builders.ThumbnailParameterBuilder();\n            builder.size(10, 10);\n            builder.formatType(\"JPEG\");\n            net.coobird.thumbnailator.ThumbnailParameter param = builder.build();\n\n            String actualFormatType = param.getFormatType();\n            assert \"JPEG\".equals(actualFormatType) : \"Expected formatType to be JPEG, but was \" + actualFormatType;\n            System.out.println(\"__CHECK__ formatType \" + actualFormatType);\n            // TODO API_TEST_END\n            System.out.println(\"__DONE__\");\n        } catch (Throwable exc) {\n            System.err.println(\"__RUN_ERR__ \" + exc.getClass().getSimpleName()\n                    + \": \" + exc.getMessage());\n            exc.printStackTrace(System.err);\n            System.exit(1);\n        }\n    }\n}\n",
+  "binding": "retained_matches_native_failure_prefix",
+  "retained_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_formatType/ApiTest.java",
+  "retained_sha256": "315e594d7d472f86efe852e77f7ced52d739687167d6f764ff3232834dd9f71e",
+  "native_code_sha256": "caf52244d25665d267208ef3d979c6f1f4aacfaf22c0b45859b4d3dcdf277099",
+  "recovered_from_native_code": false,
+  "replay": {
+    "compile": {
+      "command": [
+        "/Library/Java/JavaVirtualMachines/jdk-1.8.jdk/Contents/Home/bin/javac",
+        "-cp",
+        "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/.aideal_exec/thumbnailator_assertion_replay/B2/f649dc41c7ec8e420828-fddca9dc/library.jar",
+        "-d",
+        "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/.aideal_exec/thumbnailator_assertion_replay/B2/f649dc41c7ec8e420828-fddca9dc/classes",
+        "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/.aideal_exec/thumbnailator_assertion_replay/B2/f649dc41c7ec8e420828-fddca9dc/ApiTest.java"
+      ],
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/.aideal_exec/thumbnailator_assertion_replay/B2/f649dc41c7ec8e420828-fddca9dc/ApiTest.java:56: error: cannot find symbol\n            String actualFormatType = param.getFormatType();\n                                           ^\n  symbol:   method getFormatType()\n  location: variable param of type ThumbnailParameter\n1 error\n",
+      "wall_s": 0.254
+    },
+    "provenance": {
+      "jar_sha256": "8b8b44f5681d520f87789f104ca106fd860bdb942a239c26bf2cce7c85927597",
+      "source_sha256": "661a34565ea4b95c441289fe545e1cc2d20653e685748295a063777a0dd75c3c",
+      "path_replacements": [
+        {
+          "from": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/source/src/test/resources/Thumbnailator/grid.png",
+          "to": "fixtures/grid_png.png"
+        },
+        {
+          "from": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/source/src/test/resources/Thumbnailator/grid.jpg",
+          "to": "fixtures/grid_jpeg.jpg"
+        },
+        {
+          "from": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/source/src/test/resources/Exif/original.jpg",
+          "to": "fixtures/exif_jpeg.jpg"
+        },
+        {
+          "from": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/output",
+          "to": "project/.aideal_exec/B2/output"
+        }
+      ],
+      "fixtures": {}
+    },
+    "variants": {
+      "assertions_off": {
+        "outcome": "compile_failure",
+        "exit_code": 1
+      },
+      "assertions_on": {
+        "outcome": "compile_failure",
+        "exit_code": 1
+      }
+    }
+  },
+  "protocol": {
+    "version": "thumbnailator-assertion-replay-v1",
+    "java_version": "java version \"1.8.0_381\"\nJava(TM) SE Runtime Environment (build 1.8.0_381-b09)\nJava HotSpot(TM) 64-Bit Server VM (build 25.381-b09, mixed mode)\n",
+    "engine": {
+      "execute.py": "43a04b545ae0bd39836bb1d0075e46cca9d590e72cab3d55dd8f48ed8f4653ed",
+      "evidence.py": "ee78d13f0082ef471d4057877b459c8fce2aa7a2a417fa3b47505add08a61b61",
+      "__main__.py": "9727d86212b02dabad98615dd102504a0d20aa0650a6cebc24cbdd82cb521e45"
+    },
+    "llm_calls": 0,
+    "code_fix_rounds": 0
+  },
+  "captured_native_source": {
+    "path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/docs/eval/B2/comprehension.json",
+    "sha256": "edf6f845e49a5b57436a68b7845e73ce578cec0a033cf20a196eae38705feb3a"
+  },
+  "evidence_file": "cases/f649dc41c7ec8e4208285c3766a8c08d6943c54034e9a143a9598b0940f7a20a.json"
+}

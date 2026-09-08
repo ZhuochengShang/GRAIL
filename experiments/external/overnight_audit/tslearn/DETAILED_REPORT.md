@@ -27,9 +27,9 @@ Effects withheld until all four matched final cells and their repair/test eviden
 
 ### A1
 
-Primary failure categories: {"api-identity": 1, "llm-error": 22, "unknown": 2}.
+Primary failure categories: {"api-identity": 2, "llm-error": 23, "unknown": 2}.
 
-Recorded provider-error attempts across all checkpoint fingerprints: 69. Provider-internal retries are not recorded by the existing client and cannot be inferred from the configured limit. Watchdog logs retain process attempts; checkpoint attempts and document-fix rounds are separate ledger fields.
+Recorded provider-error attempts across all checkpoint fingerprints: 70. Provider-internal retries are not recorded by the existing client and cannot be inferred from the configured limit. Watchdog logs retain process attempts; checkpoint attempts and document-fix rounds are separate ledger fields.
 
 - `PatchingLayer`: llm-error; native=llm-error; checkpoint attempts=1; provider-error attempts=1; document rounds=None; repair=None. Source: `tslearn/tslearn/shapelets/shapelets.py:128`. Error: `ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}`. Review: Provider outcome; retry, never count as a documentation failure.
 - `SquaredEuclidean`: unknown; native=runtime; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `tslearn/tslearn/metrics/softdtw_variants.py:1176`. Error: `TypeError: SquaredEuclidean.__init__() missing 2 required positional arguments: 'X' and 'Y'`. Review: Observed runtime; doc attribution requires source, document, and snippet review.
@@ -56,16 +56,18 @@ Recorded provider-error attempts across all checkpoint fingerprints: 69. Provide
 - `frechet`: llm-error; native=llm-error; checkpoint attempts=1; provider-error attempts=1; document rounds=None; repair=None. Source: `tslearn/tslearn/metrics/_frechet.py:30`. Error: `ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}`. Review: Provider outcome; retry, never count as a documentation failure.
 - `from_numpy`: llm-error; native=llm-error; checkpoint attempts=1; provider-error attempts=1; document rounds=None; repair=None. Source: `tslearn/tslearn/backend/numpy_backend.py:98`. Error: `ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}`. Review: Provider outcome; retry, never count as a documentation failure.
 - `gamma_soft_dtw`: llm-error; native=llm-error; checkpoint attempts=1; provider-error attempts=1; document rounds=None; repair=None. Source: `tslearn/tslearn/metrics/softdtw_variants.py:474`. Error: `ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}`. Review: Provider outcome; retry, never count as a documentation failure.
+- `get_backend`: api-identity; native=infra; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `tslearn/tslearn/backend/backend.py:84`. Error: `missing module/import: cannot import name 'get_backend' from 'tslearn.backend' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/backend/__init__.py)`. Review: Import/member selection failed; the runner's infrastructure label needs review.
+- `get_early_predict_generator`: llm-error; native=llm-error; checkpoint attempts=1; provider-error attempts=1; document rounds=None; repair=None. Source: `tslearn/tslearn/early_classification/early_classification.py:627`. Error: `ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}`. Review: Provider outcome; retry, never count as a documentation failure.
 
 ### A2
 
 Primary failure categories: {"llm-error": 3}.
 
-Recorded provider-error attempts across all checkpoint fingerprints: 35. Provider-internal retries are not recorded by the existing client and cannot be inferred from the configured limit. Watchdog logs retain process attempts; checkpoint attempts and document-fix rounds are separate ledger fields.
+Recorded provider-error attempts across all checkpoint fingerprints: 36. Provider-internal retries are not recorded by the existing client and cannot be inferred from the configured limit. Watchdog logs retain process attempts; checkpoint attempts and document-fix rounds are separate ledger fields.
 
 - `compute`: llm-error; native=llm-error; checkpoint attempts=7; provider-error attempts=7; document rounds=None; repair=None. Source: `tslearn/tslearn/metrics/softdtw_variants.py:1111`. Error: `ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}`. Review: Provider outcome; retry, never count as a documentation failure.
 - `jacobian_product`: llm-error; native=llm-error; checkpoint attempts=7; provider-error attempts=7; document rounds=None; repair=None. Source: `tslearn/tslearn/metrics/softdtw_variants.py:1218`. Error: `ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}`. Review: Provider outcome; retry, never count as a documentation failure.
-- `predict_class_and_earliness`: llm-error; native=llm-error; checkpoint attempts=6; provider-error attempts=6; document rounds=None; repair=None. Source: `tslearn/tslearn/early_classification/early_classification.py:399`. Error: `ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}`. Review: Provider outcome; retry, never count as a documentation failure.
+- `predict_class_and_earliness`: llm-error; native=llm-error; checkpoint attempts=7; provider-error attempts=7; document rounds=None; repair=None. Source: `tslearn/tslearn/early_classification/early_classification.py:399`. Error: `ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}`. Review: Provider outcome; retry, never count as a documentation failure.
 
 ### B1
 

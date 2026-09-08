@@ -1,6 +1,6 @@
 # AIDEAL: three separate stages
 
-2026-09-08T03:49:06.471339-07:00
+2026-09-08T04:04:07.083406-07:00
 
 A1/A2 are zero-fix controls. S_A2 repairs snippets from A2 failures. Independent README repair produces fresh zero-fix B2. S_B2 repairs only eligible B2 failures.
 
@@ -13,9 +13,9 @@ A1/A2 are zero-fix controls. S_A2 repairs snippets from A2 failures. Independent
 | mir_eval | S_B2 | priority complete | — | — |
 | thumbnailator | A1 | native partial | 128 | 149 |
 | thumbnailator | A2 | native complete | 127 | 149 |
-| thumbnailator | B2 | pending native evidence | — | — |
+| thumbnailator | B2 | native complete | 139 | 149 |
 | thumbnailator | S_A2 | {'recovered_native': 18, 'provider_blocked': 2, 'stuck': 2} | 18 | 22 |
-| thumbnailator | S_B2 | FileNotFoundError: [Errno 2] No such file or directory: '/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/docs/eval/B2/comprehension.json' | — | — |
+| thumbnailator | S_B2 | ValueError: A2 source work/retries still pending; preserve its provider capacity | — | — |
 | tslearn | A1 | native partial | 119 | 235 |
 | tslearn | A2 | native partial | 175 | 235 |
 | tslearn | B2 | pending native evidence | — | — |

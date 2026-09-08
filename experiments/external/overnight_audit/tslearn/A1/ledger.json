@@ -2,18 +2,18 @@
   "status": "partial",
   "expected": 235,
   "counts": {
-    "pending": 209,
-    "fail": 25,
+    "pending": 207,
+    "fail": 27,
     "pass": 1
   },
   "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
   "errors": [],
   "failure_categories": {
-    "llm-error": 22,
+    "llm-error": 23,
     "unknown": 2,
-    "api-identity": 1
+    "api-identity": 2
   },
-  "recorded_provider_errors_all_fingerprints": 69,
+  "recorded_provider_errors_all_fingerprints": 70,
   "observed_fingerprints": [
     "964a2ec0df73c3b53c3966c9213dedb1a12bf7e39ad1b8d7d1ddd561ba53212b",
     "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea"
@@ -7416,6 +7416,92 @@
       "source_other_sites": 0,
       "codebase_frames": null,
       "checkpoint_line": 261
+    },
+    {
+      "name": "get_backend",
+      "doc_source": "original",
+      "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "infra",
+            "error": "missing module/import: cannot import name 'get_backend' from 'tslearn.backend' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1"
+          }
+        ],
+        "error_category": "infra",
+        "error": "missing module/import: cannot import name 'get_backend' from 'tslearn.backend' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/backend/__init__.py)",
+        "code": "from tslearn.backend import get_backend\n\nbackend = None\nfor arg in [(\"numpy\",), (X,), ()]:\n    try:\n        backend = get_backend(*arg)\n        break\n    except Exception:\n        pass\n\nassert backend is not None, \"get_backend failed with all attempted arguments\"\n\nbackend_str = str(type(backend)).lower() + str(backend).lower()\nassert \"numpy\" in backend_str, f\"Expected numpy backend, got {backend}\"\n\nprint(f\"__CHECK__ get_backend {type(backend).__name__}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_get_backend/api_test.py",
+        "exit_code": 1,
+        "stdout_tail": "",
+        "stderr_tail": "__RUN_ERR__ ImportError: cannot import name 'get_backend' from 'tslearn.backend' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/backend/__init__.py)\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_get_backend/api_test.py\", line 58, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_get_backend/api_test.py\", line 53, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_get_backend/api_test.py\", line 34, in api_test\n    from tslearn.backend import get_backend\nImportError: cannot import name 'get_backend' from 'tslearn.backend' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/backend/__init__.py)\n"
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 327.1,
+      "llm_calls": 1,
+      "input_tokens": 1323,
+      "output_tokens": 2474,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1323,
+          "output_tokens": 2474
+        }
+      },
+      "error_category": "infra",
+      "error": "missing module/import: cannot import name 'get_backend' from 'tslearn.backend' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/backend/__init__.py)",
+      "locus": "",
+      "doc_chars": 93,
+      "document_sha256": "bc14d5927c55cf3915d91a4bf9d5bf7826a9db2cdc6614c08477f9f0b70be31d",
+      "source": "tslearn/tslearn/backend/backend.py:84",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 262
+    },
+    {
+      "name": "get_early_predict_generator",
+      "doc_source": "original",
+      "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "llm-error",
+            "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}"
+          }
+        ],
+        "error_category": "llm-error",
+        "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+        "code": "",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_get_early_predict_generator/api_test.py",
+        "exit_code": null,
+        "stdout_tail": "",
+        "stderr_tail": ""
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 599.3,
+      "llm_calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "by_model": {},
+      "error_category": "llm-error",
+      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "locus": "",
+      "doc_chars": 109,
+      "document_sha256": "63e48026dcf411cde245f6f4aa5db3b45ada96a15ce35b15613783dc48f5a2d5",
+      "source": "tslearn/tslearn/early_classification/early_classification.py:627",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 263
     }
   ],
   "repair_summary": {
@@ -10200,18 +10286,31 @@
     },
     {
       "api": "get_backend",
-      "status": "pending",
-      "primary_category": "pending",
-      "runner_category": null,
-      "category_reason": "Not yet observed.",
-      "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "status": "fail",
+      "primary_category": "api-identity",
+      "runner_category": "infra",
+      "category_reason": "Import/member selection failed; the runner's infrastructure label needs review.",
+      "error": "missing module/import: cannot import name 'get_backend' from 'tslearn.backend' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/backend/__init__.py)",
+      "source": "tslearn/tslearn/backend/backend.py:84",
+      "doc_chars": 93,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 262,
+          "status": "fail",
+          "error_category": "infra",
+          "error": "missing module/import: cannot import name 'get_backend' from 'tslearn.backend' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/backend/__init__.py)",
+          "attempts": 1,
+          "wall_s": 327.1,
+          "llm_calls": 1,
+          "input_tokens": 1323,
+          "output_tokens": 2474,
+          "pass_round": null
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -10257,18 +10356,31 @@
     },
     {
       "api": "get_early_predict_generator",
-      "status": "pending",
-      "primary_category": "pending",
-      "runner_category": null,
-      "category_reason": "Not yet observed.",
-      "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
-      "provider_error_attempts": 0,
+      "status": "fail",
+      "primary_category": "llm-error",
+      "runner_category": "llm-error",
+      "category_reason": "Provider outcome; retry, never count as a documentation failure.",
+      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "source": "tslearn/tslearn/early_classification/early_classification.py:627",
+      "doc_chars": 109,
+      "checkpoint_attempts": 1,
+      "provider_error_attempts": 1,
       "provider_internal_retries": null,
       "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "attempt_history": [
+        {
+          "checkpoint_line": 263,
+          "status": "fail",
+          "error_category": "llm-error",
+          "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+          "attempts": 1,
+          "wall_s": 599.3,
+          "llm_calls": 0,
+          "input_tokens": 0,
+          "output_tokens": 0,
+          "pass_round": null
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],

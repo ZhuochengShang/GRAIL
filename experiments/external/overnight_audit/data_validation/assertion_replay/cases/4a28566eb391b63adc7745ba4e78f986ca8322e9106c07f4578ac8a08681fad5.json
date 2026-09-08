@@ -1,0 +1,164 @@
+{
+  "api": "useOriginalFormat",
+  "cell": "B2",
+  "native": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 29.4,
+    "llm_calls": 1,
+    "input_tokens": 1942,
+    "output_tokens": 3754,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 1942,
+        "output_tokens": 3754
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 2994,
+    "document_sha256": "721d69c978f36d11fcf132926484fd9e04afee375db1b30e6902f68796403869",
+    "source": "source/src/main/java/net/coobird/thumbnailator/Thumbnails.java:1680",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "evidence_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced",
+    "name": "useOriginalFormat",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "java.io.File sourceFile = new java.io.File(grid_png);\njava.io.File destFile = outputPath.resolve(\"out_useOriginalFormat\").toFile();\njava.io.File expectedFile = outputPath.resolve(\"out_useOriginalFormat.png\").toFile();\n\nboolean threw = false;\ntry {\n    net.coobird.thumbnailator.Thumbnails.of(sourceFile)\n        .size(10, 10)\n        .useOriginalFormat()\n        .useOriginalFormat();\n} catch (IllegalStateException e) {\n    threw = true;\n}\nassert threw : \"Expected IllegalStateException when calling useOriginalFormat multiple times\";\n\nnet.coobird.thumbnailator.Thumbnails.of(sourceFile)\n    .size(10, 10)\n    .useOriginalFormat()\n    .toFile(destFile);\n\nassert expectedFile.exists() : \"Expected file with appended .png extension\";\nassert expectedFile.length() > 0 : \"Expected non-empty file\";\n\nbyte[] magic = new byte[4];\ntry (java.io.FileInputStream fis = new java.io.FileInputStream(expectedFile)) {\n    int read = fis.read(magic);\n    assert read == 4 : \"Could not read magic number\";\n}\nassert magic[0] == (byte) 0x89 && magic[1] == (byte) 0x50 && magic[2] == (byte) 0x4E && magic[3] == (byte) 0x47 : \"Output is not a valid PNG\";\n\nSystem.out.println(\"__CHECK__ useOriginalFormat \" + expectedFile.getName() + \" magic: \" + String.format(\"%02X%02X%02X%02X\", magic[0] & 0xFF, magic[1] & 0xFF, magic[2] & 0xFF, magic[3] & 0xFF));",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_useOriginalFormat/ApiTest.java",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ useOriginalFormat out_useOriginalFormat.png magic: 89504E47\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced"
+  },
+  "available": true,
+  "source": "import java.awt.Color;\nimport java.awt.Graphics2D;\nimport java.awt.image.BufferedImage;\nimport java.io.ByteArrayInputStream;\nimport java.io.ByteArrayOutputStream;\nimport java.io.File;\nimport java.nio.file.Files;\nimport java.nio.file.Path;\nimport java.nio.file.Paths;\nimport java.util.Arrays;\n\nimport javax.imageio.ImageIO;\n\nimport net.coobird.thumbnailator.*;\nimport net.coobird.thumbnailator.builders.*;\nimport net.coobird.thumbnailator.filters.*;\nimport net.coobird.thumbnailator.geometry.*;\nimport net.coobird.thumbnailator.makers.*;\nimport net.coobird.thumbnailator.name.*;\nimport net.coobird.thumbnailator.resizers.*;\nimport net.coobird.thumbnailator.resizers.configurations.*;\nimport net.coobird.thumbnailator.tasks.*;\nimport net.coobird.thumbnailator.tasks.io.*;\nimport net.coobird.thumbnailator.util.*;\nimport net.coobird.thumbnailator.util.exif.*;\n\npublic final class ApiTest {\n    private ApiTest() {}\n\n    public static void main(String[] args) {\n        try {\n            String grid_png = \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/source/src/test/resources/Thumbnailator/grid.png\";\n    String grid_jpeg = \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/source/src/test/resources/Thumbnailator/grid.jpg\";\n    String exif_jpeg = \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/source/src/test/resources/Exif/original.jpg\";\n    String output_dir = \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/output\";\n\n    // pre-loaded typed inputs (comprehension.execute.preamble)\n    BufferedImage sourceImage = new BufferedImage(32, 24, BufferedImage.TYPE_INT_RGB);\n    Graphics2D graphics = sourceImage.createGraphics();\n    graphics.setColor(Color.BLUE);\n    graphics.fillRect(0, 0, 32, 24);\n    graphics.setColor(Color.YELLOW);\n    graphics.fillRect(8, 6, 16, 12);\n    graphics.dispose();\n    BufferedImage destinationImage = new BufferedImage(16, 12, BufferedImage.TYPE_INT_RGB);\n    ByteArrayOutputStream imageBytes = new ByteArrayOutputStream();\n    Path outputPath = Paths.get(output_dir, \"thumbnail.png\");\n    Files.createDirectories(outputPath.getParent());\n\n            // TODO API_TEST_START\n            java.io.File sourceFile = new java.io.File(grid_png);\n            java.io.File destFile = outputPath.resolve(\"out_useOriginalFormat\").toFile();\n            java.io.File expectedFile = outputPath.resolve(\"out_useOriginalFormat.png\").toFile();\n\n            boolean threw = false;\n            try {\n                net.coobird.thumbnailator.Thumbnails.of(sourceFile)\n                    .size(10, 10)\n                    .useOriginalFormat()\n                    .useOriginalFormat();\n            } catch (IllegalStateException e) {\n                threw = true;\n            }\n            assert threw : \"Expected IllegalStateException when calling useOriginalFormat multiple times\";\n\n            net.coobird.thumbnailator.Thumbnails.of(sourceFile)\n                .size(10, 10)\n                .useOriginalFormat()\n                .toFile(destFile);\n\n            assert expectedFile.exists() : \"Expected file with appended .png extension\";\n            assert expectedFile.length() > 0 : \"Expected non-empty file\";\n\n            byte[] magic = new byte[4];\n            try (java.io.FileInputStream fis = new java.io.FileInputStream(expectedFile)) {\n                int read = fis.read(magic);\n                assert read == 4 : \"Could not read magic number\";\n            }\n            assert magic[0] == (byte) 0x89 && magic[1] == (byte) 0x50 && magic[2] == (byte) 0x4E && magic[3] == (byte) 0x47 : \"Output is not a valid PNG\";\n\n            System.out.println(\"__CHECK__ useOriginalFormat \" + expectedFile.getName() + \" magic: \" + String.format(\"%02X%02X%02X%02X\", magic[0] & 0xFF, magic[1] & 0xFF, magic[2] & 0xFF, magic[3] & 0xFF));\n            // TODO API_TEST_END\n            System.out.println(\"__DONE__\");\n        } catch (Throwable exc) {\n            System.err.println(\"__RUN_ERR__ \" + exc.getClass().getSimpleName()\n                    + \": \" + exc.getMessage());\n            exc.printStackTrace(System.err);\n            System.exit(1);\n        }\n    }\n}\n",
+  "binding": "full_native_code",
+  "retained_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_useOriginalFormat/ApiTest.java",
+  "retained_sha256": "73b28ee757455d715462d88ba0a4ee172bf7d860e4aebb99f929e5fdeb04dba7",
+  "native_code_sha256": "e74946d731c6ab9e9cb926f324807c6d345b4e99bbed237dcd1af9b8ffe16c4a",
+  "recovered_from_native_code": false,
+  "replay": {
+    "compile": {
+      "command": [
+        "/Library/Java/JavaVirtualMachines/jdk-1.8.jdk/Contents/Home/bin/javac",
+        "-cp",
+        "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/.aideal_exec/thumbnailator_assertion_replay/B2/4a28566eb391b63adc77-003afe81/library.jar",
+        "-d",
+        "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/.aideal_exec/thumbnailator_assertion_replay/B2/4a28566eb391b63adc77-003afe81/classes",
+        "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/.aideal_exec/thumbnailator_assertion_replay/B2/4a28566eb391b63adc77-003afe81/ApiTest.java"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "",
+      "wall_s": 0.274
+    },
+    "provenance": {
+      "jar_sha256": "8b8b44f5681d520f87789f104ca106fd860bdb942a239c26bf2cce7c85927597",
+      "source_sha256": "6ae6e0d5ed1e37875e97c929b1457f1bf64f89a54b1c64e21f3d1bbd558877cb",
+      "path_replacements": [
+        {
+          "from": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/source/src/test/resources/Thumbnailator/grid.png",
+          "to": "fixtures/grid_png.png"
+        },
+        {
+          "from": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/source/src/test/resources/Thumbnailator/grid.jpg",
+          "to": "fixtures/grid_jpeg.jpg"
+        },
+        {
+          "from": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/source/src/test/resources/Exif/original.jpg",
+          "to": "fixtures/exif_jpeg.jpg"
+        },
+        {
+          "from": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/output",
+          "to": "project/.aideal_exec/B2/output"
+        }
+      ],
+      "fixtures": {
+        "grid_png": {
+          "source": "source/src/test/resources/Thumbnailator/grid.png",
+          "sha256": "810ca84718b8e4e6dabd0c8178dc2e4909a92abb63e24831d22cef6d74853608"
+        },
+        "grid_jpeg": {
+          "source": "source/src/test/resources/Thumbnailator/grid.jpg",
+          "sha256": "b84a5be546bfd573b17045dd8e6459d3b265f464dcbe07b40f8205e4f9b305e2"
+        },
+        "exif_jpeg": {
+          "source": "source/src/test/resources/Exif/original.jpg",
+          "sha256": "24c144238c49076bfe6eed9a10ca6189fda5a8d9c2d9c43f68381f094806b7e7"
+        }
+      }
+    },
+    "variants": {
+      "assertions_off": {
+        "command": [
+          "/Library/Java/JavaVirtualMachines/jdk-1.8.jdk/Contents/Home/bin/java",
+          "-da",
+          "-Xmx256m",
+          "-Djava.awt.headless=true",
+          "-Djava.security.manager",
+          "-Djava.security.policy==/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/.aideal_exec/thumbnailator_assertion_replay/B2/4a28566eb391b63adc77-003afe81/assertions_off.policy",
+          "-Djava.io.tmpdir=/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/.aideal_exec/thumbnailator_assertion_replay/B2/4a28566eb391b63adc77-003afe81/assertions_off/tmp",
+          "-Duser.home=/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/.aideal_exec/thumbnailator_assertion_replay/B2/4a28566eb391b63adc77-003afe81/assertions_off",
+          "-Daideal.replay.root=/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/.aideal_exec/thumbnailator_assertion_replay/B2/4a28566eb391b63adc77-003afe81/assertions_off",
+          "-cp",
+          "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/.aideal_exec/thumbnailator_assertion_replay/B2/4a28566eb391b63adc77-003afe81/classes:/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/.aideal_exec/thumbnailator_assertion_replay/B2/4a28566eb391b63adc77-003afe81/library.jar",
+          "ApiTest"
+        ],
+        "exit_code": 1,
+        "stdout": "",
+        "stderr": "__RUN_ERR__ FileNotFoundException: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/.aideal_exec/thumbnailator_assertion_replay/B2/4a28566eb391b63adc77-003afe81/assertions_off/project/.aideal_exec/B2/output/thumbnail.png/out_useOriginalFormat.png (No such file or directory)\njava.io.FileNotFoundException: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/.aideal_exec/thumbnailator_assertion_replay/B2/4a28566eb391b63adc77-003afe81/assertions_off/project/.aideal_exec/B2/output/thumbnail.png/out_useOriginalFormat.png (No such file or directory)\n\tat java.io.FileOutputStream.open0(Native Method)\n\tat java.io.FileOutputStream.open(FileOutputStream.java:270)\n\tat java.io.FileOutputStream.<init>(FileOutputStream.java:213)\n\tat java.io.FileOutputStream.<init>(FileOutputStream.java:162)\n\tat net.coobird.thumbnailator.tasks.io.FileImageSink.createOutputStream(Unknown Source)\n\tat net.coobird.thumbnailator.tasks.io.FileImageSink.write(Unknown Source)\n\tat net.coobird.thumbnailator.tasks.SourceSinkThumbnailTask.write(Unknown Source)\n\tat net.coobird.thumbnailator.Thumbnailator.createThumbnail(Unknown Source)\n\tat net.coobird.thumbnailator.Thumbnails$Builder.toFile(Unknown Source)\n\tat ApiTest.main(ApiTest.java:69)\n",
+        "wall_s": 0.547,
+        "outcome": "runtime_failure"
+      },
+      "assertions_on": {
+        "command": [
+          "/Library/Java/JavaVirtualMachines/jdk-1.8.jdk/Contents/Home/bin/java",
+          "-ea",
+          "-Xmx256m",
+          "-Djava.awt.headless=true",
+          "-Djava.security.manager",
+          "-Djava.security.policy==/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/.aideal_exec/thumbnailator_assertion_replay/B2/4a28566eb391b63adc77-003afe81/assertions_on.policy",
+          "-Djava.io.tmpdir=/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/.aideal_exec/thumbnailator_assertion_replay/B2/4a28566eb391b63adc77-003afe81/assertions_on/tmp",
+          "-Duser.home=/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/.aideal_exec/thumbnailator_assertion_replay/B2/4a28566eb391b63adc77-003afe81/assertions_on",
+          "-Daideal.replay.root=/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/.aideal_exec/thumbnailator_assertion_replay/B2/4a28566eb391b63adc77-003afe81/assertions_on",
+          "-cp",
+          "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/.aideal_exec/thumbnailator_assertion_replay/B2/4a28566eb391b63adc77-003afe81/classes:/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/.aideal_exec/thumbnailator_assertion_replay/B2/4a28566eb391b63adc77-003afe81/library.jar",
+          "ApiTest"
+        ],
+        "exit_code": 1,
+        "stdout": "",
+        "stderr": "__RUN_ERR__ FileNotFoundException: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/.aideal_exec/thumbnailator_assertion_replay/B2/4a28566eb391b63adc77-003afe81/assertions_on/project/.aideal_exec/B2/output/thumbnail.png/out_useOriginalFormat.png (No such file or directory)\njava.io.FileNotFoundException: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/.aideal_exec/thumbnailator_assertion_replay/B2/4a28566eb391b63adc77-003afe81/assertions_on/project/.aideal_exec/B2/output/thumbnail.png/out_useOriginalFormat.png (No such file or directory)\n\tat java.io.FileOutputStream.open0(Native Method)\n\tat java.io.FileOutputStream.open(FileOutputStream.java:270)\n\tat java.io.FileOutputStream.<init>(FileOutputStream.java:213)\n\tat java.io.FileOutputStream.<init>(FileOutputStream.java:162)\n\tat net.coobird.thumbnailator.tasks.io.FileImageSink.createOutputStream(Unknown Source)\n\tat net.coobird.thumbnailator.tasks.io.FileImageSink.write(Unknown Source)\n\tat net.coobird.thumbnailator.tasks.SourceSinkThumbnailTask.write(Unknown Source)\n\tat net.coobird.thumbnailator.Thumbnailator.createThumbnail(Unknown Source)\n\tat net.coobird.thumbnailator.Thumbnails$Builder.toFile(Unknown Source)\n\tat ApiTest.main(ApiTest.java:69)\n",
+        "wall_s": 0.568,
+        "outcome": "runtime_failure"
+      }
+    }
+  },
+  "protocol": {
+    "version": "thumbnailator-assertion-replay-v1",
+    "java_version": "java version \"1.8.0_381\"\nJava(TM) SE Runtime Environment (build 1.8.0_381-b09)\nJava HotSpot(TM) 64-Bit Server VM (build 25.381-b09, mixed mode)\n",
+    "engine": {
+      "execute.py": "43a04b545ae0bd39836bb1d0075e46cca9d590e72cab3d55dd8f48ed8f4653ed",
+      "evidence.py": "ee78d13f0082ef471d4057877b459c8fce2aa7a2a417fa3b47505add08a61b61",
+      "__main__.py": "9727d86212b02dabad98615dd102504a0d20aa0650a6cebc24cbdd82cb521e45"
+    },
+    "llm_calls": 0,
+    "code_fix_rounds": 0
+  },
+  "captured_native_source": {
+    "path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/docs/eval/B2/comprehension.json",
+    "sha256": "edf6f845e49a5b57436a68b7845e73ce578cec0a033cf20a196eae38705feb3a"
+  },
+  "evidence_file": "cases/4a28566eb391b63adc7745ba4e78f986ca8322e9106c07f4578ac8a08681fad5.json"
+}

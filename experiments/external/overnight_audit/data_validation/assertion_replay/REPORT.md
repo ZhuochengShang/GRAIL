@@ -1,6 +1,6 @@
 # Thumbnailator native outcomes and isolated assertion replay
 
-Updated: 2026-09-08T03:48:00.629358-07:00
+Updated: 2026-09-08T04:03:15.194119-07:00
 
 No native score is replaced. Both replay variants use identical code, copied fixture bytes, a fresh output root and Java 8 isolation; only `-da` versus `-ea` differs.
 
@@ -9,7 +9,7 @@ No native score is replaced. Both replay variants use identical code, copied fix
 | A1 | native partial | 128/149 | 142 | 125 | 111 | 14 | 139 |
 | A2 | native complete | 127/149 | 149 | 120 | 114 | 6 | 0 |
 | B1 | awaiting native evidence | — | — | — | — | — | — |
-| B2 | awaiting native evidence | — | — | — | — | — | — |
+| B2 | native complete | 139/149 | 149 | 134 | 126 | 8 | 0 |
 
 ## Interpretation
 
@@ -321,3 +321,152 @@ No native score is replaced. Both replay variants use identical code, copied fix
 | A2 | `watermark` | pass | pass | pass | full_native_code |
 | A2 | `width` | pass | pass | pass | full_native_code |
 | A2 | `write` | pass | pass | pass | full_native_code |
+| B2 | `AbsoluteSize` | pass | pass | pass | full_native_code |
+| B2 | `BicubicResizer` | pass | pass | pass | full_native_code |
+| B2 | `BilinearResizer` | pass | pass | pass | full_native_code |
+| B2 | `BufferedImageBuilder` | pass | pass | pass | full_native_code |
+| B2 | `BufferedImageSource` | pass | pass | pass | full_native_code |
+| B2 | `Canvas` | pass | pass | pass | full_native_code |
+| B2 | `Caption` | pass | pass | pass | full_native_code |
+| B2 | `Colorize` | pass | pass | pass | full_native_code |
+| B2 | `ConsecutivelyNumberedFilenames` | pass | pass | pass | full_native_code |
+| B2 | `Coordinate` | pass | pass | pass | full_native_code |
+| B2 | `FileImageSink` | fail | runtime_failure | runtime_failure | retained_matches_native_failure_prefix |
+| B2 | `FileImageSource` | pass | pass | pass | full_native_code |
+| B2 | `FileThumbnailTask` | fail | runtime_failure | runtime_failure | retained_matches_native_failure_prefix |
+| B2 | `FixedResizerFactory` | pass | pass | pass | full_native_code |
+| B2 | `FixedSizeThumbnailMaker` | pass | pass | pass | full_native_code |
+| B2 | `IfdStructure` | pass | pass | assertion_failure | full_native_code |
+| B2 | `InputStreamImageSource` | pass | pass | pass | full_native_code |
+| B2 | `NullResizer` | pass | pass | pass | full_native_code |
+| B2 | `OutputStreamImageSink` | pass | pass | pass | full_native_code |
+| B2 | `Pipeline` | pass | pass | pass | full_native_code |
+| B2 | `ProgressiveBilinearResizer` | pass | pass | pass | full_native_code |
+| B2 | `Region` | pass | pass | pass | full_native_code |
+| B2 | `RelativeSize` | pass | pass | pass | full_native_code |
+| B2 | `ScaledThumbnailMaker` | pass | pass | pass | full_native_code |
+| B2 | `SourceSinkThumbnailTask` | pass | pass | pass | full_native_code |
+| B2 | `StreamThumbnailTask` | pass | pass | pass | full_native_code |
+| B2 | `ThumbnailMaker` | pass | pass | pass | full_native_code |
+| B2 | `ThumbnailParameter` | pass | pass | pass | full_native_code |
+| B2 | `ThumbnailParameterBuilder` | pass | pass | pass | full_native_code |
+| B2 | `Transparency` | pass | pass | pass | full_native_code |
+| B2 | `URLImageSource` | pass | pass | pass | full_native_code |
+| B2 | `UnsupportedFormatException` | pass | pass | pass | full_native_code |
+| B2 | `Watermark` | pass | pass | pass | full_native_code |
+| B2 | `add` | pass | pass | pass | full_native_code |
+| B2 | `addAll` | pass | pass | pass | full_native_code |
+| B2 | `addFilter` | pass | pass | pass | full_native_code |
+| B2 | `addFilters` | pass | pass | pass | full_native_code |
+| B2 | `addFirst` | pass | pass | pass | full_native_code |
+| B2 | `allowOverwrite` | fail | runtime_failure | runtime_failure | retained_matches_native_failure_prefix |
+| B2 | `alphaInterpolation` | pass | pass | pass | full_native_code |
+| B2 | `antialiasing` | pass | pass | pass | full_native_code |
+| B2 | `apply` | pass | pass | pass | full_native_code |
+| B2 | `asBufferedImage` | pass | pass | pass | full_native_code |
+| B2 | `asBufferedImages` | pass | pass | pass | full_native_code |
+| B2 | `asFiles` | pass | pass | pass | full_native_code |
+| B2 | `build` | pass | pass | pass | full_native_code |
+| B2 | `calculate` | pass | pass | pass | full_native_code |
+| B2 | `clear` | fail | compile_failure | compile_failure | retained_matches_native_failure_prefix |
+| B2 | `copy` | pass | pass | pass | full_native_code |
+| B2 | `createOutputStream` | fail | compile_failure | compile_failure | retained_matches_native_failure_prefix |
+| B2 | `createThumbnail` | pass | pass | pass | full_native_code |
+| B2 | `createThumbnails` | pass | pass | pass | full_native_code |
+| B2 | `createThumbnailsAsCollection` | pass | runtime_failure | runtime_failure | full_native_code |
+| B2 | `crop` | pass | pass | pass | full_native_code |
+| B2 | `defaultImageType` | pass | pass | pass | full_native_code |
+| B2 | `defaultResizer` | pass | pass | pass | full_native_code |
+| B2 | `defaultResizerFactory` | pass | pass | pass | full_native_code |
+| B2 | `determineOutputFormat` | pass | runtime_failure | runtime_failure | full_native_code |
+| B2 | `dithering` | pass | pass | pass | full_native_code |
+| B2 | `filters` | pass | pass | assertion_failure | full_native_code |
+| B2 | `fitWithinDimenions` | fail | compile_failure | compile_failure | retained_matches_native_failure_prefix |
+| B2 | `fitWithinDimensions` | pass | pass | pass | full_native_code |
+| B2 | `forceSize` | pass | pass | pass | full_native_code |
+| B2 | `format` | pass | pass | pass | full_native_code |
+| B2 | `formatType` | fail | compile_failure | compile_failure | retained_matches_native_failure_prefix |
+| B2 | `fromFilenames` | pass | pass | pass | full_native_code |
+| B2 | `fromFiles` | pass | pass | pass | full_native_code |
+| B2 | `fromImages` | pass | pass | pass | full_native_code |
+| B2 | `fromInputStreams` | pass | pass | pass | full_native_code |
+| B2 | `fromURLs` | pass | pass | pass | full_native_code |
+| B2 | `getAlpha` | pass | pass | pass | full_native_code |
+| B2 | `getBoolean` | pass | pass | assertion_failure | full_native_code |
+| B2 | `getCount` | pass | pass | pass | full_native_code |
+| B2 | `getDestination` | fail | compile_failure | compile_failure | retained_matches_native_failure_prefix |
+| B2 | `getExifOrientation` | pass | pass | pass | full_native_code |
+| B2 | `getFilterForOrientation` | pass | pass | pass | full_native_code |
+| B2 | `getFilters` | pass | pass | pass | full_native_code |
+| B2 | `getFormatName` | pass | pass | pass | full_native_code |
+| B2 | `getHeightScalingFactor` | pass | pass | pass | full_native_code |
+| B2 | `getImageFilters` | pass | pass | pass | full_native_code |
+| B2 | `getInputFormatName` | pass | pass | pass | full_native_code |
+| B2 | `getInstance` | pass | pass | pass | full_native_code |
+| B2 | `getKey` | pass | pass | pass | full_native_code |
+| B2 | `getOffsetValue` | pass | pass | pass | full_native_code |
+| B2 | `getOrientationFromExif` | pass | pass | pass | full_native_code |
+| B2 | `getOutputFormat` | pass | pass | pass | full_native_code |
+| B2 | `getOutputFormatType` | pass | pass | pass | full_native_code |
+| B2 | `getOutputQuality` | pass | pass | pass | full_native_code |
+| B2 | `getParam` | pass | pass | pass | full_native_code |
+| B2 | `getPosition` | pass | pass | pass | full_native_code |
+| B2 | `getProxy` | pass | pass | pass | full_native_code |
+| B2 | `getRenderingHints` | pass | pass | pass | full_native_code |
+| B2 | `getResizer` | pass | pass | assertion_failure | full_native_code |
+| B2 | `getResizerFactory` | pass | pass | pass | full_native_code |
+| B2 | `getSink` | pass | pass | pass | full_native_code |
+| B2 | `getSize` | pass | pass | pass | full_native_code |
+| B2 | `getSource` | pass | pass | pass | full_native_code |
+| B2 | `getSourceRegion` | fail | compile_failure | compile_failure | retained_matches_native_failure_prefix |
+| B2 | `getSupportedOutputFormatTypes` | pass | pass | pass | full_native_code |
+| B2 | `getSupportedOutputFormats` | pass | pass | pass | full_native_code |
+| B2 | `getTag` | pass | pass | pass | full_native_code |
+| B2 | `getType` | pass | pass | pass | full_native_code |
+| B2 | `getValue` | pass | pass | pass | full_native_code |
+| B2 | `getWidthScalingFactor` | pass | pass | pass | full_native_code |
+| B2 | `height` | pass | pass | pass | full_native_code |
+| B2 | `if` | pass | pass | pass | full_native_code |
+| B2 | `imageType` | pass | pass | pass | full_native_code |
+| B2 | `init` | fail | compile_failure | compile_failure | retained_matches_native_failure_prefix |
+| B2 | `isKeepAspectRatio` | pass | pass | pass | full_native_code |
+| B2 | `isOffset` | pass | pass | pass | full_native_code |
+| B2 | `isSupportedOutputFormat` | pass | pass | pass | full_native_code |
+| B2 | `isSupportedOutputFormatType` | pass | pass | pass | full_native_code |
+| B2 | `isValue` | pass | pass | pass | full_native_code |
+| B2 | `iterableBufferedImages` | pass | pass | pass | full_native_code |
+| B2 | `iterator` | pass | pass | pass | full_native_code |
+| B2 | `keepAspectRatio` | pass | pass | pass | full_native_code |
+| B2 | `make` | pass | pass | pass | full_native_code |
+| B2 | `newRotator` | pass | pass | pass | full_native_code |
+| B2 | `of` | pass | pass | pass | full_native_code |
+| B2 | `outputFormat` | pass | pass | pass | full_native_code |
+| B2 | `outputFormatType` | pass | pass | pass | full_native_code |
+| B2 | `outputQuality` | pass | pass | pass | full_native_code |
+| B2 | `preferredOutputFormatName` | pass | pass | runtime_failure | full_native_code |
+| B2 | `quality` | pass | pass | assertion_failure | full_native_code |
+| B2 | `read` | pass | pass | pass | full_native_code |
+| B2 | `region` | pass | pass | pass | full_native_code |
+| B2 | `rendering` | pass | pass | pass | full_native_code |
+| B2 | `resize` | pass | pass | pass | full_native_code |
+| B2 | `resizer` | pass | pass | pass | full_native_code |
+| B2 | `resizerFactory` | pass | pass | pass | full_native_code |
+| B2 | `rotate` | pass | pass | pass | full_native_code |
+| B2 | `scale` | pass | pass | pass | full_native_code |
+| B2 | `scalingMode` | pass | pass | pass | full_native_code |
+| B2 | `setOutputFormatName` | pass | pass | pass | full_native_code |
+| B2 | `setThumbnailParameter` | pass | pass | assertion_failure | full_native_code |
+| B2 | `size` | pass | pass | pass | full_native_code |
+| B2 | `sourceRegion` | pass | pass | pass | full_native_code |
+| B2 | `toFile` | pass | runtime_failure | runtime_failure | full_native_code |
+| B2 | `toFiles` | pass | pass | pass | full_native_code |
+| B2 | `toOutputStream` | pass | pass | pass | full_native_code |
+| B2 | `toOutputStreams` | pass | pass | pass | full_native_code |
+| B2 | `typeOf` | pass | pass | pass | full_native_code |
+| B2 | `useExifOrientation` | pass | pass | pass | full_native_code |
+| B2 | `useOriginalFormat` | pass | runtime_failure | runtime_failure | full_native_code |
+| B2 | `useOriginalImageType` | pass | pass | pass | full_native_code |
+| B2 | `value` | pass | pass | assertion_failure | full_native_code |
+| B2 | `watermark` | pass | pass | pass | full_native_code |
+| B2 | `width` | pass | pass | pass | full_native_code |
+| B2 | `write` | pass | runtime_failure | runtime_failure | full_native_code |
