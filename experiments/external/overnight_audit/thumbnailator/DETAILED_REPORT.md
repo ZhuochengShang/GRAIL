@@ -27,7 +27,7 @@ Effects withheld until all four matched final cells and their repair/test eviden
 
 ### A1
 
-Primary failure categories: {"llm-error": 5, "unknown": 11}.
+Primary failure categories: {"llm-error": 5, "unknown": 15}.
 
 Recorded provider-error attempts across all checkpoint fingerprints: 13. Provider-internal retries are not recorded by the existing client and cannot be inferred from the configured limit. Watchdog logs retain process attempts; checkpoint attempts and document-fix rounds are separate ledger fields.
 
@@ -47,6 +47,10 @@ Recorded provider-error attempts across all checkpoint fingerprints: 13. Provide
 - `defaultResizerFactory`: unknown; native=runtime; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `source/src/main/java/net/coobird/thumbnailator/makers/ThumbnailMaker.java:290`. Error: `IllegalStateException: Maker not ready to make thumbnail.`. Review: Observed runtime; doc attribution requires source, document, and snippet review.
 - `determineOutputFormat`: unknown; native=runtime; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `source/src/main/java/net/coobird/thumbnailator/Thumbnails.java:1720`. Error: `FileNotFoundException: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A1/experiments/external/thumbnailator/.aideal_exec/A1/output/thumbnail.png/test_output.png (Not a directory)`. Review: Observed runtime; doc attribution requires source, document, and snippet review.
 - `format`: llm-error; native=llm-error; checkpoint attempts=1; provider-error attempts=1; document rounds=None; repair=None. Source: `source/src/main/java/net/coobird/thumbnailator/builders/ThumbnailParameterBuilder.java:243`. Error: `ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}`. Review: Provider outcome; retry, never count as a documentation failure.
+- `getDestination`: unknown; native=compile; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `source/src/main/java/net/coobird/thumbnailator/tasks/ThumbnailTask.java:126`. Error: `/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A1/experiments/external/thumbnailator/.aideal_exec/A1/run_getDestination/ApiTest.java:51: error: illegal start of expression`. Review: Observed compile; doc attribution requires source, document, and snippet review.
+- `getExifOrientation`: unknown; native=runtime; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `source/src/main/java/net/coobird/thumbnailator/util/exif/ExifUtils.java:69`. Error: `IllegalStateException: Input not set`. Review: Observed runtime; doc attribution requires source, document, and snippet review.
+- `getOutputFormat`: unknown; native=runtime; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `source/src/main/java/net/coobird/thumbnailator/ThumbnailParameter.java:878`. Error: `IllegalArgumentException: Resizer cannot be null`. Review: Observed runtime; doc attribution requires source, document, and snippet review.
+- `getResizerFactory`: unknown; native=compile; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `source/src/main/java/net/coobird/thumbnailator/ThumbnailParameter.java:942`. Error: `/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A1/experiments/external/thumbnailator/.aideal_exec/A1/run_getResizerFactory/ApiTest.java:55: error: variable args is already defined in method main(String[])`. Review: Observed compile; doc attribution requires source, document, and snippet review.
 
 ### A2
 
