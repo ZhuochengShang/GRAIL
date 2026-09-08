@@ -31,10 +31,15 @@ exclude:
 - llm-error
 - infra
 scheduling:
-  priority_barrier: all three priority B2 jobs succeeded and A2 source pass settled
+  priority_barrier: this repository B2 succeeded; no A1 or other-repository dependency
   max_additional_model_workers: 1
   rate_pool: same existing Google state file
   provider_retry_delay_seconds: 300
+  max_local_study_callers: 6
+  shared_recovery_admission: one file-lock slot; reserve 1 native caller per B2-complete
+    repo, otherwise 2
+  source_retries: resume same S_A2 checkpoint after own B2, independently of A1
+  amended_at: 2026-09-08; before any S_B2 execution
 measurement:
   native_scores_immutable: true
   fixed_cohort_denominators: true
