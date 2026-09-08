@@ -9,12 +9,12 @@
   "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
   "errors": [],
   "failure_categories": {
-    "llm-error": 37,
-    "unknown": 3,
-    "api-identity": 2,
-    "test/scaffold": 3
+    "llm-error": 35,
+    "unknown": 4,
+    "test/scaffold": 4,
+    "api-identity": 2
   },
-  "recorded_provider_errors_all_fingerprints": 87,
+  "recorded_provider_errors_all_fingerprints": 89,
   "observed_fingerprints": [
     "964a2ec0df73c3b53c3966c9213dedb1a12bf7e39ad1b8d7d1ddd561ba53212b",
     "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea"
@@ -8423,6 +8423,178 @@
       "source_other_sites": 2,
       "codebase_frames": null,
       "checkpoint_line": 285
+    },
+    {
+      "name": "accumulated_matrix_from_dist_matrix",
+      "doc_source": "original",
+      "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "llm-error",
+            "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}"
+          }
+        ],
+        "error_category": "llm-error",
+        "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+        "code": "",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_accumulated_matrix_from_dist_matrix/api_test.py",
+        "exit_code": null,
+        "stdout_tail": "",
+        "stderr_tail": ""
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 598.7,
+      "llm_calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "by_model": {},
+      "error_category": "llm-error",
+      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "locus": "",
+      "doc_chars": 117,
+      "document_sha256": "a2efdf7ec1f21b79d0b2dd2330aac3b46dd9d66c1af2e782f9896e4dad99aee4",
+      "source": "tslearn/tslearn/metrics/dtw_variants.py:456",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 286
+    },
+    {
+      "name": "baseline_accuracy",
+      "doc_source": "original",
+      "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "runtime",
+            "error": "AssertionError: Unexpected baseline accuracy: {'Trace': {'NB': 0.8, 'C45': 0.79, 'SVML': 0.73, 'SVMQ': 0.82, 'BN': 0.82, 'RandF': 0.78, 'RotF': 0.93, 'MLP': 0.8"
+          }
+        ],
+        "error_category": "runtime",
+        "error": "AssertionError: Unexpected baseline accuracy: {'Trace': {'NB': 0.8, 'C45': 0.79, 'SVML': 0.73, 'SVMQ': 0.82, 'BN': 0.82, 'RandF': 0.78, 'RotF': 0.93, 'MLP': 0.84, 'Euclidean_1NN': 0.76, 'DTW_R1_1NN': 1.0, 'DTW_Rn_1NN': 0.99, 'DDTW_R1_1NN': 1.0, 'DDTW_Rn_1NN': 0.99, 'ERP_1NN': 0.95, 'LCSS_1NN': 0.97, 'MSM_1NN': 0.93, 'TWE_1NN': 0.99, 'WDDTW_1NN': 1.0, 'WDTW_1NN': 1.0, 'DD_DTW': 1.0, 'DTD_C': 0.99, 'DTW_F': 1.0, 'ST': 1.0, 'LS': 1.0, 'FS': 1.0, 'BoP': 0.97, 'SAXVSM': 1.0, 'BOSS': 1.0, 'TSF': 0.99, 'TSBF': 0.98, 'LPS': 0.98, 'ACF': 1.0, 'PS': 0.95, 'EE': 0.99, 'COTE': 1.0, 'CID_DTW': 0.99}}",
+        "code": "from tslearn.datasets import UCR_UEA_datasets\n\nucr = UCR_UEA_datasets()\nacc = ucr.baseline_accuracy(\"Trace\")\n\nassert acc is None or (isinstance(acc, float) and 0.0 <= acc <= 1.0), f\"Unexpected baseline accuracy: {acc}\"\nprint(f\"__CHECK__ baseline_accuracy {acc}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_baseline_accuracy/api_test.py",
+        "exit_code": 1,
+        "stdout_tail": "",
+        "stderr_tail": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_baseline_accuracy/api_test.py:37: DeprecationWarning: The method baseline_accuracy will soon be deprecated because the data provider no longer maintains this information.\n  acc = ucr.baseline_accuracy(\"Trace\")\n__RUN_ERR__ AssertionError: Unexpected baseline accuracy: {'Trace': {'NB': 0.8, 'C45': 0.79, 'SVML': 0.73, 'SVMQ': 0.82, 'BN': 0.82, 'RandF': 0.78, 'RotF': 0.93, 'MLP': 0.84, 'Euclidean_1NN': 0.76, 'DTW_R1_1NN': 1.0, 'DTW_Rn_1NN': 0.99, 'DDTW_R1_1NN': 1.0, 'DDTW_Rn_1NN': 0.99, 'ERP_1NN': 0.95, 'LCSS_1NN': 0.97, 'MSM_1NN': 0.93, 'TWE_1NN': 0.99, 'WDDTW_1NN': 1.0, 'WDTW_1NN': 1.0, 'DD_DTW': 1.0, 'DTD_C': 0.99, 'DTW_F': 1.0, 'ST': 1.0, 'LS': 1.0, 'FS': 1.0, 'BoP': 0.97, 'SAXVSM': 1.0, 'BOSS': 1.0, 'TSF': 0.99, 'TSBF': 0.98, 'LPS': 0.98, 'ACF': 1.0, 'PS': 0.95, 'EE': 0.99, 'COTE': 1.0, 'CID_DTW': 0.99}}\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_baseline_accuracy/api_test.py\", line 49, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_baseline_accuracy/api_test.py\", line 44, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_baseline_accuracy/api_test.py\", line 39, in api_test\n    assert acc is None or (isinstance(acc, float) and 0.0 <= acc <= 1.0), f\"Unexpected baseline accuracy: {acc}\"\nAssertionError: Unexpected baseline accuracy: {'Trace': {'NB': 0.8, 'C45': 0.79, 'SVML': 0.73, 'SVMQ': 0.82, 'BN': 0.82, 'RandF': 0.78, 'RotF': 0.93, 'MLP': 0.84, 'Euclidean_1NN': 0.76, 'DTW_R1_1NN': 1.0, 'DTW_Rn_1NN': 0.99, 'DDTW_R1_1NN': 1.0, 'DDTW_Rn_1NN': 0.99, 'ERP_1NN': 0.95, 'LCSS_1NN': 0.97, 'MSM_1NN': 0.93, 'TWE_1NN': 0.99, 'WDDTW_1NN': 1.0, 'WDTW_1NN': 1.0, 'DD_DTW': 1.0, 'DTD_C': 0.99, 'DTW_F': 1.0, 'ST': 1.0, 'LS': 1.0, 'FS': 1.0, 'BoP': 0.97, 'SAXVSM': 1.0, 'BOSS': 1.0, 'TSF': 0.99, 'TSBF': 0.98, 'LPS': 0.98, 'ACF': 1.0, 'PS': 0.95, 'EE': 0.99, 'COTE': 1.0, 'CID_DTW': 0.99}}\n"
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 38.2,
+      "llm_calls": 1,
+      "input_tokens": 1323,
+      "output_tokens": 3722,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1323,
+          "output_tokens": 3722
+        }
+      },
+      "error_category": "runtime",
+      "error": "AssertionError: Unexpected baseline accuracy: {'Trace': {'NB': 0.8, 'C45': 0.79, 'SVML': 0.73, 'SVMQ': 0.82, 'BN': 0.82, 'RandF': 0.78, 'RotF': 0.93, 'MLP': 0.84, 'Euclidean_1NN': 0.76, 'DTW_R1_1NN': 1.0, 'DTW_Rn_1NN': 0.99, 'DDTW_R1_1NN': 1.0, 'DDTW_Rn_1NN': 0.99, 'ERP_1NN': 0.95, 'LCSS_1NN': 0.97, 'MSM_1NN': 0.93, 'TWE_1NN': 0.99, 'WDDTW_1NN': 1.0, 'WDTW_1NN': 1.0, 'DD_DTW': 1.0, 'DTD_C': 0.99, 'DTW_F': 1.0, 'ST': 1.0, 'LS': 1.0, 'FS': 1.0, 'BoP': 0.97, 'SAXVSM': 1.0, 'BOSS': 1.0, 'TSF': 0.99, 'TSBF': 0.98, 'LPS': 0.98, 'ACF': 1.0, 'PS': 0.95, 'EE': 0.99, 'COTE': 1.0, 'CID_DTW': 0.99}}",
+      "locus": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_baseline_accuracy/api_test.py:39",
+      "doc_chars": 99,
+      "document_sha256": "36a353f8d4de31f42875451a4698e504bb3615690e916dfa4ef1f2a7fe58ec89",
+      "source": "tslearn/tslearn/datasets/ucr_uea.py:121",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 287
+    },
+    {
+      "name": "belongs_to_backend",
+      "doc_source": "original",
+      "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "llm-error",
+            "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}"
+          }
+        ],
+        "error_category": "llm-error",
+        "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+        "code": "",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_belongs_to_backend/api_test.py",
+        "exit_code": null,
+        "stdout_tail": "",
+        "stderr_tail": ""
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 598.4,
+      "llm_calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "by_model": {},
+      "error_category": "llm-error",
+      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "locus": "",
+      "doc_chars": 100,
+      "document_sha256": "ef848ade21f8fec15e4a567a57314510118945a0ae03bfc83bbf913639d24efc",
+      "source": "tslearn/tslearn/backend/numpy_backend.py:86",
+      "source_other_sites": 1,
+      "codebase_frames": null,
+      "checkpoint_line": 288
+    },
+    {
+      "name": "call",
+      "doc_source": "original",
+      "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "infra",
+            "error": "missing module/import: No module named 'tensorflow'"
+          }
+        ],
+        "error_category": "infra",
+        "error": "missing module/import: No module named 'tensorflow'",
+        "code": "import numpy as np\nimport tensorflow as tf\nfrom tslearn.shapelets import GlobalMinPooling1D\n\n# GlobalMinPooling1D is a custom Keras layer in tslearn.\n# We instantiate it and directly invoke its `call` method.\nlayer = GlobalMinPooling1D()\n\n# Create a small deterministic tensor: 1 sample, 3 timesteps, 2 features\ninputs = tf.constant([[[3.0, 5.0], \n                       [1.0, 6.0], \n                       [4.0, 2.0]]], dtype=tf.float32)\n\n# Execute the call method\nres = layer.call(inputs).numpy()\n\n# The layer computes the minimum over the time dimension (axis 1)\n# Feature 0: min(3.0, 1.0, 4.0) = 1.0\n# Feature 1: min(5.0, 6.0, 2.0) = 2.0\nassert res.shape == (1, 2), f\"Expected shape (1, 2), got {res.shape}\"\nassert np.allclose(res, [[1.0, 2.0]]), f\"Expected [[1.0, 2.0]], got {res}\"\n\nprint(f\"__CHECK__ call {res.tolist()}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_call/api_test.py",
+        "exit_code": 1,
+        "stdout_tail": "",
+        "stderr_tail": "__RUN_ERR__ ModuleNotFoundError: No module named 'tensorflow'\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_call/api_test.py\", line 65, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_call/api_test.py\", line 60, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_call/api_test.py\", line 35, in api_test\n    import tensorflow as tf\nModuleNotFoundError: No module named 'tensorflow'\n"
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 35.6,
+      "llm_calls": 1,
+      "input_tokens": 1307,
+      "output_tokens": 4361,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1307,
+          "output_tokens": 4361
+        }
+      },
+      "error_category": "infra",
+      "error": "missing module/import: No module named 'tensorflow'",
+      "locus": "",
+      "doc_chars": 86,
+      "document_sha256": "4a3660267b63f156f9c0ac9f275d714a1720d00806eb92e577f3222ce1142c67",
+      "source": "tslearn/tslearn/shapelets/shapelets.py:89",
+      "source_other_sites": 3,
+      "codebase_frames": null,
+      "checkpoint_line": 289
     }
   ],
   "repair_summary": {
@@ -9482,8 +9654,8 @@
       "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
       "source": "tslearn/tslearn/metrics/dtw_variants.py:456",
       "doc_chars": 117,
-      "checkpoint_attempts": 1,
-      "provider_error_attempts": 1,
+      "checkpoint_attempts": 2,
+      "provider_error_attempts": 2,
       "provider_internal_retries": null,
       "recorded_successful_llm_calls": 0,
       "attempt_history": [
@@ -9494,6 +9666,18 @@
           "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
           "attempts": 1,
           "wall_s": 600.1,
+          "llm_calls": 0,
+          "input_tokens": 0,
+          "output_tokens": 0,
+          "pass_round": null
+        },
+        {
+          "checkpoint_line": 286,
+          "status": "fail",
+          "error_category": "llm-error",
+          "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+          "attempts": 1,
+          "wall_s": 598.7,
           "llm_calls": 0,
           "input_tokens": 0,
           "output_tokens": 0,
@@ -9565,16 +9749,16 @@
     {
       "api": "baseline_accuracy",
       "status": "fail",
-      "primary_category": "llm-error",
-      "runner_category": "llm-error",
-      "category_reason": "Provider outcome; retry, never count as a documentation failure.",
-      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "primary_category": "unknown",
+      "runner_category": "runtime",
+      "category_reason": "Observed runtime; doc attribution requires source, document, and snippet review.",
+      "error": "AssertionError: Unexpected baseline accuracy: {'Trace': {'NB': 0.8, 'C45': 0.79, 'SVML': 0.73, 'SVMQ': 0.82, 'BN': 0.82, 'RandF': 0.78, 'RotF': 0.93, 'MLP': 0.84, 'Euclidean_1NN': 0.76, 'DTW_R1_1NN': 1.0, 'DTW_Rn_1NN': 0.99, 'DDTW_R1_1NN': 1.0, 'DDTW_Rn_1NN': 0.99, 'ERP_1NN': 0.95, 'LCSS_1NN': 0.97, 'MSM_1NN': 0.93, 'TWE_1NN': 0.99, 'WDDTW_1NN': 1.0, 'WDTW_1NN': 1.0, 'DD_DTW': 1.0, 'DTD_C': 0.99, 'DTW_F': 1.0, 'ST': 1.0, 'LS': 1.0, 'FS': 1.0, 'BoP': 0.97, 'SAXVSM': 1.0, 'BOSS': 1.0, 'TSF': 0.99, 'TSBF': 0.98, 'LPS': 0.98, 'ACF': 1.0, 'PS': 0.95, 'EE': 0.99, 'COTE': 1.0, 'CID_DTW': 0.99}}",
       "source": "tslearn/tslearn/datasets/ucr_uea.py:121",
       "doc_chars": 99,
-      "checkpoint_attempts": 1,
+      "checkpoint_attempts": 2,
       "provider_error_attempts": 1,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
+      "recorded_successful_llm_calls": 1,
       "attempt_history": [
         {
           "checkpoint_line": 241,
@@ -9586,6 +9770,18 @@
           "llm_calls": 0,
           "input_tokens": 0,
           "output_tokens": 0,
+          "pass_round": null
+        },
+        {
+          "checkpoint_line": 287,
+          "status": "fail",
+          "error_category": "runtime",
+          "error": "AssertionError: Unexpected baseline accuracy: {'Trace': {'NB': 0.8, 'C45': 0.79, 'SVML': 0.73, 'SVMQ': 0.82, 'BN': 0.82, 'RandF': 0.78, 'RotF': 0.93, 'MLP': 0.84, 'Euclidean_1NN': 0.76, 'DTW_R1_1NN': 1.0, 'DTW_Rn_1NN': 0.99, 'DDTW_R1_1NN': 1.0, 'DDTW_Rn_1NN': 0.99, 'ERP_1NN': 0.95, 'LCSS_1NN': 0.97, 'MSM_1NN': 0.93, 'TWE_1NN': 0.99, 'WDDTW_1NN': 1.0, 'WDTW_1NN': 1.0, 'DD_DTW': 1.0, 'DTD_C': 0.99, 'DTW_F': 1.0, 'ST': 1.0, 'LS': 1.0, 'FS': 1.0, 'BoP': 0.97, 'SAXVSM': 1.0, 'BOSS': 1.0, 'TSF': 0.99, 'TSBF': 0.98, 'LPS': 0.98, 'ACF': 1.0, 'PS': 0.95, 'EE': 0.99, 'COTE': 1.0, 'CID_DTW': 0.99}}",
+          "attempts": 1,
+          "wall_s": 38.2,
+          "llm_calls": 1,
+          "input_tokens": 1323,
+          "output_tokens": 3722,
           "pass_round": null
         }
       ],
@@ -9603,8 +9799,8 @@
       "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
       "source": "tslearn/tslearn/backend/numpy_backend.py:86",
       "doc_chars": 100,
-      "checkpoint_attempts": 1,
-      "provider_error_attempts": 1,
+      "checkpoint_attempts": 2,
+      "provider_error_attempts": 2,
       "provider_internal_retries": null,
       "recorded_successful_llm_calls": 0,
       "attempt_history": [
@@ -9615,6 +9811,18 @@
           "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
           "attempts": 1,
           "wall_s": 599.1,
+          "llm_calls": 0,
+          "input_tokens": 0,
+          "output_tokens": 0,
+          "pass_round": null
+        },
+        {
+          "checkpoint_line": 288,
+          "status": "fail",
+          "error_category": "llm-error",
+          "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+          "attempts": 1,
+          "wall_s": 598.4,
           "llm_calls": 0,
           "input_tokens": 0,
           "output_tokens": 0,
@@ -9667,16 +9875,16 @@
     {
       "api": "call",
       "status": "fail",
-      "primary_category": "llm-error",
-      "runner_category": "llm-error",
-      "category_reason": "Provider outcome; retry, never count as a documentation failure.",
-      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "primary_category": "test/scaffold",
+      "runner_category": "infra",
+      "category_reason": "Runner classified this as infrastructure.",
+      "error": "missing module/import: No module named 'tensorflow'",
       "source": "tslearn/tslearn/shapelets/shapelets.py:89",
       "doc_chars": 86,
-      "checkpoint_attempts": 1,
+      "checkpoint_attempts": 2,
       "provider_error_attempts": 1,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
+      "recorded_successful_llm_calls": 1,
       "attempt_history": [
         {
           "checkpoint_line": 243,
@@ -9688,6 +9896,18 @@
           "llm_calls": 0,
           "input_tokens": 0,
           "output_tokens": 0,
+          "pass_round": null
+        },
+        {
+          "checkpoint_line": 289,
+          "status": "fail",
+          "error_category": "infra",
+          "error": "missing module/import: No module named 'tensorflow'",
+          "attempts": 1,
+          "wall_s": 35.6,
+          "llm_calls": 1,
+          "input_tokens": 1307,
+          "output_tokens": 4361,
           "pass_round": null
         }
       ],

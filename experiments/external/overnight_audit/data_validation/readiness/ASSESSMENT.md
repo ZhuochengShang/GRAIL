@@ -1,6 +1,6 @@
 # AIDEAL readiness assessment and improvement queue
 
-Updated: 2026-09-08T14:05:45.459302+00:00
+Updated: 2026-09-08T14:20:46.666976+00:00
 
 **Measured scope:** how documentation affects an LLM’s API use under a fixed harness. Overall agent readiness is not yet fully measured; no composite score is assigned.
 
@@ -36,9 +36,10 @@ Provisional counts retain pending and provider-error APIs in the denominator. Fi
 | thumbnailator | provider | 3 |
 | thumbnailator | unknown | 31 |
 | tslearn | api-identity-or-version | 3 |
+| tslearn | assertion-or-behavior | 1 |
 | tslearn | input-contract-or-api-call | 3 |
-| tslearn | provider | 39 |
-| tslearn | unknown | 3 |
+| tslearn | provider | 37 |
+| tslearn | unknown | 4 |
 
 ## Reviewable improvements (136)
 
@@ -83,9 +84,7 @@ Each card separates native failure, diagnosis confidence, proposed action, valid
 | [tslearn: TimeSeriesDBSCAN](suggestions/1268880b6e8ce0e28497.md) | A1 | execution_blocker | high | open |
 | [tslearn: accumulated_matrix](suggestions/31932007a7b91d0395d7.md) | A1 | execution_blocker | high | open |
 | [tslearn: accumulated_matrix_from_dist_matrix](suggestions/c873c572383ded07dabd.md) | A1 | execution_blocker | high | open |
-| [tslearn: baseline_accuracy](suggestions/efc0eaaf68454e1f6b3d.md) | A1 | execution_blocker | high | open |
 | [tslearn: belongs_to_backend](suggestions/f46ab268890b4c653478.md) | A1 | execution_blocker | high | open |
-| [tslearn: call](suggestions/d9bb728a68e8297ee02c.md) | A1 | execution_blocker | high | open |
 | [tslearn: cdist_sax](suggestions/c25207efc332a03acceb.md) | A1 | execution_blocker | high | open |
 | [tslearn: check_dataset](suggestions/a8e4c6f1f84f7f2405c8.md) | A1 | execution_blocker | high | open |
 | [tslearn: check_keras_backend](suggestions/66e5440c2bd6bad1b798.md) | A1 | execution_blocker | high | open |
@@ -176,6 +175,8 @@ Each card separates native failure, diagnosis confidence, proposed action, valid
 | [thumbnailator: getSourceRegion](suggestions/ec70ff6061fe3ebc1206.md) | B2 | needs_diagnosis | low | open |
 | [thumbnailator: init](suggestions/1d5565af4db2fe2faaf2.md) | B2 | needs_diagnosis | low | open |
 | [tslearn: SquaredEuclidean](suggestions/9cb2806d53f90d5dc13a.md) | A1 | needs_diagnosis | medium | open |
+| [tslearn: baseline_accuracy](suggestions/efc0eaaf68454e1f6b3d.md) | A1 | needs_diagnosis | medium | open |
+| [tslearn: call](suggestions/d9bb728a68e8297ee02c.md) | A1 | needs_diagnosis | low | open |
 | [tslearn: cast](suggestions/965682daafd9a388c930.md) | A1 | needs_diagnosis | medium | open |
 | [tslearn: fix_force_all_finite_warning](suggestions/31a797e1c04a6d32d433.md) | A1 | needs_diagnosis | medium | open |
 | [tslearn: get_backend](suggestions/5b561e6f3abaf83879f5.md) | A1 | needs_diagnosis | medium | open |
