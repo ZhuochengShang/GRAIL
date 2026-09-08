@@ -1,0 +1,24 @@
+version: 1
+max_parallel: 1
+retry_delay_seconds: 120
+jobs:
+  - id: thumbnailator_isolated_assertion_replay
+    cwd: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal
+    branch: aideal/external-2x2-infra
+    command:
+      - /Library/Developer/CommandLineTools/usr/bin/python3
+      - -m
+      - experiments.external.assertion_replay
+      - --workspace-parent
+      - /Users/clockorangezoe/Documents/phd_projects/code/geoAI
+      - --out
+      - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_overnight_evidence_audit/experiments/external/overnight_audit/data_validation/assertion_replay
+      - --work
+      - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/.aideal_exec/thumbnailator_assertion_replay
+      - --java-home
+      - /Library/Java/JavaVirtualMachines/jdk-1.8.jdk/Contents/Home
+      - --watch
+    result: .aideal_exec/thumbnailator_replay.stdout
+    complete: {kind: exit_zero}
+    max_runtime_seconds: 604800
+    max_restarts: 0
