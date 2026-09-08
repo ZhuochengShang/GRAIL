@@ -126,3 +126,14 @@ def test_completed_A2_starts_repair_without_waiting_for_A1(tmp_path, monkeypatch
         '--work', str(tmp_path/'work'), '--out', str(tmp_path/'out')])
     driver.main()
     assert order == ['A2', 'source_from_A2', 'B2', 'A1', 'report']
+
+
+def test_legacy_adapter_receives_string_git_paths(tmp_path):
+    from .driver import completed_cell
+    captured = []
+    def commit(worktree, branch, message, paths):
+        # The legacy command logger joins its argv without coercion.
+        captured.append(' '.join(['git', 'add', '--', *paths]))
+    module = SimpleNamespace(analyze=lambda *args: None, commit_push=commit)
+    completed_cell('mir_eval', 'A2', tmp_path, module, Path('experiments/external/mir_eval'))
+    assert captured and 'docs/eval/A2' in captured[0]

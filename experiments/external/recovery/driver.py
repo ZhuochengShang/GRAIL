@@ -97,7 +97,8 @@ def completed_cell(repo, cell, worktree, module, relative):
         branch = f'aideal/{repo}-{cell}'
     paths = [relative / f'docs/eval/{cell}', relative / f'docs/eval/setup/environment_{cell}.txt',
              relative / ('logs/eval/' + cell if repo == 'tslearn' else 'logs/' + cell)]
-    module.commit_push(worktree, branch, f'Complete {repo} {cell} under A2-only repair protocol', paths)
+    module.commit_push(worktree, branch, f'Complete {repo} {cell} under A2-only repair protocol',
+                       [str(path) for path in paths])
 
 
 def report(repo, worktrees, relative, out):
