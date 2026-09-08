@@ -1,0 +1,93 @@
+{
+  "fingerprint": "b7e4fb28db60b29003c1fa906a001f2333a58819187363a99ea4185c49b56daa",
+  "identity": {
+    "baseline_fingerprint": "366e0c64f58ebac296ba554d7ae3f9d9ca2a6b85bf15faf250291bc1c2198bb9",
+    "baseline_result_sha256": "cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab",
+    "api": "decision_function",
+    "script_sha256": "2bac1eaf8734e36c9d14d10ed43c2b32cd6a33f458a6f19710c64bb972c67775",
+    "prompt_sha256": {
+      "comprehension_write_exec": "f557fcc5d4534cdfa6e596066b2106fd4d9f1ed459be8afccb8676070275c501",
+      "deep_dive": "bcaacb96d675d8e898784eea65319e5ded213c06eb8578f5e40627fd3adce504"
+    },
+    "current_effective_config_sha256": "8f538c73b1313fa0053891b34eebf92d5423a22486707c2010f1cdbca48fc715",
+    "current_profile_sha256": "a9124a6c32a7bd4813d62b15ebee0bd7810d32a3f1e770cc67b21aac37b28a46",
+    "upstream_test_context": {
+      "sha256": "71eff9e405056f9b6670608d1c983b7c14f9ac268ae1869c767bf8d06b8ff241",
+      "file_count": 21
+    },
+    "context_engine": {
+      "deepdive.py": "11b4bd8f2c2761c17c43d43a4747ee3660173c94c1a621811c8f720e13898c73",
+      "docfix.py": "1d2f7cf6acdf9455ede12acdf35dcb93d91aa5bc7fe05514fbf783a5eca877b9"
+    },
+    "protocol_sha256": "b6caeb1e279ff5f30bd90547071380caf7efd19a54ea2f5972fddd266f91b5a2",
+    "source": {
+      "sha256": "90ffcaf2949df6e6efb7c82e0eb692117803de7fbb7c5d61178bc44fd411cdfc",
+      "file_count": 62
+    },
+    "document_sha256": "99563bb64e9b9f98f0fec08a242860867eed80fba8e6adf21ddee63e26efb4ff",
+    "script_binding": "retained_unbound_legacy",
+    "baseline_compatibility": null,
+    "mode": "source",
+    "max_code_fix_rounds": 5,
+    "stuck_rounds": 2,
+    "runner_sha256": "0b5d7370459006a623d7084ab5c63a2ecdaa953fc2494a65627175671b994abf",
+    "engine_sha256": "6d9f4310015755d44f7e002ef5add7fb29dfaad0685c7e9d61ca495c1cddeaf1",
+    "validation_sha256": "6b57fe6df9a3049e7b76fbe76ca8042f885bcd507d87040a28032401879cdeb9",
+    "compatibility_adapter_sha256": "86d978d07814e35310da027da25d1e59bafd84dd350be5f66dc278050b1d43f9"
+  },
+  "initial": {
+    "status": "fail",
+    "category": "runtime",
+    "error": "InvalidParameterError: The 'kernel' parameter of SVC must be a str among {'precomputed', 'linear', 'sigmoid', 'rbf', 'poly'} or a callable. Got 'euclidean' instead.",
+    "code": "\"\"\"Shared infrastructure-only scaffold for tslearn's full-surface 2x2.\n\nThis exact file is used in A1, A2, B1, and B2. It intentionally imports no\ntested tslearn API because discovering the public import is part of the\naudience task in every cell.\n\"\"\"\n\nfrom pathlib import Path\nimport sys\nimport traceback\n\nimport numpy as np\n\n\ndef run():\n    # Typed repository fixture path and condition-specific output directory:\n    trace_npz = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/tslearn/tslearn/.cached_datasets/Trace.npz\"\n    output_dir = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_exec/A2/output\"\n\n    # pre-loaded typed inputs (comprehension.execute.preamble)\n    Path(output_dir).mkdir(parents=True, exist_ok=True)\n    _trace = np.load(trace_npz)\n    _balanced = np.array([0, 4, 1, 17, 3, 13, 2, 5], dtype=int)\n    X = _trace[\"X_train\"][_balanced, :40, :]  # type: balanced time-series dataset ndarray (8, 40, 1)\n    X2 = _trace[\"X_test\"][:4, :32, :]  # type: second dataset ndarray (4, 32, 1)\n    s1 = X[0].ravel()  # type: 1-D series ndarray (40,)\n    s2 = X[1].ravel()  # type: 1-D series ndarray (40,)\n    y = _trace[\"y_train\"][_balanced]  # type: four balanced labels, two examples per class\n    tiny_matrix = np.arange(12.0).reshape(3, 4)  # type: deterministic numeric matrix\n\n    # Keep audience imports local so they cannot shadow fixture construction.\n    def api_test():\n        # TODO API_TEST_START\n        from tslearn.svm import TimeSeriesSVC\n\n        # Initialize and fit the classifier\n        clf = TimeSeriesSVC(kernel=\"euclidean\")\n        clf.fit(X, y)\n\n        # Evaluate the decision function on the dataset\n        scores = clf.decision_function(X)\n\n        # Verify the output shape\n        # For a multiclass problem (4 classes), the decision function returns a 2D array\n        assert scores.shape[0] == X.shape[0], f\"Expected {X.shape[0]} rows, got {scores.shape[0]}\"\n        assert scores.ndim == 2, f\"Expected 2D array for multiclass decision function, got {scores.ndim}D\"\n\n        print(f\"__CHECK__ decision_function {scores.shape}\")\n        # TODO API_TEST_END\n        pass\n\n    api_test()\n\n\nif __name__ == \"__main__\":\n    try:\n        run()\n        print(\"__DONE__\")\n    except Exception as exc:  # noqa: BLE001 - execution boundary\n        sys.stderr.write(\"__RUN_ERR__ \" + type(exc).__name__ + \": \" + str(exc) + \"\\n\")\n        traceback.print_exc()\n        raise SystemExit(1)\n"
+  },
+  "events": [
+    {
+      "status": "pass",
+      "category": null,
+      "error": null,
+      "code": "\"\"\"Shared infrastructure-only scaffold for tslearn's full-surface 2x2.\n\nThis exact file is used in A1, A2, B1, and B2. It intentionally imports no\ntested tslearn API because discovering the public import is part of the\naudience task in every cell.\n\"\"\"\n\nfrom pathlib import Path\nimport sys\nimport traceback\n\nimport numpy as np\n\n\ndef run():\n    # Typed repository fixture path and condition-specific output directory:\n    trace_npz = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/tslearn/tslearn/.cached_datasets/Trace.npz\"\n    output_dir = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/30b32cc61a6ddea96ab2edad75509e04f6539ff5ac49abcedfb04cf94ced1f85/round_01/attempt_0001/output\"\n\n    # pre-loaded typed inputs (comprehension.execute.preamble)\n    Path(output_dir).mkdir(parents=True, exist_ok=True)\n    _trace = np.load(trace_npz)\n    _balanced = np.array([0, 4, 1, 17, 3, 13, 2, 5], dtype=int)\n    X = _trace[\"X_train\"][_balanced, :40, :]  # type: balanced time-series dataset ndarray (8, 40, 1)\n    X2 = _trace[\"X_test\"][:4, :32, :]  # type: second dataset ndarray (4, 32, 1)\n    s1 = X[0].ravel()  # type: 1-D series ndarray (40,)\n    s2 = X[1].ravel()  # type: 1-D series ndarray (40,)\n    y = _trace[\"y_train\"][_balanced]  # type: four balanced labels, two examples per class\n    tiny_matrix = np.arange(12.0).reshape(3, 4)  # type: deterministic numeric matrix\n\n    # Keep audience imports local so they cannot shadow fixture construction.\n    def api_test():\n        # TODO API_TEST_START\n        from tslearn.svm import TimeSeriesSVC\n\n        # Initialize and fit the classifier with a valid kernel\n        clf = TimeSeriesSVC(kernel=\"rbf\")\n        clf.fit(X, y)\n\n        # Evaluate the decision function on the dataset\n        scores = clf.decision_function(X)\n\n        # Verify the output shape\n        # For a multiclass problem (4 classes), the decision function returns a 2D array\n        assert scores.shape[0] == X.shape[0], f\"Expected {X.shape[0]} rows, got {scores.shape[0]}\"\n        assert scores.ndim == 2, f\"Expected 2D array for multiclass decision function, got {scores.ndim}D\"\n        assert scores.shape[1] in (4, 6), f\"Expected 4 (ovr) or 6 (ovo) columns, got {scores.shape[1]}\"\n\n        print(f\"__CHECK__ decision_function {scores.shape}\")\n        # TODO API_TEST_END\n        pass\n\n    api_test()\n\n\nif __name__ == \"__main__\":\n    try:\n        run()\n        print(\"__DONE__\")\n    except Exception as exc:  # noqa: BLE001 - execution boundary\n        sys.stderr.write(\"__RUN_ERR__ \" + type(exc).__name__ + \": \" + str(exc) + \"\\n\")\n        traceback.print_exc()\n        raise SystemExit(1)\n",
+      "native_result": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/30b32cc61a6ddea96ab2edad75509e04f6539ff5ac49abcedfb04cf94ced1f85/round_01/attempt_0001/native_result.json",
+      "script_sha256": "cda289658d2711ac398fa6af6cd728878d0e427f420267f59f45b60928553da5",
+      "wall_s": 13.5,
+      "llm_calls": 1,
+      "input_tokens": 4139,
+      "output_tokens": 1063,
+      "code_fix_round": 1
+    }
+  ],
+  "rounds": [
+    {
+      "status": "pass",
+      "category": null,
+      "error": null,
+      "code": "\"\"\"Shared infrastructure-only scaffold for tslearn's full-surface 2x2.\n\nThis exact file is used in A1, A2, B1, and B2. It intentionally imports no\ntested tslearn API because discovering the public import is part of the\naudience task in every cell.\n\"\"\"\n\nfrom pathlib import Path\nimport sys\nimport traceback\n\nimport numpy as np\n\n\ndef run():\n    # Typed repository fixture path and condition-specific output directory:\n    trace_npz = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/tslearn/tslearn/.cached_datasets/Trace.npz\"\n    output_dir = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/30b32cc61a6ddea96ab2edad75509e04f6539ff5ac49abcedfb04cf94ced1f85/round_01/attempt_0001/output\"\n\n    # pre-loaded typed inputs (comprehension.execute.preamble)\n    Path(output_dir).mkdir(parents=True, exist_ok=True)\n    _trace = np.load(trace_npz)\n    _balanced = np.array([0, 4, 1, 17, 3, 13, 2, 5], dtype=int)\n    X = _trace[\"X_train\"][_balanced, :40, :]  # type: balanced time-series dataset ndarray (8, 40, 1)\n    X2 = _trace[\"X_test\"][:4, :32, :]  # type: second dataset ndarray (4, 32, 1)\n    s1 = X[0].ravel()  # type: 1-D series ndarray (40,)\n    s2 = X[1].ravel()  # type: 1-D series ndarray (40,)\n    y = _trace[\"y_train\"][_balanced]  # type: four balanced labels, two examples per class\n    tiny_matrix = np.arange(12.0).reshape(3, 4)  # type: deterministic numeric matrix\n\n    # Keep audience imports local so they cannot shadow fixture construction.\n    def api_test():\n        # TODO API_TEST_START\n        from tslearn.svm import TimeSeriesSVC\n\n        # Initialize and fit the classifier with a valid kernel\n        clf = TimeSeriesSVC(kernel=\"rbf\")\n        clf.fit(X, y)\n\n        # Evaluate the decision function on the dataset\n        scores = clf.decision_function(X)\n\n        # Verify the output shape\n        # For a multiclass problem (4 classes), the decision function returns a 2D array\n        assert scores.shape[0] == X.shape[0], f\"Expected {X.shape[0]} rows, got {scores.shape[0]}\"\n        assert scores.ndim == 2, f\"Expected 2D array for multiclass decision function, got {scores.ndim}D\"\n        assert scores.shape[1] in (4, 6), f\"Expected 4 (ovr) or 6 (ovo) columns, got {scores.shape[1]}\"\n\n        print(f\"__CHECK__ decision_function {scores.shape}\")\n        # TODO API_TEST_END\n        pass\n\n    api_test()\n\n\nif __name__ == \"__main__\":\n    try:\n        run()\n        print(\"__DONE__\")\n    except Exception as exc:  # noqa: BLE001 - execution boundary\n        sys.stderr.write(\"__RUN_ERR__ \" + type(exc).__name__ + \": \" + str(exc) + \"\\n\")\n        traceback.print_exc()\n        raise SystemExit(1)\n",
+      "native_result": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/30b32cc61a6ddea96ab2edad75509e04f6539ff5ac49abcedfb04cf94ced1f85/round_01/attempt_0001/native_result.json",
+      "script_sha256": "cda289658d2711ac398fa6af6cd728878d0e427f420267f59f45b60928553da5",
+      "wall_s": 13.5,
+      "llm_calls": 1,
+      "input_tokens": 4139,
+      "output_tokens": 1063,
+      "code_fix_round": 1
+    }
+  ],
+  "status": "recovered_native",
+  "diagnosis": {
+    "api": "decision_function",
+    "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/30b32cc61a6ddea96ab2edad75509e04f6539ff5ac49abcedfb04cf94ced1f85/deepdive/decision_function.md",
+    "model": "google:gemini-3.1-pro-preview",
+    "tokens": {
+      "in": 5644,
+      "out": 2709
+    },
+    "wall_s": 22.7,
+    "report_text": "### L0 AUDIENCE + TESTABILITY CLASSIFICATION\n**USER-FACING**\n**TESTABLE FROM PUBLIC INPUTS**\n\nThis is a standard, user-facing machine learning method conforming to the scikit-learn classifier API. It is fully testable from public inputs by instantiating the appropriate classifier (e.g., `TimeSeriesSVC`), fitting it on a 3D time-series dataset, and calling the method on test data.\n\n### L1 PURPOSE\nThe `decision_function` API evaluates the decision function for a set of time-series samples using a fitted Support Vector Machine classifier. In the context of SVMs, this typically represents the signed distance of the samples to the separating hyperplane(s), which can be used to gauge prediction confidence or to compute ROC curves and precision-recall metrics.\n\n### L2 CONTRACT\n**Receiver:** A fitted instance of a `tslearn` time-series classifier that wraps a scikit-learn SVM, specifically `TimeSeriesSVC`.\n**Parameters:**\n- `X` (array-like of shape `(n_ts, sz, d)`): The time-series dataset to evaluate. `n_ts` is the number of time series, `sz` is the sequence length, and `d` is the dimensionality of each time step.\n\n**Returns:**\n- `ndarray`: A NumPy array containing the decision function scores. The shape is `(n_samples, n_classes * (n_classes-1) / 2)` by default (One-vs-One), or `(n_samples, n_classes)` if the estimator was configured with `decision_function_shape='ovr'` (One-vs-Rest). For binary classification, it returns a 1D array of shape `(n_samples,)`.\n\n### L3 MECHANICS\n1. **Preprocessing:** The method first delegates to `self._preprocess_sklearn(X, fit_time=False)` (line 367) to validate and reshape the 3D time-series dataset `X` into a 2D format (`sklearn_X`) compatible with the underlying scikit-learn estimator.\n2. **Delegation:** It then calls `decision_function(sklearn_X)` on `self.svm_estimator_` (line 368), which is the underlying fitted `sklearn.svm.SVC` model.\n3. **Return:** The resulting NumPy array of decision scores is returned directly to the caller without further post-processing.\n\n### L4 CORRECT MINIMAL USAGE\n```python\nimport numpy as np\nfrom tslearn.svm import TimeSeriesSVC\n\n# 1. Prepare deterministic 3D time-series data (n_ts, sz, d)\nX_train = np.array([\n    [[1.0], [2.0], [3.0]], \n    [[1.5], [2.5], [3.5]], \n    [[8.0], [9.0], [10.0]], \n    [[8.5], [9.5], [10.5]]\n])\ny_train = np.array([0, 0, 1, 1])\n\n# 2. Initialize and fit the classifier\n# Note: We use a valid scikit-learn/tslearn kernel like 'rbf' or 'gak'\nclf = TimeSeriesSVC(kernel=\"rbf\")\nclf.fit(X_train, y_train)\n\n# 3. Evaluate the decision function on new 3D data\nX_test = np.array([\n    [[1.2], [2.2], [3.2]], \n    [[8.2], [9.2], [10.2]]\n])\nscores = clf.decision_function(X_test)\n\nassert isinstance(scores, np.ndarray)\nassert scores.shape == (2,)  # Binary classification returns a 1D array\nprint(\"Decision function scores:\\n\", scores)\n```\n\n### L5 FAILURE FORENSICS\n**Failed Attempt:**\n```text\nInvalidParameterError: The 'kernel' parameter of SVC must be a str among {'precomputed', 'linear', 'sigmoid', 'rbf', 'poly'} or a callable. Got 'euclidean' instead.\n```\n**Reason for Failure:**\nThe failure occurred because the example code in the provided documentation entry instantiated the classifier with `TimeSeriesSVC(kernel=\"euclidean\")`. The `TimeSeriesSVC` class delegates its core SVM logic to `sklearn.svm.SVC`. Scikit-learn's `SVC` strictly validates the `kernel` parameter and does not accept `\"euclidean\"`. Valid string values are `'linear'`, `'poly'`, `'rbf'`, `'sigmoid'`, `'precomputed'`, or `tslearn`'s specific `'gak'` (Global Alignment Kernel).\n\n### L6 SELF-ASSESSMENT\n- **Inferences:** \n  - I inferred that the class containing `decision_function` is `TimeSeriesSVC`. The provided source snippet starts at line 322 inside a class definition and ends before `TimeSeriesSVR` is defined at line 413. Given the classification-specific methods (`predict_proba`, `predict_log_proba`, `decision_function`) and the documentation entry mentioning `TimeSeriesSVC`, this inference is structurally sound.\n- **Information needed for absolute certainty:** The exact class definition line (e.g., `class TimeSeriesSVC(...)`) preceding line 322 to confirm the class name without relying on inference.\n- **Confidence Scores:**\n  - **L2 (Contract): 10/10** - The signature, parameters, and return types are explicitly defined in the docstring and source code.\n  - **L3 (Mechanics): 10/10** - The two lines of code in the method body (`_preprocess_sklearn` and `svm_estimator_.decision_function`) make the internal mechanics completely transparent.\n  - **L4 (Minimal Usage): 10/10** - The usage pattern is standard for scikit-learn compatible estimators, and the correction of the kernel parameter guarantees execution.",
+    "report_sha256": "17cf44a9477d63988aa2ad006a67b702307f6ca21df26dfcb662d7247528c5d4"
+  },
+  "max_rounds": 5,
+  "stuck_threshold": 2,
+  "stop_reason": null,
+  "semantic_validation": "needs_independent_review",
+  "headline_credit": false,
+  "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/30b32cc61a6ddea96ab2edad75509e04f6539ff5ac49abcedfb04cf94ced1f85/recovery.json"
+}

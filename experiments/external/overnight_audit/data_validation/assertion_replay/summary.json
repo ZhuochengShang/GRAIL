@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-08T14:08:36.747745-07:00",
+  "updated_at": "2026-09-08T14:24:41.880437-07:00",
   "scope": "isolated execution replay; zero LLM calls; zero code fixes",
   "limitations": [
     "Assertion-enabled acceptance is not an independently validated correctness oracle.",
@@ -13,24 +13,25 @@
       "cell": "A1",
       "state": "native partial",
       "native_apis": 149,
-      "native_pass": 129,
-      "replayed": 143,
+      "native_pass": 130,
+      "replayed": 145,
       "assertions_on": {
-        "pass": 112,
+        "pass": 113,
         "runtime_failure": 9,
         "compile_failure": 8,
-        "assertion_failure": 14,
-        "not_replayed": 6
+        "assertion_failure": 15,
+        "not_replayed": 4
       },
       "assertions_off": {
-        "pass": 126,
+        "pass": 127,
         "runtime_failure": 9,
         "compile_failure": 8,
-        "not_replayed": 6
+        "not_replayed": 4,
+        "missing_check_marker": 1
       },
       "off_pass_on_fail": 14,
       "unbound_retained_replays": 139,
-      "native_source_sha256": "ed14ee693269e4582e2cc0dcd3ec5511275b493d4d66bb6c52a1314290a86559"
+      "native_source_sha256": "f7fe237c266e622424a8d7768e07cb8fd7e482403434107ba89f368cfec83709"
     },
     {
       "cell": "A2",
@@ -601,12 +602,12 @@
       "cell": "A1",
       "api": "clear",
       "native": "fail",
-      "native_category": "llm-error",
-      "binding": "provider failure; stale retained files are not this attempt",
-      "off": "not_replayed",
-      "on": "not_replayed",
-      "evidence": null,
-      "error": ""
+      "native_category": "no-correctness-check",
+      "binding": "retained_matches_native_failure_prefix",
+      "off": "missing_check_marker",
+      "on": "assertion_failure",
+      "evidence": "cases/bec6ba087ed64c49ac067417426a81d42c57f69f35b7481ec8a43dce3283f157.json",
+      "error": "__RUN_ERR__ AssertionError: The documented contract is insufficient to verify the result of clear, as no receiver type or context was provided.\njava.lang.AssertionError: The documented contract is insufficient to verify the result of clear, as no receiver type or context was provided.\n\tat ApiTest.main(ApiTest.java:56)\n"
     },
     {
       "cell": "A1",
@@ -622,12 +623,12 @@
     {
       "cell": "A1",
       "api": "createOutputStream",
-      "native": "fail",
-      "native_category": "llm-error",
-      "binding": "provider failure; stale retained files are not this attempt",
-      "off": "not_replayed",
-      "on": "not_replayed",
-      "evidence": null,
+      "native": "pass",
+      "native_category": null,
+      "binding": "full_native_code",
+      "off": "pass",
+      "on": "pass",
+      "evidence": "cases/5cc28d6b2b3d8208f1b6378126ed86c66fc24149937ebe74621443d3e914e875.json",
       "error": ""
     },
     {

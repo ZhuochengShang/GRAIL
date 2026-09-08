@@ -1,6 +1,6 @@
 # thumbnailator · A2-only repair pipeline
 
-2026-09-08T14:09:40.684193-07:00
+2026-09-08T14:25:11.724546-07:00
 
 A1 original README → zero fixes. A2 generated README → zero fixes.
 Frozen A2 failures → source-only snippet repair; independently → generated-README repair → fresh B2.
@@ -8,7 +8,7 @@ Original-README repair (historical B1) is intentionally omitted.
 
 | Cell | State | Native pass | API outcomes | Failure categories |
 |---|---|---:|---:|---|
-| A1 | native partial | 129 | 149 | {'runtime': 9, 'compile': 8, 'llm-error': 3} |
+| A1 | native partial | 130 | 149 | {'runtime': 9, 'compile': 8, 'no-correctness-check': 1, 'llm-error': 1} |
 | A2 | native complete | 127 | 149 | {'compile': 14, 'runtime': 8} |
 | B2 | native complete | 139 | 149 | {'runtime': 3, 'compile': 7} |
 

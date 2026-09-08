@@ -1,0 +1,93 @@
+{
+  "fingerprint": "a533f6700336ff5d616410316467247d209e7ec8685e1588ba03b03dad84e39c",
+  "identity": {
+    "baseline_fingerprint": "366e0c64f58ebac296ba554d7ae3f9d9ca2a6b85bf15faf250291bc1c2198bb9",
+    "baseline_result_sha256": "cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab",
+    "api": "is_float",
+    "script_sha256": "a69c12ac2bb9690f2ef4e6c64c6d6c0bbce3a080c8bdb86f8168016cbefe4e64",
+    "prompt_sha256": {
+      "comprehension_write_exec": "f557fcc5d4534cdfa6e596066b2106fd4d9f1ed459be8afccb8676070275c501",
+      "deep_dive": "bcaacb96d675d8e898784eea65319e5ded213c06eb8578f5e40627fd3adce504"
+    },
+    "current_effective_config_sha256": "8f538c73b1313fa0053891b34eebf92d5423a22486707c2010f1cdbca48fc715",
+    "current_profile_sha256": "a9124a6c32a7bd4813d62b15ebee0bd7810d32a3f1e770cc67b21aac37b28a46",
+    "upstream_test_context": {
+      "sha256": "71eff9e405056f9b6670608d1c983b7c14f9ac268ae1869c767bf8d06b8ff241",
+      "file_count": 21
+    },
+    "context_engine": {
+      "deepdive.py": "11b4bd8f2c2761c17c43d43a4747ee3660173c94c1a621811c8f720e13898c73",
+      "docfix.py": "1d2f7cf6acdf9455ede12acdf35dcb93d91aa5bc7fe05514fbf783a5eca877b9"
+    },
+    "protocol_sha256": "b6caeb1e279ff5f30bd90547071380caf7efd19a54ea2f5972fddd266f91b5a2",
+    "source": {
+      "sha256": "90ffcaf2949df6e6efb7c82e0eb692117803de7fbb7c5d61178bc44fd411cdfc",
+      "file_count": 62
+    },
+    "document_sha256": "99563bb64e9b9f98f0fec08a242860867eed80fba8e6adf21ddee63e26efb4ff",
+    "script_binding": "retained_unbound_legacy",
+    "baseline_compatibility": null,
+    "mode": "source",
+    "max_code_fix_rounds": 5,
+    "stuck_rounds": 2,
+    "runner_sha256": "0b5d7370459006a623d7084ab5c63a2ecdaa953fc2494a65627175671b994abf",
+    "engine_sha256": "6d9f4310015755d44f7e002ef5add7fb29dfaad0685c7e9d61ca495c1cddeaf1",
+    "validation_sha256": "6b57fe6df9a3049e7b76fbe76ca8042f885bcd507d87040a28032401879cdeb9",
+    "compatibility_adapter_sha256": "86d978d07814e35310da027da25d1e59bafd84dd350be5f66dc278050b1d43f9"
+  },
+  "initial": {
+    "status": "fail",
+    "category": "runtime",
+    "error": "AssertionError: Expected float array to be recognized as float.",
+    "code": "\"\"\"Shared infrastructure-only scaffold for tslearn's full-surface 2x2.\n\nThis exact file is used in A1, A2, B1, and B2. It intentionally imports no\ntested tslearn API because discovering the public import is part of the\naudience task in every cell.\n\"\"\"\n\nfrom pathlib import Path\nimport sys\nimport traceback\n\nimport numpy as np\n\n\ndef run():\n    # Typed repository fixture path and condition-specific output directory:\n    trace_npz = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/tslearn/tslearn/.cached_datasets/Trace.npz\"\n    output_dir = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_exec/A2/output\"\n\n    # pre-loaded typed inputs (comprehension.execute.preamble)\n    Path(output_dir).mkdir(parents=True, exist_ok=True)\n    _trace = np.load(trace_npz)\n    _balanced = np.array([0, 4, 1, 17, 3, 13, 2, 5], dtype=int)\n    X = _trace[\"X_train\"][_balanced, :40, :]  # type: balanced time-series dataset ndarray (8, 40, 1)\n    X2 = _trace[\"X_test\"][:4, :32, :]  # type: second dataset ndarray (4, 32, 1)\n    s1 = X[0].ravel()  # type: 1-D series ndarray (40,)\n    s2 = X[1].ravel()  # type: 1-D series ndarray (40,)\n    y = _trace[\"y_train\"][_balanced]  # type: four balanced labels, two examples per class\n    tiny_matrix = np.arange(12.0).reshape(3, 4)  # type: deterministic numeric matrix\n\n    # Keep audience imports local so they cannot shadow fixture construction.\n    def api_test():\n        # TODO API_TEST_START\n        from tslearn.backend import instantiate_backend\n        import numpy as np\n\n        backend = instantiate_backend(\"numpy\")\n\n        # Check a float array (X is a balanced time-series dataset ndarray, typically float)\n        res_float = backend.is_float(X)\n\n        # Check an integer array\n        res_int = backend.is_float(np.array([1, 2, 3], dtype=np.int32))\n\n        assert res_float is True, \"Expected the backend to identify the float array X as a float type.\"\n        assert res_int is False, \"Expected the backend to identify the int32 array as not a float type.\"\n\n        print(f\"__CHECK__ is_float {res_float}, {res_int}\")\n        # TODO API_TEST_END\n        pass\n\n    api_test()\n\n\nif __name__ == \"__main__\":\n    try:\n        run()\n        print(\"__DONE__\")\n    except Exception as exc:  # noqa: BLE001 - execution boundary\n        sys.stderr.write(\"__RUN_ERR__ \" + type(exc).__name__ + \": \" + str(exc) + \"\\n\")\n        traceback.print_exc()\n        raise SystemExit(1)\n"
+  },
+  "events": [
+    {
+      "status": "pass",
+      "category": null,
+      "error": null,
+      "code": "\"\"\"Shared infrastructure-only scaffold for tslearn's full-surface 2x2.\n\nThis exact file is used in A1, A2, B1, and B2. It intentionally imports no\ntested tslearn API because discovering the public import is part of the\naudience task in every cell.\n\"\"\"\n\nfrom pathlib import Path\nimport sys\nimport traceback\n\nimport numpy as np\n\n\ndef run():\n    # Typed repository fixture path and condition-specific output directory:\n    trace_npz = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/tslearn/tslearn/.cached_datasets/Trace.npz\"\n    output_dir = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/da2d77e659bf5c70e8d51f6e57d6639db9e6230879a9ada535042a3dea3574ab/round_01/attempt_0001/output\"\n\n    # pre-loaded typed inputs (comprehension.execute.preamble)\n    Path(output_dir).mkdir(parents=True, exist_ok=True)\n    _trace = np.load(trace_npz)\n    _balanced = np.array([0, 4, 1, 17, 3, 13, 2, 5], dtype=int)\n    X = _trace[\"X_train\"][_balanced, :40, :]  # type: balanced time-series dataset ndarray (8, 40, 1)\n    X2 = _trace[\"X_test\"][:4, :32, :]  # type: second dataset ndarray (4, 32, 1)\n    s1 = X[0].ravel()  # type: 1-D series ndarray (40,)\n    s2 = X[1].ravel()  # type: 1-D series ndarray (40,)\n    y = _trace[\"y_train\"][_balanced]  # type: four balanced labels, two examples per class\n    tiny_matrix = np.arange(12.0).reshape(3, 4)  # type: deterministic numeric matrix\n\n    # Keep audience imports local so they cannot shadow fixture construction.\n    def api_test():\n        # TODO API_TEST_START\n        from tslearn.backend import instantiate_backend\n        import numpy as np\n\n        backend = instantiate_backend(\"numpy\")\n\n        # Check a NumPy float scalar\n        res_float_scalar = backend.is_float(np.float64(3.14))\n\n        # Check a built-in Python float\n        res_py_float = backend.is_float(3.14)\n\n        # Check an integer scalar\n        res_int_scalar = backend.is_float(np.int32(3))\n\n        # Check a float array (returns False because it is an ndarray, not a float scalar)\n        res_float_array = backend.is_float(X)\n\n        assert res_float_scalar is True, \"Expected np.float64 to be recognized as float.\"\n        assert res_py_float is True, \"Expected Python float to be recognized as float.\"\n        assert res_int_scalar is False, \"Expected np.int32 to not be recognized as float.\"\n        assert res_float_array is False, \"Expected ndarray to not be recognized as float scalar.\"\n\n        print(f\"__CHECK__ is_float {res_float_scalar}, {res_py_float}, {res_int_scalar}, {res_float_array}\")\n        # TODO API_TEST_END\n        pass\n\n    api_test()\n\n\nif __name__ == \"__main__\":\n    try:\n        run()\n        print(\"__DONE__\")\n    except Exception as exc:  # noqa: BLE001 - execution boundary\n        sys.stderr.write(\"__RUN_ERR__ \" + type(exc).__name__ + \": \" + str(exc) + \"\\n\")\n        traceback.print_exc()\n        raise SystemExit(1)\n",
+      "native_result": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/da2d77e659bf5c70e8d51f6e57d6639db9e6230879a9ada535042a3dea3574ab/round_01/attempt_0001/native_result.json",
+      "script_sha256": "15b99b0c8f67733b2afcf8d63e6f49011afa41c0225f67ab84644d988fc28fe0",
+      "wall_s": 9.5,
+      "llm_calls": 1,
+      "input_tokens": 3409,
+      "output_tokens": 900,
+      "code_fix_round": 1
+    }
+  ],
+  "rounds": [
+    {
+      "status": "pass",
+      "category": null,
+      "error": null,
+      "code": "\"\"\"Shared infrastructure-only scaffold for tslearn's full-surface 2x2.\n\nThis exact file is used in A1, A2, B1, and B2. It intentionally imports no\ntested tslearn API because discovering the public import is part of the\naudience task in every cell.\n\"\"\"\n\nfrom pathlib import Path\nimport sys\nimport traceback\n\nimport numpy as np\n\n\ndef run():\n    # Typed repository fixture path and condition-specific output directory:\n    trace_npz = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/tslearn/tslearn/.cached_datasets/Trace.npz\"\n    output_dir = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/da2d77e659bf5c70e8d51f6e57d6639db9e6230879a9ada535042a3dea3574ab/round_01/attempt_0001/output\"\n\n    # pre-loaded typed inputs (comprehension.execute.preamble)\n    Path(output_dir).mkdir(parents=True, exist_ok=True)\n    _trace = np.load(trace_npz)\n    _balanced = np.array([0, 4, 1, 17, 3, 13, 2, 5], dtype=int)\n    X = _trace[\"X_train\"][_balanced, :40, :]  # type: balanced time-series dataset ndarray (8, 40, 1)\n    X2 = _trace[\"X_test\"][:4, :32, :]  # type: second dataset ndarray (4, 32, 1)\n    s1 = X[0].ravel()  # type: 1-D series ndarray (40,)\n    s2 = X[1].ravel()  # type: 1-D series ndarray (40,)\n    y = _trace[\"y_train\"][_balanced]  # type: four balanced labels, two examples per class\n    tiny_matrix = np.arange(12.0).reshape(3, 4)  # type: deterministic numeric matrix\n\n    # Keep audience imports local so they cannot shadow fixture construction.\n    def api_test():\n        # TODO API_TEST_START\n        from tslearn.backend import instantiate_backend\n        import numpy as np\n\n        backend = instantiate_backend(\"numpy\")\n\n        # Check a NumPy float scalar\n        res_float_scalar = backend.is_float(np.float64(3.14))\n\n        # Check a built-in Python float\n        res_py_float = backend.is_float(3.14)\n\n        # Check an integer scalar\n        res_int_scalar = backend.is_float(np.int32(3))\n\n        # Check a float array (returns False because it is an ndarray, not a float scalar)\n        res_float_array = backend.is_float(X)\n\n        assert res_float_scalar is True, \"Expected np.float64 to be recognized as float.\"\n        assert res_py_float is True, \"Expected Python float to be recognized as float.\"\n        assert res_int_scalar is False, \"Expected np.int32 to not be recognized as float.\"\n        assert res_float_array is False, \"Expected ndarray to not be recognized as float scalar.\"\n\n        print(f\"__CHECK__ is_float {res_float_scalar}, {res_py_float}, {res_int_scalar}, {res_float_array}\")\n        # TODO API_TEST_END\n        pass\n\n    api_test()\n\n\nif __name__ == \"__main__\":\n    try:\n        run()\n        print(\"__DONE__\")\n    except Exception as exc:  # noqa: BLE001 - execution boundary\n        sys.stderr.write(\"__RUN_ERR__ \" + type(exc).__name__ + \": \" + str(exc) + \"\\n\")\n        traceback.print_exc()\n        raise SystemExit(1)\n",
+      "native_result": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/da2d77e659bf5c70e8d51f6e57d6639db9e6230879a9ada535042a3dea3574ab/round_01/attempt_0001/native_result.json",
+      "script_sha256": "15b99b0c8f67733b2afcf8d63e6f49011afa41c0225f67ab84644d988fc28fe0",
+      "wall_s": 9.5,
+      "llm_calls": 1,
+      "input_tokens": 3409,
+      "output_tokens": 900,
+      "code_fix_round": 1
+    }
+  ],
+  "status": "recovered_native",
+  "diagnosis": {
+    "api": "is_float",
+    "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/da2d77e659bf5c70e8d51f6e57d6639db9e6230879a9ada535042a3dea3574ab/deepdive/is_float.md",
+    "model": "google:gemini-3.1-pro-preview",
+    "tokens": {
+      "in": 2834,
+      "out": 3944
+    },
+    "wall_s": 33.3,
+    "report_text": "**L0 AUDIENCE + TESTABILITY CLASSIFICATION**\nADVANCED/LOW-LEVEL\nTESTABLE ONLY WITH EXPLICIT LOW-LEVEL CONSTRUCTION\n\nThis API is a low-level backend helper used internally by `tslearn` to write backend-agnostic metric code. It is testable only with explicit low-level construction because it is a method on a backend instance, not a top-level function. To test it, one must first import `instantiate_backend` from `tslearn.backend`, call it with a backend identifier (e.g., `\"numpy\"`), and then call `is_float()` on the resulting backend object.\n\n**L1 PURPOSE**\nThe `is_float` API is a backend-agnostic helper method used to verify that a computed value\u2014typically the scalar output of a distance or alignment metric like DTW\u2014is a floating-point scalar recognized by the active computational backend (NumPy or PyTorch). It sits in the backend compatibility layer, allowing metric implementations to assert type correctness without hardcoding backend-specific type checks.\n\n**L2 CONTRACT**\n- **Receiver**: An instantiated backend object, obtained via `tslearn.backend.instantiate_backend(backend_name)`.\n- **Parameters**: \n  - `x` (Any): The object or value to be evaluated.\n- **Return Value**: `bool`. Returns `True` if `x` is recognized as a floating-point scalar type by the backend, and `False` otherwise.\n- **Visibility**: Public (part of the public backend abstraction).\n- **Thread-safety/Laziness**: Evaluates eagerly and is thread-safe as it relies purely on built-in type checking without mutating state.\n\n**L3 MECHANICS**\nIn the NumPy backend (`tslearn/tslearn/backend/numpy_backend.py:106`), `is_float` is implemented as a `@staticmethod`. It delegates directly to Python's built-in `isinstance` function, checking if `x` is an instance of `numpy.floating` or Python's built-in `float` (line 107). \n\nCrucially, it does *not* inspect the `dtype` attribute of arrays. Because a NumPy array is of type `numpy.ndarray`, `isinstance(x, (_np.floating, float))` will evaluate to `False` for all arrays, even if they contain floating-point numbers or are 0-dimensional. It mutates no state and raises no exceptions.\n\n**L4 CORRECT MINIMAL USAGE**\n```python\nfrom tslearn.backend import instantiate_backend\nimport numpy as np\n\n# 1. Explicit low-level construction of the backend receiver\nbackend = instantiate_backend(\"numpy\")\n\n# 2. Create a scalar float (simulating a distance metric output like DTW)\nscalar_val = np.float64(3.14)\n\n# 3. Exercise the API\nresult = backend.is_float(scalar_val)\n\nprint(f\"Correctness witness: {result}\")\nassert result is True, \"Expected the backend to identify np.float64 as a float.\"\n\n# Demonstration of the array trap:\narray_val = np.array([3.14])\nassert backend.is_float(array_val) is False, \"Arrays are not instances of float scalars.\"\n```\n\n**L5 FAILURE FORENSICS**\nThe recorded failure `AssertionError: Expected float array to be recognized as float.` occurred because the user passed a NumPy array to `is_float`. The documentation incorrectly claims the API checks whether an \"array... represents a floating-point data type\". However, the source code at `tslearn/tslearn/backend/numpy_backend.py:107` explicitly implements this as `return isinstance(x, (_np.floating, float))`. Because a NumPy array is of type `numpy.ndarray` and not a scalar `numpy.floating` or `float`, the method returns `False` for all arrays. The user's assertion failed because they trusted the documentation over the strict scalar type-check enforced by the source code.\n\n**L6 SELF-ASSESSMENT**\n- **INFERENCE**: The exact class name for the NumPy backend (likely `NumPyBackend`) is inferred from the file name `numpy_backend.py` and standard naming conventions, as the `class` declaration is cut off in the provided snippet.\n- **INFERENCE**: The PyTorch backend implementation (`pytorch_backend.py:159`) is inferred to have similar semantics (checking for scalar/0-d tensor float types) based on the API's purpose and the real call sites, though its exact source is not provided.\n- **Confidence Score L2**: 10/10. The contract is explicitly visible in the source code and real call sites.\n- **Confidence Score L3**: 10/10. The mechanics are a single, unambiguous line of code in the provided context.\n- **Confidence Score L4**: 10/10. The usage snippet correctly instantiates the backend and passes a scalar, successfully avoiding the array trap identified in the source code.",
+    "report_sha256": "733e164164aa817ddee90626499c49cd3e9d5e9060f6c5d466759b8f4ef1e5a9"
+  },
+  "max_rounds": 5,
+  "stuck_threshold": 2,
+  "stop_reason": null,
+  "semantic_validation": "needs_independent_review",
+  "headline_credit": false,
+  "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/da2d77e659bf5c70e8d51f6e57d6639db9e6230879a9ada535042a3dea3574ab/recovery.json"
+}

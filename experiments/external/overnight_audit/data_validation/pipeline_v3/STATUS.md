@@ -1,6 +1,6 @@
 # AIDEAL: three separate stages
 
-2026-09-08T14:09:45.541823-07:00
+2026-09-08T14:24:46.404865-07:00
 
 A1/A2 are zero-fix controls. S_A2 repairs snippets from A2 failures. Independent README repair produces fresh zero-fix B2. S_B2 repairs only eligible B2 failures.
 
@@ -11,7 +11,7 @@ A1/A2 are zero-fix controls. S_A2 repairs snippets from A2 failures. Independent
 | mir_eval | B2 | native complete | 137 | 148 |
 | mir_eval | S_A2 | {'recovered_native': 13} | 13 | 13 |
 | mir_eval | S_B2 | {'recovered_native': 11} | 11 | 11 |
-| thumbnailator | A1 | native partial | 129 | 149 |
+| thumbnailator | A1 | native partial | 130 | 149 |
 | thumbnailator | A2 | native complete | 127 | 149 |
 | thumbnailator | B2 | native complete | 139 | 149 |
 | thumbnailator | S_A2 | {'recovered_native': 20, 'stuck': 2} | 20 | 22 |
@@ -19,7 +19,7 @@ A1/A2 are zero-fix controls. S_A2 repairs snippets from A2 failures. Independent
 | tslearn | A1 | native partial | 121 | 235 |
 | tslearn | A2 | native complete | 175 | 235 |
 | tslearn | B2 | pending native evidence | — | — |
-| tslearn | S_A2 | {'recovered_native': 8, 'pending': 24} | 8 | 32 |
+| tslearn | S_A2 | {'recovered_native': 24, 'pending': 8} | 24 | 32 |
 | tslearn | S_B2 | FileNotFoundError: [Errno 2] No such file or directory: '/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/comprehension.json' | — | — |
 
 Denominators: A1/A2/B2 use the full manifest; S_A2 and S_B2 use different frozen eligible-failure cohorts.

@@ -27,13 +27,12 @@ Effects withheld until all four matched final cells and their repair/test eviden
 
 ### A1
 
-Primary failure categories: {"llm-error": 3, "unknown": 1}.
+Primary failure categories: {"llm-error": 1, "unknown": 2}.
 
 Recorded provider-error attempts across all checkpoint fingerprints: 110. Provider-internal retries are not recorded by the existing client and cannot be inferred from the configured limit. Watchdog logs retain process attempts; checkpoint attempts and document-fix rounds are separate ledger fields.
 
 - `build`: unknown; native=compile; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `source/src/main/java/net/coobird/thumbnailator/builders/BufferedImageBuilder.java:110`. Error: `/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A1/experiments/external/thumbnailator/.aideal_exec/A1/run_build/ApiTest.java:52: error: cannot find symbol`. Review: Observed compile; doc attribution requires source, document, and snippet review.
-- `clear`: llm-error; native=llm-error; checkpoint attempts=24; provider-error attempts=24; document rounds=None; repair=None. Source: `source/src/main/java/net/coobird/thumbnailator/util/Configurations.java:130`. Error: `ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}`. Review: Provider outcome; retry, never count as a documentation failure.
-- `createOutputStream`: llm-error; native=llm-error; checkpoint attempts=24; provider-error attempts=24; document rounds=None; repair=None. Source: `source/src/main/java/net/coobird/thumbnailator/tasks/io/FileImageSink.java:326`. Error: `ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}`. Review: Provider outcome; retry, never count as a documentation failure.
+- `clear`: unknown; native=no-correctness-check; checkpoint attempts=25; provider-error attempts=24; document rounds=None; repair=None. Source: `source/src/main/java/net/coobird/thumbnailator/util/Configurations.java:130`. Error: `ran without a correctness check: no '__CHECK__' witness printed. End the snippet with require(<result non-degenerate>, ...) then println("__CHECK__ clear " + <witness>).`. Review: Observed no-correctness-check; doc attribution requires source, document, and snippet review.
 - `region`: llm-error; native=llm-error; checkpoint attempts=24; provider-error attempts=24; document rounds=None; repair=None. Source: `source/src/main/java/net/coobird/thumbnailator/builders/ThumbnailParameterBuilder.java:200`. Error: `ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}`. Review: Provider outcome; retry, never count as a documentation failure.
 
 ### A2

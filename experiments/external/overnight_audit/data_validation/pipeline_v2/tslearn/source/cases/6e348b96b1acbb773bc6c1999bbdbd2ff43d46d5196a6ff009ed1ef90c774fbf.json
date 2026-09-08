@@ -1,0 +1,93 @@
+{
+  "fingerprint": "04639b05ea5854be063aacea1447da4e5e0f15f03c2861f8cc4745088ccda51d",
+  "identity": {
+    "baseline_fingerprint": "366e0c64f58ebac296ba554d7ae3f9d9ca2a6b85bf15faf250291bc1c2198bb9",
+    "baseline_result_sha256": "cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab",
+    "api": "inv_transform_sax",
+    "script_sha256": "f5f4ad614cb133f944d2849e7b156ed746c6a1aa6b1c1df2ee539c5d56b9e4ca",
+    "prompt_sha256": {
+      "comprehension_write_exec": "f557fcc5d4534cdfa6e596066b2106fd4d9f1ed459be8afccb8676070275c501",
+      "deep_dive": "bcaacb96d675d8e898784eea65319e5ded213c06eb8578f5e40627fd3adce504"
+    },
+    "current_effective_config_sha256": "8f538c73b1313fa0053891b34eebf92d5423a22486707c2010f1cdbca48fc715",
+    "current_profile_sha256": "a9124a6c32a7bd4813d62b15ebee0bd7810d32a3f1e770cc67b21aac37b28a46",
+    "upstream_test_context": {
+      "sha256": "71eff9e405056f9b6670608d1c983b7c14f9ac268ae1869c767bf8d06b8ff241",
+      "file_count": 21
+    },
+    "context_engine": {
+      "deepdive.py": "11b4bd8f2c2761c17c43d43a4747ee3660173c94c1a621811c8f720e13898c73",
+      "docfix.py": "1d2f7cf6acdf9455ede12acdf35dcb93d91aa5bc7fe05514fbf783a5eca877b9"
+    },
+    "protocol_sha256": "b6caeb1e279ff5f30bd90547071380caf7efd19a54ea2f5972fddd266f91b5a2",
+    "source": {
+      "sha256": "90ffcaf2949df6e6efb7c82e0eb692117803de7fbb7c5d61178bc44fd411cdfc",
+      "file_count": 62
+    },
+    "document_sha256": "99563bb64e9b9f98f0fec08a242860867eed80fba8e6adf21ddee63e26efb4ff",
+    "script_binding": "retained_unbound_legacy",
+    "baseline_compatibility": null,
+    "mode": "source",
+    "max_code_fix_rounds": 5,
+    "stuck_rounds": 2,
+    "runner_sha256": "0b5d7370459006a623d7084ab5c63a2ecdaa953fc2494a65627175671b994abf",
+    "engine_sha256": "6d9f4310015755d44f7e002ef5add7fb29dfaad0685c7e9d61ca495c1cddeaf1",
+    "validation_sha256": "6b57fe6df9a3049e7b76fbe76ca8042f885bcd507d87040a28032401879cdeb9",
+    "compatibility_adapter_sha256": "86d978d07814e35310da027da25d1e59bafd84dd350be5f66dc278050b1d43f9"
+  },
+  "initial": {
+    "status": "fail",
+    "category": "runtime",
+    "error": "TypingError: Failed in nopython mode pipeline (step: nopython frontend)",
+    "code": "\"\"\"Shared infrastructure-only scaffold for tslearn's full-surface 2x2.\n\nThis exact file is used in A1, A2, B1, and B2. It intentionally imports no\ntested tslearn API because discovering the public import is part of the\naudience task in every cell.\n\"\"\"\n\nfrom pathlib import Path\nimport sys\nimport traceback\n\nimport numpy as np\n\n\ndef run():\n    # Typed repository fixture path and condition-specific output directory:\n    trace_npz = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/tslearn/tslearn/.cached_datasets/Trace.npz\"\n    output_dir = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_exec/A2/output\"\n\n    # pre-loaded typed inputs (comprehension.execute.preamble)\n    Path(output_dir).mkdir(parents=True, exist_ok=True)\n    _trace = np.load(trace_npz)\n    _balanced = np.array([0, 4, 1, 17, 3, 13, 2, 5], dtype=int)\n    X = _trace[\"X_train\"][_balanced, :40, :]  # type: balanced time-series dataset ndarray (8, 40, 1)\n    X2 = _trace[\"X_test\"][:4, :32, :]  # type: second dataset ndarray (4, 32, 1)\n    s1 = X[0].ravel()  # type: 1-D series ndarray (40,)\n    s2 = X[1].ravel()  # type: 1-D series ndarray (40,)\n    y = _trace[\"y_train\"][_balanced]  # type: four balanced labels, two examples per class\n    tiny_matrix = np.arange(12.0).reshape(3, 4)  # type: deterministic numeric matrix\n\n    # Keep audience imports local so they cannot shadow fixture construction.\n    def api_test():\n        # TODO API_TEST_START\n        import sys\n        import numpy as np\n        from tslearn.metrics.cysax import inv_transform_sax\n\n        float_type = np.float32 if sys.platform == \"win32\" else np.float64\n        int_type = np.int32 if sys.platform == \"win32\" else np.int64\n\n        dataset_sax = np.array([[[0.0], [1.0], [2.0]]], dtype=float_type)\n        breakpoints_middle = np.array([-0.5, 0.0, 0.5], dtype=np.float64)\n        original_size = int_type(6)\n\n        dataset_out = inv_transform_sax(dataset_sax, breakpoints_middle, original_size)\n\n        assert dataset_out.shape == (1, 6, 1), f\"Expected shape (1, 6, 1), got {dataset_out.shape}\"\n        assert np.allclose(dataset_out[0, :, 0], [-0.5, -0.5, 0.0, 0.0, 0.5, 0.5]), \"Reconstructed values do not match expected bin centers\"\n\n        print(f\"__CHECK__ inv_transform_sax {dataset_out.shape}\")\n        # TODO API_TEST_END\n        pass\n\n    api_test()\n\n\nif __name__ == \"__main__\":\n    try:\n        run()\n        print(\"__DONE__\")\n    except Exception as exc:  # noqa: BLE001 - execution boundary\n        sys.stderr.write(\"__RUN_ERR__ \" + type(exc).__name__ + \": \" + str(exc) + \"\\n\")\n        traceback.print_exc()\n        raise SystemExit(1)\n"
+  },
+  "events": [
+    {
+      "status": "pass",
+      "category": null,
+      "error": null,
+      "code": "\"\"\"Shared infrastructure-only scaffold for tslearn's full-surface 2x2.\n\nThis exact file is used in A1, A2, B1, and B2. It intentionally imports no\ntested tslearn API because discovering the public import is part of the\naudience task in every cell.\n\"\"\"\n\nfrom pathlib import Path\nimport sys\nimport traceback\n\nimport numpy as np\n\n\ndef run():\n    # Typed repository fixture path and condition-specific output directory:\n    trace_npz = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/tslearn/tslearn/.cached_datasets/Trace.npz\"\n    output_dir = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/98e16b31d1b15a5bccb0923f5fa7d776fec9cc9e15809c8e803f61b6d1c60caa/round_01/attempt_0001/output\"\n\n    # pre-loaded typed inputs (comprehension.execute.preamble)\n    Path(output_dir).mkdir(parents=True, exist_ok=True)\n    _trace = np.load(trace_npz)\n    _balanced = np.array([0, 4, 1, 17, 3, 13, 2, 5], dtype=int)\n    X = _trace[\"X_train\"][_balanced, :40, :]  # type: balanced time-series dataset ndarray (8, 40, 1)\n    X2 = _trace[\"X_test\"][:4, :32, :]  # type: second dataset ndarray (4, 32, 1)\n    s1 = X[0].ravel()  # type: 1-D series ndarray (40,)\n    s2 = X[1].ravel()  # type: 1-D series ndarray (40,)\n    y = _trace[\"y_train\"][_balanced]  # type: four balanced labels, two examples per class\n    tiny_matrix = np.arange(12.0).reshape(3, 4)  # type: deterministic numeric matrix\n\n    # Keep audience imports local so they cannot shadow fixture construction.\n    def api_test():\n        # TODO API_TEST_START\n        import numpy as np\n        from tslearn.metrics.cysax import inv_transform_sax\n\n        # dataset_sax must be an integer type to be used as indices in Numba, \n        # despite the docstring incorrectly specifying float types.\n        dataset_sax = np.array([[[0], [1], [2]]], dtype=np.int64)\n        breakpoints_middle = np.array([-0.5, 0.0, 0.5], dtype=np.float64)\n        original_size = 6\n\n        dataset_out = inv_transform_sax(dataset_sax, breakpoints_middle, original_size)\n\n        assert dataset_out.shape == (1, 6, 1), f\"Expected shape (1, 6, 1), got {dataset_out.shape}\"\n        assert np.allclose(dataset_out[0, :, 0], [-0.5, -0.5, 0.0, 0.0, 0.5, 0.5]), \"Reconstructed values do not match expected bin centers\"\n\n        print(f\"__CHECK__ inv_transform_sax {dataset_out.shape}\")\n        # TODO API_TEST_END\n        pass\n\n    api_test()\n\n\nif __name__ == \"__main__\":\n    try:\n        run()\n        print(\"__DONE__\")\n    except Exception as exc:  # noqa: BLE001 - execution boundary\n        sys.stderr.write(\"__RUN_ERR__ \" + type(exc).__name__ + \": \" + str(exc) + \"\\n\")\n        traceback.print_exc()\n        raise SystemExit(1)\n",
+      "native_result": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/98e16b31d1b15a5bccb0923f5fa7d776fec9cc9e15809c8e803f61b6d1c60caa/round_01/attempt_0001/native_result.json",
+      "script_sha256": "aec9a336f11cba2a8e88f0d6f79b61766a872e5aa25b0ed53fbbbf7d94377860",
+      "wall_s": 15.8,
+      "llm_calls": 1,
+      "input_tokens": 4340,
+      "output_tokens": 1390,
+      "code_fix_round": 1
+    }
+  ],
+  "rounds": [
+    {
+      "status": "pass",
+      "category": null,
+      "error": null,
+      "code": "\"\"\"Shared infrastructure-only scaffold for tslearn's full-surface 2x2.\n\nThis exact file is used in A1, A2, B1, and B2. It intentionally imports no\ntested tslearn API because discovering the public import is part of the\naudience task in every cell.\n\"\"\"\n\nfrom pathlib import Path\nimport sys\nimport traceback\n\nimport numpy as np\n\n\ndef run():\n    # Typed repository fixture path and condition-specific output directory:\n    trace_npz = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/tslearn/tslearn/.cached_datasets/Trace.npz\"\n    output_dir = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/98e16b31d1b15a5bccb0923f5fa7d776fec9cc9e15809c8e803f61b6d1c60caa/round_01/attempt_0001/output\"\n\n    # pre-loaded typed inputs (comprehension.execute.preamble)\n    Path(output_dir).mkdir(parents=True, exist_ok=True)\n    _trace = np.load(trace_npz)\n    _balanced = np.array([0, 4, 1, 17, 3, 13, 2, 5], dtype=int)\n    X = _trace[\"X_train\"][_balanced, :40, :]  # type: balanced time-series dataset ndarray (8, 40, 1)\n    X2 = _trace[\"X_test\"][:4, :32, :]  # type: second dataset ndarray (4, 32, 1)\n    s1 = X[0].ravel()  # type: 1-D series ndarray (40,)\n    s2 = X[1].ravel()  # type: 1-D series ndarray (40,)\n    y = _trace[\"y_train\"][_balanced]  # type: four balanced labels, two examples per class\n    tiny_matrix = np.arange(12.0).reshape(3, 4)  # type: deterministic numeric matrix\n\n    # Keep audience imports local so they cannot shadow fixture construction.\n    def api_test():\n        # TODO API_TEST_START\n        import numpy as np\n        from tslearn.metrics.cysax import inv_transform_sax\n\n        # dataset_sax must be an integer type to be used as indices in Numba, \n        # despite the docstring incorrectly specifying float types.\n        dataset_sax = np.array([[[0], [1], [2]]], dtype=np.int64)\n        breakpoints_middle = np.array([-0.5, 0.0, 0.5], dtype=np.float64)\n        original_size = 6\n\n        dataset_out = inv_transform_sax(dataset_sax, breakpoints_middle, original_size)\n\n        assert dataset_out.shape == (1, 6, 1), f\"Expected shape (1, 6, 1), got {dataset_out.shape}\"\n        assert np.allclose(dataset_out[0, :, 0], [-0.5, -0.5, 0.0, 0.0, 0.5, 0.5]), \"Reconstructed values do not match expected bin centers\"\n\n        print(f\"__CHECK__ inv_transform_sax {dataset_out.shape}\")\n        # TODO API_TEST_END\n        pass\n\n    api_test()\n\n\nif __name__ == \"__main__\":\n    try:\n        run()\n        print(\"__DONE__\")\n    except Exception as exc:  # noqa: BLE001 - execution boundary\n        sys.stderr.write(\"__RUN_ERR__ \" + type(exc).__name__ + \": \" + str(exc) + \"\\n\")\n        traceback.print_exc()\n        raise SystemExit(1)\n",
+      "native_result": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/98e16b31d1b15a5bccb0923f5fa7d776fec9cc9e15809c8e803f61b6d1c60caa/round_01/attempt_0001/native_result.json",
+      "script_sha256": "aec9a336f11cba2a8e88f0d6f79b61766a872e5aa25b0ed53fbbbf7d94377860",
+      "wall_s": 15.8,
+      "llm_calls": 1,
+      "input_tokens": 4340,
+      "output_tokens": 1390,
+      "code_fix_round": 1
+    }
+  ],
+  "status": "recovered_native",
+  "diagnosis": {
+    "api": "inv_transform_sax",
+    "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/98e16b31d1b15a5bccb0923f5fa7d776fec9cc9e15809c8e803f61b6d1c60caa/deepdive/inv_transform_sax.md",
+    "model": "google:gemini-3.1-pro-preview",
+    "tokens": {
+      "in": 5653,
+      "out": 5836
+    },
+    "wall_s": 61.9,
+    "report_text": "**L0 AUDIENCE + TESTABILITY CLASSIFICATION**\n- **Audience:** ADVANCED/LOW-LEVEL (Numba JIT-compiled backend helper for SAX transformations).\n- **Testability:** TESTABLE FROM PUBLIC INPUTS.\n\n**L1 PURPOSE**\nThis API computes the inverse transformation of a Symbolic Aggregate approXimation (SAX) representation. It reconstructs a continuous time-series dataset from discrete SAX symbols (bin indices) by mapping them back to the middle values of their corresponding bins and repeating those values to match the original time-series length.\n\n**L2 CONTRACT**\n- **`dataset_sax`**: A 3D NumPy array of shape `(n_ts, sz, d)`. **Must be an integer type** (e.g., `np.int32` or `np.int64`) representing the discrete SAX bin indices. *(Note: The docstring incorrectly specifies `float64`/`float32`, which is a copy-paste error from other distance metrics and will cause a Numba compilation failure).*\n- **`breakpoints_middle_`**: A 1D NumPy array of shape `(n_bins,)` and dtype `float64`. Contains the continuous values (bin centers) corresponding to each SAX symbol.\n- **`original_size`**: Integer. The length of the original time series before it was reduced to length `sz`.\n- **Returns**: `dataset_out`, a 3D NumPy array of shape `(n_ts, original_size, d)` and dtype `float64` containing the reconstructed time series.\n- **Visibility**: Publicly importable, though primarily intended as an internal backend helper for `PiecewiseAggregateApproximation` and `SymbolicAggregateApproximation`.\n- **Thread-safety**: Uses Numba's `prange` for parallel execution over the `n_ts` dimension, making it thread-safe and parallelized across multiple time series.\n\n**L3 MECHANICS**\n- The function is JIT-compiled via Numba (`@njit(parallel=True, fastmath=True)`).\n- It calculates the segment size `seg_sz = original_size // sz`.\n- It initializes a zero-filled array `dataset_out` of shape `(n_ts, original_size, d)`.\n- It iterates over each time series `i` in parallel.\n- For each SAX segment `t`, it uses the SAX symbols `dataset_sax[i, t, :]` as indices to look up the continuous values in `breakpoints_middle_` (line 100).\n- It assigns these continuous values to the corresponding segment `t0 : t0 + seg_sz` in `dataset_out`.\n- **Edge Case / State Mutation**: If `original_size` is not perfectly divisible by `sz`, the trailing elements of `dataset_out` (from `sz * seg_sz` to `original_size`) are never written to and will remain exactly `0.0`.\n\n**L4 CORRECT MINIMAL USAGE**\n```python\nimport numpy as np\nfrom tslearn.metrics.cysax import inv_transform_sax\n\n# dataset_sax MUST be integers to be used as indices, despite the docstring.\n# Shape: (n_ts=1, sz=3, d=1)\ndataset_sax = np.array([[[0], [1], [2]]], dtype=np.int64) \n\n# 3 bins, so 3 middle breakpoints\nbreakpoints_middle = np.array([-0.5, 0.0, 0.5], dtype=np.float64)\n\n# Original length of the time series\noriginal_size = 6\n\ndataset_out = inv_transform_sax(dataset_sax, breakpoints_middle, original_size)\n\nassert dataset_out.shape == (1, 6, 1)\nassert np.allclose(dataset_out[0, 0:2, 0], -0.5)\nassert np.allclose(dataset_out[0, 2:4, 0], 0.0)\nassert np.allclose(dataset_out[0, 4:6, 0], 0.5)\nprint(\"Reconstructed shape:\", dataset_out.shape)\n```\n\n**L5 FAILURE FORENSICS**\n- **`TypingError: Failed in nopython mode pipeline`**: This failure occurred because the previous attempt followed the docstring's incorrect instruction to pass `dataset_sax` as a `float64` or `float32` array. On line 100, the code executes `breakpoints_middle_[dataset_sax[i, t, :]]`. Numba strictly requires array indices to be integers. Passing a float array causes Numba's type inference (nopython frontend) to fail because floats cannot be used to index arrays. The fix is to pass `dataset_sax` as an integer array.\n\n**L6 SELF-ASSESSMENT**\n- **Inferences**: The exact cause of the `TypingError` is inferred from Numba's strict typing rules regarding array indexing and the explicit use of `dataset_sax` as an index on line 100, combined with the misleading docstring.\n- **Confidence in L2 (Contract)**: 10/10. The types are clear from the code's operations, and the docstring's error is definitively proven by the indexing operation.\n- **Confidence in L3 (Mechanics)**: 10/10. The Numba code is straightforward, and the truncation edge case is mathematically evident from the integer division `original_size // sz`.\n- **Confidence in L4 (Usage)**: 10/10. The minimal usage correctly bypasses the docstring error, provides valid inputs, and deterministically verifies the output.",
+    "report_sha256": "7ec3cae4fcf8284af68134ae3f0aee421bdc1754069a020e8f71cdd7fc1f19d8"
+  },
+  "max_rounds": 5,
+  "stuck_threshold": 2,
+  "stop_reason": null,
+  "semantic_validation": "needs_independent_review",
+  "headline_credit": false,
+  "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/98e16b31d1b15a5bccb0923f5fa7d776fec9cc9e15809c8e803f61b6d1c60caa/recovery.json"
+}

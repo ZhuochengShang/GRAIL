@@ -1,0 +1,119 @@
+{
+  "fingerprint": "05ef5c364fc0a842dfe747c084384ae978bdb009a57ffccceec723bb40fe5849",
+  "identity": {
+    "baseline_fingerprint": "366e0c64f58ebac296ba554d7ae3f9d9ca2a6b85bf15faf250291bc1c2198bb9",
+    "baseline_result_sha256": "cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab",
+    "api": "extract_from_zip_url",
+    "script_sha256": "f5b78f28bd5ae614dd6e594e3b7dc00d5e3d6e1a06d41c03f1a0e398b0634cab",
+    "prompt_sha256": {
+      "comprehension_write_exec": "f557fcc5d4534cdfa6e596066b2106fd4d9f1ed459be8afccb8676070275c501",
+      "deep_dive": "bcaacb96d675d8e898784eea65319e5ded213c06eb8578f5e40627fd3adce504"
+    },
+    "current_effective_config_sha256": "8f538c73b1313fa0053891b34eebf92d5423a22486707c2010f1cdbca48fc715",
+    "current_profile_sha256": "a9124a6c32a7bd4813d62b15ebee0bd7810d32a3f1e770cc67b21aac37b28a46",
+    "upstream_test_context": {
+      "sha256": "71eff9e405056f9b6670608d1c983b7c14f9ac268ae1869c767bf8d06b8ff241",
+      "file_count": 21
+    },
+    "context_engine": {
+      "deepdive.py": "11b4bd8f2c2761c17c43d43a4747ee3660173c94c1a621811c8f720e13898c73",
+      "docfix.py": "1d2f7cf6acdf9455ede12acdf35dcb93d91aa5bc7fe05514fbf783a5eca877b9"
+    },
+    "protocol_sha256": "b6caeb1e279ff5f30bd90547071380caf7efd19a54ea2f5972fddd266f91b5a2",
+    "source": {
+      "sha256": "90ffcaf2949df6e6efb7c82e0eb692117803de7fbb7c5d61178bc44fd411cdfc",
+      "file_count": 62
+    },
+    "document_sha256": "99563bb64e9b9f98f0fec08a242860867eed80fba8e6adf21ddee63e26efb4ff",
+    "script_binding": "retained_unbound_legacy",
+    "baseline_compatibility": null,
+    "mode": "source",
+    "max_code_fix_rounds": 5,
+    "stuck_rounds": 2,
+    "runner_sha256": "0b5d7370459006a623d7084ab5c63a2ecdaa953fc2494a65627175671b994abf",
+    "engine_sha256": "6d9f4310015755d44f7e002ef5add7fb29dfaad0685c7e9d61ca495c1cddeaf1",
+    "validation_sha256": "6b57fe6df9a3049e7b76fbe76ca8042f885bcd507d87040a28032401879cdeb9",
+    "compatibility_adapter_sha256": "86d978d07814e35310da027da25d1e59bafd84dd350be5f66dc278050b1d43f9"
+  },
+  "initial": {
+    "status": "fail",
+    "category": "runtime",
+    "error": "URLError: <urlopen error [Errno 61] Connection refused>",
+    "code": "\"\"\"Shared infrastructure-only scaffold for tslearn's full-surface 2x2.\n\nThis exact file is used in A1, A2, B1, and B2. It intentionally imports no\ntested tslearn API because discovering the public import is part of the\naudience task in every cell.\n\"\"\"\n\nfrom pathlib import Path\nimport sys\nimport traceback\n\nimport numpy as np\n\n\ndef run():\n    # Typed repository fixture path and condition-specific output directory:\n    trace_npz = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/tslearn/tslearn/.cached_datasets/Trace.npz\"\n    output_dir = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_exec/A2/output\"\n\n    # pre-loaded typed inputs (comprehension.execute.preamble)\n    Path(output_dir).mkdir(parents=True, exist_ok=True)\n    _trace = np.load(trace_npz)\n    _balanced = np.array([0, 4, 1, 17, 3, 13, 2, 5], dtype=int)\n    X = _trace[\"X_train\"][_balanced, :40, :]  # type: balanced time-series dataset ndarray (8, 40, 1)\n    X2 = _trace[\"X_test\"][:4, :32, :]  # type: second dataset ndarray (4, 32, 1)\n    s1 = X[0].ravel()  # type: 1-D series ndarray (40,)\n    s2 = X[1].ravel()  # type: 1-D series ndarray (40,)\n    y = _trace[\"y_train\"][_balanced]  # type: four balanced labels, two examples per class\n    tiny_matrix = np.arange(12.0).reshape(3, 4)  # type: deterministic numeric matrix\n\n    # Keep audience imports local so they cannot shadow fixture construction.\n    def api_test():\n        # TODO API_TEST_START\n        import warnings\n        from tslearn.datasets import extract_from_zip_url\n\n        with warnings.catch_warnings(record=True) as w:\n            warnings.simplefilter(\"always\")\n            # Using an invalid URL to avoid network access and demonstrate the failure mode\n            out_dir = extract_from_zip_url(\n                url=\"http://0.0.0.0/nonexistent_dataset.zip\", \n                target_dir=output_dir, \n                verbose=False\n            )\n\n        assert out_dir is None, f\"Expected None on failure, got {out_dir}\"\n        assert any(issubclass(warn.category, RuntimeWarning) for warn in w), \"Expected a RuntimeWarning to be emitted on failure\"\n\n        print(f\"__CHECK__ extract_from_zip_url {out_dir}\")\n        # TODO API_TEST_END\n        pass\n\n    api_test()\n\n\nif __name__ == \"__main__\":\n    try:\n        run()\n        print(\"__DONE__\")\n    except Exception as exc:  # noqa: BLE001 - execution boundary\n        sys.stderr.write(\"__RUN_ERR__ \" + type(exc).__name__ + \": \" + str(exc) + \"\\n\")\n        traceback.print_exc()\n        raise SystemExit(1)\n"
+  },
+  "events": [
+    {
+      "status": "fail",
+      "category": "runtime",
+      "error": "AssertionError: Expected out_dir to be a string",
+      "code": "\"\"\"Shared infrastructure-only scaffold for tslearn's full-surface 2x2.\n\nThis exact file is used in A1, A2, B1, and B2. It intentionally imports no\ntested tslearn API because discovering the public import is part of the\naudience task in every cell.\n\"\"\"\n\nfrom pathlib import Path\nimport sys\nimport traceback\n\nimport numpy as np\n\n\ndef run():\n    # Typed repository fixture path and condition-specific output directory:\n    trace_npz = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/tslearn/tslearn/.cached_datasets/Trace.npz\"\n    output_dir = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/3f6f98c93a37be85ce25328f6f64155e47752ccd9de9a60b0b53e5800f1a6d71/round_01/attempt_0001/output\"\n\n    # pre-loaded typed inputs (comprehension.execute.preamble)\n    Path(output_dir).mkdir(parents=True, exist_ok=True)\n    _trace = np.load(trace_npz)\n    _balanced = np.array([0, 4, 1, 17, 3, 13, 2, 5], dtype=int)\n    X = _trace[\"X_train\"][_balanced, :40, :]  # type: balanced time-series dataset ndarray (8, 40, 1)\n    X2 = _trace[\"X_test\"][:4, :32, :]  # type: second dataset ndarray (4, 32, 1)\n    s1 = X[0].ravel()  # type: 1-D series ndarray (40,)\n    s2 = X[1].ravel()  # type: 1-D series ndarray (40,)\n    y = _trace[\"y_train\"][_balanced]  # type: four balanced labels, two examples per class\n    tiny_matrix = np.arange(12.0).reshape(3, 4)  # type: deterministic numeric matrix\n\n    # Keep audience imports local so they cannot shadow fixture construction.\n    def api_test():\n        # TODO API_TEST_START\n        import os\n        import zipfile\n        import urllib.request\n        from tslearn.datasets import extract_from_zip_url\n\n        # Create a dummy zip file locally to avoid network access\n        zip_path = os.path.join(output_dir, \"dummy.zip\")\n        with zipfile.ZipFile(zip_path, 'w') as zf:\n            zf.writestr(\"dummy.txt\", \"hello world\")\n\n        # Convert the local path to a file:// URL\n        url = \"file://\" + urllib.request.pathname2url(os.path.abspath(zip_path))\n\n        # Extract the zip file using the target API\n        out_dir = extract_from_zip_url(url, target_dir=output_dir, verbose=False)\n\n        # Verify the extraction was successful and returned the correct directory\n        assert out_dir is not None, \"Expected successful extraction, got None\"\n        assert isinstance(out_dir, str), \"Expected out_dir to be a string\"\n        assert os.path.isdir(out_dir), \"Expected out_dir to be a valid directory\"\n\n        # Verify the contents were actually extracted\n        extracted_file = os.path.join(out_dir, \"dummy.txt\")\n        assert os.path.exists(extracted_file), f\"Expected {extracted_file} to exist after extraction\"\n\n        with open(extracted_file, \"r\") as f:\n            content = f.read()\n    \n        assert content == \"hello world\", f\"Content mismatch: expected 'hello world', got '{content}'\"\n\n        print(f\"__CHECK__ extract_from_zip_url {content}\")\n        # TODO API_TEST_END\n        pass\n\n    api_test()\n\n\nif __name__ == \"__main__\":\n    try:\n        run()\n        print(\"__DONE__\")\n    except Exception as exc:  # noqa: BLE001 - execution boundary\n        sys.stderr.write(\"__RUN_ERR__ \" + type(exc).__name__ + \": \" + str(exc) + \"\\n\")\n        traceback.print_exc()\n        raise SystemExit(1)\n",
+      "native_result": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/3f6f98c93a37be85ce25328f6f64155e47752ccd9de9a60b0b53e5800f1a6d71/round_01/attempt_0001/native_result.json",
+      "script_sha256": "55a399f893785d08a76aa0760ed69297b73365d39b99f76cc50571adb2d8679d",
+      "wall_s": 23.8,
+      "llm_calls": 1,
+      "input_tokens": 2444,
+      "output_tokens": 2751,
+      "code_fix_round": 1
+    },
+    {
+      "status": "pass",
+      "category": null,
+      "error": null,
+      "code": "\"\"\"Shared infrastructure-only scaffold for tslearn's full-surface 2x2.\n\nThis exact file is used in A1, A2, B1, and B2. It intentionally imports no\ntested tslearn API because discovering the public import is part of the\naudience task in every cell.\n\"\"\"\n\nfrom pathlib import Path\nimport sys\nimport traceback\n\nimport numpy as np\n\n\ndef run():\n    # Typed repository fixture path and condition-specific output directory:\n    trace_npz = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/tslearn/tslearn/.cached_datasets/Trace.npz\"\n    output_dir = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/3f6f98c93a37be85ce25328f6f64155e47752ccd9de9a60b0b53e5800f1a6d71/round_02/attempt_0001/output\"\n\n    # pre-loaded typed inputs (comprehension.execute.preamble)\n    Path(output_dir).mkdir(parents=True, exist_ok=True)\n    _trace = np.load(trace_npz)\n    _balanced = np.array([0, 4, 1, 17, 3, 13, 2, 5], dtype=int)\n    X = _trace[\"X_train\"][_balanced, :40, :]  # type: balanced time-series dataset ndarray (8, 40, 1)\n    X2 = _trace[\"X_test\"][:4, :32, :]  # type: second dataset ndarray (4, 32, 1)\n    s1 = X[0].ravel()  # type: 1-D series ndarray (40,)\n    s2 = X[1].ravel()  # type: 1-D series ndarray (40,)\n    y = _trace[\"y_train\"][_balanced]  # type: four balanced labels, two examples per class\n    tiny_matrix = np.arange(12.0).reshape(3, 4)  # type: deterministic numeric matrix\n\n    # Keep audience imports local so they cannot shadow fixture construction.\n    def api_test():\n        # TODO API_TEST_START\n        import os\n        import zipfile\n        import urllib.request\n        from tslearn.datasets import extract_from_zip_url\n\n        # Create a dummy zip file locally to avoid network access\n        zip_path = os.path.join(output_dir, \"dummy.zip\")\n        with zipfile.ZipFile(zip_path, 'w') as zf:\n            zf.writestr(\"dummy.txt\", \"hello world\")\n\n        # Convert the local path to a file:// URL\n        url = \"file://\" + urllib.request.pathname2url(os.path.abspath(zip_path))\n\n        # Extract the zip file using the target API\n        out_dir = extract_from_zip_url(url, target_dir=output_dir, verbose=False)\n\n        # Verify the extraction was successful and returned the correct directory\n        assert out_dir is not None, \"Expected successful extraction, got None\"\n\n        # out_dir may be a pathlib.Path object, so we convert it to string for os.path operations\n        out_dir_str = str(out_dir)\n        assert os.path.isdir(out_dir_str), \"Expected out_dir to be a valid directory\"\n\n        # Verify the contents were actually extracted\n        extracted_file = os.path.join(out_dir_str, \"dummy.txt\")\n        assert os.path.exists(extracted_file), f\"Expected {extracted_file} to exist after extraction\"\n\n        with open(extracted_file, \"r\") as f:\n            content = f.read()\n\n        assert content == \"hello world\", f\"Content mismatch: expected 'hello world', got '{content}'\"\n\n        print(f\"__CHECK__ extract_from_zip_url {content}\")\n        # TODO API_TEST_END\n        pass\n\n    api_test()\n\n\nif __name__ == \"__main__\":\n    try:\n        run()\n        print(\"__DONE__\")\n    except Exception as exc:  # noqa: BLE001 - execution boundary\n        sys.stderr.write(\"__RUN_ERR__ \" + type(exc).__name__ + \": \" + str(exc) + \"\\n\")\n        traceback.print_exc()\n        raise SystemExit(1)\n",
+      "native_result": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/3f6f98c93a37be85ce25328f6f64155e47752ccd9de9a60b0b53e5800f1a6d71/round_02/attempt_0001/native_result.json",
+      "script_sha256": "0800327a6a2244a29808ef860a2554d3ae48adc218ab9e086f3c7a2ff3f6000f",
+      "wall_s": 16.6,
+      "llm_calls": 1,
+      "input_tokens": 2625,
+      "output_tokens": 1857,
+      "code_fix_round": 2
+    }
+  ],
+  "rounds": [
+    {
+      "status": "fail",
+      "category": "runtime",
+      "error": "AssertionError: Expected out_dir to be a string",
+      "code": "\"\"\"Shared infrastructure-only scaffold for tslearn's full-surface 2x2.\n\nThis exact file is used in A1, A2, B1, and B2. It intentionally imports no\ntested tslearn API because discovering the public import is part of the\naudience task in every cell.\n\"\"\"\n\nfrom pathlib import Path\nimport sys\nimport traceback\n\nimport numpy as np\n\n\ndef run():\n    # Typed repository fixture path and condition-specific output directory:\n    trace_npz = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/tslearn/tslearn/.cached_datasets/Trace.npz\"\n    output_dir = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/3f6f98c93a37be85ce25328f6f64155e47752ccd9de9a60b0b53e5800f1a6d71/round_01/attempt_0001/output\"\n\n    # pre-loaded typed inputs (comprehension.execute.preamble)\n    Path(output_dir).mkdir(parents=True, exist_ok=True)\n    _trace = np.load(trace_npz)\n    _balanced = np.array([0, 4, 1, 17, 3, 13, 2, 5], dtype=int)\n    X = _trace[\"X_train\"][_balanced, :40, :]  # type: balanced time-series dataset ndarray (8, 40, 1)\n    X2 = _trace[\"X_test\"][:4, :32, :]  # type: second dataset ndarray (4, 32, 1)\n    s1 = X[0].ravel()  # type: 1-D series ndarray (40,)\n    s2 = X[1].ravel()  # type: 1-D series ndarray (40,)\n    y = _trace[\"y_train\"][_balanced]  # type: four balanced labels, two examples per class\n    tiny_matrix = np.arange(12.0).reshape(3, 4)  # type: deterministic numeric matrix\n\n    # Keep audience imports local so they cannot shadow fixture construction.\n    def api_test():\n        # TODO API_TEST_START\n        import os\n        import zipfile\n        import urllib.request\n        from tslearn.datasets import extract_from_zip_url\n\n        # Create a dummy zip file locally to avoid network access\n        zip_path = os.path.join(output_dir, \"dummy.zip\")\n        with zipfile.ZipFile(zip_path, 'w') as zf:\n            zf.writestr(\"dummy.txt\", \"hello world\")\n\n        # Convert the local path to a file:// URL\n        url = \"file://\" + urllib.request.pathname2url(os.path.abspath(zip_path))\n\n        # Extract the zip file using the target API\n        out_dir = extract_from_zip_url(url, target_dir=output_dir, verbose=False)\n\n        # Verify the extraction was successful and returned the correct directory\n        assert out_dir is not None, \"Expected successful extraction, got None\"\n        assert isinstance(out_dir, str), \"Expected out_dir to be a string\"\n        assert os.path.isdir(out_dir), \"Expected out_dir to be a valid directory\"\n\n        # Verify the contents were actually extracted\n        extracted_file = os.path.join(out_dir, \"dummy.txt\")\n        assert os.path.exists(extracted_file), f\"Expected {extracted_file} to exist after extraction\"\n\n        with open(extracted_file, \"r\") as f:\n            content = f.read()\n    \n        assert content == \"hello world\", f\"Content mismatch: expected 'hello world', got '{content}'\"\n\n        print(f\"__CHECK__ extract_from_zip_url {content}\")\n        # TODO API_TEST_END\n        pass\n\n    api_test()\n\n\nif __name__ == \"__main__\":\n    try:\n        run()\n        print(\"__DONE__\")\n    except Exception as exc:  # noqa: BLE001 - execution boundary\n        sys.stderr.write(\"__RUN_ERR__ \" + type(exc).__name__ + \": \" + str(exc) + \"\\n\")\n        traceback.print_exc()\n        raise SystemExit(1)\n",
+      "native_result": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/3f6f98c93a37be85ce25328f6f64155e47752ccd9de9a60b0b53e5800f1a6d71/round_01/attempt_0001/native_result.json",
+      "script_sha256": "55a399f893785d08a76aa0760ed69297b73365d39b99f76cc50571adb2d8679d",
+      "wall_s": 23.8,
+      "llm_calls": 1,
+      "input_tokens": 2444,
+      "output_tokens": 2751,
+      "code_fix_round": 1
+    },
+    {
+      "status": "pass",
+      "category": null,
+      "error": null,
+      "code": "\"\"\"Shared infrastructure-only scaffold for tslearn's full-surface 2x2.\n\nThis exact file is used in A1, A2, B1, and B2. It intentionally imports no\ntested tslearn API because discovering the public import is part of the\naudience task in every cell.\n\"\"\"\n\nfrom pathlib import Path\nimport sys\nimport traceback\n\nimport numpy as np\n\n\ndef run():\n    # Typed repository fixture path and condition-specific output directory:\n    trace_npz = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/tslearn/tslearn/.cached_datasets/Trace.npz\"\n    output_dir = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/3f6f98c93a37be85ce25328f6f64155e47752ccd9de9a60b0b53e5800f1a6d71/round_02/attempt_0001/output\"\n\n    # pre-loaded typed inputs (comprehension.execute.preamble)\n    Path(output_dir).mkdir(parents=True, exist_ok=True)\n    _trace = np.load(trace_npz)\n    _balanced = np.array([0, 4, 1, 17, 3, 13, 2, 5], dtype=int)\n    X = _trace[\"X_train\"][_balanced, :40, :]  # type: balanced time-series dataset ndarray (8, 40, 1)\n    X2 = _trace[\"X_test\"][:4, :32, :]  # type: second dataset ndarray (4, 32, 1)\n    s1 = X[0].ravel()  # type: 1-D series ndarray (40,)\n    s2 = X[1].ravel()  # type: 1-D series ndarray (40,)\n    y = _trace[\"y_train\"][_balanced]  # type: four balanced labels, two examples per class\n    tiny_matrix = np.arange(12.0).reshape(3, 4)  # type: deterministic numeric matrix\n\n    # Keep audience imports local so they cannot shadow fixture construction.\n    def api_test():\n        # TODO API_TEST_START\n        import os\n        import zipfile\n        import urllib.request\n        from tslearn.datasets import extract_from_zip_url\n\n        # Create a dummy zip file locally to avoid network access\n        zip_path = os.path.join(output_dir, \"dummy.zip\")\n        with zipfile.ZipFile(zip_path, 'w') as zf:\n            zf.writestr(\"dummy.txt\", \"hello world\")\n\n        # Convert the local path to a file:// URL\n        url = \"file://\" + urllib.request.pathname2url(os.path.abspath(zip_path))\n\n        # Extract the zip file using the target API\n        out_dir = extract_from_zip_url(url, target_dir=output_dir, verbose=False)\n\n        # Verify the extraction was successful and returned the correct directory\n        assert out_dir is not None, \"Expected successful extraction, got None\"\n\n        # out_dir may be a pathlib.Path object, so we convert it to string for os.path operations\n        out_dir_str = str(out_dir)\n        assert os.path.isdir(out_dir_str), \"Expected out_dir to be a valid directory\"\n\n        # Verify the contents were actually extracted\n        extracted_file = os.path.join(out_dir_str, \"dummy.txt\")\n        assert os.path.exists(extracted_file), f\"Expected {extracted_file} to exist after extraction\"\n\n        with open(extracted_file, \"r\") as f:\n            content = f.read()\n\n        assert content == \"hello world\", f\"Content mismatch: expected 'hello world', got '{content}'\"\n\n        print(f\"__CHECK__ extract_from_zip_url {content}\")\n        # TODO API_TEST_END\n        pass\n\n    api_test()\n\n\nif __name__ == \"__main__\":\n    try:\n        run()\n        print(\"__DONE__\")\n    except Exception as exc:  # noqa: BLE001 - execution boundary\n        sys.stderr.write(\"__RUN_ERR__ \" + type(exc).__name__ + \": \" + str(exc) + \"\\n\")\n        traceback.print_exc()\n        raise SystemExit(1)\n",
+      "native_result": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/3f6f98c93a37be85ce25328f6f64155e47752ccd9de9a60b0b53e5800f1a6d71/round_02/attempt_0001/native_result.json",
+      "script_sha256": "0800327a6a2244a29808ef860a2554d3ae48adc218ab9e086f3c7a2ff3f6000f",
+      "wall_s": 16.6,
+      "llm_calls": 1,
+      "input_tokens": 2625,
+      "output_tokens": 1857,
+      "code_fix_round": 2
+    }
+  ],
+  "status": "recovered_native",
+  "diagnosis": {
+    "api": "extract_from_zip_url",
+    "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/3f6f98c93a37be85ce25328f6f64155e47752ccd9de9a60b0b53e5800f1a6d71/deepdive/extract_from_zip_url.md",
+    "model": "google:gemini-3.1-pro-preview",
+    "tokens": {
+      "in": 3174,
+      "out": 4394
+    },
+    "wall_s": 50.2,
+    "report_text": "",
+    "report_sha256": "8f371fa4e9bea9cc63fe8c7b59a1574578d280244e8cf4faaba67d88b79c3bc8"
+  },
+  "max_rounds": 5,
+  "stuck_threshold": 2,
+  "stop_reason": null,
+  "semantic_validation": "needs_independent_review",
+  "headline_credit": false,
+  "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/3f6f98c93a37be85ce25328f6f64155e47752ccd9de9a60b0b53e5800f1a6d71/recovery.json"
+}

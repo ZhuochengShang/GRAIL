@@ -1,12 +1,12 @@
 # Thumbnailator native outcomes and isolated assertion replay
 
-Updated: 2026-09-08T14:08:36.747745-07:00
+Updated: 2026-09-08T14:24:41.880437-07:00
 
 No native score is replaced. Both replay variants use identical code, copied fixture bytes, a fresh output root and Java 8 isolation; only `-da` versus `-ea` differs.
 
 | Cell | Native state | Native pass / API outcomes | Replayed | Off pass | On pass | Off pass → on fail | Unbound retained replays |
 |---|---|---:|---:|---:|---:|---:|---:|
-| A1 | native partial | 129/149 | 143 | 126 | 112 | 14 | 139 |
+| A1 | native partial | 130/149 | 145 | 127 | 113 | 14 | 139 |
 | A2 | native complete | 127/149 | 149 | 120 | 114 | 6 | 0 |
 | B1 | awaiting native evidence | — | — | — | — | — | — |
 | B2 | native complete | 139/149 | 149 | 134 | 126 | 8 | 0 |
@@ -70,9 +70,9 @@ No native score is replaced. Both replay variants use identical code, copied fix
 | A1 | `asFiles` | fail | runtime_failure | runtime_failure | retained_unbound_legacy |
 | A1 | `build` | fail | compile_failure | compile_failure | retained_matches_native_failure_prefix |
 | A1 | `calculate` | pass | pass | pass | retained_unbound_legacy |
-| A1 | `clear` | fail | not_replayed | not_replayed | provider failure; stale retained files are not this attempt |
+| A1 | `clear` | fail | missing_check_marker | assertion_failure | retained_matches_native_failure_prefix |
 | A1 | `copy` | pass | pass | pass | retained_unbound_legacy |
-| A1 | `createOutputStream` | fail | not_replayed | not_replayed | provider failure; stale retained files are not this attempt |
+| A1 | `createOutputStream` | pass | pass | pass | full_native_code |
 | A1 | `createThumbnail` | pass | pass | pass | retained_unbound_legacy |
 | A1 | `createThumbnails` | pass | pass | pass | retained_unbound_legacy |
 | A1 | `createThumbnailsAsCollection` | pass | pass | assertion_failure | retained_unbound_legacy |

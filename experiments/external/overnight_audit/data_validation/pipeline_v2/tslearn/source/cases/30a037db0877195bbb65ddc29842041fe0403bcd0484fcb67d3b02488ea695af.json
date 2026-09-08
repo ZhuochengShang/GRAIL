@@ -1,0 +1,93 @@
+{
+  "fingerprint": "b8cbd3c445253b342509fcfa3d09b74cceb32ee48cbff573e4068192fcaaa351",
+  "identity": {
+    "baseline_fingerprint": "366e0c64f58ebac296ba554d7ae3f9d9ca2a6b85bf15faf250291bc1c2198bb9",
+    "baseline_result_sha256": "cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab",
+    "api": "check_keras_backend",
+    "script_sha256": "54f470878fbb7e0aabcf78ff10f33a966f43928613e52c7a8f7e91005b4d0070",
+    "prompt_sha256": {
+      "comprehension_write_exec": "f557fcc5d4534cdfa6e596066b2106fd4d9f1ed459be8afccb8676070275c501",
+      "deep_dive": "bcaacb96d675d8e898784eea65319e5ded213c06eb8578f5e40627fd3adce504"
+    },
+    "current_effective_config_sha256": "8f538c73b1313fa0053891b34eebf92d5423a22486707c2010f1cdbca48fc715",
+    "current_profile_sha256": "a9124a6c32a7bd4813d62b15ebee0bd7810d32a3f1e770cc67b21aac37b28a46",
+    "upstream_test_context": {
+      "sha256": "71eff9e405056f9b6670608d1c983b7c14f9ac268ae1869c767bf8d06b8ff241",
+      "file_count": 21
+    },
+    "context_engine": {
+      "deepdive.py": "11b4bd8f2c2761c17c43d43a4747ee3660173c94c1a621811c8f720e13898c73",
+      "docfix.py": "1d2f7cf6acdf9455ede12acdf35dcb93d91aa5bc7fe05514fbf783a5eca877b9"
+    },
+    "protocol_sha256": "b6caeb1e279ff5f30bd90547071380caf7efd19a54ea2f5972fddd266f91b5a2",
+    "source": {
+      "sha256": "90ffcaf2949df6e6efb7c82e0eb692117803de7fbb7c5d61178bc44fd411cdfc",
+      "file_count": 62
+    },
+    "document_sha256": "99563bb64e9b9f98f0fec08a242860867eed80fba8e6adf21ddee63e26efb4ff",
+    "script_binding": "retained_unbound_legacy",
+    "baseline_compatibility": null,
+    "mode": "source",
+    "max_code_fix_rounds": 5,
+    "stuck_rounds": 2,
+    "runner_sha256": "0b5d7370459006a623d7084ab5c63a2ecdaa953fc2494a65627175671b994abf",
+    "engine_sha256": "6d9f4310015755d44f7e002ef5add7fb29dfaad0685c7e9d61ca495c1cddeaf1",
+    "validation_sha256": "6b57fe6df9a3049e7b76fbe76ca8042f885bcd507d87040a28032401879cdeb9",
+    "compatibility_adapter_sha256": "86d978d07814e35310da027da25d1e59bafd84dd350be5f66dc278050b1d43f9"
+  },
+  "initial": {
+    "status": "fail",
+    "category": "runtime",
+    "error": "AssertionError: The documented contract is insufficient to verify the side effect of check_keras_backend",
+    "code": "\"\"\"Shared infrastructure-only scaffold for tslearn's full-surface 2x2.\n\nThis exact file is used in A1, A2, B1, and B2. It intentionally imports no\ntested tslearn API because discovering the public import is part of the\naudience task in every cell.\n\"\"\"\n\nfrom pathlib import Path\nimport sys\nimport traceback\n\nimport numpy as np\n\n\ndef run():\n    # Typed repository fixture path and condition-specific output directory:\n    trace_npz = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/tslearn/tslearn/.cached_datasets/Trace.npz\"\n    output_dir = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_exec/A2/output\"\n\n    # pre-loaded typed inputs (comprehension.execute.preamble)\n    Path(output_dir).mkdir(parents=True, exist_ok=True)\n    _trace = np.load(trace_npz)\n    _balanced = np.array([0, 4, 1, 17, 3, 13, 2, 5], dtype=int)\n    X = _trace[\"X_train\"][_balanced, :40, :]  # type: balanced time-series dataset ndarray (8, 40, 1)\n    X2 = _trace[\"X_test\"][:4, :32, :]  # type: second dataset ndarray (4, 32, 1)\n    s1 = X[0].ravel()  # type: 1-D series ndarray (40,)\n    s2 = X[1].ravel()  # type: 1-D series ndarray (40,)\n    y = _trace[\"y_train\"][_balanced]  # type: four balanced labels, two examples per class\n    tiny_matrix = np.arange(12.0).reshape(3, 4)  # type: deterministic numeric matrix\n\n    # Keep audience imports local so they cannot shadow fixture construction.\n    def api_test():\n        # TODO API_TEST_START\n        from tslearn.backend import check_keras_backend\n\n        result = check_keras_backend()\n\n        assert result is None, f\"Expected check_keras_backend to return None, got {type(result)}\"\n        print(f\"__CHECK__ check_keras_backend {result}\")\n        # TODO API_TEST_END\n        pass\n\n    api_test()\n\n\nif __name__ == \"__main__\":\n    try:\n        run()\n        print(\"__DONE__\")\n    except Exception as exc:  # noqa: BLE001 - execution boundary\n        sys.stderr.write(\"__RUN_ERR__ \" + type(exc).__name__ + \": \" + str(exc) + \"\\n\")\n        traceback.print_exc()\n        raise SystemExit(1)\n"
+  },
+  "events": [
+    {
+      "status": "pass",
+      "category": null,
+      "error": null,
+      "code": "\"\"\"Shared infrastructure-only scaffold for tslearn's full-surface 2x2.\n\nThis exact file is used in A1, A2, B1, and B2. It intentionally imports no\ntested tslearn API because discovering the public import is part of the\naudience task in every cell.\n\"\"\"\n\nfrom pathlib import Path\nimport sys\nimport traceback\n\nimport numpy as np\n\n\ndef run():\n    # Typed repository fixture path and condition-specific output directory:\n    trace_npz = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/tslearn/tslearn/.cached_datasets/Trace.npz\"\n    output_dir = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/77b31896ac8e4b477128158e0b6e8d3141049f755a1e2d5b8e2618881f5df6d0/round_01/attempt_0001/output\"\n\n    # pre-loaded typed inputs (comprehension.execute.preamble)\n    Path(output_dir).mkdir(parents=True, exist_ok=True)\n    _trace = np.load(trace_npz)\n    _balanced = np.array([0, 4, 1, 17, 3, 13, 2, 5], dtype=int)\n    X = _trace[\"X_train\"][_balanced, :40, :]  # type: balanced time-series dataset ndarray (8, 40, 1)\n    X2 = _trace[\"X_test\"][:4, :32, :]  # type: second dataset ndarray (4, 32, 1)\n    s1 = X[0].ravel()  # type: 1-D series ndarray (40,)\n    s2 = X[1].ravel()  # type: 1-D series ndarray (40,)\n    y = _trace[\"y_train\"][_balanced]  # type: four balanced labels, two examples per class\n    tiny_matrix = np.arange(12.0).reshape(3, 4)  # type: deterministic numeric matrix\n\n    # Keep audience imports local so they cannot shadow fixture construction.\n    def api_test():\n        # TODO API_TEST_START\n        import os\n        from tslearn.backend import check_keras_backend\n\n        original_backend = os.environ.get(\"KERAS_BACKEND\")\n        if \"KERAS_BACKEND\" in os.environ:\n            del os.environ[\"KERAS_BACKEND\"]\n\n        witness = None\n        try:\n            check_keras_backend()\n            new_backend = os.environ.get(\"KERAS_BACKEND\")\n            assert new_backend in [\"torch\", \"tensorflow\", \"jax\"], f\"Expected a valid backend, got {new_backend}\"\n            witness = new_backend\n        except ImportError as e:\n            assert str(e) == \"No Keras backend installed\", f\"Unexpected error message: {e}\"\n            witness = \"ImportError\"\n        finally:\n            if original_backend is not None:\n                os.environ[\"KERAS_BACKEND\"] = original_backend\n            elif \"KERAS_BACKEND\" in os.environ:\n                del os.environ[\"KERAS_BACKEND\"]\n\n        print(f\"__CHECK__ check_keras_backend {witness}\")\n        # TODO API_TEST_END\n        pass\n\n    api_test()\n\n\nif __name__ == \"__main__\":\n    try:\n        run()\n        print(\"__DONE__\")\n    except Exception as exc:  # noqa: BLE001 - execution boundary\n        sys.stderr.write(\"__RUN_ERR__ \" + type(exc).__name__ + \": \" + str(exc) + \"\\n\")\n        traceback.print_exc()\n        raise SystemExit(1)\n",
+      "native_result": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/77b31896ac8e4b477128158e0b6e8d3141049f755a1e2d5b8e2618881f5df6d0/round_01/attempt_0001/native_result.json",
+      "script_sha256": "60014d0c4382e14ac10c851fa48d7e5bffe3a7f88a805676492bd756647eee80",
+      "wall_s": 10.7,
+      "llm_calls": 1,
+      "input_tokens": 3162,
+      "output_tokens": 1118,
+      "code_fix_round": 1
+    }
+  ],
+  "rounds": [
+    {
+      "status": "pass",
+      "category": null,
+      "error": null,
+      "code": "\"\"\"Shared infrastructure-only scaffold for tslearn's full-surface 2x2.\n\nThis exact file is used in A1, A2, B1, and B2. It intentionally imports no\ntested tslearn API because discovering the public import is part of the\naudience task in every cell.\n\"\"\"\n\nfrom pathlib import Path\nimport sys\nimport traceback\n\nimport numpy as np\n\n\ndef run():\n    # Typed repository fixture path and condition-specific output directory:\n    trace_npz = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/tslearn/tslearn/.cached_datasets/Trace.npz\"\n    output_dir = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/77b31896ac8e4b477128158e0b6e8d3141049f755a1e2d5b8e2618881f5df6d0/round_01/attempt_0001/output\"\n\n    # pre-loaded typed inputs (comprehension.execute.preamble)\n    Path(output_dir).mkdir(parents=True, exist_ok=True)\n    _trace = np.load(trace_npz)\n    _balanced = np.array([0, 4, 1, 17, 3, 13, 2, 5], dtype=int)\n    X = _trace[\"X_train\"][_balanced, :40, :]  # type: balanced time-series dataset ndarray (8, 40, 1)\n    X2 = _trace[\"X_test\"][:4, :32, :]  # type: second dataset ndarray (4, 32, 1)\n    s1 = X[0].ravel()  # type: 1-D series ndarray (40,)\n    s2 = X[1].ravel()  # type: 1-D series ndarray (40,)\n    y = _trace[\"y_train\"][_balanced]  # type: four balanced labels, two examples per class\n    tiny_matrix = np.arange(12.0).reshape(3, 4)  # type: deterministic numeric matrix\n\n    # Keep audience imports local so they cannot shadow fixture construction.\n    def api_test():\n        # TODO API_TEST_START\n        import os\n        from tslearn.backend import check_keras_backend\n\n        original_backend = os.environ.get(\"KERAS_BACKEND\")\n        if \"KERAS_BACKEND\" in os.environ:\n            del os.environ[\"KERAS_BACKEND\"]\n\n        witness = None\n        try:\n            check_keras_backend()\n            new_backend = os.environ.get(\"KERAS_BACKEND\")\n            assert new_backend in [\"torch\", \"tensorflow\", \"jax\"], f\"Expected a valid backend, got {new_backend}\"\n            witness = new_backend\n        except ImportError as e:\n            assert str(e) == \"No Keras backend installed\", f\"Unexpected error message: {e}\"\n            witness = \"ImportError\"\n        finally:\n            if original_backend is not None:\n                os.environ[\"KERAS_BACKEND\"] = original_backend\n            elif \"KERAS_BACKEND\" in os.environ:\n                del os.environ[\"KERAS_BACKEND\"]\n\n        print(f\"__CHECK__ check_keras_backend {witness}\")\n        # TODO API_TEST_END\n        pass\n\n    api_test()\n\n\nif __name__ == \"__main__\":\n    try:\n        run()\n        print(\"__DONE__\")\n    except Exception as exc:  # noqa: BLE001 - execution boundary\n        sys.stderr.write(\"__RUN_ERR__ \" + type(exc).__name__ + \": \" + str(exc) + \"\\n\")\n        traceback.print_exc()\n        raise SystemExit(1)\n",
+      "native_result": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/77b31896ac8e4b477128158e0b6e8d3141049f755a1e2d5b8e2618881f5df6d0/round_01/attempt_0001/native_result.json",
+      "script_sha256": "60014d0c4382e14ac10c851fa48d7e5bffe3a7f88a805676492bd756647eee80",
+      "wall_s": 10.7,
+      "llm_calls": 1,
+      "input_tokens": 3162,
+      "output_tokens": 1118,
+      "code_fix_round": 1
+    }
+  ],
+  "status": "recovered_native",
+  "diagnosis": {
+    "api": "check_keras_backend",
+    "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/77b31896ac8e4b477128158e0b6e8d3141049f755a1e2d5b8e2618881f5df6d0/deepdive/check_keras_backend.md",
+    "model": "google:gemini-3.1-pro-preview",
+    "tokens": {
+      "in": 2230,
+      "out": 2643
+    },
+    "wall_s": 22.4,
+    "report_text": "**L0 AUDIENCE + TESTABILITY CLASSIFICATION**\n- **Classification:** INTERNAL/FRAMEWORK. This function is designed to be called internally by `tslearn` modules (such as `tslearn.shapelets`) before importing Keras, ensuring that a valid backend is configured in the environment. It should be excluded from a main user-facing benchmark denominator.\n- **Testability:** TESTABLE FROM PUBLIC INPUTS. The function takes no arguments and its behavior (mutating `os.environ` or raising an `ImportError`) can be deterministically verified by manipulating and inspecting the environment variables.\n\n**L1 PURPOSE**\nThe `check_keras_backend` function ensures that the `KERAS_BACKEND` environment variable is populated before any Keras modules are imported. It sits at the very beginning of the import flow for deep-learning-dependent modules in `tslearn` (like shapelets), automatically discovering and selecting an available backend (PyTorch, TensorFlow, or JAX) if the user hasn't explicitly configured one.\n\n**L2 CONTRACT**\n- **Receiver:** None (standalone function).\n- **Parameters:** None.\n- **Return value:** `None`.\n- **Side effects:** Mutates `os.environ[\"KERAS_BACKEND\"]` if it was not previously set and a valid backend is found.\n- **Exceptions:** Raises `ImportError(\"No Keras backend installed\")` if `KERAS_BACKEND` is not set and none of `torch`, `tensorflow`, or `jax` can be imported.\n- **Visibility:** Publicly exported in `tslearn.backend.__all__`, but intended for internal framework use.\n\n**L3 MECHANICS**\n1. The function checks if `os.environ.get(\"KERAS_BACKEND\")` is already truthy (line 18). If it is, the function does nothing and returns `None`.\n2. If not set, it iterates through a hardcoded list of preferred backends: `[\"torch\", \"tensorflow\", \"jax\"]` (line 19).\n3. For each backend, it attempts to dynamically import it using `importlib.import_module` (line 21).\n4. If the import succeeds, it sets `os.environ[\"KERAS_BACKEND\"]` to that backend's name, logs an info message, and breaks out of the loop (lines 22-28).\n5. If a `ModuleNotFoundError` is caught, it logs a debug message and continues to the next candidate (lines 29-32).\n6. If the loop exhausts all candidates without breaking (the `else` block of the `for` loop), it raises an `ImportError` (line 34).\n\n**L4 CORRECT MINIMAL USAGE**\n```python\nimport os\nfrom tslearn.backend import check_keras_backend\n\ndef test_check_keras_backend():\n    # Save the original environment state to avoid polluting the test runner\n    original_backend = os.environ.get(\"KERAS_BACKEND\")\n    \n    # Force the function to perform its search by removing the env var\n    if \"KERAS_BACKEND\" in os.environ:\n        del os.environ[\"KERAS_BACKEND\"]\n        \n    try:\n        check_keras_backend()\n        # Verify the documented side effect\n        new_backend = os.environ.get(\"KERAS_BACKEND\")\n        assert new_backend in [\"torch\", \"tensorflow\", \"jax\"], f\"Expected a valid backend, got {new_backend}\"\n        print(f\"check_keras_backend() successfully set KERAS_BACKEND to {new_backend}\")\n    except ImportError as e:\n        # Verify the documented failure condition if no backends are installed\n        assert str(e) == \"No Keras backend installed\", f\"Unexpected error message: {e}\"\n        print(\"check_keras_backend() correctly raised ImportError when no backend was found.\")\n    finally:\n        # Restore original state\n        if original_backend is not None:\n            os.environ[\"KERAS_BACKEND\"] = original_backend\n        elif \"KERAS_BACKEND\" in os.environ:\n            del os.environ[\"KERAS_BACKEND\"]\n\ntest_check_keras_backend()\n```\n\n**L5 FAILURE FORENSICS**\n- `AssertionError: The documented contract is insufficient to verify the side effect of check_keras_backend`: The previous test attempt failed because it only asserted that the function returned `None`. The execution harness requires tests to assert a falsifiable property that proves the API actually did its job. Because this function operates entirely via side effects on `os.environ`, a valid test must explicitly check `os.environ[\"KERAS_BACKEND\"]` after execution.\n\n**L6 SELF-ASSESSMENT**\n- **Inferences:** None. The behavior, side effects, and exceptions are explicitly visible in the provided source code.\n- **Information needed for certainty:** None. The provided context is complete.\n- **Confidence Scores:**\n  - L2 (Contract): 10/10. The signature is empty, and the side effects/exceptions are explicitly coded.\n  - L3 (Mechanics): 10/10. The logic is a simple linear script with standard library imports.\n  - L4 (Usage): 10/10. The snippet safely tests the side effect while preserving the environment state, handling both the success and failure branches of the underlying logic.",
+    "report_sha256": "158e608e991e62c41b00e37ca7c1c54cc8522b552a257493aa5eb9a9f57351f9"
+  },
+  "max_rounds": 5,
+  "stuck_threshold": 2,
+  "stop_reason": null,
+  "semantic_validation": "needs_independent_review",
+  "headline_credit": false,
+  "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/77b31896ac8e4b477128158e0b6e8d3141049f755a1e2d5b8e2618881f5df6d0/recovery.json"
+}
