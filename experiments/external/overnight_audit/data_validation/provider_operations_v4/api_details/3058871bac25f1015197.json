@@ -1,0 +1,467 @@
+{
+  "summary": {
+    "repository": "Thumbnailator",
+    "cell": "A1",
+    "api": "format",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 34.6,
+    "retained_checkpoint_events": 11,
+    "retained_attempt_total_s": 5732.0,
+    "retained_504_events": 9,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "identity_status": "Final or explicitly migrated evidence",
+    "error": null,
+    "details": "api_details/3058871bac25f1015197.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 34.6,
+    "llm_calls": 1,
+    "input_tokens": 4837,
+    "output_tokens": 3672,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 4837,
+        "output_tokens": 3672
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 12000,
+    "document_sha256": "a2d756c1d5779271f73237a971c6afb27146221fe848d78c72f54491e69d0266",
+    "source": "source/src/main/java/net/coobird/thumbnailator/builders/ThumbnailParameterBuilder.java:243",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "evidence_fingerprint": "b3f55a8b3e67c862b177dad68ab837550254e5f262c7bf4387c9a25ecd9241ed",
+    "name": "format",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "String formatName = String.format(\"%s\", \"png\");\nnet.coobird.thumbnailator.Thumbnails.of(sourceImage)\n    .size(10, 10)\n    .outputFormat(formatName)\n    .toOutputStream(imageBytes);\n\nbyte[] outBytes = imageBytes.toByteArray();\nassert outBytes.length > 8 : \"Output image is too small\";\n// Verify the PNG magic number to ensure the format was applied correctly\nassert outBytes[1] == 'P' && outBytes[2] == 'N' && outBytes[3] == 'G' : \"Output is not in PNG format\";\n\nSystem.out.println(\"__CHECK__ format \" + outBytes.length);",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A1/experiments/external/thumbnailator/.aideal_exec/A1/run_format/ApiTest.java",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ format 87\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "b3f55a8b3e67c862b177dad68ab837550254e5f262c7bf4387c9a25ecd9241ed"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A1/experiments/external/thumbnailator/docs/eval/A1/comprehension.json",
+  "source_sha256": "76caf8a69008d2bac64ebab7f3ac56df757fd4f69a0db9e08ba72846ce485365",
+  "checkpoint_events": [
+    {
+      "name": "format",
+      "doc_source": "original",
+      "experiment_fingerprint": "6361a90a8d15196e1351e3b191a2908f96c8a6a6a6bdf9b683903311f4c2940e",
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 300.8,
+      "llm_calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "by_model": {},
+      "error_category": "llm-error",
+      "error": "ServerError: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'The service is currently unavailable.', 'status': 'UNAVAILABLE'}}",
+      "locus": "",
+      "doc_chars": 12000,
+      "document_sha256": "a2d756c1d5779271f73237a971c6afb27146221fe848d78c72f54491e69d0266",
+      "source": "source/src/main/java/net/coobird/thumbnailator/builders/ThumbnailParameterBuilder.java:243",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    },
+    {
+      "name": "format",
+      "doc_source": "original",
+      "experiment_fingerprint": "6361a90a8d15196e1351e3b191a2908f96c8a6a6a6bdf9b683903311f4c2940e",
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 599.3,
+      "llm_calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "by_model": {},
+      "error_category": "llm-error",
+      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "locus": "",
+      "doc_chars": 12000,
+      "document_sha256": "a2d756c1d5779271f73237a971c6afb27146221fe848d78c72f54491e69d0266",
+      "source": "source/src/main/java/net/coobird/thumbnailator/builders/ThumbnailParameterBuilder.java:243",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    },
+    {
+      "name": "format",
+      "doc_source": "original",
+      "experiment_fingerprint": "b3f55a8b3e67c862b177dad68ab837550254e5f262c7bf4387c9a25ecd9241ed",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "llm-error",
+            "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}"
+          }
+        ],
+        "error_category": "llm-error",
+        "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+        "code": "",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A1/experiments/external/thumbnailator/.aideal_exec/A1/run_format/ApiTest.java",
+        "exit_code": null,
+        "stdout_tail": "",
+        "stderr_tail": ""
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 599.0,
+      "llm_calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "by_model": {},
+      "error_category": "llm-error",
+      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "locus": "",
+      "doc_chars": 12000,
+      "document_sha256": "a2d756c1d5779271f73237a971c6afb27146221fe848d78c72f54491e69d0266",
+      "source": "source/src/main/java/net/coobird/thumbnailator/builders/ThumbnailParameterBuilder.java:243",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    },
+    {
+      "name": "format",
+      "doc_source": "original",
+      "experiment_fingerprint": "b3f55a8b3e67c862b177dad68ab837550254e5f262c7bf4387c9a25ecd9241ed",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "llm-error",
+            "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}"
+          }
+        ],
+        "error_category": "llm-error",
+        "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+        "code": "",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A1/experiments/external/thumbnailator/.aideal_exec/A1/run_format/ApiTest.java",
+        "exit_code": null,
+        "stdout_tail": "",
+        "stderr_tail": ""
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 599.6,
+      "llm_calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "by_model": {},
+      "error_category": "llm-error",
+      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "locus": "",
+      "doc_chars": 12000,
+      "document_sha256": "a2d756c1d5779271f73237a971c6afb27146221fe848d78c72f54491e69d0266",
+      "source": "source/src/main/java/net/coobird/thumbnailator/builders/ThumbnailParameterBuilder.java:243",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    },
+    {
+      "name": "format",
+      "doc_source": "original",
+      "experiment_fingerprint": "b3f55a8b3e67c862b177dad68ab837550254e5f262c7bf4387c9a25ecd9241ed",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "llm-error",
+            "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}"
+          }
+        ],
+        "error_category": "llm-error",
+        "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+        "code": "",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A1/experiments/external/thumbnailator/.aideal_exec/A1/run_format/ApiTest.java",
+        "exit_code": null,
+        "stdout_tail": "",
+        "stderr_tail": ""
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 599.9,
+      "llm_calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "by_model": {},
+      "error_category": "llm-error",
+      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "locus": "",
+      "doc_chars": 12000,
+      "document_sha256": "a2d756c1d5779271f73237a971c6afb27146221fe848d78c72f54491e69d0266",
+      "source": "source/src/main/java/net/coobird/thumbnailator/builders/ThumbnailParameterBuilder.java:243",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    },
+    {
+      "name": "format",
+      "doc_source": "original",
+      "experiment_fingerprint": "b3f55a8b3e67c862b177dad68ab837550254e5f262c7bf4387c9a25ecd9241ed",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "llm-error",
+            "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}"
+          }
+        ],
+        "error_category": "llm-error",
+        "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+        "code": "",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A1/experiments/external/thumbnailator/.aideal_exec/A1/run_format/ApiTest.java",
+        "exit_code": null,
+        "stdout_tail": "",
+        "stderr_tail": ""
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 599.4,
+      "llm_calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "by_model": {},
+      "error_category": "llm-error",
+      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "locus": "",
+      "doc_chars": 12000,
+      "document_sha256": "a2d756c1d5779271f73237a971c6afb27146221fe848d78c72f54491e69d0266",
+      "source": "source/src/main/java/net/coobird/thumbnailator/builders/ThumbnailParameterBuilder.java:243",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    },
+    {
+      "name": "format",
+      "doc_source": "original",
+      "experiment_fingerprint": "b3f55a8b3e67c862b177dad68ab837550254e5f262c7bf4387c9a25ecd9241ed",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "llm-error",
+            "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}"
+          }
+        ],
+        "error_category": "llm-error",
+        "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+        "code": "",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A1/experiments/external/thumbnailator/.aideal_exec/A1/run_format/ApiTest.java",
+        "exit_code": null,
+        "stdout_tail": "",
+        "stderr_tail": ""
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 601.6,
+      "llm_calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "by_model": {},
+      "error_category": "llm-error",
+      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "locus": "",
+      "doc_chars": 12000,
+      "document_sha256": "a2d756c1d5779271f73237a971c6afb27146221fe848d78c72f54491e69d0266",
+      "source": "source/src/main/java/net/coobird/thumbnailator/builders/ThumbnailParameterBuilder.java:243",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    },
+    {
+      "name": "format",
+      "doc_source": "original",
+      "experiment_fingerprint": "b3f55a8b3e67c862b177dad68ab837550254e5f262c7bf4387c9a25ecd9241ed",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "llm-error",
+            "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}"
+          }
+        ],
+        "error_category": "llm-error",
+        "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+        "code": "",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A1/experiments/external/thumbnailator/.aideal_exec/A1/run_format/ApiTest.java",
+        "exit_code": null,
+        "stdout_tail": "",
+        "stderr_tail": ""
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 599.0,
+      "llm_calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "by_model": {},
+      "error_category": "llm-error",
+      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "locus": "",
+      "doc_chars": 12000,
+      "document_sha256": "a2d756c1d5779271f73237a971c6afb27146221fe848d78c72f54491e69d0266",
+      "source": "source/src/main/java/net/coobird/thumbnailator/builders/ThumbnailParameterBuilder.java:243",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    },
+    {
+      "name": "format",
+      "doc_source": "original",
+      "experiment_fingerprint": "b3f55a8b3e67c862b177dad68ab837550254e5f262c7bf4387c9a25ecd9241ed",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "llm-error",
+            "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}"
+          }
+        ],
+        "error_category": "llm-error",
+        "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+        "code": "",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A1/experiments/external/thumbnailator/.aideal_exec/A1/run_format/ApiTest.java",
+        "exit_code": null,
+        "stdout_tail": "",
+        "stderr_tail": ""
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 599.1,
+      "llm_calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "by_model": {},
+      "error_category": "llm-error",
+      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "locus": "",
+      "doc_chars": 12000,
+      "document_sha256": "a2d756c1d5779271f73237a971c6afb27146221fe848d78c72f54491e69d0266",
+      "source": "source/src/main/java/net/coobird/thumbnailator/builders/ThumbnailParameterBuilder.java:243",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    },
+    {
+      "name": "format",
+      "doc_source": "original",
+      "experiment_fingerprint": "b3f55a8b3e67c862b177dad68ab837550254e5f262c7bf4387c9a25ecd9241ed",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "llm-error",
+            "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}"
+          }
+        ],
+        "error_category": "llm-error",
+        "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+        "code": "",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A1/experiments/external/thumbnailator/.aideal_exec/A1/run_format/ApiTest.java",
+        "exit_code": null,
+        "stdout_tail": "",
+        "stderr_tail": ""
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 599.7,
+      "llm_calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "by_model": {},
+      "error_category": "llm-error",
+      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "locus": "",
+      "doc_chars": 12000,
+      "document_sha256": "a2d756c1d5779271f73237a971c6afb27146221fe848d78c72f54491e69d0266",
+      "source": "source/src/main/java/net/coobird/thumbnailator/builders/ThumbnailParameterBuilder.java:243",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    },
+    {
+      "name": "format",
+      "doc_source": "original",
+      "experiment_fingerprint": "b3f55a8b3e67c862b177dad68ab837550254e5f262c7bf4387c9a25ecd9241ed",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "String formatName = String.format(\"%s\", \"png\");\nnet.coobird.thumbnailator.Thumbnails.of(sourceImage)\n    .size(10, 10)\n    .outputFormat(formatName)\n    .toOutputStream(imageBytes);\n\nbyte[] outBytes = imageBytes.toByteArray();\nassert outBytes.length > 8 : \"Output image is too small\";\n// Verify the PNG magic number to ensure the format was applied correctly\nassert outBytes[1] == 'P' && outBytes[2] == 'N' && outBytes[3] == 'G' : \"Output is not in PNG format\";\n\nSystem.out.println(\"__CHECK__ format \" + outBytes.length);",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A1/experiments/external/thumbnailator/.aideal_exec/A1/run_format/ApiTest.java",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ format 87\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 34.6,
+      "llm_calls": 1,
+      "input_tokens": 4837,
+      "output_tokens": 3672,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 4837,
+          "output_tokens": 3672
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 12000,
+      "document_sha256": "a2d756c1d5779271f73237a971c6afb27146221fe848d78c72f54491e69d0266",
+      "source": "source/src/main/java/net/coobird/thumbnailator/builders/ThumbnailParameterBuilder.java:243",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

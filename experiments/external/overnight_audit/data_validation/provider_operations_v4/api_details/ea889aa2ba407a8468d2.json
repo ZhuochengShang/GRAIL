@@ -1,0 +1,113 @@
+{
+  "summary": {
+    "repository": "tslearn",
+    "cell": "B2",
+    "api": "njit_accumulated_matrix",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 11.3,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 11.3,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "identity_status": "Provisional last-observed fingerprint group; final identity unverified",
+    "error": null,
+    "details": "api_details/ea889aa2ba407a8468d2.json"
+  },
+  "native_row": {
+    "name": "njit_accumulated_matrix",
+    "doc_source": "aideal",
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "import numpy as np\nfrom tslearn.metrics.dtw_variants import njit_accumulated_matrix\n\n# Extract 2D time series from the 3D datasets\ns1_2d = X[0]  # shape (40, 1)\ns2_2d = X2[0] # shape (32, 1)\n\n# Create a boolean mask allowing all paths\nmask = np.ones((s1_2d.shape[0], s2_2d.shape[0]), dtype=bool)\n\n# Compute the accumulated cost matrix\ncost_matrix = njit_accumulated_matrix(s1_2d, s2_2d, mask)\n\n# Verify the result\nassert cost_matrix.shape == (40, 32), f\"Expected shape (40, 32), got {cost_matrix.shape}\"\nassert cost_matrix[0, 0] >= 0.0, \"Cost matrix should have non-negative costs\"\nassert not np.isnan(cost_matrix[-1, -1]), \"Final accumulated cost should not be NaN\"\n\nprint(f\"__CHECK__ njit_accumulated_matrix {cost_matrix.shape}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_njit_accumulated_matrix/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ njit_accumulated_matrix (40, 32)\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 11.3,
+    "llm_calls": 1,
+    "input_tokens": 2341,
+    "output_tokens": 956,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2341,
+        "output_tokens": 956
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 3275,
+    "document_sha256": "ae7136110af8e1194ffd664911f93e0928ef2549b77051b830985273c7905851",
+    "source": "tslearn/tslearn/metrics/dtw_variants.py:74",
+    "source_other_sites": 0,
+    "codebase_frames": null
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/comprehension_progress.jsonl",
+  "source_sha256": "0a09dcebc55c1b772f6889a52003ba9fcffd51ad4e99ecb50387e688fe973703",
+  "checkpoint_events": [
+    {
+      "name": "njit_accumulated_matrix",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import numpy as np\nfrom tslearn.metrics.dtw_variants import njit_accumulated_matrix\n\n# Extract 2D time series from the 3D datasets\ns1_2d = X[0]  # shape (40, 1)\ns2_2d = X2[0] # shape (32, 1)\n\n# Create a boolean mask allowing all paths\nmask = np.ones((s1_2d.shape[0], s2_2d.shape[0]), dtype=bool)\n\n# Compute the accumulated cost matrix\ncost_matrix = njit_accumulated_matrix(s1_2d, s2_2d, mask)\n\n# Verify the result\nassert cost_matrix.shape == (40, 32), f\"Expected shape (40, 32), got {cost_matrix.shape}\"\nassert cost_matrix[0, 0] >= 0.0, \"Cost matrix should have non-negative costs\"\nassert not np.isnan(cost_matrix[-1, -1]), \"Final accumulated cost should not be NaN\"\n\nprint(f\"__CHECK__ njit_accumulated_matrix {cost_matrix.shape}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_njit_accumulated_matrix/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ njit_accumulated_matrix (40, 32)\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 11.3,
+      "llm_calls": 1,
+      "input_tokens": 2341,
+      "output_tokens": 956,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2341,
+          "output_tokens": 956
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3275,
+      "document_sha256": "ae7136110af8e1194ffd664911f93e0928ef2549b77051b830985273c7905851",
+      "source": "tslearn/tslearn/metrics/dtw_variants.py:74",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

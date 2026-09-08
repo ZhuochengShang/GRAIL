@@ -1,0 +1,102 @@
+{
+  "summary": {
+    "repository": "Thumbnailator",
+    "cell": "A2",
+    "api": "getOutputFormat",
+    "outcome": "Execution failed",
+    "test_execution": "Test process returned exit code 1; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 21.3,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 21.3,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "identity_status": "Final or explicitly migrated evidence",
+    "error": "NullPointerException: null",
+    "details": "api_details/f1f3de1b9f4b21fd6df5.json"
+  },
+  "native_row": {
+    "status": "fail",
+    "attempts": 1,
+    "pass_round": null,
+    "wall_s": 21.3,
+    "llm_calls": 1,
+    "input_tokens": 2009,
+    "output_tokens": 2545,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2009,
+        "output_tokens": 2545
+      }
+    },
+    "error_category": "runtime",
+    "error": "NullPointerException: null",
+    "locus": "ApiTest.java:63",
+    "doc_chars": 3516,
+    "document_sha256": "ce15ed07cc452f384cd144f071ddde19a0be6ab7591e4ac98faf44e978208d72",
+    "source": "source/src/main/java/net/coobird/thumbnailator/ThumbnailParameter.java:878",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "name": "getOutputFormat",
+    "execution_evidence": {
+      "status": "fail",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "fail",
+          "category": "runtime",
+          "error": "NullPointerException: null"
+        }
+      ],
+      "error_category": "runtime",
+      "error": "NullPointerException: null",
+      "code": "net.coobird.thumbnailator.builders.ThumbnailParameterBuilder builder = new net.coobird.thumbnailator.builders.ThumbnailParameterBuilder();\nbuilder.size(100, 100);\nbuilder.format(\"png\");\nnet.coobird.thumbnailator.ThumbnailParameter param = builder.build();\n\nString format = param.getOutputFormat();\nassert \"png\".equals(format) : \"Expected 'png', got \" + format;\n\nnet.coobird.thumbnailator.ThumbnailParameter defaultParam = new net.coobird.thumbnailator.builders.ThumbnailParameterBuilder().size(100, 100).build();\nString defaultFormat = defaultParam.getOutputFormat();\nassert net.coobird.thumbnailator.ThumbnailParameter.ORIGINAL_FORMAT.equals(defaultFormat) : \"Expected ORIGINAL_FORMAT\";\n\nSystem.out.println(\"__CHECK__ getOutputFormat \" + format + \"_\" + (net.coobird.thumbnailator.ThumbnailParameter.ORIGINAL_FORMAT.equals(defaultFormat) ? \"ORIGINAL\" : \"OTHER\"));",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/.aideal_exec/A2/run_getOutputFormat/ApiTest.java",
+      "exit_code": 1,
+      "stdout_tail": "",
+      "stderr_tail": "__RUN_ERR__ NullPointerException: null\njava.lang.NullPointerException\n\tat ApiTest.main(ApiTest.java:63)\n"
+    },
+    "experiment_fingerprint": "d0a4b20f3e5d3ea0caf7b1501a9bf2fb4d4f11ac7d844517d7b5d67874427464"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/docs/eval/A2/comprehension.json",
+  "source_sha256": "b6aa0c714a7c8a076f415ed0dae0e6b3126ad774bc94aab394ec1036974003d7",
+  "checkpoint_events": [
+    {
+      "name": "getOutputFormat",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "d0a4b20f3e5d3ea0caf7b1501a9bf2fb4d4f11ac7d844517d7b5d67874427464",
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 21.3,
+      "llm_calls": 1,
+      "input_tokens": 2009,
+      "output_tokens": 2545,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2009,
+          "output_tokens": 2545
+        }
+      },
+      "error_category": "runtime",
+      "error": "NullPointerException: null",
+      "locus": "ApiTest.java:63",
+      "doc_chars": 3516,
+      "document_sha256": "ce15ed07cc452f384cd144f071ddde19a0be6ab7591e4ac98faf44e978208d72",
+      "source": "source/src/main/java/net/coobird/thumbnailator/ThumbnailParameter.java:878",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

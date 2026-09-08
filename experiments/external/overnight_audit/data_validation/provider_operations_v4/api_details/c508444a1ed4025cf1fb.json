@@ -1,0 +1,113 @@
+{
+  "summary": {
+    "repository": "tslearn",
+    "cell": "B2",
+    "api": "predict_proba_and_earliness",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 15.2,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 15.2,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "identity_status": "Provisional last-observed fingerprint group; final identity unverified",
+    "error": null,
+    "details": "api_details/c508444a1ed4025cf1fb.json"
+  },
+  "native_row": {
+    "name": "predict_proba_and_earliness",
+    "doc_source": "aideal",
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "from tslearn.early_classification import NonMyopicEarlyClassifier\n\nclf = NonMyopicEarlyClassifier(random_state=42)\nclf.fit(X, y)\nprobas, earliness = clf.predict_proba_and_earliness(X)\n\nn_series = len(X)\nn_classes = len(set(y))\n\nassert probas.shape == (n_series, n_classes), f\"Expected probas shape {(n_series, n_classes)}, got {probas.shape}\"\nassert earliness.shape == (n_series,), f\"Expected earliness shape {(n_series,)}, got {earliness.shape}\"\n\nprint(f\"__CHECK__ predict_proba_and_earliness {probas.shape} {earliness.shape}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_predict_proba_and_earliness/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ predict_proba_and_earliness (8, 4) (8,)\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 15.2,
+    "llm_calls": 1,
+    "input_tokens": 2561,
+    "output_tokens": 1452,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2561,
+        "output_tokens": 1452
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 4283,
+    "document_sha256": "4851ef68ef5f0bc810351d4a0a35a5bf6d3e9671f60c28857a3e5cbe9d145a0c",
+    "source": "tslearn/tslearn/early_classification/early_classification.py:453",
+    "source_other_sites": 0,
+    "codebase_frames": null
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/comprehension_progress.jsonl",
+  "source_sha256": "0a09dcebc55c1b772f6889a52003ba9fcffd51ad4e99ecb50387e688fe973703",
+  "checkpoint_events": [
+    {
+      "name": "predict_proba_and_earliness",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "from tslearn.early_classification import NonMyopicEarlyClassifier\n\nclf = NonMyopicEarlyClassifier(random_state=42)\nclf.fit(X, y)\nprobas, earliness = clf.predict_proba_and_earliness(X)\n\nn_series = len(X)\nn_classes = len(set(y))\n\nassert probas.shape == (n_series, n_classes), f\"Expected probas shape {(n_series, n_classes)}, got {probas.shape}\"\nassert earliness.shape == (n_series,), f\"Expected earliness shape {(n_series,)}, got {earliness.shape}\"\n\nprint(f\"__CHECK__ predict_proba_and_earliness {probas.shape} {earliness.shape}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_predict_proba_and_earliness/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ predict_proba_and_earliness (8, 4) (8,)\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 15.2,
+      "llm_calls": 1,
+      "input_tokens": 2561,
+      "output_tokens": 1452,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2561,
+          "output_tokens": 1452
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 4283,
+      "document_sha256": "4851ef68ef5f0bc810351d4a0a35a5bf6d3e9671f60c28857a3e5cbe9d145a0c",
+      "source": "tslearn/tslearn/early_classification/early_classification.py:453",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

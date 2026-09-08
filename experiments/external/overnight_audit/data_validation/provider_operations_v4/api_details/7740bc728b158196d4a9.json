@@ -1,0 +1,112 @@
+{
+  "summary": {
+    "repository": "mir_eval",
+    "cell": "B2",
+    "api": "match_note_onsets",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 23.0,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 23.0,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "identity_status": "Final or explicitly migrated evidence",
+    "error": null,
+    "details": "api_details/7740bc728b158196d4a9.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 23.0,
+    "llm_calls": 1,
+    "input_tokens": 2879,
+    "output_tokens": 2646,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2879,
+        "output_tokens": 2646
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 5558,
+    "document_sha256": "cd5144764bfc76eb395d26ab8887f26db58f463997d73fa25a345f0d366c551e",
+    "source": "source/mir_eval/transcription.py:262",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "name": "match_note_onsets",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "import mir_eval\n\n# Ensure inputs are (n, 2) and (m, 2) intervals, slicing off any pitch/velocity columns\nref_ints = ref_intervals[:, :2]\nest_ints = est_intervals[:, :2]\n\n# Call the function with default (strict=False) and strict=True\nmatching = mir_eval.transcription.match_note_onsets(ref_ints, est_ints, onset_tolerance=0.05, strict=False)\nmatching_strict = mir_eval.transcription.match_note_onsets(ref_ints, est_ints, onset_tolerance=0.05, strict=True)\n\n# Verify the output type and basic bounds\nassert isinstance(matching, list), \"Matching should be a list of tuples\"\nassert len(matching) <= min(len(ref_ints), len(est_ints)), \"Cannot have more matches than notes\"\nassert len(matching_strict) <= len(matching), \"Strict matching should yield subset or equal number of matches\"\n\n# Verify the onset tolerance constraint for non-strict matching\nfor i, j in matching:\n    onset_diff = abs(ref_ints[i, 0] - est_ints[j, 0])\n    assert onset_diff <= 0.05 + 1e-9, f\"Matched onsets {i} and {j} exceed tolerance: {onset_diff}\"\n\n# Verify the onset tolerance constraint for strict matching\nfor i, j in matching_strict:\n    onset_diff = abs(ref_ints[i, 0] - est_ints[j, 0])\n    assert onset_diff < 0.05, f\"Strict matched onsets {i} and {j} exceed or equal tolerance: {onset_diff}\"\n\n# Verify that every reference and estimated note is matched at most once (bipartite matching property)\nref_matched = set(i for i, j in matching)\nest_matched = set(j for i, j in matching)\nassert len(ref_matched) == len(matching), \"A reference note was matched multiple times\"\nassert len(est_matched) == len(matching), \"An estimated note was matched multiple times\"\n\nprint(f\"__CHECK__ match_note_onsets {len(matching)}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_match_note_onsets/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ match_note_onsets 4\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/comprehension.json",
+  "source_sha256": "c25a74155511d59ffa5583bce3975fae3a254ce3e3bc65948dcfbd8f61d51736",
+  "checkpoint_events": [
+    {
+      "name": "match_note_onsets",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import mir_eval\n\n# Ensure inputs are (n, 2) and (m, 2) intervals, slicing off any pitch/velocity columns\nref_ints = ref_intervals[:, :2]\nest_ints = est_intervals[:, :2]\n\n# Call the function with default (strict=False) and strict=True\nmatching = mir_eval.transcription.match_note_onsets(ref_ints, est_ints, onset_tolerance=0.05, strict=False)\nmatching_strict = mir_eval.transcription.match_note_onsets(ref_ints, est_ints, onset_tolerance=0.05, strict=True)\n\n# Verify the output type and basic bounds\nassert isinstance(matching, list), \"Matching should be a list of tuples\"\nassert len(matching) <= min(len(ref_ints), len(est_ints)), \"Cannot have more matches than notes\"\nassert len(matching_strict) <= len(matching), \"Strict matching should yield subset or equal number of matches\"\n\n# Verify the onset tolerance constraint for non-strict matching\nfor i, j in matching:\n    onset_diff = abs(ref_ints[i, 0] - est_ints[j, 0])\n    assert onset_diff <= 0.05 + 1e-9, f\"Matched onsets {i} and {j} exceed tolerance: {onset_diff}\"\n\n# Verify the onset tolerance constraint for strict matching\nfor i, j in matching_strict:\n    onset_diff = abs(ref_ints[i, 0] - est_ints[j, 0])\n    assert onset_diff < 0.05, f\"Strict matched onsets {i} and {j} exceed or equal tolerance: {onset_diff}\"\n\n# Verify that every reference and estimated note is matched at most once (bipartite matching property)\nref_matched = set(i for i, j in matching)\nest_matched = set(j for i, j in matching)\nassert len(ref_matched) == len(matching), \"A reference note was matched multiple times\"\nassert len(est_matched) == len(matching), \"An estimated note was matched multiple times\"\n\nprint(f\"__CHECK__ match_note_onsets {len(matching)}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_match_note_onsets/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ match_note_onsets 4\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 23.0,
+      "llm_calls": 1,
+      "input_tokens": 2879,
+      "output_tokens": 2646,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2879,
+          "output_tokens": 2646
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 5558,
+      "document_sha256": "cd5144764bfc76eb395d26ab8887f26db58f463997d73fa25a345f0d366c551e",
+      "source": "source/mir_eval/transcription.py:262",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

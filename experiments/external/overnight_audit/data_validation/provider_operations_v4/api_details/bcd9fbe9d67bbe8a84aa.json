@@ -1,0 +1,112 @@
+{
+  "summary": {
+    "repository": "mir_eval",
+    "cell": "B2",
+    "api": "thirds_inv",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 18.6,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 18.6,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "identity_status": "Final or explicitly migrated evidence",
+    "error": null,
+    "details": "api_details/bcd9fbe9d67bbe8a84aa.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 18.6,
+    "llm_calls": 1,
+    "input_tokens": 2764,
+    "output_tokens": 1735,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2764,
+        "output_tokens": 1735
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 5395,
+    "document_sha256": "578a78154151fd22b4b1915a007012ae1a0641af039930b1e9b1d19c0f06c532",
+    "source": "source/mir_eval/chord.py:762",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "name": "thirds_inv",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "import mir_eval\nimport numpy as np\n\n# 1. Adjust intervals to a common time base\nest_intervals_adj, est_labels_adj = mir_eval.util.adjust_intervals(\n    est_intervals, est_labels, ref_intervals.min(),\n    ref_intervals.max(), mir_eval.chord.NO_CHORD,\n    mir_eval.chord.NO_CHORD\n)\n\n# 2. Merge into a single set of intervals with aligned labels\nintervals, ref_labels_merged, est_labels_merged = mir_eval.util.merge_labeled_intervals(\n    ref_intervals, ref_labels, est_intervals_adj, est_labels_adj\n)\n\n# 3. Compute the thirds_inv comparisons\ncomparisons = mir_eval.chord.thirds_inv(ref_labels_merged, est_labels_merged)\n\n# 4. Compute the final weighted accuracy score\ndurations = mir_eval.util.intervals_to_durations(intervals)\nscore = mir_eval.chord.weighted_accuracy(comparisons, durations)\n\n# Verify the results\nassert isinstance(comparisons, np.ndarray), \"Output must be a numpy array\"\nassert comparisons.shape == (len(ref_labels_merged),), \"Output shape must match the number of merged labels\"\nassert np.all((comparisons >= 0.0) & (comparisons <= 1.0)), \"Scores must be in [0.0, 1.0]\"\nassert 0.0 <= score <= 1.0, \"Weighted accuracy must be in [0.0, 1.0]\"\n\nprint(f\"__CHECK__ thirds_inv {comparisons.shape[0]} {score:.4f}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_thirds_inv/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ thirds_inv 7 0.9700\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/comprehension.json",
+  "source_sha256": "c25a74155511d59ffa5583bce3975fae3a254ce3e3bc65948dcfbd8f61d51736",
+  "checkpoint_events": [
+    {
+      "name": "thirds_inv",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import mir_eval\nimport numpy as np\n\n# 1. Adjust intervals to a common time base\nest_intervals_adj, est_labels_adj = mir_eval.util.adjust_intervals(\n    est_intervals, est_labels, ref_intervals.min(),\n    ref_intervals.max(), mir_eval.chord.NO_CHORD,\n    mir_eval.chord.NO_CHORD\n)\n\n# 2. Merge into a single set of intervals with aligned labels\nintervals, ref_labels_merged, est_labels_merged = mir_eval.util.merge_labeled_intervals(\n    ref_intervals, ref_labels, est_intervals_adj, est_labels_adj\n)\n\n# 3. Compute the thirds_inv comparisons\ncomparisons = mir_eval.chord.thirds_inv(ref_labels_merged, est_labels_merged)\n\n# 4. Compute the final weighted accuracy score\ndurations = mir_eval.util.intervals_to_durations(intervals)\nscore = mir_eval.chord.weighted_accuracy(comparisons, durations)\n\n# Verify the results\nassert isinstance(comparisons, np.ndarray), \"Output must be a numpy array\"\nassert comparisons.shape == (len(ref_labels_merged),), \"Output shape must match the number of merged labels\"\nassert np.all((comparisons >= 0.0) & (comparisons <= 1.0)), \"Scores must be in [0.0, 1.0]\"\nassert 0.0 <= score <= 1.0, \"Weighted accuracy must be in [0.0, 1.0]\"\n\nprint(f\"__CHECK__ thirds_inv {comparisons.shape[0]} {score:.4f}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_thirds_inv/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ thirds_inv 7 0.9700\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 18.6,
+      "llm_calls": 1,
+      "input_tokens": 2764,
+      "output_tokens": 1735,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2764,
+          "output_tokens": 1735
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 5395,
+      "document_sha256": "578a78154151fd22b4b1915a007012ae1a0641af039930b1e9b1d19c0f06c532",
+      "source": "source/mir_eval/chord.py:762",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

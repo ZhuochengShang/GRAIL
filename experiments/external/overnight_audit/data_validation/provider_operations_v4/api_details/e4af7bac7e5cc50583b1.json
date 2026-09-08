@@ -1,0 +1,98 @@
+{
+  "summary": {
+    "repository": "Thumbnailator",
+    "cell": "A2",
+    "api": "size",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 11.7,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 11.7,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "identity_status": "Final or explicitly migrated evidence",
+    "error": null,
+    "details": "api_details/e4af7bac7e5cc50583b1.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 11.7,
+    "llm_calls": 1,
+    "input_tokens": 2322,
+    "output_tokens": 1334,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2322,
+        "output_tokens": 1334
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 4501,
+    "document_sha256": "f97a0d005d2dd6d2bfc1c60e94bb82191969330895f79516a5bacac7131998f7",
+    "source": "source/src/main/java/net/coobird/thumbnailator/Thumbnails.java:843",
+    "source_other_sites": 5,
+    "codebase_frames": null,
+    "name": "size",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "int targetWidth = 100;\nint targetHeight = 100;\n\njava.awt.image.BufferedImage thumbnail = net.coobird.thumbnailator.Thumbnails.of(sourceImage)\n    .size(targetWidth, targetHeight)\n    .asBufferedImage();\n\nint outWidth = thumbnail.getWidth();\nint outHeight = thumbnail.getHeight();\n\nassert outWidth <= targetWidth && outHeight <= targetHeight : \"Dimensions exceed bounding box\";\nassert outWidth == targetWidth || outHeight == targetHeight : \"Image was not scaled to fit bounding box\";\n\ndouble originalRatio = (double) sourceImage.getWidth() / sourceImage.getHeight();\ndouble newRatio = (double) outWidth / outHeight;\nassert Math.abs(originalRatio - newRatio) < 0.1 : \"Aspect ratio not preserved\";\n\nSystem.out.println(\"__CHECK__ size \" + outWidth + \"x\" + outHeight);",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/.aideal_exec/A2/run_size/ApiTest.java",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ size 100x75\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "d0a4b20f3e5d3ea0caf7b1501a9bf2fb4d4f11ac7d844517d7b5d67874427464"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/docs/eval/A2/comprehension.json",
+  "source_sha256": "b6aa0c714a7c8a076f415ed0dae0e6b3126ad774bc94aab394ec1036974003d7",
+  "checkpoint_events": [
+    {
+      "name": "size",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "d0a4b20f3e5d3ea0caf7b1501a9bf2fb4d4f11ac7d844517d7b5d67874427464",
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 11.7,
+      "llm_calls": 1,
+      "input_tokens": 2322,
+      "output_tokens": 1334,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2322,
+          "output_tokens": 1334
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 4501,
+      "document_sha256": "f97a0d005d2dd6d2bfc1c60e94bb82191969330895f79516a5bacac7131998f7",
+      "source": "source/src/main/java/net/coobird/thumbnailator/Thumbnails.java:843",
+      "source_other_sites": 5,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

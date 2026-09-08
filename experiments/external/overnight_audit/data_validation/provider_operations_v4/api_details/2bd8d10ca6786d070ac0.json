@@ -1,0 +1,112 @@
+{
+  "summary": {
+    "repository": "mir_eval",
+    "cell": "B2",
+    "api": "average_overlap_ratio",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 59.2,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 59.2,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "identity_status": "Final or explicitly migrated evidence",
+    "error": null,
+    "details": "api_details/2bd8d10ca6786d070ac0.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 59.2,
+    "llm_calls": 1,
+    "input_tokens": 2696,
+    "output_tokens": 6918,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2696,
+        "output_tokens": 6918
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 5203,
+    "document_sha256": "9e9e7b276a73cefecb2d3add3aa644f9b8df510de13c111db01ebd1914d6db32",
+    "source": "source/mir_eval/transcription.py:591",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "name": "average_overlap_ratio",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "import numpy as np\nimport mir_eval\n\n# Validate intervals to prevent divide-by-zero as required by the documentation\nmir_eval.util.validate_intervals(ref_intervals)\nmir_eval.util.validate_intervals(est_intervals)\n\n# Temporarily overwrite the first intervals to guarantee a deterministic overlap ratio\noriginal_ref = ref_intervals[0].copy()\noriginal_est = est_intervals[0].copy()\n\nref_intervals[0] = [0, 4]\nest_intervals[0] = [1, 3]\n\n# Provide explicit matching for the deterministic pair\nmatching = [(0, 0)]\n\naor_score = mir_eval.transcription.average_overlap_ratio(\n    ref_intervals, \n    est_intervals, \n    matching\n)\n\n# Restore original values\nref_intervals[0] = original_ref\nest_intervals[0] = original_est\n\n# Verify the Average Overlap Ratio\n# Numerator: min(4, 3) - max(0, 1) = 3 - 1 = 2\n# Denominator: max(4, 3) - min(0, 1) = 4 - 0 = 4\n# Expected AOR = 2 / 4 = 0.5\nassert np.isclose(aor_score, 0.5), f\"Expected AOR of 0.5, got {aor_score}\"\nprint(f\"__CHECK__ average_overlap_ratio {aor_score:.3f}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_average_overlap_ratio/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ average_overlap_ratio 0.500\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/comprehension.json",
+  "source_sha256": "c25a74155511d59ffa5583bce3975fae3a254ce3e3bc65948dcfbd8f61d51736",
+  "checkpoint_events": [
+    {
+      "name": "average_overlap_ratio",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import numpy as np\nimport mir_eval\n\n# Validate intervals to prevent divide-by-zero as required by the documentation\nmir_eval.util.validate_intervals(ref_intervals)\nmir_eval.util.validate_intervals(est_intervals)\n\n# Temporarily overwrite the first intervals to guarantee a deterministic overlap ratio\noriginal_ref = ref_intervals[0].copy()\noriginal_est = est_intervals[0].copy()\n\nref_intervals[0] = [0, 4]\nest_intervals[0] = [1, 3]\n\n# Provide explicit matching for the deterministic pair\nmatching = [(0, 0)]\n\naor_score = mir_eval.transcription.average_overlap_ratio(\n    ref_intervals, \n    est_intervals, \n    matching\n)\n\n# Restore original values\nref_intervals[0] = original_ref\nest_intervals[0] = original_est\n\n# Verify the Average Overlap Ratio\n# Numerator: min(4, 3) - max(0, 1) = 3 - 1 = 2\n# Denominator: max(4, 3) - min(0, 1) = 4 - 0 = 4\n# Expected AOR = 2 / 4 = 0.5\nassert np.isclose(aor_score, 0.5), f\"Expected AOR of 0.5, got {aor_score}\"\nprint(f\"__CHECK__ average_overlap_ratio {aor_score:.3f}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_average_overlap_ratio/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ average_overlap_ratio 0.500\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 59.2,
+      "llm_calls": 1,
+      "input_tokens": 2696,
+      "output_tokens": 6918,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2696,
+          "output_tokens": 6918
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 5203,
+      "document_sha256": "9e9e7b276a73cefecb2d3add3aa644f9b8df510de13c111db01ebd1914d6db32",
+      "source": "source/mir_eval/transcription.py:591",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

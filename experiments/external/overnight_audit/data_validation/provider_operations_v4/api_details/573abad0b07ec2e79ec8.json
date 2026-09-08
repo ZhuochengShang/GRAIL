@@ -1,0 +1,98 @@
+{
+  "summary": {
+    "repository": "Thumbnailator",
+    "cell": "A2",
+    "api": "formatType",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 16.3,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 16.3,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "identity_status": "Final or explicitly migrated evidence",
+    "error": null,
+    "details": "api_details/573abad0b07ec2e79ec8.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 16.3,
+    "llm_calls": 1,
+    "input_tokens": 1757,
+    "output_tokens": 1779,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 1757,
+        "output_tokens": 1779
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 2640,
+    "document_sha256": "62e8eb1b85faa759a45d3cdd0e33bf9c9269dff868f38d1a295e4edbf335b594",
+    "source": "source/src/main/java/net/coobird/thumbnailator/builders/ThumbnailParameterBuilder.java:254",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "name": "formatType",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "net.coobird.thumbnailator.builders.ThumbnailParameterBuilder builder = new net.coobird.thumbnailator.builders.ThumbnailParameterBuilder();\nbuilder.size(100, 100);\nbuilder.formatType(\"JPEG\");\n\nnet.coobird.thumbnailator.ThumbnailParameter param = builder.build();\nString actualFormatType = param.getOutputFormatType();\n\nassert \"JPEG\".equals(actualFormatType) : \"Expected format type to be JPEG, but was \" + actualFormatType;\nSystem.out.println(\"__CHECK__ formatType \" + actualFormatType);",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/.aideal_exec/A2/run_formatType/ApiTest.java",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ formatType JPEG\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "d0a4b20f3e5d3ea0caf7b1501a9bf2fb4d4f11ac7d844517d7b5d67874427464"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/docs/eval/A2/comprehension.json",
+  "source_sha256": "b6aa0c714a7c8a076f415ed0dae0e6b3126ad774bc94aab394ec1036974003d7",
+  "checkpoint_events": [
+    {
+      "name": "formatType",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "d0a4b20f3e5d3ea0caf7b1501a9bf2fb4d4f11ac7d844517d7b5d67874427464",
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 16.3,
+      "llm_calls": 1,
+      "input_tokens": 1757,
+      "output_tokens": 1779,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1757,
+          "output_tokens": 1779
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 2640,
+      "document_sha256": "62e8eb1b85faa759a45d3cdd0e33bf9c9269dff868f38d1a295e4edbf335b594",
+      "source": "source/src/main/java/net/coobird/thumbnailator/builders/ThumbnailParameterBuilder.java:254",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

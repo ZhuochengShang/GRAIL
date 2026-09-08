@@ -1,0 +1,98 @@
+{
+  "summary": {
+    "repository": "Thumbnailator",
+    "cell": "A2",
+    "api": "ConsecutivelyNumberedFilenames",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 22.6,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 22.6,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "identity_status": "Final or explicitly migrated evidence",
+    "error": null,
+    "details": "api_details/39b7a9b5a3e2141950ea.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 22.6,
+    "llm_calls": 1,
+    "input_tokens": 2555,
+    "output_tokens": 2785,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2555,
+        "output_tokens": 2785
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 5354,
+    "document_sha256": "017970966ca2fa7ade574cb7c6d6977db88d41e526d2758cf12cfdfb998bc4b1",
+    "source": "source/src/main/java/net/coobird/thumbnailator/name/ConsecutivelyNumberedFilenames.java:295",
+    "source_other_sites": 7,
+    "codebase_frames": null,
+    "name": "ConsecutivelyNumberedFilenames",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "java.io.File dir = new java.io.File(output_dir);\nif (!dir.exists()) {\n    dir.mkdirs();\n}\n\nnet.coobird.thumbnailator.name.ConsecutivelyNumberedFilenames filenames = \n    new net.coobird.thumbnailator.name.ConsecutivelyNumberedFilenames(dir, \"thumb-%03d.jpg\", 5);\n\njava.util.List<java.io.File> resultFiles = net.coobird.thumbnailator.Thumbnails.of(grid_png, grid_jpeg)\n    .size(50, 50)\n    .asFiles(filenames);\n\nassert resultFiles != null && resultFiles.size() == 2 : \"Expected 2 files to be generated\";\nassert resultFiles.get(0).getName().equals(\"thumb-005.jpg\") : \"First file name mismatch\";\nassert resultFiles.get(1).getName().equals(\"thumb-006.jpg\") : \"Second file name mismatch\";\nassert resultFiles.get(0).getParentFile().getAbsoluteFile().equals(dir.getAbsoluteFile()) : \"Directory mismatch\";\nassert resultFiles.get(0).exists() : \"First file does not exist\";\nassert resultFiles.get(1).exists() : \"Second file does not exist\";\n\nSystem.out.println(\"__CHECK__ ConsecutivelyNumberedFilenames \" + resultFiles.get(0).getName() + \", \" + resultFiles.get(1).getName());",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/.aideal_exec/A2/run_ConsecutivelyNumberedFilenames/ApiTest.java",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ ConsecutivelyNumberedFilenames thumb-005.jpg, thumb-006.jpg\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "d0a4b20f3e5d3ea0caf7b1501a9bf2fb4d4f11ac7d844517d7b5d67874427464"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/docs/eval/A2/comprehension.json",
+  "source_sha256": "b6aa0c714a7c8a076f415ed0dae0e6b3126ad774bc94aab394ec1036974003d7",
+  "checkpoint_events": [
+    {
+      "name": "ConsecutivelyNumberedFilenames",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "d0a4b20f3e5d3ea0caf7b1501a9bf2fb4d4f11ac7d844517d7b5d67874427464",
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 22.6,
+      "llm_calls": 1,
+      "input_tokens": 2555,
+      "output_tokens": 2785,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2555,
+          "output_tokens": 2785
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 5354,
+      "document_sha256": "017970966ca2fa7ade574cb7c6d6977db88d41e526d2758cf12cfdfb998bc4b1",
+      "source": "source/src/main/java/net/coobird/thumbnailator/name/ConsecutivelyNumberedFilenames.java:295",
+      "source_other_sites": 7,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

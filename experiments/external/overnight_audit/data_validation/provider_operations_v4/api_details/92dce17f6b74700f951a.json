@@ -1,0 +1,113 @@
+{
+  "summary": {
+    "repository": "tslearn",
+    "cell": "B2",
+    "api": "cdist_sax",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 16.9,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 16.9,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "identity_status": "Provisional last-observed fingerprint group; final identity unverified",
+    "error": null,
+    "details": "api_details/92dce17f6b74700f951a.json"
+  },
+  "native_row": {
+    "name": "cdist_sax",
+    "doc_source": "aideal",
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "import numpy as np\nimport tslearn.metrics\n\nX_sax_symbols = np.array([[0, 1, 2], [2, 1, 0]])\nY_sax_symbols = np.array([[0, 1, 2], [0, 0, 0], [2, 2, 2]])\nmy_breakpoints = np.array([-0.5, 0.0, 0.5])\nsize_fitted = 50\n\ndists = tslearn.metrics.cdist_sax(\n    dataset1=X_sax_symbols,\n    breakpoints_avg=my_breakpoints,\n    size_fitted=size_fitted,\n    dataset2=Y_sax_symbols\n)\n\nassert dists.shape == (2, 3), f\"Expected shape (2, 3), got {dists.shape}\"\nassert dists[0, 0] == 0.0, \"Distance between identical SAX representations should be 0.0\"\nassert dists[1, 0] > 0.0, \"Distance between different SAX representations should be > 0.0\"\n\nprint(f\"__CHECK__ cdist_sax {dists.shape} {dists[0, 0]}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_cdist_sax/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ cdist_sax (2, 3) 0.0\n__DONE__\n",
+      "stderr_tail": "/Users/clockorangezoe/miniconda3/envs/geo_llm_spark/lib/python3.10/site-packages/numpy/core/numeric.py:330: RuntimeWarning: invalid value encountered in cast\n  multiarray.copyto(a, fill_value, casting='unsafe')\n"
+    },
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 16.9,
+    "llm_calls": 1,
+    "input_tokens": 2497,
+    "output_tokens": 1826,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2497,
+        "output_tokens": 1826
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 4428,
+    "document_sha256": "6b590f2189da090c2893c99fceb9756b793f9e5e8578cf1c81e60ac79a08bcd3",
+    "source": "tslearn/tslearn/metrics/sax.py:10",
+    "source_other_sites": 0,
+    "codebase_frames": null
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/comprehension_progress.jsonl",
+  "source_sha256": "0a09dcebc55c1b772f6889a52003ba9fcffd51ad4e99ecb50387e688fe973703",
+  "checkpoint_events": [
+    {
+      "name": "cdist_sax",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import numpy as np\nimport tslearn.metrics\n\nX_sax_symbols = np.array([[0, 1, 2], [2, 1, 0]])\nY_sax_symbols = np.array([[0, 1, 2], [0, 0, 0], [2, 2, 2]])\nmy_breakpoints = np.array([-0.5, 0.0, 0.5])\nsize_fitted = 50\n\ndists = tslearn.metrics.cdist_sax(\n    dataset1=X_sax_symbols,\n    breakpoints_avg=my_breakpoints,\n    size_fitted=size_fitted,\n    dataset2=Y_sax_symbols\n)\n\nassert dists.shape == (2, 3), f\"Expected shape (2, 3), got {dists.shape}\"\nassert dists[0, 0] == 0.0, \"Distance between identical SAX representations should be 0.0\"\nassert dists[1, 0] > 0.0, \"Distance between different SAX representations should be > 0.0\"\n\nprint(f\"__CHECK__ cdist_sax {dists.shape} {dists[0, 0]}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_cdist_sax/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ cdist_sax (2, 3) 0.0\n__DONE__\n",
+        "stderr_tail": "/Users/clockorangezoe/miniconda3/envs/geo_llm_spark/lib/python3.10/site-packages/numpy/core/numeric.py:330: RuntimeWarning: invalid value encountered in cast\n  multiarray.copyto(a, fill_value, casting='unsafe')\n"
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 16.9,
+      "llm_calls": 1,
+      "input_tokens": 2497,
+      "output_tokens": 1826,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2497,
+          "output_tokens": 1826
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 4428,
+      "document_sha256": "6b590f2189da090c2893c99fceb9756b793f9e5e8578cf1c81e60ac79a08bcd3",
+      "source": "tslearn/tslearn/metrics/sax.py:10",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

@@ -1,0 +1,156 @@
+{
+  "summary": {
+    "repository": "tslearn",
+    "cell": "A1",
+    "api": "set_weights",
+    "outcome": "Setup/import blocked",
+    "test_execution": "Setup/import failed; target execution not established",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 17.7,
+    "retained_checkpoint_events": 2,
+    "retained_attempt_total_s": 617.4,
+    "retained_504_events": 1,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "identity_status": "Final or explicitly migrated evidence",
+    "error": "missing module/import: No module named 'keras'",
+    "details": "api_details/3a544b5914a54c280f9e.json"
+  },
+  "native_row": {
+    "name": "set_weights",
+    "doc_source": "original",
+    "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+    "execution_evidence": {
+      "status": "fail",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "fail",
+          "category": "infra",
+          "error": "missing module/import: No module named 'keras'",
+          "codebase_frames": [
+            "tslearn/tslearn/__init__.py:14",
+            "tslearn/tslearn/shapelets/shapelets.py:7"
+          ]
+        }
+      ],
+      "error_category": "infra",
+      "error": "missing module/import: No module named 'keras'",
+      "code": "from tslearn.shapelets import LearningShapelets\nimport numpy as np\n\n# Initialize and fit a small LearningShapelets model\nclf = LearningShapelets(n_shapelets_per_size={3: 2}, max_iter=1, batch_size=8, random_state=42)\nclf.fit(X, y)\n\n# Retrieve the current weights\nweights = clf.get_weights()\n\n# Modify the weights and set them back using set_weights\nnew_weights = [w + 1.0 for w in weights]\nclf.set_weights(new_weights)\n\n# Retrieve the updated weights to verify the setter worked\nupdated_weights = clf.get_weights()\n\nassert len(updated_weights) == len(weights), \"Number of weight arrays changed unexpectedly.\"\nassert np.allclose(updated_weights[0], weights[0] + 1.0), \"Weights were not updated correctly by set_weights.\"\n\nprint(f\"__CHECK__ set_weights {len(updated_weights)}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_set_weights/api_test.py",
+      "exit_code": 1,
+      "stdout_tail": "",
+      "stderr_tail": "__RUN_ERR__ ModuleNotFoundError: No module named 'keras'\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_set_weights/api_test.py\", line 63, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_set_weights/api_test.py\", line 58, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_set_weights/api_test.py\", line 34, in api_test\n    from tslearn.shapelets import LearningShapelets\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/shapelets/__init__.py\", line 14, in <module>\n    from .shapelets import (\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/shapelets/shapelets.py\", line 7, in <module>\n    from keras.layers import (\nModuleNotFoundError: No module named 'keras'\n"
+    },
+    "status": "fail",
+    "attempts": 1,
+    "pass_round": null,
+    "wall_s": 17.7,
+    "llm_calls": 1,
+    "input_tokens": 1323,
+    "output_tokens": 1771,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 1323,
+        "output_tokens": 1771
+      }
+    },
+    "error_category": "infra",
+    "error": "missing module/import: No module named 'keras'",
+    "locus": "",
+    "doc_chars": 93,
+    "document_sha256": "79c91960606a06317970ccfb655b5d1feb521da22e1df736768b44f14241f04c",
+    "source": "tslearn/tslearn/shapelets/shapelets.py:866",
+    "source_other_sites": 0,
+    "codebase_frames": [
+      "tslearn/tslearn/__init__.py:14",
+      "tslearn/tslearn/shapelets/shapelets.py:7"
+    ]
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/comprehension_progress.jsonl",
+  "source_sha256": "95d519cbe3290172a05050399c59ff868985ac1ce077daa930678198016bf26b",
+  "checkpoint_events": [
+    {
+      "name": "set_weights",
+      "doc_source": "original",
+      "experiment_fingerprint": "964a2ec0df73c3b53c3966c9213dedb1a12bf7e39ad1b8d7d1ddd561ba53212b",
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 599.7,
+      "llm_calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "by_model": {},
+      "error_category": "llm-error",
+      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "locus": "",
+      "doc_chars": 93,
+      "document_sha256": "79c91960606a06317970ccfb655b5d1feb521da22e1df736768b44f14241f04c",
+      "source": "tslearn/tslearn/shapelets/shapelets.py:866",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    },
+    {
+      "name": "set_weights",
+      "doc_source": "original",
+      "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "infra",
+            "error": "missing module/import: No module named 'keras'",
+            "codebase_frames": [
+              "tslearn/tslearn/__init__.py:14",
+              "tslearn/tslearn/shapelets/shapelets.py:7"
+            ]
+          }
+        ],
+        "error_category": "infra",
+        "error": "missing module/import: No module named 'keras'",
+        "code": "from tslearn.shapelets import LearningShapelets\nimport numpy as np\n\n# Initialize and fit a small LearningShapelets model\nclf = LearningShapelets(n_shapelets_per_size={3: 2}, max_iter=1, batch_size=8, random_state=42)\nclf.fit(X, y)\n\n# Retrieve the current weights\nweights = clf.get_weights()\n\n# Modify the weights and set them back using set_weights\nnew_weights = [w + 1.0 for w in weights]\nclf.set_weights(new_weights)\n\n# Retrieve the updated weights to verify the setter worked\nupdated_weights = clf.get_weights()\n\nassert len(updated_weights) == len(weights), \"Number of weight arrays changed unexpectedly.\"\nassert np.allclose(updated_weights[0], weights[0] + 1.0), \"Weights were not updated correctly by set_weights.\"\n\nprint(f\"__CHECK__ set_weights {len(updated_weights)}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_set_weights/api_test.py",
+        "exit_code": 1,
+        "stdout_tail": "",
+        "stderr_tail": "__RUN_ERR__ ModuleNotFoundError: No module named 'keras'\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_set_weights/api_test.py\", line 63, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_set_weights/api_test.py\", line 58, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_set_weights/api_test.py\", line 34, in api_test\n    from tslearn.shapelets import LearningShapelets\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/shapelets/__init__.py\", line 14, in <module>\n    from .shapelets import (\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/shapelets/shapelets.py\", line 7, in <module>\n    from keras.layers import (\nModuleNotFoundError: No module named 'keras'\n"
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 17.7,
+      "llm_calls": 1,
+      "input_tokens": 1323,
+      "output_tokens": 1771,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1323,
+          "output_tokens": 1771
+        }
+      },
+      "error_category": "infra",
+      "error": "missing module/import: No module named 'keras'",
+      "locus": "",
+      "doc_chars": 93,
+      "document_sha256": "79c91960606a06317970ccfb655b5d1feb521da22e1df736768b44f14241f04c",
+      "source": "tslearn/tslearn/shapelets/shapelets.py:866",
+      "source_other_sites": 0,
+      "codebase_frames": [
+        "tslearn/tslearn/__init__.py:14",
+        "tslearn/tslearn/shapelets/shapelets.py:7"
+      ]
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

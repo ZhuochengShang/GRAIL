@@ -1,0 +1,112 @@
+{
+  "summary": {
+    "repository": "mir_eval",
+    "cell": "B2",
+    "api": "pitch",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 16.5,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 16.5,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "identity_status": "Final or explicitly migrated evidence",
+    "error": null,
+    "details": "api_details/976a5e4081e389a8f43e.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 16.5,
+    "llm_calls": 1,
+    "input_tokens": 2740,
+    "output_tokens": 1819,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2740,
+        "output_tokens": 1819
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 5891,
+    "document_sha256": "a485def26527dfb002961ab738e9503e7ed4d616a55af81ed0221b262795fc4c",
+    "source": "source/mir_eval/display.py:659",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "name": "pitch",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "import matplotlib\nmatplotlib.use('Agg')\nimport matplotlib.pyplot as plt\nimport mir_eval.display\nimport numpy as np\n\nt = np.asarray(times).flatten()\nf = np.asarray(ref_freqs).flatten()\nn = min(len(t), len(f))\nt = t[:n]\nf = f[:n]\n\nfig, ax = plt.subplots()\nax_res = mir_eval.display.pitch(t, f, midi=True, unvoiced=True, ax=ax, label=\"Reference\")\n\nnum_elements = len(ax_res.lines) + len(ax_res.collections)\nassert ax_res is ax, \"Returned axes should be the one provided\"\nassert num_elements > 0, \"Expected plot elements to be added to the axes\"\n\nprint(f\"__CHECK__ pitch {num_elements}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_pitch/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ pitch 2\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/comprehension.json",
+  "source_sha256": "c25a74155511d59ffa5583bce3975fae3a254ce3e3bc65948dcfbd8f61d51736",
+  "checkpoint_events": [
+    {
+      "name": "pitch",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import matplotlib\nmatplotlib.use('Agg')\nimport matplotlib.pyplot as plt\nimport mir_eval.display\nimport numpy as np\n\nt = np.asarray(times).flatten()\nf = np.asarray(ref_freqs).flatten()\nn = min(len(t), len(f))\nt = t[:n]\nf = f[:n]\n\nfig, ax = plt.subplots()\nax_res = mir_eval.display.pitch(t, f, midi=True, unvoiced=True, ax=ax, label=\"Reference\")\n\nnum_elements = len(ax_res.lines) + len(ax_res.collections)\nassert ax_res is ax, \"Returned axes should be the one provided\"\nassert num_elements > 0, \"Expected plot elements to be added to the axes\"\n\nprint(f\"__CHECK__ pitch {num_elements}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_pitch/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ pitch 2\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 16.5,
+      "llm_calls": 1,
+      "input_tokens": 2740,
+      "output_tokens": 1819,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2740,
+          "output_tokens": 1819
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 5891,
+      "document_sha256": "a485def26527dfb002961ab738e9503e7ed4d616a55af81ed0221b262795fc4c",
+      "source": "source/mir_eval/display.py:659",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

@@ -1,0 +1,131 @@
+{
+  "summary": {
+    "repository": "tslearn",
+    "cell": "B2",
+    "api": "extract_from_zip_url",
+    "outcome": "Execution failed",
+    "test_execution": "Test process returned exit code 1; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 8.0,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 8.0,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "identity_status": "Provisional last-observed fingerprint group; final identity unverified",
+    "error": "URLError: <urlopen error [Errno 61] Connection refused>",
+    "details": "api_details/ecf1c3b61cde020c3531.json"
+  },
+  "native_row": {
+    "name": "extract_from_zip_url",
+    "doc_source": "aideal",
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+    "execution_evidence": {
+      "status": "fail",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "fail",
+          "category": "runtime",
+          "error": "URLError: <urlopen error [Errno 61] Connection refused>",
+          "codebase_frames": [
+            "tslearn/tslearn/datasets/datasets.py:39"
+          ]
+        }
+      ],
+      "error_category": "runtime",
+      "error": "URLError: <urlopen error [Errno 61] Connection refused>",
+      "code": "import warnings\nfrom tslearn.datasets import extract_from_zip_url\n\nwith warnings.catch_warnings(record=True) as w:\n    warnings.simplefilter(\"always\")\n    # Using an invalid URL to avoid network access and demonstrate the failure mode\n    out_dir = extract_from_zip_url(\n        url=\"http://0.0.0.0/nonexistent_dataset.zip\", \n        target_dir=output_dir, \n        verbose=False\n    )\n\nassert out_dir is None, f\"Expected None on failure, got {out_dir}\"\nassert any(issubclass(warn.category, RuntimeWarning) for warn in w), \"Expected a RuntimeWarning to be emitted on failure\"\n\nprint(f\"__CHECK__ extract_from_zip_url {out_dir}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_extract_from_zip_url/api_test.py",
+      "exit_code": 1,
+      "stdout_tail": "",
+      "stderr_tail": "__RUN_ERR__ URLError: <urlopen error [Errno 61] Connection refused>\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/miniconda3/envs/geo_llm_spark/lib/python3.10/urllib/request.py\", line 1348, in do_open\n    h.request(req.get_method(), req.selector, req.data, headers,\n  File \"/Users/clockorangezoe/miniconda3/envs/geo_llm_spark/lib/python3.10/http/client.py\", line 1283, in request\n    self._send_request(method, url, body, headers, encode_chunked)\n  File \"/Users/clockorangezoe/miniconda3/envs/geo_llm_spark/lib/python3.10/http/client.py\", line 1329, in _send_request\n    self.endheaders(body, encode_chunked=encode_chunked)\n  File \"/Users/clockorangezoe/miniconda3/envs/geo_llm_spark/lib/python3.10/http/client.py\", line 1278, in endheaders\n    self._send_output(message_body, encode_chunked=encode_chunked)\n  File \"/Users/clockorangezoe/miniconda3/envs/geo_llm_spark/lib/python3.10/http/client.py\", line 1038, in _send_output\n    self.send(msg)\n  File \"/Users/clockorangezoe/miniconda3/envs/geo_llm_spark/lib/python3.10/http/client.py\", line 976, in send\n    self.connect()\n  File \"/Users/clockorangezoe/miniconda3/envs/geo_llm_spark/lib/python3.10/http/client.py\", line 942, in connect\n    self.sock = self._create_connection(\n  File \"/Users/clockorangezoe/miniconda3/envs/geo_llm_spark/lib/python3.10/socket.py\", line 857, in create_connection\n    raise err\n  File \"/Users/clockorangezoe/miniconda3/envs/geo_llm_spark/lib/python3.10/socket.py\", line 845, in create_connection\n    sock.connect(sa)\nConnectionRefusedError: [Errno 61] Connection refused\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_extract_from_zip_url/api_test.py\", line 58, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_extract_from_zip_url/api_test.py\", line 53, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_extract_from_zip_url/api_test.py\", line 40, in api_test\n    out_dir = extract_from_zip_url(\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/tslearn/tslearn/datasets/datasets.py\", line 39, in extract_from_zip_url\n    urlretrieve(url, local_zip_fname)\n  File \"/Users/clockorangezoe/miniconda3/envs/geo_llm_spark/lib/python3.10/urllib/request.py\", line 241, in urlretrieve\n    with contextlib.closing(urlopen(url, data)) as fp:\n  File \"/Users/clockorangezoe/miniconda3/envs/geo_llm_spark/lib/python3.10/urllib/request.py\", line 216, in urlopen\n    return opener.open(url, data, timeout)\n  File \"/Users/clockorangezoe/miniconda3/envs/geo_llm_spark/lib/python3.10/urllib/request.py\", line 519, in open\n    response = self._open(req, data)\n  File \"/Users/clockorangezoe/miniconda3/envs/geo_llm_spark/lib/python3.10/urllib/request.py\", line 536, in _open\n    result = self._call_chain(self.handle_open, protocol, protocol +\n  File \"/Users/clockorangezoe/miniconda3/envs/geo_llm_spark/lib/python3.10/urllib/request.py\", line 496, in _call_chain\n    result = func(*args)\n  File \"/Users/clockorangezoe/miniconda3/envs/geo_llm_spark/lib/python3.10/urllib/request.py\", line 1377, in http_open\n    return self.do_open(http.client.HTTPConnection, req)\n  File \"/Users/clockorangezoe/miniconda3/envs/geo_llm_spark/lib/python3.10/urllib/request.py\", line 1351, in do_open\n    raise URLError(err)\nurllib.error.URLError: <urlopen error [Errno 61] Connection refused>\n"
+    },
+    "status": "fail",
+    "attempts": 1,
+    "pass_round": null,
+    "wall_s": 8.0,
+    "llm_calls": 1,
+    "input_tokens": 2147,
+    "output_tokens": 614,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2147,
+        "output_tokens": 614
+      }
+    },
+    "error_category": "runtime",
+    "error": "URLError: <urlopen error [Errno 61] Connection refused>",
+    "locus": "/Users/clockorangezoe/miniconda3/envs/geo_llm_spark/lib/python3.10/urllib/request.py:1351",
+    "doc_chars": 3368,
+    "document_sha256": "5110479eae490f830d1149aa0936d171a3d9613bc925f06e7bb7c872b0d74327",
+    "source": "tslearn/tslearn/datasets/datasets.py:16",
+    "source_other_sites": 0,
+    "codebase_frames": [
+      "tslearn/tslearn/datasets/datasets.py:39"
+    ]
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/comprehension_progress.jsonl",
+  "source_sha256": "0a09dcebc55c1b772f6889a52003ba9fcffd51ad4e99ecb50387e688fe973703",
+  "checkpoint_events": [
+    {
+      "name": "extract_from_zip_url",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "runtime",
+            "error": "URLError: <urlopen error [Errno 61] Connection refused>",
+            "codebase_frames": [
+              "tslearn/tslearn/datasets/datasets.py:39"
+            ]
+          }
+        ],
+        "error_category": "runtime",
+        "error": "URLError: <urlopen error [Errno 61] Connection refused>",
+        "code": "import warnings\nfrom tslearn.datasets import extract_from_zip_url\n\nwith warnings.catch_warnings(record=True) as w:\n    warnings.simplefilter(\"always\")\n    # Using an invalid URL to avoid network access and demonstrate the failure mode\n    out_dir = extract_from_zip_url(\n        url=\"http://0.0.0.0/nonexistent_dataset.zip\", \n        target_dir=output_dir, \n        verbose=False\n    )\n\nassert out_dir is None, f\"Expected None on failure, got {out_dir}\"\nassert any(issubclass(warn.category, RuntimeWarning) for warn in w), \"Expected a RuntimeWarning to be emitted on failure\"\n\nprint(f\"__CHECK__ extract_from_zip_url {out_dir}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_extract_from_zip_url/api_test.py",
+        "exit_code": 1,
+        "stdout_tail": "",
+        "stderr_tail": "__RUN_ERR__ URLError: <urlopen error [Errno 61] Connection refused>\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/miniconda3/envs/geo_llm_spark/lib/python3.10/urllib/request.py\", line 1348, in do_open\n    h.request(req.get_method(), req.selector, req.data, headers,\n  File \"/Users/clockorangezoe/miniconda3/envs/geo_llm_spark/lib/python3.10/http/client.py\", line 1283, in request\n    self._send_request(method, url, body, headers, encode_chunked)\n  File \"/Users/clockorangezoe/miniconda3/envs/geo_llm_spark/lib/python3.10/http/client.py\", line 1329, in _send_request\n    self.endheaders(body, encode_chunked=encode_chunked)\n  File \"/Users/clockorangezoe/miniconda3/envs/geo_llm_spark/lib/python3.10/http/client.py\", line 1278, in endheaders\n    self._send_output(message_body, encode_chunked=encode_chunked)\n  File \"/Users/clockorangezoe/miniconda3/envs/geo_llm_spark/lib/python3.10/http/client.py\", line 1038, in _send_output\n    self.send(msg)\n  File \"/Users/clockorangezoe/miniconda3/envs/geo_llm_spark/lib/python3.10/http/client.py\", line 976, in send\n    self.connect()\n  File \"/Users/clockorangezoe/miniconda3/envs/geo_llm_spark/lib/python3.10/http/client.py\", line 942, in connect\n    self.sock = self._create_connection(\n  File \"/Users/clockorangezoe/miniconda3/envs/geo_llm_spark/lib/python3.10/socket.py\", line 857, in create_connection\n    raise err\n  File \"/Users/clockorangezoe/miniconda3/envs/geo_llm_spark/lib/python3.10/socket.py\", line 845, in create_connection\n    sock.connect(sa)\nConnectionRefusedError: [Errno 61] Connection refused\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_extract_from_zip_url/api_test.py\", line 58, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_extract_from_zip_url/api_test.py\", line 53, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_extract_from_zip_url/api_test.py\", line 40, in api_test\n    out_dir = extract_from_zip_url(\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/tslearn/tslearn/datasets/datasets.py\", line 39, in extract_from_zip_url\n    urlretrieve(url, local_zip_fname)\n  File \"/Users/clockorangezoe/miniconda3/envs/geo_llm_spark/lib/python3.10/urllib/request.py\", line 241, in urlretrieve\n    with contextlib.closing(urlopen(url, data)) as fp:\n  File \"/Users/clockorangezoe/miniconda3/envs/geo_llm_spark/lib/python3.10/urllib/request.py\", line 216, in urlopen\n    return opener.open(url, data, timeout)\n  File \"/Users/clockorangezoe/miniconda3/envs/geo_llm_spark/lib/python3.10/urllib/request.py\", line 519, in open\n    response = self._open(req, data)\n  File \"/Users/clockorangezoe/miniconda3/envs/geo_llm_spark/lib/python3.10/urllib/request.py\", line 536, in _open\n    result = self._call_chain(self.handle_open, protocol, protocol +\n  File \"/Users/clockorangezoe/miniconda3/envs/geo_llm_spark/lib/python3.10/urllib/request.py\", line 496, in _call_chain\n    result = func(*args)\n  File \"/Users/clockorangezoe/miniconda3/envs/geo_llm_spark/lib/python3.10/urllib/request.py\", line 1377, in http_open\n    return self.do_open(http.client.HTTPConnection, req)\n  File \"/Users/clockorangezoe/miniconda3/envs/geo_llm_spark/lib/python3.10/urllib/request.py\", line 1351, in do_open\n    raise URLError(err)\nurllib.error.URLError: <urlopen error [Errno 61] Connection refused>\n"
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 8.0,
+      "llm_calls": 1,
+      "input_tokens": 2147,
+      "output_tokens": 614,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2147,
+          "output_tokens": 614
+        }
+      },
+      "error_category": "runtime",
+      "error": "URLError: <urlopen error [Errno 61] Connection refused>",
+      "locus": "/Users/clockorangezoe/miniconda3/envs/geo_llm_spark/lib/python3.10/urllib/request.py:1351",
+      "doc_chars": 3368,
+      "document_sha256": "5110479eae490f830d1149aa0936d171a3d9613bc925f06e7bb7c872b0d74327",
+      "source": "tslearn/tslearn/datasets/datasets.py:16",
+      "source_other_sites": 0,
+      "codebase_frames": [
+        "tslearn/tslearn/datasets/datasets.py:39"
+      ]
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

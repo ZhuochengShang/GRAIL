@@ -1,0 +1,113 @@
+{
+  "summary": {
+    "repository": "tslearn",
+    "cell": "B2",
+    "api": "lb_keogh",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 12.0,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 12.0,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "identity_status": "Provisional last-observed fingerprint group; final identity unverified",
+    "error": null,
+    "details": "api_details/46e7109922fd6d90c3df.json"
+  },
+  "native_row": {
+    "name": "lb_keogh",
+    "doc_source": "aideal",
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "from tslearn.metrics import lb_keogh, lb_envelope\n\n# Pattern 1: Compute envelope on the fly\ndist1 = lb_keogh(ts_query=s1, ts_candidate=s2, radius=2)\n\n# Pattern 2: Use pre-computed envelope\nenv_low, env_up = lb_envelope(s2, radius=2)\ndist2 = lb_keogh(ts_query=s1, envelope_candidate=(env_low, env_up))\n\n# Verify correctness\nassert isinstance(dist1, float), \"LB_Keogh distance must be a float\"\nassert dist1 >= 0.0, \"LB_Keogh distance must be non-negative\"\nassert abs(dist1 - dist2) < 1e-9, \"LB_Keogh distances with and without pre-computed envelope must match\"\n\nprint(f\"__CHECK__ lb_keogh {dist1:.4f}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_lb_keogh/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ lb_keogh 0.1911\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 12.0,
+    "llm_calls": 1,
+    "input_tokens": 2308,
+    "output_tokens": 943,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2308,
+        "output_tokens": 943
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 3516,
+    "document_sha256": "f3d39842c4d010fc809a144c6eeba63f7cc6613ed927afb55a59a9c0bf4f9d16",
+    "source": "tslearn/tslearn/metrics/dtw_variants.py:2008",
+    "source_other_sites": 0,
+    "codebase_frames": null
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/comprehension_progress.jsonl",
+  "source_sha256": "0a09dcebc55c1b772f6889a52003ba9fcffd51ad4e99ecb50387e688fe973703",
+  "checkpoint_events": [
+    {
+      "name": "lb_keogh",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "from tslearn.metrics import lb_keogh, lb_envelope\n\n# Pattern 1: Compute envelope on the fly\ndist1 = lb_keogh(ts_query=s1, ts_candidate=s2, radius=2)\n\n# Pattern 2: Use pre-computed envelope\nenv_low, env_up = lb_envelope(s2, radius=2)\ndist2 = lb_keogh(ts_query=s1, envelope_candidate=(env_low, env_up))\n\n# Verify correctness\nassert isinstance(dist1, float), \"LB_Keogh distance must be a float\"\nassert dist1 >= 0.0, \"LB_Keogh distance must be non-negative\"\nassert abs(dist1 - dist2) < 1e-9, \"LB_Keogh distances with and without pre-computed envelope must match\"\n\nprint(f\"__CHECK__ lb_keogh {dist1:.4f}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_lb_keogh/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ lb_keogh 0.1911\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 12.0,
+      "llm_calls": 1,
+      "input_tokens": 2308,
+      "output_tokens": 943,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2308,
+          "output_tokens": 943
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3516,
+      "document_sha256": "f3d39842c4d010fc809a144c6eeba63f7cc6613ed927afb55a59a9c0bf4f9d16",
+      "source": "tslearn/tslearn/metrics/dtw_variants.py:2008",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

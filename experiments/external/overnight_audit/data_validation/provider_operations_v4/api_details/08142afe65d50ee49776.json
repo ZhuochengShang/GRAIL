@@ -1,0 +1,113 @@
+{
+  "summary": {
+    "repository": "tslearn",
+    "cell": "B2",
+    "api": "njit_lcss_accumulated_matrix_from_dist_matrix",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 13.6,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 13.6,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "identity_status": "Provisional last-observed fingerprint group; final identity unverified",
+    "error": null,
+    "details": "api_details/08142afe65d50ee49776.json"
+  },
+  "native_row": {
+    "name": "njit_lcss_accumulated_matrix_from_dist_matrix",
+    "doc_source": "aideal",
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "import numpy as np\nfrom tslearn.metrics.dtw_variants import njit_lcss_accumulated_matrix_from_dist_matrix\n\ndist_matrix = np.atleast_2d(tiny_matrix).astype(float)\nsz1, sz2 = dist_matrix.shape\nmask = np.ones((sz1, sz2), dtype=bool)\neps = float(np.median(dist_matrix))\n\nacc_cost_mat = njit_lcss_accumulated_matrix_from_dist_matrix(dist_matrix, eps, mask)\n\nassert acc_cost_mat.shape == (sz1 + 1, sz2 + 1), f\"Expected shape {(sz1 + 1, sz2 + 1)}, got {acc_cost_mat.shape}\"\nassert acc_cost_mat[0, 0] == 0, \"First element of accumulated cost matrix should be 0\"\nassert np.max(acc_cost_mat) <= min(sz1, sz2), \"LCSS score cannot exceed the length of the shortest sequence\"\n\nprint(f\"__CHECK__ njit_lcss_accumulated_matrix_from_dist_matrix {acc_cost_mat.shape}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_njit_lcss_accumulated_matrix_from_dist_matrix/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ njit_lcss_accumulated_matrix_from_dist_matrix (4, 5)\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 13.6,
+    "llm_calls": 1,
+    "input_tokens": 2550,
+    "output_tokens": 1469,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2550,
+        "output_tokens": 1469
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 4047,
+    "document_sha256": "b125d558118a410ebde84cb43ed279882b60f63d07e3fd91d882b5c1638b5bdf",
+    "source": "tslearn/tslearn/metrics/dtw_variants.py:2831",
+    "source_other_sites": 0,
+    "codebase_frames": null
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/comprehension_progress.jsonl",
+  "source_sha256": "0a09dcebc55c1b772f6889a52003ba9fcffd51ad4e99ecb50387e688fe973703",
+  "checkpoint_events": [
+    {
+      "name": "njit_lcss_accumulated_matrix_from_dist_matrix",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import numpy as np\nfrom tslearn.metrics.dtw_variants import njit_lcss_accumulated_matrix_from_dist_matrix\n\ndist_matrix = np.atleast_2d(tiny_matrix).astype(float)\nsz1, sz2 = dist_matrix.shape\nmask = np.ones((sz1, sz2), dtype=bool)\neps = float(np.median(dist_matrix))\n\nacc_cost_mat = njit_lcss_accumulated_matrix_from_dist_matrix(dist_matrix, eps, mask)\n\nassert acc_cost_mat.shape == (sz1 + 1, sz2 + 1), f\"Expected shape {(sz1 + 1, sz2 + 1)}, got {acc_cost_mat.shape}\"\nassert acc_cost_mat[0, 0] == 0, \"First element of accumulated cost matrix should be 0\"\nassert np.max(acc_cost_mat) <= min(sz1, sz2), \"LCSS score cannot exceed the length of the shortest sequence\"\n\nprint(f\"__CHECK__ njit_lcss_accumulated_matrix_from_dist_matrix {acc_cost_mat.shape}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_njit_lcss_accumulated_matrix_from_dist_matrix/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ njit_lcss_accumulated_matrix_from_dist_matrix (4, 5)\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 13.6,
+      "llm_calls": 1,
+      "input_tokens": 2550,
+      "output_tokens": 1469,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2550,
+          "output_tokens": 1469
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 4047,
+      "document_sha256": "b125d558118a410ebde84cb43ed279882b60f63d07e3fd91d882b5c1638b5bdf",
+      "source": "tslearn/tslearn/metrics/dtw_variants.py:2831",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

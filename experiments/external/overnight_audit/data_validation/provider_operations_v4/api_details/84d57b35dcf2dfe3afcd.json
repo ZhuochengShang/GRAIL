@@ -1,0 +1,121 @@
+{
+  "summary": {
+    "repository": "Thumbnailator",
+    "cell": "B2",
+    "api": "FileThumbnailTask",
+    "outcome": "Execution failed",
+    "test_execution": "Test process returned exit code 1; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 34.4,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 34.4,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "identity_status": "Final or explicitly migrated evidence",
+    "error": "FileNotFoundException: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/output/thumbnail.png/task_out.png (No such file or directory)",
+    "details": "api_details/84d57b35dcf2dfe3afcd.json"
+  },
+  "native_row": {
+    "status": "fail",
+    "attempts": 1,
+    "pass_round": null,
+    "wall_s": 34.4,
+    "llm_calls": 1,
+    "input_tokens": 2133,
+    "output_tokens": 4110,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2133,
+        "output_tokens": 4110
+      }
+    },
+    "error_category": "runtime",
+    "error": "FileNotFoundException: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/output/thumbnail.png/task_out.png (No such file or directory)",
+    "locus": "FileOutputStream.java:270",
+    "doc_chars": 4003,
+    "document_sha256": "4ab909c9eb598f3e029a60db48c41129c360d9da7462d61eeb71906d77a2a03e",
+    "source": "source/src/main/java/net/coobird/thumbnailator/tasks/FileThumbnailTask.java:61",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "evidence_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced",
+    "name": "FileThumbnailTask",
+    "execution_evidence": {
+      "status": "fail",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "fail",
+          "category": "runtime",
+          "error": "FileNotFoundException: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/output/"
+        }
+      ],
+      "error_category": "runtime",
+      "error": "FileNotFoundException: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/output/thumbnail.png/task_out.png (No such file or directory)",
+      "code": "net.coobird.thumbnailator.ThumbnailParameter param = new net.coobird.thumbnailator.ThumbnailParameter(\n        new java.awt.Dimension(50, 50),\n        null,\n        true,\n        \"png\",\n        net.coobird.thumbnailator.ThumbnailParameter.DEFAULT_FORMAT_TYPE,\n        net.coobird.thumbnailator.ThumbnailParameter.DEFAULT_QUALITY,\n        java.awt.image.BufferedImage.TYPE_INT_ARGB,\n        null,\n        net.coobird.thumbnailator.resizers.Resizers.PROGRESSIVE,\n        true,\n        true\n);\n\njava.io.File inputFile = new java.io.File(grid_png);\njava.io.File outputFile = outputPath.resolve(\"task_out.png\").toFile();\n\nnet.coobird.thumbnailator.tasks.FileThumbnailTask task = new net.coobird.thumbnailator.tasks.FileThumbnailTask(param, inputFile, outputFile);\n\njava.awt.image.BufferedImage img = task.read();\nassert img != null : \"Read image must not be null\";\n\ntask.write(img);\n\nassert outputFile.exists() : \"Output file must be created\";\nassert outputFile.length() > 0 : \"Output file must not be emp",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_FileThumbnailTask/ApiTest.java",
+      "exit_code": 1,
+      "stdout_tail": "",
+      "stderr_tail": "__RUN_ERR__ FileNotFoundException: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/output/thumbnail.png/task_out.png (No such file or directory)\njava.io.FileNotFoundException: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/output/thumbnail.png/task_out.png (No such file or directory)\n\tat java.io.FileOutputStream.open0(Native Method)\n\tat java.io.FileOutputStream.open(FileOutputStream.java:270)\n\tat java.io.FileOutputStream.<init>(FileOutputStream.java:213)\n\tat java.io.FileOutputStream.<init>(FileOutputStream.java:162)\n\tat net.coobird.thumbnailator.tasks.io.FileImageSink.createOutputStream(Unknown Source)\n\tat net.coobird.thumbnailator.tasks.io.FileImageSink.write(Unknown Source)\n\tat net.coobird.thumbnailator.tasks.SourceSinkThumbnailTask.write(Unknown Source)\n\tat net.coobird.thumbnailator.tasks.FileThumbnailTask.write(Unknown Source)\n\tat ApiTest.main(ApiTest.java:73)\n"
+    },
+    "experiment_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/docs/eval/B2/comprehension.json",
+  "source_sha256": "edf6f845e49a5b57436a68b7845e73ce578cec0a033cf20a196eae38705feb3a",
+  "checkpoint_events": [
+    {
+      "name": "FileThumbnailTask",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "runtime",
+            "error": "FileNotFoundException: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/output/"
+          }
+        ],
+        "error_category": "runtime",
+        "error": "FileNotFoundException: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/output/thumbnail.png/task_out.png (No such file or directory)",
+        "code": "net.coobird.thumbnailator.ThumbnailParameter param = new net.coobird.thumbnailator.ThumbnailParameter(\n        new java.awt.Dimension(50, 50),\n        null,\n        true,\n        \"png\",\n        net.coobird.thumbnailator.ThumbnailParameter.DEFAULT_FORMAT_TYPE,\n        net.coobird.thumbnailator.ThumbnailParameter.DEFAULT_QUALITY,\n        java.awt.image.BufferedImage.TYPE_INT_ARGB,\n        null,\n        net.coobird.thumbnailator.resizers.Resizers.PROGRESSIVE,\n        true,\n        true\n);\n\njava.io.File inputFile = new java.io.File(grid_png);\njava.io.File outputFile = outputPath.resolve(\"task_out.png\").toFile();\n\nnet.coobird.thumbnailator.tasks.FileThumbnailTask task = new net.coobird.thumbnailator.tasks.FileThumbnailTask(param, inputFile, outputFile);\n\njava.awt.image.BufferedImage img = task.read();\nassert img != null : \"Read image must not be null\";\n\ntask.write(img);\n\nassert outputFile.exists() : \"Output file must be created\";\nassert outputFile.length() > 0 : \"Output file must not be emp",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_FileThumbnailTask/ApiTest.java",
+        "exit_code": 1,
+        "stdout_tail": "",
+        "stderr_tail": "__RUN_ERR__ FileNotFoundException: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/output/thumbnail.png/task_out.png (No such file or directory)\njava.io.FileNotFoundException: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/output/thumbnail.png/task_out.png (No such file or directory)\n\tat java.io.FileOutputStream.open0(Native Method)\n\tat java.io.FileOutputStream.open(FileOutputStream.java:270)\n\tat java.io.FileOutputStream.<init>(FileOutputStream.java:213)\n\tat java.io.FileOutputStream.<init>(FileOutputStream.java:162)\n\tat net.coobird.thumbnailator.tasks.io.FileImageSink.createOutputStream(Unknown Source)\n\tat net.coobird.thumbnailator.tasks.io.FileImageSink.write(Unknown Source)\n\tat net.coobird.thumbnailator.tasks.SourceSinkThumbnailTask.write(Unknown Source)\n\tat net.coobird.thumbnailator.tasks.FileThumbnailTask.write(Unknown Source)\n\tat ApiTest.main(ApiTest.java:73)\n"
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 34.4,
+      "llm_calls": 1,
+      "input_tokens": 2133,
+      "output_tokens": 4110,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2133,
+          "output_tokens": 4110
+        }
+      },
+      "error_category": "runtime",
+      "error": "FileNotFoundException: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/output/thumbnail.png/task_out.png (No such file or directory)",
+      "locus": "FileOutputStream.java:270",
+      "doc_chars": 4003,
+      "document_sha256": "4ab909c9eb598f3e029a60db48c41129c360d9da7462d61eeb71906d77a2a03e",
+      "source": "source/src/main/java/net/coobird/thumbnailator/tasks/FileThumbnailTask.java:61",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

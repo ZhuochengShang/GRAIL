@@ -1,0 +1,113 @@
+{
+  "summary": {
+    "repository": "Thumbnailator",
+    "cell": "B2",
+    "api": "addFilters",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 41.9,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 41.9,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "identity_status": "Final or explicitly migrated evidence",
+    "error": null,
+    "details": "api_details/76749558c226f7de2013.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 41.9,
+    "llm_calls": 1,
+    "input_tokens": 1875,
+    "output_tokens": 4548,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 1875,
+        "output_tokens": 4548
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 2849,
+    "document_sha256": "a046bb62aef396d87f9ed7431bfd5dea73616abbe8336263c1160a7c41a9e655",
+    "source": "source/src/main/java/net/coobird/thumbnailator/Thumbnails.java:2016",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "evidence_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced",
+    "name": "addFilters",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "java.awt.image.BufferedImage testImg = new java.awt.image.BufferedImage(10, 10, java.awt.image.BufferedImage.TYPE_INT_RGB);\nfor (int y = 0; y < 5; y++) {\n    for (int x = 0; x < 5; x++) {\n        testImg.setRGB(x, y, 0xFF123456);\n    }\n}\n\njava.util.List<net.coobird.thumbnailator.filters.ImageFilter> filters = new java.util.ArrayList<>();\nfilters.add(net.coobird.thumbnailator.filters.Flip.HORIZONTAL);\nfilters.add(net.coobird.thumbnailator.filters.Flip.VERTICAL);\n\njava.awt.image.BufferedImage result = net.coobird.thumbnailator.Thumbnails.of(testImg)\n    .scale(1.0)\n    .addFilters(filters)\n    .asBufferedImage();\n\nint rgb = result.getRGB(8, 8) & 0xFFFFFF;\nassert rgb == 0x123456 : \"Block not flipped correctly, got \" + Integer.toHexString(rgb);\n\nint rgbEmpty = result.getRGB(2, 2) & 0xFFFFFF;\nassert rgbEmpty == 0x000000 : \"Empty area not flipped correctly, got \" + Integer.toHexString(rgbEmpty);\n\nSystem.out.println(\"__CHECK__ addFilters \" + Integer.toHexString(rgb));",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_addFilters/ApiTest.java",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ addFilters 123456\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/docs/eval/B2/comprehension.json",
+  "source_sha256": "edf6f845e49a5b57436a68b7845e73ce578cec0a033cf20a196eae38705feb3a",
+  "checkpoint_events": [
+    {
+      "name": "addFilters",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "java.awt.image.BufferedImage testImg = new java.awt.image.BufferedImage(10, 10, java.awt.image.BufferedImage.TYPE_INT_RGB);\nfor (int y = 0; y < 5; y++) {\n    for (int x = 0; x < 5; x++) {\n        testImg.setRGB(x, y, 0xFF123456);\n    }\n}\n\njava.util.List<net.coobird.thumbnailator.filters.ImageFilter> filters = new java.util.ArrayList<>();\nfilters.add(net.coobird.thumbnailator.filters.Flip.HORIZONTAL);\nfilters.add(net.coobird.thumbnailator.filters.Flip.VERTICAL);\n\njava.awt.image.BufferedImage result = net.coobird.thumbnailator.Thumbnails.of(testImg)\n    .scale(1.0)\n    .addFilters(filters)\n    .asBufferedImage();\n\nint rgb = result.getRGB(8, 8) & 0xFFFFFF;\nassert rgb == 0x123456 : \"Block not flipped correctly, got \" + Integer.toHexString(rgb);\n\nint rgbEmpty = result.getRGB(2, 2) & 0xFFFFFF;\nassert rgbEmpty == 0x000000 : \"Empty area not flipped correctly, got \" + Integer.toHexString(rgbEmpty);\n\nSystem.out.println(\"__CHECK__ addFilters \" + Integer.toHexString(rgb));",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_addFilters/ApiTest.java",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ addFilters 123456\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 41.9,
+      "llm_calls": 1,
+      "input_tokens": 1875,
+      "output_tokens": 4548,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1875,
+          "output_tokens": 4548
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 2849,
+      "document_sha256": "a046bb62aef396d87f9ed7431bfd5dea73616abbe8336263c1160a7c41a9e655",
+      "source": "source/src/main/java/net/coobird/thumbnailator/Thumbnails.java:2016",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

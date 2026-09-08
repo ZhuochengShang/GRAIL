@@ -1,0 +1,151 @@
+{
+  "summary": {
+    "repository": "Thumbnailator",
+    "cell": "B2",
+    "api": "Watermark",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 36.8,
+    "retained_checkpoint_events": 2,
+    "retained_attempt_total_s": 637.8,
+    "retained_504_events": 1,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "identity_status": "Final or explicitly migrated evidence",
+    "error": null,
+    "details": "api_details/60825914fe9b4d13ce0b.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 36.8,
+    "llm_calls": 1,
+    "input_tokens": 2303,
+    "output_tokens": 3102,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2303,
+        "output_tokens": 3102
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 4175,
+    "document_sha256": "ed3fea64679faa3070a6cc5dd3e195a87089e6036926236ab12c2cfbf3de52cc",
+    "source": "source/src/main/java/net/coobird/thumbnailator/filters/Watermark.java:76",
+    "source_other_sites": 1,
+    "codebase_frames": null,
+    "name": "Watermark",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "java.awt.image.BufferedImage watermarkImg = new java.awt.image.BufferedImage(5, 5, java.awt.image.BufferedImage.TYPE_INT_ARGB);\njava.awt.Graphics2D g2d = watermarkImg.createGraphics();\ng2d.setColor(java.awt.Color.BLUE);\ng2d.fillRect(0, 0, 5, 5);\ng2d.dispose();\n\nnet.coobird.thumbnailator.filters.Watermark watermark = new net.coobird.thumbnailator.filters.Watermark(\n    net.coobird.thumbnailator.geometry.Positions.BOTTOM_RIGHT, \n    watermarkImg, \n    0.5f, \n    2\n);\n\njava.awt.image.BufferedImage result = watermark.apply(sourceImage);\n\nassert result != null : \"Resulting image should not be null\";\nassert result.getWidth() == sourceImage.getWidth() : \"Width should remain unchanged after applying watermark\";\nassert result.getHeight() == sourceImage.getHeight() : \"Height should remain unchanged after applying watermark\";\n\nSystem.out.println(\"__CHECK__ Watermark \" + result.getWidth() + \"x\" + result.getHeight());",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_Watermark/ApiTest.java",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ Watermark 32x24\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/docs/eval/B2/comprehension.json",
+  "source_sha256": "edf6f845e49a5b57436a68b7845e73ce578cec0a033cf20a196eae38705feb3a",
+  "checkpoint_events": [
+    {
+      "name": "Watermark",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "llm-error",
+            "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}"
+          }
+        ],
+        "error_category": "llm-error",
+        "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+        "code": "",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_Watermark/ApiTest.java",
+        "exit_code": null,
+        "stdout_tail": "",
+        "stderr_tail": ""
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 601.0,
+      "llm_calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "by_model": {},
+      "error_category": "llm-error",
+      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "locus": "",
+      "doc_chars": 4175,
+      "document_sha256": "ed3fea64679faa3070a6cc5dd3e195a87089e6036926236ab12c2cfbf3de52cc",
+      "source": "source/src/main/java/net/coobird/thumbnailator/filters/Watermark.java:76",
+      "source_other_sites": 1,
+      "codebase_frames": null
+    },
+    {
+      "name": "Watermark",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "java.awt.image.BufferedImage watermarkImg = new java.awt.image.BufferedImage(5, 5, java.awt.image.BufferedImage.TYPE_INT_ARGB);\njava.awt.Graphics2D g2d = watermarkImg.createGraphics();\ng2d.setColor(java.awt.Color.BLUE);\ng2d.fillRect(0, 0, 5, 5);\ng2d.dispose();\n\nnet.coobird.thumbnailator.filters.Watermark watermark = new net.coobird.thumbnailator.filters.Watermark(\n    net.coobird.thumbnailator.geometry.Positions.BOTTOM_RIGHT, \n    watermarkImg, \n    0.5f, \n    2\n);\n\njava.awt.image.BufferedImage result = watermark.apply(sourceImage);\n\nassert result != null : \"Resulting image should not be null\";\nassert result.getWidth() == sourceImage.getWidth() : \"Width should remain unchanged after applying watermark\";\nassert result.getHeight() == sourceImage.getHeight() : \"Height should remain unchanged after applying watermark\";\n\nSystem.out.println(\"__CHECK__ Watermark \" + result.getWidth() + \"x\" + result.getHeight());",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_Watermark/ApiTest.java",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ Watermark 32x24\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 36.8,
+      "llm_calls": 1,
+      "input_tokens": 2303,
+      "output_tokens": 3102,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2303,
+          "output_tokens": 3102
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 4175,
+      "document_sha256": "ed3fea64679faa3070a6cc5dd3e195a87089e6036926236ab12c2cfbf3de52cc",
+      "source": "source/src/main/java/net/coobird/thumbnailator/filters/Watermark.java:76",
+      "source_other_sites": 1,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

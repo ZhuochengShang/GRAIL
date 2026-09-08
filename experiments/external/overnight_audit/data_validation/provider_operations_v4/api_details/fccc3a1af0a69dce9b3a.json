@@ -1,0 +1,112 @@
+{
+  "summary": {
+    "repository": "mir_eval",
+    "cell": "B2",
+    "api": "metrics",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 39.2,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 39.2,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "identity_status": "Final or explicitly migrated evidence",
+    "error": null,
+    "details": "api_details/fccc3a1af0a69dce9b3a.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 39.2,
+    "llm_calls": 1,
+    "input_tokens": 2803,
+    "output_tokens": 4646,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2803,
+        "output_tokens": 4646
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 5419,
+    "document_sha256": "1cbd030185236f681dbb8ee9daff80e94ef68ec339006945c8449bba5a79b90c",
+    "source": "source/mir_eval/multipitch.py:348",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "name": "metrics",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "import mir_eval\nimport numpy as np\n\n# Multipitch metrics require ragged arrays (list of 1D numpy arrays)\n# Convert the provided 1D frequency arrays into ragged format\nref_time = np.arange(len(ref_freqs), dtype=float)\nest_time = np.arange(len(est_freqs), dtype=float)\n\nref_ragged = [np.array([f]) if f > 0 else np.array([]) for f in ref_freqs]\nest_ragged = [np.array([f]) if f > 0 else np.array([]) for f in est_freqs]\n\n# Compute the 14-element tuple of multipitch metrics\nmetrics_tuple = mir_eval.multipitch.metrics(ref_time, ref_ragged, est_time, est_ragged)\n\n# Compute self-metrics to establish a strong correctness oracle\nself_metrics = mir_eval.multipitch.metrics(ref_time, ref_ragged, ref_time, ref_ragged)\n\nassert len(metrics_tuple) == 14, f\"Expected 14 metrics, got {len(metrics_tuple)}\"\n\n# When comparing identical data, precision and recall must be 1.0 (if there are any active pitches)\nif any(len(arr) > 0 for arr in ref_ragged):\n    assert self_metrics[0] == 1.0, f\"Expected self-precision 1.0, got {self_metrics[0]}\"\n    assert self_metrics[1] == 1.0, f\"Expected self-recall 1.0, got {self_metrics[1]}\"\n    assert self_metrics[2] == 1.0, f\"Expected self-accuracy 1.0, got {self_metrics[2]}\"\n\nprint(f\"__CHECK__ metrics {len(metrics_tuple)}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_metrics/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ metrics 14\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/comprehension.json",
+  "source_sha256": "c25a74155511d59ffa5583bce3975fae3a254ce3e3bc65948dcfbd8f61d51736",
+  "checkpoint_events": [
+    {
+      "name": "metrics",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import mir_eval\nimport numpy as np\n\n# Multipitch metrics require ragged arrays (list of 1D numpy arrays)\n# Convert the provided 1D frequency arrays into ragged format\nref_time = np.arange(len(ref_freqs), dtype=float)\nest_time = np.arange(len(est_freqs), dtype=float)\n\nref_ragged = [np.array([f]) if f > 0 else np.array([]) for f in ref_freqs]\nest_ragged = [np.array([f]) if f > 0 else np.array([]) for f in est_freqs]\n\n# Compute the 14-element tuple of multipitch metrics\nmetrics_tuple = mir_eval.multipitch.metrics(ref_time, ref_ragged, est_time, est_ragged)\n\n# Compute self-metrics to establish a strong correctness oracle\nself_metrics = mir_eval.multipitch.metrics(ref_time, ref_ragged, ref_time, ref_ragged)\n\nassert len(metrics_tuple) == 14, f\"Expected 14 metrics, got {len(metrics_tuple)}\"\n\n# When comparing identical data, precision and recall must be 1.0 (if there are any active pitches)\nif any(len(arr) > 0 for arr in ref_ragged):\n    assert self_metrics[0] == 1.0, f\"Expected self-precision 1.0, got {self_metrics[0]}\"\n    assert self_metrics[1] == 1.0, f\"Expected self-recall 1.0, got {self_metrics[1]}\"\n    assert self_metrics[2] == 1.0, f\"Expected self-accuracy 1.0, got {self_metrics[2]}\"\n\nprint(f\"__CHECK__ metrics {len(metrics_tuple)}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_metrics/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ metrics 14\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 39.2,
+      "llm_calls": 1,
+      "input_tokens": 2803,
+      "output_tokens": 4646,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2803,
+          "output_tokens": 4646
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 5419,
+      "document_sha256": "1cbd030185236f681dbb8ee9daff80e94ef68ec339006945c8449bba5a79b90c",
+      "source": "source/mir_eval/multipitch.py:348",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

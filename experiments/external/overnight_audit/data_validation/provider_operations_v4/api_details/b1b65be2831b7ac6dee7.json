@@ -1,0 +1,112 @@
+{
+  "summary": {
+    "repository": "mir_eval",
+    "cell": "B2",
+    "api": "thirds",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 15.6,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 15.6,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "identity_status": "Final or explicitly migrated evidence",
+    "error": null,
+    "details": "api_details/b1b65be2831b7ac6dee7.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 15.6,
+    "llm_calls": 1,
+    "input_tokens": 2359,
+    "output_tokens": 1698,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2359,
+        "output_tokens": 1698
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 3928,
+    "document_sha256": "b2a4c645642de5efe461da0c576c9862a27ecd94aeb036a0c06fb7e731e89798",
+    "source": "source/mir_eval/chord.py:715",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "name": "thirds",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "import mir_eval\nimport numpy as np\n\n# Merge intervals to ensure reference and estimated labels are perfectly aligned in time\nintervals, ref_labels_merged, est_labels_merged = mir_eval.util.merge_labeled_intervals(\n    ref_intervals, ref_labels, est_intervals, est_labels\n)\n\n# Compute the root and third relationship metric\ncomparisons = mir_eval.chord.thirds(ref_labels_merged, est_labels_merged)\n\n# Verify the output properties as per the documentation\nassert isinstance(comparisons, np.ndarray), \"Output must be a NumPy array\"\nassert comparisons.shape == (len(ref_labels_merged),), \"Output shape must match the number of aligned labels\"\nassert comparisons.dtype == float, \"Output dtype must be float\"\nassert np.all(comparisons <= 1.0), \"Comparison scores must not exceed 1.0\"\n\nprint(f\"__CHECK__ thirds {comparisons.size}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_thirds/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ thirds 7\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/comprehension.json",
+  "source_sha256": "c25a74155511d59ffa5583bce3975fae3a254ce3e3bc65948dcfbd8f61d51736",
+  "checkpoint_events": [
+    {
+      "name": "thirds",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import mir_eval\nimport numpy as np\n\n# Merge intervals to ensure reference and estimated labels are perfectly aligned in time\nintervals, ref_labels_merged, est_labels_merged = mir_eval.util.merge_labeled_intervals(\n    ref_intervals, ref_labels, est_intervals, est_labels\n)\n\n# Compute the root and third relationship metric\ncomparisons = mir_eval.chord.thirds(ref_labels_merged, est_labels_merged)\n\n# Verify the output properties as per the documentation\nassert isinstance(comparisons, np.ndarray), \"Output must be a NumPy array\"\nassert comparisons.shape == (len(ref_labels_merged),), \"Output shape must match the number of aligned labels\"\nassert comparisons.dtype == float, \"Output dtype must be float\"\nassert np.all(comparisons <= 1.0), \"Comparison scores must not exceed 1.0\"\n\nprint(f\"__CHECK__ thirds {comparisons.size}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_thirds/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ thirds 7\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 15.6,
+      "llm_calls": 1,
+      "input_tokens": 2359,
+      "output_tokens": 1698,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2359,
+          "output_tokens": 1698
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3928,
+      "document_sha256": "b2a4c645642de5efe461da0c576c9862a27ecd94aeb036a0c06fb7e731e89798",
+      "source": "source/mir_eval/chord.py:715",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

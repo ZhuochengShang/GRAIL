@@ -1,0 +1,113 @@
+{
+  "summary": {
+    "repository": "Thumbnailator",
+    "cell": "B2",
+    "api": "addFilter",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 38.0,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 38.0,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "identity_status": "Final or explicitly migrated evidence",
+    "error": null,
+    "details": "api_details/b7e3146271f6b49b254c.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 38.0,
+    "llm_calls": 1,
+    "input_tokens": 2063,
+    "output_tokens": 4177,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2063,
+        "output_tokens": 4177
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 3829,
+    "document_sha256": "ae3238dedb738051365368304a5b477b4a3354245ecbf6ada98ad5bdde1ea933",
+    "source": "source/src/main/java/net/coobird/thumbnailator/Thumbnails.java:1993",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "evidence_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced",
+    "name": "addFilter",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "net.coobird.thumbnailator.filters.ImageFilter magentaFilter = new net.coobird.thumbnailator.filters.ImageFilter() {\n    @Override\n    public java.awt.image.BufferedImage apply(java.awt.image.BufferedImage img) {\n        java.awt.image.BufferedImage out = new java.awt.image.BufferedImage(\n            img.getWidth(), img.getHeight(), java.awt.image.BufferedImage.TYPE_INT_ARGB);\n        java.awt.Graphics2D g = out.createGraphics();\n        g.setColor(java.awt.Color.MAGENTA);\n        g.fillRect(0, 0, img.getWidth(), img.getHeight());\n        g.dispose();\n        return out;\n    }\n};\n\njava.awt.image.BufferedImage result = net.coobird.thumbnailator.Thumbnails.of(sourceImage)\n    .size(32, 32)\n    .addFilter(magentaFilter)\n    .asBufferedImage();\n\nint centerX = result.getWidth() / 2;\nint centerY = result.getHeight() / 2;\nint centerRgb = result.getRGB(centerX, centerY);\nint expectedRgb = java.awt.Color.MAGENTA.getRGB();\n\nassert centerRgb == expectedRgb : \"Filter was not applied correctly, expected MAGENTA but got \" + Integer.toHexString(centerRgb);\nSystem.out.println(\"__CHECK__ addFilter \" + Integer.toHexString(centerRgb));",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_addFilter/ApiTest.java",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ addFilter ffff00ff\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/docs/eval/B2/comprehension.json",
+  "source_sha256": "edf6f845e49a5b57436a68b7845e73ce578cec0a033cf20a196eae38705feb3a",
+  "checkpoint_events": [
+    {
+      "name": "addFilter",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "net.coobird.thumbnailator.filters.ImageFilter magentaFilter = new net.coobird.thumbnailator.filters.ImageFilter() {\n    @Override\n    public java.awt.image.BufferedImage apply(java.awt.image.BufferedImage img) {\n        java.awt.image.BufferedImage out = new java.awt.image.BufferedImage(\n            img.getWidth(), img.getHeight(), java.awt.image.BufferedImage.TYPE_INT_ARGB);\n        java.awt.Graphics2D g = out.createGraphics();\n        g.setColor(java.awt.Color.MAGENTA);\n        g.fillRect(0, 0, img.getWidth(), img.getHeight());\n        g.dispose();\n        return out;\n    }\n};\n\njava.awt.image.BufferedImage result = net.coobird.thumbnailator.Thumbnails.of(sourceImage)\n    .size(32, 32)\n    .addFilter(magentaFilter)\n    .asBufferedImage();\n\nint centerX = result.getWidth() / 2;\nint centerY = result.getHeight() / 2;\nint centerRgb = result.getRGB(centerX, centerY);\nint expectedRgb = java.awt.Color.MAGENTA.getRGB();\n\nassert centerRgb == expectedRgb : \"Filter was not applied correctly, expected MAGENTA but got \" + Integer.toHexString(centerRgb);\nSystem.out.println(\"__CHECK__ addFilter \" + Integer.toHexString(centerRgb));",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_addFilter/ApiTest.java",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ addFilter ffff00ff\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 38.0,
+      "llm_calls": 1,
+      "input_tokens": 2063,
+      "output_tokens": 4177,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2063,
+          "output_tokens": 4177
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3829,
+      "document_sha256": "ae3238dedb738051365368304a5b477b4a3354245ecbf6ada98ad5bdde1ea933",
+      "source": "source/src/main/java/net/coobird/thumbnailator/Thumbnails.java:1993",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

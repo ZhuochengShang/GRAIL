@@ -1,0 +1,121 @@
+{
+  "summary": {
+    "repository": "tslearn",
+    "cell": "B2",
+    "api": "LocalSquaredDistanceLayer",
+    "outcome": "Setup/import blocked",
+    "test_execution": "Setup/import failed; target execution not established",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 25.7,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 25.7,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "identity_status": "Provisional last-observed fingerprint group; final identity unverified",
+    "error": "missing module/import: No module named 'tensorflow'",
+    "details": "api_details/ff4eeb3fec1717ffea61.json"
+  },
+  "native_row": {
+    "name": "LocalSquaredDistanceLayer",
+    "doc_source": "aideal",
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+    "execution_evidence": {
+      "status": "fail",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "fail",
+          "category": "infra",
+          "error": "missing module/import: No module named 'tensorflow'"
+        }
+      ],
+      "error_category": "infra",
+      "error": "missing module/import: No module named 'tensorflow'",
+      "code": "import numpy as np\nimport tensorflow as tf\nfrom tslearn.shapelets.shapelets import LocalSquaredDistanceLayer\n\n# Instantiate the layer without arguments\nlayer = LocalSquaredDistanceLayer()\n\n# Define dimensions\nbatch_size = 2\nn_patches = 4  # corresponds to steps - shapelet_size\nshapelet_length = 3\nfeatures = 1\nn_shapelets = 5\n\n# Create deterministic input tensors\n# patches shape: (batch_size, n_patches, shapelet_length, features)\npatches = tf.ones((batch_size, n_patches, shapelet_length, features), dtype=tf.float32)\n# shapelets shape: (n_shapelets, shapelet_length, features)\nshapelets = tf.ones((n_shapelets, shapelet_length, features), dtype=tf.float32) * 2.0\n\n# The layer expects a list of two inputs: [patches, shapelets]\nout = layer([patches, shapelets])\nout_np = out.numpy()\n\n# Verify the output shape matches the documented contract\nexpected_shape = (batch_size, n_patches, n_shapelets)\nassert out_np.shape == expected_shape, f\"Expected shape {expected_shape}, got {out_np.shape}\"\n\n# Veri",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_LocalSquaredDistanceLayer/api_test.py",
+      "exit_code": 1,
+      "stdout_tail": "",
+      "stderr_tail": "__RUN_ERR__ ModuleNotFoundError: No module named 'tensorflow'\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_LocalSquaredDistanceLayer/api_test.py\", line 76, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_LocalSquaredDistanceLayer/api_test.py\", line 71, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_LocalSquaredDistanceLayer/api_test.py\", line 35, in api_test\n    import tensorflow as tf\nModuleNotFoundError: No module named 'tensorflow'\n"
+    },
+    "status": "fail",
+    "attempts": 1,
+    "pass_round": null,
+    "wall_s": 25.7,
+    "llm_calls": 1,
+    "input_tokens": 1899,
+    "output_tokens": 3301,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 1899,
+        "output_tokens": 3301
+      }
+    },
+    "error_category": "infra",
+    "error": "missing module/import: No module named 'tensorflow'",
+    "locus": "",
+    "doc_chars": 2309,
+    "document_sha256": "cb97cbfe0a862efbfb9232e8251ee4ce0f7b143e2876bc6d036b57d0d36ea2c7",
+    "source": "tslearn/tslearn/shapelets/shapelets.py:167",
+    "source_other_sites": 0,
+    "codebase_frames": null
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/comprehension_progress.jsonl",
+  "source_sha256": "0a09dcebc55c1b772f6889a52003ba9fcffd51ad4e99ecb50387e688fe973703",
+  "checkpoint_events": [
+    {
+      "name": "LocalSquaredDistanceLayer",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "infra",
+            "error": "missing module/import: No module named 'tensorflow'"
+          }
+        ],
+        "error_category": "infra",
+        "error": "missing module/import: No module named 'tensorflow'",
+        "code": "import numpy as np\nimport tensorflow as tf\nfrom tslearn.shapelets.shapelets import LocalSquaredDistanceLayer\n\n# Instantiate the layer without arguments\nlayer = LocalSquaredDistanceLayer()\n\n# Define dimensions\nbatch_size = 2\nn_patches = 4  # corresponds to steps - shapelet_size\nshapelet_length = 3\nfeatures = 1\nn_shapelets = 5\n\n# Create deterministic input tensors\n# patches shape: (batch_size, n_patches, shapelet_length, features)\npatches = tf.ones((batch_size, n_patches, shapelet_length, features), dtype=tf.float32)\n# shapelets shape: (n_shapelets, shapelet_length, features)\nshapelets = tf.ones((n_shapelets, shapelet_length, features), dtype=tf.float32) * 2.0\n\n# The layer expects a list of two inputs: [patches, shapelets]\nout = layer([patches, shapelets])\nout_np = out.numpy()\n\n# Verify the output shape matches the documented contract\nexpected_shape = (batch_size, n_patches, n_shapelets)\nassert out_np.shape == expected_shape, f\"Expected shape {expected_shape}, got {out_np.shape}\"\n\n# Veri",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_LocalSquaredDistanceLayer/api_test.py",
+        "exit_code": 1,
+        "stdout_tail": "",
+        "stderr_tail": "__RUN_ERR__ ModuleNotFoundError: No module named 'tensorflow'\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_LocalSquaredDistanceLayer/api_test.py\", line 76, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_LocalSquaredDistanceLayer/api_test.py\", line 71, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_LocalSquaredDistanceLayer/api_test.py\", line 35, in api_test\n    import tensorflow as tf\nModuleNotFoundError: No module named 'tensorflow'\n"
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 25.7,
+      "llm_calls": 1,
+      "input_tokens": 1899,
+      "output_tokens": 3301,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1899,
+          "output_tokens": 3301
+        }
+      },
+      "error_category": "infra",
+      "error": "missing module/import: No module named 'tensorflow'",
+      "locus": "",
+      "doc_chars": 2309,
+      "document_sha256": "cb97cbfe0a862efbfb9232e8251ee4ce0f7b143e2876bc6d036b57d0d36ea2c7",
+      "source": "tslearn/tslearn/shapelets/shapelets.py:167",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "diagram_type": "lifecycle",
+  "meta": {"title": "AIDEAL v4 · Durable document repair", "locale": "en", "quality_profile": "showcase", "viewBox": [1030, 630]},
+  "lanes": [{"id": "main", "label": "One bounded document round"}, {"id": "waiting", "label": "Recoverable interruption"}, {"id": "terminal", "label": "Evidence reconciliation"}],
+  "states": [
+    {"id": "lock", "type": "start", "label": "Own README", "sublabel": "lock + identity", "lane": "main", "col": 0, "tag": "automatic"},
+    {"id": "diagnose", "type": "active", "label": "Diagnose", "sublabel": "source and errors", "lane": "main", "col": 1, "tag": "LLM"},
+    {"id": "rewrite", "type": "active", "label": "Rewrite", "sublabel": "save phase result", "lane": "main", "col": 2, "tag": "LLM"},
+    {"id": "validate", "type": "decision", "label": "Validate", "sublabel": "fresh zero-fix test", "lane": "main", "col": 3, "tag": "LLM + code"},
+    {"id": "settle", "type": "success", "label": "Record outcome", "sublabel": "pass or bounded stop", "lane": "main", "col": 4, "tag": "automatic"},
+    {"id": "retry", "type": "waiting", "label": "Provider retry", "sublabel": "reuse saved rewrite", "lane": "waiting", "col": 1, "tag": "same round"},
+    {"id": "uncertain", "type": "failure", "label": "Uncertain phase", "sublabel": "started, no receipt", "lane": "terminal", "col": 0, "tag": "blocked"}
+  ],
+  "transitions": [
+    {"from": "validate", "to": "retry", "variant": "security"},
+    {"from": "retry", "to": "validate", "variant": "emphasis"},
+    {"from": "rewrite", "to": "uncertain", "variant": "security"}
+  ],
+  "cards": [
+    {"dot": "cyan", "title": "Implemented on isolated v4 branch", "items": ["docfix.doc_fix_run: single README owner", "RepairJournal.phase: durable phase receipts", "doc_repair.run: original text and round budget survive resume"]},
+    {"dot": "amber", "title": "Review and operational boundaries", "items": ["Uncertain interrupted calls require evidence reconciliation", "The five-round budget spans retries and controller restarts", "Live v3 experiment workers have not been migrated"]}
+  ]
+}

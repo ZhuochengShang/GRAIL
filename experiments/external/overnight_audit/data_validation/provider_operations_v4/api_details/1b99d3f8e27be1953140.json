@@ -1,0 +1,173 @@
+{
+  "summary": {
+    "repository": "tslearn",
+    "cell": "A1",
+    "api": "to_numpy",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 25.4,
+    "retained_checkpoint_events": 3,
+    "retained_attempt_total_s": 1225.4,
+    "retained_504_events": 2,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "identity_status": "Final or explicitly migrated evidence",
+    "error": null,
+    "details": "api_details/1b99d3f8e27be1953140.json"
+  },
+  "native_row": {
+    "name": "to_numpy",
+    "doc_source": "original",
+    "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "from tslearn.backend import instantiate_backend\nimport numpy as np\n\n# Instantiate the backend for the given input type (NumPy ndarray)\nbe = instantiate_backend(X)\n\n# Call to_numpy to ensure the tensor/array is converted to a NumPy ndarray\nres = be.to_numpy(X)\n\n# Verify the result is a NumPy array with the correct shape and content\nassert isinstance(res, np.ndarray), \"Result must be a NumPy ndarray\"\nassert res.shape == X.shape, f\"Expected shape {X.shape}, got {res.shape}\"\nassert np.array_equal(res, X), \"Content mismatch after to_numpy conversion\"\n\nprint(f\"__CHECK__ to_numpy {res.shape}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_to_numpy/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ to_numpy (8, 40, 1)\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 25.4,
+    "llm_calls": 1,
+    "input_tokens": 1323,
+    "output_tokens": 2399,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 1323,
+        "output_tokens": 2399
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 90,
+    "document_sha256": "f371d7060492318ecdefc2435f1efd5165c618cdbddbce7ebe9eebc6b2ee1439",
+    "source": "tslearn/tslearn/backend/numpy_backend.py:122",
+    "source_other_sites": 1,
+    "codebase_frames": null
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/comprehension_progress.jsonl",
+  "source_sha256": "95d519cbe3290172a05050399c59ff868985ac1ce077daa930678198016bf26b",
+  "checkpoint_events": [
+    {
+      "name": "to_numpy",
+      "doc_source": "original",
+      "experiment_fingerprint": "964a2ec0df73c3b53c3966c9213dedb1a12bf7e39ad1b8d7d1ddd561ba53212b",
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 599.8,
+      "llm_calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "by_model": {},
+      "error_category": "llm-error",
+      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "locus": "",
+      "doc_chars": 90,
+      "document_sha256": "f371d7060492318ecdefc2435f1efd5165c618cdbddbce7ebe9eebc6b2ee1439",
+      "source": "tslearn/tslearn/backend/numpy_backend.py:122",
+      "source_other_sites": 1,
+      "codebase_frames": null
+    },
+    {
+      "name": "to_numpy",
+      "doc_source": "original",
+      "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "llm-error",
+            "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}"
+          }
+        ],
+        "error_category": "llm-error",
+        "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+        "code": "",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_to_numpy/api_test.py",
+        "exit_code": null,
+        "stdout_tail": "",
+        "stderr_tail": ""
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 600.2,
+      "llm_calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "by_model": {},
+      "error_category": "llm-error",
+      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "locus": "",
+      "doc_chars": 90,
+      "document_sha256": "f371d7060492318ecdefc2435f1efd5165c618cdbddbce7ebe9eebc6b2ee1439",
+      "source": "tslearn/tslearn/backend/numpy_backend.py:122",
+      "source_other_sites": 1,
+      "codebase_frames": null
+    },
+    {
+      "name": "to_numpy",
+      "doc_source": "original",
+      "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "from tslearn.backend import instantiate_backend\nimport numpy as np\n\n# Instantiate the backend for the given input type (NumPy ndarray)\nbe = instantiate_backend(X)\n\n# Call to_numpy to ensure the tensor/array is converted to a NumPy ndarray\nres = be.to_numpy(X)\n\n# Verify the result is a NumPy array with the correct shape and content\nassert isinstance(res, np.ndarray), \"Result must be a NumPy ndarray\"\nassert res.shape == X.shape, f\"Expected shape {X.shape}, got {res.shape}\"\nassert np.array_equal(res, X), \"Content mismatch after to_numpy conversion\"\n\nprint(f\"__CHECK__ to_numpy {res.shape}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_to_numpy/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ to_numpy (8, 40, 1)\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 25.4,
+      "llm_calls": 1,
+      "input_tokens": 1323,
+      "output_tokens": 2399,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1323,
+          "output_tokens": 2399
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 90,
+      "document_sha256": "f371d7060492318ecdefc2435f1efd5165c618cdbddbce7ebe9eebc6b2ee1439",
+      "source": "tslearn/tslearn/backend/numpy_backend.py:122",
+      "source_other_sites": 1,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

@@ -1,0 +1,98 @@
+{
+  "summary": {
+    "repository": "Thumbnailator",
+    "cell": "A2",
+    "api": "createThumbnailsAsCollection",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 15.3,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 15.3,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "identity_status": "Final or explicitly migrated evidence",
+    "error": null,
+    "details": "api_details/b22373ce77664d6c986e.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 15.3,
+    "llm_calls": 1,
+    "input_tokens": 2325,
+    "output_tokens": 1806,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2325,
+        "output_tokens": 1806
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 4597,
+    "document_sha256": "f0ab358aba5d3bf1eefaf72ca1dc8ab57007f8661b66eb8b4c47456d1c498989",
+    "source": "source/src/main/java/net/coobird/thumbnailator/Thumbnailator.java:400",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "name": "createThumbnailsAsCollection",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "java.io.File sourceFile = new java.io.File(grid_png);\njava.io.File tempInput = new java.io.File(outputPath.toFile(), \"temp_input.png\");\njava.nio.file.Files.copy(sourceFile.toPath(), tempInput.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);\n\njava.util.List<java.io.File> files = java.util.Collections.singletonList(tempInput);\n\njava.util.Collection<java.io.File> thumbnails = net.coobird.thumbnailator.Thumbnailator.createThumbnailsAsCollection(\n    files,\n    net.coobird.thumbnailator.name.Rename.PREFIX_DOT_THUMBNAIL,\n    50,\n    50\n);\n\nassert thumbnails != null : \"Thumbnails collection should not be null\";\nassert thumbnails.size() == 1 : \"Should have exactly 1 thumbnail\";\n\njava.io.File thumbFile = thumbnails.iterator().next();\nassert thumbFile.exists() : \"Thumbnail file should exist\";\nassert thumbFile.getName().equals(\"thumbnail.temp_input.png\") : \"Thumbnail file name should match Rename strategy\";\n\njava.awt.image.BufferedImage thumbImage = javax.imageio.ImageIO.read(thumbFile);\nassert thumbImage.getWidth() <= 50 && thumbImage.getHeight() <= 50 : \"Thumbnail dimensions should be within 50x50\";\n\nSystem.out.println(\"__CHECK__ createThumbnailsAsCollection \" + thumbnails.size() + \",\" + thumbFile.getName());",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/.aideal_exec/A2/run_createThumbnailsAsCollection/ApiTest.java",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ createThumbnailsAsCollection 1,thumbnail.temp_input.png\n__DONE__\n",
+      "stderr_tail": "Note: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/.aideal_exec/A2/run_createThumbnailsAsCollection/ApiTest.java uses or overrides a deprecated API.\nNote: Recompile with -Xlint:deprecation for details.\n"
+    },
+    "experiment_fingerprint": "d0a4b20f3e5d3ea0caf7b1501a9bf2fb4d4f11ac7d844517d7b5d67874427464"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/docs/eval/A2/comprehension.json",
+  "source_sha256": "b6aa0c714a7c8a076f415ed0dae0e6b3126ad774bc94aab394ec1036974003d7",
+  "checkpoint_events": [
+    {
+      "name": "createThumbnailsAsCollection",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "d0a4b20f3e5d3ea0caf7b1501a9bf2fb4d4f11ac7d844517d7b5d67874427464",
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 15.3,
+      "llm_calls": 1,
+      "input_tokens": 2325,
+      "output_tokens": 1806,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2325,
+          "output_tokens": 1806
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 4597,
+      "document_sha256": "f0ab358aba5d3bf1eefaf72ca1dc8ab57007f8661b66eb8b4c47456d1c498989",
+      "source": "source/src/main/java/net/coobird/thumbnailator/Thumbnailator.java:400",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

@@ -1,0 +1,113 @@
+{
+  "summary": {
+    "repository": "Thumbnailator",
+    "cell": "B2",
+    "api": "StreamThumbnailTask",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 41.3,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 41.3,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "identity_status": "Final or explicitly migrated evidence",
+    "error": null,
+    "details": "api_details/f8c750b7efae31613f41.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 41.3,
+    "llm_calls": 1,
+    "input_tokens": 2141,
+    "output_tokens": 4881,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2141,
+        "output_tokens": 4881
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 4238,
+    "document_sha256": "0980c39deed7fea24078ac952fe81c27166d9ef090b8535f78b0611c76d98024",
+    "source": "source/src/main/java/net/coobird/thumbnailator/tasks/StreamThumbnailTask.java:66",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "evidence_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced",
+    "name": "StreamThumbnailTask",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();\njava.awt.image.BufferedImage img;\n\ntry (java.io.InputStream is = new java.io.FileInputStream(grid_png);\n     java.io.OutputStream os = baos) {\n    \n    net.coobird.thumbnailator.ThumbnailParameter param = new net.coobird.thumbnailator.ThumbnailParameter(\n            new java.awt.Dimension(50, 50),\n            null,\n            true,\n            \"png\",\n            net.coobird.thumbnailator.ThumbnailParameter.DEFAULT_FORMAT_TYPE,\n            net.coobird.thumbnailator.ThumbnailParameter.DEFAULT_QUALITY,\n            java.awt.image.BufferedImage.TYPE_INT_ARGB,\n            null,\n            net.coobird.thumbnailator.resizers.Resizers.PROGRESSIVE,\n            true,\n            true\n    );\n    \n    net.coobird.thumbnailator.tasks.StreamThumbnailTask task = new net.coobird.thumbnailator.tasks.StreamThumbnailTask(param, is, os);\n    \n    // The task reads the source image from the InputStream\n    img = task.read();\n    assert img != null : \"Task should read a valid image from the InputStream\";\n    \n    // The task writes the provided image to the OutputStream using the configured parameters\n    task.write(img);\n}\n\nbyte[] outBytes = baos.toByteArray();\nassert outBytes.length > 0 : \"Task should have written data to the output stream\";\n\ntry (java.io.InputStream in = new java.io.ByteArrayInputStream(outBytes)) {\n    java.awt.image.BufferedImage outImg = javax.imageio.ImageIO.read(in);\n    assert outImg != null : \"Output data should be a valid readable image\";\n    \n    // Since we wrote the original image back without resizing it through the Thumbnailator pipeline,\n    // the dimensions should match the original image exactly.\n    assert outImg.getWidth() == img.getWidth() : \"Output width should match the written image width\";\n    assert outImg.getHeight() == img.getHeight() : \"Output height should match the written image height\";\n    \n    System.out.println(\"__CHECK__ StreamThumbnailTask \" + outBytes.length + \" bytes, \" + outImg.getWidth() + \"x\" + outImg.getHeight());\n}",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_StreamThumbnailTask/ApiTest.java",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ StreamThumbnailTask 284 bytes, 100x100\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/docs/eval/B2/comprehension.json",
+  "source_sha256": "edf6f845e49a5b57436a68b7845e73ce578cec0a033cf20a196eae38705feb3a",
+  "checkpoint_events": [
+    {
+      "name": "StreamThumbnailTask",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();\njava.awt.image.BufferedImage img;\n\ntry (java.io.InputStream is = new java.io.FileInputStream(grid_png);\n     java.io.OutputStream os = baos) {\n    \n    net.coobird.thumbnailator.ThumbnailParameter param = new net.coobird.thumbnailator.ThumbnailParameter(\n            new java.awt.Dimension(50, 50),\n            null,\n            true,\n            \"png\",\n            net.coobird.thumbnailator.ThumbnailParameter.DEFAULT_FORMAT_TYPE,\n            net.coobird.thumbnailator.ThumbnailParameter.DEFAULT_QUALITY,\n            java.awt.image.BufferedImage.TYPE_INT_ARGB,\n            null,\n            net.coobird.thumbnailator.resizers.Resizers.PROGRESSIVE,\n            true,\n            true\n    );\n    \n    net.coobird.thumbnailator.tasks.StreamThumbnailTask task = new net.coobird.thumbnailator.tasks.StreamThumbnailTask(param, is, os);\n    \n    // The task reads the source image from the InputStream\n    img = task.read();\n    assert img != null : \"Task should read a valid image from the InputStream\";\n    \n    // The task writes the provided image to the OutputStream using the configured parameters\n    task.write(img);\n}\n\nbyte[] outBytes = baos.toByteArray();\nassert outBytes.length > 0 : \"Task should have written data to the output stream\";\n\ntry (java.io.InputStream in = new java.io.ByteArrayInputStream(outBytes)) {\n    java.awt.image.BufferedImage outImg = javax.imageio.ImageIO.read(in);\n    assert outImg != null : \"Output data should be a valid readable image\";\n    \n    // Since we wrote the original image back without resizing it through the Thumbnailator pipeline,\n    // the dimensions should match the original image exactly.\n    assert outImg.getWidth() == img.getWidth() : \"Output width should match the written image width\";\n    assert outImg.getHeight() == img.getHeight() : \"Output height should match the written image height\";\n    \n    System.out.println(\"__CHECK__ StreamThumbnailTask \" + outBytes.length + \" bytes, \" + outImg.getWidth() + \"x\" + outImg.getHeight());\n}",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_StreamThumbnailTask/ApiTest.java",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ StreamThumbnailTask 284 bytes, 100x100\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 41.3,
+      "llm_calls": 1,
+      "input_tokens": 2141,
+      "output_tokens": 4881,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2141,
+          "output_tokens": 4881
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 4238,
+      "document_sha256": "0980c39deed7fea24078ac952fe81c27166d9ef090b8535f78b0611c76d98024",
+      "source": "source/src/main/java/net/coobird/thumbnailator/tasks/StreamThumbnailTask.java:66",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

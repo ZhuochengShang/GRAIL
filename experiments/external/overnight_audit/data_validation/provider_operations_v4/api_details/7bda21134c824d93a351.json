@@ -1,0 +1,112 @@
+{
+  "summary": {
+    "repository": "mir_eval",
+    "cell": "B2",
+    "api": "underseg",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 19.7,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 19.7,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "identity_status": "Final or explicitly migrated evidence",
+    "error": null,
+    "details": "api_details/7bda21134c824d93a351.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 19.7,
+    "llm_calls": 1,
+    "input_tokens": 2252,
+    "output_tokens": 1544,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2252,
+        "output_tokens": 1544
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 3295,
+    "document_sha256": "8ae62220b4923668d5f0efa71e4bfeb180fdd6f358f3e840817709d9821010ad",
+    "source": "source/mir_eval/chord.py:1435",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "name": "underseg",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "import mir_eval\nimport numpy as np\n\n# Compute the undersegmentation score using the provided interval arrays\nscore = mir_eval.chord.underseg(ref_intervals, est_intervals)\n\n# A perfect match should have no undersegmentation, yielding a score of 1.0\nperfect_score = mir_eval.chord.underseg(ref_intervals, ref_intervals)\n\nassert isinstance(score, float), \"Score must be a float\"\nassert 0.0 <= score <= 1.0, f\"Score {score} is out of bounds [0.0, 1.0]\"\nassert np.isclose(perfect_score, 1.0), f\"Expected perfect score to be 1.0, got {perfect_score}\"\n\nprint(f\"__CHECK__ underseg {score:.4f}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_underseg/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ underseg 0.9700\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/comprehension.json",
+  "source_sha256": "c25a74155511d59ffa5583bce3975fae3a254ce3e3bc65948dcfbd8f61d51736",
+  "checkpoint_events": [
+    {
+      "name": "underseg",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import mir_eval\nimport numpy as np\n\n# Compute the undersegmentation score using the provided interval arrays\nscore = mir_eval.chord.underseg(ref_intervals, est_intervals)\n\n# A perfect match should have no undersegmentation, yielding a score of 1.0\nperfect_score = mir_eval.chord.underseg(ref_intervals, ref_intervals)\n\nassert isinstance(score, float), \"Score must be a float\"\nassert 0.0 <= score <= 1.0, f\"Score {score} is out of bounds [0.0, 1.0]\"\nassert np.isclose(perfect_score, 1.0), f\"Expected perfect score to be 1.0, got {perfect_score}\"\n\nprint(f\"__CHECK__ underseg {score:.4f}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_underseg/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ underseg 0.9700\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 19.7,
+      "llm_calls": 1,
+      "input_tokens": 2252,
+      "output_tokens": 1544,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2252,
+          "output_tokens": 1544
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3295,
+      "document_sha256": "8ae62220b4923668d5f0efa71e4bfeb180fdd6f358f3e840817709d9821010ad",
+      "source": "source/mir_eval/chord.py:1435",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

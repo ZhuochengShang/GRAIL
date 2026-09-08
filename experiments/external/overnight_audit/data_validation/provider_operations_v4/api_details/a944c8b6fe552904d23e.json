@@ -1,0 +1,113 @@
+{
+  "summary": {
+    "repository": "tslearn",
+    "cell": "B2",
+    "api": "inv_transform_sax",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 15.0,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 15.0,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "identity_status": "Provisional last-observed fingerprint group; final identity unverified",
+    "error": null,
+    "details": "api_details/a944c8b6fe552904d23e.json"
+  },
+  "native_row": {
+    "name": "inv_transform_sax",
+    "doc_source": "aideal",
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "import numpy as np\nfrom tslearn.metrics.cysax import inv_transform_sax\n\ndataset_sax = np.array([[[0], [1], [2]]], dtype=np.int64)\nbreakpoints_middle = np.array([-0.5, 0.0, 0.5], dtype=np.float64)\noriginal_size = 6\n\ndataset_out = inv_transform_sax(dataset_sax, breakpoints_middle, original_size)\n\nassert dataset_out.shape == (1, 6, 1), f\"Expected shape (1, 6, 1), got {dataset_out.shape}\"\nassert np.allclose(dataset_out[0, :, 0], [-0.5, -0.5, 0.0, 0.0, 0.5, 0.5]), \"Reconstructed values do not match expected bin centers\"\n\nprint(f\"__CHECK__ inv_transform_sax {dataset_out.shape}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_inv_transform_sax/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ inv_transform_sax (1, 6, 1)\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 15.0,
+    "llm_calls": 1,
+    "input_tokens": 2571,
+    "output_tokens": 1096,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2571,
+        "output_tokens": 1096
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 4121,
+    "document_sha256": "123eb23dce34921d4ad7f85fc0ddadb6a07e1764058d2e9611194cc1aa7cb861",
+    "source": "tslearn/tslearn/metrics/cysax.py:78",
+    "source_other_sites": 0,
+    "codebase_frames": null
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/comprehension_progress.jsonl",
+  "source_sha256": "0a09dcebc55c1b772f6889a52003ba9fcffd51ad4e99ecb50387e688fe973703",
+  "checkpoint_events": [
+    {
+      "name": "inv_transform_sax",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import numpy as np\nfrom tslearn.metrics.cysax import inv_transform_sax\n\ndataset_sax = np.array([[[0], [1], [2]]], dtype=np.int64)\nbreakpoints_middle = np.array([-0.5, 0.0, 0.5], dtype=np.float64)\noriginal_size = 6\n\ndataset_out = inv_transform_sax(dataset_sax, breakpoints_middle, original_size)\n\nassert dataset_out.shape == (1, 6, 1), f\"Expected shape (1, 6, 1), got {dataset_out.shape}\"\nassert np.allclose(dataset_out[0, :, 0], [-0.5, -0.5, 0.0, 0.0, 0.5, 0.5]), \"Reconstructed values do not match expected bin centers\"\n\nprint(f\"__CHECK__ inv_transform_sax {dataset_out.shape}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_inv_transform_sax/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ inv_transform_sax (1, 6, 1)\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 15.0,
+      "llm_calls": 1,
+      "input_tokens": 2571,
+      "output_tokens": 1096,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2571,
+          "output_tokens": 1096
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 4121,
+      "document_sha256": "123eb23dce34921d4ad7f85fc0ddadb6a07e1764058d2e9611194cc1aa7cb861",
+      "source": "tslearn/tslearn/metrics/cysax.py:78",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

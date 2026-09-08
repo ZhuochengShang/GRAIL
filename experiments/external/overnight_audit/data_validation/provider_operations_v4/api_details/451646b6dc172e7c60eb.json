@@ -1,0 +1,113 @@
+{
+  "summary": {
+    "repository": "Thumbnailator",
+    "cell": "B2",
+    "api": "createThumbnails",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 22.4,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 22.4,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "identity_status": "Final or explicitly migrated evidence",
+    "error": null,
+    "details": "api_details/451646b6dc172e7c60eb.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 22.4,
+    "llm_calls": 1,
+    "input_tokens": 2196,
+    "output_tokens": 2506,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2196,
+        "output_tokens": 2506
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 4105,
+    "document_sha256": "0f645f0c2496d3b3bc0526a95b7c2ced66f903cfde7bfee2b32b4c4f7564f45a",
+    "source": "source/src/main/java/net/coobird/thumbnailator/Thumbnailator.java:453",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "evidence_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced",
+    "name": "createThumbnails",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "java.io.File sourceFile = new java.io.File(grid_png);\njava.io.File tempSource = new java.io.File(output_dir, \"temp_source_createThumbnails.png\");\njava.nio.file.Files.copy(sourceFile.toPath(), tempSource.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);\n\njava.util.List<java.io.File> files = java.util.Collections.singletonList(tempSource);\nnet.coobird.thumbnailator.Thumbnailator.createThumbnails(\n    files,\n    net.coobird.thumbnailator.name.Rename.PREFIX_DOT_THUMBNAIL,\n    50,\n    50\n);\n\njava.io.File expectedOutputFile = new java.io.File(output_dir, \"thumbnail.temp_source_createThumbnails.png\");\nassert expectedOutputFile.exists() : \"Thumbnail file was not created\";\n\njava.awt.image.BufferedImage thumb = javax.imageio.ImageIO.read(expectedOutputFile);\nassert thumb != null : \"Thumbnail could not be read\";\nassert thumb.getWidth() <= 50 && thumb.getHeight() <= 50 : \"Thumbnail dimensions exceed 50x50\";\n\nSystem.out.println(\"__CHECK__ createThumbnails \" + thumb.getWidth() + \"x\" + thumb.getHeight());",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_createThumbnails/ApiTest.java",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ createThumbnails 50x50\n__DONE__\n",
+      "stderr_tail": "Note: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_createThumbnails/ApiTest.java uses or overrides a deprecated API.\nNote: Recompile with -Xlint:deprecation for details.\n"
+    },
+    "experiment_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/docs/eval/B2/comprehension.json",
+  "source_sha256": "edf6f845e49a5b57436a68b7845e73ce578cec0a033cf20a196eae38705feb3a",
+  "checkpoint_events": [
+    {
+      "name": "createThumbnails",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "java.io.File sourceFile = new java.io.File(grid_png);\njava.io.File tempSource = new java.io.File(output_dir, \"temp_source_createThumbnails.png\");\njava.nio.file.Files.copy(sourceFile.toPath(), tempSource.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);\n\njava.util.List<java.io.File> files = java.util.Collections.singletonList(tempSource);\nnet.coobird.thumbnailator.Thumbnailator.createThumbnails(\n    files,\n    net.coobird.thumbnailator.name.Rename.PREFIX_DOT_THUMBNAIL,\n    50,\n    50\n);\n\njava.io.File expectedOutputFile = new java.io.File(output_dir, \"thumbnail.temp_source_createThumbnails.png\");\nassert expectedOutputFile.exists() : \"Thumbnail file was not created\";\n\njava.awt.image.BufferedImage thumb = javax.imageio.ImageIO.read(expectedOutputFile);\nassert thumb != null : \"Thumbnail could not be read\";\nassert thumb.getWidth() <= 50 && thumb.getHeight() <= 50 : \"Thumbnail dimensions exceed 50x50\";\n\nSystem.out.println(\"__CHECK__ createThumbnails \" + thumb.getWidth() + \"x\" + thumb.getHeight());",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_createThumbnails/ApiTest.java",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ createThumbnails 50x50\n__DONE__\n",
+        "stderr_tail": "Note: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_createThumbnails/ApiTest.java uses or overrides a deprecated API.\nNote: Recompile with -Xlint:deprecation for details.\n"
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 22.4,
+      "llm_calls": 1,
+      "input_tokens": 2196,
+      "output_tokens": 2506,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2196,
+          "output_tokens": 2506
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 4105,
+      "document_sha256": "0f645f0c2496d3b3bc0526a95b7c2ced66f903cfde7bfee2b32b4c4f7564f45a",
+      "source": "source/src/main/java/net/coobird/thumbnailator/Thumbnailator.java:453",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

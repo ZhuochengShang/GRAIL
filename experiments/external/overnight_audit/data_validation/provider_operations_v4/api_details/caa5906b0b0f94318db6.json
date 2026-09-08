@@ -1,0 +1,113 @@
+{
+  "summary": {
+    "repository": "Thumbnailator",
+    "cell": "B2",
+    "api": "region",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 17.2,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 17.2,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "identity_status": "Final or explicitly migrated evidence",
+    "error": null,
+    "details": "api_details/caa5906b0b0f94318db6.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 17.2,
+    "llm_calls": 1,
+    "input_tokens": 2043,
+    "output_tokens": 1825,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2043,
+        "output_tokens": 1825
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 3570,
+    "document_sha256": "c4b808b5a6204f42fddb8dbe90df12784d8bacf1afe96a063ad1cabe2e5e8210",
+    "source": "source/src/main/java/net/coobird/thumbnailator/builders/ThumbnailParameterBuilder.java:200",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "evidence_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced",
+    "name": "region",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "net.coobird.thumbnailator.geometry.Region expectedRegion = new net.coobird.thumbnailator.geometry.Region(\n    new net.coobird.thumbnailator.geometry.Coordinate(10, 15),\n    new net.coobird.thumbnailator.geometry.AbsoluteSize(50, 60)\n);\n\nnet.coobird.thumbnailator.builders.ThumbnailParameterBuilder builder = new net.coobird.thumbnailator.builders.ThumbnailParameterBuilder();\nnet.coobird.thumbnailator.ThumbnailParameter param = builder.region(expectedRegion)\n    .size(20, 20)\n    .build();\n\nnet.coobird.thumbnailator.geometry.Region actualRegion = param.getSourceRegion();\nassert actualRegion == expectedRegion : \"Region was not set correctly in ThumbnailParameter\";\n\nSystem.out.println(\"__CHECK__ region \" + (actualRegion != null));",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_region/ApiTest.java",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ region true\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/docs/eval/B2/comprehension.json",
+  "source_sha256": "edf6f845e49a5b57436a68b7845e73ce578cec0a033cf20a196eae38705feb3a",
+  "checkpoint_events": [
+    {
+      "name": "region",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "net.coobird.thumbnailator.geometry.Region expectedRegion = new net.coobird.thumbnailator.geometry.Region(\n    new net.coobird.thumbnailator.geometry.Coordinate(10, 15),\n    new net.coobird.thumbnailator.geometry.AbsoluteSize(50, 60)\n);\n\nnet.coobird.thumbnailator.builders.ThumbnailParameterBuilder builder = new net.coobird.thumbnailator.builders.ThumbnailParameterBuilder();\nnet.coobird.thumbnailator.ThumbnailParameter param = builder.region(expectedRegion)\n    .size(20, 20)\n    .build();\n\nnet.coobird.thumbnailator.geometry.Region actualRegion = param.getSourceRegion();\nassert actualRegion == expectedRegion : \"Region was not set correctly in ThumbnailParameter\";\n\nSystem.out.println(\"__CHECK__ region \" + (actualRegion != null));",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_region/ApiTest.java",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ region true\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 17.2,
+      "llm_calls": 1,
+      "input_tokens": 2043,
+      "output_tokens": 1825,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2043,
+          "output_tokens": 1825
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3570,
+      "document_sha256": "c4b808b5a6204f42fddb8dbe90df12784d8bacf1afe96a063ad1cabe2e5e8210",
+      "source": "source/src/main/java/net/coobird/thumbnailator/builders/ThumbnailParameterBuilder.java:200",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

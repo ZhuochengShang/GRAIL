@@ -1,0 +1,113 @@
+{
+  "summary": {
+    "repository": "Thumbnailator",
+    "cell": "B2",
+    "api": "Colorize",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 33.4,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 33.4,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "identity_status": "Final or explicitly migrated evidence",
+    "error": null,
+    "details": "api_details/7ee9ace338a318815f45.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 33.4,
+    "llm_calls": 1,
+    "input_tokens": 2227,
+    "output_tokens": 4028,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2227,
+        "output_tokens": 4028
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 3884,
+    "document_sha256": "64a9a9c4c627b034173078fd5e93ae7817d09b326ef17195a5a67c004f10bdad",
+    "source": "source/src/main/java/net/coobird/thumbnailator/filters/Colorize.java:69",
+    "source_other_sites": 2,
+    "codebase_frames": null,
+    "evidence_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced",
+    "name": "Colorize",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "net.coobird.thumbnailator.filters.ImageFilter filter = new net.coobird.thumbnailator.filters.Colorize(java.awt.Color.RED, 0.5f);\njava.awt.image.BufferedImage result = filter.apply(sourceImage);\n\nassert result != null : \"Resulting image should not be null\";\nassert result != sourceImage : \"Colorize should return a new image instance, not mutate in place\";\nassert result.getWidth() == sourceImage.getWidth() : \"Width should match original\";\nassert result.getHeight() == sourceImage.getHeight() : \"Height should match original\";\n\nint diffCount = 0;\nfor (int y = 0; y < sourceImage.getHeight(); y++) {\n    for (int x = 0; x < sourceImage.getWidth(); x++) {\n        if (sourceImage.getRGB(x, y) != result.getRGB(x, y)) {\n            diffCount++;\n        }\n    }\n}\n\nassert diffCount > 0 : \"Image should be tinted and thus have different pixel values from the original\";\n\nSystem.out.println(\"__CHECK__ Colorize \" + result.getWidth() + \"x\" + result.getHeight() + \" diffCount=\" + diffCount);",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_Colorize/ApiTest.java",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ Colorize 32x24 diffCount=768\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/docs/eval/B2/comprehension.json",
+  "source_sha256": "edf6f845e49a5b57436a68b7845e73ce578cec0a033cf20a196eae38705feb3a",
+  "checkpoint_events": [
+    {
+      "name": "Colorize",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "net.coobird.thumbnailator.filters.ImageFilter filter = new net.coobird.thumbnailator.filters.Colorize(java.awt.Color.RED, 0.5f);\njava.awt.image.BufferedImage result = filter.apply(sourceImage);\n\nassert result != null : \"Resulting image should not be null\";\nassert result != sourceImage : \"Colorize should return a new image instance, not mutate in place\";\nassert result.getWidth() == sourceImage.getWidth() : \"Width should match original\";\nassert result.getHeight() == sourceImage.getHeight() : \"Height should match original\";\n\nint diffCount = 0;\nfor (int y = 0; y < sourceImage.getHeight(); y++) {\n    for (int x = 0; x < sourceImage.getWidth(); x++) {\n        if (sourceImage.getRGB(x, y) != result.getRGB(x, y)) {\n            diffCount++;\n        }\n    }\n}\n\nassert diffCount > 0 : \"Image should be tinted and thus have different pixel values from the original\";\n\nSystem.out.println(\"__CHECK__ Colorize \" + result.getWidth() + \"x\" + result.getHeight() + \" diffCount=\" + diffCount);",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_Colorize/ApiTest.java",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ Colorize 32x24 diffCount=768\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 33.4,
+      "llm_calls": 1,
+      "input_tokens": 2227,
+      "output_tokens": 4028,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2227,
+          "output_tokens": 4028
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3884,
+      "document_sha256": "64a9a9c4c627b034173078fd5e93ae7817d09b326ef17195a5a67c004f10bdad",
+      "source": "source/src/main/java/net/coobird/thumbnailator/filters/Colorize.java:69",
+      "source_other_sites": 2,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

@@ -1,0 +1,113 @@
+{
+  "summary": {
+    "repository": "tslearn",
+    "cell": "B2",
+    "api": "cdist",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 17.7,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 17.7,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "identity_status": "Provisional last-observed fingerprint group; final identity unverified",
+    "error": null,
+    "details": "api_details/e247d1c087b10a3e0597.json"
+  },
+  "native_row": {
+    "name": "cdist",
+    "doc_source": "aideal",
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "import torch\nfrom tslearn.backend import instantiate_backend\n\nbe = instantiate_backend(\"pytorch\")\n\n# Reshape 3D time-series data to 2D (n_samples, n_features) as required by the backend helper\nx_2d = torch.tensor(X[:3].reshape(3, -1), dtype=torch.float64, requires_grad=True)\ny_2d = torch.tensor(X[3:8].reshape(5, -1), dtype=torch.float64)\n\n# Compute pairwise distances using the PyTorch backend\ndist_matrix = be.cdist(x_2d, y_2d, metric=\"euclidean\")\n\n# Verify the shape and that the computation graph is preserved\nassert dist_matrix.shape == (3, 5), f\"Expected shape (3, 5), got {dist_matrix.shape}\"\nassert dist_matrix.requires_grad, \"Expected output to require gradients\"\n\n# Verify automatic differentiation works\ndist_matrix.sum().backward()\nassert x_2d.grad is not None, \"Expected gradients to be populated on x_2d\"\nassert x_2d.grad.shape == (3, 40), f\"Expected grad shape (3, 40), got {x_2d.grad.shape}\"\n\nwitness = float(dist_matrix[0, 0].item())\nprint(f\"__CHECK__ cdist {dist_matrix.shape} {witness:.4f}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_cdist/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ cdist torch.Size([3, 5]) 0.8382\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 17.7,
+    "llm_calls": 1,
+    "input_tokens": 2376,
+    "output_tokens": 1973,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2376,
+        "output_tokens": 1973
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 3596,
+    "document_sha256": "7fc5bf990febca2ee82c671f745242d4ab797be6d8893cdd9a1b98cba13c9f03",
+    "source": "tslearn/tslearn/backend/pytorch_backend.py:135",
+    "source_other_sites": 0,
+    "codebase_frames": null
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/comprehension_progress.jsonl",
+  "source_sha256": "0a09dcebc55c1b772f6889a52003ba9fcffd51ad4e99ecb50387e688fe973703",
+  "checkpoint_events": [
+    {
+      "name": "cdist",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import torch\nfrom tslearn.backend import instantiate_backend\n\nbe = instantiate_backend(\"pytorch\")\n\n# Reshape 3D time-series data to 2D (n_samples, n_features) as required by the backend helper\nx_2d = torch.tensor(X[:3].reshape(3, -1), dtype=torch.float64, requires_grad=True)\ny_2d = torch.tensor(X[3:8].reshape(5, -1), dtype=torch.float64)\n\n# Compute pairwise distances using the PyTorch backend\ndist_matrix = be.cdist(x_2d, y_2d, metric=\"euclidean\")\n\n# Verify the shape and that the computation graph is preserved\nassert dist_matrix.shape == (3, 5), f\"Expected shape (3, 5), got {dist_matrix.shape}\"\nassert dist_matrix.requires_grad, \"Expected output to require gradients\"\n\n# Verify automatic differentiation works\ndist_matrix.sum().backward()\nassert x_2d.grad is not None, \"Expected gradients to be populated on x_2d\"\nassert x_2d.grad.shape == (3, 40), f\"Expected grad shape (3, 40), got {x_2d.grad.shape}\"\n\nwitness = float(dist_matrix[0, 0].item())\nprint(f\"__CHECK__ cdist {dist_matrix.shape} {witness:.4f}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_cdist/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ cdist torch.Size([3, 5]) 0.8382\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 17.7,
+      "llm_calls": 1,
+      "input_tokens": 2376,
+      "output_tokens": 1973,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2376,
+          "output_tokens": 1973
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3596,
+      "document_sha256": "7fc5bf990febca2ee82c671f745242d4ab797be6d8893cdd9a1b98cba13c9f03",
+      "source": "tslearn/tslearn/backend/pytorch_backend.py:135",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

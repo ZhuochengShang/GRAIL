@@ -1,0 +1,98 @@
+{
+  "summary": {
+    "repository": "Thumbnailator",
+    "cell": "A2",
+    "api": "addFilters",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 50.5,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 50.5,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "identity_status": "Final or explicitly migrated evidence",
+    "error": null,
+    "details": "api_details/3d65a5139f998fdbcc26.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 50.5,
+    "llm_calls": 1,
+    "input_tokens": 1875,
+    "output_tokens": 7066,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 1875,
+        "output_tokens": 7066
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 2849,
+    "document_sha256": "a046bb62aef396d87f9ed7431bfd5dea73616abbe8336263c1160a7c41a9e655",
+    "source": "source/src/main/java/net/coobird/thumbnailator/Thumbnails.java:2016",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "name": "addFilters",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "java.util.List<net.coobird.thumbnailator.filters.ImageFilter> myFilters = java.util.Arrays.asList(\n    new net.coobird.thumbnailator.filters.ImageFilter() {\n        @Override\n        public java.awt.image.BufferedImage apply(java.awt.image.BufferedImage img) {\n            java.awt.image.BufferedImage out = new java.awt.image.BufferedImage(\n                img.getWidth(), img.getHeight(), java.awt.image.BufferedImage.TYPE_INT_ARGB);\n            java.awt.Graphics2D g = out.createGraphics();\n            g.setColor(java.awt.Color.RED);\n            g.fillRect(0, 0, img.getWidth(), img.getHeight());\n            g.dispose();\n            return out;\n        }\n    },\n    new net.coobird.thumbnailator.filters.ImageFilter() {\n        @Override\n        public java.awt.image.BufferedImage apply(java.awt.image.BufferedImage img) {\n            java.awt.image.BufferedImage out = new java.awt.image.BufferedImage(\n                img.getWidth(), img.getHeight(), java.awt.image.BufferedImage.TYPE_INT_ARGB);\n            java.awt.Graphics2D g = out.createGraphics();\n            g.drawImage(img, 0, 0, null);\n            g.setColor(java.awt.Color.BLUE);\n            g.fillRect(0, 0, img.getWidth() / 2, img.getHeight());\n            g.dispose();\n            return out;\n        }\n    }\n);\n\njava.awt.image.BufferedImage result = net.coobird.thumbnailator.Thumbnails.of(sourceImage)\n    .forceSize(50, 50)\n    .addFilters(myFilters)\n    .asBufferedImage();\n\nint rgbBlue = result.getRGB(12, 25) & 0x00FFFFFF;\nint rgbRed = result.getRGB(37, 25) & 0x00FFFFFF;\nint expectedBlue = java.awt.Color.BLUE.getRGB() & 0x00FFFFFF;\nint expectedRed = java.awt.Color.RED.getRGB() & 0x00FFFFFF;\n\nassert rgbBlue == expectedBlue : \"Second filter was not applied correctly or order was wrong\";\nassert rgbRed == expectedRed : \"First filter was not applied correctly or order was wrong\";\n\nSystem.out.println(\"__CHECK__ addFilters \" + rgbBlue + \", \" + rgbRed);",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/.aideal_exec/A2/run_addFilters/ApiTest.java",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ addFilters 255, 16711680\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "d0a4b20f3e5d3ea0caf7b1501a9bf2fb4d4f11ac7d844517d7b5d67874427464"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/docs/eval/A2/comprehension.json",
+  "source_sha256": "b6aa0c714a7c8a076f415ed0dae0e6b3126ad774bc94aab394ec1036974003d7",
+  "checkpoint_events": [
+    {
+      "name": "addFilters",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "d0a4b20f3e5d3ea0caf7b1501a9bf2fb4d4f11ac7d844517d7b5d67874427464",
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 50.5,
+      "llm_calls": 1,
+      "input_tokens": 1875,
+      "output_tokens": 7066,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1875,
+          "output_tokens": 7066
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 2849,
+      "document_sha256": "a046bb62aef396d87f9ed7431bfd5dea73616abbe8336263c1160a7c41a9e655",
+      "source": "source/src/main/java/net/coobird/thumbnailator/Thumbnails.java:2016",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

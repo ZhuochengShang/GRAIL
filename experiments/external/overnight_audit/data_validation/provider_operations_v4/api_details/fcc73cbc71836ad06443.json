@@ -1,0 +1,112 @@
+{
+  "summary": {
+    "repository": "mir_eval",
+    "cell": "B2",
+    "api": "standard_FPR",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 49.4,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 49.4,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "identity_status": "Final or explicitly migrated evidence",
+    "error": null,
+    "details": "api_details/fcc73cbc71836ad06443.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 49.4,
+    "llm_calls": 1,
+    "input_tokens": 2431,
+    "output_tokens": 5594,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2431,
+        "output_tokens": 5594
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 4446,
+    "document_sha256": "650ada4c284dd0f040f9c39477c9811b5ce3a25df5183f35a4803d0f25078ba8",
+    "source": "source/mir_eval/pattern.py:171",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "name": "standard_FPR",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "import mir_eval\n\n# Construct deterministic in-memory pattern lists\n# Format: list of patterns, where each pattern is a list of occurrences,\n# and each occurrence is a list of (onset, pitch) tuples.\nref_patterns = [\n    [\n        [(1.0, 60.0), (2.0, 62.0)],\n        [(3.0, 60.0), (4.0, 62.0)]\n    ]\n]\nest_patterns = [\n    [\n        [(1.0, 60.0), (2.0, 62.0)],\n        [(3.0, 60.0), (4.0, 62.0)]\n    ]\n]\n\nf_measure, precision, recall = mir_eval.pattern.standard_FPR(ref_patterns, est_patterns)\n\nassert f_measure == 1.0, f\"Expected F-measure 1.0 for identical patterns, got {f_measure}\"\nassert precision == 1.0, f\"Expected Precision 1.0 for identical patterns, got {precision}\"\nassert recall == 1.0, f\"Expected Recall 1.0 for identical patterns, got {recall}\"\n\nprint(f\"__CHECK__ standard_FPR {f_measure}, {precision}, {recall}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_standard_FPR/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ standard_FPR 1.0, 1.0, 1.0\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/comprehension.json",
+  "source_sha256": "c25a74155511d59ffa5583bce3975fae3a254ce3e3bc65948dcfbd8f61d51736",
+  "checkpoint_events": [
+    {
+      "name": "standard_FPR",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import mir_eval\n\n# Construct deterministic in-memory pattern lists\n# Format: list of patterns, where each pattern is a list of occurrences,\n# and each occurrence is a list of (onset, pitch) tuples.\nref_patterns = [\n    [\n        [(1.0, 60.0), (2.0, 62.0)],\n        [(3.0, 60.0), (4.0, 62.0)]\n    ]\n]\nest_patterns = [\n    [\n        [(1.0, 60.0), (2.0, 62.0)],\n        [(3.0, 60.0), (4.0, 62.0)]\n    ]\n]\n\nf_measure, precision, recall = mir_eval.pattern.standard_FPR(ref_patterns, est_patterns)\n\nassert f_measure == 1.0, f\"Expected F-measure 1.0 for identical patterns, got {f_measure}\"\nassert precision == 1.0, f\"Expected Precision 1.0 for identical patterns, got {precision}\"\nassert recall == 1.0, f\"Expected Recall 1.0 for identical patterns, got {recall}\"\n\nprint(f\"__CHECK__ standard_FPR {f_measure}, {precision}, {recall}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_standard_FPR/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ standard_FPR 1.0, 1.0, 1.0\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 49.4,
+      "llm_calls": 1,
+      "input_tokens": 2431,
+      "output_tokens": 5594,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2431,
+          "output_tokens": 5594
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 4446,
+      "document_sha256": "650ada4c284dd0f040f9c39477c9811b5ce3a25df5183f35a4803d0f25078ba8",
+      "source": "source/mir_eval/pattern.py:171",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

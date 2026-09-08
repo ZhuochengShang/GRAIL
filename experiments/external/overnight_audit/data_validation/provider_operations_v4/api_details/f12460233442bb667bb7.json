@@ -1,0 +1,113 @@
+{
+  "summary": {
+    "repository": "Thumbnailator",
+    "cell": "B2",
+    "api": "BilinearResizer",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 30.7,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 30.7,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "identity_status": "Final or explicitly migrated evidence",
+    "error": null,
+    "details": "api_details/f12460233442bb667bb7.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 30.7,
+    "llm_calls": 1,
+    "input_tokens": 2092,
+    "output_tokens": 3282,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2092,
+        "output_tokens": 3282
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 3711,
+    "document_sha256": "29ae8dc469ab1d22985f9c13faaaccf385462fbd1c1a96a27e44d38cec044618",
+    "source": "source/src/main/java/net/coobird/thumbnailator/resizers/BilinearResizer.java:52",
+    "source_other_sites": 1,
+    "codebase_frames": null,
+    "evidence_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced",
+    "name": "BilinearResizer",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "java.awt.Graphics2D g = sourceImage.createGraphics();\ng.setColor(java.awt.Color.BLUE);\ng.fillRect(0, 0, sourceImage.getWidth(), sourceImage.getHeight());\ng.dispose();\n\njava.util.Map<java.awt.RenderingHints.Key, Object> hints = new java.util.HashMap<>();\nhints.put(java.awt.RenderingHints.KEY_RENDERING, java.awt.RenderingHints.VALUE_RENDER_QUALITY);\nhints.put(java.awt.RenderingHints.KEY_ANTIALIASING, java.awt.RenderingHints.VALUE_ANTIALIAS_ON);\n\nnet.coobird.thumbnailator.resizers.BilinearResizer resizer = new net.coobird.thumbnailator.resizers.BilinearResizer(hints);\n\nint newWidth = Math.max(1, sourceImage.getWidth() / 2);\nint newHeight = Math.max(1, sourceImage.getHeight() / 2);\njava.awt.image.BufferedImage dest = new java.awt.image.BufferedImage(newWidth, newHeight, java.awt.image.BufferedImage.TYPE_INT_ARGB);\n\nresizer.resize(sourceImage, dest);\n\nint centerRgb = dest.getRGB(newWidth / 2, newHeight / 2);\nassert (centerRgb & 0xFFFFFF) == 0x0000FF : \"Center pixel should be blue, got \" + Integer.toHexString(centerRgb);\n\nSystem.out.println(\"__CHECK__ BilinearResizer \" + Integer.toHexString(centerRgb));",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_BilinearResizer/ApiTest.java",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ BilinearResizer ff0000ff\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/docs/eval/B2/comprehension.json",
+  "source_sha256": "edf6f845e49a5b57436a68b7845e73ce578cec0a033cf20a196eae38705feb3a",
+  "checkpoint_events": [
+    {
+      "name": "BilinearResizer",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "java.awt.Graphics2D g = sourceImage.createGraphics();\ng.setColor(java.awt.Color.BLUE);\ng.fillRect(0, 0, sourceImage.getWidth(), sourceImage.getHeight());\ng.dispose();\n\njava.util.Map<java.awt.RenderingHints.Key, Object> hints = new java.util.HashMap<>();\nhints.put(java.awt.RenderingHints.KEY_RENDERING, java.awt.RenderingHints.VALUE_RENDER_QUALITY);\nhints.put(java.awt.RenderingHints.KEY_ANTIALIASING, java.awt.RenderingHints.VALUE_ANTIALIAS_ON);\n\nnet.coobird.thumbnailator.resizers.BilinearResizer resizer = new net.coobird.thumbnailator.resizers.BilinearResizer(hints);\n\nint newWidth = Math.max(1, sourceImage.getWidth() / 2);\nint newHeight = Math.max(1, sourceImage.getHeight() / 2);\njava.awt.image.BufferedImage dest = new java.awt.image.BufferedImage(newWidth, newHeight, java.awt.image.BufferedImage.TYPE_INT_ARGB);\n\nresizer.resize(sourceImage, dest);\n\nint centerRgb = dest.getRGB(newWidth / 2, newHeight / 2);\nassert (centerRgb & 0xFFFFFF) == 0x0000FF : \"Center pixel should be blue, got \" + Integer.toHexString(centerRgb);\n\nSystem.out.println(\"__CHECK__ BilinearResizer \" + Integer.toHexString(centerRgb));",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_BilinearResizer/ApiTest.java",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ BilinearResizer ff0000ff\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 30.7,
+      "llm_calls": 1,
+      "input_tokens": 2092,
+      "output_tokens": 3282,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2092,
+          "output_tokens": 3282
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3711,
+      "document_sha256": "29ae8dc469ab1d22985f9c13faaaccf385462fbd1c1a96a27e44d38cec044618",
+      "source": "source/src/main/java/net/coobird/thumbnailator/resizers/BilinearResizer.java:52",
+      "source_other_sites": 1,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

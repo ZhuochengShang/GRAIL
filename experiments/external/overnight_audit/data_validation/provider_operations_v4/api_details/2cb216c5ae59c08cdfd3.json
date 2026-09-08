@@ -1,0 +1,112 @@
+{
+  "summary": {
+    "repository": "mir_eval",
+    "cell": "B2",
+    "api": "overall_accuracy",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 42.1,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 42.1,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "identity_status": "Final or explicitly migrated evidence",
+    "error": null,
+    "details": "api_details/2cb216c5ae59c08cdfd3.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 42.1,
+    "llm_calls": 1,
+    "input_tokens": 2554,
+    "output_tokens": 5055,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2554,
+        "output_tokens": 5055
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 4962,
+    "document_sha256": "e13402bc67e967c428e6c15dcd141f72f080db452905832a4d563c983e5270e4",
+    "source": "source/mir_eval/melody.py:691",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "name": "overall_accuracy",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "import numpy as np\nimport mir_eval\n\n# Ensure lengths match between times and frequencies\nn_ref = min(len(times), len(ref_freqs))\nn_est = min(len(times), len(est_freqs))\n\nref_t = times[:n_ref]\nest_t = times[:n_est]\n\n# mir_eval.melody.to_cent_voicing requires strictly increasing time arrays\nif n_ref > 1 and not np.all(np.diff(ref_t) > 0):\n    ref_t = np.arange(n_ref, dtype=float)\nif n_est > 1 and not np.all(np.diff(est_t) > 0):\n    est_t = np.arange(n_est, dtype=float)\n\n# Convert raw time and frequency arrays into aligned cent and voicing arrays\nref_v, ref_c, est_v, est_c = mir_eval.melody.to_cent_voicing(\n    ref_t, ref_freqs[:n_ref], est_t, est_freqs[:n_est]\n)\n\n# Compute the metric\naccuracy = mir_eval.melody.overall_accuracy(ref_v, ref_c, est_v, est_c)\n\n# Oracle: identical inputs must yield perfect accuracy\nref_v_id, ref_c_id, est_v_id, est_c_id = mir_eval.melody.to_cent_voicing(\n    ref_t, ref_freqs[:n_ref], ref_t, ref_freqs[:n_ref]\n)\naccuracy_id = mir_eval.melody.overall_accuracy(ref_v_id, ref_c_id, est_v_id, est_c_id)\n\nassert accuracy_id == 1.0, f\"Expected perfect accuracy for identical inputs, got {accuracy_id}\"\nassert 0.0 <= accuracy <= 1.0, \"Accuracy must be bounded between 0.0 and 1.0\"\n\nprint(f\"__CHECK__ overall_accuracy {accuracy:.4f}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_overall_accuracy/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ overall_accuracy 1.0000\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/comprehension.json",
+  "source_sha256": "c25a74155511d59ffa5583bce3975fae3a254ce3e3bc65948dcfbd8f61d51736",
+  "checkpoint_events": [
+    {
+      "name": "overall_accuracy",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import numpy as np\nimport mir_eval\n\n# Ensure lengths match between times and frequencies\nn_ref = min(len(times), len(ref_freqs))\nn_est = min(len(times), len(est_freqs))\n\nref_t = times[:n_ref]\nest_t = times[:n_est]\n\n# mir_eval.melody.to_cent_voicing requires strictly increasing time arrays\nif n_ref > 1 and not np.all(np.diff(ref_t) > 0):\n    ref_t = np.arange(n_ref, dtype=float)\nif n_est > 1 and not np.all(np.diff(est_t) > 0):\n    est_t = np.arange(n_est, dtype=float)\n\n# Convert raw time and frequency arrays into aligned cent and voicing arrays\nref_v, ref_c, est_v, est_c = mir_eval.melody.to_cent_voicing(\n    ref_t, ref_freqs[:n_ref], est_t, est_freqs[:n_est]\n)\n\n# Compute the metric\naccuracy = mir_eval.melody.overall_accuracy(ref_v, ref_c, est_v, est_c)\n\n# Oracle: identical inputs must yield perfect accuracy\nref_v_id, ref_c_id, est_v_id, est_c_id = mir_eval.melody.to_cent_voicing(\n    ref_t, ref_freqs[:n_ref], ref_t, ref_freqs[:n_ref]\n)\naccuracy_id = mir_eval.melody.overall_accuracy(ref_v_id, ref_c_id, est_v_id, est_c_id)\n\nassert accuracy_id == 1.0, f\"Expected perfect accuracy for identical inputs, got {accuracy_id}\"\nassert 0.0 <= accuracy <= 1.0, \"Accuracy must be bounded between 0.0 and 1.0\"\n\nprint(f\"__CHECK__ overall_accuracy {accuracy:.4f}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_overall_accuracy/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ overall_accuracy 1.0000\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 42.1,
+      "llm_calls": 1,
+      "input_tokens": 2554,
+      "output_tokens": 5055,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2554,
+          "output_tokens": 5055
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 4962,
+      "document_sha256": "e13402bc67e967c428e6c15dcd141f72f080db452905832a4d563c983e5270e4",
+      "source": "source/mir_eval/melody.py:691",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

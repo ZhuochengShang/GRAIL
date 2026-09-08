@@ -1,0 +1,278 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>AIDEAL robustness review</title><style>body{font:16px/1.6 system-ui;max-width:1150px;margin:3rem auto;padding:0 2rem;color:#183047}table{border-collapse:collapse;width:100%;font-size:14px}td,th{border:1px solid #c6d0dc;padding:10px;text-align:left}th{background:#e6eef5}pre{white-space:pre-wrap;background:#eef3f7;padding:15px}a{color:#1760a5}.links{padding:18px;background:#e8f4ef;border-radius:8px}</style><p class="links"><a href="document-recovery.html">Open interactive recovery diagram</a> · <a href="../index.html">Original architecture atlas</a> · <a href="https://github.com/ZhuochengShang/GRAIL/commit/3b072ca">Review committed changes</a></p><h1>AIDEAL robustness review and isolated implementation</h1>
+<p>Date: 2026-09-08, America/Los_Angeles. Branch: <code>aideal/robust-core-v4</code>.
+Historical reference: <code>aideal/external-2x2-infra</code> at <code>3db92a9</code>.</p>
+<p>The current experiment workers remain on their historical code. This branch
+implements and tests the next core revision without changing their treatment,
+restarting them, or rewriting their checkpoints. The only new running service
+is a passive report reader with its own supervisor and output directory.</p>
+<h2>Findings and reviewable changes</h2>
+<table>
+<thead>
+<tr>
+  <th>Evidence / barrier</th>
+  <th>Implemented change</th>
+  <th>Code reference</th>
+  <th>Deployment</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Old fingerprints omitted actual prompt/profile bytes and transport amendments</td>
+  <td>Schema 4 binds prompt/profile, effective transport settings, and additional engine files; each API records delivered prompt hashes</td>
+  <td><code>experiment_identity.prompt_contract</code>, <code>transport_contract</code>; <code>doc_checks._comprehension_fingerprint_components</code></td>
+  <td>Future matched experiments only</td>
+</tr>
+<tr>
+  <td>Fresh B2 journal was invisible without a legacy migration file</td>
+  <td>Read a published active identity; for old workers, show only the last-observed fingerprint group with an explicit provisional label</td>
+  <td><code>provider_retry.evidence.collect</code></td>
+  <td>Separate passive observer</td>
+</tr>
+<tr>
+  <td>Document rounds could reset after a restart</td>
+  <td>Durable per-API phase journal, original entry, round history, saved diagnosis/rewrite/validation results, and phase attempt timing</td>
+  <td><code>repair_journal.RepairJournal</code>; <code>doc_repair.run</code></td>
+  <td>Future runs only</td>
+</tr>
+<tr>
+  <td>Multiple document repair callers could write the same README</td>
+  <td>Nonblocking file lock around the public document-repair entry point</td>
+  <td><code>repair_journal.document_lock</code>; <code>docfix.doc_fix_run</code></td>
+  <td>Future callers using this entry point</td>
+</tr>
+<tr>
+  <td>Shell timeout could leave a child running</td>
+  <td>Dedicated POSIX process group, bounded cleanup, and a persistent execution block when cleanup cannot be confirmed</td>
+  <td><code>execution.run_command</code></td>
+  <td>Future runs; real group termination still needs host validation</td>
+</tr>
+<tr>
+  <td>Two callers could share a native checkpoint/test directory</td>
+  <td>Exclusive writer lock for the native evaluation; cleanup blocks are checked before model work</td>
+  <td><code>execution.exclusive_work_dir</code></td>
+  <td>Future runs only</td>
+</tr>
+<tr>
+  <td>Corrupt transport JSON could bypass installation</td>
+  <td>Intended worker bootstrap fails before CLI execution; unrelated plain Python is unaffected</td>
+  <td><code>provider_retry.enroll.BOOTSTRAP</code></td>
+  <td>Future explicit enrollment only</td>
+</tr>
+<tr>
+  <td>Invalid imported API symbols were classified as infrastructure failures</td>
+  <td><code>ImportError: cannot import name</code> gets a separate <code>api-import</code> category</td>
+  <td><code>doc_checks._classify_error_py</code></td>
+  <td>Future native measurements; historical categories unchanged</td>
+</tr>
+<tr>
+  <td>Corrupt supervisor state could be read as an empty fresh plan</td>
+  <td>Reject malformed/invalid persisted state before adoption, saving, or launching</td>
+  <td><code>run_condition_watchdog.Supervisor.__init__</code></td>
+  <td>New passive supervisor; live supervisors unchanged</td>
+</tr>
+</tbody>
+</table>
+<h2>Before / after module responsibilities</h2>
+<table>
+<thead>
+<tr>
+  <th>Responsibility</th>
+  <th>Historical implementation</th>
+  <th>This branch</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Document editing helpers and public entry</td>
+  <td><code>docfix.py</code>, 707 lines including loop</td>
+  <td><code>docfix.py</code>, 333 lines; public signature retained</td>
+</tr>
+<tr>
+  <td>Document repair orchestration</td>
+  <td>Same file</td>
+  <td><code>doc_repair.py</code>, 444 lines</td>
+</tr>
+<tr>
+  <td>Durable phase state and exclusive README access</td>
+  <td>No separate component</td>
+  <td><code>repair_journal.py</code>, 122 lines</td>
+</tr>
+<tr>
+  <td>Local subprocess lifecycle and native writer lock</td>
+  <td>Inline <code>subprocess.run</code></td>
+  <td><code>execution.py</code>, 86 lines</td>
+</tr>
+<tr>
+  <td>Prompt and transport identity</td>
+  <td>Incomplete inline identity</td>
+  <td><code>experiment_identity.py</code>, 56 lines</td>
+</tr>
+<tr>
+  <td>Fresh native evidence reader</td>
+  <td>Required legacy compatibility receipt</td>
+  <td><code>provider_retry/evidence.py</code>, 86 lines</td>
+</tr>
+</tbody>
+</table>
+<p>This is a responsibility split, not a claim of fewer total lines. The orchestration
+function is still substantial. Further extraction should follow the stable phase
+boundaries after this study, with the current resume tests retained. Core paths
+are derived from configuration; the study-specific watchdog YAML still names its
+installed interpreter and workspace. POSIX locks/process groups require a platform
+adapter for Windows. No new third-party runtime dependency was added.</p>
+<h2>Full experiment boundaries and actors</h2>
+<pre><code class="language-mermaid">flowchart LR
+  H[Human: approve study and fixture contract] --&gt; F[Automatic: freeze source, API manifest, YAML and fixtures]
+  F --&gt; A1[LLM snippet + native execution: A1 original docs, zero fixes]
+  F --&gt; G[LLM: generated README]
+  G --&gt; A2[LLM snippet + native execution: A2, zero fixes]
+  A2 --&gt; S[Source-only recovery: independent A2 failure cohort, up to 5 code fixes]
+  A2 --&gt; D[Document repair: source/error diagnosis + README rewrite, up to 5 rounds]
+  D --&gt; V[Fresh zero-fix validation per document round]
+  V --&gt; B2[Fresh B2 evaluation on repaired README, zero fixes]
+  B2 --&gt; SB[Post-B2 source recovery: separate failed cohort]
+  A1 --&gt; E[Automatic evidence aggregation]
+  A2 --&gt; E
+  S --&gt; E
+  B2 --&gt; E
+  SB --&gt; E
+  E --&gt; Q[Evidence-backed readiness assessment and improvement queue]
+  Q --&gt; R[Human or explicitly delegated reviewer: assess evidence and approve improvements]
+</code></pre>
+<p>The diagram is a stage map; the document controller iterates while its round
+budget and stagnation policy permit. Source-only recovery and document repair
+start independently from A2; source snippets are not fed into B2 audience tests.
+There is no original-README repair/B1 arm in this study. <code>stuck_rounds: 2</code> is
+unchanged. Provider retries are not new document proposals or code-fix rounds.
+LLM diagnosis/rewrite/deep-dive prompts remain in <code>grail-agent/src/aideal/default_prompts/aideal/</code>;
+project overrides and the effective YAML profile are hashed in the new identity.</p>
+<p>Automatic behavior includes admission, execution, checkpointing, retry scheduling,
+and reports. The operator skill guides the assistant's operations; it is not a
+runtime skill automatically executed by the harness. Human review is needed for
+study changes and acceptance of proposed code/document improvements. An interrupted
+phase with no completion receipt requires evidence reconciliation; a delegate can
+inspect it, but the controller must not silently declare it completed or redo it.</p>
+<h2>Resumption contract</h2>
+<ol>
+<li>A README lock protects participating document-repair callers.</li>
+<li>Schema 4 repair identity binds configuration, source/tests, prompt/profile,
+baseline result when supplied, engine, policy and transport.</li>
+<li>The original entry and phase <code>started</code> receipt are durable before model work.</li>
+<li>Completed phases are reused. A known failed validation retries validation
+without another diagnosis/rewrite or another logical document round.</li>
+<li>Round history and stagnation state survive restart. Terminal failure restores
+the original entry. A per-entry validation pass does not guarantee a fresh B2 pass.</li>
+<li>An ambiguous interrupted invocation or unconfirmed process cleanup blocks
+automatic re-execution. Reconciliation tooling remains a follow-up item.</li>
+</ol>
+<p>Per-phase journal attempts now contain start/end epochs, elapsed time, and time
+since the previous attempt ended. The historical study lacks some of those fields;
+reports keep missing values explicit rather than inventing zero durations.</p>
+<h2>Current output ownership and configuration evidence</h2>
+<p>The read-only <code>experiments.external.code_review.ownership</code> helper inspects discovered
+watchdog plans/states and process presence. Unlike the existing static per-cell
+automation bundles, this snapshot focuses on currently declared supervisor writers.
+It imports no provider, sends no requests, and signals no processes.</p>
+<p>The 16:29 PDT snapshot found 10 states declaring a running job, with no overlapping
+declared output paths. Nine recorded PIDs were present; the historical
+<code>rdpro_complete_2x2</code> PID was absent. The idle/deferred MDAnalysis and RDPro waiters
+were preserved. Process presence alone does not establish activity or identity.</p>
+<p>The three active native API workers use separate worktrees, execution directories,
+outputs and result files. Their configured mir_eval text/label fixtures and
+tslearn Trace NPZ fixture exist. That does not certify that every generated snippet
+uses the right input, reaches its target, or has a correct oracle. tslearn B2 logs
+still show missing optional imports such as <code>keras</code>; these remain native outcomes.</p>
+<p>Discovered plans/defaults share <code>/tmp/aideal_google_rate_gate.txt</code> with a three-second
+minimum admission interval. <code>llm._wait_for_provider_slot</code> serializes admissions;
+<code>post_b2.admission.slot</code> reserves native capacity and serializes recovery admissions.
+This is not a verified account-wide requests/tokens/concurrency limit. Inherited
+worker environment and other machines are not attested by the YAML snapshot.
+No quota settings or measured worker transports were changed by this branch.</p>
+<h2>Validation and migration gate</h2>
+<p>The expanded offline suite passed <strong>182 tests, with 1 skipped</strong>. It includes all
+<code>grail-agent/tests</code>, recovery, post-B2, provider-retry, supervisor and adoption tests.
+Tests cover saved validation reuse, lifetime round budget/original entry, ambiguous
+phase refusal, prompt/profile/transport drift, bootstrap failure, fresh checkpoint
+groups, corrupt state, process cleanup call order and persistent cleanup blocking.
+No model calls or measured API experiments were launched by these tests.</p>
+<p>The real disposable-child process-group termination test is skipped because this
+execution environment denies <code>os.killpg</code>, including an escalated attempt. Mocked
+signal/cleanup tests pass; host-level descendant termination is <strong>not certified</strong>.</p>
+<p>Historical post-B2 registration remains frozen. Its implementation hash check
+intentionally rejects this changed source-recovery implementation. Do not update
+that receipt to disguise a v4 run as v3. Deploying a new matched study requires a
+new protocol registration, fresh compatible A2/B2 identities, a defined <code>api-import</code>
+recovery cohort, and host process-cleanup validation. Existing v3 controllers keep
+running from their original worktree. No running job was restarted or deleted.</p>
+<h2>Improvement queue requiring further evidence</h2>
+<table>
+<thead>
+<tr>
+  <th>Priority</th>
+  <th>Item</th>
+  <th>Acceptance evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>High</td>
+  <td>Validate process-group cleanup on the actual execution host</td>
+  <td>Real child/grandchild termination and no late file writes</td>
+</tr>
+<tr>
+  <td>High</td>
+  <td>Register a matched next experiment before enabling the new core</td>
+  <td>New protocol identity and matched A2/B2 input/prompt/transport contracts</td>
+</tr>
+<tr>
+  <td>High</td>
+  <td>Resolve optional dependency vs invalid-import categories</td>
+  <td>Isolated import checks; preserve historical native outcomes</td>
+</tr>
+<tr>
+  <td>High</td>
+  <td>Add independent per-API semantic oracles and target/dataflow witnesses</td>
+  <td>Fixture schema checks, target invocation evidence, reference/metamorphic assertions</td>
+</tr>
+<tr>
+  <td>Medium</td>
+  <td>Review interrupted-phase reconciliation workflow</td>
+  <td>Saved response/process evidence, explicit decision, no silent duplicate proposal</td>
+</tr>
+<tr>
+  <td>Medium</td>
+  <td>Complete account-wide Gemini admission integration</td>
+  <td>Every SDK attempt reserves the same request/token/concurrency policy</td>
+</tr>
+<tr>
+  <td>Medium</td>
+  <td>Further split document controller</td>
+  <td>Smaller phase functions with unchanged resume and budget tests</td>
+</tr>
+<tr>
+  <td>Later</td>
+  <td>Consolidate worktrees</td>
+  <td>Branch unique commits, artifact owners, active job references and archive manifest reviewed first</td>
+</tr>
+</tbody>
+</table>
+<h2>Artifacts and reproducibility</h2>
+<ul>
+<li>Existing atlas: <code>/Users/clockorangezoe/output/archify-geoai/index.html</code> (unchanged).</li>
+<li>New interactive phase diagram: <code>/Users/clockorangezoe/output/archify-geoai/robustness-v4/document-recovery.html</code>.</li>
+<li>Diagram JSON and Archify visual-check receipts are beside that HTML.</li>
+<li>Ownership snapshot: <code>/Users/clockorangezoe/output/aideal-robustness-v4/ownership.json</code>.</li>
+<li>Passive report: sibling audit worktree, <code>data_validation/provider_operations_v4/REPORT.html</code>.</li>
+<li>Its supervisor plan: <code>experiments/external/provider_operations_v4_watchdog.yaml</code>.</li>
+</ul>
+<p>Archify validation passed 9/9 showcase checks, zero errors/warnings. Browser
+containment/readability checks passed at the requested desktop sizes, and light/dark
+1440×900 captures were visually reviewed. This certifies the diagram checks only;
+the code test results and remaining limitations are reported separately above.</p>
+<p>Run the targeted suite from this worktree using the configured environment:</p>
+<pre><code class="language-sh">env PYTHONPATH=grail-agent/src:. python -m pytest -q grail-agent/tests \
+  experiments/external/recovery experiments/external/post_b2 \
+  experiments/external/provider_retry experiments/external/test_run_condition_watchdog.py \
+  experiments/external/test_watchdog_adoption.py experiments/external/test_watchdog_corruption.py
+</code></pre>
+</html>

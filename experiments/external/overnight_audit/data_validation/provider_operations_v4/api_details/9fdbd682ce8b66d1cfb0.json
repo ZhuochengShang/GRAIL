@@ -1,0 +1,112 @@
+{
+  "summary": {
+    "repository": "mir_eval",
+    "cell": "B2",
+    "api": "overseg",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 20.5,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 20.5,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "identity_status": "Final or explicitly migrated evidence",
+    "error": null,
+    "details": "api_details/9fdbd682ce8b66d1cfb0.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 20.5,
+    "llm_calls": 1,
+    "input_tokens": 2189,
+    "output_tokens": 2321,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2189,
+        "output_tokens": 2321
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 3033,
+    "document_sha256": "1820bb5b702c33848dd55f0d5d6a1d671e882be28f0f73394edf060b9dcacb9a",
+    "source": "source/mir_eval/chord.py:1409",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "name": "overseg",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "import mir_eval\nimport numpy as np\n\n# Create deliberately small inputs with the same total duration [0.0, 3.2]\nref_ivs = np.array([[0.0, 2.0], [2.0, 2.5], [2.5, 3.2]])\n\n# 1. Perfect segmentation (identical intervals)\nest_ivs_perfect = np.array([[0.0, 2.0], [2.0, 2.5], [2.5, 3.2]])\nscore_perfect = mir_eval.chord.overseg(ref_ivs, est_ivs_perfect)\n\n# 2. Oversegmentation (more estimated segments than reference segments)\nest_ivs_over = np.array([[0.0, 1.0], [1.0, 2.0], [2.0, 2.5], [2.5, 3.2]])\nscore_over = mir_eval.chord.overseg(ref_ivs, est_ivs_over)\n\n# Verify the documented contract: 1.0 means no oversegmentation\nassert score_perfect == 1.0, f\"Expected 1.0 for identical intervals, got {score_perfect}\"\nassert 0.0 <= score_over < 1.0, f\"Expected < 1.0 for oversegmented intervals, got {score_over}\"\n\nprint(f\"__CHECK__ overseg {score_perfect}, {score_over:.3f}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_overseg/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ overseg 1.0, 0.688\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/comprehension.json",
+  "source_sha256": "c25a74155511d59ffa5583bce3975fae3a254ce3e3bc65948dcfbd8f61d51736",
+  "checkpoint_events": [
+    {
+      "name": "overseg",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import mir_eval\nimport numpy as np\n\n# Create deliberately small inputs with the same total duration [0.0, 3.2]\nref_ivs = np.array([[0.0, 2.0], [2.0, 2.5], [2.5, 3.2]])\n\n# 1. Perfect segmentation (identical intervals)\nest_ivs_perfect = np.array([[0.0, 2.0], [2.0, 2.5], [2.5, 3.2]])\nscore_perfect = mir_eval.chord.overseg(ref_ivs, est_ivs_perfect)\n\n# 2. Oversegmentation (more estimated segments than reference segments)\nest_ivs_over = np.array([[0.0, 1.0], [1.0, 2.0], [2.0, 2.5], [2.5, 3.2]])\nscore_over = mir_eval.chord.overseg(ref_ivs, est_ivs_over)\n\n# Verify the documented contract: 1.0 means no oversegmentation\nassert score_perfect == 1.0, f\"Expected 1.0 for identical intervals, got {score_perfect}\"\nassert 0.0 <= score_over < 1.0, f\"Expected < 1.0 for oversegmented intervals, got {score_over}\"\n\nprint(f\"__CHECK__ overseg {score_perfect}, {score_over:.3f}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_overseg/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ overseg 1.0, 0.688\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 20.5,
+      "llm_calls": 1,
+      "input_tokens": 2189,
+      "output_tokens": 2321,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2189,
+          "output_tokens": 2321
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3033,
+      "document_sha256": "1820bb5b702c33848dd55f0d5d6a1d671e882be28f0f73394edf060b9dcacb9a",
+      "source": "source/mir_eval/chord.py:1409",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

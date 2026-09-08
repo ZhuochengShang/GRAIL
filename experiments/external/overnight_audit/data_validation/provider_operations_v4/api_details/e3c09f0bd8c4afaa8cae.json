@@ -1,0 +1,112 @@
+{
+  "summary": {
+    "repository": "mir_eval",
+    "cell": "B2",
+    "api": "absolute_error",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 12.3,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 12.3,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "identity_status": "Final or explicitly migrated evidence",
+    "error": null,
+    "details": "api_details/e3c09f0bd8c4afaa8cae.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 12.3,
+    "llm_calls": 1,
+    "input_tokens": 2242,
+    "output_tokens": 1465,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2242,
+        "output_tokens": 1465
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 3814,
+    "document_sha256": "83ec3da89c5b07b8dd486e557c0ad7ef0c153e73ca207d66274dee60dd876290",
+    "source": "source/mir_eval/alignment.py:115",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "name": "absolute_error",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "import mir_eval\nimport numpy as np\n\n# Ensure arrays are of equal length for element-wise comparison\nmin_len = min(len(ref_events), len(est_events))\nref_times = ref_events[:min_len]\nest_times = est_events[:min_len]\n\n# Compute absolute errors\nmae, aae = mir_eval.alignment.absolute_error(ref_times, est_times)\n\n# Verify against manual calculation\nexpected_errors = np.abs(ref_times - est_times)\nexpected_mae = np.median(expected_errors)\nexpected_aae = np.mean(expected_errors)\n\nassert np.isclose(mae, expected_mae), f\"Expected MAE {expected_mae}, got {mae}\"\nassert np.isclose(aae, expected_aae), f\"Expected AAE {expected_aae}, got {aae}\"\n\nprint(f\"__CHECK__ absolute_error {mae:.4f}, {aae:.4f}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_absolute_error/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ absolute_error 0.0200, 0.0225\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/comprehension.json",
+  "source_sha256": "c25a74155511d59ffa5583bce3975fae3a254ce3e3bc65948dcfbd8f61d51736",
+  "checkpoint_events": [
+    {
+      "name": "absolute_error",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import mir_eval\nimport numpy as np\n\n# Ensure arrays are of equal length for element-wise comparison\nmin_len = min(len(ref_events), len(est_events))\nref_times = ref_events[:min_len]\nest_times = est_events[:min_len]\n\n# Compute absolute errors\nmae, aae = mir_eval.alignment.absolute_error(ref_times, est_times)\n\n# Verify against manual calculation\nexpected_errors = np.abs(ref_times - est_times)\nexpected_mae = np.median(expected_errors)\nexpected_aae = np.mean(expected_errors)\n\nassert np.isclose(mae, expected_mae), f\"Expected MAE {expected_mae}, got {mae}\"\nassert np.isclose(aae, expected_aae), f\"Expected AAE {expected_aae}, got {aae}\"\n\nprint(f\"__CHECK__ absolute_error {mae:.4f}, {aae:.4f}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_absolute_error/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ absolute_error 0.0200, 0.0225\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 12.3,
+      "llm_calls": 1,
+      "input_tokens": 2242,
+      "output_tokens": 1465,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2242,
+          "output_tokens": 1465
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3814,
+      "document_sha256": "83ec3da89c5b07b8dd486e557c0ad7ef0c153e73ca207d66274dee60dd876290",
+      "source": "source/mir_eval/alignment.py:115",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

@@ -1,0 +1,112 @@
+{
+  "summary": {
+    "repository": "mir_eval",
+    "cell": "B2",
+    "api": "bss_eval_images_framewise",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 34.0,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 34.0,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "identity_status": "Final or explicitly migrated evidence",
+    "error": null,
+    "details": "api_details/3db68a5af796e04a85d9.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 34.0,
+    "llm_calls": 1,
+    "input_tokens": 3185,
+    "output_tokens": 4143,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 3185,
+        "output_tokens": 4143
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 6816,
+    "document_sha256": "343f4ee8016dd1ffed2479ab91ed8a6e8ceabfe5d14c4be498064d145705a15e",
+    "source": "source/mir_eval/separation.py:507",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "name": "bss_eval_images_framewise",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "import mir_eval\nimport numpy as np\nimport warnings\n\n# Ensure inputs are 3D arrays (sources, samples, channels)\nref = np.atleast_3d(ref_sources)\nest = np.atleast_3d(est_sources)\n\n# Handle empty arrays\nif ref.size == 0 or ref.shape[1] == 0:\n    ref = np.ones((2, 100, 1))\n    est = np.ones((2, 100, 1))\n\n# Ensure we have at least 100 samples for the framewise windowing\nif ref.shape[1] < 100:\n    pad_len = 100 - ref.shape[1]\n    ref = np.pad(ref, ((0, 0), (0, pad_len), (0, 0)), mode='constant', constant_values=1.0)\n    est = np.pad(est, ((0, 0), (0, pad_len), (0, 0)), mode='constant', constant_values=1.0)\n\n# Slice to exactly 100 samples for deterministic frame count\nref = ref[:, :100, :]\nest = est[:, :100, :]\n\n# Prevent ValueError from completely silent sources\nif not np.any(ref):\n    ref[:] = 1.0\nif not np.any(est):\n    est[:] = 1.0\n\n# Add small noise to avoid perfect separation singularities in bss_eval\nnp.random.seed(42)\nest = est + 0.1 * np.random.random_sample(est.shape)\n\nwith warnings.catch_warnings():\n    warnings.simplefilter(\"ignore\")\n    sdr, isr, sir, sar, perm = mir_eval.separation.bss_eval_images_framewise(\n        ref, est, window=40, hop=20\n    )\n\n# Verify the output shapes and deterministic frame count\n# 100 samples with window=40 and hop=20 yields exactly 4 frames\nexpected_frames = 4\nassert sdr.ndim == 2, \"SDR should be a 2D array\"\nassert sdr.shape[0] == ref.shape[0], \"Number of sources should match input\"\nassert sdr.shape[1] == expected_frames, f\"Expected {expected_frames} frames, got {sdr.shape[1]}\"\nassert sdr.shape == isr.shape == sir.shape == sar.shape == perm.shape, \"All metric arrays must have identical shapes\"\n\nprint(f\"__CHECK__ bss_eval_images_framewise {sdr.shape}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_bss_eval_images_framewise/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ bss_eval_images_framewise (2, 4)\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/comprehension.json",
+  "source_sha256": "c25a74155511d59ffa5583bce3975fae3a254ce3e3bc65948dcfbd8f61d51736",
+  "checkpoint_events": [
+    {
+      "name": "bss_eval_images_framewise",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import mir_eval\nimport numpy as np\nimport warnings\n\n# Ensure inputs are 3D arrays (sources, samples, channels)\nref = np.atleast_3d(ref_sources)\nest = np.atleast_3d(est_sources)\n\n# Handle empty arrays\nif ref.size == 0 or ref.shape[1] == 0:\n    ref = np.ones((2, 100, 1))\n    est = np.ones((2, 100, 1))\n\n# Ensure we have at least 100 samples for the framewise windowing\nif ref.shape[1] < 100:\n    pad_len = 100 - ref.shape[1]\n    ref = np.pad(ref, ((0, 0), (0, pad_len), (0, 0)), mode='constant', constant_values=1.0)\n    est = np.pad(est, ((0, 0), (0, pad_len), (0, 0)), mode='constant', constant_values=1.0)\n\n# Slice to exactly 100 samples for deterministic frame count\nref = ref[:, :100, :]\nest = est[:, :100, :]\n\n# Prevent ValueError from completely silent sources\nif not np.any(ref):\n    ref[:] = 1.0\nif not np.any(est):\n    est[:] = 1.0\n\n# Add small noise to avoid perfect separation singularities in bss_eval\nnp.random.seed(42)\nest = est + 0.1 * np.random.random_sample(est.shape)\n\nwith warnings.catch_warnings():\n    warnings.simplefilter(\"ignore\")\n    sdr, isr, sir, sar, perm = mir_eval.separation.bss_eval_images_framewise(\n        ref, est, window=40, hop=20\n    )\n\n# Verify the output shapes and deterministic frame count\n# 100 samples with window=40 and hop=20 yields exactly 4 frames\nexpected_frames = 4\nassert sdr.ndim == 2, \"SDR should be a 2D array\"\nassert sdr.shape[0] == ref.shape[0], \"Number of sources should match input\"\nassert sdr.shape[1] == expected_frames, f\"Expected {expected_frames} frames, got {sdr.shape[1]}\"\nassert sdr.shape == isr.shape == sir.shape == sar.shape == perm.shape, \"All metric arrays must have identical shapes\"\n\nprint(f\"__CHECK__ bss_eval_images_framewise {sdr.shape}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_bss_eval_images_framewise/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ bss_eval_images_framewise (2, 4)\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 34.0,
+      "llm_calls": 1,
+      "input_tokens": 3185,
+      "output_tokens": 4143,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 3185,
+          "output_tokens": 4143
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 6816,
+      "document_sha256": "343f4ee8016dd1ffed2479ab91ed8a6e8ceabfe5d14c4be498064d145705a15e",
+      "source": "source/mir_eval/separation.py:507",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

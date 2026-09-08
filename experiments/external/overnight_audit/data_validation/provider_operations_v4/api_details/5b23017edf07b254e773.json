@@ -1,0 +1,113 @@
+{
+  "summary": {
+    "repository": "tslearn",
+    "cell": "B2",
+    "api": "BaseModelPackage",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 7.4,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 7.4,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "identity_status": "Provisional last-observed fingerprint group; final identity unverified",
+    "error": null,
+    "details": "api_details/5b23017edf07b254e773.json"
+  },
+  "native_row": {
+    "name": "BaseModelPackage",
+    "doc_source": "aideal",
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "from tslearn.bases import BaseModelPackage\n\nclass DummyEstimator(BaseModelPackage):\n    def __init__(self, alpha=1.0):\n        self.alpha = alpha\n        \n    def get_params(self, deep=True):\n        return {\"alpha\": self.alpha}\n        \n    def _is_fitted(self):\n        return hasattr(self, \"coef_\")\n\nmodel = DummyEstimator(alpha=2.0)\nmodel.coef_ = [1, 2, 3]\n\npkg_dict = model._to_dict()\n\nassert pkg_dict[\"hyper_params\"][\"alpha\"] == 2.0, \"Hyperparameters not correctly extracted\"\nassert pkg_dict[\"model_params\"][\"coef_\"] == [1, 2, 3], \"Model parameters not correctly extracted\"\nprint(f\"__CHECK__ BaseModelPackage {pkg_dict['hyper_params']['alpha']} {pkg_dict['model_params']['coef_']}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_BaseModelPackage/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ BaseModelPackage 2.0 [1, 2, 3]\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 7.4,
+    "llm_calls": 1,
+    "input_tokens": 2315,
+    "output_tokens": 832,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2315,
+        "output_tokens": 832
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 4046,
+    "document_sha256": "4c865702c716d4a81c1d1f4dfc6b4950b51206367115da2c878131d7978ae2c0",
+    "source": "tslearn/tslearn/bases/bases.py:78",
+    "source_other_sites": 0,
+    "codebase_frames": null
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/comprehension_progress.jsonl",
+  "source_sha256": "0a09dcebc55c1b772f6889a52003ba9fcffd51ad4e99ecb50387e688fe973703",
+  "checkpoint_events": [
+    {
+      "name": "BaseModelPackage",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "from tslearn.bases import BaseModelPackage\n\nclass DummyEstimator(BaseModelPackage):\n    def __init__(self, alpha=1.0):\n        self.alpha = alpha\n        \n    def get_params(self, deep=True):\n        return {\"alpha\": self.alpha}\n        \n    def _is_fitted(self):\n        return hasattr(self, \"coef_\")\n\nmodel = DummyEstimator(alpha=2.0)\nmodel.coef_ = [1, 2, 3]\n\npkg_dict = model._to_dict()\n\nassert pkg_dict[\"hyper_params\"][\"alpha\"] == 2.0, \"Hyperparameters not correctly extracted\"\nassert pkg_dict[\"model_params\"][\"coef_\"] == [1, 2, 3], \"Model parameters not correctly extracted\"\nprint(f\"__CHECK__ BaseModelPackage {pkg_dict['hyper_params']['alpha']} {pkg_dict['model_params']['coef_']}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_BaseModelPackage/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ BaseModelPackage 2.0 [1, 2, 3]\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 7.4,
+      "llm_calls": 1,
+      "input_tokens": 2315,
+      "output_tokens": 832,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2315,
+          "output_tokens": 832
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 4046,
+      "document_sha256": "4c865702c716d4a81c1d1f4dfc6b4950b51206367115da2c878131d7978ae2c0",
+      "source": "tslearn/tslearn/bases/bases.py:78",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

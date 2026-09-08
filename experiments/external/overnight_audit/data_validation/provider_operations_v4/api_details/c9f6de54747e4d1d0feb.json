@@ -1,0 +1,113 @@
+{
+  "summary": {
+    "repository": "Thumbnailator",
+    "cell": "B2",
+    "api": "asFiles",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 26.8,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 26.8,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "identity_status": "Final or explicitly migrated evidence",
+    "error": null,
+    "details": "api_details/c9f6de54747e4d1d0feb.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 26.8,
+    "llm_calls": 1,
+    "input_tokens": 2670,
+    "output_tokens": 3003,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2670,
+        "output_tokens": 3003
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 6148,
+    "document_sha256": "929dee53743847c0f452bed5817037af5a51257e19fc934c1c97e7d99a2045c0",
+    "source": "source/src/main/java/net/coobird/thumbnailator/Thumbnails.java:2519",
+    "source_other_sites": 2,
+    "codebase_frames": null,
+    "evidence_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced",
+    "name": "asFiles",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "java.io.File destDir = outputPath.toFile();\ndestDir.mkdirs();\n\njava.util.List<java.io.File> inputFiles = java.util.Arrays.asList(\n    new java.io.File(grid_png), \n    new java.io.File(grid_jpeg)\n);\n\njava.util.List<java.io.File> resultFiles;\ntry {\n    resultFiles = net.coobird.thumbnailator.Thumbnails.fromFiles(inputFiles)\n        .size(200, 200)\n        .asFiles(destDir, net.coobird.thumbnailator.name.Rename.PREFIX_HYPHEN_THUMBNAIL);\n} catch (java.io.IOException e) {\n    throw new RuntimeException(\"Failed to process and save thumbnails\", e);\n}\n\nassert resultFiles != null && resultFiles.size() == 2 : \"Expected exactly 2 files to be created\";\n\njava.io.File firstFile = resultFiles.get(0);\nassert firstFile.exists() : \"Output file should exist on disk\";\nassert firstFile.getParentFile().getAbsoluteFile().equals(destDir.getAbsoluteFile()) : \"Output file should be located in the destination directory\";\nassert firstFile.getName().startsWith(\"thumbnail-\") : \"Output file should have the correct rename prefix\";\n\njava.awt.image.BufferedImage resized;\ntry {\n    resized = javax.imageio.ImageIO.read(firstFile);\n} catch (java.io.IOException e) {\n    throw new RuntimeException(\"Failed to read the generated thumbnail\", e);\n}\n\nassert resized != null : \"Generated thumbnail could not be decoded\";\nassert resized.getWidth() <= 200 && resized.getHeight() <= 200 : \"Image should be resized to fit within 200x200 bounding box\";\n\nSystem.out.println(\"__CHECK__ asFiles \" + resultFiles.size() + \" files, first: \" + firstFile.getName());",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_asFiles/ApiTest.java",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ asFiles 2 files, first: thumbnail-grid.png\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/docs/eval/B2/comprehension.json",
+  "source_sha256": "edf6f845e49a5b57436a68b7845e73ce578cec0a033cf20a196eae38705feb3a",
+  "checkpoint_events": [
+    {
+      "name": "asFiles",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "java.io.File destDir = outputPath.toFile();\ndestDir.mkdirs();\n\njava.util.List<java.io.File> inputFiles = java.util.Arrays.asList(\n    new java.io.File(grid_png), \n    new java.io.File(grid_jpeg)\n);\n\njava.util.List<java.io.File> resultFiles;\ntry {\n    resultFiles = net.coobird.thumbnailator.Thumbnails.fromFiles(inputFiles)\n        .size(200, 200)\n        .asFiles(destDir, net.coobird.thumbnailator.name.Rename.PREFIX_HYPHEN_THUMBNAIL);\n} catch (java.io.IOException e) {\n    throw new RuntimeException(\"Failed to process and save thumbnails\", e);\n}\n\nassert resultFiles != null && resultFiles.size() == 2 : \"Expected exactly 2 files to be created\";\n\njava.io.File firstFile = resultFiles.get(0);\nassert firstFile.exists() : \"Output file should exist on disk\";\nassert firstFile.getParentFile().getAbsoluteFile().equals(destDir.getAbsoluteFile()) : \"Output file should be located in the destination directory\";\nassert firstFile.getName().startsWith(\"thumbnail-\") : \"Output file should have the correct rename prefix\";\n\njava.awt.image.BufferedImage resized;\ntry {\n    resized = javax.imageio.ImageIO.read(firstFile);\n} catch (java.io.IOException e) {\n    throw new RuntimeException(\"Failed to read the generated thumbnail\", e);\n}\n\nassert resized != null : \"Generated thumbnail could not be decoded\";\nassert resized.getWidth() <= 200 && resized.getHeight() <= 200 : \"Image should be resized to fit within 200x200 bounding box\";\n\nSystem.out.println(\"__CHECK__ asFiles \" + resultFiles.size() + \" files, first: \" + firstFile.getName());",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_asFiles/ApiTest.java",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ asFiles 2 files, first: thumbnail-grid.png\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 26.8,
+      "llm_calls": 1,
+      "input_tokens": 2670,
+      "output_tokens": 3003,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2670,
+          "output_tokens": 3003
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 6148,
+      "document_sha256": "929dee53743847c0f452bed5817037af5a51257e19fc934c1c97e7d99a2045c0",
+      "source": "source/src/main/java/net/coobird/thumbnailator/Thumbnails.java:2519",
+      "source_other_sites": 2,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

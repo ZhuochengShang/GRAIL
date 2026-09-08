@@ -1,0 +1,113 @@
+{
+  "summary": {
+    "repository": "Thumbnailator",
+    "cell": "B2",
+    "api": "ConsecutivelyNumberedFilenames",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 24.4,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 24.4,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "identity_status": "Final or explicitly migrated evidence",
+    "error": null,
+    "details": "api_details/ff330fe41081c1d5f4a7.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 24.4,
+    "llm_calls": 1,
+    "input_tokens": 2555,
+    "output_tokens": 2857,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2555,
+        "output_tokens": 2857
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 5354,
+    "document_sha256": "017970966ca2fa7ade574cb7c6d6977db88d41e526d2758cf12cfdfb998bc4b1",
+    "source": "source/src/main/java/net/coobird/thumbnailator/name/ConsecutivelyNumberedFilenames.java:295",
+    "source_other_sites": 7,
+    "codebase_frames": null,
+    "evidence_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced",
+    "name": "ConsecutivelyNumberedFilenames",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "java.io.File outDir = new java.io.File(output_dir);\nif (!outDir.exists()) {\n    outDir.mkdirs();\n}\n\njava.util.List<java.io.File> thumbnails;\ntry {\n    net.coobird.thumbnailator.name.ConsecutivelyNumberedFilenames filenames = \n        new net.coobird.thumbnailator.name.ConsecutivelyNumberedFilenames(outDir, \"thumb-%03d.jpg\", 1);\n\n    thumbnails = net.coobird.thumbnailator.Thumbnails.of(new java.io.File(grid_png), new java.io.File(grid_jpeg))\n        .size(50, 50)\n        .asFiles(filenames);\n} catch (java.io.IOException e) {\n    throw new RuntimeException(\"Failed to process thumbnails or create filenames\", e);\n}\n\nassert thumbnails != null && thumbnails.size() == 2 : \"Expected 2 thumbnails generated\";\nassert thumbnails.get(0).getName().equals(\"thumb-001.jpg\") : \"First filename mismatch\";\nassert thumbnails.get(1).getName().equals(\"thumb-002.jpg\") : \"Second filename mismatch\";\nassert thumbnails.get(0).exists() : \"First file does not exist\";\nassert thumbnails.get(1).exists() : \"Second file does not exist\";\n\nSystem.out.println(\"__CHECK__ ConsecutivelyNumberedFilenames \" + thumbnails.get(0).getName() + \", \" + thumbnails.get(1).getName());",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_ConsecutivelyNumberedFilenames/ApiTest.java",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ ConsecutivelyNumberedFilenames thumb-001.jpg, thumb-002.jpg\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/docs/eval/B2/comprehension.json",
+  "source_sha256": "edf6f845e49a5b57436a68b7845e73ce578cec0a033cf20a196eae38705feb3a",
+  "checkpoint_events": [
+    {
+      "name": "ConsecutivelyNumberedFilenames",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "java.io.File outDir = new java.io.File(output_dir);\nif (!outDir.exists()) {\n    outDir.mkdirs();\n}\n\njava.util.List<java.io.File> thumbnails;\ntry {\n    net.coobird.thumbnailator.name.ConsecutivelyNumberedFilenames filenames = \n        new net.coobird.thumbnailator.name.ConsecutivelyNumberedFilenames(outDir, \"thumb-%03d.jpg\", 1);\n\n    thumbnails = net.coobird.thumbnailator.Thumbnails.of(new java.io.File(grid_png), new java.io.File(grid_jpeg))\n        .size(50, 50)\n        .asFiles(filenames);\n} catch (java.io.IOException e) {\n    throw new RuntimeException(\"Failed to process thumbnails or create filenames\", e);\n}\n\nassert thumbnails != null && thumbnails.size() == 2 : \"Expected 2 thumbnails generated\";\nassert thumbnails.get(0).getName().equals(\"thumb-001.jpg\") : \"First filename mismatch\";\nassert thumbnails.get(1).getName().equals(\"thumb-002.jpg\") : \"Second filename mismatch\";\nassert thumbnails.get(0).exists() : \"First file does not exist\";\nassert thumbnails.get(1).exists() : \"Second file does not exist\";\n\nSystem.out.println(\"__CHECK__ ConsecutivelyNumberedFilenames \" + thumbnails.get(0).getName() + \", \" + thumbnails.get(1).getName());",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_ConsecutivelyNumberedFilenames/ApiTest.java",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ ConsecutivelyNumberedFilenames thumb-001.jpg, thumb-002.jpg\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 24.4,
+      "llm_calls": 1,
+      "input_tokens": 2555,
+      "output_tokens": 2857,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2555,
+          "output_tokens": 2857
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 5354,
+      "document_sha256": "017970966ca2fa7ade574cb7c6d6977db88d41e526d2758cf12cfdfb998bc4b1",
+      "source": "source/src/main/java/net/coobird/thumbnailator/name/ConsecutivelyNumberedFilenames.java:295",
+      "source_other_sites": 7,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

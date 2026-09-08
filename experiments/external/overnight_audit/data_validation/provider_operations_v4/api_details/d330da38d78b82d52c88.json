@@ -1,0 +1,120 @@
+{
+  "summary": {
+    "repository": "mir_eval",
+    "cell": "B2",
+    "api": "load_tempo",
+    "outcome": "Execution failed",
+    "test_execution": "Test process returned exit code 1; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 12.2,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 12.2,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "identity_status": "Final or explicitly migrated evidence",
+    "error": "FileNotFoundError: [Errno 2] No such file or directory: '/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/output/test_tempo.txt'",
+    "details": "api_details/d330da38d78b82d52c88.json"
+  },
+  "native_row": {
+    "status": "fail",
+    "attempts": 1,
+    "pass_round": null,
+    "wall_s": 12.2,
+    "llm_calls": 1,
+    "input_tokens": 2232,
+    "output_tokens": 1375,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2232,
+        "output_tokens": 1375
+      }
+    },
+    "error_category": "runtime",
+    "error": "FileNotFoundError: [Errno 2] No such file or directory: '/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/output/test_tempo.txt'",
+    "locus": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_load_tempo/api_test.py:39",
+    "doc_chars": 3474,
+    "document_sha256": "5ba7c237608d306af8408bd21136b3a24445067a5c63c05fe2aa4ecfdaf65e2d",
+    "source": "source/mir_eval/io.py:542",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "name": "load_tempo",
+    "execution_evidence": {
+      "status": "fail",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "fail",
+          "category": "runtime",
+          "error": "FileNotFoundError: [Errno 2] No such file or directory: '/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval"
+        }
+      ],
+      "error_category": "runtime",
+      "error": "FileNotFoundError: [Errno 2] No such file or directory: '/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/output/test_tempo.txt'",
+      "code": "import os\nimport numpy as np\nimport mir_eval\n\n# Create a deterministic tempo annotation file in the provided output directory\ntempo_file = os.path.join(output_dir, \"test_tempo.txt\")\nwith open(tempo_file, \"w\") as f:\n    f.write(\"# This is a comment line\\n\")\n    f.write(\"60.0 120.0 0.5\\n\")\n\n# Load the tempo annotations\ntempi, weight = mir_eval.io.load_tempo(tempo_file)\n\n# Verify the loaded data matches the written file\nassert isinstance(tempi, np.ndarray), \"tempi should be a NumPy array\"\nassert tempi.shape == (2,), f\"Expected 2 tempo values, got {tempi.shape[0]}\"\nassert np.allclose(tempi, [60.0, 120.0]), \"Parsed tempi values do not match expected\"\nassert isinstance(weight, float), \"weight should be a float\"\nassert weight == 0.5, \"Parsed weight does not match expected\"\n\nprint(f\"__CHECK__ load_tempo {tempi.tolist()} {weight}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_load_tempo/api_test.py",
+      "exit_code": 1,
+      "stdout_tail": "",
+      "stderr_tail": "__RUN_ERR__ FileNotFoundError: [Errno 2] No such file or directory: '/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/output/test_tempo.txt'\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_load_tempo/api_test.py\", line 62, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_load_tempo/api_test.py\", line 57, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_load_tempo/api_test.py\", line 39, in api_test\n    with open(tempo_file, \"w\") as f:\nFileNotFoundError: [Errno 2] No such file or directory: '/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/output/test_tempo.txt'\n"
+    },
+    "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/comprehension.json",
+  "source_sha256": "c25a74155511d59ffa5583bce3975fae3a254ce3e3bc65948dcfbd8f61d51736",
+  "checkpoint_events": [
+    {
+      "name": "load_tempo",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "runtime",
+            "error": "FileNotFoundError: [Errno 2] No such file or directory: '/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval"
+          }
+        ],
+        "error_category": "runtime",
+        "error": "FileNotFoundError: [Errno 2] No such file or directory: '/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/output/test_tempo.txt'",
+        "code": "import os\nimport numpy as np\nimport mir_eval\n\n# Create a deterministic tempo annotation file in the provided output directory\ntempo_file = os.path.join(output_dir, \"test_tempo.txt\")\nwith open(tempo_file, \"w\") as f:\n    f.write(\"# This is a comment line\\n\")\n    f.write(\"60.0 120.0 0.5\\n\")\n\n# Load the tempo annotations\ntempi, weight = mir_eval.io.load_tempo(tempo_file)\n\n# Verify the loaded data matches the written file\nassert isinstance(tempi, np.ndarray), \"tempi should be a NumPy array\"\nassert tempi.shape == (2,), f\"Expected 2 tempo values, got {tempi.shape[0]}\"\nassert np.allclose(tempi, [60.0, 120.0]), \"Parsed tempi values do not match expected\"\nassert isinstance(weight, float), \"weight should be a float\"\nassert weight == 0.5, \"Parsed weight does not match expected\"\n\nprint(f\"__CHECK__ load_tempo {tempi.tolist()} {weight}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_load_tempo/api_test.py",
+        "exit_code": 1,
+        "stdout_tail": "",
+        "stderr_tail": "__RUN_ERR__ FileNotFoundError: [Errno 2] No such file or directory: '/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/output/test_tempo.txt'\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_load_tempo/api_test.py\", line 62, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_load_tempo/api_test.py\", line 57, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_load_tempo/api_test.py\", line 39, in api_test\n    with open(tempo_file, \"w\") as f:\nFileNotFoundError: [Errno 2] No such file or directory: '/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/output/test_tempo.txt'\n"
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 12.2,
+      "llm_calls": 1,
+      "input_tokens": 2232,
+      "output_tokens": 1375,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2232,
+          "output_tokens": 1375
+        }
+      },
+      "error_category": "runtime",
+      "error": "FileNotFoundError: [Errno 2] No such file or directory: '/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/output/test_tempo.txt'",
+      "locus": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_load_tempo/api_test.py:39",
+      "doc_chars": 3474,
+      "document_sha256": "5ba7c237608d306af8408bd21136b3a24445067a5c63c05fe2aa4ecfdaf65e2d",
+      "source": "source/mir_eval/io.py:542",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

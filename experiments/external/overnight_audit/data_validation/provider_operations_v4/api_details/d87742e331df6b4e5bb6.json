@@ -1,0 +1,112 @@
+{
+  "summary": {
+    "repository": "mir_eval",
+    "cell": "B2",
+    "api": "encode",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 16.3,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 16.3,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "identity_status": "Final or explicitly migrated evidence",
+    "error": null,
+    "details": "api_details/d87742e331df6b4e5bb6.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 16.3,
+    "llm_calls": 1,
+    "input_tokens": 2470,
+    "output_tokens": 1739,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2470,
+        "output_tokens": 1739
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 4287,
+    "document_sha256": "d79f01a1312e1217a74beda86feaf7dce7a3bb4675c9e75a33e49fce044c2c23",
+    "source": "source/mir_eval/chord.py:471",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "name": "encode",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "import mir_eval\nimport numpy as np\n\n# Encode a standard chord label into its numerical representations\nroot, intervals, bass = mir_eval.chord.encode(\n    \"C:maj7\", reduce_extended_chords=False, strict_bass_intervals=False\n)\n\n# Verify the absolute root (C = 0)\nassert root == 0, f\"Expected root 0 for 'C', got {root}\"\n\n# Verify the bass note relative to the root (root position = 0)\nassert bass == 0, f\"Expected bass 0 for root position, got {bass}\"\n\n# Verify the 12-dimensional relative semitone bitmap for a major 7th chord\n# (root=0, major 3rd=4, perfect 5th=7, major 7th=11)\nassert intervals.shape == (12,), f\"Expected 12-dim bitmap, got shape {intervals.shape}\"\nassert np.sum(intervals) == 4, f\"Expected 4 active semitones, got {np.sum(intervals)}\"\nassert intervals[0] == 1 and intervals[4] == 1 and intervals[7] == 1 and intervals[11] == 1, \\\n    f\"Incorrect intervals for maj7: {intervals}\"\n\nprint(f\"__CHECK__ encode root={root}, active_intervals={np.sum(intervals)}, bass={bass}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_encode/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ encode root=0, active_intervals=4, bass=0\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/comprehension.json",
+  "source_sha256": "c25a74155511d59ffa5583bce3975fae3a254ce3e3bc65948dcfbd8f61d51736",
+  "checkpoint_events": [
+    {
+      "name": "encode",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import mir_eval\nimport numpy as np\n\n# Encode a standard chord label into its numerical representations\nroot, intervals, bass = mir_eval.chord.encode(\n    \"C:maj7\", reduce_extended_chords=False, strict_bass_intervals=False\n)\n\n# Verify the absolute root (C = 0)\nassert root == 0, f\"Expected root 0 for 'C', got {root}\"\n\n# Verify the bass note relative to the root (root position = 0)\nassert bass == 0, f\"Expected bass 0 for root position, got {bass}\"\n\n# Verify the 12-dimensional relative semitone bitmap for a major 7th chord\n# (root=0, major 3rd=4, perfect 5th=7, major 7th=11)\nassert intervals.shape == (12,), f\"Expected 12-dim bitmap, got shape {intervals.shape}\"\nassert np.sum(intervals) == 4, f\"Expected 4 active semitones, got {np.sum(intervals)}\"\nassert intervals[0] == 1 and intervals[4] == 1 and intervals[7] == 1 and intervals[11] == 1, \\\n    f\"Incorrect intervals for maj7: {intervals}\"\n\nprint(f\"__CHECK__ encode root={root}, active_intervals={np.sum(intervals)}, bass={bass}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_encode/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ encode root=0, active_intervals=4, bass=0\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 16.3,
+      "llm_calls": 1,
+      "input_tokens": 2470,
+      "output_tokens": 1739,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2470,
+          "output_tokens": 1739
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 4287,
+      "document_sha256": "d79f01a1312e1217a74beda86feaf7dce7a3bb4675c9e75a33e49fce044c2c23",
+      "source": "source/mir_eval/chord.py:471",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

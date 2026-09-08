@@ -1,0 +1,98 @@
+{
+  "summary": {
+    "repository": "Thumbnailator",
+    "cell": "A2",
+    "api": "OutputStreamImageSink",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 47.6,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 47.6,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "identity_status": "Final or explicitly migrated evidence",
+    "error": null,
+    "details": "api_details/1c61af97abcd958c6e81.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 47.6,
+    "llm_calls": 1,
+    "input_tokens": 1975,
+    "output_tokens": 5833,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 1975,
+        "output_tokens": 5833
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 3493,
+    "document_sha256": "1595664e064cacc9bf7a0d429bf7c9cbd2ecab1c546a5181062264c5019f5094",
+    "source": "source/src/main/java/net/coobird/thumbnailator/tasks/io/OutputStreamImageSink.java:66",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "name": "OutputStreamImageSink",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "net.coobird.thumbnailator.tasks.io.OutputStreamImageSink sink = \n    new net.coobird.thumbnailator.tasks.io.OutputStreamImageSink(imageBytes);\n\nsink.setOutputFormatName(\"png\");\nsink.write(sourceImage);\n\nbyte[] resultBytes = imageBytes.toByteArray();\nassert resultBytes.length > 0 : \"Output stream should contain image data\";\n// Verify the output has a valid PNG signature (89 50 4E 47)\nassert resultBytes[0] == (byte) 0x89 && resultBytes[1] == (byte) 0x50 && \n       resultBytes[2] == (byte) 0x4E && resultBytes[3] == (byte) 0x47 : \"Output should be a PNG image\";\n\nSystem.out.println(\"__CHECK__ OutputStreamImageSink \" + resultBytes.length);",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/.aideal_exec/A2/run_OutputStreamImageSink/ApiTest.java",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ OutputStreamImageSink 100\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "d0a4b20f3e5d3ea0caf7b1501a9bf2fb4d4f11ac7d844517d7b5d67874427464"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/docs/eval/A2/comprehension.json",
+  "source_sha256": "b6aa0c714a7c8a076f415ed0dae0e6b3126ad774bc94aab394ec1036974003d7",
+  "checkpoint_events": [
+    {
+      "name": "OutputStreamImageSink",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "d0a4b20f3e5d3ea0caf7b1501a9bf2fb4d4f11ac7d844517d7b5d67874427464",
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 47.6,
+      "llm_calls": 1,
+      "input_tokens": 1975,
+      "output_tokens": 5833,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1975,
+          "output_tokens": 5833
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3493,
+      "document_sha256": "1595664e064cacc9bf7a0d429bf7c9cbd2ecab1c546a5181062264c5019f5094",
+      "source": "source/src/main/java/net/coobird/thumbnailator/tasks/io/OutputStreamImageSink.java:66",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

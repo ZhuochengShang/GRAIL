@@ -1,0 +1,102 @@
+{
+  "summary": {
+    "repository": "Thumbnailator",
+    "cell": "A2",
+    "api": "getOrientationFromExif",
+    "outcome": "Execution failed",
+    "test_execution": "Test process returned exit code 1; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 53.8,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 53.8,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "identity_status": "Final or explicitly migrated evidence",
+    "error": "BufferUnderflowException: null",
+    "details": "api_details/be8a104be2df3d4057ab.json"
+  },
+  "native_row": {
+    "status": "fail",
+    "attempts": 1,
+    "pass_round": null,
+    "wall_s": 53.8,
+    "llm_calls": 1,
+    "input_tokens": 1798,
+    "output_tokens": 6993,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 1798,
+        "output_tokens": 6993
+      }
+    },
+    "error_category": "runtime",
+    "error": "BufferUnderflowException: null",
+    "locus": "HeapByteBuffer.java:154",
+    "doc_chars": 2471,
+    "document_sha256": "52f065e1b85133a6a1a856cd57fb1cec600b9c2fcf0398cbd5360595d41891f1",
+    "source": "source/src/main/java/net/coobird/thumbnailator/util/exif/ExifUtils.java:109",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "name": "getOrientationFromExif",
+    "execution_evidence": {
+      "status": "fail",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "fail",
+          "category": "runtime",
+          "error": "BufferUnderflowException: null"
+        }
+      ],
+      "error_category": "runtime",
+      "error": "BufferUnderflowException: null",
+      "code": "byte[] jpegBytes = java.nio.file.Files.readAllBytes(java.nio.file.Paths.get(exif_jpeg));\nbyte[] exifData = null;\n\n// Extract the APP1 (Exif) segment from the JPEG file\nfor (int i = 0; i < jpegBytes.length - 1; i++) {\n    if (jpegBytes[i] == (byte) 0xFF && jpegBytes[i + 1] == (byte) 0xE1) {\n        int length = ((jpegBytes[i + 2] & 0xFF) << 8) | (jpegBytes[i + 3] & 0xFF);\n        if (i + 4 + length - 2 <= jpegBytes.length) {\n            byte[] segment = new byte[length - 2];\n            System.arraycopy(jpegBytes, i + 4, segment, 0, length - 2);\n            if (segment.length >= 4 && segment[0] == 'E' && segment[1] == 'x' && segment[2] == 'i' && segment[3] == 'f') {\n                exifData = segment;\n                break;\n            }\n        }\n    }\n}\n\nnet.coobird.thumbnailator.util.exif.Orientation orientation = null;\nif (exifData != null) {\n    orientation = net.coobird.thumbnailator.util.exif.ExifUtils.getOrientationFromExif(exifData);\n}\n\n// Fallback to a manually constructed val",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/.aideal_exec/A2/run_getOrientationFromExif/ApiTest.java",
+      "exit_code": 1,
+      "stdout_tail": "",
+      "stderr_tail": "__RUN_ERR__ BufferUnderflowException: null\njava.nio.BufferUnderflowException\n\tat java.nio.HeapByteBuffer.get(HeapByteBuffer.java:154)\n\tat java.nio.ByteBuffer.get(ByteBuffer.java:715)\n\tat net.coobird.thumbnailator.util.exif.ExifUtils.getOrientationFromExif(Unknown Source)\n\tat ApiTest.main(ApiTest.java:90)\n"
+    },
+    "experiment_fingerprint": "d0a4b20f3e5d3ea0caf7b1501a9bf2fb4d4f11ac7d844517d7b5d67874427464"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/docs/eval/A2/comprehension.json",
+  "source_sha256": "b6aa0c714a7c8a076f415ed0dae0e6b3126ad774bc94aab394ec1036974003d7",
+  "checkpoint_events": [
+    {
+      "name": "getOrientationFromExif",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "d0a4b20f3e5d3ea0caf7b1501a9bf2fb4d4f11ac7d844517d7b5d67874427464",
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 53.8,
+      "llm_calls": 1,
+      "input_tokens": 1798,
+      "output_tokens": 6993,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1798,
+          "output_tokens": 6993
+        }
+      },
+      "error_category": "runtime",
+      "error": "BufferUnderflowException: null",
+      "locus": "HeapByteBuffer.java:154",
+      "doc_chars": 2471,
+      "document_sha256": "52f065e1b85133a6a1a856cd57fb1cec600b9c2fcf0398cbd5360595d41891f1",
+      "source": "source/src/main/java/net/coobird/thumbnailator/util/exif/ExifUtils.java:109",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

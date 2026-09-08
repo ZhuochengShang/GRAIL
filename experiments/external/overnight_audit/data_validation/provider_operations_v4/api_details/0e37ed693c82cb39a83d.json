@@ -1,0 +1,112 @@
+{
+  "summary": {
+    "repository": "mir_eval",
+    "cell": "B2",
+    "api": "lmeasure",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 20.8,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 20.8,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "identity_status": "Final or explicitly migrated evidence",
+    "error": null,
+    "details": "api_details/0e37ed693c82cb39a83d.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 20.8,
+    "llm_calls": 1,
+    "input_tokens": 2856,
+    "output_tokens": 2317,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2856,
+        "output_tokens": 2317
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 6065,
+    "document_sha256": "9704e5e1180edd9359f3c492498b1080bdf0d9b7a45c3f665753a927942ed652",
+    "source": "source/mir_eval/hierarchy.py:548",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "name": "lmeasure",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "import mir_eval\nimport numpy as np\n\n# Define a deterministic 2-layer hierarchy for both reference and estimation\nref_intervals_hier = [\n    np.array([[0.0, 30.0]]),\n    np.array([[0.0, 15.0], [15.0, 30.0]])\n]\nref_labels_hier = [[\"A\"], [\"a\", \"b\"]]\n\nest_intervals_hier = [\n    np.array([[0.0, 30.0]]),\n    np.array([[0.0, 15.0], [15.0, 30.0]])\n]\nest_labels_hier = [[\"A\"], [\"a\", \"b\"]]\n\n# Compute L-measure scores\nl_precision, l_recall, l_measure_val = mir_eval.hierarchy.lmeasure(\n    ref_intervals_hier, \n    ref_labels_hier, \n    est_intervals_hier, \n    est_labels_hier, \n    frame_size=0.1\n)\n\n# Verify that identical hierarchies yield perfect scores\nassert np.isclose(l_precision, 1.0), f\"Expected precision 1.0, got {l_precision}\"\nassert np.isclose(l_recall, 1.0), f\"Expected recall 1.0, got {l_recall}\"\nassert np.isclose(l_measure_val, 1.0), f\"Expected f-measure 1.0, got {l_measure_val}\"\n\nprint(f\"__CHECK__ lmeasure {l_precision:.1f}, {l_recall:.1f}, {l_measure_val:.1f}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_lmeasure/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ lmeasure 1.0, 1.0, 1.0\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/comprehension.json",
+  "source_sha256": "c25a74155511d59ffa5583bce3975fae3a254ce3e3bc65948dcfbd8f61d51736",
+  "checkpoint_events": [
+    {
+      "name": "lmeasure",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import mir_eval\nimport numpy as np\n\n# Define a deterministic 2-layer hierarchy for both reference and estimation\nref_intervals_hier = [\n    np.array([[0.0, 30.0]]),\n    np.array([[0.0, 15.0], [15.0, 30.0]])\n]\nref_labels_hier = [[\"A\"], [\"a\", \"b\"]]\n\nest_intervals_hier = [\n    np.array([[0.0, 30.0]]),\n    np.array([[0.0, 15.0], [15.0, 30.0]])\n]\nest_labels_hier = [[\"A\"], [\"a\", \"b\"]]\n\n# Compute L-measure scores\nl_precision, l_recall, l_measure_val = mir_eval.hierarchy.lmeasure(\n    ref_intervals_hier, \n    ref_labels_hier, \n    est_intervals_hier, \n    est_labels_hier, \n    frame_size=0.1\n)\n\n# Verify that identical hierarchies yield perfect scores\nassert np.isclose(l_precision, 1.0), f\"Expected precision 1.0, got {l_precision}\"\nassert np.isclose(l_recall, 1.0), f\"Expected recall 1.0, got {l_recall}\"\nassert np.isclose(l_measure_val, 1.0), f\"Expected f-measure 1.0, got {l_measure_val}\"\n\nprint(f\"__CHECK__ lmeasure {l_precision:.1f}, {l_recall:.1f}, {l_measure_val:.1f}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_lmeasure/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ lmeasure 1.0, 1.0, 1.0\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 20.8,
+      "llm_calls": 1,
+      "input_tokens": 2856,
+      "output_tokens": 2317,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2856,
+          "output_tokens": 2317
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 6065,
+      "document_sha256": "9704e5e1180edd9359f3c492498b1080bdf0d9b7a45c3f665753a927942ed652",
+      "source": "source/mir_eval/hierarchy.py:548",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

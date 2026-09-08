@@ -1,0 +1,113 @@
+{
+  "summary": {
+    "repository": "Thumbnailator",
+    "cell": "B2",
+    "api": "Pipeline",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 20.0,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 20.0,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "identity_status": "Final or explicitly migrated evidence",
+    "error": null,
+    "details": "api_details/1c90f408b46db46f7bf1.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 20.0,
+    "llm_calls": 1,
+    "input_tokens": 2101,
+    "output_tokens": 2034,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2101,
+        "output_tokens": 2034
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 4105,
+    "document_sha256": "c9114059946de11e48b94b21372b4319bec76f6c4495ec194a97eb284dc039d6",
+    "source": "source/src/main/java/net/coobird/thumbnailator/filters/Pipeline.java:73",
+    "source_other_sites": 2,
+    "codebase_frames": null,
+    "evidence_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced",
+    "name": "Pipeline",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "net.coobird.thumbnailator.filters.ImageFilter filter1 = new net.coobird.thumbnailator.filters.ImageFilter() {\n    @Override\n    public java.awt.image.BufferedImage apply(java.awt.image.BufferedImage image) {\n        return new java.awt.image.BufferedImage(\n            image.getWidth() + 10, \n            image.getHeight(), \n            java.awt.image.BufferedImage.TYPE_INT_ARGB\n        );\n    }\n};\n\nnet.coobird.thumbnailator.filters.ImageFilter filter2 = new net.coobird.thumbnailator.filters.ImageFilter() {\n    @Override\n    public java.awt.image.BufferedImage apply(java.awt.image.BufferedImage image) {\n        return new java.awt.image.BufferedImage(\n            image.getWidth(), \n            image.getHeight() + 20, \n            java.awt.image.BufferedImage.TYPE_INT_ARGB\n        );\n    }\n};\n\nnet.coobird.thumbnailator.filters.Pipeline pipeline = new net.coobird.thumbnailator.filters.Pipeline(filter1);\npipeline.add(filter2);\n\njava.awt.image.BufferedImage result = pipeline.apply(sourceImage);\n\nassert result.getWidth() == sourceImage.getWidth() + 10 : \"Width should be increased by 10 by filter1\";\nassert result.getHeight() == sourceImage.getHeight() + 20 : \"Height should be increased by 20 by filter2\";\n\nSystem.out.println(\"__CHECK__ Pipeline \" + result.getWidth() + \"x\" + result.getHeight());",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_Pipeline/ApiTest.java",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ Pipeline 42x44\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/docs/eval/B2/comprehension.json",
+  "source_sha256": "edf6f845e49a5b57436a68b7845e73ce578cec0a033cf20a196eae38705feb3a",
+  "checkpoint_events": [
+    {
+      "name": "Pipeline",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "net.coobird.thumbnailator.filters.ImageFilter filter1 = new net.coobird.thumbnailator.filters.ImageFilter() {\n    @Override\n    public java.awt.image.BufferedImage apply(java.awt.image.BufferedImage image) {\n        return new java.awt.image.BufferedImage(\n            image.getWidth() + 10, \n            image.getHeight(), \n            java.awt.image.BufferedImage.TYPE_INT_ARGB\n        );\n    }\n};\n\nnet.coobird.thumbnailator.filters.ImageFilter filter2 = new net.coobird.thumbnailator.filters.ImageFilter() {\n    @Override\n    public java.awt.image.BufferedImage apply(java.awt.image.BufferedImage image) {\n        return new java.awt.image.BufferedImage(\n            image.getWidth(), \n            image.getHeight() + 20, \n            java.awt.image.BufferedImage.TYPE_INT_ARGB\n        );\n    }\n};\n\nnet.coobird.thumbnailator.filters.Pipeline pipeline = new net.coobird.thumbnailator.filters.Pipeline(filter1);\npipeline.add(filter2);\n\njava.awt.image.BufferedImage result = pipeline.apply(sourceImage);\n\nassert result.getWidth() == sourceImage.getWidth() + 10 : \"Width should be increased by 10 by filter1\";\nassert result.getHeight() == sourceImage.getHeight() + 20 : \"Height should be increased by 20 by filter2\";\n\nSystem.out.println(\"__CHECK__ Pipeline \" + result.getWidth() + \"x\" + result.getHeight());",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_Pipeline/ApiTest.java",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ Pipeline 42x44\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 20.0,
+      "llm_calls": 1,
+      "input_tokens": 2101,
+      "output_tokens": 2034,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2101,
+          "output_tokens": 2034
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 4105,
+      "document_sha256": "c9114059946de11e48b94b21372b4319bec76f6c4495ec194a97eb284dc039d6",
+      "source": "source/src/main/java/net/coobird/thumbnailator/filters/Pipeline.java:73",
+      "source_other_sites": 2,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

@@ -1,0 +1,113 @@
+{
+  "summary": {
+    "repository": "tslearn",
+    "cell": "B2",
+    "api": "PyTorchRandom",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 9.9,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 9.9,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "identity_status": "Provisional last-observed fingerprint group; final identity unverified",
+    "error": null,
+    "details": "api_details/ce0f006ba798c9bf5772.json"
+  },
+  "native_row": {
+    "name": "PyTorchRandom",
+    "doc_source": "aideal",
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "import torch\nfrom tslearn.backend.pytorch_backend import PyTorchRandom\n\n# Explicit low-level construction\nrng = PyTorchRandom()\n\n# Test instance attributes bound to torch functions\nrand_tensor = rng.rand(2, 2)\nassert isinstance(rand_tensor, torch.Tensor)\nassert rand_tensor.shape == (2, 2)\n\n# Test static method: normal\nnorm_tensor = PyTorchRandom.normal(loc=5.0, scale=2.0, size=3)\nassert isinstance(norm_tensor, torch.Tensor)\nassert norm_tensor.shape == (3,)\n\n# Test static method: uniform\nunif_tensor = PyTorchRandom.uniform(low=10.0, high=20.0, size=(4, 1))\nassert isinstance(unif_tensor, torch.Tensor)\nassert unif_tensor.shape == (4, 1)\nassert (unif_tensor >= 10.0).all() and (unif_tensor <= 20.0).all()\n\nprint(f\"__CHECK__ PyTorchRandom {unif_tensor.shape} {norm_tensor.shape} {rand_tensor.shape}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_PyTorchRandom/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ PyTorchRandom torch.Size([4, 1]) torch.Size([3]) torch.Size([2, 2])\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 9.9,
+    "llm_calls": 1,
+    "input_tokens": 2216,
+    "output_tokens": 1049,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2216,
+        "output_tokens": 1049
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 3387,
+    "document_sha256": "b1998f8ae811f5d399f97cdc13bec828109c4d244409f6ab823e274e37e517ec",
+    "source": "tslearn/tslearn/backend/pytorch_backend.py:243",
+    "source_other_sites": 0,
+    "codebase_frames": null
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/comprehension_progress.jsonl",
+  "source_sha256": "0a09dcebc55c1b772f6889a52003ba9fcffd51ad4e99ecb50387e688fe973703",
+  "checkpoint_events": [
+    {
+      "name": "PyTorchRandom",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import torch\nfrom tslearn.backend.pytorch_backend import PyTorchRandom\n\n# Explicit low-level construction\nrng = PyTorchRandom()\n\n# Test instance attributes bound to torch functions\nrand_tensor = rng.rand(2, 2)\nassert isinstance(rand_tensor, torch.Tensor)\nassert rand_tensor.shape == (2, 2)\n\n# Test static method: normal\nnorm_tensor = PyTorchRandom.normal(loc=5.0, scale=2.0, size=3)\nassert isinstance(norm_tensor, torch.Tensor)\nassert norm_tensor.shape == (3,)\n\n# Test static method: uniform\nunif_tensor = PyTorchRandom.uniform(low=10.0, high=20.0, size=(4, 1))\nassert isinstance(unif_tensor, torch.Tensor)\nassert unif_tensor.shape == (4, 1)\nassert (unif_tensor >= 10.0).all() and (unif_tensor <= 20.0).all()\n\nprint(f\"__CHECK__ PyTorchRandom {unif_tensor.shape} {norm_tensor.shape} {rand_tensor.shape}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_PyTorchRandom/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ PyTorchRandom torch.Size([4, 1]) torch.Size([3]) torch.Size([2, 2])\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 9.9,
+      "llm_calls": 1,
+      "input_tokens": 2216,
+      "output_tokens": 1049,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2216,
+          "output_tokens": 1049
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3387,
+      "document_sha256": "b1998f8ae811f5d399f97cdc13bec828109c4d244409f6ab823e274e37e517ec",
+      "source": "tslearn/tslearn/backend/pytorch_backend.py:243",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

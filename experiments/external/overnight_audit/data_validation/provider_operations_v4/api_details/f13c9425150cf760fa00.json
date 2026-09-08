@@ -1,0 +1,113 @@
+{
+  "summary": {
+    "repository": "Thumbnailator",
+    "cell": "B2",
+    "api": "if",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 20.1,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 20.1,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "identity_status": "Final or explicitly migrated evidence",
+    "error": null,
+    "details": "api_details/f13c9425150cf760fa00.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 20.1,
+    "llm_calls": 1,
+    "input_tokens": 1973,
+    "output_tokens": 2446,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 1973,
+        "output_tokens": 2446
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 3483,
+    "document_sha256": "ab4851a2e9e8b07031533a1d9bea397ed333069ef59cc66b621fa2d21e596b38",
+    "source": "source/src/main/java/net/coobird/thumbnailator/resizers/DefaultResizerFactory.java:139",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "evidence_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced",
+    "name": "if",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "int origWidth = sourceImage.getWidth();\nint origHeight = sourceImage.getHeight();\nint thumbWidth = origWidth * 2;\nint thumbHeight = origHeight * 2;\n\n// Let Thumbnailator handle the upscaling condition internally\njava.awt.image.BufferedImage upscaled = net.coobird.thumbnailator.Thumbnails.of(sourceImage)\n    .size(thumbWidth, thumbHeight)\n    .asBufferedImage();\n\n// Custom Rename strategy using standard Java 'if' statement as per authoritative usage\nnet.coobird.thumbnailator.name.Rename customRename = new net.coobird.thumbnailator.name.Rename() {\n    @Override\n    public String apply(String name, net.coobird.thumbnailator.ThumbnailParameter param) {\n        if (name.endsWith(\".gif\")) {\n            return \"thumbnail.\" + name + \".foobar\";\n        }\n        return name;\n    }\n};\n\nString renamed = customRename.apply(\"test.gif\", null);\n\nassert upscaled.getWidth() > origWidth && upscaled.getHeight() > origHeight : \"Upscaling failed\";\nassert \"thumbnail.test.gif.foobar\".equals(renamed) : \"Rename if-branch failed\";\n\nSystem.out.println(\"__CHECK__ if \" + renamed + \" \" + upscaled.getWidth() + \"x\" + upscaled.getHeight());",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_if/ApiTest.java",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ if thumbnail.test.gif.foobar 64x48\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/docs/eval/B2/comprehension.json",
+  "source_sha256": "edf6f845e49a5b57436a68b7845e73ce578cec0a033cf20a196eae38705feb3a",
+  "checkpoint_events": [
+    {
+      "name": "if",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "int origWidth = sourceImage.getWidth();\nint origHeight = sourceImage.getHeight();\nint thumbWidth = origWidth * 2;\nint thumbHeight = origHeight * 2;\n\n// Let Thumbnailator handle the upscaling condition internally\njava.awt.image.BufferedImage upscaled = net.coobird.thumbnailator.Thumbnails.of(sourceImage)\n    .size(thumbWidth, thumbHeight)\n    .asBufferedImage();\n\n// Custom Rename strategy using standard Java 'if' statement as per authoritative usage\nnet.coobird.thumbnailator.name.Rename customRename = new net.coobird.thumbnailator.name.Rename() {\n    @Override\n    public String apply(String name, net.coobird.thumbnailator.ThumbnailParameter param) {\n        if (name.endsWith(\".gif\")) {\n            return \"thumbnail.\" + name + \".foobar\";\n        }\n        return name;\n    }\n};\n\nString renamed = customRename.apply(\"test.gif\", null);\n\nassert upscaled.getWidth() > origWidth && upscaled.getHeight() > origHeight : \"Upscaling failed\";\nassert \"thumbnail.test.gif.foobar\".equals(renamed) : \"Rename if-branch failed\";\n\nSystem.out.println(\"__CHECK__ if \" + renamed + \" \" + upscaled.getWidth() + \"x\" + upscaled.getHeight());",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_if/ApiTest.java",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ if thumbnail.test.gif.foobar 64x48\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 20.1,
+      "llm_calls": 1,
+      "input_tokens": 1973,
+      "output_tokens": 2446,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1973,
+          "output_tokens": 2446
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3483,
+      "document_sha256": "ab4851a2e9e8b07031533a1d9bea397ed333069ef59cc66b621fa2d21e596b38",
+      "source": "source/src/main/java/net/coobird/thumbnailator/resizers/DefaultResizerFactory.java:139",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

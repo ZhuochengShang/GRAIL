@@ -1,0 +1,112 @@
+{
+  "summary": {
+    "repository": "mir_eval",
+    "cell": "B2",
+    "api": "compute_err_score",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 19.3,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 19.3,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "identity_status": "Final or explicitly migrated evidence",
+    "error": null,
+    "details": "api_details/4fcf98e0790e7cd4efc1.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 19.3,
+    "llm_calls": 1,
+    "input_tokens": 2211,
+    "output_tokens": 2301,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2211,
+        "output_tokens": 2301
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 3126,
+    "document_sha256": "cd051ec6696b33da7db7f3b6d562962edd4468b0faab23ba5aa98f69756c08d9",
+    "source": "source/mir_eval/multipitch.py:296",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "name": "compute_err_score",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "import numpy as np\nimport mir_eval\n\ntrue_positives = np.array([1, 0, 0, 3, 2])\nn_ref = np.array([2, 0, 1, 3, 2])\nn_est = np.array([1, 0, 2, 3, 2])\n\ne_sub, e_miss, e_fa, e_tot = mir_eval.multipitch.compute_err_score(\n    true_positives, n_ref, n_est\n)\n\nassert np.isclose(e_sub, 0.125), f\"Expected e_sub=0.125, got {e_sub}\"\nassert np.isclose(e_miss, 0.125), f\"Expected e_miss=0.125, got {e_miss}\"\nassert np.isclose(e_fa, 0.125), f\"Expected e_fa=0.125, got {e_fa}\"\nassert np.isclose(e_tot, 0.375), f\"Expected e_tot=0.375, got {e_tot}\"\n\nprint(f\"__CHECK__ compute_err_score {e_sub:.3f}, {e_miss:.3f}, {e_fa:.3f}, {e_tot:.3f}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_compute_err_score/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ compute_err_score 0.125, 0.125, 0.125, 0.375\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/comprehension.json",
+  "source_sha256": "c25a74155511d59ffa5583bce3975fae3a254ce3e3bc65948dcfbd8f61d51736",
+  "checkpoint_events": [
+    {
+      "name": "compute_err_score",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import numpy as np\nimport mir_eval\n\ntrue_positives = np.array([1, 0, 0, 3, 2])\nn_ref = np.array([2, 0, 1, 3, 2])\nn_est = np.array([1, 0, 2, 3, 2])\n\ne_sub, e_miss, e_fa, e_tot = mir_eval.multipitch.compute_err_score(\n    true_positives, n_ref, n_est\n)\n\nassert np.isclose(e_sub, 0.125), f\"Expected e_sub=0.125, got {e_sub}\"\nassert np.isclose(e_miss, 0.125), f\"Expected e_miss=0.125, got {e_miss}\"\nassert np.isclose(e_fa, 0.125), f\"Expected e_fa=0.125, got {e_fa}\"\nassert np.isclose(e_tot, 0.375), f\"Expected e_tot=0.375, got {e_tot}\"\n\nprint(f\"__CHECK__ compute_err_score {e_sub:.3f}, {e_miss:.3f}, {e_fa:.3f}, {e_tot:.3f}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_compute_err_score/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ compute_err_score 0.125, 0.125, 0.125, 0.375\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 19.3,
+      "llm_calls": 1,
+      "input_tokens": 2211,
+      "output_tokens": 2301,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2211,
+          "output_tokens": 2301
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3126,
+      "document_sha256": "cd051ec6696b33da7db7f3b6d562962edd4468b0faab23ba5aa98f69756c08d9",
+      "source": "source/mir_eval/multipitch.py:296",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

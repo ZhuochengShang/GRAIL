@@ -1,0 +1,113 @@
+{
+  "summary": {
+    "repository": "tslearn",
+    "cell": "B2",
+    "api": "decision_function",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 7.9,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 7.9,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "identity_status": "Provisional last-observed fingerprint group; final identity unverified",
+    "error": null,
+    "details": "api_details/3d5e975972c4d7c4da5a.json"
+  },
+  "native_row": {
+    "name": "decision_function",
+    "doc_source": "aideal",
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "from tslearn.svm import TimeSeriesSVC\n\nclf = TimeSeriesSVC(kernel=\"gak\")\nclf.fit(X, y)\nscores = clf.decision_function(X)\n\nassert scores.shape == (8, 4), f\"Expected shape (8, 4), got {scores.shape}\"\nprint(f\"__CHECK__ decision_function {scores.shape}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_decision_function/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ decision_function (8, 4)\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 7.9,
+    "llm_calls": 1,
+    "input_tokens": 2336,
+    "output_tokens": 555,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2336,
+        "output_tokens": 555
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 3359,
+    "document_sha256": "07731332f4ba306ae67d1690510d21e944091b3d6a5ee3d71ae6c3a2decf1065",
+    "source": "tslearn/tslearn/svm/svm.py:352",
+    "source_other_sites": 0,
+    "codebase_frames": null
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/comprehension_progress.jsonl",
+  "source_sha256": "0a09dcebc55c1b772f6889a52003ba9fcffd51ad4e99ecb50387e688fe973703",
+  "checkpoint_events": [
+    {
+      "name": "decision_function",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "from tslearn.svm import TimeSeriesSVC\n\nclf = TimeSeriesSVC(kernel=\"gak\")\nclf.fit(X, y)\nscores = clf.decision_function(X)\n\nassert scores.shape == (8, 4), f\"Expected shape (8, 4), got {scores.shape}\"\nprint(f\"__CHECK__ decision_function {scores.shape}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_decision_function/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ decision_function (8, 4)\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 7.9,
+      "llm_calls": 1,
+      "input_tokens": 2336,
+      "output_tokens": 555,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2336,
+          "output_tokens": 555
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3359,
+      "document_sha256": "07731332f4ba306ae67d1690510d21e944091b3d6a5ee3d71ae6c3a2decf1065",
+      "source": "tslearn/tslearn/svm/svm.py:352",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

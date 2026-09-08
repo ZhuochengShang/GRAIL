@@ -1,0 +1,113 @@
+{
+  "summary": {
+    "repository": "tslearn",
+    "cell": "B2",
+    "api": "lb_envelope",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 12.0,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 12.0,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "identity_status": "Provisional last-observed fingerprint group; final identity unverified",
+    "error": null,
+    "details": "api_details/095697e367674a9d2c1d.json"
+  },
+  "native_row": {
+    "name": "lb_envelope",
+    "doc_source": "aideal",
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "from tslearn.metrics import lb_envelope\nimport numpy as np\n\nenv_low, env_up = lb_envelope(s1, radius=2)\n\nassert env_low.shape == (40, 1), f\"Expected (40, 1), got {env_low.shape}\"\nassert env_up.shape == (40, 1), f\"Expected (40, 1), got {env_up.shape}\"\nassert np.all(env_low <= env_up), \"Lower envelope must be <= upper envelope\"\nassert np.all(env_low <= s1.reshape(40, 1)), \"Lower envelope must be <= original series\"\nassert np.all(env_up >= s1.reshape(40, 1)), \"Upper envelope must be >= original series\"\n\nprint(f\"__CHECK__ lb_envelope {env_low.shape} {env_up.shape}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_lb_envelope/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ lb_envelope (40, 1) (40, 1)\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 12.0,
+    "llm_calls": 1,
+    "input_tokens": 2689,
+    "output_tokens": 1006,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2689,
+        "output_tokens": 1006
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 4786,
+    "document_sha256": "8f1bf2080de97a6d9d1af223736aa9daaf74abc61eed3d82303cc4060320b4e6",
+    "source": "tslearn/tslearn/metrics/dtw_variants.py:2170",
+    "source_other_sites": 0,
+    "codebase_frames": null
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/comprehension_progress.jsonl",
+  "source_sha256": "0a09dcebc55c1b772f6889a52003ba9fcffd51ad4e99ecb50387e688fe973703",
+  "checkpoint_events": [
+    {
+      "name": "lb_envelope",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "from tslearn.metrics import lb_envelope\nimport numpy as np\n\nenv_low, env_up = lb_envelope(s1, radius=2)\n\nassert env_low.shape == (40, 1), f\"Expected (40, 1), got {env_low.shape}\"\nassert env_up.shape == (40, 1), f\"Expected (40, 1), got {env_up.shape}\"\nassert np.all(env_low <= env_up), \"Lower envelope must be <= upper envelope\"\nassert np.all(env_low <= s1.reshape(40, 1)), \"Lower envelope must be <= original series\"\nassert np.all(env_up >= s1.reshape(40, 1)), \"Upper envelope must be >= original series\"\n\nprint(f\"__CHECK__ lb_envelope {env_low.shape} {env_up.shape}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_lb_envelope/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ lb_envelope (40, 1) (40, 1)\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 12.0,
+      "llm_calls": 1,
+      "input_tokens": 2689,
+      "output_tokens": 1006,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2689,
+          "output_tokens": 1006
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 4786,
+      "document_sha256": "8f1bf2080de97a6d9d1af223736aa9daaf74abc61eed3d82303cc4060320b4e6",
+      "source": "tslearn/tslearn/metrics/dtw_variants.py:2170",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

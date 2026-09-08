@@ -1,0 +1,112 @@
+{
+  "summary": {
+    "repository": "mir_eval",
+    "cell": "B2",
+    "api": "register_colormap",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 13.4,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 13.4,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "identity_status": "Final or explicitly migrated evidence",
+    "error": null,
+    "details": "api_details/49c5990fd6be0ac7ab03.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 13.4,
+    "llm_calls": 1,
+    "input_tokens": 2044,
+    "output_tokens": 1315,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2044,
+        "output_tokens": 1315
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 2999,
+    "document_sha256": "80d4e200043b808584ead766ee3dc21753bb36f3b532e54fa66aa4380a89e504",
+    "source": "source/mir_eval/display.py:117",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "name": "register_colormap",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "import mir_eval.display\nfrom matplotlib.colors import ListedColormap\nimport matplotlib\n\ncmap_name = 'test_custom_cmap'\ncolors = ['#FF0000', '#00FF00', '#0000FF']\ncustom_cmap = ListedColormap(colors, name=cmap_name)\n\nmir_eval.display.register_colormap(cmap_name, custom_cmap)\n\nif hasattr(matplotlib, 'colormaps'):\n    retrieved_cmap = matplotlib.colormaps[cmap_name]\nelse:\n    retrieved_cmap = matplotlib.cm.get_cmap(cmap_name)\n\nassert retrieved_cmap is not None, \"Colormap was not registered\"\nassert list(retrieved_cmap.colors) == colors, \"Registered colormap colors do not match\"\n\nprint(f\"__CHECK__ register_colormap {cmap_name} {len(retrieved_cmap.colors)}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_register_colormap/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ register_colormap test_custom_cmap 3\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/comprehension.json",
+  "source_sha256": "c25a74155511d59ffa5583bce3975fae3a254ce3e3bc65948dcfbd8f61d51736",
+  "checkpoint_events": [
+    {
+      "name": "register_colormap",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import mir_eval.display\nfrom matplotlib.colors import ListedColormap\nimport matplotlib\n\ncmap_name = 'test_custom_cmap'\ncolors = ['#FF0000', '#00FF00', '#0000FF']\ncustom_cmap = ListedColormap(colors, name=cmap_name)\n\nmir_eval.display.register_colormap(cmap_name, custom_cmap)\n\nif hasattr(matplotlib, 'colormaps'):\n    retrieved_cmap = matplotlib.colormaps[cmap_name]\nelse:\n    retrieved_cmap = matplotlib.cm.get_cmap(cmap_name)\n\nassert retrieved_cmap is not None, \"Colormap was not registered\"\nassert list(retrieved_cmap.colors) == colors, \"Registered colormap colors do not match\"\n\nprint(f\"__CHECK__ register_colormap {cmap_name} {len(retrieved_cmap.colors)}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_register_colormap/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ register_colormap test_custom_cmap 3\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 13.4,
+      "llm_calls": 1,
+      "input_tokens": 2044,
+      "output_tokens": 1315,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2044,
+          "output_tokens": 1315
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 2999,
+      "document_sha256": "80d4e200043b808584ead766ee3dc21753bb36f3b532e54fa66aa4380a89e504",
+      "source": "source/mir_eval/display.py:117",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}
