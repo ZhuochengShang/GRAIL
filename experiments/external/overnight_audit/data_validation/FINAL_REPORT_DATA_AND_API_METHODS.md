@@ -174,3 +174,16 @@ The [late-evening runtime inspection](STATUS_2026-09-07_CHECKPOINT_DEFECT.md) re
 ## September 7 checkpoint repair and rollout
 
 The output-directory fingerprint defect has a committed repair and explicit, hash-bound legacy reuse records. See [repair evidence and rollout](checkpoint_repair_20260907/README.md). Running workers were preserved; new code takes effect on normal worker retries. Preserve the schema transition, all discarded fingerprint groups, unresolved provider outcomes, and missing historical snippet evidence in the final report. Completed native A2 results remain unchanged; strict mixed-schema comparison warnings require review rather than silent normalization.
+
+
+## September 7 Thumbnailator semantic validation and interactive review
+
+The [interactive HTML evidence review](thumbnailator_a2_review_20260907/AIDEAL_RESULTS_REVIEW.html) and [detailed failure memo](thumbnailator_a2_review_20260907/REPORT.md) cover all 149 paired API names, all 22 native A2 failures, fixture samples, checkpoint-event timeout frequency, and 22 reviewable improvement proposals. The archive is bound to source commit `e9b70af` through [file hashes](thumbnailator_a2_review_20260907/ARCHIVE_PROVENANCE.json). It is a dated snapshot, not a live completion claim.
+
+**Correctness gate unresolved:** the Java execution command omits `-ea`. All 127 native A2 passing snippets contain assertions; isolated replays of three unconditional `assert false` snippets pass without assertions enabled and fail with assertions enabled. Preserve the native 127/149 result, but label it harness acceptance, not verified API correctness. Do not infer that only three passes are affected. Calls inside disabled assertions may not execute.
+
+The checked-in `Exif/original.jpg` fixture has no orientation tag; a separate diagnostic control, `orientation_6.jpg`, does. Three frozen manifest entries are package-private and inaccessible from the external harness. These findings qualify earlier input-identity checks: matching file hashes does not certify semantic suitability or a validated full-public-API surface.
+
+The review separates README contradictions, generated helper mistakes, receiver setup, visibility, and input/test assumptions. It preserves compile, runtime, and provider failures separately. Timeout percentages are checkpoint-event frequencies across retry/fingerprint groups, not SDK request rates or hourly probabilities.
+
+Only reporting and isolated diagnostics changed. Current workers, fixture bindings, manifests, prompts, checkpoints, and native results were preserved. The [proposed validation revision](thumbnailator_a2_review_20260907/PROPOSED_VALIDATION_REVISION.yaml) is disabled and requires a separately reviewed matched experiment. HTML behavior and data checks passed; visual browser inspection was unavailable in this session.
