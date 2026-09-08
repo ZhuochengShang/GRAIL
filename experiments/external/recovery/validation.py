@@ -3,6 +3,8 @@ from __future__ import annotations
 
 import glob
 import hashlib
+import re
+import textwrap
 from pathlib import Path
 
 from aideal.doc_checks import (_comprehension_inventory, _execute_sample_data,
@@ -10,6 +12,7 @@ from aideal.doc_checks import (_comprehension_inventory, _execute_sample_data,
 from aideal.prompts import DEFAULT_PROMPTS, prompts_dir
 
 from .engine import POLICY, digest, policy
+from .compatibility import components, engine_files
 
 
 def prompt_file(cfg, name):
@@ -49,7 +52,8 @@ def validate(base, cfg, result, api, manifest):
         raise ValueError('recovery requires a separate, non-nested project copy/worktree')
     if cfg.raw != base.raw:
         raise ValueError('isolated config must be an exact effective-config copy; outputs are isolated by runner')
-    run, fp = result['run'], result['run']['fingerprint_components']
+    run = result['run']
+    fp, migration = components(result)
     names = _load_manifest(base, manifest)
     if not names or set(names) != set(result['metrics']):
         raise ValueError('manifest identities differ from baseline')
@@ -73,7 +77,9 @@ def validate(base, cfg, result, api, manifest):
                  for p in glob.glob(str(current.root / g), recursive=True)]
         scaffold = current.root / ex['scaffold']
         bindings, _, _ = _execute_sample_data(current, ex)
-        fixtures = [Path(p.removeprefix('file://')) for k, p in bindings.items() if k != 'output_dir']
+        from urllib.parse import unquote, urlparse
+        fixtures = [Path(unquote(urlparse(p).path) if p.startswith('file://') else p)
+                    for k, p in bindings.items() if k != 'output_dir']
         docs = [*current.original_readme_files]
         if current.llm_readme.exists():
             docs.append(current.llm_readme)
@@ -96,7 +102,7 @@ def validate(base, cfg, result, api, manifest):
     # This extension must use the same executable engine as the frozen cell.
     import aideal.doc_checks as native
     directory = Path(native.__file__).parent
-    files = [directory / n for n in ('config.py', 'doc_checks.py', 'llm.py', 'prompts.py', 'readme_agent.py')]
+    files = engine_files(directory, fp['schema'])
     if _sha256_files(files, directory) != fp['engine']:
         raise ValueError('native engine differs from baseline; do not mix versions')
     prompts = {}
@@ -116,6 +122,22 @@ def validate(base, cfg, result, api, manifest):
     script = base.root / base_ex['work_dir'] / f'run_{api}' / base_ex['test_filename']
     if not script.is_file():
         raise ValueError('full preserved failing script is missing; truncated error-log code is insufficient')
+    saved_code = script.read_text()
+    detail = result.get('details', {}).get(api)
+    detail = detail if isinstance(detail, dict) else {}
+    native_code = detail.get('code', '')
+    binding = 'retained_unbound_legacy'
+    if native_code:
+        region = base_ex.get('region', [])
+        if len(region) != 2 or region[0] not in saved_code or region[1] not in saved_code:
+            raise ValueError('saved failing harness has no declared snippet region')
+        body = saved_code.split(region[0], 1)[1].split(region[1], 1)[0]
+        normalize = lambda s: re.sub(r'(?m)^[ \t]+$', '', textwrap.dedent(s).strip())
+        if not normalize(body).startswith(normalize(native_code)):
+            raise ValueError('saved failing script does not match native failure code prefix')
+        binding = 'retained_matches_native_failure_prefix'
+    elif sum(name.casefold() == api.casefold() for name in names) > 1:
+        raise ValueError('case-colliding API has no native script association')
     # Verify checkpoint ownership. Historical result JSON does not bind the full
     # saved script's bytes; expose that remaining limitation in the identity.
     checkpoint = Path(run['checkpoint'])
@@ -130,7 +152,8 @@ def validate(base, cfg, result, api, manifest):
                 'context_engine': {n: file_sha(directory / n) for n in ('deepdive.py', 'docfix.py')},
                 'protocol_sha256': file_sha(POLICY), 'source': fp['source'],
                 'document_sha256': run['document_sha256'],
-                'script_binding': 'current saved harness; not independently bound by baseline JSON'}
+                'script_binding': binding}
+    identity['baseline_compatibility'] = migration
     initial = {'status': 'fail', 'category': metric['error_category'],
-               'error': metric.get('error', ''), 'code': script.read_text()}
+               'error': metric.get('error') or '', 'code': saved_code}
     return identity, initial

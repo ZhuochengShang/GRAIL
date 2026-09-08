@@ -24,6 +24,10 @@ def isolated_config(cfg, out, prompt):
     ex = cfg.comprehension['execute']
     ex['work_dir'] = str(out / 'work')
     ex['output_dir'] = str(out / 'output')
+    # full235's relative import root assumes the native two-level work_dir.
+    # Recovery rounds are deeper: relocate this path, never import another cell.
+    ex['command'] = ex.get('command', '').replace(
+        'PYTHONPATH=../../tslearn', f'PYTHONPATH="{cfg.root / "tslearn"}"')
     cfg.raw['comprehension'] = cfg.comprehension
     # Every proposal uses the same fixer role, including its first attempt.
     spec = cfg.model_for_role('fixer')
@@ -47,9 +51,10 @@ def run(cfg, base, result, api, mode, manifest, *, execute=False, max_rounds=5, 
                     runner_sha256=file_sha(Path(__file__)),
                     engine_sha256=file_sha(Path(__file__).with_name('engine.py')),
                     validation_sha256=file_sha(Path(__file__).with_name('validation.py')))
+    identity['compatibility_adapter_sha256'] = file_sha(Path(__file__).with_name('compatibility.py'))
     if not execute:
         return {'status': 'preflight_passed', 'identity': identity,
-                'admission': 'staged; run only after priority four-cell reports',
+                'admission': 'A2-only continuation driver; baseline completion and isolated runtime required',
                 'limitations': ['saved script association and runtime packages need review',
                                 'passing generated assertions require independent semantic review']}
     expected = result['run']['fingerprint_components']['interpreter']
@@ -80,6 +85,9 @@ def run(cfg, base, result, api, mode, manifest, *, execute=False, max_rounds=5, 
                           'Keep the fixtures, preloaded values, harness and library unchanged. '
                           'Do not weaken checks, bypass the target call, or replace an assertion '
                           'with a success print. Report success through the existing witness.\n')
+        # Never teach the fixer to write into the retained baseline's paths.
+        initial = dict(initial, code=initial['code'].replace(str(base.root), str(cfg.root)),
+                       error=initial['error'].replace(str(base.root), str(cfg.root)))
 
         def diagnose():
             if mode == 'feedback':
@@ -116,8 +124,12 @@ def run(cfg, base, result, api, mode, manifest, *, execute=False, max_rounds=5, 
             invocation = folder / f'attempt_{len(used) + 1:04d}'
             current = isolated_config(cfg, invocation, source_prompt)
             ex = current.comprehension['execute']
+            previous_code = previous['code']
+            region = ex.get('region', [])
+            if len(region) == 2 and region[0] in previous_code and region[1] in previous_code:
+                previous_code = previous_code.split(region[0], 1)[1].split(region[1], 1)[0]
             ex['exec_hints'] = (ex.get('exec_hints', '') + '\n\nPREVIOUS SAVED TEST:\n'
-                + previous['code'] + '\nEXECUTION FAILURE:\n' + previous.get('error', '')
+                + previous_code + '\nEXECUTION FAILURE:\n' + previous.get('error', '')
                 + '\nSOURCE DIAGNOSIS:\n' + diagnosis.get('report_text', ''))
             native = comprehension_check(current, execute=True, show_code=True, api=api,
                 doc_source=result['doc_source'], doc_scope=result['run']['doc_scope'],

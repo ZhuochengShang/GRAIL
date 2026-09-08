@@ -1,5 +1,11 @@
 # AIDEAL 2×2 experiment comparison report
 
+**Protocol change, September 8:** the user omitted original-README repair.
+Use [the A2-only repair template](recovery/REPORT_TEMPLATE_V2.md) and
+[the active pipeline definition](recovery/PIPELINE_V2.md) for current results.
+The four-cell tables and interaction formulas below are retained for historical
+2×2 studies, and must not be presented as the revised priority experiment.
+
 ## Measurement labels and validation gates
 
 Never use **attempted**, **executed**, and **passed** interchangeably.

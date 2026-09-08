@@ -76,3 +76,12 @@ hash, fixture hashes, YAML/profile fingerprint, interpreter inventory, and
 per-function failure details. Historical 99-name tslearn and 661-name
 MDAnalysis artifacts are reference-only and are not reused as full-surface
 denominators.
+# September 8 scope update
+
+The user replaced the pending original-README repair branch with an A2-only
+repair study. [Active protocol](experiments/external/recovery/PIPELINE_V2.md):
+A1 original zero-fix control; A2 generated zero-fix baseline; source-only
+snippet recovery from A2 failures; independent generated-README repair and
+fresh B2. Historical B1 is omitted. A1 does not block the A2 repair chain.
+MDAnalysis, Sedona and RDPro reruns remain outside the deadline priority package.
+The dated 2×2 plan below is retained as history, not the active stage graph.

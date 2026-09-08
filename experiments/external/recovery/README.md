@@ -1,5 +1,11 @@
 # Separate API snippet recovery
 
+**September 8 update:** the active continuation is now
+[A2-only repair v2](PIPELINE_V2.md). It omits original-README repair and schedules
+source-only snippet recovery plus independent generated-README repair/fresh B2.
+The remainder of this document records the earlier staged design; its paired
+four-cell admission policy is superseded, not an additional scheduled study.
+
 This extension is **implemented and staged**, with mocked-provider/harness tests.
 It has not been run against a live provider or repository API. Existing jobs,
 prompts, watchdogs and A1/A2/B1/B2 scores are unchanged. Admission remains after

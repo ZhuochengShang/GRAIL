@@ -117,6 +117,7 @@ class Supervisor:
         self.max_parallel = int(self.plan.get("max_parallel", 3))
         self.retry_delay = int(self.plan.get("retry_delay_seconds", 300))
         self.active: dict[str, dict] = {}
+        self.inherited_env = dict(os.environ)
         self.stopping = False
         self.state = load_json(self.state_path)
         if self.state and self.state.get("plan_sha256") != self.plan_sha:
@@ -129,7 +130,21 @@ class Supervisor:
             row = self.state["jobs"].setdefault(
                 job_id, {"status": "pending", "attempts": 0})
             if row.get("status") == "running":
-                row["status"] = "pending"
+                try:
+                    from experiments.external.watchdog_adoption import adopt
+                except ModuleNotFoundError:
+                    from watchdog_adoption import adopt
+                proc = adopt(row, command_list(self.jobs[job_id]['command']))
+                if proc is not None:
+                    final = result_path(self.jobs[job_id], self.plan_dir)
+                    self.active[job_id] = {
+                        'proc': proc, 'cwd': self.cwd(self.jobs[job_id]),
+                        'final': final, 'tmp': final.with_suffix(final.suffix + '.tmp'),
+                        'stdout': None, 'stderr': None, 'started': time.time()}
+                    row['adopted_processes'] = proc.tracked
+                    row['supervisor_recovery'] = 'observing surviving job and descendants; no relaunch'
+                else:
+                    row["status"] = "pending"
                 row["recovered_after_supervisor_restart"] = True
         self._save()
 
@@ -149,7 +164,7 @@ class Supervisor:
         return path.resolve() if path.is_absolute() else (self.plan_dir / path).resolve()
 
     def env(self, job: dict) -> dict[str, str]:
-        env = dict(os.environ)
+        env = dict(self.inherited_env)
         shared = self.plan.get("env", {}) or {}
         env.update({str(k): str(v) for k, v in shared.items()})
         env.update({str(k): str(v) for k, v in (job.get("env", {}) or {}).items()})
@@ -217,6 +232,7 @@ class Supervisor:
             command, cwd=cwd, env=self.env(job), text=True,
             stdout=stdout_stream, stderr=stderr_stream, start_new_session=True)
         row = self.state["jobs"][job_id]
+        row.pop('adopted_processes', None)
         row.update({"status": "running", "pid": proc.pid,
                     "attempts": int(row.get("attempts", 0)) + 1,
                     "started_at": time.strftime("%Y-%m-%d %H:%M:%S"),
@@ -232,13 +248,19 @@ class Supervisor:
     def finish(self, job_id: str) -> None:
         info = self.active.pop(job_id)
         proc = info["proc"]
-        info["stdout"].close()
-        info["stderr"].close()
+        for stream in ('stdout', 'stderr'):
+            if info[stream] is not None:
+                info[stream].close()
         row = self.state["jobs"][job_id]
         rc = proc.returncode
         ok, detail = (False, f"exit={rc}")
-        if rc == 0:
+        artifact_adoption = (getattr(proc, 'adopted', False) and
+            self.jobs[job_id].get('complete', {}).get('kind') in
+            ('json_metrics_no_transient', 'readme_generation', 'docfix'))
+        if rc == 0 or artifact_adoption:
             ok, detail = completion(self.jobs[job_id], info["tmp"], self.plan_dir)
+            if artifact_adoption:
+                detail += '; adopted process exit status unavailable; completion verified from artifact'
         if ok:
             info["tmp"].replace(info["final"])
             try:
@@ -269,11 +291,14 @@ class Supervisor:
             now = time.time()
             for job_id, info in list(self.active.items()):
                 max_runtime = int(self.jobs[job_id].get("max_runtime_seconds", 0) or 0)
-                if max_runtime and now - info["started"] > max_runtime:
+                adopted = getattr(info['proc'], 'adopted', False)
+                if max_runtime and not adopted and now - info["started"] > max_runtime:
                     self.log(f"TIMEOUT {job_id}; terminating process group")
                     os.killpg(info["proc"].pid, signal.SIGTERM)
                 if info["proc"].poll() is not None:
                     self.finish(job_id)
+                elif adopted:
+                    self.state['jobs'][job_id]['adopted_processes'] = info['proc'].tracked
             for job_id in self.jobs:
                 if len(self.active) >= self.max_parallel:
                     break
@@ -297,6 +322,8 @@ class Supervisor:
     def stop(self, *_args) -> None:
         self.stopping = True
         for info in self.active.values():
+            if getattr(info['proc'], 'adopted', False):
+                continue
             try:
                 os.killpg(info["proc"].pid, signal.SIGTERM)
             except ProcessLookupError:

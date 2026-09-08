@@ -1,5 +1,11 @@
 # AIDEAL design logic and automation boundaries
 
+**September 8 protocol update:** the active priority continuation is
+[A2-only repair](experiments/external/recovery/PIPELINE_V2.md): A1 remains an
+original-README zero-fix control; A2 failures feed source-only snippet recovery
+and independent generated-README repair followed by fresh B2. Original-document
+repair is omitted. Historical 2×2 descriptions below remain architectural history.
+
 Updated September 7, 2026. This note describes the existing priority study and
 labels the new, staged components separately. It is an architecture record,
 not evidence that every planned stage has completed.
