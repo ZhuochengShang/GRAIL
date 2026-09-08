@@ -1,6 +1,6 @@
 # AIDEAL: three separate stages
 
-2026-09-08T02:48:33.965617-07:00
+2026-09-08T03:03:34.559870-07:00
 
 A1/A2 are zero-fix controls. S_A2 repairs snippets from A2 failures. Independent README repair produces fresh zero-fix B2. S_B2 repairs only eligible B2 failures.
 
@@ -8,9 +8,9 @@ A1/A2 are zero-fix controls. S_A2 repairs snippets from A2 failures. Independent
 |---|---|---|---:|---:|
 | mir_eval | A1 | native partial | 69 | 148 |
 | mir_eval | A2 | native complete | 135 | 148 |
-| mir_eval | B2 | pending native evidence | — | — |
+| mir_eval | B2 | native complete | 137 | 148 |
 | mir_eval | S_A2 | {'recovered_native': 13} | 13 | 13 |
-| mir_eval | S_B2 | FileNotFoundError: [Errno 2] No such file or directory: '/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/comprehension.json' | — | — |
+| mir_eval | S_B2 | priority complete | — | — |
 | thumbnailator | A1 | native partial | 128 | 149 |
 | thumbnailator | A2 | native complete | 127 | 149 |
 | thumbnailator | B2 | pending native evidence | — | — |

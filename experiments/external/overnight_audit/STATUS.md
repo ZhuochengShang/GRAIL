@@ -4,16 +4,16 @@ Deadline: 2026-09-09T11:00:00-07:00. This observer never starts, stops, or resta
 
 | Repository | Cell | State | Pass | Fail | Pending | Recorded provider-error attempts |
 |---|---|---|---:|---:|---:|---:|
-| mir_eval | A1 | partial | 0 | 19 | 129 | 145 |
+| mir_eval | A1 | partial | 0 | 20 | 128 | 146 |
 | mir_eval | A2 | complete | 135 | 13 | 0 | 1 |
 | mir_eval | B1 | pending | 0 | 0 | 148 | 0 |
-| mir_eval | B2 | partial | 134 | 11 | 3 | 0 |
-| thumbnailator | A1 | partial | 1 | 5 | 143 | 51 |
+| mir_eval | B2 | complete | 137 | 11 | 0 | 0 |
+| thumbnailator | A1 | partial | 1 | 5 | 143 | 53 |
 | thumbnailator | A2 | complete | 127 | 22 | 0 | 1 |
 | thumbnailator | B1 | pending | 0 | 0 | 149 | 0 |
-| thumbnailator | B2 | partial | 30 | 2 | 117 | 0 |
-| tslearn | A1 | partial | 0 | 18 | 217 | 63 |
-| tslearn | A2 | partial | 0 | 3 | 232 | 30 |
+| thumbnailator | B2 | partial | 51 | 6 | 92 | 1 |
+| tslearn | A1 | partial | 0 | 20 | 215 | 65 |
+| tslearn | A2 | partial | 0 | 3 | 232 | 31 |
 | tslearn | B1 | pending | 0 | 0 | 235 | 0 |
 | tslearn | B2 | pending | 0 | 0 | 235 | 0 |
 | mdanalysis | A1 | pending | 0 | 0 | 1032 | 0 |

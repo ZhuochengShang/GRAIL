@@ -1,15 +1,15 @@
 {
-  "status": "partial",
+  "status": "complete",
   "expected": 148,
   "counts": {
-    "pass": 134,
-    "fail": 11,
-    "pending": 3
+    "pass": 137,
+    "fail": 11
   },
   "fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
   "errors": [],
   "failure_categories": {
-    "unknown": 11
+    "unknown": 8,
+    "test/scaffold": 3
   },
   "recorded_provider_errors_all_fingerprints": 0,
   "observed_fingerprints": [
@@ -6200,6 +6200,132 @@
       "source_other_sites": 0,
       "codebase_frames": null,
       "checkpoint_line": 146
+    },
+    {
+      "name": "voicing_recall",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import numpy as np\nimport mir_eval\n\nref_voicing = np.array([True, True, False, False])\nest_voicing = np.array([True, False, True, False])\n\nrecall = mir_eval.melody.voicing_recall(ref_voicing, est_voicing)\n\nassert recall == 0.5, f\"Expected recall to be 0.5, got {recall}\"\nprint(f\"__CHECK__ voicing_recall {recall}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_voicing_recall/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ voicing_recall 0.5\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 15.4,
+      "llm_calls": 1,
+      "input_tokens": 2179,
+      "output_tokens": 687,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2179,
+          "output_tokens": 687
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3192,
+      "document_sha256": "cbea86d4ebe7f8cd8c49cc8d2ca2c5f1b89d1a4ac66ca3e01787fa2453961415",
+      "source": "source/mir_eval/melody.py:441",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 147
+    },
+    {
+      "name": "weighted_accuracy",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import mir_eval\nimport numpy as np\n\ncomparisons = np.array([1.0, 0.5, 0.0])\nweights = np.array([2.0, 1.0, 1.0])\n\nscore = mir_eval.chord.weighted_accuracy(comparisons, weights)\n\n# Expected score: (1.0*2.0 + 0.5*1.0 + 0.0*1.0) / (2.0 + 1.0 + 1.0) = 2.5 / 4.0 = 0.625\nassert np.isclose(score, 0.625), f\"Expected weighted accuracy of 0.625, got {score}\"\nprint(f\"__CHECK__ weighted_accuracy {score:.3f}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_weighted_accuracy/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ weighted_accuracy 0.625\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 19.8,
+      "llm_calls": 1,
+      "input_tokens": 2527,
+      "output_tokens": 1448,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2527,
+          "output_tokens": 1448
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 4599,
+      "document_sha256": "37125c7efaa3912328e12c8ff57044abf0b2f3a4efb2a1ead6a7e4e25f6306c5",
+      "source": "source/mir_eval/chord.py:647",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 148
+    },
+    {
+      "name": "weighted_score",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import mir_eval\n\nref_key = \"C major\"\nest_key = \"F major\"  # Perfect fifth below C major\n\n# Compute score with MIREX 2017+ compatibility (descending fifths allowed)\nscore = mir_eval.key.weighted_score(\n    ref_key, \n    est_key, \n    allow_descending_fifths=True\n)\n\n# A perfect fifth below should score 0.5 when allow_descending_fifths=True\nassert score == 0.5, f\"Expected score of 0.5 for descending fifth, got {score}\"\n\nprint(f\"__CHECK__ weighted_score {score}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_weighted_score/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ weighted_score 0.5\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 10.2,
+      "llm_calls": 1,
+      "input_tokens": 2588,
+      "output_tokens": 964,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2588,
+          "output_tokens": 964
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 5094,
+      "document_sha256": "2a6bc8e9e8f872b80a536060da13efa317e5cfd2fa2abd9184f5a7912dfb1582",
+      "source": "source/mir_eval/key.py:117",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 149
     }
   ],
   "repair_summary": {
@@ -8160,9 +8286,9 @@
     {
       "api": "load_key",
       "status": "fail",
-      "primary_category": "unknown",
+      "primary_category": "test/scaffold",
       "runner_category": "runtime",
-      "category_reason": "Observed runtime; doc attribution requires source, document, and snippet review.",
+      "category_reason": "Generated code tried to write under the supplied, absent output directory.",
       "error": "FileNotFoundError: [Errno 2] No such file or directory: '/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/output/test_key.txt'",
       "source": "source/mir_eval/io.py:497",
       "doc_chars": 3343,
@@ -8530,9 +8656,9 @@
     {
       "api": "load_tempo",
       "status": "fail",
-      "primary_category": "unknown",
+      "primary_category": "test/scaffold",
       "runner_category": "runtime",
-      "category_reason": "Observed runtime; doc attribution requires source, document, and snippet review.",
+      "category_reason": "Generated code tried to write under the supplied, absent output directory.",
       "error": "FileNotFoundError: [Errno 2] No such file or directory: '/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/output/test_tempo.txt'",
       "source": "source/mir_eval/io.py:542",
       "doc_chars": 3474,
@@ -8755,9 +8881,9 @@
     {
       "api": "load_wav",
       "status": "fail",
-      "primary_category": "unknown",
+      "primary_category": "test/scaffold",
       "runner_category": "runtime",
-      "category_reason": "Observed runtime; doc attribution requires source, document, and snippet review.",
+      "category_reason": "Generated code tried to write under the supplied, absent output directory.",
       "error": "FileNotFoundError: [Errno 2] No such file or directory: '/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/output/test_load.wav'",
       "source": "source/mir_eval/io.py:409",
       "doc_chars": 3691,
@@ -11642,18 +11768,31 @@
     },
     {
       "api": "voicing_recall",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "source/mir_eval/melody.py:441",
+      "doc_chars": 3192,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 147,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 15.4,
+          "llm_calls": 1,
+          "input_tokens": 2179,
+          "output_tokens": 687,
+          "pass_round": 0
+        }
+      ],
       "repair_status": "doc-fixed",
       "doc_rounds_used": 1,
       "doc_rounds": [
@@ -11720,18 +11859,31 @@
     },
     {
       "api": "weighted_accuracy",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "source/mir_eval/chord.py:647",
+      "doc_chars": 4599,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 148,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 19.8,
+          "llm_calls": 1,
+          "input_tokens": 2527,
+          "output_tokens": 1448,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -11739,18 +11891,31 @@
     },
     {
       "api": "weighted_score",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "source/mir_eval/key.py:117",
+      "doc_chars": 5094,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 149,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 10.2,
+          "llm_calls": 1,
+          "input_tokens": 2588,
+          "output_tokens": 964,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -11762,6 +11927,11 @@
   "manifest": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/api_manifest.json",
   "manifest_file_sha256": "67bc70f983ed92137ff2a9c49240abbe57ad0e8e5fdc72a93f4ae56e53623a9e",
   "evidence": [
+    {
+      "path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/comprehension.json",
+      "sha256": "c25a74155511d59ffa5583bce3975fae3a254ce3e3bc65948dcfbd8f61d51736",
+      "snapshot": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_overnight_evidence_audit/experiments/external/overnight_audit/snapshots/c25a74155511d59ffa5583bce3975fae3a254ce3e3bc65948dcfbd8f61d51736"
+    },
     {
       "path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/docfix.json",
       "sha256": "b87feefbef809590ba5d45607f19766ecd8f87d5de925f48a830c4199dfdce15",

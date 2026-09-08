@@ -2,16 +2,17 @@
   "status": "partial",
   "expected": 149,
   "counts": {
-    "pass": 30,
-    "fail": 2,
-    "pending": 117
+    "pass": 51,
+    "fail": 6,
+    "pending": 92
   },
   "fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced",
   "errors": [],
   "failure_categories": {
-    "unknown": 2
+    "unknown": 5,
+    "llm-error": 1
   },
-  "recorded_provider_errors_all_fingerprints": 0,
+  "recorded_provider_errors_all_fingerprints": 1,
   "observed_fingerprints": [
     "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced",
     "929b33ac9c93eb7b75bfe6473dfa801ffaa65a8a5ec52d7285a9fecfb14db2ec"
@@ -1397,6 +1398,1066 @@
       "source_other_sites": 1,
       "codebase_frames": null,
       "checkpoint_line": 33
+    },
+    {
+      "name": "Watermark",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "llm-error",
+            "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}"
+          }
+        ],
+        "error_category": "llm-error",
+        "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+        "code": "",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_Watermark/ApiTest.java",
+        "exit_code": null,
+        "stdout_tail": "",
+        "stderr_tail": ""
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 601.0,
+      "llm_calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "by_model": {},
+      "error_category": "llm-error",
+      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "locus": "",
+      "doc_chars": 4175,
+      "document_sha256": "ed3fea64679faa3070a6cc5dd3e195a87089e6036926236ab12c2cfbf3de52cc",
+      "source": "source/src/main/java/net/coobird/thumbnailator/filters/Watermark.java:76",
+      "source_other_sites": 1,
+      "codebase_frames": null,
+      "checkpoint_line": 34
+    },
+    {
+      "name": "add",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "int w = sourceImage.getWidth();\nsourceImage.setRGB(0, 0, java.awt.Color.WHITE.getRGB());\nsourceImage.setRGB(w - 1, 0, java.awt.Color.BLACK.getRGB());\n\nint expectedLeft = sourceImage.getRGB(w - 1, 0);\nint expectedRight = sourceImage.getRGB(0, 0);\n\nnet.coobird.thumbnailator.filters.Pipeline pipeline = new net.coobird.thumbnailator.filters.Pipeline();\npipeline.add(net.coobird.thumbnailator.filters.Flip.HORIZONTAL);\n\njava.awt.image.BufferedImage result = pipeline.apply(sourceImage);\n\nassert result.getRGB(0, 0) == expectedLeft : \"Expected right pixel to move to left\";\nassert result.getRGB(w - 1, 0) == expectedRight : \"Expected left pixel to move to right\";\n\nSystem.out.println(\"__CHECK__ add \" + result.getRGB(0, 0));",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_add/ApiTest.java",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ add -16777216\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 42.6,
+      "llm_calls": 1,
+      "input_tokens": 1815,
+      "output_tokens": 5145,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1815,
+          "output_tokens": 5145
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 2728,
+      "document_sha256": "234cd41d80c6578eed4d899c75a30572f07e9bf0d199a1b71920f19b220f1b08",
+      "source": "source/src/main/java/net/coobird/thumbnailator/filters/Pipeline.java:99",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 35
+    },
+    {
+      "name": "addAll",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "net.coobird.thumbnailator.filters.ImageFilter filter1 = img -> {\n    int type = img.getType() == java.awt.image.BufferedImage.TYPE_CUSTOM ? java.awt.image.BufferedImage.TYPE_INT_ARGB : img.getType();\n    return new java.awt.image.BufferedImage(img.getWidth() + 10, img.getHeight(), type);\n};\n\nnet.coobird.thumbnailator.filters.ImageFilter filter2 = img -> {\n    int type = img.getType() == java.awt.image.BufferedImage.TYPE_CUSTOM ? java.awt.image.BufferedImage.TYPE_INT_ARGB : img.getType();\n    return new java.awt.image.BufferedImage(img.getWidth(), img.getHeight() + 20, type);\n};\n\nnet.coobird.thumbnailator.filters.Pipeline pipeline = new net.coobird.thumbnailator.filters.Pipeline();\npipeline.addAll(java.util.Arrays.asList(filter1, filter2));\n\njava.awt.image.BufferedImage result = pipeline.apply(sourceImage);\n\nint dw = result.getWidth() - sourceImage.getWidth();\nint dh = result.getHeight() - sourceImage.getHeight();\n\nassert dw == 10 : \"Width should increase by 10\";\nassert dh == 20 : \"Height should increase by 20\";\n\nSystem.out.println(\"__CHECK__ addAll \" + dw + \",\" + dh);",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_addAll/ApiTest.java",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ addAll 10,20\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 23.1,
+      "llm_calls": 1,
+      "input_tokens": 1788,
+      "output_tokens": 2640,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1788,
+          "output_tokens": 2640
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 2458,
+      "document_sha256": "e7c676d4947cf59683f01cf9c7050fc4840056084222d92f49a47f5b0c664a63",
+      "source": "source/src/main/java/net/coobird/thumbnailator/filters/Pipeline.java:125",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 36
+    },
+    {
+      "name": "addFilter",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "net.coobird.thumbnailator.filters.ImageFilter magentaFilter = new net.coobird.thumbnailator.filters.ImageFilter() {\n    @Override\n    public java.awt.image.BufferedImage apply(java.awt.image.BufferedImage img) {\n        java.awt.image.BufferedImage out = new java.awt.image.BufferedImage(\n            img.getWidth(), img.getHeight(), java.awt.image.BufferedImage.TYPE_INT_ARGB);\n        java.awt.Graphics2D g = out.createGraphics();\n        g.setColor(java.awt.Color.MAGENTA);\n        g.fillRect(0, 0, img.getWidth(), img.getHeight());\n        g.dispose();\n        return out;\n    }\n};\n\njava.awt.image.BufferedImage result = net.coobird.thumbnailator.Thumbnails.of(sourceImage)\n    .size(32, 32)\n    .addFilter(magentaFilter)\n    .asBufferedImage();\n\nint centerX = result.getWidth() / 2;\nint centerY = result.getHeight() / 2;\nint centerRgb = result.getRGB(centerX, centerY);\nint expectedRgb = java.awt.Color.MAGENTA.getRGB();\n\nassert centerRgb == expectedRgb : \"Filter was not applied correctly, expected MAGENTA but got \" + Integer.toHexString(centerRgb);\nSystem.out.println(\"__CHECK__ addFilter \" + Integer.toHexString(centerRgb));",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_addFilter/ApiTest.java",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ addFilter ffff00ff\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 38.0,
+      "llm_calls": 1,
+      "input_tokens": 2063,
+      "output_tokens": 4177,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2063,
+          "output_tokens": 4177
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3829,
+      "document_sha256": "ae3238dedb738051365368304a5b477b4a3354245ecbf6ada98ad5bdde1ea933",
+      "source": "source/src/main/java/net/coobird/thumbnailator/Thumbnails.java:1993",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 37
+    },
+    {
+      "name": "addFilters",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "java.awt.image.BufferedImage testImg = new java.awt.image.BufferedImage(10, 10, java.awt.image.BufferedImage.TYPE_INT_RGB);\nfor (int y = 0; y < 5; y++) {\n    for (int x = 0; x < 5; x++) {\n        testImg.setRGB(x, y, 0xFF123456);\n    }\n}\n\njava.util.List<net.coobird.thumbnailator.filters.ImageFilter> filters = new java.util.ArrayList<>();\nfilters.add(net.coobird.thumbnailator.filters.Flip.HORIZONTAL);\nfilters.add(net.coobird.thumbnailator.filters.Flip.VERTICAL);\n\njava.awt.image.BufferedImage result = net.coobird.thumbnailator.Thumbnails.of(testImg)\n    .scale(1.0)\n    .addFilters(filters)\n    .asBufferedImage();\n\nint rgb = result.getRGB(8, 8) & 0xFFFFFF;\nassert rgb == 0x123456 : \"Block not flipped correctly, got \" + Integer.toHexString(rgb);\n\nint rgbEmpty = result.getRGB(2, 2) & 0xFFFFFF;\nassert rgbEmpty == 0x000000 : \"Empty area not flipped correctly, got \" + Integer.toHexString(rgbEmpty);\n\nSystem.out.println(\"__CHECK__ addFilters \" + Integer.toHexString(rgb));",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_addFilters/ApiTest.java",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ addFilters 123456\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 41.9,
+      "llm_calls": 1,
+      "input_tokens": 1875,
+      "output_tokens": 4548,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1875,
+          "output_tokens": 4548
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 2849,
+      "document_sha256": "a046bb62aef396d87f9ed7431bfd5dea73616abbe8336263c1160a7c41a9e655",
+      "source": "source/src/main/java/net/coobird/thumbnailator/Thumbnails.java:2016",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 38
+    },
+    {
+      "name": "addFirst",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "java.util.List<Integer> order = new java.util.ArrayList<>();\n\nnet.coobird.thumbnailator.filters.ImageFilter one = new net.coobird.thumbnailator.filters.ImageFilter() {\n    @Override\n    public java.awt.image.BufferedImage apply(java.awt.image.BufferedImage img) {\n        order.add(1);\n        return img;\n    }\n};\n\nnet.coobird.thumbnailator.filters.ImageFilter two = new net.coobird.thumbnailator.filters.ImageFilter() {\n    @Override\n    public java.awt.image.BufferedImage apply(java.awt.image.BufferedImage img) {\n        order.add(2);\n        return img;\n    }\n};\n\nnet.coobird.thumbnailator.filters.Pipeline pipeline = new net.coobird.thumbnailator.filters.Pipeline();\npipeline.add(one);\npipeline.addFirst(two);\n\npipeline.apply(sourceImage);\n\nassert order.size() == 2 : \"Pipeline should have executed 2 filters\";\nassert order.get(0) == 2 : \"Filter 'two' should have executed first because of addFirst\";\nassert order.get(1) == 1 : \"Filter 'one' should have executed second\";\n\nSystem.out.println(\"__CHECK__ addFirst \" + order.toString());",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_addFirst/ApiTest.java",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ addFirst [2, 1]\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 19.9,
+      "llm_calls": 1,
+      "input_tokens": 1871,
+      "output_tokens": 1618,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1871,
+          "output_tokens": 1618
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 2903,
+      "document_sha256": "d519b97b7bde189782c964a42ddcb048a4b997b3f1386ab3f61dc82c5ae6ea9e",
+      "source": "source/src/main/java/net/coobird/thumbnailator/filters/Pipeline.java:112",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 39
+    },
+    {
+      "name": "allowOverwrite",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "runtime",
+            "error": "NoSuchFileException: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/output/th"
+          }
+        ],
+        "error_category": "runtime",
+        "error": "NoSuchFileException: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/output/thumbnail.png/test_overwrite.png",
+        "code": "java.nio.file.Path testFilePath = outputPath.resolve(\"test_overwrite.png\");\njava.nio.file.Files.write(testFilePath, new byte[]{1, 2, 3, 4, 5});\n\n// Test that allowOverwrite(true) successfully overwrites the existing file\nnet.coobird.thumbnailator.Thumbnails.of(sourceImage)\n    .size(10, 10)\n    .allowOverwrite(true)\n    .toFile(testFilePath.toFile());\n\nlong newSize = java.nio.file.Files.size(testFilePath);\nassert newSize > 5 : \"File should have been overwritten with a valid image, but size was \" + newSize;\n\n// Test the documented failure mode: calling allowOverwrite multiple times throws IllegalStateException\nboolean threw = false;\ntry {\n    net.coobird.thumbnailator.Thumbnails.of(sourceImage)\n        .size(10, 10)\n        .allowOverwrite(true)\n        .allowOverwrite(false);\n} catch (IllegalStateException e) {\n    threw = true;\n}\nassert threw : \"Should throw IllegalStateException when allowOverwrite is called multiple times\";\n\nSystem.out.println(\"__CHECK__ allowOverwrite \" + newSize +",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_allowOverwrite/ApiTest.java",
+        "exit_code": 1,
+        "stdout_tail": "",
+        "stderr_tail": "__RUN_ERR__ NoSuchFileException: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/output/thumbnail.png/test_overwrite.png\njava.nio.file.NoSuchFileException: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/output/thumbnail.png/test_overwrite.png\n\tat sun.nio.fs.UnixException.translateToIOException(UnixException.java:86)\n\tat sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:102)\n\tat sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:107)\n\tat sun.nio.fs.UnixFileSystemProvider.newByteChannel(UnixFileSystemProvider.java:214)\n\tat java.nio.file.spi.FileSystemProvider.newOutputStream(FileSystemProvider.java:434)\n\tat java.nio.file.Files.newOutputStream(Files.java:216)\n\tat java.nio.file.Files.write(Files.java:3292)\n\tat ApiTest.main(ApiTest.java:52)\n"
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 23.7,
+      "llm_calls": 1,
+      "input_tokens": 2094,
+      "output_tokens": 2531,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2094,
+          "output_tokens": 2531
+        }
+      },
+      "error_category": "runtime",
+      "error": "NoSuchFileException: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/output/thumbnail.png/test_overwrite.png",
+      "locus": "UnixException.java:86",
+      "doc_chars": 3717,
+      "document_sha256": "f2a912f27066711e2da87b2347ab3c27b3f6de7e604861db05ecb1c59dc5cdb4",
+      "source": "source/src/main/java/net/coobird/thumbnailator/Thumbnails.java:1265",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 40
+    },
+    {
+      "name": "alphaInterpolation",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "java.awt.image.BufferedImage result = net.coobird.thumbnailator.Thumbnails.of(sourceImage)\n    .size(50, 50)\n    .alphaInterpolation(net.coobird.thumbnailator.resizers.configurations.AlphaInterpolation.SPEED)\n    .asBufferedImage();\n\nassert result.getWidth() <= 50 && result.getHeight() <= 50 : \"Resulting image dimensions should be bounded by 50x50\";\nSystem.out.println(\"__CHECK__ alphaInterpolation \" + result.getWidth() + \"x\" + result.getHeight());",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_alphaInterpolation/ApiTest.java",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ alphaInterpolation 50x38\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 13.0,
+      "llm_calls": 1,
+      "input_tokens": 1967,
+      "output_tokens": 990,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1967,
+          "output_tokens": 990
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3152,
+      "document_sha256": "83a8728a32847830bb1c58e31da3d940f04243a8fb7af3cf72efe26e511bfaf5",
+      "source": "source/src/main/java/net/coobird/thumbnailator/Thumbnails.java:1379",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 41
+    },
+    {
+      "name": "antialiasing",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "net.coobird.thumbnailator.Thumbnails.Builder<java.awt.image.BufferedImage> builder = \n    net.coobird.thumbnailator.Thumbnails.of(sourceImage).size(50, 50);\n\n// Call the API under test\nbuilder.antialiasing(net.coobird.thumbnailator.resizers.configurations.Antialiasing.ON);\n\n// Verify documented contract: calling multiple times throws IllegalStateException\nboolean threwMultiple = false;\ntry {\n    builder.antialiasing(net.coobird.thumbnailator.resizers.configurations.Antialiasing.OFF);\n} catch (IllegalStateException e) {\n    threwMultiple = true;\n}\nassert threwMultiple : \"Calling antialiasing multiple times must throw IllegalStateException\";\n\n// Materialize the result to ensure the pipeline executes successfully with the configuration\njava.awt.image.BufferedImage thumbnail = builder.asBufferedImage();\nassert thumbnail.getWidth() <= 50 && thumbnail.getHeight() <= 50 : \"Thumbnail dimensions should be within 50x50\";\n\nSystem.out.println(\"__CHECK__ antialiasing \" + thumbnail.getWidth() + \"x\" + thumbnail.getHeight() + \"_threw_\" + threwMultiple);",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_antialiasing/ApiTest.java",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ antialiasing 50x38_threw_true\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 33.1,
+      "llm_calls": 1,
+      "input_tokens": 1985,
+      "output_tokens": 2915,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1985,
+          "output_tokens": 2915
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3081,
+      "document_sha256": "8ebefa043858b969d72fe25409cba725ae82f4bf131dd9368dfb95c0c9a4378d",
+      "source": "source/src/main/java/net/coobird/thumbnailator/Thumbnails.java:1425",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 42
+    },
+    {
+      "name": "apply",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "net.coobird.thumbnailator.name.Rename safeRenamer = new net.coobird.thumbnailator.name.Rename() {\n    @Override\n    public String apply(String name, net.coobird.thumbnailator.ThumbnailParameter param) {\n        int dotIndex = name.lastIndexOf('.');\n        String baseName = (dotIndex == -1) ? name : name.substring(0, dotIndex);\n        return \"thumb_\" + baseName + \".jpg\";\n    }\n};\n\nString originalName = \"batch_image.png\";\nString newName = safeRenamer.apply(originalName, null);\n\nassert \"thumb_batch_image.jpg\".equals(newName) : \"Renamer did not produce expected filename, got: \" + newName;\nSystem.out.println(\"__CHECK__ apply \" + newName);",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_apply/ApiTest.java",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ apply thumb_batch_image.jpg\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 23.2,
+      "llm_calls": 1,
+      "input_tokens": 2137,
+      "output_tokens": 2073,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2137,
+          "output_tokens": 2073
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 4271,
+      "document_sha256": "ca50a5e9de22b236651074b73937934419653e99211a53c9a06fc412bdfc1936",
+      "source": "source/src/main/java/net/coobird/thumbnailator/name/Rename.java:202",
+      "source_other_sites": 16,
+      "codebase_frames": null,
+      "checkpoint_line": 43
+    },
+    {
+      "name": "asBufferedImage",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "java.awt.image.BufferedImage thumbnail = net.coobird.thumbnailator.Thumbnails.of(sourceImage)\n    .forceSize(50, 50)\n    .asBufferedImage();\n\nassert thumbnail != null : \"Thumbnail should not be null\";\nassert thumbnail.getWidth() == 50 && thumbnail.getHeight() == 50 : \"Thumbnail dimensions should be exactly 50x50\";\n\nSystem.out.println(\"__CHECK__ asBufferedImage \" + thumbnail.getWidth() + \"x\" + thumbnail.getHeight());",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_asBufferedImage/ApiTest.java",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ asBufferedImage 50x50\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 10.6,
+      "llm_calls": 1,
+      "input_tokens": 2406,
+      "output_tokens": 941,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2406,
+          "output_tokens": 941
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 4953,
+      "document_sha256": "2e49f3c82ddc5d4d2947b74d8a213ed5b0d118afa5f2c9e237dd2bddd3ba0a53",
+      "source": "source/src/main/java/net/coobird/thumbnailator/Thumbnails.java:2342",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 44
+    },
+    {
+      "name": "asBufferedImages",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "java.util.List<java.awt.image.BufferedImage> thumbnails = net.coobird.thumbnailator.Thumbnails.of(sourceImage)\n    .forceSize(100, 100)\n    .asBufferedImages();\n\nassert thumbnails != null && thumbnails.size() == 1 : \"Expected exactly 1 thumbnail in the list\";\njava.awt.image.BufferedImage thumb = thumbnails.get(0);\nassert thumb.getWidth() == 100 && thumb.getHeight() == 100 : \"Expected thumbnail to be exactly 100x100\";\n\nSystem.out.println(\"__CHECK__ asBufferedImages \" + thumbnails.size() + \",\" + thumb.getWidth() + \"x\" + thumb.getHeight());",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_asBufferedImages/ApiTest.java",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ asBufferedImages 1,100x100\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 20.7,
+      "llm_calls": 1,
+      "input_tokens": 2723,
+      "output_tokens": 1855,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2723,
+          "output_tokens": 1855
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 6011,
+      "document_sha256": "33bc630b10a8acdf7da77f3cf17b1364b1f0959a385d2ed65eacc7caf30a5bd7",
+      "source": "source/src/main/java/net/coobird/thumbnailator/Thumbnails.java:2277",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 45
+    },
+    {
+      "name": "asFiles",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "java.io.File destDir = outputPath.toFile();\ndestDir.mkdirs();\n\njava.util.List<java.io.File> inputFiles = java.util.Arrays.asList(\n    new java.io.File(grid_png), \n    new java.io.File(grid_jpeg)\n);\n\njava.util.List<java.io.File> resultFiles;\ntry {\n    resultFiles = net.coobird.thumbnailator.Thumbnails.fromFiles(inputFiles)\n        .size(200, 200)\n        .asFiles(destDir, net.coobird.thumbnailator.name.Rename.PREFIX_HYPHEN_THUMBNAIL);\n} catch (java.io.IOException e) {\n    throw new RuntimeException(\"Failed to process and save thumbnails\", e);\n}\n\nassert resultFiles != null && resultFiles.size() == 2 : \"Expected exactly 2 files to be created\";\n\njava.io.File firstFile = resultFiles.get(0);\nassert firstFile.exists() : \"Output file should exist on disk\";\nassert firstFile.getParentFile().getAbsoluteFile().equals(destDir.getAbsoluteFile()) : \"Output file should be located in the destination directory\";\nassert firstFile.getName().startsWith(\"thumbnail-\") : \"Output file should have the correct rename prefix\";\n\njava.awt.image.BufferedImage resized;\ntry {\n    resized = javax.imageio.ImageIO.read(firstFile);\n} catch (java.io.IOException e) {\n    throw new RuntimeException(\"Failed to read the generated thumbnail\", e);\n}\n\nassert resized != null : \"Generated thumbnail could not be decoded\";\nassert resized.getWidth() <= 200 && resized.getHeight() <= 200 : \"Image should be resized to fit within 200x200 bounding box\";\n\nSystem.out.println(\"__CHECK__ asFiles \" + resultFiles.size() + \" files, first: \" + firstFile.getName());",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_asFiles/ApiTest.java",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ asFiles 2 files, first: thumbnail-grid.png\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 26.8,
+      "llm_calls": 1,
+      "input_tokens": 2670,
+      "output_tokens": 3003,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2670,
+          "output_tokens": 3003
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 6148,
+      "document_sha256": "929dee53743847c0f452bed5817037af5a51257e19fc934c1c97e7d99a2045c0",
+      "source": "source/src/main/java/net/coobird/thumbnailator/Thumbnails.java:2519",
+      "source_other_sites": 2,
+      "codebase_frames": null,
+      "checkpoint_line": 46
+    },
+    {
+      "name": "build",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "java.awt.image.BufferedImage img = new net.coobird.thumbnailator.builders.BufferedImageBuilder(200, 200, java.awt.image.BufferedImage.TYPE_INT_ARGB).build();\n\nnet.coobird.thumbnailator.ThumbnailParameter param = new net.coobird.thumbnailator.builders.ThumbnailParameterBuilder()\n    .size(100, 100)\n    .build();\n\nassert img.getWidth() == 200 : \"Width must be 200\";\nassert img.getHeight() == 200 : \"Height must be 200\";\nassert img.getType() == java.awt.image.BufferedImage.TYPE_INT_ARGB : \"Type must be TYPE_INT_ARGB\";\nassert param != null : \"ThumbnailParameter must be successfully built\";\n\nSystem.out.println(\"__CHECK__ build \" + img.getWidth() + \"x\" + img.getHeight() + \" \" + param.getClass().getSimpleName());",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_build/ApiTest.java",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ build 200x200 ThumbnailParameter\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 17.1,
+      "llm_calls": 1,
+      "input_tokens": 1799,
+      "output_tokens": 1789,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1799,
+          "output_tokens": 1789
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 2920,
+      "document_sha256": "7a073fd6cad6996161ab5b06f041acc16e52282d6713fc315442027220a29b19",
+      "source": "source/src/main/java/net/coobird/thumbnailator/builders/BufferedImageBuilder.java:110",
+      "source_other_sites": 1,
+      "codebase_frames": null,
+      "checkpoint_line": 47
+    },
+    {
+      "name": "calculate",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "net.coobird.thumbnailator.geometry.Position position = net.coobird.thumbnailator.geometry.Positions.BOTTOM_RIGHT;\njava.awt.Point placement = position.calculate(\n    800, 600, // enclosingWidth, enclosingHeight\n    200, 100, // width, height\n    10, 20, 30, 40 // insetLeft, insetRight, insetTop, insetBottom\n);\n\n// For BOTTOM_RIGHT, X = enclosingWidth - width - insetRight = 800 - 200 - 20 = 580\n// For BOTTOM_RIGHT, Y = enclosingHeight - height - insetBottom = 600 - 100 - 40 = 460\nassert placement.x == 580 : \"Expected X coordinate to be 580, but got \" + placement.x;\nassert placement.y == 460 : \"Expected Y coordinate to be 460, but got \" + placement.y;\n\nSystem.out.println(\"__CHECK__ calculate \" + placement.x + \",\" + placement.y);",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_calculate/ApiTest.java",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ calculate 580,460\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 22.1,
+      "llm_calls": 1,
+      "input_tokens": 2220,
+      "output_tokens": 2390,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2220,
+          "output_tokens": 2390
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 4242,
+      "document_sha256": "2f809416e293130a747d0ad763530dd21f9fe64b303f0e4d52f572e6614abe13",
+      "source": "source/src/main/java/net/coobird/thumbnailator/geometry/Position.java:58",
+      "source_other_sites": 14,
+      "codebase_frames": null,
+      "checkpoint_line": 48
+    },
+    {
+      "name": "clear",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "compile",
+            "error": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_clear/ApiTest.java:51: err"
+          }
+        ],
+        "error_category": "compile",
+        "error": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_clear/ApiTest.java:51: error: clear() is not public in Configurations; cannot be accessed from outside package",
+        "code": "net.coobird.thumbnailator.util.Configurations.clear();\nassert false : \"The documented contract is insufficient to verify the result\";\nSystem.out.println(\"__CHECK__ clear executed\");",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_clear/ApiTest.java",
+        "exit_code": 1,
+        "stdout_tail": "",
+        "stderr_tail": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_clear/ApiTest.java:51: error: clear() is not public in Configurations; cannot be accessed from outside package\n            net.coobird.thumbnailator.util.Configurations.clear();\n                                                         ^\n1 error\n"
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 7.0,
+      "llm_calls": 1,
+      "input_tokens": 1601,
+      "output_tokens": 574,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1601,
+          "output_tokens": 574
+        }
+      },
+      "error_category": "compile",
+      "error": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_clear/ApiTest.java:51: error: clear() is not public in Configurations; cannot be accessed from outside package",
+      "locus": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_clear/ApiTest.java:51",
+      "doc_chars": 1956,
+      "document_sha256": "b22fa95de6172a1da339fb0a1195832d751438c3bec8cb3cf84b2a2f38af1ce4",
+      "source": "source/src/main/java/net/coobird/thumbnailator/util/Configurations.java:130",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 49
+    },
+    {
+      "name": "copy",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "java.awt.image.BufferedImage copy1 = net.coobird.thumbnailator.util.BufferedImages.copy(sourceImage);\njava.awt.image.BufferedImage copy2 = net.coobird.thumbnailator.util.BufferedImages.copy(sourceImage, java.awt.image.BufferedImage.TYPE_INT_RGB);\n\nassert copy1 != sourceImage : \"Copy 1 must be a distinct instance\";\nassert copy1.getWidth() == sourceImage.getWidth() : \"Width must match\";\nassert copy1.getHeight() == sourceImage.getHeight() : \"Height must match\";\nassert copy1.getType() == sourceImage.getType() : \"Image type must match\";\nassert copy1.getRGB(0, 0) == sourceImage.getRGB(0, 0) : \"Pixel data must match\";\n\nassert copy2 != sourceImage : \"Copy 2 must be a distinct instance\";\nassert copy2.getWidth() == sourceImage.getWidth() : \"Width must match\";\nassert copy2.getHeight() == sourceImage.getHeight() : \"Height must match\";\nassert copy2.getType() == java.awt.image.BufferedImage.TYPE_INT_RGB : \"Image type must be TYPE_INT_RGB\";\n\nSystem.out.println(\"__CHECK__ copy \" + copy1.getWidth() + \"x\" + copy1.getHeight() + \",\" + copy2.getType());",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_copy/ApiTest.java",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ copy 32x24,1\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 22.9,
+      "llm_calls": 1,
+      "input_tokens": 1892,
+      "output_tokens": 1919,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1892,
+          "output_tokens": 1919
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3107,
+      "document_sha256": "d4829f78ab6a89913dcbb04909854c279df6440b091826fd06bfbca792a54e0e",
+      "source": "source/src/main/java/net/coobird/thumbnailator/util/BufferedImages.java:63",
+      "source_other_sites": 1,
+      "codebase_frames": null,
+      "checkpoint_line": 50
+    },
+    {
+      "name": "createOutputStream",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "compile",
+            "error": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_createOutputStream/ApiTest"
+          }
+        ],
+        "error_category": "compile",
+        "error": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_createOutputStream/ApiTest.java:55: error: createOutputStream(File) is not public in FileImageSink; cannot be accessed from outside package",
+        "code": "java.io.File outputFile = outputPath.resolve(\"output.png\").toFile();\nnet.coobird.thumbnailator.tasks.io.FileImageSink sink = new net.coobird.thumbnailator.tasks.io.FileImageSink(outputFile);\n\nbyte[] data = new byte[] { 10, 20, 30, 40 };\ntry (java.io.OutputStream os = sink.createOutputStream(outputFile)) {\n    os.write(data);\n} catch (java.io.IOException e) {\n    throw new RuntimeException(\"Failed to create or write to output stream\", e);\n}\n\nassert outputFile.exists() : \"Output file should have been created\";\nassert outputFile.length() == data.length : \"Output file should contain the exact written bytes\";\n\nSystem.out.println(\"__CHECK__ createOutputStream \" + outputFile.length());",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_createOutputStream/ApiTest.java",
+        "exit_code": 1,
+        "stdout_tail": "",
+        "stderr_tail": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_createOutputStream/ApiTest.java:55: error: createOutputStream(File) is not public in FileImageSink; cannot be accessed from outside package\n            try (java.io.OutputStream os = sink.createOutputStream(outputFile)) {\n                                               ^\n1 error\n"
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 25.1,
+      "llm_calls": 1,
+      "input_tokens": 1869,
+      "output_tokens": 2497,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1869,
+          "output_tokens": 2497
+        }
+      },
+      "error_category": "compile",
+      "error": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_createOutputStream/ApiTest.java:55: error: createOutputStream(File) is not public in FileImageSink; cannot be accessed from outside package",
+      "locus": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_createOutputStream/ApiTest.java:55",
+      "doc_chars": 3011,
+      "document_sha256": "7580997a676fef64481a74ff1a468bcf7f5e06556e26d655c38b4ed5a91cbb93",
+      "source": "source/src/main/java/net/coobird/thumbnailator/tasks/io/FileImageSink.java:326",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 51
+    },
+    {
+      "name": "createThumbnail",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "try (java.io.InputStream is = java.nio.file.Files.newInputStream(java.nio.file.Paths.get(grid_png));\n     java.io.ByteArrayOutputStream os = new java.io.ByteArrayOutputStream()) {\n    \n    net.coobird.thumbnailator.Thumbnailator.createThumbnail(is, os, \"png\", 50, 50);\n    \n    byte[] resultBytes = os.toByteArray();\n    assert resultBytes.length > 0 : \"Output stream should not be empty\";\n    \n    try (java.io.InputStream resultIs = new java.io.ByteArrayInputStream(resultBytes)) {\n        java.awt.image.BufferedImage resultImage = javax.imageio.ImageIO.read(resultIs);\n        assert resultImage != null : \"Resulting image should be readable\";\n        assert resultImage.getWidth() <= 50 && resultImage.getHeight() <= 50 : \"Image dimensions should be within 50x50\";\n        \n        System.out.println(\"__CHECK__ createThumbnail \" + resultImage.getWidth() + \"x\" + resultImage.getHeight());\n    }\n} catch (java.io.IOException e) {\n    throw new RuntimeException(e);\n}",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_createThumbnail/ApiTest.java",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ createThumbnail 50x50\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 18.4,
+      "llm_calls": 1,
+      "input_tokens": 2327,
+      "output_tokens": 1966,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2327,
+          "output_tokens": 1966
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 4720,
+      "document_sha256": "c8661e32f90ed28a514128f955f2ebea4366177e4087b2813b484f800f10d0f9",
+      "source": "source/src/main/java/net/coobird/thumbnailator/Thumbnailator.java:356",
+      "source_other_sites": 6,
+      "codebase_frames": null,
+      "checkpoint_line": 52
+    },
+    {
+      "name": "createThumbnails",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "java.io.File sourceFile = new java.io.File(grid_png);\njava.io.File tempSource = new java.io.File(output_dir, \"temp_source_createThumbnails.png\");\njava.nio.file.Files.copy(sourceFile.toPath(), tempSource.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);\n\njava.util.List<java.io.File> files = java.util.Collections.singletonList(tempSource);\nnet.coobird.thumbnailator.Thumbnailator.createThumbnails(\n    files,\n    net.coobird.thumbnailator.name.Rename.PREFIX_DOT_THUMBNAIL,\n    50,\n    50\n);\n\njava.io.File expectedOutputFile = new java.io.File(output_dir, \"thumbnail.temp_source_createThumbnails.png\");\nassert expectedOutputFile.exists() : \"Thumbnail file was not created\";\n\njava.awt.image.BufferedImage thumb = javax.imageio.ImageIO.read(expectedOutputFile);\nassert thumb != null : \"Thumbnail could not be read\";\nassert thumb.getWidth() <= 50 && thumb.getHeight() <= 50 : \"Thumbnail dimensions exceed 50x50\";\n\nSystem.out.println(\"__CHECK__ createThumbnails \" + thumb.getWidth() + \"x\" + thumb.getHeight());",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_createThumbnails/ApiTest.java",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ createThumbnails 50x50\n__DONE__\n",
+        "stderr_tail": "Note: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_createThumbnails/ApiTest.java uses or overrides a deprecated API.\nNote: Recompile with -Xlint:deprecation for details.\n"
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 22.4,
+      "llm_calls": 1,
+      "input_tokens": 2196,
+      "output_tokens": 2506,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2196,
+          "output_tokens": 2506
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 4105,
+      "document_sha256": "0f645f0c2496d3b3bc0526a95b7c2ced66f903cfde7bfee2b32b4c4f7564f45a",
+      "source": "source/src/main/java/net/coobird/thumbnailator/Thumbnailator.java:453",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 53
+    },
+    {
+      "name": "createThumbnailsAsCollection",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "java.io.File sourceFile = new java.io.File(grid_png);\njava.io.File tempInput = new java.io.File(outputPath.toFile(), \"temp_input.png\");\njava.nio.file.Files.copy(sourceFile.toPath(), tempInput.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);\n\njava.util.List<java.io.File> files = java.util.Collections.singletonList(tempInput);\n\njava.util.Collection<java.io.File> thumbnails = net.coobird.thumbnailator.Thumbnailator.createThumbnailsAsCollection(\n    files,\n    net.coobird.thumbnailator.name.Rename.PREFIX_DOT_THUMBNAIL,\n    50,\n    50\n);\n\nassert thumbnails != null : \"Thumbnails collection should not be null\";\nassert thumbnails.size() == 1 : \"Should have exactly 1 thumbnail\";\n\njava.io.File thumbFile = thumbnails.iterator().next();\nassert thumbFile.exists() : \"Thumbnail file should exist\";\nassert thumbFile.getName().equals(\"thumbnail.temp_input.png\") : \"Thumbnail file name should match Rename strategy\";\n\njava.awt.image.BufferedImage thumbImage = javax.imageio.ImageIO.read(thumbFile);\nassert thumbImage.getWidth() <= 50 && thumbImage.getHeight() <= 50 : \"Thumbnail dimensions should be within 50x50\";\n\nSystem.out.println(\"__CHECK__ createThumbnailsAsCollection \" + thumbnails.size() + \",\" + thumbFile.getName());",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_createThumbnailsAsCollection/ApiTest.java",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ createThumbnailsAsCollection 1,thumbnail.temp_input.png\n__DONE__\n",
+        "stderr_tail": "Note: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_createThumbnailsAsCollection/ApiTest.java uses or overrides a deprecated API.\nNote: Recompile with -Xlint:deprecation for details.\n"
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 18.0,
+      "llm_calls": 1,
+      "input_tokens": 2325,
+      "output_tokens": 1806,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2325,
+          "output_tokens": 1806
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 4597,
+      "document_sha256": "f0ab358aba5d3bf1eefaf72ca1dc8ab57007f8661b66eb8b4c47456d1c498989",
+      "source": "source/src/main/java/net/coobird/thumbnailator/Thumbnailator.java:400",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 54
+    },
+    {
+      "name": "crop",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "java.awt.image.BufferedImage thumbnail = net.coobird.thumbnailator.Thumbnails.of(sourceImage)\n    .size(10, 10)\n    .crop(net.coobird.thumbnailator.geometry.Positions.CENTER)\n    .asBufferedImage();\n\nassert thumbnail.getWidth() == 10 : \"Width should be exactly 10\";\nassert thumbnail.getHeight() == 10 : \"Height should be exactly 10\";\n\nSystem.out.println(\"__CHECK__ crop \" + thumbnail.getWidth() + \"x\" + thumbnail.getHeight());",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_crop/ApiTest.java",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ crop 10x10\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 12.8,
+      "llm_calls": 1,
+      "input_tokens": 2427,
+      "output_tokens": 1269,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2427,
+          "output_tokens": 1269
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 4943,
+      "document_sha256": "d4f95378aaf481c3495093bdcfdfc39b9307247361b2f798c1fce0cd473bedd8",
+      "source": "source/src/main/java/net/coobird/thumbnailator/Thumbnails.java:1226",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 55
+    },
+    {
+      "name": "defaultImageType",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "net.coobird.thumbnailator.makers.ThumbnailMaker maker = new net.coobird.thumbnailator.makers.ScaledThumbnailMaker(0.5);\nnet.coobird.thumbnailator.makers.ThumbnailMaker returnedMaker = maker.defaultImageType();\njava.awt.image.BufferedImage result = returnedMaker.make(sourceImage);\n\nassert returnedMaker == maker : \"Expected fluent return\";\nassert result.getType() == java.awt.image.BufferedImage.TYPE_INT_ARGB : \"Expected TYPE_INT_ARGB\";\n\nSystem.out.println(\"__CHECK__ defaultImageType \" + result.getType());",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_defaultImageType/ApiTest.java",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ defaultImageType 2\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 18.8,
+      "llm_calls": 1,
+      "input_tokens": 1759,
+      "output_tokens": 1976,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1759,
+          "output_tokens": 1976
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 2572,
+      "document_sha256": "a05bafe8450b0793a1120450b0918edecbeb50cc775a5d598d08c0733e8377b7",
+      "source": "source/src/main/java/net/coobird/thumbnailator/makers/ThumbnailMaker.java:240",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 56
+    },
+    {
+      "name": "defaultResizer",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "net.coobird.thumbnailator.makers.FixedSizeThumbnailMaker maker = new net.coobird.thumbnailator.makers.FixedSizeThumbnailMaker(50, 50);\nnet.coobird.thumbnailator.makers.ThumbnailMaker returnedMaker = maker.defaultResizer();\n\nassert returnedMaker == maker : \"Expected fluent return from defaultResizer\";\nSystem.out.println(\"__CHECK__ defaultResizer fluent return: \" + (returnedMaker == maker));",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_defaultResizer/ApiTest.java",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ defaultResizer fluent return: true\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 8.3,
+      "llm_calls": 1,
+      "input_tokens": 1980,
+      "output_tokens": 751,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1980,
+          "output_tokens": 751
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3460,
+      "document_sha256": "a9d84399664c2dc14a37a0d086f761cabc4e4cff5cdca08258d62b1fc36728b7",
+      "source": "source/src/main/java/net/coobird/thumbnailator/makers/ThumbnailMaker.java:263",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 57
+    },
+    {
+      "name": "defaultResizerFactory",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "net.coobird.thumbnailator.makers.ThumbnailMaker maker = new net.coobird.thumbnailator.makers.FixedSizeThumbnailMaker(50, 50);\nnet.coobird.thumbnailator.makers.ThumbnailMaker chained = maker.defaultResizerFactory();\n\nassert chained == maker : \"Fluent API should return the same instance\";\nSystem.out.println(\"__CHECK__ defaultResizerFactory \" + (chained == maker));",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_defaultResizerFactory/ApiTest.java",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ defaultResizerFactory true\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 11.1,
+      "llm_calls": 1,
+      "input_tokens": 1901,
+      "output_tokens": 822,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1901,
+          "output_tokens": 822
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3156,
+      "document_sha256": "2e7903fd004ce680e8099cf388acd564bdca2581ad1cf82fa319c91d55a763dd",
+      "source": "source/src/main/java/net/coobird/thumbnailator/makers/ThumbnailMaker.java:290",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 58
     }
   ],
   "repair_summary": {
@@ -2615,18 +3676,31 @@
     },
     {
       "api": "Watermark",
-      "status": "pending",
-      "primary_category": "pending",
-      "runner_category": null,
-      "category_reason": "Not yet observed.",
-      "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
-      "provider_error_attempts": 0,
+      "status": "fail",
+      "primary_category": "llm-error",
+      "runner_category": "llm-error",
+      "category_reason": "Provider outcome; retry, never count as a documentation failure.",
+      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "source": "source/src/main/java/net/coobird/thumbnailator/filters/Watermark.java:76",
+      "doc_chars": 4175,
+      "checkpoint_attempts": 1,
+      "provider_error_attempts": 1,
       "provider_internal_retries": null,
       "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "attempt_history": [
+        {
+          "checkpoint_line": 34,
+          "status": "fail",
+          "error_category": "llm-error",
+          "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+          "attempts": 1,
+          "wall_s": 601.0,
+          "llm_calls": 0,
+          "input_tokens": 0,
+          "output_tokens": 0,
+          "pass_round": null
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -2634,18 +3708,31 @@
     },
     {
       "api": "add",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "source/src/main/java/net/coobird/thumbnailator/filters/Pipeline.java:99",
+      "doc_chars": 2728,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 35,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 42.6,
+          "llm_calls": 1,
+          "input_tokens": 1815,
+          "output_tokens": 5145,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -2653,18 +3740,31 @@
     },
     {
       "api": "addAll",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "source/src/main/java/net/coobird/thumbnailator/filters/Pipeline.java:125",
+      "doc_chars": 2458,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 36,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 23.1,
+          "llm_calls": 1,
+          "input_tokens": 1788,
+          "output_tokens": 2640,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -2672,18 +3772,31 @@
     },
     {
       "api": "addFilter",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "source/src/main/java/net/coobird/thumbnailator/Thumbnails.java:1993",
+      "doc_chars": 3829,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 37,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 38.0,
+          "llm_calls": 1,
+          "input_tokens": 2063,
+          "output_tokens": 4177,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -2691,18 +3804,31 @@
     },
     {
       "api": "addFilters",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "source/src/main/java/net/coobird/thumbnailator/Thumbnails.java:2016",
+      "doc_chars": 2849,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 38,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 41.9,
+          "llm_calls": 1,
+          "input_tokens": 1875,
+          "output_tokens": 4548,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -2710,18 +3836,31 @@
     },
     {
       "api": "addFirst",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "source/src/main/java/net/coobird/thumbnailator/filters/Pipeline.java:112",
+      "doc_chars": 2903,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 39,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 19.9,
+          "llm_calls": 1,
+          "input_tokens": 1871,
+          "output_tokens": 1618,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -2729,18 +3868,31 @@
     },
     {
       "api": "allowOverwrite",
-      "status": "pending",
-      "primary_category": "pending",
-      "runner_category": null,
-      "category_reason": "Not yet observed.",
-      "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "status": "fail",
+      "primary_category": "unknown",
+      "runner_category": "runtime",
+      "category_reason": "Observed runtime; doc attribution requires source, document, and snippet review.",
+      "error": "NoSuchFileException: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/output/thumbnail.png/test_overwrite.png",
+      "source": "source/src/main/java/net/coobird/thumbnailator/Thumbnails.java:1265",
+      "doc_chars": 3717,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 40,
+          "status": "fail",
+          "error_category": "runtime",
+          "error": "NoSuchFileException: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/output/thumbnail.png/test_overwrite.png",
+          "attempts": 1,
+          "wall_s": 23.7,
+          "llm_calls": 1,
+          "input_tokens": 2094,
+          "output_tokens": 2531,
+          "pass_round": null
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -2748,18 +3900,31 @@
     },
     {
       "api": "alphaInterpolation",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "source/src/main/java/net/coobird/thumbnailator/Thumbnails.java:1379",
+      "doc_chars": 3152,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 41,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 13.0,
+          "llm_calls": 1,
+          "input_tokens": 1967,
+          "output_tokens": 990,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -2767,18 +3932,31 @@
     },
     {
       "api": "antialiasing",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "source/src/main/java/net/coobird/thumbnailator/Thumbnails.java:1425",
+      "doc_chars": 3081,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 42,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 33.1,
+          "llm_calls": 1,
+          "input_tokens": 1985,
+          "output_tokens": 2915,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -2786,18 +3964,31 @@
     },
     {
       "api": "apply",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "source/src/main/java/net/coobird/thumbnailator/name/Rename.java:202",
+      "doc_chars": 4271,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 43,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 23.2,
+          "llm_calls": 1,
+          "input_tokens": 2137,
+          "output_tokens": 2073,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -2805,18 +3996,31 @@
     },
     {
       "api": "asBufferedImage",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "source/src/main/java/net/coobird/thumbnailator/Thumbnails.java:2342",
+      "doc_chars": 4953,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 44,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 10.6,
+          "llm_calls": 1,
+          "input_tokens": 2406,
+          "output_tokens": 941,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -2824,18 +4028,31 @@
     },
     {
       "api": "asBufferedImages",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "source/src/main/java/net/coobird/thumbnailator/Thumbnails.java:2277",
+      "doc_chars": 6011,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 45,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 20.7,
+          "llm_calls": 1,
+          "input_tokens": 2723,
+          "output_tokens": 1855,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -2843,18 +4060,31 @@
     },
     {
       "api": "asFiles",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "source/src/main/java/net/coobird/thumbnailator/Thumbnails.java:2519",
+      "doc_chars": 6148,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 46,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 26.8,
+          "llm_calls": 1,
+          "input_tokens": 2670,
+          "output_tokens": 3003,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -2862,18 +4092,31 @@
     },
     {
       "api": "build",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "source/src/main/java/net/coobird/thumbnailator/builders/BufferedImageBuilder.java:110",
+      "doc_chars": 2920,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 47,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 17.1,
+          "llm_calls": 1,
+          "input_tokens": 1799,
+          "output_tokens": 1789,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -2881,18 +4124,31 @@
     },
     {
       "api": "calculate",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "source/src/main/java/net/coobird/thumbnailator/geometry/Position.java:58",
+      "doc_chars": 4242,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 48,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 22.1,
+          "llm_calls": 1,
+          "input_tokens": 2220,
+          "output_tokens": 2390,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -2900,18 +4156,31 @@
     },
     {
       "api": "clear",
-      "status": "pending",
-      "primary_category": "pending",
-      "runner_category": null,
-      "category_reason": "Not yet observed.",
-      "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "status": "fail",
+      "primary_category": "unknown",
+      "runner_category": "compile",
+      "category_reason": "Observed compile; doc attribution requires source, document, and snippet review.",
+      "error": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_clear/ApiTest.java:51: error: clear() is not public in Configurations; cannot be accessed from outside package",
+      "source": "source/src/main/java/net/coobird/thumbnailator/util/Configurations.java:130",
+      "doc_chars": 1956,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 49,
+          "status": "fail",
+          "error_category": "compile",
+          "error": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_clear/ApiTest.java:51: error: clear() is not public in Configurations; cannot be accessed from outside package",
+          "attempts": 1,
+          "wall_s": 7.0,
+          "llm_calls": 1,
+          "input_tokens": 1601,
+          "output_tokens": 574,
+          "pass_round": null
+        }
+      ],
       "repair_status": "not-testable (entry unchanged)",
       "doc_rounds_used": 1,
       "doc_rounds": [
@@ -2961,18 +4230,31 @@
     },
     {
       "api": "copy",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "source/src/main/java/net/coobird/thumbnailator/util/BufferedImages.java:63",
+      "doc_chars": 3107,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 50,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 22.9,
+          "llm_calls": 1,
+          "input_tokens": 1892,
+          "output_tokens": 1919,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -2980,18 +4262,31 @@
     },
     {
       "api": "createOutputStream",
-      "status": "pending",
-      "primary_category": "pending",
-      "runner_category": null,
-      "category_reason": "Not yet observed.",
-      "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "status": "fail",
+      "primary_category": "unknown",
+      "runner_category": "compile",
+      "category_reason": "Observed compile; doc attribution requires source, document, and snippet review.",
+      "error": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_createOutputStream/ApiTest.java:55: error: createOutputStream(File) is not public in FileImageSink; cannot be accessed from outside package",
+      "source": "source/src/main/java/net/coobird/thumbnailator/tasks/io/FileImageSink.java:326",
+      "doc_chars": 3011,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 51,
+          "status": "fail",
+          "error_category": "compile",
+          "error": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_createOutputStream/ApiTest.java:55: error: createOutputStream(File) is not public in FileImageSink; cannot be accessed from outside package",
+          "attempts": 1,
+          "wall_s": 25.1,
+          "llm_calls": 1,
+          "input_tokens": 1869,
+          "output_tokens": 2497,
+          "pass_round": null
+        }
+      ],
       "repair_status": "not-testable (entry unchanged)",
       "doc_rounds_used": 1,
       "doc_rounds": [
@@ -3041,18 +4336,31 @@
     },
     {
       "api": "createThumbnail",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "source/src/main/java/net/coobird/thumbnailator/Thumbnailator.java:356",
+      "doc_chars": 4720,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 52,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 18.4,
+          "llm_calls": 1,
+          "input_tokens": 2327,
+          "output_tokens": 1966,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -3060,18 +4368,31 @@
     },
     {
       "api": "createThumbnails",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "source/src/main/java/net/coobird/thumbnailator/Thumbnailator.java:453",
+      "doc_chars": 4105,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 53,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 22.4,
+          "llm_calls": 1,
+          "input_tokens": 2196,
+          "output_tokens": 2506,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -3079,18 +4400,31 @@
     },
     {
       "api": "createThumbnailsAsCollection",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "source/src/main/java/net/coobird/thumbnailator/Thumbnailator.java:400",
+      "doc_chars": 4597,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 54,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 18.0,
+          "llm_calls": 1,
+          "input_tokens": 2325,
+          "output_tokens": 1806,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -3098,18 +4432,31 @@
     },
     {
       "api": "crop",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "source/src/main/java/net/coobird/thumbnailator/Thumbnails.java:1226",
+      "doc_chars": 4943,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 55,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 12.8,
+          "llm_calls": 1,
+          "input_tokens": 2427,
+          "output_tokens": 1269,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -3117,18 +4464,31 @@
     },
     {
       "api": "defaultImageType",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "source/src/main/java/net/coobird/thumbnailator/makers/ThumbnailMaker.java:240",
+      "doc_chars": 2572,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 56,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 18.8,
+          "llm_calls": 1,
+          "input_tokens": 1759,
+          "output_tokens": 1976,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -3136,18 +4496,31 @@
     },
     {
       "api": "defaultResizer",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "source/src/main/java/net/coobird/thumbnailator/makers/ThumbnailMaker.java:263",
+      "doc_chars": 3460,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 57,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 8.3,
+          "llm_calls": 1,
+          "input_tokens": 1980,
+          "output_tokens": 751,
+          "pass_round": 0
+        }
+      ],
       "repair_status": "doc-fixed",
       "doc_rounds_used": 2,
       "doc_rounds": [
@@ -3256,18 +4629,31 @@
     },
     {
       "api": "defaultResizerFactory",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "source/src/main/java/net/coobird/thumbnailator/makers/ThumbnailMaker.java:290",
+      "doc_chars": 3156,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 58,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 11.1,
+          "llm_calls": 1,
+          "input_tokens": 1901,
+          "output_tokens": 822,
+          "pass_round": 0
+        }
+      ],
       "repair_status": "doc-fixed",
       "doc_rounds_used": 1,
       "doc_rounds": [
