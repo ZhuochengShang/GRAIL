@@ -2,6 +2,7 @@
 from collections import Counter
 from datetime import datetime
 import html
+import hashlib
 import json
 from pathlib import Path
 import re
@@ -28,7 +29,17 @@ def document_audit(root):
     counts = Counter(api for api, _ in starts)
     outcomes = re.findall(r'\[docfix \d+/\d+\] (.+?) round (\d+): (PASS|fail)', text)
     completed = Counter(api for api, _, _ in outcomes)
+    handoff = optional(folder / 'A2_INPUT_HANDOFF.json')
+    seeded = False
+    if handoff:
+        try:
+            log = Path(handoff['error_log']).read_bytes()
+            seeded = hashlib.sha256(log[:handoff['seed_bytes']]).hexdigest() == handoff['seed_sha256']
+        except (OSError, KeyError):
+            pass
     return {'report_present': bool(doc), 'attempted': doc.get('attempted'),
+            'A2_error_seed_prefix_verified': seeded,
+            'seeded_failure_count': handoff.get('seeded_failures'),
             'processed': doc.get('processed'), 'doc_round_starts_in_append_log': dict(counts),
             'validation_outcomes_in_append_log': dict(completed),
             'apis_with_more_than_five_round_starts': [api for api, n in counts.items() if n > 5],
@@ -37,8 +48,7 @@ def document_audit(root):
             'source_report': str(folder / 'docfix.json'),
             'limitations': ['Five doc rounds are configured per API invocation; unfinished APIs can restart. '
                            'Actual attempts and provider retries must be audited from the append log.',
-                           'A2 selects document targets; the legacy repairer reads initial error context '
-                           'from its B2 error log. A2 snippet/error seeding is not certified by target selection.',
+                           'A2 error-log seed binding is reported separately; retained legacy snippet associations remain qualified.',
                            'Document repair can include infrastructure failures; source recovery excludes them.']}
 
 
@@ -80,7 +90,7 @@ def publish(out, upstream, parent, status):
               '[Full evidence JSON](live.json) · [Data/API methods](../FINAL_REPORT_DATA_AND_API_METHODS.md) · '
               '[Independent assertion replay](../assertion_replay/REPLAY.html)', '',
               'Method limitations: single adaptive run; no equal-cost randomized comparison. '
-              'Legacy document retries can restart an unfinished API, and initial A2 error-context seeding is unverified. '
+              'Legacy document retries can restart an unfinished API; A2 error-log seed binding is audited per repository. '
               'See document_protocol_audit in JSON for observed round counts. Native passes still require semantic review.']
     (out / 'STATUS.md').write_text('\n'.join(lines) + '\n')
     body = ''.join('<tr>' + ''.join('<td>' + html.escape(str(x)) + '</td>' for x in row) + '</tr>' for row in table)
@@ -101,7 +111,7 @@ def publish(out, upstream, parent, status):
             '<h2>Live outcomes</h2><div class="table"><table><thead><tr><th>Repository</th><th>Measurement</th><th>State</th>'
             f'<th>Pass/recovered</th><th>Denominator</th></tr></thead><tbody>{body}</tbody></table></div>'
             '<h2>Method audit</h2><p>The existing document loop can restart unfinished APIs; actual round starts and validation '
-            'outcomes are audited from append-only logs. Initial A2 snippet/error seeding into its error context remains unverified. '
+            'outcomes are audited from append-only logs. A2 error-log seed hashes are checked per repository. '
             'This is an adaptively amended study, not a preregistered equal-cost trial.</p><p>'
             '<a href="PIPELINE_V3.md">Design and code map</a> · <a href="REPORT_TEMPLATE_V3.md">Detailed report template</a> · '
             '<a href="live.json">Evidence and round audit</a> · <a href="../assertion_replay/REPLAY.html">Independent replay</a>'

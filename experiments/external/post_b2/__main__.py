@@ -9,7 +9,8 @@ import time
 
 from experiments.external.recovery.engine import save
 from .evidence import REPOSITORIES, TERMINAL, admission
-from . import report, stage
+from . import report, stage, source_retry
+from .admission import slot
 
 
 def isolated_paths(work, out, upstream, parent):
@@ -42,14 +43,15 @@ def main():
     stage.registered()
     if not args.watch:
         ready, blocked = admission(args.workspace_parent, args.upstream)
-        print(json.dumps({'status': 'ready' if not blocked else 'waiting_priority',
+        print(json.dumps({'status': 'ready' if ready else 'waiting_repository',
                           'ready_repositories': list(ready), 'blocked': blocked,
                           'provider_calls': 0, 'native_writes': 0}, indent=2))
         return
     args.out.mkdir(parents=True, exist_ok=True)
     with (args.out / 'observer.lock').open('a') as lock:
         fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
-        status = {'state': 'waiting_priority', 'repositories': {}, 'max_parallel': 1,
+        status = {'state': 'waiting_repository', 'repositories': {}, 'max_parallel': 1,
+                  'scheduling': 'independent repository admission; source retries do not depend on A1',
                   'admit_until': cutoff.isoformat(), 'source_implementation': stage.implementation()}
         stop = threading.Event()
         def observe():
@@ -61,6 +63,8 @@ def main():
                 stop.wait(30)
         thread = threading.Thread(target=observe, name='passive-v3-report', daemon=True)
         thread.start()
+        retry_file = args.out / 'source_retry_schedule.json'
+        retry_after = json.loads(retry_file.read_text()) if retry_file.exists() else {}
         try:
             while True:
                 if datetime.now(cutoff.tzinfo) >= cutoff:
@@ -68,12 +72,12 @@ def main():
                     break
                 ready, blocked = admission(args.workspace_parent, args.upstream)
                 status['repositories'] = {repo: blocked.get(repo, 'priority complete') for repo in REPOSITORIES}
-                if blocked:
-                    status['state'] = 'waiting_priority'
+                if not ready:
+                    status['state'] = 'waiting_repository'
                     time.sleep(30)
                     continue
                 status['state'] = 'post_B2_recovery'
-                terminal, progressed = True, False
+                terminal, progressed = not blocked, False
                 for repo, info in ready.items():
                     if datetime.now(cutoff.tzinfo) >= cutoff:
                         terminal = False
@@ -81,11 +85,27 @@ def main():
                     out = args.out / repo
                     try:
                         state = stage.prepare(info, out)
-                        progressed |= stage.one(info, args.work / repo, out, state)
+                        with slot(args.upstream, f'{repo}:S_B2') as admitted:
+                            if admitted:
+                                progressed |= stage.one(info, args.work / repo, out, state)
                         save(out / 'comparison.json', stage.compare(info, state))
                         finished = all(row['status'] in TERMINAL for row in state['apis'].values())
                         terminal &= finished
                         status['repositories'][repo] = state['statuses']
+                        if source_retry.needed(info):
+                            terminal = False
+                            if time.time() >= retry_after.get(repo, 0):
+                                with slot(args.upstream, f'{repo}:S_A2_retry') as admitted:
+                                    if admitted:
+                                        try:
+                                            result = source_retry.run(info, args.workspace_parent, args.upstream)
+                                            status['repositories'][repo] = {'S_B2': state['statuses'], 'S_A2': result['statuses']}
+                                            progressed = True
+                                        except BlockingIOError:
+                                            pass  # Original driver owns the source batch; no duplicate.
+                                        finally:
+                                            retry_after[repo] = time.time() + 300
+                                            save(retry_file, retry_after)
                     except Exception as exc:
                         # A preflight/identity failure is evidence, never a new
                         # denominator or permission to bypass the gate.

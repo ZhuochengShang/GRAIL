@@ -144,7 +144,7 @@ def admitted(tmp_path, monkeypatch):
     return tmp_path, up
 
 
-def test_priority_admission_is_fail_closed(admitted):
+def test_source_provider_retry_does_not_block_this_repositories_B2(admitted):
     parent, up = admitted
     assert e.inspect('mir_eval',parent,up.parent)['names'] == ['first']
     path = up/'source/summary.json'
@@ -152,7 +152,9 @@ def test_priority_admission_is_fail_closed(admitted):
     state['apis']['first']['status'] = 'provider_blocked'
     path.write_text(json.dumps(state))
     ready, blocked = e.admission(parent,up.parent)
-    assert not ready and 'A2 source work/retries' in blocked['mir_eval']
+    assert 'mir_eval' in ready and not blocked
+    from .source_retry import needed
+    assert needed(ready['mir_eval'])
 
 
 def test_completed_native_file_does_not_override_running_B2_worker(admitted):
@@ -172,18 +174,48 @@ def test_changed_A2_inherited_result_rejected(admitted):
         e.inspect('mir_eval',parent,up.parent)
 
 
-def test_scheduler_never_calls_recovery_when_one_priority_repo_is_pending(tmp_path, monkeypatch):
+def test_scheduler_runs_ready_repo_even_when_another_is_pending(tmp_path, monkeypatch):
     import sys
+    from contextlib import contextmanager
     from . import __main__ as controller
     class ObservedWait(Exception):
         pass
     monkeypatch.setattr(controller, 'admission', lambda *args: ({'mir_eval': {}}, {'tslearn': 'A2 incomplete'}))
     monkeypatch.setattr(controller.time, 'sleep', lambda *args: (_ for _ in ()).throw(ObservedWait()))
     monkeypatch.setattr(controller.report, 'publish', lambda *args: None)
-    monkeypatch.setattr(controller.stage, 'one', lambda *args: pytest.fail('model work admitted before priority barrier'))
+    called = []
+    monkeypatch.setattr(controller.stage, 'prepare', lambda *args: {'apis': {'fn': {'status': 'pending'}}, 'statuses': {}})
+    monkeypatch.setattr(controller.stage, 'one', lambda *args: called.append('mir_eval') or False)
+    monkeypatch.setattr(controller.stage, 'compare', lambda *args: {})
+    monkeypatch.setattr(controller.source_retry, 'needed', lambda *args: False)
+    @contextmanager
+    def admitted_slot(*args):
+        yield True
+    monkeypatch.setattr(controller, 'slot', admitted_slot)
     monkeypatch.setattr(sys, 'argv', ['post_b2', '--workspace-parent', str(tmp_path),
         '--upstream', str(tmp_path/'v2'), '--out', str(tmp_path/'v3'), '--work', str(tmp_path/'private'),
         '--admit-until', '2099-09-09T10:15:00-07:00', '--watch'])
     with pytest.raises(ObservedWait):
         controller.main()
-    assert json.loads((tmp_path/'v3/scheduler_completion.json').read_text())['state'] == 'waiting_priority'
+    assert called == ['mir_eval']
+    assert json.loads((tmp_path/'v3/scheduler_completion.json').read_text())['repositories']['tslearn'] == 'A2 incomplete'
+
+
+def test_shared_admission_reserves_native_capacity_and_excludes_second_worker(tmp_path, monkeypatch):
+    from .admission import slot, native_reservation
+    monkeypatch.setenv('AIDEAL_GOOGLE_RECOVERY_ADMISSION_LOCK', str(tmp_path/'gate.lock'))
+    monkeypatch.setenv('AIDEAL_GOOGLE_RATE_STATE', str(tmp_path/'rate.txt'))
+    monkeypatch.setenv('AIDEAL_GOOGLE_MIN_INTERVAL_S', '3')
+    upstream = tmp_path/'v2'
+    assert native_reservation(upstream) == 6
+    with slot(upstream, 'too early') as ok:
+        assert not ok
+    (upstream/'mir_eval').mkdir(parents=True)
+    (upstream/'mir_eval/b2_watchdog.state.json').write_text(json.dumps({'jobs': {'B2': {'status':'succeeded'}}}))
+    assert native_reservation(upstream) == 5
+    with slot(upstream, 'first') as ok:
+        assert ok
+        with slot(upstream, 'second') as second:
+            assert not second
+    with slot(upstream, 'after release') as ok:
+        assert ok

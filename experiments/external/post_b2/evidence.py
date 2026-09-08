@@ -72,7 +72,7 @@ def command_option(command, flag, expected):
 
 
 def inspect(repo, parent, upstream):
-    """Only succeeded B2 jobs and a settled A2 source pass permit admission."""
+    """Require this repository's completed B2; A1/source retries are independent."""
     prefix, relative, count = REPOSITORIES[repo]
     roots = {cell: Path(parent) / f'{prefix}_{cell}' / relative for cell in ('A2', 'B2')}
     files = {cell: root / f'docs/eval/{cell}/comprehension.json' for cell, root in roots.items()}
@@ -103,8 +103,8 @@ def inspect(repo, parent, upstream):
                    for r in doc.get('apis', {}).values())):
         raise ValueError('document repair is incomplete')
     source = read(upstream / 'source/summary.json')
-    if any(row.get('status') not in TERMINAL for row in source['apis'].values()):
-        raise ValueError('A2 source work/retries still pending; preserve its provider capacity')
+    if any(row.get('status') in ('pending', 'running') for row in source['apis'].values()):
+        raise ValueError('initial A2 source pass has not finished')
     if source.get('identity'):
         if (source['identity']['baseline_sha256'] != file_sha(files['A2'])
                 or source['identity']['protocol'] != policy()):
