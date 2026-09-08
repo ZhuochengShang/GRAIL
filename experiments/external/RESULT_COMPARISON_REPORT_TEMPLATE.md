@@ -1,5 +1,38 @@
 # AIDEAL 2×2 experiment comparison report
 
+## Measurement labels and validation gates
+
+Never use **attempted**, **executed**, and **passed** interchangeably.
+
+| Stage | Meaning | Required evidence |
+|---|---|---|
+| API evaluation attempted | Harness recorded an outcome for an API; it may be a provider failure | Per-API checkpoint event |
+| Usable test generated | Provider returned code that reached local validation | Generated code/artifact; not merely a request-start log |
+| Compiled | Compiler completed successfully; not applicable to every language | Compiler exit status |
+| Test process started | Generated test was launched | Runner/process evidence |
+| Target API reached | Intended receiver-qualified API call actually executed | Trace/instrumentation or explicitly qualified source/stack review; otherwise unknown |
+| Recorded pass | Native harness accepted the process/markers | Native result, preserved even when a validation limitation is found |
+| Verified correctness | Target was exercised and meaningful checks were active and passed | Assertion-enablement probe, target evidence, checked postcondition |
+
+An execution failure can occur during receiver/data setup before reaching the
+target API. A call inside a disabled assertion does not execute. Presence of
+`__CHECK__` and exit code zero does not establish correctness by itself.
+Keep unsupported/unknown stages explicit rather than deriving all stages from
+one pass/fail field. Record denominator and snapshot time for every percentage.
+
+For Java, verify the **effective** assertion setting with a sentinel assertion
+that must fail, not just a YAML field named `require_correctness`. Compile
+complete documentation examples against the pinned dependency. Validate fixture
+meaning (e.g. actual EXIF orientation), not only format/path/file existence.
+Changes to assertion behavior, fixtures, or eligible API identities require a
+versioned matched comparison; do not silently modify one running condition.
+
+When checkpoint compatibility records authorize reuse, report stable legacy
+rows plus current-fingerprint outcomes with native current evidence taking
+precedence. Preserve row-level provenance and provider errors. Do not count
+only the new fingerprint as if all reused APIs had become unattempted, and do
+not combine best scores across unrelated historical fingerprint groups.
+
 Use this template once a repository has produced all four **matched** cells.
 Copy it into the repository's analysis branch and replace every `<...>` field.
 

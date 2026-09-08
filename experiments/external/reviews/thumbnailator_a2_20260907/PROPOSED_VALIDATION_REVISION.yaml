@@ -1,0 +1,35 @@
+schema: 1
+status: proposed_for_review
+automatic_launch: false
+purpose: Correct validation weaknesses in a future matched experiment without changing current running conditions.
+current_measurement_policy:
+  preserve_native_results: true
+  preserve_frozen_manifest: true
+  preserve_live_configs_and_fixtures: true
+  diagnostic_successes_enter_headline_scores: false
+proposed_gates:
+  assertions:
+    java_runtime_flag: -ea
+    preflight: A sentinel assert false must produce nonzero exit, even when a witness marker was printed first.
+    evidence: assertion_replays.json
+  fixture_semantics:
+    positive_orientation_fixture: source/src/test/resources/Exif/orientation_6.jpg
+    expected_orientation: 6
+    negative_orientation_fixture: source/src/test/resources/Exif/original.jpg
+    expected_negative_orientation: null
+    evidence: isolated_contract_diagnostics.json
+  external_api_surface:
+    validate: Declaring class, static receiver type, effective Java visibility, and constructor instantiability.
+    cases_for_review: [clear, init, createOutputStream, ThumbnailMaker]
+    note: Audit the complete surface; these are confirmed examples, not an exhaustive corrected denominator.
+  examples:
+    validate: Compile complete examples with supported companion types and pinned imports.
+    cases_for_review: [Pipeline, getDestination, getRenderingHints, getOutputFormat]
+  execution_evidence:
+    record_separately: [provider_request, code_generated, compiled, test_started, target_reached, assertion_active, native_result]
+    unknown_is_not_zero: true
+comparison_requirement:
+  new_protocol_version: required
+  matched_A1_A2_B1_B2_validation: required
+  reuse_old_scores_as_new_correctness_scores: false
+  source_informed_diagnostics_exposed_to_audience: false
