@@ -1,6 +1,6 @@
 # AIDEAL readiness assessment and improvement queue
 
-Updated: 2026-09-08T04:24:54.752901+00:00
+Updated: 2026-09-08T04:39:56.453337+00:00
 
 **Measured scope:** how documentation affects an LLM’s API use under a fixed harness. Overall agent readiness is not yet fully measured; no composite score is assigned.
 
@@ -8,7 +8,7 @@ Updated: 2026-09-08T04:24:54.752901+00:00
 |---|---|---|---|---|---|
 | mir_eval | 68/148 provisional | 135/148 final | pending (148 APIs) | pending (148 APIs) | WITHHELD/PARTIAL |
 | thumbnailator | 126/149 provisional | 127/149 final | pending (149 APIs) | pending (149 APIs) | WITHHELD/PARTIAL |
-| tslearn | 86/235 provisional | 105/235 provisional | pending (235 APIs) | pending (235 APIs) | WITHHELD/PARTIAL |
+| tslearn | 87/235 provisional | 129/235 provisional | pending (235 APIs) | pending (235 APIs) | WITHHELD/PARTIAL |
 
 Provisional counts retain pending and provider-error APIs in the denominator. Final counts are native pass/all-API results. Cross-cell effects require the separate matched-comparison release checks.
 
@@ -36,15 +36,15 @@ Provisional counts retain pending and provider-error APIs in the denominator. Fi
 | thumbnailator | input-or-output-path | 2 |
 | thumbnailator | provider | 7 |
 | thumbnailator | unknown | 36 |
-| tslearn | api-identity-or-version | 31 |
+| tslearn | api-identity-or-version | 34 |
 | tslearn | assertion-or-behavior | 19 |
-| tslearn | input-contract-or-api-call | 7 |
-| tslearn | provider | 37 |
-| tslearn | unknown | 36 |
+| tslearn | input-contract-or-api-call | 8 |
+| tslearn | provider | 39 |
+| tslearn | unknown | 39 |
 
-## Reviewable improvements (268)
+## Reviewable improvements (277)
 
-Review states: `{'open': 267, 'proposed': 1}`. Observation errors: 0. Inactive reviewed IDs retained: 0.
+Review states: `{'open': 276, 'proposed': 1}`. Observation errors: 0. Inactive reviewed IDs retained: 0.
 
 Each card separates native failure, diagnosis confidence, proposed action, validation and review decisions. Provider barriers concern execution infrastructure; they are not automatically codebase or documentation defects.
 
@@ -123,7 +123,9 @@ Each card separates native failure, diagnosis confidence, proposed action, valid
 | [tslearn: iscomplex](suggestions/25813de0f12d953e9275.md) | A1 | execution_blocker | high | open |
 | [tslearn: jacobian_product](suggestions/efe13aead9dc33ab2b15.md) | A1 | execution_blocker | high | open |
 | [tslearn: mase](suggestions/d6318ccb7f4952366621.md) | A1 | execution_blocker | high | open |
+| [tslearn: mse](suggestions/3af68a89e69ff9f8ddde.md) | A1 | execution_blocker | high | open |
 | [tslearn: compute](suggestions/4a28af1f1c30cd779151.md) | A2 | execution_blocker | high | open |
+| [tslearn: jacobian_product](suggestions/5eb42a36285bbdb40258.md) | A2 | execution_blocker | high | open |
 | [mir_eval: deprecated](suggestions/8c1892028fee0fa4c019.md) | A2 | reviewed_barrier | reviewed | open |
 | [mir_eval: first_n_three_layer_P](suggestions/1350063ad65ccf061962.md) | A2 | reviewed_barrier | reviewed | open |
 | [mir_eval: load_key](suggestions/436854cbe884009d1ba7.md) | A2 | reviewed_barrier | reviewed | open |
@@ -273,6 +275,9 @@ Each card separates native failure, diagnosis confidence, proposed action, valid
 | [tslearn: list_cached_datasets](suggestions/cf40b090c19e4acb2bbd.md) | A1 | needs_diagnosis | medium | open |
 | [tslearn: load_dict](suggestions/d6a84054031158dccd7c.md) | A1 | needs_diagnosis | medium | open |
 | [tslearn: locate](suggestions/884c0788395a87c4ac28.md) | A1 | needs_diagnosis | low | open |
+| [tslearn: n_iter_](suggestions/2b36250d86a6501de6fc.md) | A1 | needs_diagnosis | low | open |
+| [tslearn: njit_accumulated_matrix](suggestions/0e550abc302b6355626e.md) | A1 | needs_diagnosis | medium | open |
+| [tslearn: njit_accumulated_matrix_from_dist_matrix](suggestions/f294249de8aada17af69.md) | A1 | needs_diagnosis | medium | open |
 | [tslearn: BaseModelPackage](suggestions/f995a70ba75a6f818ba5.md) | A2 | needs_diagnosis | medium | open |
 | [tslearn: EmptyClusterError](suggestions/3bb29d868c529bcad84e.md) | A2 | needs_diagnosis | medium | open |
 | [tslearn: GlobalArgminPooling1D](suggestions/7fec39a7ce54e7122bf8.md) | A2 | needs_diagnosis | low | open |
@@ -318,6 +323,10 @@ Each card separates native failure, diagnosis confidence, proposed action, valid
 | [tslearn: is_float32](suggestions/b64a87449b75059926df.md) | A2 | needs_diagnosis | medium | open |
 | [tslearn: is_float64](suggestions/24b26619da067b29ed62.md) | A2 | needs_diagnosis | medium | open |
 | [tslearn: iscomplex](suggestions/ec9c6d62bb40991b43d6.md) | A2 | needs_diagnosis | medium | open |
+| [tslearn: lcss_accumulated_matrix](suggestions/a052216881cad4209ce1.md) | A2 | needs_diagnosis | medium | open |
+| [tslearn: load_dict](suggestions/8f3b17699f7dcf2be90f.md) | A2 | needs_diagnosis | low | open |
+| [tslearn: locate](suggestions/c501d3c2fb0362ac8b0f.md) | A2 | needs_diagnosis | low | open |
+| [tslearn: normal](suggestions/e910f1e8c01175070256.md) | A2 | needs_diagnosis | medium | open |
 
 ## Human and agent workflow
 
