@@ -1,6 +1,6 @@
 # AIDEAL readiness assessment and improvement queue
 
-Updated: 2026-09-08T22:40:31.458291+00:00
+Updated: 2026-09-08T22:55:32.904380+00:00
 
 **Measured scope:** how documentation affects an LLM’s API use under a fixed harness. Overall agent readiness is not yet fully measured; no composite score is assigned.
 
@@ -8,7 +8,7 @@ Updated: 2026-09-08T22:40:31.458291+00:00
 |---|---|---|---|---|---|
 | mir_eval | 1/148 provisional | 135/148 final | pending (148 APIs) | 137/148 final | WITHHELD/PARTIAL |
 | thumbnailator | 130/149 final | 127/149 final | pending (149 APIs) | 139/149 final | WITHHELD/PARTIAL |
-| tslearn | 3/235 provisional | 175/235 final | pending (235 APIs) | 1/235 provisional | WITHHELD/PARTIAL |
+| tslearn | 3/235 provisional | 175/235 final | pending (235 APIs) | pending (235 APIs) | WITHHELD/PARTIAL |
 
 Provisional counts retain pending and provider-error APIs in the denominator. Final counts are native pass/all-API results. Cross-cell effects require the separate matched-comparison release checks.
 
