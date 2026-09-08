@@ -2,75 +2,172 @@
   "status": "partial",
   "expected": 149,
   "counts": {
-    "pending": 148,
-    "pass": 1
+    "pass": 2,
+    "pending": 147
   },
-  "fingerprint": "b5b16144b5c83cd4c0a7666e8d00c86c59fd18a62f0ff0b8639323691e5eec26",
+  "fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced",
   "errors": [],
   "failure_categories": {},
   "recorded_provider_errors_all_fingerprints": 0,
   "observed_fingerprints": [
-    "b5b16144b5c83cd4c0a7666e8d00c86c59fd18a62f0ff0b8639323691e5eec26"
+    "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced",
+    "929b33ac9c93eb7b75bfe6473dfa801ffaa65a8a5ec52d7285a9fecfb14db2ec"
   ],
   "all_checkpoint_events": [
     {
-      "name": "quality",
+      "name": "setThumbnailParameter",
       "doc_source": "aideal",
-      "experiment_fingerprint": "b5b16144b5c83cd4c0a7666e8d00c86c59fd18a62f0ff0b8639323691e5eec26",
+      "experiment_fingerprint": "929b33ac9c93eb7b75bfe6473dfa801ffaa65a8a5ec52d7285a9fecfb14db2ec",
       "execution_evidence": "pass",
       "status": "pass",
       "attempts": 1,
       "pass_round": 0,
-      "wall_s": 16.1,
+      "wall_s": 25.6,
       "llm_calls": 1,
-      "input_tokens": 1943,
-      "output_tokens": 1746,
+      "input_tokens": 2058,
+      "output_tokens": 2697,
       "by_model": {
         "google:gemini-3.1-pro-preview": {
           "calls": 1,
-          "input_tokens": 1943,
-          "output_tokens": 1746
+          "input_tokens": 2058,
+          "output_tokens": 2697
         }
       },
       "error_category": null,
       "error": null,
       "locus": null,
-      "doc_chars": 3337,
-      "document_sha256": "587de46c353acc15fe5045ebde5956ec3d5a61e3e4ce541f32f8982ec14762ae",
-      "source": "source/src/main/java/net/coobird/thumbnailator/builders/ThumbnailParameterBuilder.java:232",
-      "source_other_sites": 0,
+      "doc_chars": 3699,
+      "document_sha256": "71766514d30fe623306d7947c068fcaf0fd057291fd1fac910bddae9ba11a7aa",
+      "source": "source/src/main/java/net/coobird/thumbnailator/tasks/io/ImageSink.java:70",
+      "source_other_sites": 6,
       "codebase_frames": null,
       "checkpoint_line": 1
+    },
+    {
+      "name": "AbsoluteSize",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "net.coobird.thumbnailator.geometry.AbsoluteSize size1 = new net.coobird.thumbnailator.geometry.AbsoluteSize(50, 75);\njava.awt.Dimension dim1 = size1.calculate(100, 100);\n\nnet.coobird.thumbnailator.geometry.AbsoluteSize size2 = new net.coobird.thumbnailator.geometry.AbsoluteSize(new java.awt.Dimension(60, 80));\njava.awt.Dimension dim2 = size2.calculate(200, 200);\n\nassert dim1.width == 50 && dim1.height == 75 : \"AbsoluteSize(int, int) failed\";\nassert dim2.width == 60 && dim2.height == 80 : \"AbsoluteSize(Dimension) failed\";\n\nSystem.out.println(\"__CHECK__ AbsoluteSize \" + dim1.width + \"x\" + dim1.height + \",\" + dim2.width + \"x\" + dim2.height);",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_AbsoluteSize/ApiTest.java",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ AbsoluteSize 50x75,60x80\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 17.0,
+      "llm_calls": 1,
+      "input_tokens": 1776,
+      "output_tokens": 1429,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1776,
+          "output_tokens": 1429
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 2431,
+      "document_sha256": "b1e763801315af2f6530d8b4c58990a0193cfea2a6ebf9a21dee629727565c52",
+      "source": "source/src/main/java/net/coobird/thumbnailator/geometry/AbsoluteSize.java:64",
+      "source_other_sites": 1,
+      "codebase_frames": null,
+      "checkpoint_line": 2
+    },
+    {
+      "name": "BicubicResizer",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "69bdb76ec89948261949a9f3d6d5df7a17498787ae325925656323a5ad6f2ced",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "java.awt.image.BufferedImage dest = new java.awt.image.BufferedImage(10, 10, java.awt.image.BufferedImage.TYPE_INT_ARGB);\njava.awt.Graphics2D g = dest.createGraphics();\ng.setColor(new java.awt.Color(123, 45, 67, 255));\ng.fillRect(0, 0, 10, 10);\ng.dispose();\n\nint originalRgb = dest.getRGB(5, 5);\n\njava.util.Map<java.awt.RenderingHints.Key, Object> hints = new java.util.HashMap<>();\nhints.put(java.awt.RenderingHints.KEY_ANTIALIASING, java.awt.RenderingHints.VALUE_ANTIALIAS_ON);\nhints.put(java.awt.RenderingHints.KEY_RENDERING, java.awt.RenderingHints.VALUE_RENDER_QUALITY);\nhints.put(java.awt.RenderingHints.KEY_INTERPOLATION, java.awt.RenderingHints.VALUE_INTERPOLATION_BICUBIC);\n\nnet.coobird.thumbnailator.resizers.BicubicResizer resizer = new net.coobird.thumbnailator.resizers.BicubicResizer(hints);\nresizer.resize(sourceImage, dest);\n\nint newRgb = dest.getRGB(5, 5);\nassert originalRgb != newRgb : \"Destination image should be modified by the resizer\";\n\nSystem.out.println(\"__CHECK__ BicubicResizer modified pixel from \" + originalRgb + \" to \" + newRgb);",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/run_BicubicResizer/ApiTest.java",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ BicubicResizer modified pixel from -8704701 to -256\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 22.7,
+      "llm_calls": 1,
+      "input_tokens": 2008,
+      "output_tokens": 2648,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2008,
+          "output_tokens": 2648
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3297,
+      "document_sha256": "dc861d83f3db91f706e6a9f05b4c02c740618175dfb766ec181e73a67f0da50b",
+      "source": "source/src/main/java/net/coobird/thumbnailator/resizers/BicubicResizer.java:51",
+      "source_other_sites": 1,
+      "codebase_frames": null,
+      "checkpoint_line": 3
     }
   ],
   "repair_summary": {
     "attempted": 22,
-    "processed": 20,
-    "doc_fixed": 13,
+    "processed": 22,
+    "doc_fixed": 16,
     "doc_rounds": 5,
     "retry_rounds": 0,
     "outcomes": {
-      "doc-fixed": 13,
-      "not-testable": 6,
-      "llm-error": 1
+      "doc-fixed": 16,
+      "not-testable": 6
     },
-    "blocked": true
+    "blocked": null
   },
   "rows": [
     {
       "api": "AbsoluteSize",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "source/src/main/java/net/coobird/thumbnailator/geometry/AbsoluteSize.java:64",
+      "doc_chars": 2431,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 2,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 17.0,
+          "llm_calls": 1,
+          "input_tokens": 1776,
+          "output_tokens": 1429,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -78,18 +175,31 @@
     },
     {
       "api": "BicubicResizer",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "source/src/main/java/net/coobird/thumbnailator/resizers/BicubicResizer.java:51",
+      "doc_chars": 3297,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 3,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 22.7,
+          "llm_calls": 1,
+          "input_tokens": 2008,
+          "output_tokens": 2648,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -3398,31 +3508,18 @@
     },
     {
       "api": "quality",
-      "status": "pass",
-      "primary_category": "pass",
+      "status": "pending",
+      "primary_category": "pending",
       "runner_category": null,
-      "category_reason": "",
+      "category_reason": "Not yet observed.",
       "error": null,
-      "source": "source/src/main/java/net/coobird/thumbnailator/builders/ThumbnailParameterBuilder.java:232",
-      "doc_chars": 3337,
-      "checkpoint_attempts": 1,
+      "source": null,
+      "doc_chars": null,
+      "checkpoint_attempts": 0,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 1,
-      "attempt_history": [
-        {
-          "checkpoint_line": 1,
-          "status": "pass",
-          "error_category": null,
-          "error": null,
-          "attempts": 1,
-          "wall_s": 16.1,
-          "llm_calls": 1,
-          "input_tokens": 1943,
-          "output_tokens": 1746,
-          "pass_round": 0
-        }
-      ],
+      "recorded_successful_llm_calls": 0,
+      "attempt_history": [],
       "repair_status": "doc-fixed",
       "doc_rounds_used": 1,
       "doc_rounds": [
@@ -3520,16 +3617,68 @@
       "provider_internal_retries": null,
       "recorded_successful_llm_calls": 0,
       "attempt_history": [],
-      "repair_status": "llm-error (run stopped)",
-      "doc_rounds_used": null,
-      "doc_rounds": [],
+      "repair_status": "doc-fixed",
+      "doc_rounds_used": 1,
+      "doc_rounds": [
+        {
+          "round": 0,
+          "deep_dive": {
+            "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/docs/eval/B2/deepdive/region.md",
+            "tokens": {
+              "in": 6504,
+              "out": 4343
+            },
+            "wall_s": 39.9
+          },
+          "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: ADVANCED-LOW-LEVEL\nHarness testability: TESTABLE-WITH-LOW-LEVEL-CONSTRUCTION\nScoring recommendation: include only in advanced/internal bucket\n\nROOT CAUSE:\nThe snippet failed because it attempted to verify the result by calling `calculate(100, 100)` on the `Regio",
+          "diagnosis_changed": true,
+          "entry_chars": {
+            "old": 3481,
+            "new": 3570
+          },
+          "retry_status": "pass",
+          "error_category": null,
+          "error_head": "pass",
+          "error_progressed": true
+        }
+      ],
       "repair_evidence": {
-        "status": "llm-error (run stopped)",
-        "phase": "diagnose round 0",
-        "error_type": "ServerError",
-        "error": "504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
-        "doc_rounds_done": [],
-        "wall_s": 625.8
+        "status": "doc-fixed",
+        "created_from_missing": false,
+        "rounds_used": 1,
+        "doc_rounds": [
+          {
+            "round": 0,
+            "deep_dive": {
+              "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/docs/eval/B2/deepdive/region.md",
+              "tokens": {
+                "in": 6504,
+                "out": 4343
+              },
+              "wall_s": 39.9
+            },
+            "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: ADVANCED-LOW-LEVEL\nHarness testability: TESTABLE-WITH-LOW-LEVEL-CONSTRUCTION\nScoring recommendation: include only in advanced/internal bucket\n\nROOT CAUSE:\nThe snippet failed because it attempted to verify the result by calling `calculate(100, 100)` on the `Regio",
+            "diagnosis_changed": true,
+            "entry_chars": {
+              "old": 3481,
+              "new": 3570
+            },
+            "retry_status": "pass",
+            "error_category": null,
+            "error_head": "pass",
+            "error_progressed": true
+          }
+        ],
+        "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: ADVANCED-LOW-LEVEL\nHarness testability: TESTABLE-WITH-LOW-LEVEL-CONSTRUCTION\nScoring recommendation: include only in advanced/internal bucket\n\nROOT CAUSE:\nThe snippet failed because it attempted to verify the result by calling `calculate(100, 100)` on the `Regio",
+        "entry_chars": {
+          "old": 3481,
+          "new": 3570
+        },
+        "wall_s": 109.2,
+        "tokens": {
+          "in": 18638,
+          "out": 12159
+        }
       }
     },
     {
@@ -3603,10 +3752,69 @@
       "provider_internal_retries": null,
       "recorded_successful_llm_calls": 0,
       "attempt_history": [],
-      "repair_status": null,
-      "doc_rounds_used": null,
-      "doc_rounds": [],
-      "repair_evidence": {}
+      "repair_status": "doc-fixed",
+      "doc_rounds_used": 1,
+      "doc_rounds": [
+        {
+          "round": 0,
+          "deep_dive": {
+            "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/docs/eval/B2/deepdive/resizerFactory.md",
+            "tokens": {
+              "in": 6848,
+              "out": 4260
+            },
+            "wall_s": 39.4
+          },
+          "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: ADVANCED-LOW-LEVEL.\nHarness testability: TESTABLE-WITH-LOW-LEVEL-CONSTRUCTION.\nScoring recommendation: include only in advanced/internal bucket.\n\nROOT CAUSE:\nThe documentation incorrectly suggests using `DefaultResizerFactory.getInstance()`, but `DefaultResizerF",
+          "diagnosis_changed": true,
+          "entry_chars": {
+            "old": 3864,
+            "new": 4314
+          },
+          "retry_status": "pass",
+          "error_category": null,
+          "error_head": "pass",
+          "error_progressed": true
+        }
+      ],
+      "repair_evidence": {
+        "status": "doc-fixed",
+        "created_from_missing": false,
+        "rounds_used": 1,
+        "doc_rounds": [
+          {
+            "round": 0,
+            "deep_dive": {
+              "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/docs/eval/B2/deepdive/resizerFactory.md",
+              "tokens": {
+                "in": 6848,
+                "out": 4260
+              },
+              "wall_s": 39.4
+            },
+            "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: ADVANCED-LOW-LEVEL.\nHarness testability: TESTABLE-WITH-LOW-LEVEL-CONSTRUCTION.\nScoring recommendation: include only in advanced/internal bucket.\n\nROOT CAUSE:\nThe documentation incorrectly suggests using `DefaultResizerFactory.getInstance()`, but `DefaultResizerF",
+            "diagnosis_changed": true,
+            "entry_chars": {
+              "old": 3864,
+              "new": 4314
+            },
+            "retry_status": "pass",
+            "error_category": null,
+            "error_head": "pass",
+            "error_progressed": true
+          }
+        ],
+        "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: ADVANCED-LOW-LEVEL.\nHarness testability: TESTABLE-WITH-LOW-LEVEL-CONSTRUCTION.\nScoring recommendation: include only in advanced/internal bucket.\n\nROOT CAUSE:\nThe documentation incorrectly suggests using `DefaultResizerFactory.getInstance()`, but `DefaultResizerF",
+        "entry_chars": {
+          "old": 3864,
+          "new": 4314
+        },
+        "wall_s": 118.3,
+        "tokens": {
+          "in": 20374,
+          "out": 13954
+        }
+      }
     },
     {
       "api": "rotate",
@@ -3698,10 +3906,69 @@
       "provider_internal_retries": null,
       "recorded_successful_llm_calls": 0,
       "attempt_history": [],
-      "repair_status": null,
-      "doc_rounds_used": null,
-      "doc_rounds": [],
-      "repair_evidence": {}
+      "repair_status": "doc-fixed",
+      "doc_rounds_used": 1,
+      "doc_rounds": [
+        {
+          "round": 0,
+          "deep_dive": {
+            "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/docs/eval/B2/deepdive/setThumbnailParameter.md",
+            "tokens": {
+              "in": 3930,
+              "out": 4755
+            },
+            "wall_s": 43.8
+          },
+          "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: ADVANCED-LOW-LEVEL.\nHarness testability: TESTABLE-WITH-LOW-LEVEL-CONSTRUCTION.\nScoring recommendation: include only in advanced/internal bucket.\n\nROOT CAUSE:\nThe snippet failed with a `cannot find symbol` error because it incorrectly assumed `ThumbnailParameterB",
+          "diagnosis_changed": true,
+          "entry_chars": {
+            "old": 3509,
+            "new": 3699
+          },
+          "retry_status": "pass",
+          "error_category": null,
+          "error_head": "pass",
+          "error_progressed": true
+        }
+      ],
+      "repair_evidence": {
+        "status": "doc-fixed",
+        "created_from_missing": false,
+        "rounds_used": 1,
+        "doc_rounds": [
+          {
+            "round": 0,
+            "deep_dive": {
+              "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/docs/eval/B2/deepdive/setThumbnailParameter.md",
+              "tokens": {
+                "in": 3930,
+                "out": 4755
+              },
+              "wall_s": 43.8
+            },
+            "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: ADVANCED-LOW-LEVEL.\nHarness testability: TESTABLE-WITH-LOW-LEVEL-CONSTRUCTION.\nScoring recommendation: include only in advanced/internal bucket.\n\nROOT CAUSE:\nThe snippet failed with a `cannot find symbol` error because it incorrectly assumed `ThumbnailParameterB",
+            "diagnosis_changed": true,
+            "entry_chars": {
+              "old": 3509,
+              "new": 3699
+            },
+            "retry_status": "pass",
+            "error_category": null,
+            "error_head": "pass",
+            "error_progressed": true
+          }
+        ],
+        "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: ADVANCED-LOW-LEVEL.\nHarness testability: TESTABLE-WITH-LOW-LEVEL-CONSTRUCTION.\nScoring recommendation: include only in advanced/internal bucket.\n\nROOT CAUSE:\nThe snippet failed with a `cannot find symbol` error because it incorrectly assumed `ThumbnailParameterB",
+        "entry_chars": {
+          "old": 3509,
+          "new": 3699
+        },
+        "wall_s": 424.0,
+        "tokens": {
+          "in": 14192,
+          "out": 13932
+        }
+      }
     },
     {
       "api": "size",
@@ -3977,8 +4244,8 @@
   "evidence": [
     {
       "path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/docs/eval/B2/docfix.json",
-      "sha256": "892f1195ca57f082d4e25099b755901cbf7865eaeb7159c64c383e4651797566",
-      "snapshot": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_overnight_evidence_audit/experiments/external/overnight_audit/snapshots/892f1195ca57f082d4e25099b755901cbf7865eaeb7159c64c383e4651797566"
+      "sha256": "462f99e47554c7788bb258a0624a439da57569abec669492e7cd8362cc35fff1",
+      "snapshot": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_overnight_evidence_audit/experiments/external/overnight_audit/snapshots/462f99e47554c7788bb258a0624a439da57569abec669492e7cd8362cc35fff1"
     }
   ]
 }

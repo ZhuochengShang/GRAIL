@@ -27,9 +27,9 @@ Effects withheld until all four matched final cells and their repair/test eviden
 
 ### A1
 
-Primary failure categories: {"llm-error": 16}.
+Primary failure categories: {"llm-error": 17}.
 
-Recorded provider-error attempts across all checkpoint fingerprints: 142. Provider-internal retries are not recorded by the existing client and cannot be inferred from the configured limit. Watchdog logs retain process attempts; checkpoint attempts and document-fix rounds are separate ledger fields.
+Recorded provider-error attempts across all checkpoint fingerprints: 143. Provider-internal retries are not recorded by the existing client and cannot be inferred from the configured limit. Watchdog logs retain process attempts; checkpoint attempts and document-fix rounds are separate ledger fields.
 
 - `IntervalFormatter`: llm-error; native=llm-error; checkpoint attempts=1; provider-error attempts=1; document rounds=None; repair=None. Source: `source/mir_eval/display.py:478`. Error: `ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}`. Review: Provider outcome; retry, never count as a documentation failure.
 - `absolute_error`: llm-error; native=llm-error; checkpoint attempts=1; provider-error attempts=1; document rounds=None; repair=None. Source: `source/mir_eval/alignment.py:115`. Error: `ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}`. Review: Provider outcome; retry, never count as a documentation failure.
@@ -47,6 +47,7 @@ Recorded provider-error attempts across all checkpoint fingerprints: 142. Provid
 - `lmeasure`: llm-error; native=llm-error; checkpoint attempts=1; provider-error attempts=1; document rounds=None; repair=None. Source: `source/mir_eval/hierarchy.py:548`. Error: `ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}`. Review: Provider outcome; retry, never count as a documentation failure.
 - `merge_chord_intervals`: llm-error; native=llm-error; checkpoint attempts=1; provider-error attempts=1; document rounds=None; repair=None. Source: `source/mir_eval/chord.py:1490`. Error: `ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}`. Review: Provider outcome; retry, never count as a documentation failure.
 - `midi_to_hz`: llm-error; native=llm-error; checkpoint attempts=1; provider-error attempts=1; document rounds=None; repair=None. Source: `source/mir_eval/util.py:930`. Error: `ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}`. Review: Provider outcome; retry, never count as a documentation failure.
+- `overseg`: llm-error; native=llm-error; checkpoint attempts=1; provider-error attempts=1; document rounds=None; repair=None. Source: `source/mir_eval/chord.py:1409`. Error: `ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}`. Review: Provider outcome; retry, never count as a documentation failure.
 
 ### A2
 
@@ -77,7 +78,7 @@ Recorded provider-error attempts across all checkpoint fingerprints: 0. Provider
 
 ### B2
 
-Primary failure categories: {"unknown": 2}.
+Primary failure categories: {"unknown": 9}.
 
 Recorded provider-error attempts across all checkpoint fingerprints: 0. Provider-internal retries are not recorded by the existing client and cannot be inferred from the configured limit. Watchdog logs retain process attempts; checkpoint attempts and document-fix rounds are separate ledger fields.
 
@@ -85,14 +86,15 @@ Recorded provider-error attempts across all checkpoint fingerprints: 0. Provider
 - `deprecated`: pass; native=None; checkpoint attempts=1; provider-error attempts=0; document rounds=1; repair=doc-fixed. Source: `source/mir_eval/util.py:946`. Error: `none captured`. Review: 
 - `first_n_three_layer_P`: pass; native=None; checkpoint attempts=1; provider-error attempts=0; document rounds=1; repair=doc-fixed. Source: `source/mir_eval/pattern.py:509`. Error: `none captured`. Review: 
 - `hierarchy`: unknown; native=runtime; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `source/mir_eval/display.py:498`. Error: `AssertionError: Expected 8 patches, got 0`. Review: Observed runtime; doc attribution requires source, document, and snippet review.
-- `load_key`: pending; native=None; checkpoint attempts=0; provider-error attempts=0; document rounds=2; repair=still-failing (no-improvement stop). Source: `None`. Error: `none captured`. Review: Not yet observed.
-- `load_patterns`: pending; native=None; checkpoint attempts=0; provider-error attempts=0; document rounds=2; repair=still-failing (no-improvement stop). Source: `None`. Error: `none captured`. Review: Not yet observed.
-- `load_ragged_time_series`: pending; native=None; checkpoint attempts=0; provider-error attempts=0; document rounds=2; repair=still-failing (no-improvement stop). Source: `None`. Error: `none captured`. Review: Not yet observed.
-- `load_tempo`: pending; native=None; checkpoint attempts=0; provider-error attempts=0; document rounds=2; repair=still-failing (no-improvement stop). Source: `None`. Error: `none captured`. Review: Not yet observed.
-- `load_valued_intervals`: pending; native=None; checkpoint attempts=0; provider-error attempts=0; document rounds=1; repair=doc-fixed. Source: `None`. Error: `none captured`. Review: Not yet observed.
-- `load_wav`: pending; native=None; checkpoint attempts=0; provider-error attempts=0; document rounds=2; repair=still-failing (no-improvement stop). Source: `None`. Error: `none captured`. Review: Not yet observed.
-- `p_score`: pending; native=None; checkpoint attempts=0; provider-error attempts=0; document rounds=1; repair=doc-fixed. Source: `None`. Error: `none captured`. Review: Not yet observed.
-- `piano_roll`: pending; native=None; checkpoint attempts=0; provider-error attempts=0; document rounds=2; repair=still-failing (no-improvement stop). Source: `None`. Error: `none captured`. Review: Not yet observed.
+- `load_key`: unknown; native=runtime; checkpoint attempts=1; provider-error attempts=0; document rounds=2; repair=still-failing (no-improvement stop). Source: `source/mir_eval/io.py:497`. Error: `FileNotFoundError: [Errno 2] No such file or directory: '/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/output/test_key.txt'`. Review: Observed runtime; doc attribution requires source, document, and snippet review.
+- `load_patterns`: unknown; native=runtime; checkpoint attempts=1; provider-error attempts=0; document rounds=2; repair=still-failing (no-improvement stop). Source: `source/mir_eval/io.py:331`. Error: `FileNotFoundError: [Errno 2] No such file or directory: '/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/source/tests/data/pattern/reference.txt'`. Review: Observed runtime; doc attribution requires source, document, and snippet review.
+- `load_ragged_time_series`: unknown; native=runtime; checkpoint attempts=1; provider-error attempts=0; document rounds=2; repair=still-failing (no-improvement stop). Source: `source/mir_eval/io.py:594`. Error: `ValueError: Couldn't convert value timestamp using float found at /var/folders/83/6ly5xs5j5ns3gmwbqgjqd7rw0000gn/T/tmp3up3srzm.csv:1:`. Review: Observed runtime; doc attribution requires source, document, and snippet review.
+- `load_tempo`: unknown; native=runtime; checkpoint attempts=1; provider-error attempts=0; document rounds=2; repair=still-failing (no-improvement stop). Source: `source/mir_eval/io.py:542`. Error: `FileNotFoundError: [Errno 2] No such file or directory: '/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/output/test_tempo.txt'`. Review: Observed runtime; doc attribution requires source, document, and snippet review.
+- `load_valued_intervals`: pass; native=None; checkpoint attempts=1; provider-error attempts=0; document rounds=1; repair=doc-fixed. Source: `source/mir_eval/io.py:448`. Error: `none captured`. Review: 
+- `load_wav`: unknown; native=runtime; checkpoint attempts=1; provider-error attempts=0; document rounds=2; repair=still-failing (no-improvement stop). Source: `source/mir_eval/io.py:409`. Error: `FileNotFoundError: [Errno 2] No such file or directory: '/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/output/test_load.wav'`. Review: Observed runtime; doc attribution requires source, document, and snippet review.
+- `p_score`: pass; native=None; checkpoint attempts=1; provider-error attempts=0; document rounds=1; repair=doc-fixed. Source: `source/mir_eval/beat.py:329`. Error: `none captured`. Review: 
+- `piano_roll`: unknown; native=runtime; checkpoint attempts=1; provider-error attempts=0; document rounds=2; repair=still-failing (no-improvement stop). Source: `source/mir_eval/display.py:873`. Error: `AssertionError: Expected 4 patches for 4 intervals, got 0`. Review: Observed runtime; doc attribution requires source, document, and snippet review.
+- `precision_recall_f1_overlap`: unknown; native=runtime; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `source/mir_eval/transcription_velocity.py:230`. Error: `ValueError: Reference intervals and pitches have different lengths.`. Review: Observed runtime; doc attribution requires source, document, and snippet review.
 - `reduce_extended_quality`: pending; native=None; checkpoint attempts=0; provider-error attempts=0; document rounds=1; repair=doc-fixed. Source: `None`. Error: `none captured`. Review: Not yet observed.
 - `ticker_pitch`: pending; native=None; checkpoint attempts=0; provider-error attempts=0; document rounds=2; repair=still-failing (no-improvement stop). Source: `None`. Error: `none captured`. Review: Not yet observed.
 - `voicing_recall`: pending; native=None; checkpoint attempts=0; provider-error attempts=0; document rounds=1; repair=doc-fixed. Source: `None`. Error: `none captured`. Review: Not yet observed.

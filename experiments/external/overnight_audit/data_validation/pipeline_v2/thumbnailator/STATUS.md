@@ -1,6 +1,6 @@
 # thumbnailator · A2-only repair pipeline
 
-2026-09-08T02:18:17.739553-07:00
+2026-09-08T02:33:18.747997-07:00
 
 A1 original README → zero fixes. A2 generated README → zero fixes.
 Frozen A2 failures → source-only snippet repair; independently → generated-README repair → fresh B2.
@@ -14,7 +14,7 @@ Original-README repair (historical B1) is intentionally omitted.
 
 Source recovery by new code-fix round: {'0': 0, '1': 12, '2': 18, '3': 18, '4': 18, '5': 18}
 Source statuses: {'recovered_native': 18, 'provider_blocked': 2, 'stuck': 2}
-Document repair: {'attempted': 22, 'processed': 20, 'blocked': True}
+Document repair: {'attempted': 22, 'processed': 22, 'blocked': None}
 
 [Source round details](source/REPORT.md) · [Machine-readable live evidence](live.json)
 
