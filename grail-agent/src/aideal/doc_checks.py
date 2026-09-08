@@ -78,14 +78,21 @@ def _comprehension_fingerprint_components(
     for pattern in cfg.source_globs:
         source_paths.extend(Path(p) for p in glob.glob(
             str(cfg.root / pattern), recursive=True))
-    fixture_paths = [Path(str(value)) for value in sample_data.values()]
+    # output_dir is a writable destination supplied to snippets, not input
+    # evidence. Its location remains in execute_config; its changing contents
+    # must never invalidate completed API checkpoints.
+    from urllib.parse import unquote, urlparse
+    fixture_paths = [Path(unquote(urlparse(str(value)).path)
+                          if str(value).startswith("file://") else str(value))
+                     for key, value in sample_data.items() if key != "output_dir"]
     engine_dir = Path(__file__).resolve().parent
     engine_paths = [engine_dir / name for name in (
-        "config.py", "doc_checks.py", "llm.py", "prompts.py", "readme_agent.py")]
+        "config.py", "doc_checks.py", "llm.py", "prompts.py", "readme_agent.py",
+        "checkpoint_compatibility.py", "provider_deadline.py")]
     audience = cfg.model_for_role("audience")
     fixer = cfg.model_for_role("fixer")
     return {
-        "schema": 2,
+        "schema": 3,
         "project": cfg.project_name,
         "language": cfg.language,
         "doc_source": doc_source,
@@ -1244,6 +1251,9 @@ def _comprehension_execute(cfg: AidealConfig, inventory, sample, seed, doc_sourc
     # (the 2026-07-01 all-API run died ~120/218 in and lost every result).
     # Without --resume the checkpoint restarts with the run.
     ckpt = work_dir / "comprehension_progress.jsonl"
+    from .checkpoint_compatibility import load_compatibility
+    reuse = load_compatibility(ckpt, fingerprint_components) if resume else {}
+    legacy_fingerprint = reuse.get("legacy_fingerprint")
     done_rows: dict[str, dict] = {}
     if resume and ckpt.exists():
         for line in ckpt.read_text(encoding="utf-8").splitlines():
@@ -1252,7 +1262,15 @@ def _comprehension_execute(cfg: AidealConfig, inventory, sample, seed, doc_sourc
                 # Provider/network failures are transient evidence, not a
                 # completed API. An overnight restart must retry them instead
                 # of silently preserving a quota outage in the final table.
-                if _checkpoint_row_reusable(row, experiment_fingerprint):
+                if (_checkpoint_row_reusable(row, experiment_fingerprint)
+                        or (legacy_fingerprint and
+                            _checkpoint_row_reusable(row, legacy_fingerprint))):
+                    # Native current evidence takes precedence over legacy
+                    # rows even when both versions append to the same journal.
+                    previous = done_rows.get(row["name"], {})
+                    if (previous.get("experiment_fingerprint") == experiment_fingerprint
+                            and row.get("experiment_fingerprint") != experiment_fingerprint):
+                        continue
                     done_rows[row["name"]] = row
             except Exception:
                 continue
@@ -1370,6 +1388,7 @@ def _comprehension_execute(cfg: AidealConfig, inventory, sample, seed, doc_sourc
                 "input_tokens", "output_tokens", "by_model", "error_category",
                 "error", "locus", "doc_chars", "document_sha256", "source",
                 "source_other_sites", "codebase_frames")}
+            metrics[entry.name]["evidence_fingerprint"] = row.get("experiment_fingerprint")
             per_api[entry.name] = f"resumed: {row.get('status')}"
             if row.get("status") == "pass":
                 passed_n += 1
@@ -1594,6 +1613,7 @@ def _comprehension_execute(cfg: AidealConfig, inventory, sample, seed, doc_sourc
             "document_sha256": doc_sha256,
             "experiment_fingerprint": experiment_fingerprint,
             "fingerprint_components": fingerprint_components,
+            "checkpoint_reuse": reuse,
             "doc_scope": doc_scope,
         },
         "passed": bool(scored_n) and passed_n == scored_n,
