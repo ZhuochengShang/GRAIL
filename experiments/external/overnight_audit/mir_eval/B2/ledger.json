@@ -2,12 +2,15 @@
   "status": "partial",
   "expected": 148,
   "counts": {
-    "pass": 4,
-    "pending": 144
+    "pass": 51,
+    "fail": 2,
+    "pending": 95
   },
   "fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
   "errors": [],
-  "failure_categories": {},
+  "failure_categories": {
+    "unknown": 2
+  },
   "recorded_provider_errors_all_fingerprints": 0,
   "observed_fingerprints": [
     "38cf404d8ec1a8adecd81479ff8e9d16425421cd18cb46a6deea120a2e3b55d4",
@@ -210,6 +213,2072 @@
       "source_other_sites": 0,
       "codebase_frames": null,
       "checkpoint_line": 5
+    },
+    {
+      "name": "adjust_intervals",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import mir_eval\nimport numpy as np\n\n# Ensure we have matching lengths for intervals and labels\nn = min(len(ref_intervals), len(ref_labels))\nif n == 0:\n    # Fallback to a deterministic small array if inputs are empty\n    intervals = np.array([[1.0, 2.0], [3.0, 4.0]])\n    labels = ['A', 'B']\n    n = 2\nelse:\n    intervals = ref_intervals[:n]\n    labels = ref_labels[:n]\n\n# Choose bounds that strictly exceed the current span to force appending\nt_min = float(intervals[0, 0] - 2.5)\nt_max = float(intervals[-1, 1] + 3.5)\n\nnew_intervals, new_labels = mir_eval.util.adjust_intervals(\n    intervals, \n    labels=labels, \n    t_min=t_min, \n    t_max=t_max, \n    start_label='__START__', \n    end_label='__END__'\n)\n\n# Verify that intervals were appended at both ends\nassert len(new_intervals) == n + 2, f\"Expected {n + 2} intervals, got {len(new_intervals)}\"\nassert new_labels[0] == '__START__', f\"Expected first label '__START__', got {new_labels[0]}\"\nassert new_labels[-1] == '__END__', f\"Expected last label '__END__', got {new_labels[-1]}\"\n\n# Verify the new boundaries\nassert np.isclose(new_intervals[0, 0], t_min), f\"First interval start should be {t_min}\"\nassert np.isclose(new_intervals[-1, 1], t_max), f\"Last interval end should be {t_max}\"\n\nprint(f\"__CHECK__ adjust_intervals {len(new_intervals)} {new_labels[0]} {new_labels[-1]}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_adjust_intervals/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ adjust_intervals 6 __START__ __END__\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 23.7,
+      "llm_calls": 1,
+      "input_tokens": 2752,
+      "output_tokens": 2586,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2752,
+          "output_tokens": 2586
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 5114,
+      "document_sha256": "ebe34b7e740852a0a299a21754f483d6d1cdc6089c7151fe67a971faecd361f9",
+      "source": "source/mir_eval/util.py:261",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 6
+    },
+    {
+      "name": "ari",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import mir_eval\n\n# Precondition: Trim or pad the estimate to match reference timing\nref_intervals_adj, ref_labels_adj = mir_eval.util.adjust_intervals(\n    ref_intervals, ref_labels, t_min=0.0\n)\nest_intervals_adj, est_labels_adj = mir_eval.util.adjust_intervals(\n    est_intervals, est_labels, t_min=0.0, t_max=ref_intervals_adj.max()\n)\n\n# Compute the Adjusted Rand Index (ARI)\nari_score = mir_eval.segment.ari(\n    ref_intervals_adj, ref_labels_adj, est_intervals_adj, est_labels_adj, frame_size=0.1\n)\n\n# Verify the result is a valid ARI score (<= 1.0)\nassert isinstance(ari_score, float), \"ARI score must be a float\"\nassert ari_score <= 1.0, \"ARI score cannot exceed 1.0\"\n\nprint(f\"__CHECK__ ari {ari_score:.4f}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_ari/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ ari 0.8588\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 11.8,
+      "llm_calls": 1,
+      "input_tokens": 2760,
+      "output_tokens": 1246,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2760,
+          "output_tokens": 1246
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 5435,
+      "document_sha256": "6744f563cebae5f52e88ab5761e3d2767e6970d96a13e4de31a4d51bf743af35",
+      "source": "source/mir_eval/segment.py:589",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 7
+    },
+    {
+      "name": "average_overlap_ratio",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import numpy as np\nimport mir_eval\n\n# Validate intervals to prevent divide-by-zero as required by the documentation\nmir_eval.util.validate_intervals(ref_intervals)\nmir_eval.util.validate_intervals(est_intervals)\n\n# Temporarily overwrite the first intervals to guarantee a deterministic overlap ratio\noriginal_ref = ref_intervals[0].copy()\noriginal_est = est_intervals[0].copy()\n\nref_intervals[0] = [0, 4]\nest_intervals[0] = [1, 3]\n\n# Provide explicit matching for the deterministic pair\nmatching = [(0, 0)]\n\naor_score = mir_eval.transcription.average_overlap_ratio(\n    ref_intervals, \n    est_intervals, \n    matching\n)\n\n# Restore original values\nref_intervals[0] = original_ref\nest_intervals[0] = original_est\n\n# Verify the Average Overlap Ratio\n# Numerator: min(4, 3) - max(0, 1) = 3 - 1 = 2\n# Denominator: max(4, 3) - min(0, 1) = 4 - 0 = 4\n# Expected AOR = 2 / 4 = 0.5\nassert np.isclose(aor_score, 0.5), f\"Expected AOR of 0.5, got {aor_score}\"\nprint(f\"__CHECK__ average_overlap_ratio {aor_score:.3f}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_average_overlap_ratio/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ average_overlap_ratio 0.500\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 59.2,
+      "llm_calls": 1,
+      "input_tokens": 2696,
+      "output_tokens": 6918,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2696,
+          "output_tokens": 6918
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 5203,
+      "document_sha256": "9e9e7b276a73cefecb2d3add3aa644f9b8df510de13c111db01ebd1914d6db32",
+      "source": "source/mir_eval/transcription.py:591",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 8
+    },
+    {
+      "name": "boundaries_to_intervals",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import numpy as np\nimport mir_eval\n\nboundaries = np.unique(ref_events)\nif len(boundaries) < 2:\n    boundaries = np.array([0.0, 1.0, 2.0, 3.5, 5.0])\n\nintervals = mir_eval.util.boundaries_to_intervals(boundaries)\n\nassert intervals.shape == (len(boundaries) - 1, 2), f\"Expected shape {(len(boundaries) - 1, 2)}, got {intervals.shape}\"\nassert np.array_equal(intervals[:, 0], boundaries[:-1]), \"Interval start times do not match boundaries\"\nassert np.array_equal(intervals[:, 1], boundaries[1:]), \"Interval end times do not match boundaries\"\n\nprint(f\"__CHECK__ boundaries_to_intervals {intervals.shape}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_boundaries_to_intervals/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ boundaries_to_intervals (3, 2)\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 14.5,
+      "llm_calls": 1,
+      "input_tokens": 2105,
+      "output_tokens": 1466,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2105,
+          "output_tokens": 1466
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3064,
+      "document_sha256": "79ba463cf49675277926340458f27a9c6eef446c14ef3873d2839ff08e45b6ed",
+      "source": "source/mir_eval/util.py:239",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 9
+    },
+    {
+      "name": "bss_eval_images",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import numpy as np\nimport mir_eval\nimport warnings\n\n# Ensure inputs are 3D (nsrc, nsampl, nchan)\nref_3d = np.atleast_3d(ref_sources)\nest_3d = np.atleast_3d(est_sources)\n\n# bss_eval_images uses a filter of length 512; pad if necessary\nif ref_3d.shape[1] < 512:\n    pad_len = 512 - ref_3d.shape[1]\n    ref_3d = np.pad(ref_3d, ((0, 0), (0, pad_len), (0, 0)), mode='constant')\n    est_3d = np.pad(est_3d, ((0, 0), (0, pad_len), (0, 0)), mode='constant')\n\n# Ensure no source is completely silent by adding a small amount of deterministic noise\nnp.random.seed(42)\nref_3d = ref_3d + np.random.random_sample(ref_3d.shape) * 1e-3\nest_3d = est_3d + np.random.random_sample(est_3d.shape) * 1e-3\n\nwith warnings.catch_warnings():\n    warnings.simplefilter(\"ignore\")\n    sdr, isr, sir, sar, perm = mir_eval.separation.bss_eval_images(ref_3d, est_3d)\n\nnsrc = ref_3d.shape[0]\nassert sdr.shape == (nsrc,), f\"Expected SDR shape {(nsrc,)}, got {sdr.shape}\"\nassert isr.shape == (nsrc,), f\"Expected ISR shape {(nsrc,)}, got {isr.shape}\"\nassert sir.shape == (nsrc,), f\"Expected SIR shape {(nsrc,)}, got {sir.shape}\"\nassert sar.shape == (nsrc,), f\"Expected SAR shape {(nsrc,)}, got {sar.shape}\"\nassert perm.shape == (nsrc,), f\"Expected perm shape {(nsrc,)}, got {perm.shape}\"\nassert np.all(np.isfinite(sdr)), \"SDR contains non-finite values\"\n\nprint(f\"__CHECK__ bss_eval_images {nsrc}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_bss_eval_images/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ bss_eval_images 2\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 29.2,
+      "llm_calls": 1,
+      "input_tokens": 3044,
+      "output_tokens": 3649,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 3044,
+          "output_tokens": 3649
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 6450,
+      "document_sha256": "d76c2dacd796fa4b10b5b982427cd2bd7f2c41acca6e13e43b8c67c1ba0ca461",
+      "source": "source/mir_eval/separation.py:372",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 10
+    },
+    {
+      "name": "bss_eval_images_framewise",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import mir_eval\nimport numpy as np\nimport warnings\n\n# Ensure inputs are 3D arrays (sources, samples, channels)\nref = np.atleast_3d(ref_sources)\nest = np.atleast_3d(est_sources)\n\n# Handle empty arrays\nif ref.size == 0 or ref.shape[1] == 0:\n    ref = np.ones((2, 100, 1))\n    est = np.ones((2, 100, 1))\n\n# Ensure we have at least 100 samples for the framewise windowing\nif ref.shape[1] < 100:\n    pad_len = 100 - ref.shape[1]\n    ref = np.pad(ref, ((0, 0), (0, pad_len), (0, 0)), mode='constant', constant_values=1.0)\n    est = np.pad(est, ((0, 0), (0, pad_len), (0, 0)), mode='constant', constant_values=1.0)\n\n# Slice to exactly 100 samples for deterministic frame count\nref = ref[:, :100, :]\nest = est[:, :100, :]\n\n# Prevent ValueError from completely silent sources\nif not np.any(ref):\n    ref[:] = 1.0\nif not np.any(est):\n    est[:] = 1.0\n\n# Add small noise to avoid perfect separation singularities in bss_eval\nnp.random.seed(42)\nest = est + 0.1 * np.random.random_sample(est.shape)\n\nwith warnings.catch_warnings():\n    warnings.simplefilter(\"ignore\")\n    sdr, isr, sir, sar, perm = mir_eval.separation.bss_eval_images_framewise(\n        ref, est, window=40, hop=20\n    )\n\n# Verify the output shapes and deterministic frame count\n# 100 samples with window=40 and hop=20 yields exactly 4 frames\nexpected_frames = 4\nassert sdr.ndim == 2, \"SDR should be a 2D array\"\nassert sdr.shape[0] == ref.shape[0], \"Number of sources should match input\"\nassert sdr.shape[1] == expected_frames, f\"Expected {expected_frames} frames, got {sdr.shape[1]}\"\nassert sdr.shape == isr.shape == sir.shape == sar.shape == perm.shape, \"All metric arrays must have identical shapes\"\n\nprint(f\"__CHECK__ bss_eval_images_framewise {sdr.shape}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_bss_eval_images_framewise/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ bss_eval_images_framewise (2, 4)\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 34.0,
+      "llm_calls": 1,
+      "input_tokens": 3185,
+      "output_tokens": 4143,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 3185,
+          "output_tokens": 4143
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 6816,
+      "document_sha256": "343f4ee8016dd1ffed2479ab91ed8a6e8ceabfe5d14c4be498064d145705a15e",
+      "source": "source/mir_eval/separation.py:507",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 11
+    },
+    {
+      "name": "bss_eval_sources",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import mir_eval\nimport numpy as np\n\n# Ensure inputs are 2D arrays of floats\nref_val = np.atleast_2d(ref_sources).astype(float)\nest_val = np.atleast_2d(est_sources).astype(float)\n\n# Determine common shape\nn_src = min(ref_val.shape[0], est_val.shape[0])\nn_smpl = min(ref_val.shape[1], est_val.shape[1])\n\n# Fallback if inputs are empty\nif n_src == 0:\n    n_src = 2\n    ref_val = np.random.rand(n_src, 512)\n    est_val = np.random.rand(n_src, 512)\n    n_smpl = 512\n\n# Truncate to identical shapes\nref_val = ref_val[:n_src, :n_smpl]\nest_val = est_val[:n_src, :n_smpl]\n\n# Pad to at least 512 samples to satisfy the time-invariant filter distortion length\nif n_smpl < 512:\n    ref_val = np.pad(ref_val, ((0, 0), (0, 512 - n_smpl)), constant_values=1e-5)\n    est_val = np.pad(est_val, ((0, 0), (0, 512 - n_smpl)), constant_values=1e-5)\n    n_smpl = 512\n\n# Prevent completely silent sources which raise ValueError\nref_val[np.all(ref_val == 0, axis=1)] += 1e-5\nest_val[np.all(est_val == 0, axis=1)] += 1e-5\n\n# Execute the API\nsdr, sir, sar, perm = mir_eval.separation.bss_eval_sources(ref_val, est_val)\n\n# Verify the results\nassert isinstance(sdr, np.ndarray) and sdr.shape == (n_src,), f\"Expected sdr shape {(n_src,)}, got {sdr.shape}\"\nassert isinstance(sir, np.ndarray) and sir.shape == (n_src,), f\"Expected sir shape {(n_src,)}, got {sir.shape}\"\nassert isinstance(sar, np.ndarray) and sar.shape == (n_src,), f\"Expected sar shape {(n_src,)}, got {sar.shape}\"\nassert isinstance(perm, np.ndarray) and perm.shape == (n_src,), f\"Expected perm shape {(n_src,)}, got {perm.shape}\"\nassert np.all(np.isfinite(sdr)), \"SDR contains non-finite values\"\n\nprint(f\"__CHECK__ bss_eval_sources {n_src} sources, mean SDR: {np.mean(sdr):.4f}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_bss_eval_sources/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ bss_eval_sources 2 sources, mean SDR: 83.1720\n__DONE__\n",
+        "stderr_tail": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_bss_eval_sources/api_test.py:66: FutureWarning: mir_eval.separation.bss_eval_sources\n\tDeprecated as of mir_eval version 0.8.\n\tIt will be removed in mir_eval version 0.9.\n  sdr, sir, sar, perm = mir_eval.separation.bss_eval_sources(ref_val, est_val)\n"
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 44.4,
+      "llm_calls": 1,
+      "input_tokens": 2910,
+      "output_tokens": 5435,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2910,
+          "output_tokens": 5435
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 6116,
+      "document_sha256": "df1e38b507e8f573477a8c56c8af88187d496ffcca974154306c7c1b35182553",
+      "source": "source/mir_eval/separation.py:149",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 12
+    },
+    {
+      "name": "bss_eval_sources_framewise",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import numpy as np\nimport mir_eval\n\n# Ensure inputs are 2D and determine common dimensions\nrs_2d = np.atleast_2d(ref_sources)\nes_2d = np.atleast_2d(est_sources)\n\nn_src = min(rs_2d.shape[0], es_2d.shape[0])\n# Ensure the length is at least 60 to allow for framewise evaluation with window=40, hop=20\nn_sampl = max(rs_2d.shape[1], es_2d.shape[1], 60)\n\n# Create identically shaped arrays and add noise to prevent completely silent tracks\nrs = np.random.random_sample((n_src, n_sampl)) + 0.1\nes = np.random.random_sample((n_src, n_sampl)) + 0.1\n\n# Incorporate the provided fixture data\nrs[:, :rs_2d.shape[1]] += rs_2d[:n_src, :]\nes[:, :es_2d.shape[1]] += es_2d[:n_src, :]\n\n# Evaluate framewise source separation\nsdr, sir, sar, perm = mir_eval.separation.bss_eval_sources_framewise(\n    rs, \n    es, \n    window=40, \n    hop=20,\n    compute_permutation=False\n)\n\n# Verify the output shapes match the documented contract (nsrc, nframes)\nassert sdr.shape == sir.shape == sar.shape == perm.shape, \"Output metric arrays must have identical shapes.\"\nassert sdr.ndim == 2, f\"Expected 2D output arrays, got {sdr.ndim}D.\"\nassert sdr.shape[0] == n_src, f\"Expected {n_src} sources in output, got {sdr.shape[0]}.\"\nassert sdr.shape[1] >= 1, \"Expected at least one frame of evaluation metrics.\"\n\nprint(f\"__CHECK__ bss_eval_sources_framewise {sdr.shape}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_bss_eval_sources_framewise/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ bss_eval_sources_framewise (2, 2)\n__DONE__\n",
+        "stderr_tail": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_bss_eval_sources_framewise/api_test.py:53: FutureWarning: mir_eval.separation.bss_eval_sources_framewise\n\tDeprecated as of mir_eval version 0.8.\n\tIt will be removed in mir_eval version 0.9.\n  sdr, sir, sar, perm = mir_eval.separation.bss_eval_sources_framewise(\n/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/source/mir_eval/separation.py:361: FutureWarning: mir_eval.separation.bss_eval_sources\n\tDeprecated as of mir_eval version 0.8.\n\tIt will be removed in mir_eval version 0.9.\n  sdr[:, k], sir[:, k], sar[:, k], perm[:, k] = bss_eval_sources(\n"
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 27.9,
+      "llm_calls": 1,
+      "input_tokens": 3248,
+      "output_tokens": 3332,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 3248,
+          "output_tokens": 3332
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 6978,
+      "document_sha256": "44248f0616d741cd6ce018ee1a206e4125d98e1881ce1b5216df139cd2213862",
+      "source": "source/mir_eval/separation.py:260",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 13
+    },
+    {
+      "name": "cemgil",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "runtime",
+            "error": "AssertionError: Expected perfect score to be ~1.0, got 0.0"
+          }
+        ],
+        "error_category": "runtime",
+        "error": "AssertionError: Expected perfect score to be ~1.0, got 0.0",
+        "code": "import mir_eval\nimport numpy as np\n\n# Preprocess inputs as required by standard MIR evaluation practices\nref_beats = mir_eval.beat.trim_beats(ref_events)\nest_beats = mir_eval.beat.trim_beats(est_events)\n\n# Compute Cemgil's score\ncemgil_score, cemgil_max = mir_eval.beat.cemgil(ref_beats, est_beats)\n\n# Strong oracle: identical inputs should yield a perfect score of 1.0\nperfect_score, perfect_max = mir_eval.beat.cemgil(ref_beats, ref_beats)\n\nassert isinstance(cemgil_score, float), \"cemgil_score must be a float\"\nassert isinstance(cemgil_max, float), \"cemgil_max must be a float\"\nassert perfect_score > 0.99, f\"Expected perfect score to be ~1.0, got {perfect_score}\"\nassert 0.0 <= cemgil_score <= 1.0, \"cemgil_score should be bounded between 0 and 1\"\n\nprint(f\"__CHECK__ cemgil {cemgil_score:.4f}, {cemgil_max:.4f}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_cemgil/api_test.py",
+        "exit_code": 1,
+        "stdout_tail": "",
+        "stderr_tail": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/source/mir_eval/beat.py:90: UserWarning: Reference beats are empty.\n  warnings.warn(\"Reference beats are empty.\")\n/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/source/mir_eval/beat.py:92: UserWarning: Estimated beats are empty.\n  warnings.warn(\"Estimated beats are empty.\")\n__RUN_ERR__ AssertionError: Expected perfect score to be ~1.0, got 0.0\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_cemgil/api_test.py\", line 60, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_cemgil/api_test.py\", line 55, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_cemgil/api_test.py\", line 48, in api_test\n    assert perfect_score > 0.99, f\"Expected perfect score to be ~1.0, got {perfect_score}\"\nAssertionError: Expected perfect score to be ~1.0, got 0.0\n"
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 17.0,
+      "llm_calls": 1,
+      "input_tokens": 2371,
+      "output_tokens": 1855,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2371,
+          "output_tokens": 1855
+        }
+      },
+      "error_category": "runtime",
+      "error": "AssertionError: Expected perfect score to be ~1.0, got 0.0",
+      "locus": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_cemgil/api_test.py:48",
+      "doc_chars": 3968,
+      "document_sha256": "190edd6fd12face5d668b1264eafa0321a6f5dfd66fe5bac9bd99fa7eb97da65",
+      "source": "source/mir_eval/beat.py:176",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 14
+    },
+    {
+      "name": "chords",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import mir_eval.display\nimport matplotlib\nmatplotlib.use('Agg')\nimport matplotlib.pyplot as plt\n\nfig, ax = plt.subplots()\nmir_eval.display.chords(\n    ref_intervals, \n    ref_labels, \n    base=0, \n    height=1, \n    text=True, \n    ax=ax, \n    cmap='fifths', \n    pattern=True\n)\n\nnum_patches = len(ax.patches)\nnum_texts = len(ax.texts)\n\nassert num_patches == len(ref_intervals), f\"Expected {len(ref_intervals)} patches, got {num_patches}\"\nassert num_texts == len(ref_intervals), f\"Expected {len(ref_intervals)} texts, got {num_texts}\"\n\nprint(f\"__CHECK__ chords {num_patches}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_chords/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ chords 4\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 15.5,
+      "llm_calls": 1,
+      "input_tokens": 3306,
+      "output_tokens": 1756,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 3306,
+          "output_tokens": 1756
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 7387,
+      "document_sha256": "362891a3e9fd64180d80bff78a4575e88dd518cd47cbb5718ec97d9aa1fba0d7",
+      "source": "source/mir_eval/display.py:1160",
+      "source_other_sites": 1,
+      "codebase_frames": null,
+      "checkpoint_line": 15
+    },
+    {
+      "name": "chroma",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import mir_eval\nimport numpy as np\n\n# Ensure chromagram has 12 rows and matches the length of times\nN = times.shape[0]\nchromagram = np.ones((12, N)) * 0.5\n\n# Ensure non-negative magnitudes for proper sonification\nchromagram_positive = np.maximum(0, chromagram)\n\nfs = 8000\nmax_time = np.max(times) if N > 0 else 1.0\nexpected_length = int(np.ceil(max_time * fs)) + fs\n\n# Perform reverse synthesis of the chromagram\nsignal = mir_eval.sonify.chroma(\n    chromagram_positive, \n    times, \n    fs, \n    length=expected_length\n)\n\n# Verify the output is a 1D numpy array of the requested length\nassert isinstance(signal, np.ndarray), \"Output must be a numpy array\"\nassert signal.ndim == 1, \"Output must be a 1D array\"\nassert len(signal) == expected_length, f\"Expected length {expected_length}, got {len(signal)}\"\n\nprint(f\"__CHECK__ chroma {len(signal)}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_chroma/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ chroma 24000\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 17.4,
+      "llm_calls": 1,
+      "input_tokens": 2502,
+      "output_tokens": 1759,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2502,
+          "output_tokens": 1759
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 4384,
+      "document_sha256": "4f1d74dfbee7d8d9d8fb4c623c0415d4553b8f023ab54e53d96fbe5f92ba8082",
+      "source": "source/mir_eval/sonify.py:320",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 16
+    },
+    {
+      "name": "clicks",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import mir_eval\nimport numpy as np\n\nfs = 8000\ncustom_click = np.ones(5)\nclick_signal = mir_eval.sonify.clicks(times, fs, click=custom_click)\n\nexpected_length = int(times.max() * fs + custom_click.shape[0] + 1)\nassert click_signal.shape == (expected_length,), f\"Expected shape {(expected_length,)}, got {click_signal.shape}\"\nassert click_signal.ndim == 1, \"Expected 1D array\"\n\nprint(f\"__CHECK__ clicks {click_signal.shape[0]}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_clicks/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ clicks 16006\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 13.4,
+      "llm_calls": 1,
+      "input_tokens": 2407,
+      "output_tokens": 1485,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2407,
+          "output_tokens": 1485
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 4046,
+      "document_sha256": "ed6323f153538519665bc9d507d484d9f717a3863e173794e89eec76d0095f10",
+      "source": "source/mir_eval/sonify.py:15",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 17
+    },
+    {
+      "name": "compute_accuracy",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import numpy as np\nimport mir_eval\n\ntrue_positives = np.array([1, 0, 0, 3, 2])\nn_ref = np.array([2, 0, 1, 3, 2])\nn_est = np.array([1, 0, 2, 3, 2])\n\nprecision, recall, accuracy = mir_eval.multipitch.compute_accuracy(\n    true_positives, n_ref, n_est\n)\n\nassert np.isclose(precision, 0.75), f\"Expected precision 0.75, got {precision}\"\nassert np.isclose(recall, 0.75), f\"Expected recall 0.75, got {recall}\"\nassert np.isclose(accuracy, 0.6), f\"Expected accuracy 0.6, got {accuracy}\"\n\nprint(f\"__CHECK__ compute_accuracy {precision:.2f}, {recall:.2f}, {accuracy:.2f}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_compute_accuracy/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ compute_accuracy 0.75, 0.75, 0.60\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 12.8,
+      "llm_calls": 1,
+      "input_tokens": 2298,
+      "output_tokens": 1453,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2298,
+          "output_tokens": 1453
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3520,
+      "document_sha256": "58a2b9f0696cd6aa5149f318665dc5f155b24017314b06fbf01a750492e8a735",
+      "source": "source/mir_eval/multipitch.py:248",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 18
+    },
+    {
+      "name": "compute_err_score",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import numpy as np\nimport mir_eval\n\ntrue_positives = np.array([1, 0, 0, 3, 2])\nn_ref = np.array([2, 0, 1, 3, 2])\nn_est = np.array([1, 0, 2, 3, 2])\n\ne_sub, e_miss, e_fa, e_tot = mir_eval.multipitch.compute_err_score(\n    true_positives, n_ref, n_est\n)\n\nassert np.isclose(e_sub, 0.125), f\"Expected e_sub=0.125, got {e_sub}\"\nassert np.isclose(e_miss, 0.125), f\"Expected e_miss=0.125, got {e_miss}\"\nassert np.isclose(e_fa, 0.125), f\"Expected e_fa=0.125, got {e_fa}\"\nassert np.isclose(e_tot, 0.375), f\"Expected e_tot=0.375, got {e_tot}\"\n\nprint(f\"__CHECK__ compute_err_score {e_sub:.3f}, {e_miss:.3f}, {e_fa:.3f}, {e_tot:.3f}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_compute_err_score/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ compute_err_score 0.125, 0.125, 0.125, 0.375\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 19.3,
+      "llm_calls": 1,
+      "input_tokens": 2211,
+      "output_tokens": 2301,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2211,
+          "output_tokens": 2301
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3126,
+      "document_sha256": "cd051ec6696b33da7db7f3b6d562962edd4468b0faab23ba5aa98f69756c08d9",
+      "source": "source/mir_eval/multipitch.py:296",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 19
+    },
+    {
+      "name": "compute_num_freqs",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import numpy as np\nimport mir_eval\n\nfrequencies = [\n    np.array([256.0]),\n    np.array([]),\n    np.array([362.03867196751236, 128.0, 512.0]),\n    np.array([300.0, 512.0]),\n]\n\nnum_freqs = mir_eval.multipitch.compute_num_freqs(frequencies)\n\nassert isinstance(num_freqs, np.ndarray), \"Output must be a numpy array\"\nassert num_freqs.ndim == 1, \"Output must be 1D\"\nassert len(num_freqs) == len(frequencies), \"Output length must match input length\"\nassert np.array_equal(num_freqs, np.array([1, 0, 3, 2])), \"Counts must match the number of elements in each array\"\n\nprint(f\"__CHECK__ compute_num_freqs {num_freqs.tolist()}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_compute_num_freqs/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ compute_num_freqs [1, 0, 3, 2]\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 15.9,
+      "llm_calls": 1,
+      "input_tokens": 2300,
+      "output_tokens": 1000,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2300,
+          "output_tokens": 1000
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3537,
+      "document_sha256": "94dfd8df9750f9edeb6bd5b6b627f33029c794edb26682d5d1c8e341227b0392",
+      "source": "source/mir_eval/multipitch.py:190",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 20
+    },
+    {
+      "name": "compute_num_true_positives",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import numpy as np\nimport mir_eval\n\n# Construct multipitch inputs in MIDI pitch scale as lists of 1D numpy arrays\nref_freqs_list = [\n    np.array([96.0, 100.0]),\n    np.array([]),\n    np.array([102.0, 84.0, 108.0])\n]\nest_freqs_list = [\n    np.array([96.0]),\n    np.array([]),\n    np.array([102.0, 84.0, 108.0])\n]\n\n# Compute the number of true positives per frame\ntp_counts = mir_eval.multipitch.compute_num_true_positives(ref_freqs_list, est_freqs_list)\n\n# Verify the output type, shape, and deterministic correctness\nassert isinstance(tp_counts, np.ndarray), \"Output must be a numpy array\"\nassert tp_counts.shape == (len(ref_freqs_list),), \"Output length must match the number of frames\"\nassert tp_counts.tolist() == [1, 0, 3], f\"Expected true positive counts [1, 0, 3], got {tp_counts.tolist()}\"\n\nprint(f\"__CHECK__ compute_num_true_positives {tp_counts.tolist()}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_compute_num_true_positives/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ compute_num_true_positives [1.0, 0.0, 3.0]\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 23.1,
+      "llm_calls": 1,
+      "input_tokens": 2846,
+      "output_tokens": 2558,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2846,
+          "output_tokens": 2558
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 5005,
+      "document_sha256": "c39935b306a12437dc481711eefddeb19e66e54f175af071e13aa0cc97adf450",
+      "source": "source/mir_eval/multipitch.py:206",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 21
+    },
+    {
+      "name": "constant_hop_timebase",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import mir_eval\nimport numpy as np\n\nhop = 0.1\nend_time = 0.35\nres_times = mir_eval.melody.constant_hop_timebase(hop, end_time)\n\nassert isinstance(res_times, np.ndarray), \"Result should be a numpy array\"\nassert len(res_times) == 4, f\"Expected length 4, got {len(res_times)}\"\nassert np.allclose(res_times, [0.0, 0.1, 0.2, 0.3]), \"Array values do not match expected\"\n\nprint(f\"__CHECK__ constant_hop_timebase {len(res_times)}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_constant_hop_timebase/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ constant_hop_timebase 4\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 8.5,
+      "llm_calls": 1,
+      "input_tokens": 2078,
+      "output_tokens": 731,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2078,
+          "output_tokens": 731
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 2671,
+      "document_sha256": "079264fbc02da0a3c6288cbc76c23d5361a26250d35a143b1addb3046e1023ee",
+      "source": "source/mir_eval/melody.py:195",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 22
+    },
+    {
+      "name": "continuity",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import mir_eval\n\nref_beats = mir_eval.beat.trim_beats(ref_events)\nest_beats = mir_eval.beat.trim_beats(est_events)\n\nCMLc, CMLt, AMLc, AMLt = mir_eval.beat.continuity(ref_beats, est_beats)\n\nassert 0.0 <= CMLc <= CMLt <= 1.0, f\"CMLc ({CMLc}) must be <= CMLt ({CMLt})\"\nassert 0.0 <= AMLc <= AMLt <= 1.0, f\"AMLc ({AMLc}) must be <= AMLt ({AMLt})\"\nassert CMLc <= AMLc, f\"CMLc ({CMLc}) must be <= AMLc ({AMLc})\"\nassert CMLt <= AMLt, f\"CMLt ({CMLt}) must be <= AMLt ({AMLt})\"\n\nprint(f\"__CHECK__ continuity {CMLc:.4f}, {CMLt:.4f}, {AMLc:.4f}, {AMLt:.4f}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_continuity/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ continuity 0.0000, 0.0000, 0.0000, 0.0000\n__DONE__\n",
+        "stderr_tail": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/source/mir_eval/beat.py:90: UserWarning: Reference beats are empty.\n  warnings.warn(\"Reference beats are empty.\")\n/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/source/mir_eval/beat.py:92: UserWarning: Estimated beats are empty.\n  warnings.warn(\"Estimated beats are empty.\")\n"
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 9.7,
+      "llm_calls": 1,
+      "input_tokens": 2725,
+      "output_tokens": 1065,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2725,
+          "output_tokens": 1065
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 5320,
+      "document_sha256": "3c0e127274e0db675ac59e20d2814c9f273e41699a5221402db27f6852ee7697",
+      "source": "source/mir_eval/beat.py:409",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 23
+    },
+    {
+      "name": "deprecated",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import warnings\nfrom mir_eval.util import deprecated\n\n@deprecated(version=\"0.8\", version_removed=\"0.9\")\ndef dummy_func():\n    return 42\n\nwith warnings.catch_warnings(record=True) as w:\n    warnings.simplefilter(\"always\")\n    result = dummy_func()\n\nassert result == 42\nassert len(w) == 1\nassert issubclass(w[-1].category, FutureWarning)\n\nprint(f\"__CHECK__ deprecated {result} {w[-1].category.__name__}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_deprecated/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ deprecated 42 FutureWarning\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 8.4,
+      "llm_calls": 1,
+      "input_tokens": 2139,
+      "output_tokens": 742,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2139,
+          "output_tokens": 742
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3401,
+      "document_sha256": "a7c746b6fcc9a9ef46370fca64ba51701fa53fd34d2fc9a769bb6cdec4ec077b",
+      "source": "source/mir_eval/util.py:946",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 24
+    },
+    {
+      "name": "detection",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import mir_eval\n\n# Strong oracle: evaluating reference against itself should yield perfect scores\np_id, r_id, f_id = mir_eval.segment.detection(\n    ref_intervals,\n    ref_intervals,\n    window=0.5,\n    trim=False\n)\nassert p_id == 1.0 and r_id == 1.0 and f_id == 1.0, \"Identity check failed to produce perfect scores\"\n\n# Evaluate the estimated segment boundaries against the reference boundaries\nprecision, recall, f_measure = mir_eval.segment.detection(\n    ref_intervals,\n    est_intervals,\n    window=0.5,\n    trim=True\n)\n\nassert 0.0 <= precision <= 1.0\nassert 0.0 <= recall <= 1.0\nassert 0.0 <= f_measure <= 1.0\n\nprint(f\"__CHECK__ detection {precision:.4f}, {recall:.4f}, {f_measure:.4f}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_detection/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ detection 1.0000, 1.0000, 1.0000\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 15.9,
+      "llm_calls": 1,
+      "input_tokens": 2981,
+      "output_tokens": 1800,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2981,
+          "output_tokens": 1800
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 6459,
+      "document_sha256": "b8678dbe087c4ddaa822e01ba2d3b963f91f29d9adc360f9cc41ef7db932d8b1",
+      "source": "source/mir_eval/segment.py:168",
+      "source_other_sites": 1,
+      "codebase_frames": null,
+      "checkpoint_line": 25
+    },
+    {
+      "name": "deviation",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import mir_eval\nimport numpy as np\n\n# Compute deviation between reference and estimated intervals\nr_to_e, e_to_r = mir_eval.segment.deviation(ref_intervals, est_intervals, trim=False)\n\n# Compute deviation of reference intervals to themselves as a strong oracle\nr_to_r_1, r_to_r_2 = mir_eval.segment.deviation(ref_intervals, ref_intervals, trim=False)\n\n# Verify that the deviation of an interval sequence to itself is exactly 0\nassert np.isclose(r_to_r_1, 0.0) and np.isclose(r_to_r_2, 0.0), \"Self-deviation must be 0.0\"\nassert r_to_e >= 0.0 and e_to_r >= 0.0, \"Deviations must be non-negative\"\n\nprint(f\"__CHECK__ deviation {r_to_e:.4f}, {e_to_r:.4f}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_deviation/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ deviation 0.0200, 0.0200\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 15.9,
+      "llm_calls": 1,
+      "input_tokens": 2627,
+      "output_tokens": 1660,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2627,
+          "output_tokens": 1660
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 4987,
+      "document_sha256": "f08e6133a0dd1b5ac8c0dd840d240432e275ac8be56b3ba22dd00516130f4508",
+      "source": "source/mir_eval/segment.py:252",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 26
+    },
+    {
+      "name": "directional_hamming_distance",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import mir_eval\nimport numpy as np\n\n# Compute directional hamming distance between reference and estimated intervals\ndhd_ref_to_est = mir_eval.chord.directional_hamming_distance(ref_intervals, est_intervals)\n\n# Compute directional hamming distance of reference to itself (should be exactly 0.0)\ndhd_self = mir_eval.chord.directional_hamming_distance(ref_intervals, ref_intervals)\n\nassert isinstance(dhd_ref_to_est, float), \"Expected directional hamming distance to be a float\"\nassert dhd_self == 0.0, f\"Expected 0.0 for identical intervals, got {dhd_self}\"\n\nprint(f\"__CHECK__ directional_hamming_distance {dhd_ref_to_est:.4f}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_directional_hamming_distance/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ directional_hamming_distance 0.0300\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 12.2,
+      "llm_calls": 1,
+      "input_tokens": 2541,
+      "output_tokens": 1159,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2541,
+          "output_tokens": 1159
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 4428,
+      "document_sha256": "6ef9bb2fbefad647c6df975cfb5aff8b42c380112af0898a4600a89bb2367fde",
+      "source": "source/mir_eval/chord.py:1359",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 27
+    },
+    {
+      "name": "encode",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import mir_eval\nimport numpy as np\n\n# Encode a standard chord label into its numerical representations\nroot, intervals, bass = mir_eval.chord.encode(\n    \"C:maj7\", reduce_extended_chords=False, strict_bass_intervals=False\n)\n\n# Verify the absolute root (C = 0)\nassert root == 0, f\"Expected root 0 for 'C', got {root}\"\n\n# Verify the bass note relative to the root (root position = 0)\nassert bass == 0, f\"Expected bass 0 for root position, got {bass}\"\n\n# Verify the 12-dimensional relative semitone bitmap for a major 7th chord\n# (root=0, major 3rd=4, perfect 5th=7, major 7th=11)\nassert intervals.shape == (12,), f\"Expected 12-dim bitmap, got shape {intervals.shape}\"\nassert np.sum(intervals) == 4, f\"Expected 4 active semitones, got {np.sum(intervals)}\"\nassert intervals[0] == 1 and intervals[4] == 1 and intervals[7] == 1 and intervals[11] == 1, \\\n    f\"Incorrect intervals for maj7: {intervals}\"\n\nprint(f\"__CHECK__ encode root={root}, active_intervals={np.sum(intervals)}, bass={bass}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_encode/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ encode root=0, active_intervals=4, bass=0\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 16.3,
+      "llm_calls": 1,
+      "input_tokens": 2470,
+      "output_tokens": 1739,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2470,
+          "output_tokens": 1739
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 4287,
+      "document_sha256": "d79f01a1312e1217a74beda86feaf7dce7a3bb4675c9e75a33e49fce044c2c23",
+      "source": "source/mir_eval/chord.py:471",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 28
+    },
+    {
+      "name": "encode_many",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import mir_eval\nimport numpy as np\n\nroots, intervals, basses = mir_eval.chord.encode_many(ref_labels)\n\nassert isinstance(roots, np.ndarray)\nassert isinstance(intervals, np.ndarray)\nassert isinstance(basses, np.ndarray)\n\nassert roots.dtype == int\nassert intervals.dtype == int\nassert basses.dtype == int\n\nassert roots.shape == (len(ref_labels),), f\"Expected roots shape {(len(ref_labels),)}, got {roots.shape}\"\nassert basses.shape == (len(ref_labels),), f\"Expected basses shape {(len(ref_labels),)}, got {basses.shape}\"\nassert intervals.shape == (len(ref_labels), 12), f\"Expected intervals shape {(len(ref_labels), 12)}, got {intervals.shape}\"\n\nprint(f\"__CHECK__ encode_many {len(roots)}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_encode_many/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ encode_many 4\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 19.2,
+      "llm_calls": 1,
+      "input_tokens": 2337,
+      "output_tokens": 2037,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2337,
+          "output_tokens": 2037
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3685,
+      "document_sha256": "beb689257030c517cee890f5c2e393415d8297d9b2048a5c7d7cdb5e92fb82e0",
+      "source": "source/mir_eval/chord.py:523",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 29
+    },
+    {
+      "name": "establishment_FPR",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import mir_eval\n\n# Construct in-memory pattern lists matching the format returned by mir_eval.io.load_patterns()\n# A pattern is a list of occurrences, and an occurrence is a list of (onset, pitch) tuples.\nref_patterns = [\n    [\n        [(1.0, 60.0), (2.0, 62.0)],\n        [(3.0, 60.0), (4.0, 62.0)]\n    ]\n]\n\nest_patterns = [\n    [\n        [(1.0, 60.0), (2.0, 62.0)],\n        [(3.0, 60.0), (4.0, 62.0)]\n    ]\n]\n\nf_measure, precision, recall = mir_eval.pattern.establishment_FPR(\n    ref_patterns, \n    est_patterns, \n    similarity_metric=\"cardinality_score\"\n)\n\n# Since the estimated patterns perfectly match the reference patterns, \n# the establishment F1 Score, Precision, and Recall should all be 1.0.\nassert f_measure == 1.0, f\"Expected F-measure 1.0, got {f_measure}\"\nassert precision == 1.0, f\"Expected Precision 1.0, got {precision}\"\nassert recall == 1.0, f\"Expected Recall 1.0, got {recall}\"\n\nprint(f\"__CHECK__ establishment_FPR {f_measure:.1f}, {precision:.1f}, {recall:.1f}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_establishment_FPR/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ establishment_FPR 1.0, 1.0, 1.0\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 21.8,
+      "llm_calls": 1,
+      "input_tokens": 2311,
+      "output_tokens": 2493,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2311,
+          "output_tokens": 2493
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 4010,
+      "document_sha256": "5d06793a21954addc3f60ecdc7869edba83d77bcac768bffedca13fc1f7a6c63",
+      "source": "source/mir_eval/pattern.py:238",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 30
+    },
+    {
+      "name": "evaluate",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import mir_eval\n\nscores = mir_eval.melody.evaluate(times, ref_freqs, times, est_freqs)\n\nassert isinstance(scores, dict), \"evaluate should return a dictionary of scores\"\nassert \"Raw Pitch Accuracy\" in scores, \"Expected 'Raw Pitch Accuracy' in melody evaluation scores\"\nassert \"Overall Accuracy\" in scores, \"Expected 'Overall Accuracy' in melody evaluation scores\"\nassert isinstance(scores[\"Raw Pitch Accuracy\"], float), \"Scores should be float values\"\n\nprint(f\"__CHECK__ evaluate {len(scores)}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_evaluate/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ evaluate 5\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 14.6,
+      "llm_calls": 1,
+      "input_tokens": 2878,
+      "output_tokens": 1721,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2878,
+          "output_tokens": 1721
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 5652,
+      "document_sha256": "b1477242dba2a5c3747e17c37090ebf04a3fb113e94f872828befa94af716d39",
+      "source": "source/mir_eval/melody.py:770",
+      "source_other_sites": 13,
+      "codebase_frames": null,
+      "checkpoint_line": 31
+    },
+    {
+      "name": "events",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import matplotlib.pyplot as plt\nimport mir_eval.display\n\n# Ensure headless mode\nplt.switch_backend('Agg')\n\nfig, ax = plt.subplots()\n\n# Create dummy labels to match the exact length of ref_events\ndummy_labels = [f\"L{i}\" for i in range(len(ref_events))]\n\n# Plot reference events with individual labels and a legend label\nreturned_ax1 = mir_eval.display.events(\n    ref_events, \n    labels=dummy_labels, \n    base=0, \n    height=1, \n    ax=ax, \n    label=\"reference\"\n)\n\n# Plot estimated events with a different base and a legend label\nreturned_ax2 = mir_eval.display.events(\n    est_events, \n    base=1.5, \n    height=1, \n    ax=ax, \n    label=\"estimate\"\n)\n\n# Verify the function returned the provided axis\nassert returned_ax1 is ax, \"Expected returned axis to be the provided axis\"\nassert returned_ax2 is ax, \"Expected returned axis to be the provided axis\"\n\n# Verify that vlines added LineCollections to the axis\nnum_collections = len(ax.collections)\nassert num_collections == 2, f\"Expected 2 LineCollections, got {num_collections}\"\n\n# Verify that the individual event labels were added as Text objects\nnum_texts = len(ax.texts)\nassert num_texts == len(ref_events), f\"Expected {len(ref_events)} texts, got {num_texts}\"\n\nprint(f\"__CHECK__ events {num_collections} collections, {num_texts} texts\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_events/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ events 2 collections, 4 texts\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 20.7,
+      "llm_calls": 1,
+      "input_tokens": 2456,
+      "output_tokens": 2245,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2456,
+          "output_tokens": 2245
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 4291,
+      "document_sha256": "fa8eb22216837b3ef7b19217d367aad8a44ed1d90dcbe3b9d5107cec9521f782",
+      "source": "source/mir_eval/display.py:543",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 32
+    },
+    {
+      "name": "f_measure",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import mir_eval\nimport numpy as np\n\n# Create deterministic in-memory arrays for a predictable outcome\n# 1.0 is an exact match\n# 2.02 is within the 0.05 window of 2.0 (match)\n# 3.5 is outside the window for 3.0 (no match)\nref_onsets = np.array([1.0, 2.0, 3.0])\nest_onsets = np.array([1.0, 2.02, 3.5])\n\n# Compute F-measure, precision, and recall for onsets\nf_measure_val, precision, recall = mir_eval.onset.f_measure(\n    ref_onsets, \n    est_onsets, \n    window=0.05\n)\n\n# With 2 true positives, 1 false positive, and 1 false negative:\n# Precision = 2 / 3\n# Recall = 2 / 3\n# F-measure = 2 * (2/3 * 2/3) / (2/3 + 2/3) = 2/3\nassert np.isclose(precision, 2/3), f\"Expected precision 2/3, got {precision}\"\nassert np.isclose(recall, 2/3), f\"Expected recall 2/3, got {recall}\"\nassert np.isclose(f_measure_val, 2/3), f\"Expected f_measure 2/3, got {f_measure_val}\"\n\nprint(f\"__CHECK__ f_measure {f_measure_val:.3f}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_f_measure/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ f_measure 0.667\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 17.2,
+      "llm_calls": 1,
+      "input_tokens": 2852,
+      "output_tokens": 2047,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2852,
+          "output_tokens": 2047
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 5518,
+      "document_sha256": "ec5ce956b633875750cf260acf832765205349268b260345122ad43e48997e34",
+      "source": "source/mir_eval/beat.py:135",
+      "source_other_sites": 2,
+      "codebase_frames": null,
+      "checkpoint_line": 33
+    },
+    {
+      "name": "filter_kwargs",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import mir_eval.util\n\ndef dummy_metric(reference, estimated, tolerance=0.5):\n    return len(reference) + len(estimated) + tolerance\n\nkwargs_dict = {\n    \"tolerance\": 0.25,\n    \"invalid_slop\": True,\n    \"unsupported_key\": \"ignore_me\"\n}\n\nresult = mir_eval.util.filter_kwargs(dummy_metric, ref_events, est_events, **kwargs_dict)\n\nexpected = len(ref_events) + len(est_events) + 0.25\nassert result == expected, f\"Expected {expected}, got {result}\"\nprint(f\"__CHECK__ filter_kwargs {result}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_filter_kwargs/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ filter_kwargs 8.25\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 11.6,
+      "llm_calls": 1,
+      "input_tokens": 2303,
+      "output_tokens": 1251,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2303,
+          "output_tokens": 1251
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 4056,
+      "document_sha256": "a2302bb5dc53cb96e828c1d8b6b641e1a11652b21542af53e24afa39ce2d7e47",
+      "source": "source/mir_eval/util.py:860",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 34
+    },
+    {
+      "name": "first_n_target_proportion_R",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import mir_eval\n\n# Deterministic in-memory arrays representing patterns.\n# Format: list of patterns, where each pattern is a list of occurrences,\n# and each occurrence is a list of (onset, midi_pitch) tuples.\nref_patterns = [\n    [\n        [(1.0, 60.0), (2.0, 62.0), (2.5, 64.0)],\n        [(3.0, 60.0), (4.0, 62.0), (4.5, 64.0)]\n    ],\n    [\n        [(5.0, 64.0), (6.0, 65.0), (6.5, 67.0)],\n        [(7.0, 64.0), (8.0, 65.0), (8.5, 67.0)]\n    ]\n]\n\nest_patterns = [\n    [\n        [(1.0, 60.0), (2.0, 62.0), (2.5, 64.0)],\n        [(3.0, 60.0), (4.0, 62.0), (4.5, 64.0)]\n    ]\n]\n\n# Compute the first n target proportion recall\nR = mir_eval.pattern.first_n_target_proportion_R(\n    ref_patterns, \n    est_patterns, \n    n=5\n)\n\n# 1 out of 2 reference patterns is perfectly matched and thus established\nassert isinstance(R, float), f\"Expected float, got {type(R)}\"\nassert R == 0.5, f\"Expected recall of 0.5, got {R}\"\n\nprint(f\"__CHECK__ first_n_target_proportion_R {R:.2f}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_first_n_target_proportion_R/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ first_n_target_proportion_R 0.50\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 45.3,
+      "llm_calls": 1,
+      "input_tokens": 2311,
+      "output_tokens": 5155,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2311,
+          "output_tokens": 5155
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3666,
+      "document_sha256": "c075d1646c312329a203d0479c32e797531b658e782edd7352cc6a5fd3dbe4ff",
+      "source": "source/mir_eval/pattern.py:554",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 35
+    },
+    {
+      "name": "first_n_three_layer_P",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import tempfile\nimport os\nimport mir_eval\n\nwith tempfile.TemporaryDirectory() as tmpdir:\n    ref_file = os.path.join(tmpdir, \"ref_pattern.txt\")\n    est_file = os.path.join(tmpdir, \"est_pattern.txt\")\n    \n    # Write identical pattern data to both reference and estimate files\n    pattern_data = \"pattern 1\\n0.5, 1.5\\n2.5, 3.5\\npattern 2\\n4.5, 5.5\\n6.5, 7.5\\n\"\n    with open(ref_file, \"w\") as f:\n        f.write(pattern_data)\n    with open(est_file, \"w\") as f:\n        f.write(pattern_data)\n        \n    # Load patterns using the required I/O helper\n    ref_patterns = mir_eval.io.load_patterns(ref_file)\n    est_patterns = mir_eval.io.load_patterns(est_file)\n    \n    # Compute the first n three-layer precision\n    precision = mir_eval.pattern.first_n_three_layer_P(\n        ref_patterns, \n        est_patterns, \n        n=5\n    )\n    \n    # Verify the result is a float and equals 1.0 for identical patterns\n    assert isinstance(precision, float), f\"Expected float, got {type(precision)}\"\n    assert abs(precision - 1.0) < 1e-7, f\"Expected precision 1.0 for identical patterns, got {precision}\"\n    \n    print(f\"__CHECK__ first_n_three_layer_P {precision}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_first_n_three_layer_P/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ first_n_three_layer_P 1.0\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 18.8,
+      "llm_calls": 1,
+      "input_tokens": 2651,
+      "output_tokens": 2271,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2651,
+          "output_tokens": 2271
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 4388,
+      "document_sha256": "48dea6feeb1ea3e2fe166db38271b01e73b60d20583900a4ca4d8ff52f3c3183",
+      "source": "source/mir_eval/pattern.py:509",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 36
+    },
+    {
+      "name": "freq_to_voicing",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import mir_eval\nimport numpy as np\n\nres_hz, res_voicing = mir_eval.melody.freq_to_voicing(ref_freqs)\n\nassert isinstance(res_hz, np.ndarray)\nassert isinstance(res_voicing, np.ndarray)\nassert res_hz.shape == ref_freqs.shape\nassert res_voicing.shape == ref_freqs.shape\n\nassert np.all(res_hz >= 0)\nassert np.all((res_voicing == 0) | (res_voicing == 1))\n\nunvoiced_mask = ref_freqs <= 0\nvoiced_mask = ref_freqs > 0\n\nassert np.all(res_voicing[unvoiced_mask] == 0)\nassert np.all(res_voicing[voiced_mask] == 1)\nassert np.allclose(res_hz, np.abs(ref_freqs))\n\nprint(f\"__CHECK__ freq_to_voicing {res_hz.size} {int(np.sum(res_voicing))}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_freq_to_voicing/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ freq_to_voicing 5 4\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 20.0,
+      "llm_calls": 1,
+      "input_tokens": 2512,
+      "output_tokens": 2371,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2512,
+          "output_tokens": 2371
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 4336,
+      "document_sha256": "a3b5141c8393a798bfe05b35a9bb481e97361cad05c1fd1f00ee35556bcf0d17",
+      "source": "source/mir_eval/melody.py:157",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 37
+    },
+    {
+      "name": "frequencies_to_midi",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import numpy as np\nimport mir_eval\n\nfrequencies = [\n    np.array([440.0]),\n    np.array([]), \n    np.array([220.0, 880.0]), \n]\n\nactual_midi = mir_eval.multipitch.frequencies_to_midi(frequencies)\n\nassert len(actual_midi) == 3\nassert np.allclose(actual_midi[0], [69.0])\nassert actual_midi[1].size == 0\nassert np.allclose(actual_midi[2], [57.0, 81.0])\n\nprint(f\"__CHECK__ frequencies_to_midi {actual_midi[0][0]}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_frequencies_to_midi/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ frequencies_to_midi 69.0\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 8.9,
+      "llm_calls": 1,
+      "input_tokens": 2291,
+      "output_tokens": 809,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2291,
+          "output_tokens": 809
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3443,
+      "document_sha256": "689b6105e870dd8fa8cddfac2cda4e6a2d4f14e389e98fba8a96c7721638217a",
+      "source": "source/mir_eval/multipitch.py:155",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 38
+    },
+    {
+      "name": "generate_labels",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import mir_eval\n\nlabels = mir_eval.util.generate_labels(ref_intervals, prefix='test_')\n\nassert isinstance(labels, list), \"Output should be a list\"\nassert len(labels) == len(ref_intervals), \"Number of labels should match number of items\"\nif len(ref_intervals) > 0:\n    assert labels[0] == 'test_0', \"First label should be 'test_0'\"\n    assert labels[-1] == f'test_{len(ref_intervals)-1}', \"Last label should be correct\"\n\nprint(f\"__CHECK__ generate_labels {len(labels)} {labels[0] if labels else None}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_generate_labels/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ generate_labels 4 test_0\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 6.6,
+      "llm_calls": 1,
+      "input_tokens": 2076,
+      "output_tokens": 638,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2076,
+          "output_tokens": 638
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3019,
+      "document_sha256": "f70e442925a9160cbc5eb8a0273b651fa9e9ac333efbcbfc2b8368d5d54446bf",
+      "source": "source/mir_eval/util.py:53",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 39
+    },
+    {
+      "name": "goto",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import numpy as np\nimport mir_eval\n\nreference_beats = np.arange(100, dtype=float)\nestimated_beats = np.append(np.arange(80, dtype=float), np.arange(80, 100, dtype=float) + 0.2)\n\nref_beats_trimmed = mir_eval.beat.trim_beats(reference_beats)\nest_beats_trimmed = mir_eval.beat.trim_beats(estimated_beats)\n\ngoto_score = mir_eval.beat.goto(ref_beats_trimmed, est_beats_trimmed)\n\nassert goto_score == 1.0, f\"Expected Goto score 1.0, got {goto_score}\"\nprint(f\"__CHECK__ goto {goto_score}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_goto/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ goto 1.0\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 19.8,
+      "llm_calls": 1,
+      "input_tokens": 2600,
+      "output_tokens": 2302,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2600,
+          "output_tokens": 2302
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 4672,
+      "document_sha256": "9a3e7361446ef9059763834dd05d9010ad3235370982f711885f6172c09b4ab5",
+      "source": "source/mir_eval/beat.py:229",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 40
+    },
+    {
+      "name": "has_kwargs",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import mir_eval\n\ndef func_with_kwargs(a, b=2, **kwargs):\n    pass\n\ndef func_without_kwargs(a, b=2, *args):\n    pass\n\nres_true = mir_eval.util.has_kwargs(func_with_kwargs)\nres_false = mir_eval.util.has_kwargs(func_without_kwargs)\n\nassert res_true is True, \"Expected True for function with **kwargs\"\nassert res_false is False, \"Expected False for function without **kwargs\"\n\nprint(f\"__CHECK__ has_kwargs {res_true}, {res_false}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_has_kwargs/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ has_kwargs True, False\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 6.6,
+      "llm_calls": 1,
+      "input_tokens": 1968,
+      "output_tokens": 559,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1968,
+          "output_tokens": 559
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 2551,
+      "document_sha256": "46deb7b996da3201d8440c8428290261afa000dfb80ca63b276c900654bea053",
+      "source": "source/mir_eval/util.py:838",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 41
+    },
+    {
+      "name": "hierarchy",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "runtime",
+            "error": "AssertionError: Expected 8 patches, got 0"
+          }
+        ],
+        "error_category": "runtime",
+        "error": "AssertionError: Expected 8 patches, got 0",
+        "code": "import matplotlib.pyplot as plt\nimport mir_eval.display\n\nplt.switch_backend('Agg')\nfig, ax = plt.subplots()\n\nintervals_hier = [ref_intervals, ref_intervals]\nlabels_hier = [ref_labels, ref_labels]\n\nax_ret = mir_eval.display.hierarchy(\n    intervals_hier,\n    labels_hier,\n    levels=[\"Coarse\", \"Fine\"],\n    ax=ax\n)\n\nnum_patches = len(ax_ret.patches)\nexpected_patches = 2 * len(ref_intervals)\n\nassert ax_ret is ax, \"Returned axes should be the same as the input axes\"\nassert num_patches == expected_patches, f\"Expected {expected_patches} patches, got {num_patches}\"\n\nprint(f\"__CHECK__ hierarchy {num_patches}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_hierarchy/api_test.py",
+        "exit_code": 1,
+        "stdout_tail": "",
+        "stderr_tail": "__RUN_ERR__ AssertionError: Expected 8 patches, got 0\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_hierarchy/api_test.py\", line 64, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_hierarchy/api_test.py\", line 59, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_hierarchy/api_test.py\", line 53, in api_test\n    assert num_patches == expected_patches, f\"Expected {expected_patches} patches, got {num_patches}\"\nAssertionError: Expected 8 patches, got 0\n"
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 15.5,
+      "llm_calls": 1,
+      "input_tokens": 2525,
+      "output_tokens": 1193,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2525,
+          "output_tokens": 1193
+        }
+      },
+      "error_category": "runtime",
+      "error": "AssertionError: Expected 8 patches, got 0",
+      "locus": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_hierarchy/api_test.py:53",
+      "doc_chars": 5010,
+      "document_sha256": "68a68d7d4a6aaa6af18a7c6a4bd42c2f65d4e1fc93b7c714afc548bfcdca8150",
+      "source": "source/mir_eval/display.py:498",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 42
+    },
+    {
+      "name": "hz2cents",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import numpy as np\nimport mir_eval\n\n# Copy the provided reference frequencies and inject known values \n# to deterministically test the 0.0 preservation and math conversion.\ntest_freqs = np.copy(ref_freqs)\nif test_freqs.size >= 2:\n    test_freqs.flat[0] = 0.0   # Unvoiced frame, should remain 0.0\n    test_freqs.flat[1] = 20.0  # Exactly 1 octave (1200 cents) above default base 10.0 Hz\n\ncents = mir_eval.melody.hz2cents(test_freqs)\n\n# Verify shape is preserved\nassert cents.shape == test_freqs.shape\n\n# Verify the deterministic properties of the conversion\nif test_freqs.size >= 2:\n    assert cents.flat[0] == 0.0, \"0.0 Hz should be safely preserved as 0.0 cents\"\n    assert np.isclose(cents.flat[1], 1200.0), \"20.0 Hz should be 1200 cents relative to 10.0 Hz base\"\n\nwitness = cents.flat[:2].tolist() if cents.size >= 2 else []\nprint(f\"__CHECK__ hz2cents {cents.shape} {witness}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_hz2cents/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ hz2cents (5,) [0.0, 1200.0]\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 20.0,
+      "llm_calls": 1,
+      "input_tokens": 2089,
+      "output_tokens": 2201,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2089,
+          "output_tokens": 2201
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 2664,
+      "document_sha256": "dc6e0ef0e04c3c16b89fc84899967bca9dc5ab43105daf8d32ee283b6e0a44fb",
+      "source": "source/mir_eval/melody.py:138",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 43
+    },
+    {
+      "name": "hz_to_midi",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import mir_eval\nimport numpy as np\n\nmidi_notes = mir_eval.util.hz_to_midi(ref_freqs)\n\nassert isinstance(midi_notes, np.ndarray)\nassert midi_notes.shape == ref_freqs.shape\n\n# Verify the deterministic mathematical property of the conversion\nknown_hz = np.array([220.0, 440.0, 880.0])\nknown_midi = mir_eval.util.hz_to_midi(known_hz)\nassert np.allclose(known_midi, [57.0, 69.0, 81.0])\n\nprint(f\"__CHECK__ hz_to_midi {midi_notes.size}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_hz_to_midi/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ hz_to_midi 5\n__DONE__\n",
+        "stderr_tail": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/source/mir_eval/util.py:927: RuntimeWarning: divide by zero encountered in log2\n  return 12.0 * (np.log2(freqs) - np.log2(440.0)) + 69.0\n"
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 12.1,
+      "llm_calls": 1,
+      "input_tokens": 2173,
+      "output_tokens": 1266,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2173,
+          "output_tokens": 1266
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3212,
+      "document_sha256": "f631855c61f6d714b7eb6315b81f36f1ac8184d0b72ffbf75d756bf3a249d9c1",
+      "source": "source/mir_eval/util.py:913",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 44
+    },
+    {
+      "name": "index_labels",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import mir_eval\n\nindices, index_to_label = mir_eval.util.index_labels(ref_labels, case_sensitive=True)\n\nassert len(indices) == len(ref_labels), \"Length of indices must match length of input labels\"\nassert all(ref_labels[i] == index_to_label[indices[i]] for i in range(len(ref_labels))), \"Index to label mapping invariant failed\"\n\nprint(f\"__CHECK__ index_labels {len(indices)} {len(index_to_label)}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_index_labels/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ index_labels 4 4\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 13.0,
+      "llm_calls": 1,
+      "input_tokens": 2221,
+      "output_tokens": 1191,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2221,
+          "output_tokens": 1191
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3595,
+      "document_sha256": "033792b3f979f5328f496a6123f116c78ec5d481bb8b8dc8e913cf6515f3c5e4",
+      "source": "source/mir_eval/util.py:14",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 45
+    },
+    {
+      "name": "information_gain",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import math\nimport mir_eval\n\n# Trim early beats (before 5s by default) as required by the evaluation standard\nref_beats_trimmed = mir_eval.beat.trim_beats(ref_events)\nest_beats_trimmed = mir_eval.beat.trim_beats(est_events)\n\n# Compute the information gain metric\nscore = mir_eval.beat.information_gain(ref_beats_trimmed, est_beats_trimmed, bins=41)\n\n# Verify correctness: identical beats should yield an error histogram with all mass in one bin (entropy = 0).\n# The information gain (K-L divergence to uniform) should therefore be exactly log2(bins).\nif len(ref_beats_trimmed) > 2:\n    score_identical = mir_eval.beat.information_gain(ref_beats_trimmed, ref_beats_trimmed, bins=41)\n    expected_max_ig = math.log2(41)\n    assert math.isclose(score_identical, expected_max_ig, rel_tol=1e-5), \\\n        f\"Expected max information gain {expected_max_ig}, got {score_identical}\"\n\nprint(f\"__CHECK__ information_gain {score:.4f}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_information_gain/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ information_gain 0.0000\n__DONE__\n",
+        "stderr_tail": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/source/mir_eval/beat.py:90: UserWarning: Reference beats are empty.\n  warnings.warn(\"Reference beats are empty.\")\n/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/source/mir_eval/beat.py:92: UserWarning: Estimated beats are empty.\n  warnings.warn(\"Estimated beats are empty.\")\n"
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 22.5,
+      "llm_calls": 1,
+      "input_tokens": 2350,
+      "output_tokens": 2384,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2350,
+          "output_tokens": 2384
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3968,
+      "document_sha256": "2f65480c025f5f7249ae035b44a78ab6d6a85bb957c0ae8cb5c91a8c332801be",
+      "source": "source/mir_eval/beat.py:585",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 46
+    },
+    {
+      "name": "interpolate_intervals",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import numpy as np\nfrom mir_eval import util\n\n# Use the first interval and label to guarantee disjointness for the test\nintervals_to_use = ref_intervals[:1]\nlabels_to_use = ref_labels[:1]\n\nt_start, t_end = intervals_to_use[0]\n# Create time points before, strictly inside, and after the interval\ntime_points = np.array([\n    t_start - 1.0, \n    t_start + (t_end - t_start) / 2.0, \n    t_end + 1.0\n])\n\n# Interpolate labels for the time points, filling gaps with a specific value\naligned_labels = util.interpolate_intervals(\n    intervals_to_use, \n    labels_to_use, \n    time_points, \n    fill_value=\"GAP\"\n)\n\n# Verify the output length and the correct mapping of inside/outside points\nassert len(aligned_labels) == 3, f\"Expected 3 labels, got {len(aligned_labels)}\"\nassert aligned_labels[0] == \"GAP\", f\"Expected 'GAP' for before_point, got {aligned_labels[0]}\"\nassert aligned_labels[1] == labels_to_use[0], f\"Expected {labels_to_use[0]} for mid_point, got {aligned_labels[1]}\"\nassert aligned_labels[2] == \"GAP\", f\"Expected 'GAP' for after_point, got {aligned_labels[2]}\"\n\nprint(f\"__CHECK__ interpolate_intervals {aligned_labels}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_interpolate_intervals/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ interpolate_intervals ['GAP', 'C:maj', 'GAP']\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 27.3,
+      "llm_calls": 1,
+      "input_tokens": 2309,
+      "output_tokens": 3071,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2309,
+          "output_tokens": 3071
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3621,
+      "document_sha256": "f1571e2a31d1105d2d540a2456eda70e25d2c7c4beb511513ec1bc2f755e70dd",
+      "source": "source/mir_eval/util.py:118",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 47
+    },
+    {
+      "name": "intersect_files",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "from mir_eval import util\n\nflist1 = [\"/a/b/abc.lab\", \"/c/d/123.lab\", \"/e/f/xyz.lab\"]\nflist2 = [\"/g/h/xyz.npy\", \"/i/j/123.txt\", \"/k/l/456.lab\"]\n\nsublist1, sublist2 = util.intersect_files(flist1, flist2)\n\n# The output lists are not guaranteed to maintain the original sorting order,\n# but elements at index i in both lists correspond to the same stem.\npairs = sorted(zip(sublist1, sublist2))\n\nassert pairs == [\n    (\"/c/d/123.lab\", \"/i/j/123.txt\"),\n    (\"/e/f/xyz.lab\", \"/g/h/xyz.npy\")\n], f\"Unexpected intersection result: {pairs}\"\n\nprint(f\"__CHECK__ intersect_files {len(pairs)}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_intersect_files/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ intersect_files 2\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 18.7,
+      "llm_calls": 1,
+      "input_tokens": 2486,
+      "output_tokens": 978,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2486,
+          "output_tokens": 978
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 4099,
+      "document_sha256": "ad5fbf7514a621a4536b01678d00633339edef5e6d2ed7ca0aa6932b951f86b4",
+      "source": "source/mir_eval/util.py:427",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 48
+    },
+    {
+      "name": "intervals_to_boundaries",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "from mir_eval.util import intervals_to_boundaries\nimport numpy as np\n\nboundaries = intervals_to_boundaries(ref_intervals, q=4)\n\nassert isinstance(boundaries, np.ndarray)\nassert boundaries.ndim == 1\nassert boundaries.shape[0] == ref_intervals.shape[0] + 1\nassert boundaries[0] == np.round(ref_intervals[0, 0], 4)\nassert boundaries[-1] == np.round(ref_intervals[-1, 1], 4)\n\nprint(f\"__CHECK__ intervals_to_boundaries {boundaries.shape[0]}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_intervals_to_boundaries/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ intervals_to_boundaries 5\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 18.0,
+      "llm_calls": 1,
+      "input_tokens": 2037,
+      "output_tokens": 1688,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2037,
+          "output_tokens": 1688
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 2573,
+      "document_sha256": "65284d4156bcc85e2a983f120ea05322e4048554b7a04de9576633f10c8970e8",
+      "source": "source/mir_eval/util.py:221",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 49
+    },
+    {
+      "name": "intervals_to_durations",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import mir_eval\nimport numpy as np\n\ndurations = mir_eval.util.intervals_to_durations(ref_intervals)\n\nassert isinstance(durations, np.ndarray)\nassert durations.ndim == 1\nassert durations.shape[0] == ref_intervals.shape[0]\nassert np.allclose(durations, ref_intervals[:, 1] - ref_intervals[:, 0])\n\nprint(f\"__CHECK__ intervals_to_durations {durations.size}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_intervals_to_durations/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ intervals_to_durations 4\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 6.8,
+      "llm_calls": 1,
+      "input_tokens": 2056,
+      "output_tokens": 552,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2056,
+          "output_tokens": 552
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 2519,
+      "document_sha256": "90ba1532a4d01d2039744bcce122491befed79af58ed068f4c0554427054ee52",
+      "source": "source/mir_eval/util.py:892",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 50
+    },
+    {
+      "name": "intervals_to_samples",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "from mir_eval import util\nimport math\n\nsample_times, sample_labels = util.intervals_to_samples(\n    ref_intervals, \n    ref_labels, \n    sample_size=0.1, \n    fill_value=\"N\"\n)\n\nassert len(sample_times) == len(sample_labels), \"Lengths of times and labels must match\"\nassert len(sample_times) > 1, \"Should generate multiple samples\"\nassert math.isclose(sample_times[1] - sample_times[0], 0.1, rel_tol=1e-5), \"Sample step should be 0.1\"\n\nprint(f\"__CHECK__ intervals_to_samples {len(sample_times)}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_intervals_to_samples/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ intervals_to_samples 20\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 13.7,
+      "llm_calls": 1,
+      "input_tokens": 2706,
+      "output_tokens": 1482,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2706,
+          "output_tokens": 1482
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 4843,
+      "document_sha256": "e4f1c73f6d070f5cc517b42e324bc0978ceb4385208ff6b629a771b3e9e54b08",
+      "source": "source/mir_eval/util.py:74",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 51
+    },
+    {
+      "name": "join",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import mir_eval\n\nlabel = mir_eval.chord.join('C', 'maj', extensions=['7', '9'], bass='5')\nassert label == 'C:maj(7,9)/5', f\"Expected 'C:maj(7,9)/5', got {label}\"\n\nprint(f\"__CHECK__ join {label}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_join/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ join C:maj(7,9)/5\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 22.9,
+      "llm_calls": 1,
+      "input_tokens": 2184,
+      "output_tokens": 856,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2184,
+          "output_tokens": 856
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3438,
+      "document_sha256": "68cf07f5bccd45446b0121c01f13321a7c87c5f8d00e558ca27932515678187a",
+      "source": "source/mir_eval/chord.py:436",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 52
+    },
+    {
+      "name": "karaoke_perceptual_metric",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import mir_eval\n\n# Compute the perceptual score for the estimated events\nscore = mir_eval.alignment.karaoke_perceptual_metric(ref_events, est_events)\n\n# Compute the score for perfect alignment (0 error)\nperfect_score = mir_eval.alignment.karaoke_perceptual_metric(ref_events, ref_events)\n\n# Verify the output type and the documented property that perfect alignment does not yield 1.0\nassert isinstance(score, float), \"Expected score to be a float\"\nassert isinstance(perfect_score, float), \"Expected perfect score to be a float\"\nassert perfect_score != 1.0, \"Metric should not equal 1.0 at 0 error by construction\"\n\nprint(f\"__CHECK__ karaoke_perceptual_metric {score:.4f} {perfect_score:.4f}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_karaoke_perceptual_metric/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ karaoke_perceptual_metric 0.9425 0.9606\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 11.2,
+      "llm_calls": 1,
+      "input_tokens": 2295,
+      "output_tokens": 1120,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2295,
+          "output_tokens": 1120
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3863,
+      "document_sha256": "c36d452b98c7d619cd3a655b6cddeaf34f66b7d4a46797e9cf89c68315032c1f",
+      "source": "source/mir_eval/alignment.py:269",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 53
+    },
+    {
+      "name": "labeled_intervals",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import matplotlib\nmatplotlib.use('Agg')\nimport matplotlib.pyplot as plt\nimport mir_eval\n\nfig, ax = plt.subplots()\nmir_eval.display.labeled_intervals(ref_intervals, ref_labels, ax=ax)\n\ncollections = ax.collections\nassert len(collections) > 0, \"No collections added to axes\"\n\ntotal_paths = sum(len(c.get_paths()) for c in collections)\nassert total_paths == len(ref_intervals), f\"Expected {len(ref_intervals)} paths, got {total_paths}\"\n\nprint(f\"__CHECK__ labeled_intervals {total_paths}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_labeled_intervals/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ labeled_intervals 4\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 20.1,
+      "llm_calls": 1,
+      "input_tokens": 2677,
+      "output_tokens": 1898,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2677,
+          "output_tokens": 1898
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 5256,
+      "document_sha256": "230472471037909599ce3a6be6908a2526af628a1f23afb134c2e561e1142b43",
+      "source": "source/mir_eval/display.py:312",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 54
     }
   ],
   "repair_summary": {
@@ -355,18 +2424,31 @@
     },
     {
       "api": "adjust_intervals",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "source/mir_eval/util.py:261",
+      "doc_chars": 5114,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 6,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 23.7,
+          "llm_calls": 1,
+          "input_tokens": 2752,
+          "output_tokens": 2586,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -374,18 +2456,31 @@
     },
     {
       "api": "ari",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "source/mir_eval/segment.py:589",
+      "doc_chars": 5435,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 7,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 11.8,
+          "llm_calls": 1,
+          "input_tokens": 2760,
+          "output_tokens": 1246,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -393,18 +2488,31 @@
     },
     {
       "api": "average_overlap_ratio",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "source/mir_eval/transcription.py:591",
+      "doc_chars": 5203,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 8,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 59.2,
+          "llm_calls": 1,
+          "input_tokens": 2696,
+          "output_tokens": 6918,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -412,18 +2520,31 @@
     },
     {
       "api": "boundaries_to_intervals",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "source/mir_eval/util.py:239",
+      "doc_chars": 3064,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 9,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 14.5,
+          "llm_calls": 1,
+          "input_tokens": 2105,
+          "output_tokens": 1466,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -431,18 +2552,31 @@
     },
     {
       "api": "bss_eval_images",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "source/mir_eval/separation.py:372",
+      "doc_chars": 6450,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 10,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 29.2,
+          "llm_calls": 1,
+          "input_tokens": 3044,
+          "output_tokens": 3649,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -450,18 +2584,31 @@
     },
     {
       "api": "bss_eval_images_framewise",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "source/mir_eval/separation.py:507",
+      "doc_chars": 6816,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 11,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 34.0,
+          "llm_calls": 1,
+          "input_tokens": 3185,
+          "output_tokens": 4143,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -469,18 +2616,31 @@
     },
     {
       "api": "bss_eval_sources",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "source/mir_eval/separation.py:149",
+      "doc_chars": 6116,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 12,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 44.4,
+          "llm_calls": 1,
+          "input_tokens": 2910,
+          "output_tokens": 5435,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -488,18 +2648,31 @@
     },
     {
       "api": "bss_eval_sources_framewise",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "source/mir_eval/separation.py:260",
+      "doc_chars": 6978,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 13,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 27.9,
+          "llm_calls": 1,
+          "input_tokens": 3248,
+          "output_tokens": 3332,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -507,18 +2680,31 @@
     },
     {
       "api": "cemgil",
-      "status": "pending",
-      "primary_category": "pending",
-      "runner_category": null,
-      "category_reason": "Not yet observed.",
-      "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "status": "fail",
+      "primary_category": "unknown",
+      "runner_category": "runtime",
+      "category_reason": "Observed runtime; doc attribution requires source, document, and snippet review.",
+      "error": "AssertionError: Expected perfect score to be ~1.0, got 0.0",
+      "source": "source/mir_eval/beat.py:176",
+      "doc_chars": 3968,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 14,
+          "status": "fail",
+          "error_category": "runtime",
+          "error": "AssertionError: Expected perfect score to be ~1.0, got 0.0",
+          "attempts": 1,
+          "wall_s": 17.0,
+          "llm_calls": 1,
+          "input_tokens": 2371,
+          "output_tokens": 1855,
+          "pass_round": null
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -526,18 +2712,31 @@
     },
     {
       "api": "chords",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "source/mir_eval/display.py:1160",
+      "doc_chars": 7387,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 15,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 15.5,
+          "llm_calls": 1,
+          "input_tokens": 3306,
+          "output_tokens": 1756,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -545,18 +2744,31 @@
     },
     {
       "api": "chroma",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "source/mir_eval/sonify.py:320",
+      "doc_chars": 4384,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 16,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 17.4,
+          "llm_calls": 1,
+          "input_tokens": 2502,
+          "output_tokens": 1759,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -564,18 +2776,31 @@
     },
     {
       "api": "clicks",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "source/mir_eval/sonify.py:15",
+      "doc_chars": 4046,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 17,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 13.4,
+          "llm_calls": 1,
+          "input_tokens": 2407,
+          "output_tokens": 1485,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -583,18 +2808,31 @@
     },
     {
       "api": "compute_accuracy",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "source/mir_eval/multipitch.py:248",
+      "doc_chars": 3520,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 18,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 12.8,
+          "llm_calls": 1,
+          "input_tokens": 2298,
+          "output_tokens": 1453,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -602,18 +2840,31 @@
     },
     {
       "api": "compute_err_score",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "source/mir_eval/multipitch.py:296",
+      "doc_chars": 3126,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 19,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 19.3,
+          "llm_calls": 1,
+          "input_tokens": 2211,
+          "output_tokens": 2301,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -621,18 +2872,31 @@
     },
     {
       "api": "compute_num_freqs",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "source/mir_eval/multipitch.py:190",
+      "doc_chars": 3537,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 20,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 15.9,
+          "llm_calls": 1,
+          "input_tokens": 2300,
+          "output_tokens": 1000,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -640,18 +2904,31 @@
     },
     {
       "api": "compute_num_true_positives",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "source/mir_eval/multipitch.py:206",
+      "doc_chars": 5005,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 21,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 23.1,
+          "llm_calls": 1,
+          "input_tokens": 2846,
+          "output_tokens": 2558,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -659,18 +2936,31 @@
     },
     {
       "api": "constant_hop_timebase",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "source/mir_eval/melody.py:195",
+      "doc_chars": 2671,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 22,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 8.5,
+          "llm_calls": 1,
+          "input_tokens": 2078,
+          "output_tokens": 731,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -678,18 +2968,31 @@
     },
     {
       "api": "continuity",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "source/mir_eval/beat.py:409",
+      "doc_chars": 5320,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 23,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 9.7,
+          "llm_calls": 1,
+          "input_tokens": 2725,
+          "output_tokens": 1065,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -697,18 +3000,31 @@
     },
     {
       "api": "deprecated",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "source/mir_eval/util.py:946",
+      "doc_chars": 3401,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 24,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 8.4,
+          "llm_calls": 1,
+          "input_tokens": 2139,
+          "output_tokens": 742,
+          "pass_round": 0
+        }
+      ],
       "repair_status": "doc-fixed",
       "doc_rounds_used": 1,
       "doc_rounds": [
@@ -775,18 +3091,31 @@
     },
     {
       "api": "detection",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "source/mir_eval/segment.py:168",
+      "doc_chars": 6459,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 25,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 15.9,
+          "llm_calls": 1,
+          "input_tokens": 2981,
+          "output_tokens": 1800,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -794,18 +3123,31 @@
     },
     {
       "api": "deviation",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "source/mir_eval/segment.py:252",
+      "doc_chars": 4987,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 26,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 15.9,
+          "llm_calls": 1,
+          "input_tokens": 2627,
+          "output_tokens": 1660,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -813,18 +3155,31 @@
     },
     {
       "api": "directional_hamming_distance",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "source/mir_eval/chord.py:1359",
+      "doc_chars": 4428,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 27,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 12.2,
+          "llm_calls": 1,
+          "input_tokens": 2541,
+          "output_tokens": 1159,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -832,18 +3187,31 @@
     },
     {
       "api": "encode",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "source/mir_eval/chord.py:471",
+      "doc_chars": 4287,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 28,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 16.3,
+          "llm_calls": 1,
+          "input_tokens": 2470,
+          "output_tokens": 1739,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -851,18 +3219,31 @@
     },
     {
       "api": "encode_many",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "source/mir_eval/chord.py:523",
+      "doc_chars": 3685,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 29,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 19.2,
+          "llm_calls": 1,
+          "input_tokens": 2337,
+          "output_tokens": 2037,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -870,18 +3251,31 @@
     },
     {
       "api": "establishment_FPR",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "source/mir_eval/pattern.py:238",
+      "doc_chars": 4010,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 30,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 21.8,
+          "llm_calls": 1,
+          "input_tokens": 2311,
+          "output_tokens": 2493,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -889,18 +3283,31 @@
     },
     {
       "api": "evaluate",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "source/mir_eval/melody.py:770",
+      "doc_chars": 5652,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 31,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 14.6,
+          "llm_calls": 1,
+          "input_tokens": 2878,
+          "output_tokens": 1721,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -908,18 +3315,31 @@
     },
     {
       "api": "events",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "source/mir_eval/display.py:543",
+      "doc_chars": 4291,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 32,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 20.7,
+          "llm_calls": 1,
+          "input_tokens": 2456,
+          "output_tokens": 2245,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -927,18 +3347,31 @@
     },
     {
       "api": "f_measure",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "source/mir_eval/beat.py:135",
+      "doc_chars": 5518,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 33,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 17.2,
+          "llm_calls": 1,
+          "input_tokens": 2852,
+          "output_tokens": 2047,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -946,18 +3379,31 @@
     },
     {
       "api": "filter_kwargs",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "source/mir_eval/util.py:860",
+      "doc_chars": 4056,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 34,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 11.6,
+          "llm_calls": 1,
+          "input_tokens": 2303,
+          "output_tokens": 1251,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -965,18 +3411,31 @@
     },
     {
       "api": "first_n_target_proportion_R",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "source/mir_eval/pattern.py:554",
+      "doc_chars": 3666,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 35,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 45.3,
+          "llm_calls": 1,
+          "input_tokens": 2311,
+          "output_tokens": 5155,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -984,18 +3443,31 @@
     },
     {
       "api": "first_n_three_layer_P",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "source/mir_eval/pattern.py:509",
+      "doc_chars": 4388,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 36,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 18.8,
+          "llm_calls": 1,
+          "input_tokens": 2651,
+          "output_tokens": 2271,
+          "pass_round": 0
+        }
+      ],
       "repair_status": "doc-fixed",
       "doc_rounds_used": 1,
       "doc_rounds": [
@@ -1062,18 +3534,31 @@
     },
     {
       "api": "freq_to_voicing",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "source/mir_eval/melody.py:157",
+      "doc_chars": 4336,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 37,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 20.0,
+          "llm_calls": 1,
+          "input_tokens": 2512,
+          "output_tokens": 2371,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -1081,18 +3566,31 @@
     },
     {
       "api": "frequencies_to_midi",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "source/mir_eval/multipitch.py:155",
+      "doc_chars": 3443,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 38,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 8.9,
+          "llm_calls": 1,
+          "input_tokens": 2291,
+          "output_tokens": 809,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -1100,18 +3598,31 @@
     },
     {
       "api": "generate_labels",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "source/mir_eval/util.py:53",
+      "doc_chars": 3019,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 39,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 6.6,
+          "llm_calls": 1,
+          "input_tokens": 2076,
+          "output_tokens": 638,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -1119,18 +3630,31 @@
     },
     {
       "api": "goto",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "source/mir_eval/beat.py:229",
+      "doc_chars": 4672,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 40,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 19.8,
+          "llm_calls": 1,
+          "input_tokens": 2600,
+          "output_tokens": 2302,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -1138,18 +3662,31 @@
     },
     {
       "api": "has_kwargs",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "source/mir_eval/util.py:838",
+      "doc_chars": 2551,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 41,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 6.6,
+          "llm_calls": 1,
+          "input_tokens": 1968,
+          "output_tokens": 559,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -1157,18 +3694,31 @@
     },
     {
       "api": "hierarchy",
-      "status": "pending",
-      "primary_category": "pending",
-      "runner_category": null,
-      "category_reason": "Not yet observed.",
-      "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "status": "fail",
+      "primary_category": "unknown",
+      "runner_category": "runtime",
+      "category_reason": "Observed runtime; doc attribution requires source, document, and snippet review.",
+      "error": "AssertionError: Expected 8 patches, got 0",
+      "source": "source/mir_eval/display.py:498",
+      "doc_chars": 5010,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 42,
+          "status": "fail",
+          "error_category": "runtime",
+          "error": "AssertionError: Expected 8 patches, got 0",
+          "attempts": 1,
+          "wall_s": 15.5,
+          "llm_calls": 1,
+          "input_tokens": 2525,
+          "output_tokens": 1193,
+          "pass_round": null
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -1176,18 +3726,31 @@
     },
     {
       "api": "hz2cents",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "source/mir_eval/melody.py:138",
+      "doc_chars": 2664,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 43,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 20.0,
+          "llm_calls": 1,
+          "input_tokens": 2089,
+          "output_tokens": 2201,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -1195,18 +3758,31 @@
     },
     {
       "api": "hz_to_midi",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "source/mir_eval/util.py:913",
+      "doc_chars": 3212,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 44,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 12.1,
+          "llm_calls": 1,
+          "input_tokens": 2173,
+          "output_tokens": 1266,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -1214,18 +3790,31 @@
     },
     {
       "api": "index_labels",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "source/mir_eval/util.py:14",
+      "doc_chars": 3595,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 45,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 13.0,
+          "llm_calls": 1,
+          "input_tokens": 2221,
+          "output_tokens": 1191,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -1233,18 +3822,31 @@
     },
     {
       "api": "information_gain",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "source/mir_eval/beat.py:585",
+      "doc_chars": 3968,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 46,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 22.5,
+          "llm_calls": 1,
+          "input_tokens": 2350,
+          "output_tokens": 2384,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -1252,18 +3854,31 @@
     },
     {
       "api": "interpolate_intervals",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "source/mir_eval/util.py:118",
+      "doc_chars": 3621,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 47,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 27.3,
+          "llm_calls": 1,
+          "input_tokens": 2309,
+          "output_tokens": 3071,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -1271,18 +3886,31 @@
     },
     {
       "api": "intersect_files",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "source/mir_eval/util.py:427",
+      "doc_chars": 4099,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 48,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 18.7,
+          "llm_calls": 1,
+          "input_tokens": 2486,
+          "output_tokens": 978,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -1290,18 +3918,31 @@
     },
     {
       "api": "intervals_to_boundaries",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "source/mir_eval/util.py:221",
+      "doc_chars": 2573,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 49,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 18.0,
+          "llm_calls": 1,
+          "input_tokens": 2037,
+          "output_tokens": 1688,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -1309,18 +3950,31 @@
     },
     {
       "api": "intervals_to_durations",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "source/mir_eval/util.py:892",
+      "doc_chars": 2519,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 50,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 6.8,
+          "llm_calls": 1,
+          "input_tokens": 2056,
+          "output_tokens": 552,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -1328,18 +3982,31 @@
     },
     {
       "api": "intervals_to_samples",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "source/mir_eval/util.py:74",
+      "doc_chars": 4843,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 51,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 13.7,
+          "llm_calls": 1,
+          "input_tokens": 2706,
+          "output_tokens": 1482,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -1347,18 +4014,31 @@
     },
     {
       "api": "join",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "source/mir_eval/chord.py:436",
+      "doc_chars": 3438,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 52,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 22.9,
+          "llm_calls": 1,
+          "input_tokens": 2184,
+          "output_tokens": 856,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -1366,18 +4046,31 @@
     },
     {
       "api": "karaoke_perceptual_metric",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "source/mir_eval/alignment.py:269",
+      "doc_chars": 3863,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 53,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 11.2,
+          "llm_calls": 1,
+          "input_tokens": 2295,
+          "output_tokens": 1120,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -1385,18 +4078,31 @@
     },
     {
       "api": "labeled_intervals",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "source/mir_eval/display.py:312",
+      "doc_chars": 5256,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 54,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 20.1,
+          "llm_calls": 1,
+          "input_tokens": 2677,
+          "output_tokens": 1898,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
