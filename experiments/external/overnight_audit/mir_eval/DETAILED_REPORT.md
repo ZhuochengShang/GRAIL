@@ -27,9 +27,9 @@ Effects withheld until all four matched final cells and their repair/test eviden
 
 ### A1
 
-Primary failure categories: {"llm-error": 13}.
+Primary failure categories: {"llm-error": 14}.
 
-Recorded provider-error attempts across all checkpoint fingerprints: 139. Provider-internal retries are not recorded by the existing client and cannot be inferred from the configured limit. Watchdog logs retain process attempts; checkpoint attempts and document-fix rounds are separate ledger fields.
+Recorded provider-error attempts across all checkpoint fingerprints: 140. Provider-internal retries are not recorded by the existing client and cannot be inferred from the configured limit. Watchdog logs retain process attempts; checkpoint attempts and document-fix rounds are separate ledger fields.
 
 - `IntervalFormatter`: llm-error; native=llm-error; checkpoint attempts=1; provider-error attempts=1; document rounds=None; repair=None. Source: `source/mir_eval/display.py:478`. Error: `ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}`. Review: Provider outcome; retry, never count as a documentation failure.
 - `absolute_error`: llm-error; native=llm-error; checkpoint attempts=1; provider-error attempts=1; document rounds=None; repair=None. Source: `source/mir_eval/alignment.py:115`. Error: `ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}`. Review: Provider outcome; retry, never count as a documentation failure.
@@ -44,6 +44,7 @@ Recorded provider-error attempts across all checkpoint fingerprints: 139. Provid
 - `hz_to_midi`: llm-error; native=llm-error; checkpoint attempts=1; provider-error attempts=1; document rounds=None; repair=None. Source: `source/mir_eval/util.py:913`. Error: `ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}`. Review: Provider outcome; retry, never count as a documentation failure.
 - `join`: llm-error; native=llm-error; checkpoint attempts=1; provider-error attempts=1; document rounds=None; repair=None. Source: `source/mir_eval/chord.py:436`. Error: `ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}`. Review: Provider outcome; retry, never count as a documentation failure.
 - `karaoke_perceptual_metric`: llm-error; native=llm-error; checkpoint attempts=1; provider-error attempts=1; document rounds=None; repair=None. Source: `source/mir_eval/alignment.py:269`. Error: `ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}`. Review: Provider outcome; retry, never count as a documentation failure.
+- `lmeasure`: llm-error; native=llm-error; checkpoint attempts=1; provider-error attempts=1; document rounds=None; repair=None. Source: `source/mir_eval/hierarchy.py:548`. Error: `ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}`. Review: Provider outcome; retry, never count as a documentation failure.
 
 ### A2
 
@@ -86,8 +87,11 @@ Recorded provider-error attempts across all checkpoint fingerprints: 0. Provider
 - `load_tempo`: pending; native=None; checkpoint attempts=0; provider-error attempts=0; document rounds=2; repair=still-failing (no-improvement stop). Source: `None`. Error: `none captured`. Review: Not yet observed.
 - `load_valued_intervals`: pending; native=None; checkpoint attempts=0; provider-error attempts=0; document rounds=1; repair=doc-fixed. Source: `None`. Error: `none captured`. Review: Not yet observed.
 - `load_wav`: pending; native=None; checkpoint attempts=0; provider-error attempts=0; document rounds=2; repair=still-failing (no-improvement stop). Source: `None`. Error: `none captured`. Review: Not yet observed.
-- `p_score`: pass; native=None; checkpoint attempts=1; provider-error attempts=0; document rounds=1; repair=doc-fixed. Source: `source/mir_eval/beat.py:329`. Error: `none captured`. Review: 
-- `piano_roll`: pending; native=None; checkpoint attempts=0; provider-error attempts=0; document rounds=None; repair=in-progress. Source: `None`. Error: `none captured`. Review: Not yet observed.
+- `p_score`: pending; native=None; checkpoint attempts=0; provider-error attempts=0; document rounds=1; repair=doc-fixed. Source: `None`. Error: `none captured`. Review: Not yet observed.
+- `piano_roll`: pending; native=None; checkpoint attempts=0; provider-error attempts=0; document rounds=2; repair=still-failing (no-improvement stop). Source: `None`. Error: `none captured`. Review: Not yet observed.
+- `reduce_extended_quality`: pending; native=None; checkpoint attempts=0; provider-error attempts=0; document rounds=1; repair=doc-fixed. Source: `None`. Error: `none captured`. Review: Not yet observed.
+- `ticker_pitch`: pending; native=None; checkpoint attempts=0; provider-error attempts=0; document rounds=2; repair=still-failing (no-improvement stop). Source: `None`. Error: `none captured`. Review: Not yet observed.
+- `voicing_recall`: pending; native=None; checkpoint attempts=0; provider-error attempts=0; document rounds=1; repair=doc-fixed. Source: `None`. Error: `none captured`. Review: Not yet observed.
 
 ## Validity and remaining review
 

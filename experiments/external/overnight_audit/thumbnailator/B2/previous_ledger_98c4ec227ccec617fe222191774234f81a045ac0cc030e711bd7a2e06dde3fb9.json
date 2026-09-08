@@ -1,732 +1,1434 @@
 {
   "status": "partial",
-  "expected": 148,
+  "expected": 149,
   "counts": {
-    "pass": 4,
-    "pending": 144
+    "pending": 148,
+    "pass": 1
   },
-  "fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
+  "fingerprint": "750897f18fbee8a55ab3330d8e4f6599a423a883c8d32c8423f731454c826fa5",
   "errors": [],
   "failure_categories": {},
   "recorded_provider_errors_all_fingerprints": 0,
   "observed_fingerprints": [
-    "38cf404d8ec1a8adecd81479ff8e9d16425421cd18cb46a6deea120a2e3b55d4",
-    "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6"
+    "750897f18fbee8a55ab3330d8e4f6599a423a883c8d32c8423f731454c826fa5"
   ],
   "all_checkpoint_events": [
     {
-      "name": "voicing_recall",
+      "name": "defaultResizer",
       "doc_source": "aideal",
-      "experiment_fingerprint": "38cf404d8ec1a8adecd81479ff8e9d16425421cd18cb46a6deea120a2e3b55d4",
+      "experiment_fingerprint": "750897f18fbee8a55ab3330d8e4f6599a423a883c8d32c8423f731454c826fa5",
       "execution_evidence": "pass",
       "status": "pass",
       "attempts": 1,
       "pass_round": 0,
-      "wall_s": 11.3,
+      "wall_s": 12.8,
       "llm_calls": 1,
-      "input_tokens": 2179,
-      "output_tokens": 1079,
+      "input_tokens": 1980,
+      "output_tokens": 1020,
       "by_model": {
         "google:gemini-3.1-pro-preview": {
           "calls": 1,
-          "input_tokens": 2179,
-          "output_tokens": 1079
+          "input_tokens": 1980,
+          "output_tokens": 1020
         }
       },
       "error_category": null,
       "error": null,
       "locus": null,
-      "doc_chars": 3192,
-      "document_sha256": "cbea86d4ebe7f8cd8c49cc8d2ca2c5f1b89d1a4ac66ca3e01787fa2453961415",
-      "source": "source/mir_eval/melody.py:441",
+      "doc_chars": 3460,
+      "document_sha256": "a9d84399664c2dc14a37a0d086f761cabc4e4cff5cdca08258d62b1fc36728b7",
+      "source": "source/src/main/java/net/coobird/thumbnailator/makers/ThumbnailMaker.java:263",
       "source_other_sites": 0,
       "codebase_frames": null,
       "checkpoint_line": 1
-    },
-    {
-      "name": "IntervalFormatter",
-      "doc_source": "aideal",
-      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
-      "execution_evidence": {
-        "status": "pass",
-        "rounds": [
-          {
-            "round": 0,
-            "status": "pass"
-          }
-        ],
-        "code": "import matplotlib\nmatplotlib.use('Agg')\nimport matplotlib.pyplot as plt\nimport mir_eval.display\n\nbase_ints = [10, 20, 30]\nlabel_strs = ['A', 'B', 'C']\nformatter = mir_eval.display.IntervalFormatter(base=base_ints, ticks=label_strs)\n\nfig, ax = plt.subplots()\nax.yaxis.set_major_formatter(formatter)\n\n# Verify the formatter directly by simulating tick value formatting\nval_10 = formatter(10)\nval_20 = formatter(20)\n\nassert val_10 == 'A', f\"Expected 'A', got {val_10}\"\nassert val_20 == 'B', f\"Expected 'B', got {val_20}\"\n\nprint(f\"__CHECK__ IntervalFormatter {val_10}, {val_20}\")",
-        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_IntervalFormatter/api_test.py",
-        "exit_code": 0,
-        "stdout_tail": "__CHECK__ IntervalFormatter A, B\n__DONE__\n",
-        "stderr_tail": ""
-      },
-      "status": "pass",
-      "attempts": 1,
-      "pass_round": 0,
-      "wall_s": 21.0,
-      "llm_calls": 1,
-      "input_tokens": 2212,
-      "output_tokens": 2041,
-      "by_model": {
-        "google:gemini-3.1-pro-preview": {
-          "calls": 1,
-          "input_tokens": 2212,
-          "output_tokens": 2041
-        }
-      },
-      "error_category": null,
-      "error": null,
-      "locus": null,
-      "doc_chars": 3709,
-      "document_sha256": "6a3777dc9fd7acb18213ac8121e4c2674148290440e427ad88bf3dfbbd287fed",
-      "source": "source/mir_eval/display.py:478",
-      "source_other_sites": 0,
-      "codebase_frames": null,
-      "checkpoint_line": 2
-    },
-    {
-      "name": "InvalidChordException",
-      "doc_source": "aideal",
-      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
-      "execution_evidence": {
-        "status": "pass",
-        "rounds": [
-          {
-            "round": 0,
-            "status": "pass"
-          }
-        ],
-        "code": "import mir_eval\n\nexc = mir_eval.chord.InvalidChordException(\"suspect chord label\")\nassert isinstance(exc, Exception), \"InvalidChordException should be a subclass of Exception\"\nassert str(exc) == \"suspect chord label\", \"Exception message did not match\"\n\ntry:\n    raise exc\nexcept mir_eval.chord.InvalidChordException as e:\n    caught_msg = str(e)\n\nassert caught_msg == \"suspect chord label\", \"Caught exception message did not match\"\nprint(f\"__CHECK__ InvalidChordException {caught_msg}\")",
-        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_InvalidChordException/api_test.py",
-        "exit_code": 0,
-        "stdout_tail": "__CHECK__ InvalidChordException suspect chord label\n__DONE__\n",
-        "stderr_tail": ""
-      },
-      "status": "pass",
-      "attempts": 1,
-      "pass_round": 0,
-      "wall_s": 8.5,
-      "llm_calls": 1,
-      "input_tokens": 1949,
-      "output_tokens": 754,
-      "by_model": {
-        "google:gemini-3.1-pro-preview": {
-          "calls": 1,
-          "input_tokens": 1949,
-          "output_tokens": 754
-        }
-      },
-      "error_category": null,
-      "error": null,
-      "locus": null,
-      "doc_chars": 2797,
-      "document_sha256": "0a6c11f3daa546e84d339565c72322e36873813f0c86ba59043956a1d818c4f6",
-      "source": "source/mir_eval/chord.py:113",
-      "source_other_sites": 0,
-      "codebase_frames": null,
-      "checkpoint_line": 3
-    },
-    {
-      "name": "absolute_error",
-      "doc_source": "aideal",
-      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
-      "execution_evidence": {
-        "status": "pass",
-        "rounds": [
-          {
-            "round": 0,
-            "status": "pass"
-          }
-        ],
-        "code": "import mir_eval\nimport numpy as np\n\n# Ensure arrays are of equal length for element-wise comparison\nmin_len = min(len(ref_events), len(est_events))\nref_times = ref_events[:min_len]\nest_times = est_events[:min_len]\n\n# Compute absolute errors\nmae, aae = mir_eval.alignment.absolute_error(ref_times, est_times)\n\n# Verify against manual calculation\nexpected_errors = np.abs(ref_times - est_times)\nexpected_mae = np.median(expected_errors)\nexpected_aae = np.mean(expected_errors)\n\nassert np.isclose(mae, expected_mae), f\"Expected MAE {expected_mae}, got {mae}\"\nassert np.isclose(aae, expected_aae), f\"Expected AAE {expected_aae}, got {aae}\"\n\nprint(f\"__CHECK__ absolute_error {mae:.4f}, {aae:.4f}\")",
-        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_absolute_error/api_test.py",
-        "exit_code": 0,
-        "stdout_tail": "__CHECK__ absolute_error 0.0200, 0.0225\n__DONE__\n",
-        "stderr_tail": ""
-      },
-      "status": "pass",
-      "attempts": 1,
-      "pass_round": 0,
-      "wall_s": 12.3,
-      "llm_calls": 1,
-      "input_tokens": 2242,
-      "output_tokens": 1465,
-      "by_model": {
-        "google:gemini-3.1-pro-preview": {
-          "calls": 1,
-          "input_tokens": 2242,
-          "output_tokens": 1465
-        }
-      },
-      "error_category": null,
-      "error": null,
-      "locus": null,
-      "doc_chars": 3814,
-      "document_sha256": "83ec3da89c5b07b8dd486e557c0ad7ef0c153e73ca207d66274dee60dd876290",
-      "source": "source/mir_eval/alignment.py:115",
-      "source_other_sites": 0,
-      "codebase_frames": null,
-      "checkpoint_line": 4
-    },
-    {
-      "name": "adjust_events",
-      "doc_source": "aideal",
-      "experiment_fingerprint": "da987c338bb4e2b297e7758540d75da27a61508fd074d51cf725260f805260b6",
-      "execution_evidence": {
-        "status": "pass",
-        "rounds": [
-          {
-            "round": 0,
-            "status": "pass"
-          }
-        ],
-        "code": "import numpy as np\nimport mir_eval\n\nevents = np.array([1.5, 2.5, 12.0])\nlabels = ['a', 'b', 'c']\n\n# Adjust events and labels to strictly span [0.0, 10.0]\nnew_e, new_l = mir_eval.util.adjust_events(events, labels=labels, t_min=0.0, t_max=10.0, label_prefix='__')\n\n# The event at 12.0 should be trimmed.\n# Boundary events at 0.0 and 10.0 should be added with synthetic labels.\nassert len(new_e) == 4, f\"Expected 4 events, got {len(new_e)}\"\nassert np.allclose(new_e, [0.0, 1.5, 2.5, 10.0]), f\"Unexpected event times: {new_e}\"\nassert new_l == ['__T_MIN', 'a', 'b', '__T_MAX'], f\"Unexpected labels: {new_l}\"\n\nprint(f\"__CHECK__ adjust_events {new_e.tolist()} {new_l}\")",
-        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/run_adjust_events/api_test.py",
-        "exit_code": 0,
-        "stdout_tail": "__CHECK__ adjust_events [0.0, 1.5, 2.5, 10.0] ['__T_MIN', 'a', 'b', '__T_MAX']\n__DONE__\n",
-        "stderr_tail": ""
-      },
-      "status": "pass",
-      "attempts": 1,
-      "pass_round": 0,
-      "wall_s": 18.3,
-      "llm_calls": 1,
-      "input_tokens": 2581,
-      "output_tokens": 2060,
-      "by_model": {
-        "google:gemini-3.1-pro-preview": {
-          "calls": 1,
-          "input_tokens": 2581,
-          "output_tokens": 2060
-        }
-      },
-      "error_category": null,
-      "error": null,
-      "locus": null,
-      "doc_chars": 4350,
-      "document_sha256": "c1a6782e4270b2b2730ce11b2613cddb7aba3026ac31a7513e3c4149bd0b98e8",
-      "source": "source/mir_eval/util.py:359",
-      "source_other_sites": 0,
-      "codebase_frames": null,
-      "checkpoint_line": 5
     }
   ],
   "repair_summary": {
-    "attempted": 13,
-    "processed": 13,
-    "doc_fixed": 6,
+    "attempted": 22,
+    "processed": 7,
+    "doc_fixed": 4,
     "doc_rounds": 5,
     "retry_rounds": 0,
     "outcomes": {
-      "doc-fixed": 6,
-      "still-failing": 7
+      "doc-fixed": 4,
+      "not-testable": 2,
+      "in-progress": 1
     },
     "blocked": null
   },
   "rows": [
     {
-      "api": "IntervalFormatter",
+      "api": "AbsoluteSize",
+      "status": "pending",
+      "primary_category": "pending",
+      "runner_category": null,
+      "category_reason": "Not yet observed.",
+      "error": null,
+      "source": null,
+      "doc_chars": null,
+      "checkpoint_attempts": 0,
+      "provider_error_attempts": 0,
+      "provider_internal_retries": null,
+      "recorded_successful_llm_calls": 0,
+      "attempt_history": [],
+      "repair_status": null,
+      "doc_rounds_used": null,
+      "doc_rounds": [],
+      "repair_evidence": {}
+    },
+    {
+      "api": "BicubicResizer",
+      "status": "pending",
+      "primary_category": "pending",
+      "runner_category": null,
+      "category_reason": "Not yet observed.",
+      "error": null,
+      "source": null,
+      "doc_chars": null,
+      "checkpoint_attempts": 0,
+      "provider_error_attempts": 0,
+      "provider_internal_retries": null,
+      "recorded_successful_llm_calls": 0,
+      "attempt_history": [],
+      "repair_status": null,
+      "doc_rounds_used": null,
+      "doc_rounds": [],
+      "repair_evidence": {}
+    },
+    {
+      "api": "BilinearResizer",
+      "status": "pending",
+      "primary_category": "pending",
+      "runner_category": null,
+      "category_reason": "Not yet observed.",
+      "error": null,
+      "source": null,
+      "doc_chars": null,
+      "checkpoint_attempts": 0,
+      "provider_error_attempts": 0,
+      "provider_internal_retries": null,
+      "recorded_successful_llm_calls": 0,
+      "attempt_history": [],
+      "repair_status": null,
+      "doc_rounds_used": null,
+      "doc_rounds": [],
+      "repair_evidence": {}
+    },
+    {
+      "api": "BufferedImageBuilder",
+      "status": "pending",
+      "primary_category": "pending",
+      "runner_category": null,
+      "category_reason": "Not yet observed.",
+      "error": null,
+      "source": null,
+      "doc_chars": null,
+      "checkpoint_attempts": 0,
+      "provider_error_attempts": 0,
+      "provider_internal_retries": null,
+      "recorded_successful_llm_calls": 0,
+      "attempt_history": [],
+      "repair_status": null,
+      "doc_rounds_used": null,
+      "doc_rounds": [],
+      "repair_evidence": {}
+    },
+    {
+      "api": "BufferedImageSource",
+      "status": "pending",
+      "primary_category": "pending",
+      "runner_category": null,
+      "category_reason": "Not yet observed.",
+      "error": null,
+      "source": null,
+      "doc_chars": null,
+      "checkpoint_attempts": 0,
+      "provider_error_attempts": 0,
+      "provider_internal_retries": null,
+      "recorded_successful_llm_calls": 0,
+      "attempt_history": [],
+      "repair_status": null,
+      "doc_rounds_used": null,
+      "doc_rounds": [],
+      "repair_evidence": {}
+    },
+    {
+      "api": "Canvas",
+      "status": "pending",
+      "primary_category": "pending",
+      "runner_category": null,
+      "category_reason": "Not yet observed.",
+      "error": null,
+      "source": null,
+      "doc_chars": null,
+      "checkpoint_attempts": 0,
+      "provider_error_attempts": 0,
+      "provider_internal_retries": null,
+      "recorded_successful_llm_calls": 0,
+      "attempt_history": [],
+      "repair_status": null,
+      "doc_rounds_used": null,
+      "doc_rounds": [],
+      "repair_evidence": {}
+    },
+    {
+      "api": "Caption",
+      "status": "pending",
+      "primary_category": "pending",
+      "runner_category": null,
+      "category_reason": "Not yet observed.",
+      "error": null,
+      "source": null,
+      "doc_chars": null,
+      "checkpoint_attempts": 0,
+      "provider_error_attempts": 0,
+      "provider_internal_retries": null,
+      "recorded_successful_llm_calls": 0,
+      "attempt_history": [],
+      "repair_status": null,
+      "doc_rounds_used": null,
+      "doc_rounds": [],
+      "repair_evidence": {}
+    },
+    {
+      "api": "Colorize",
+      "status": "pending",
+      "primary_category": "pending",
+      "runner_category": null,
+      "category_reason": "Not yet observed.",
+      "error": null,
+      "source": null,
+      "doc_chars": null,
+      "checkpoint_attempts": 0,
+      "provider_error_attempts": 0,
+      "provider_internal_retries": null,
+      "recorded_successful_llm_calls": 0,
+      "attempt_history": [],
+      "repair_status": null,
+      "doc_rounds_used": null,
+      "doc_rounds": [],
+      "repair_evidence": {}
+    },
+    {
+      "api": "ConsecutivelyNumberedFilenames",
+      "status": "pending",
+      "primary_category": "pending",
+      "runner_category": null,
+      "category_reason": "Not yet observed.",
+      "error": null,
+      "source": null,
+      "doc_chars": null,
+      "checkpoint_attempts": 0,
+      "provider_error_attempts": 0,
+      "provider_internal_retries": null,
+      "recorded_successful_llm_calls": 0,
+      "attempt_history": [],
+      "repair_status": null,
+      "doc_rounds_used": null,
+      "doc_rounds": [],
+      "repair_evidence": {}
+    },
+    {
+      "api": "Coordinate",
+      "status": "pending",
+      "primary_category": "pending",
+      "runner_category": null,
+      "category_reason": "Not yet observed.",
+      "error": null,
+      "source": null,
+      "doc_chars": null,
+      "checkpoint_attempts": 0,
+      "provider_error_attempts": 0,
+      "provider_internal_retries": null,
+      "recorded_successful_llm_calls": 0,
+      "attempt_history": [],
+      "repair_status": null,
+      "doc_rounds_used": null,
+      "doc_rounds": [],
+      "repair_evidence": {}
+    },
+    {
+      "api": "FileImageSink",
+      "status": "pending",
+      "primary_category": "pending",
+      "runner_category": null,
+      "category_reason": "Not yet observed.",
+      "error": null,
+      "source": null,
+      "doc_chars": null,
+      "checkpoint_attempts": 0,
+      "provider_error_attempts": 0,
+      "provider_internal_retries": null,
+      "recorded_successful_llm_calls": 0,
+      "attempt_history": [],
+      "repair_status": null,
+      "doc_rounds_used": null,
+      "doc_rounds": [],
+      "repair_evidence": {}
+    },
+    {
+      "api": "FileImageSource",
+      "status": "pending",
+      "primary_category": "pending",
+      "runner_category": null,
+      "category_reason": "Not yet observed.",
+      "error": null,
+      "source": null,
+      "doc_chars": null,
+      "checkpoint_attempts": 0,
+      "provider_error_attempts": 0,
+      "provider_internal_retries": null,
+      "recorded_successful_llm_calls": 0,
+      "attempt_history": [],
+      "repair_status": null,
+      "doc_rounds_used": null,
+      "doc_rounds": [],
+      "repair_evidence": {}
+    },
+    {
+      "api": "FileThumbnailTask",
+      "status": "pending",
+      "primary_category": "pending",
+      "runner_category": null,
+      "category_reason": "Not yet observed.",
+      "error": null,
+      "source": null,
+      "doc_chars": null,
+      "checkpoint_attempts": 0,
+      "provider_error_attempts": 0,
+      "provider_internal_retries": null,
+      "recorded_successful_llm_calls": 0,
+      "attempt_history": [],
+      "repair_status": null,
+      "doc_rounds_used": null,
+      "doc_rounds": [],
+      "repair_evidence": {}
+    },
+    {
+      "api": "FixedResizerFactory",
+      "status": "pending",
+      "primary_category": "pending",
+      "runner_category": null,
+      "category_reason": "Not yet observed.",
+      "error": null,
+      "source": null,
+      "doc_chars": null,
+      "checkpoint_attempts": 0,
+      "provider_error_attempts": 0,
+      "provider_internal_retries": null,
+      "recorded_successful_llm_calls": 0,
+      "attempt_history": [],
+      "repair_status": null,
+      "doc_rounds_used": null,
+      "doc_rounds": [],
+      "repair_evidence": {}
+    },
+    {
+      "api": "FixedSizeThumbnailMaker",
+      "status": "pending",
+      "primary_category": "pending",
+      "runner_category": null,
+      "category_reason": "Not yet observed.",
+      "error": null,
+      "source": null,
+      "doc_chars": null,
+      "checkpoint_attempts": 0,
+      "provider_error_attempts": 0,
+      "provider_internal_retries": null,
+      "recorded_successful_llm_calls": 0,
+      "attempt_history": [],
+      "repair_status": null,
+      "doc_rounds_used": null,
+      "doc_rounds": [],
+      "repair_evidence": {}
+    },
+    {
+      "api": "IfdStructure",
+      "status": "pending",
+      "primary_category": "pending",
+      "runner_category": null,
+      "category_reason": "Not yet observed.",
+      "error": null,
+      "source": null,
+      "doc_chars": null,
+      "checkpoint_attempts": 0,
+      "provider_error_attempts": 0,
+      "provider_internal_retries": null,
+      "recorded_successful_llm_calls": 0,
+      "attempt_history": [],
+      "repair_status": null,
+      "doc_rounds_used": null,
+      "doc_rounds": [],
+      "repair_evidence": {}
+    },
+    {
+      "api": "InputStreamImageSource",
+      "status": "pending",
+      "primary_category": "pending",
+      "runner_category": null,
+      "category_reason": "Not yet observed.",
+      "error": null,
+      "source": null,
+      "doc_chars": null,
+      "checkpoint_attempts": 0,
+      "provider_error_attempts": 0,
+      "provider_internal_retries": null,
+      "recorded_successful_llm_calls": 0,
+      "attempt_history": [],
+      "repair_status": null,
+      "doc_rounds_used": null,
+      "doc_rounds": [],
+      "repair_evidence": {}
+    },
+    {
+      "api": "NullResizer",
+      "status": "pending",
+      "primary_category": "pending",
+      "runner_category": null,
+      "category_reason": "Not yet observed.",
+      "error": null,
+      "source": null,
+      "doc_chars": null,
+      "checkpoint_attempts": 0,
+      "provider_error_attempts": 0,
+      "provider_internal_retries": null,
+      "recorded_successful_llm_calls": 0,
+      "attempt_history": [],
+      "repair_status": null,
+      "doc_rounds_used": null,
+      "doc_rounds": [],
+      "repair_evidence": {}
+    },
+    {
+      "api": "OutputStreamImageSink",
+      "status": "pending",
+      "primary_category": "pending",
+      "runner_category": null,
+      "category_reason": "Not yet observed.",
+      "error": null,
+      "source": null,
+      "doc_chars": null,
+      "checkpoint_attempts": 0,
+      "provider_error_attempts": 0,
+      "provider_internal_retries": null,
+      "recorded_successful_llm_calls": 0,
+      "attempt_history": [],
+      "repair_status": null,
+      "doc_rounds_used": null,
+      "doc_rounds": [],
+      "repair_evidence": {}
+    },
+    {
+      "api": "Pipeline",
+      "status": "pending",
+      "primary_category": "pending",
+      "runner_category": null,
+      "category_reason": "Not yet observed.",
+      "error": null,
+      "source": null,
+      "doc_chars": null,
+      "checkpoint_attempts": 0,
+      "provider_error_attempts": 0,
+      "provider_internal_retries": null,
+      "recorded_successful_llm_calls": 0,
+      "attempt_history": [],
+      "repair_status": "doc-fixed",
+      "doc_rounds_used": 1,
+      "doc_rounds": [
+        {
+          "round": 0,
+          "deep_dive": {
+            "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/docs/eval/B2/deepdive/Pipeline.md",
+            "tokens": {
+              "in": 4789,
+              "out": 3218
+            },
+            "wall_s": 36.5
+          },
+          "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: ADVANCED/LOW-LEVEL.\nHarness testability: TESTABLE-WITH-LOW-LEVEL-CONSTRUCTION.\nScoring recommendation: include only in advanced/internal bucket.\n\nROOT CAUSE:\nThe documentation's prompt snippet provided an illustrative example using `new Rotation(90)`, but the ex",
+          "diagnosis_changed": true,
+          "entry_chars": {
+            "old": 3744,
+            "new": 4105
+          },
+          "retry_status": "pass",
+          "error_category": null,
+          "error_head": "pass",
+          "error_progressed": true
+        }
+      ],
+      "repair_evidence": {
+        "status": "doc-fixed",
+        "created_from_missing": false,
+        "rounds_used": 1,
+        "doc_rounds": [
+          {
+            "round": 0,
+            "deep_dive": {
+              "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/docs/eval/B2/deepdive/Pipeline.md",
+              "tokens": {
+                "in": 4789,
+                "out": 3218
+              },
+              "wall_s": 36.5
+            },
+            "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: ADVANCED/LOW-LEVEL.\nHarness testability: TESTABLE-WITH-LOW-LEVEL-CONSTRUCTION.\nScoring recommendation: include only in advanced/internal bucket.\n\nROOT CAUSE:\nThe documentation's prompt snippet provided an illustrative example using `new Rotation(90)`, but the ex",
+            "diagnosis_changed": true,
+            "entry_chars": {
+              "old": 3744,
+              "new": 4105
+            },
+            "retry_status": "pass",
+            "error_category": null,
+            "error_head": "pass",
+            "error_progressed": true
+          }
+        ],
+        "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: ADVANCED/LOW-LEVEL.\nHarness testability: TESTABLE-WITH-LOW-LEVEL-CONSTRUCTION.\nScoring recommendation: include only in advanced/internal bucket.\n\nROOT CAUSE:\nThe documentation's prompt snippet provided an illustrative example using `new Rotation(90)`, but the ex",
+        "entry_chars": {
+          "old": 3744,
+          "new": 4105
+        },
+        "wall_s": 105.4,
+        "tokens": {
+          "in": 17341,
+          "out": 9144
+        }
+      }
+    },
+    {
+      "api": "ProgressiveBilinearResizer",
+      "status": "pending",
+      "primary_category": "pending",
+      "runner_category": null,
+      "category_reason": "Not yet observed.",
+      "error": null,
+      "source": null,
+      "doc_chars": null,
+      "checkpoint_attempts": 0,
+      "provider_error_attempts": 0,
+      "provider_internal_retries": null,
+      "recorded_successful_llm_calls": 0,
+      "attempt_history": [],
+      "repair_status": null,
+      "doc_rounds_used": null,
+      "doc_rounds": [],
+      "repair_evidence": {}
+    },
+    {
+      "api": "Region",
+      "status": "pending",
+      "primary_category": "pending",
+      "runner_category": null,
+      "category_reason": "Not yet observed.",
+      "error": null,
+      "source": null,
+      "doc_chars": null,
+      "checkpoint_attempts": 0,
+      "provider_error_attempts": 0,
+      "provider_internal_retries": null,
+      "recorded_successful_llm_calls": 0,
+      "attempt_history": [],
+      "repair_status": null,
+      "doc_rounds_used": null,
+      "doc_rounds": [],
+      "repair_evidence": {}
+    },
+    {
+      "api": "RelativeSize",
+      "status": "pending",
+      "primary_category": "pending",
+      "runner_category": null,
+      "category_reason": "Not yet observed.",
+      "error": null,
+      "source": null,
+      "doc_chars": null,
+      "checkpoint_attempts": 0,
+      "provider_error_attempts": 0,
+      "provider_internal_retries": null,
+      "recorded_successful_llm_calls": 0,
+      "attempt_history": [],
+      "repair_status": null,
+      "doc_rounds_used": null,
+      "doc_rounds": [],
+      "repair_evidence": {}
+    },
+    {
+      "api": "ScaledThumbnailMaker",
+      "status": "pending",
+      "primary_category": "pending",
+      "runner_category": null,
+      "category_reason": "Not yet observed.",
+      "error": null,
+      "source": null,
+      "doc_chars": null,
+      "checkpoint_attempts": 0,
+      "provider_error_attempts": 0,
+      "provider_internal_retries": null,
+      "recorded_successful_llm_calls": 0,
+      "attempt_history": [],
+      "repair_status": null,
+      "doc_rounds_used": null,
+      "doc_rounds": [],
+      "repair_evidence": {}
+    },
+    {
+      "api": "SourceSinkThumbnailTask",
+      "status": "pending",
+      "primary_category": "pending",
+      "runner_category": null,
+      "category_reason": "Not yet observed.",
+      "error": null,
+      "source": null,
+      "doc_chars": null,
+      "checkpoint_attempts": 0,
+      "provider_error_attempts": 0,
+      "provider_internal_retries": null,
+      "recorded_successful_llm_calls": 0,
+      "attempt_history": [],
+      "repair_status": null,
+      "doc_rounds_used": null,
+      "doc_rounds": [],
+      "repair_evidence": {}
+    },
+    {
+      "api": "StreamThumbnailTask",
+      "status": "pending",
+      "primary_category": "pending",
+      "runner_category": null,
+      "category_reason": "Not yet observed.",
+      "error": null,
+      "source": null,
+      "doc_chars": null,
+      "checkpoint_attempts": 0,
+      "provider_error_attempts": 0,
+      "provider_internal_retries": null,
+      "recorded_successful_llm_calls": 0,
+      "attempt_history": [],
+      "repair_status": null,
+      "doc_rounds_used": null,
+      "doc_rounds": [],
+      "repair_evidence": {}
+    },
+    {
+      "api": "ThumbnailMaker",
+      "status": "pending",
+      "primary_category": "pending",
+      "runner_category": null,
+      "category_reason": "Not yet observed.",
+      "error": null,
+      "source": null,
+      "doc_chars": null,
+      "checkpoint_attempts": 0,
+      "provider_error_attempts": 0,
+      "provider_internal_retries": null,
+      "recorded_successful_llm_calls": 0,
+      "attempt_history": [],
+      "repair_status": "doc-fixed",
+      "doc_rounds_used": 1,
+      "doc_rounds": [
+        {
+          "round": 0,
+          "deep_dive": {
+            "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/docs/eval/B2/deepdive/ThumbnailMaker.md",
+            "tokens": {
+              "in": 4649,
+              "out": 2809
+            },
+            "wall_s": 23.7
+          },
+          "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: INTERNAL-FRAMEWORK.\nHarness testability: TESTABLE-WITH-LOW-LEVEL-CONSTRUCTION.\nScoring recommendation: include only in advanced/internal bucket.\n\nROOT CAUSE:\nThe documentation contains a direct error in its \"Valid Call Patterns\" section. It suggests instantiatin",
+          "diagnosis_changed": true,
+          "entry_chars": {
+            "old": 2278,
+            "new": 2789
+          },
+          "retry_status": "pass",
+          "error_category": null,
+          "error_head": "pass",
+          "error_progressed": true
+        }
+      ],
+      "repair_evidence": {
+        "status": "doc-fixed",
+        "created_from_missing": false,
+        "rounds_used": 1,
+        "doc_rounds": [
+          {
+            "round": 0,
+            "deep_dive": {
+              "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/docs/eval/B2/deepdive/ThumbnailMaker.md",
+              "tokens": {
+                "in": 4649,
+                "out": 2809
+              },
+              "wall_s": 23.7
+            },
+            "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: INTERNAL-FRAMEWORK.\nHarness testability: TESTABLE-WITH-LOW-LEVEL-CONSTRUCTION.\nScoring recommendation: include only in advanced/internal bucket.\n\nROOT CAUSE:\nThe documentation contains a direct error in its \"Valid Call Patterns\" section. It suggests instantiatin",
+            "diagnosis_changed": true,
+            "entry_chars": {
+              "old": 2278,
+              "new": 2789
+            },
+            "retry_status": "pass",
+            "error_category": null,
+            "error_head": "pass",
+            "error_progressed": true
+          }
+        ],
+        "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: INTERNAL-FRAMEWORK.\nHarness testability: TESTABLE-WITH-LOW-LEVEL-CONSTRUCTION.\nScoring recommendation: include only in advanced/internal bucket.\n\nROOT CAUSE:\nThe documentation contains a direct error in its \"Valid Call Patterns\" section. It suggests instantiatin",
+        "entry_chars": {
+          "old": 2278,
+          "new": 2789
+        },
+        "wall_s": 95.4,
+        "tokens": {
+          "in": 14943,
+          "out": 10365
+        }
+      }
+    },
+    {
+      "api": "ThumbnailParameter",
+      "status": "pending",
+      "primary_category": "pending",
+      "runner_category": null,
+      "category_reason": "Not yet observed.",
+      "error": null,
+      "source": null,
+      "doc_chars": null,
+      "checkpoint_attempts": 0,
+      "provider_error_attempts": 0,
+      "provider_internal_retries": null,
+      "recorded_successful_llm_calls": 0,
+      "attempt_history": [],
+      "repair_status": null,
+      "doc_rounds_used": null,
+      "doc_rounds": [],
+      "repair_evidence": {}
+    },
+    {
+      "api": "ThumbnailParameterBuilder",
+      "status": "pending",
+      "primary_category": "pending",
+      "runner_category": null,
+      "category_reason": "Not yet observed.",
+      "error": null,
+      "source": null,
+      "doc_chars": null,
+      "checkpoint_attempts": 0,
+      "provider_error_attempts": 0,
+      "provider_internal_retries": null,
+      "recorded_successful_llm_calls": 0,
+      "attempt_history": [],
+      "repair_status": null,
+      "doc_rounds_used": null,
+      "doc_rounds": [],
+      "repair_evidence": {}
+    },
+    {
+      "api": "Transparency",
+      "status": "pending",
+      "primary_category": "pending",
+      "runner_category": null,
+      "category_reason": "Not yet observed.",
+      "error": null,
+      "source": null,
+      "doc_chars": null,
+      "checkpoint_attempts": 0,
+      "provider_error_attempts": 0,
+      "provider_internal_retries": null,
+      "recorded_successful_llm_calls": 0,
+      "attempt_history": [],
+      "repair_status": null,
+      "doc_rounds_used": null,
+      "doc_rounds": [],
+      "repair_evidence": {}
+    },
+    {
+      "api": "URLImageSource",
+      "status": "pending",
+      "primary_category": "pending",
+      "runner_category": null,
+      "category_reason": "Not yet observed.",
+      "error": null,
+      "source": null,
+      "doc_chars": null,
+      "checkpoint_attempts": 0,
+      "provider_error_attempts": 0,
+      "provider_internal_retries": null,
+      "recorded_successful_llm_calls": 0,
+      "attempt_history": [],
+      "repair_status": null,
+      "doc_rounds_used": null,
+      "doc_rounds": [],
+      "repair_evidence": {}
+    },
+    {
+      "api": "UnsupportedFormatException",
+      "status": "pending",
+      "primary_category": "pending",
+      "runner_category": null,
+      "category_reason": "Not yet observed.",
+      "error": null,
+      "source": null,
+      "doc_chars": null,
+      "checkpoint_attempts": 0,
+      "provider_error_attempts": 0,
+      "provider_internal_retries": null,
+      "recorded_successful_llm_calls": 0,
+      "attempt_history": [],
+      "repair_status": "doc-fixed",
+      "doc_rounds_used": 1,
+      "doc_rounds": [
+        {
+          "round": 0,
+          "deep_dive": {
+            "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/docs/eval/B2/deepdive/UnsupportedFormatException.md",
+            "tokens": {
+              "in": 3393,
+              "out": 3487
+            },
+            "wall_s": 31.7
+          },
+          "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING.\nHarness testability: TESTABLE.\nScoring recommendation: include in main user-facing denominator.\n\nROOT CAUSE:\nThe documentation incorrectly claims that requesting an unsupported format via `Thumbnails.Builder.outputFormat(String)` will throw an `Unsu",
+          "diagnosis_changed": true,
+          "entry_chars": {
+            "old": 2941,
+            "new": 4111
+          },
+          "retry_status": "pass",
+          "error_category": null,
+          "error_head": "pass",
+          "error_progressed": true
+        }
+      ],
+      "repair_evidence": {
+        "status": "doc-fixed",
+        "created_from_missing": false,
+        "rounds_used": 1,
+        "doc_rounds": [
+          {
+            "round": 0,
+            "deep_dive": {
+              "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/docs/eval/B2/deepdive/UnsupportedFormatException.md",
+              "tokens": {
+                "in": 3393,
+                "out": 3487
+              },
+              "wall_s": 31.7
+            },
+            "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING.\nHarness testability: TESTABLE.\nScoring recommendation: include in main user-facing denominator.\n\nROOT CAUSE:\nThe documentation incorrectly claims that requesting an unsupported format via `Thumbnails.Builder.outputFormat(String)` will throw an `Unsu",
+            "diagnosis_changed": true,
+            "entry_chars": {
+              "old": 2941,
+              "new": 4111
+            },
+            "retry_status": "pass",
+            "error_category": null,
+            "error_head": "pass",
+            "error_progressed": true
+          }
+        ],
+        "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING.\nHarness testability: TESTABLE.\nScoring recommendation: include in main user-facing denominator.\n\nROOT CAUSE:\nThe documentation incorrectly claims that requesting an unsupported format via `Thumbnails.Builder.outputFormat(String)` will throw an `Unsu",
+        "entry_chars": {
+          "old": 2941,
+          "new": 4111
+        },
+        "wall_s": 89.4,
+        "tokens": {
+          "in": 12685,
+          "out": 9052
+        }
+      }
+    },
+    {
+      "api": "Watermark",
+      "status": "pending",
+      "primary_category": "pending",
+      "runner_category": null,
+      "category_reason": "Not yet observed.",
+      "error": null,
+      "source": null,
+      "doc_chars": null,
+      "checkpoint_attempts": 0,
+      "provider_error_attempts": 0,
+      "provider_internal_retries": null,
+      "recorded_successful_llm_calls": 0,
+      "attempt_history": [],
+      "repair_status": null,
+      "doc_rounds_used": null,
+      "doc_rounds": [],
+      "repair_evidence": {}
+    },
+    {
+      "api": "add",
+      "status": "pending",
+      "primary_category": "pending",
+      "runner_category": null,
+      "category_reason": "Not yet observed.",
+      "error": null,
+      "source": null,
+      "doc_chars": null,
+      "checkpoint_attempts": 0,
+      "provider_error_attempts": 0,
+      "provider_internal_retries": null,
+      "recorded_successful_llm_calls": 0,
+      "attempt_history": [],
+      "repair_status": null,
+      "doc_rounds_used": null,
+      "doc_rounds": [],
+      "repair_evidence": {}
+    },
+    {
+      "api": "addAll",
+      "status": "pending",
+      "primary_category": "pending",
+      "runner_category": null,
+      "category_reason": "Not yet observed.",
+      "error": null,
+      "source": null,
+      "doc_chars": null,
+      "checkpoint_attempts": 0,
+      "provider_error_attempts": 0,
+      "provider_internal_retries": null,
+      "recorded_successful_llm_calls": 0,
+      "attempt_history": [],
+      "repair_status": null,
+      "doc_rounds_used": null,
+      "doc_rounds": [],
+      "repair_evidence": {}
+    },
+    {
+      "api": "addFilter",
+      "status": "pending",
+      "primary_category": "pending",
+      "runner_category": null,
+      "category_reason": "Not yet observed.",
+      "error": null,
+      "source": null,
+      "doc_chars": null,
+      "checkpoint_attempts": 0,
+      "provider_error_attempts": 0,
+      "provider_internal_retries": null,
+      "recorded_successful_llm_calls": 0,
+      "attempt_history": [],
+      "repair_status": null,
+      "doc_rounds_used": null,
+      "doc_rounds": [],
+      "repair_evidence": {}
+    },
+    {
+      "api": "addFilters",
+      "status": "pending",
+      "primary_category": "pending",
+      "runner_category": null,
+      "category_reason": "Not yet observed.",
+      "error": null,
+      "source": null,
+      "doc_chars": null,
+      "checkpoint_attempts": 0,
+      "provider_error_attempts": 0,
+      "provider_internal_retries": null,
+      "recorded_successful_llm_calls": 0,
+      "attempt_history": [],
+      "repair_status": null,
+      "doc_rounds_used": null,
+      "doc_rounds": [],
+      "repair_evidence": {}
+    },
+    {
+      "api": "addFirst",
+      "status": "pending",
+      "primary_category": "pending",
+      "runner_category": null,
+      "category_reason": "Not yet observed.",
+      "error": null,
+      "source": null,
+      "doc_chars": null,
+      "checkpoint_attempts": 0,
+      "provider_error_attempts": 0,
+      "provider_internal_retries": null,
+      "recorded_successful_llm_calls": 0,
+      "attempt_history": [],
+      "repair_status": null,
+      "doc_rounds_used": null,
+      "doc_rounds": [],
+      "repair_evidence": {}
+    },
+    {
+      "api": "allowOverwrite",
+      "status": "pending",
+      "primary_category": "pending",
+      "runner_category": null,
+      "category_reason": "Not yet observed.",
+      "error": null,
+      "source": null,
+      "doc_chars": null,
+      "checkpoint_attempts": 0,
+      "provider_error_attempts": 0,
+      "provider_internal_retries": null,
+      "recorded_successful_llm_calls": 0,
+      "attempt_history": [],
+      "repair_status": null,
+      "doc_rounds_used": null,
+      "doc_rounds": [],
+      "repair_evidence": {}
+    },
+    {
+      "api": "alphaInterpolation",
+      "status": "pending",
+      "primary_category": "pending",
+      "runner_category": null,
+      "category_reason": "Not yet observed.",
+      "error": null,
+      "source": null,
+      "doc_chars": null,
+      "checkpoint_attempts": 0,
+      "provider_error_attempts": 0,
+      "provider_internal_retries": null,
+      "recorded_successful_llm_calls": 0,
+      "attempt_history": [],
+      "repair_status": null,
+      "doc_rounds_used": null,
+      "doc_rounds": [],
+      "repair_evidence": {}
+    },
+    {
+      "api": "antialiasing",
+      "status": "pending",
+      "primary_category": "pending",
+      "runner_category": null,
+      "category_reason": "Not yet observed.",
+      "error": null,
+      "source": null,
+      "doc_chars": null,
+      "checkpoint_attempts": 0,
+      "provider_error_attempts": 0,
+      "provider_internal_retries": null,
+      "recorded_successful_llm_calls": 0,
+      "attempt_history": [],
+      "repair_status": null,
+      "doc_rounds_used": null,
+      "doc_rounds": [],
+      "repair_evidence": {}
+    },
+    {
+      "api": "apply",
+      "status": "pending",
+      "primary_category": "pending",
+      "runner_category": null,
+      "category_reason": "Not yet observed.",
+      "error": null,
+      "source": null,
+      "doc_chars": null,
+      "checkpoint_attempts": 0,
+      "provider_error_attempts": 0,
+      "provider_internal_retries": null,
+      "recorded_successful_llm_calls": 0,
+      "attempt_history": [],
+      "repair_status": null,
+      "doc_rounds_used": null,
+      "doc_rounds": [],
+      "repair_evidence": {}
+    },
+    {
+      "api": "asBufferedImage",
+      "status": "pending",
+      "primary_category": "pending",
+      "runner_category": null,
+      "category_reason": "Not yet observed.",
+      "error": null,
+      "source": null,
+      "doc_chars": null,
+      "checkpoint_attempts": 0,
+      "provider_error_attempts": 0,
+      "provider_internal_retries": null,
+      "recorded_successful_llm_calls": 0,
+      "attempt_history": [],
+      "repair_status": null,
+      "doc_rounds_used": null,
+      "doc_rounds": [],
+      "repair_evidence": {}
+    },
+    {
+      "api": "asBufferedImages",
+      "status": "pending",
+      "primary_category": "pending",
+      "runner_category": null,
+      "category_reason": "Not yet observed.",
+      "error": null,
+      "source": null,
+      "doc_chars": null,
+      "checkpoint_attempts": 0,
+      "provider_error_attempts": 0,
+      "provider_internal_retries": null,
+      "recorded_successful_llm_calls": 0,
+      "attempt_history": [],
+      "repair_status": null,
+      "doc_rounds_used": null,
+      "doc_rounds": [],
+      "repair_evidence": {}
+    },
+    {
+      "api": "asFiles",
+      "status": "pending",
+      "primary_category": "pending",
+      "runner_category": null,
+      "category_reason": "Not yet observed.",
+      "error": null,
+      "source": null,
+      "doc_chars": null,
+      "checkpoint_attempts": 0,
+      "provider_error_attempts": 0,
+      "provider_internal_retries": null,
+      "recorded_successful_llm_calls": 0,
+      "attempt_history": [],
+      "repair_status": null,
+      "doc_rounds_used": null,
+      "doc_rounds": [],
+      "repair_evidence": {}
+    },
+    {
+      "api": "build",
+      "status": "pending",
+      "primary_category": "pending",
+      "runner_category": null,
+      "category_reason": "Not yet observed.",
+      "error": null,
+      "source": null,
+      "doc_chars": null,
+      "checkpoint_attempts": 0,
+      "provider_error_attempts": 0,
+      "provider_internal_retries": null,
+      "recorded_successful_llm_calls": 0,
+      "attempt_history": [],
+      "repair_status": null,
+      "doc_rounds_used": null,
+      "doc_rounds": [],
+      "repair_evidence": {}
+    },
+    {
+      "api": "calculate",
+      "status": "pending",
+      "primary_category": "pending",
+      "runner_category": null,
+      "category_reason": "Not yet observed.",
+      "error": null,
+      "source": null,
+      "doc_chars": null,
+      "checkpoint_attempts": 0,
+      "provider_error_attempts": 0,
+      "provider_internal_retries": null,
+      "recorded_successful_llm_calls": 0,
+      "attempt_history": [],
+      "repair_status": null,
+      "doc_rounds_used": null,
+      "doc_rounds": [],
+      "repair_evidence": {}
+    },
+    {
+      "api": "clear",
+      "status": "pending",
+      "primary_category": "pending",
+      "runner_category": null,
+      "category_reason": "Not yet observed.",
+      "error": null,
+      "source": null,
+      "doc_chars": null,
+      "checkpoint_attempts": 0,
+      "provider_error_attempts": 0,
+      "provider_internal_retries": null,
+      "recorded_successful_llm_calls": 0,
+      "attempt_history": [],
+      "repair_status": "not-testable (entry unchanged)",
+      "doc_rounds_used": 1,
+      "doc_rounds": [
+        {
+          "round": 0,
+          "deep_dive": {
+            "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/docs/eval/B2/deepdive/clear.md",
+            "tokens": {
+              "in": 2450,
+              "out": 1796
+            },
+            "wall_s": 17.6
+          },
+          "diagnosis_head": "VERDICT: NOT-TESTABLE — Method is package-private and cannot be invoked from an external test harness.",
+          "diagnosis_changed": true,
+          "outcome": "not-testable"
+        }
+      ],
+      "repair_evidence": {
+        "status": "not-testable (entry unchanged)",
+        "created_from_missing": false,
+        "rounds_used": 1,
+        "doc_rounds": [
+          {
+            "round": 0,
+            "deep_dive": {
+              "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/docs/eval/B2/deepdive/clear.md",
+              "tokens": {
+                "in": 2450,
+                "out": 1796
+              },
+              "wall_s": 17.6
+            },
+            "diagnosis_head": "VERDICT: NOT-TESTABLE — Method is package-private and cannot be invoked from an external test harness.",
+            "diagnosis_changed": true,
+            "outcome": "not-testable"
+          }
+        ],
+        "diagnosis_head": "VERDICT: NOT-TESTABLE — Method is package-private and cannot be invoked from an external test harness.",
+        "entry_chars": null,
+        "wall_s": 29.3,
+        "tokens": {
+          "in": 5506,
+          "out": 2249
+        }
+      }
+    },
+    {
+      "api": "copy",
+      "status": "pending",
+      "primary_category": "pending",
+      "runner_category": null,
+      "category_reason": "Not yet observed.",
+      "error": null,
+      "source": null,
+      "doc_chars": null,
+      "checkpoint_attempts": 0,
+      "provider_error_attempts": 0,
+      "provider_internal_retries": null,
+      "recorded_successful_llm_calls": 0,
+      "attempt_history": [],
+      "repair_status": null,
+      "doc_rounds_used": null,
+      "doc_rounds": [],
+      "repair_evidence": {}
+    },
+    {
+      "api": "createOutputStream",
+      "status": "pending",
+      "primary_category": "pending",
+      "runner_category": null,
+      "category_reason": "Not yet observed.",
+      "error": null,
+      "source": null,
+      "doc_chars": null,
+      "checkpoint_attempts": 0,
+      "provider_error_attempts": 0,
+      "provider_internal_retries": null,
+      "recorded_successful_llm_calls": 0,
+      "attempt_history": [],
+      "repair_status": "not-testable (entry unchanged)",
+      "doc_rounds_used": 1,
+      "doc_rounds": [
+        {
+          "round": 0,
+          "deep_dive": {
+            "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/docs/eval/B2/deepdive/createOutputStream.md",
+            "tokens": {
+              "in": 3037,
+              "out": 3052
+            },
+            "wall_s": 28.4
+          },
+          "diagnosis_head": "VERDICT: NOT-TESTABLE — The method is package-private and explicitly marked \"Visible for testing only\", making it inaccessible from an external test harness package.",
+          "diagnosis_changed": true,
+          "outcome": "not-testable"
+        }
+      ],
+      "repair_evidence": {
+        "status": "not-testable (entry unchanged)",
+        "created_from_missing": false,
+        "rounds_used": 1,
+        "doc_rounds": [
+          {
+            "round": 0,
+            "deep_dive": {
+              "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/docs/eval/B2/deepdive/createOutputStream.md",
+              "tokens": {
+                "in": 3037,
+                "out": 3052
+              },
+              "wall_s": 28.4
+            },
+            "diagnosis_head": "VERDICT: NOT-TESTABLE — The method is package-private and explicitly marked \"Visible for testing only\", making it inaccessible from an external test harness package.",
+            "diagnosis_changed": true,
+            "outcome": "not-testable"
+          }
+        ],
+        "diagnosis_head": "VERDICT: NOT-TESTABLE — The method is package-private and explicitly marked \"Visible for testing only\", making it inaccessible from an external test harness package.",
+        "entry_chars": null,
+        "wall_s": 34.6,
+        "tokens": {
+          "in": 6958,
+          "out": 3461
+        }
+      }
+    },
+    {
+      "api": "createThumbnail",
+      "status": "pending",
+      "primary_category": "pending",
+      "runner_category": null,
+      "category_reason": "Not yet observed.",
+      "error": null,
+      "source": null,
+      "doc_chars": null,
+      "checkpoint_attempts": 0,
+      "provider_error_attempts": 0,
+      "provider_internal_retries": null,
+      "recorded_successful_llm_calls": 0,
+      "attempt_history": [],
+      "repair_status": null,
+      "doc_rounds_used": null,
+      "doc_rounds": [],
+      "repair_evidence": {}
+    },
+    {
+      "api": "createThumbnails",
+      "status": "pending",
+      "primary_category": "pending",
+      "runner_category": null,
+      "category_reason": "Not yet observed.",
+      "error": null,
+      "source": null,
+      "doc_chars": null,
+      "checkpoint_attempts": 0,
+      "provider_error_attempts": 0,
+      "provider_internal_retries": null,
+      "recorded_successful_llm_calls": 0,
+      "attempt_history": [],
+      "repair_status": null,
+      "doc_rounds_used": null,
+      "doc_rounds": [],
+      "repair_evidence": {}
+    },
+    {
+      "api": "createThumbnailsAsCollection",
+      "status": "pending",
+      "primary_category": "pending",
+      "runner_category": null,
+      "category_reason": "Not yet observed.",
+      "error": null,
+      "source": null,
+      "doc_chars": null,
+      "checkpoint_attempts": 0,
+      "provider_error_attempts": 0,
+      "provider_internal_retries": null,
+      "recorded_successful_llm_calls": 0,
+      "attempt_history": [],
+      "repair_status": null,
+      "doc_rounds_used": null,
+      "doc_rounds": [],
+      "repair_evidence": {}
+    },
+    {
+      "api": "crop",
+      "status": "pending",
+      "primary_category": "pending",
+      "runner_category": null,
+      "category_reason": "Not yet observed.",
+      "error": null,
+      "source": null,
+      "doc_chars": null,
+      "checkpoint_attempts": 0,
+      "provider_error_attempts": 0,
+      "provider_internal_retries": null,
+      "recorded_successful_llm_calls": 0,
+      "attempt_history": [],
+      "repair_status": null,
+      "doc_rounds_used": null,
+      "doc_rounds": [],
+      "repair_evidence": {}
+    },
+    {
+      "api": "defaultImageType",
+      "status": "pending",
+      "primary_category": "pending",
+      "runner_category": null,
+      "category_reason": "Not yet observed.",
+      "error": null,
+      "source": null,
+      "doc_chars": null,
+      "checkpoint_attempts": 0,
+      "provider_error_attempts": 0,
+      "provider_internal_retries": null,
+      "recorded_successful_llm_calls": 0,
+      "attempt_history": [],
+      "repair_status": null,
+      "doc_rounds_used": null,
+      "doc_rounds": [],
+      "repair_evidence": {}
+    },
+    {
+      "api": "defaultResizer",
       "status": "pass",
       "primary_category": "pass",
       "runner_category": null,
       "category_reason": "",
       "error": null,
-      "source": "source/mir_eval/display.py:478",
-      "doc_chars": 3709,
+      "source": "source/src/main/java/net/coobird/thumbnailator/makers/ThumbnailMaker.java:263",
+      "doc_chars": 3460,
       "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
       "recorded_successful_llm_calls": 1,
       "attempt_history": [
         {
-          "checkpoint_line": 2,
+          "checkpoint_line": 1,
           "status": "pass",
           "error_category": null,
           "error": null,
           "attempts": 1,
-          "wall_s": 21.0,
+          "wall_s": 12.8,
           "llm_calls": 1,
-          "input_tokens": 2212,
-          "output_tokens": 2041,
+          "input_tokens": 1980,
+          "output_tokens": 1020,
           "pass_round": 0
         }
       ],
-      "repair_status": null,
-      "doc_rounds_used": null,
-      "doc_rounds": [],
-      "repair_evidence": {}
-    },
-    {
-      "api": "InvalidChordException",
-      "status": "pass",
-      "primary_category": "pass",
-      "runner_category": null,
-      "category_reason": "",
-      "error": null,
-      "source": "source/mir_eval/chord.py:113",
-      "doc_chars": 2797,
-      "checkpoint_attempts": 1,
-      "provider_error_attempts": 0,
-      "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 1,
-      "attempt_history": [
-        {
-          "checkpoint_line": 3,
-          "status": "pass",
-          "error_category": null,
-          "error": null,
-          "attempts": 1,
-          "wall_s": 8.5,
-          "llm_calls": 1,
-          "input_tokens": 1949,
-          "output_tokens": 754,
-          "pass_round": 0
-        }
-      ],
-      "repair_status": null,
-      "doc_rounds_used": null,
-      "doc_rounds": [],
-      "repair_evidence": {}
-    },
-    {
-      "api": "absolute_error",
-      "status": "pass",
-      "primary_category": "pass",
-      "runner_category": null,
-      "category_reason": "",
-      "error": null,
-      "source": "source/mir_eval/alignment.py:115",
-      "doc_chars": 3814,
-      "checkpoint_attempts": 1,
-      "provider_error_attempts": 0,
-      "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 1,
-      "attempt_history": [
-        {
-          "checkpoint_line": 4,
-          "status": "pass",
-          "error_category": null,
-          "error": null,
-          "attempts": 1,
-          "wall_s": 12.3,
-          "llm_calls": 1,
-          "input_tokens": 2242,
-          "output_tokens": 1465,
-          "pass_round": 0
-        }
-      ],
-      "repair_status": null,
-      "doc_rounds_used": null,
-      "doc_rounds": [],
-      "repair_evidence": {}
-    },
-    {
-      "api": "adjust_events",
-      "status": "pass",
-      "primary_category": "pass",
-      "runner_category": null,
-      "category_reason": "",
-      "error": null,
-      "source": "source/mir_eval/util.py:359",
-      "doc_chars": 4350,
-      "checkpoint_attempts": 1,
-      "provider_error_attempts": 0,
-      "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 1,
-      "attempt_history": [
-        {
-          "checkpoint_line": 5,
-          "status": "pass",
-          "error_category": null,
-          "error": null,
-          "attempts": 1,
-          "wall_s": 18.3,
-          "llm_calls": 1,
-          "input_tokens": 2581,
-          "output_tokens": 2060,
-          "pass_round": 0
-        }
-      ],
-      "repair_status": null,
-      "doc_rounds_used": null,
-      "doc_rounds": [],
-      "repair_evidence": {}
-    },
-    {
-      "api": "adjust_intervals",
-      "status": "pending",
-      "primary_category": "pending",
-      "runner_category": null,
-      "category_reason": "Not yet observed.",
-      "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
-      "provider_error_attempts": 0,
-      "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
-      "repair_status": null,
-      "doc_rounds_used": null,
-      "doc_rounds": [],
-      "repair_evidence": {}
-    },
-    {
-      "api": "ari",
-      "status": "pending",
-      "primary_category": "pending",
-      "runner_category": null,
-      "category_reason": "Not yet observed.",
-      "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
-      "provider_error_attempts": 0,
-      "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
-      "repair_status": null,
-      "doc_rounds_used": null,
-      "doc_rounds": [],
-      "repair_evidence": {}
-    },
-    {
-      "api": "average_overlap_ratio",
-      "status": "pending",
-      "primary_category": "pending",
-      "runner_category": null,
-      "category_reason": "Not yet observed.",
-      "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
-      "provider_error_attempts": 0,
-      "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
-      "repair_status": null,
-      "doc_rounds_used": null,
-      "doc_rounds": [],
-      "repair_evidence": {}
-    },
-    {
-      "api": "boundaries_to_intervals",
-      "status": "pending",
-      "primary_category": "pending",
-      "runner_category": null,
-      "category_reason": "Not yet observed.",
-      "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
-      "provider_error_attempts": 0,
-      "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
-      "repair_status": null,
-      "doc_rounds_used": null,
-      "doc_rounds": [],
-      "repair_evidence": {}
-    },
-    {
-      "api": "bss_eval_images",
-      "status": "pending",
-      "primary_category": "pending",
-      "runner_category": null,
-      "category_reason": "Not yet observed.",
-      "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
-      "provider_error_attempts": 0,
-      "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
-      "repair_status": null,
-      "doc_rounds_used": null,
-      "doc_rounds": [],
-      "repair_evidence": {}
-    },
-    {
-      "api": "bss_eval_images_framewise",
-      "status": "pending",
-      "primary_category": "pending",
-      "runner_category": null,
-      "category_reason": "Not yet observed.",
-      "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
-      "provider_error_attempts": 0,
-      "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
-      "repair_status": null,
-      "doc_rounds_used": null,
-      "doc_rounds": [],
-      "repair_evidence": {}
-    },
-    {
-      "api": "bss_eval_sources",
-      "status": "pending",
-      "primary_category": "pending",
-      "runner_category": null,
-      "category_reason": "Not yet observed.",
-      "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
-      "provider_error_attempts": 0,
-      "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
-      "repair_status": null,
-      "doc_rounds_used": null,
-      "doc_rounds": [],
-      "repair_evidence": {}
-    },
-    {
-      "api": "bss_eval_sources_framewise",
-      "status": "pending",
-      "primary_category": "pending",
-      "runner_category": null,
-      "category_reason": "Not yet observed.",
-      "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
-      "provider_error_attempts": 0,
-      "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
-      "repair_status": null,
-      "doc_rounds_used": null,
-      "doc_rounds": [],
-      "repair_evidence": {}
-    },
-    {
-      "api": "cemgil",
-      "status": "pending",
-      "primary_category": "pending",
-      "runner_category": null,
-      "category_reason": "Not yet observed.",
-      "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
-      "provider_error_attempts": 0,
-      "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
-      "repair_status": null,
-      "doc_rounds_used": null,
-      "doc_rounds": [],
-      "repair_evidence": {}
-    },
-    {
-      "api": "chords",
-      "status": "pending",
-      "primary_category": "pending",
-      "runner_category": null,
-      "category_reason": "Not yet observed.",
-      "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
-      "provider_error_attempts": 0,
-      "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
-      "repair_status": null,
-      "doc_rounds_used": null,
-      "doc_rounds": [],
-      "repair_evidence": {}
-    },
-    {
-      "api": "chroma",
-      "status": "pending",
-      "primary_category": "pending",
-      "runner_category": null,
-      "category_reason": "Not yet observed.",
-      "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
-      "provider_error_attempts": 0,
-      "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
-      "repair_status": null,
-      "doc_rounds_used": null,
-      "doc_rounds": [],
-      "repair_evidence": {}
-    },
-    {
-      "api": "clicks",
-      "status": "pending",
-      "primary_category": "pending",
-      "runner_category": null,
-      "category_reason": "Not yet observed.",
-      "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
-      "provider_error_attempts": 0,
-      "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
-      "repair_status": null,
-      "doc_rounds_used": null,
-      "doc_rounds": [],
-      "repair_evidence": {}
-    },
-    {
-      "api": "compute_accuracy",
-      "status": "pending",
-      "primary_category": "pending",
-      "runner_category": null,
-      "category_reason": "Not yet observed.",
-      "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
-      "provider_error_attempts": 0,
-      "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
-      "repair_status": null,
-      "doc_rounds_used": null,
-      "doc_rounds": [],
-      "repair_evidence": {}
-    },
-    {
-      "api": "compute_err_score",
-      "status": "pending",
-      "primary_category": "pending",
-      "runner_category": null,
-      "category_reason": "Not yet observed.",
-      "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
-      "provider_error_attempts": 0,
-      "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
-      "repair_status": null,
-      "doc_rounds_used": null,
-      "doc_rounds": [],
-      "repair_evidence": {}
-    },
-    {
-      "api": "compute_num_freqs",
-      "status": "pending",
-      "primary_category": "pending",
-      "runner_category": null,
-      "category_reason": "Not yet observed.",
-      "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
-      "provider_error_attempts": 0,
-      "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
-      "repair_status": null,
-      "doc_rounds_used": null,
-      "doc_rounds": [],
-      "repair_evidence": {}
-    },
-    {
-      "api": "compute_num_true_positives",
-      "status": "pending",
-      "primary_category": "pending",
-      "runner_category": null,
-      "category_reason": "Not yet observed.",
-      "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
-      "provider_error_attempts": 0,
-      "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
-      "repair_status": null,
-      "doc_rounds_used": null,
-      "doc_rounds": [],
-      "repair_evidence": {}
-    },
-    {
-      "api": "constant_hop_timebase",
-      "status": "pending",
-      "primary_category": "pending",
-      "runner_category": null,
-      "category_reason": "Not yet observed.",
-      "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
-      "provider_error_attempts": 0,
-      "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
-      "repair_status": null,
-      "doc_rounds_used": null,
-      "doc_rounds": [],
-      "repair_evidence": {}
-    },
-    {
-      "api": "continuity",
-      "status": "pending",
-      "primary_category": "pending",
-      "runner_category": null,
-      "category_reason": "Not yet observed.",
-      "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
-      "provider_error_attempts": 0,
-      "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
-      "repair_status": null,
-      "doc_rounds_used": null,
-      "doc_rounds": [],
-      "repair_evidence": {}
-    },
-    {
-      "api": "deprecated",
-      "status": "pending",
-      "primary_category": "pending",
-      "runner_category": null,
-      "category_reason": "Not yet observed.",
-      "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
-      "provider_error_attempts": 0,
-      "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
       "repair_status": "doc-fixed",
-      "doc_rounds_used": 1,
+      "doc_rounds_used": 2,
       "doc_rounds": [
         {
           "round": 0,
           "deep_dive": {
-            "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/deepdive/deprecated.md",
+            "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/docs/eval/B2/deepdive/defaultResizer.md",
             "tokens": {
-              "in": 2743,
-              "out": 2464
+              "in": 3329,
+              "out": 2719
             },
-            "wall_s": 24.8
+            "wall_s": 27.9
           },
-          "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: INTERNAL-FRAMEWORK.\nHarness testability: TESTABLE.\nScoring recommendation: include only in advanced/internal bucket.\n\nROOT CAUSE:\nThe snippet failed because it asserted the emitted warning was a `DeprecationWarning`, but the `deprecated` decorator actually emits",
+          "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: ADVANCED/LOW-LEVEL\nHarness testability: TESTABLE-WITH-LOW-LEVEL-CONSTRUCTION\nScoring recommendation: include only in advanced/internal bucket\n\nROOT CAUSE:\nThe documentation failed to mention that `ThumbnailMaker` uses a readiness tracker that requires all parame",
           "diagnosis_changed": true,
           "entry_chars": {
-            "old": 2499,
-            "new": 3401
+            "old": 1915,
+            "new": 3150
+          },
+          "retry_status": "fail",
+          "error_category": "runtime",
+          "error_head": "fail [runtime]: IllegalStateException: Maker not ready to make thumbnail.",
+          "error_progressed": true
+        },
+        {
+          "round": 1,
+          "deep_dive": {
+            "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/docs/eval/B2/deepdive/defaultResizer.md",
+            "tokens": {
+              "in": 3729,
+              "out": 3731
+            },
+            "wall_s": 33.4
+          },
+          "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: ADVANCED/LOW-LEVEL.\nHarness testability: TESTABLE-WITH-LOW-LEVEL-CONSTRUCTION.\nScoring recommendation: include only in advanced/internal bucket.\n\nROOT CAUSE:\nThe documentation incorrectly claims that calling `defaultImageType()` is sufficient to satisfy the `Rea",
+          "diagnosis_changed": true,
+          "entry_chars": {
+            "old": 1915,
+            "new": 3460
           },
           "retry_status": "pass",
           "error_category": null,
@@ -737,23 +1439,44 @@
       "repair_evidence": {
         "status": "doc-fixed",
         "created_from_missing": false,
-        "rounds_used": 1,
+        "rounds_used": 2,
         "doc_rounds": [
           {
             "round": 0,
             "deep_dive": {
-              "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/deepdive/deprecated.md",
+              "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/docs/eval/B2/deepdive/defaultResizer.md",
               "tokens": {
-                "in": 2743,
-                "out": 2464
+                "in": 3329,
+                "out": 2719
               },
-              "wall_s": 24.8
+              "wall_s": 27.9
             },
-            "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: INTERNAL-FRAMEWORK.\nHarness testability: TESTABLE.\nScoring recommendation: include only in advanced/internal bucket.\n\nROOT CAUSE:\nThe snippet failed because it asserted the emitted warning was a `DeprecationWarning`, but the `deprecated` decorator actually emits",
+            "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: ADVANCED/LOW-LEVEL\nHarness testability: TESTABLE-WITH-LOW-LEVEL-CONSTRUCTION\nScoring recommendation: include only in advanced/internal bucket\n\nROOT CAUSE:\nThe documentation failed to mention that `ThumbnailMaker` uses a readiness tracker that requires all parame",
             "diagnosis_changed": true,
             "entry_chars": {
-              "old": 2499,
-              "new": 3401
+              "old": 1915,
+              "new": 3150
+            },
+            "retry_status": "fail",
+            "error_category": "runtime",
+            "error_head": "fail [runtime]: IllegalStateException: Maker not ready to make thumbnail.",
+            "error_progressed": true
+          },
+          {
+            "round": 1,
+            "deep_dive": {
+              "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/docs/eval/B2/deepdive/defaultResizer.md",
+              "tokens": {
+                "in": 3729,
+                "out": 3731
+              },
+              "wall_s": 33.4
+            },
+            "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: ADVANCED/LOW-LEVEL.\nHarness testability: TESTABLE-WITH-LOW-LEVEL-CONSTRUCTION.\nScoring recommendation: include only in advanced/internal bucket.\n\nROOT CAUSE:\nThe documentation incorrectly claims that calling `defaultImageType()` is sufficient to satisfy the `Rea",
+            "diagnosis_changed": true,
+            "entry_chars": {
+              "old": 1915,
+              "new": 3460
             },
             "retry_status": "pass",
             "error_category": null,
@@ -761,20 +1484,20 @@
             "error_progressed": true
           }
         ],
-        "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: INTERNAL-FRAMEWORK.\nHarness testability: TESTABLE.\nScoring recommendation: include only in advanced/internal bucket.\n\nROOT CAUSE:\nThe snippet failed because it asserted the emitted warning was a `DeprecationWarning`, but the `deprecated` decorator actually emits",
+        "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: ADVANCED/LOW-LEVEL.\nHarness testability: TESTABLE-WITH-LOW-LEVEL-CONSTRUCTION.\nScoring recommendation: include only in advanced/internal bucket.\n\nROOT CAUSE:\nThe documentation incorrectly claims that calling `defaultImageType()` is sufficient to satisfy the `Rea",
         "entry_chars": {
-          "old": 2499,
-          "new": 3401
+          "old": 1915,
+          "new": 3460
         },
-        "wall_s": 98.8,
+        "wall_s": 163.7,
         "tokens": {
-          "in": 11416,
-          "out": 6719
+          "in": 26403,
+          "out": 17618
         }
       }
     },
     {
-      "api": "detection",
+      "api": "defaultResizerFactory",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -787,281 +1510,17 @@
       "provider_internal_retries": null,
       "recorded_successful_llm_calls": 0,
       "attempt_history": [],
-      "repair_status": null,
+      "repair_status": "in-progress",
       "doc_rounds_used": null,
       "doc_rounds": [],
-      "repair_evidence": {}
-    },
-    {
-      "api": "deviation",
-      "status": "pending",
-      "primary_category": "pending",
-      "runner_category": null,
-      "category_reason": "Not yet observed.",
-      "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
-      "provider_error_attempts": 0,
-      "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
-      "repair_status": null,
-      "doc_rounds_used": null,
-      "doc_rounds": [],
-      "repair_evidence": {}
-    },
-    {
-      "api": "directional_hamming_distance",
-      "status": "pending",
-      "primary_category": "pending",
-      "runner_category": null,
-      "category_reason": "Not yet observed.",
-      "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
-      "provider_error_attempts": 0,
-      "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
-      "repair_status": null,
-      "doc_rounds_used": null,
-      "doc_rounds": [],
-      "repair_evidence": {}
-    },
-    {
-      "api": "encode",
-      "status": "pending",
-      "primary_category": "pending",
-      "runner_category": null,
-      "category_reason": "Not yet observed.",
-      "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
-      "provider_error_attempts": 0,
-      "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
-      "repair_status": null,
-      "doc_rounds_used": null,
-      "doc_rounds": [],
-      "repair_evidence": {}
-    },
-    {
-      "api": "encode_many",
-      "status": "pending",
-      "primary_category": "pending",
-      "runner_category": null,
-      "category_reason": "Not yet observed.",
-      "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
-      "provider_error_attempts": 0,
-      "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
-      "repair_status": null,
-      "doc_rounds_used": null,
-      "doc_rounds": [],
-      "repair_evidence": {}
-    },
-    {
-      "api": "establishment_FPR",
-      "status": "pending",
-      "primary_category": "pending",
-      "runner_category": null,
-      "category_reason": "Not yet observed.",
-      "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
-      "provider_error_attempts": 0,
-      "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
-      "repair_status": null,
-      "doc_rounds_used": null,
-      "doc_rounds": [],
-      "repair_evidence": {}
-    },
-    {
-      "api": "evaluate",
-      "status": "pending",
-      "primary_category": "pending",
-      "runner_category": null,
-      "category_reason": "Not yet observed.",
-      "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
-      "provider_error_attempts": 0,
-      "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
-      "repair_status": null,
-      "doc_rounds_used": null,
-      "doc_rounds": [],
-      "repair_evidence": {}
-    },
-    {
-      "api": "events",
-      "status": "pending",
-      "primary_category": "pending",
-      "runner_category": null,
-      "category_reason": "Not yet observed.",
-      "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
-      "provider_error_attempts": 0,
-      "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
-      "repair_status": null,
-      "doc_rounds_used": null,
-      "doc_rounds": [],
-      "repair_evidence": {}
-    },
-    {
-      "api": "f_measure",
-      "status": "pending",
-      "primary_category": "pending",
-      "runner_category": null,
-      "category_reason": "Not yet observed.",
-      "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
-      "provider_error_attempts": 0,
-      "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
-      "repair_status": null,
-      "doc_rounds_used": null,
-      "doc_rounds": [],
-      "repair_evidence": {}
-    },
-    {
-      "api": "filter_kwargs",
-      "status": "pending",
-      "primary_category": "pending",
-      "runner_category": null,
-      "category_reason": "Not yet observed.",
-      "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
-      "provider_error_attempts": 0,
-      "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
-      "repair_status": null,
-      "doc_rounds_used": null,
-      "doc_rounds": [],
-      "repair_evidence": {}
-    },
-    {
-      "api": "first_n_target_proportion_R",
-      "status": "pending",
-      "primary_category": "pending",
-      "runner_category": null,
-      "category_reason": "Not yet observed.",
-      "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
-      "provider_error_attempts": 0,
-      "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
-      "repair_status": null,
-      "doc_rounds_used": null,
-      "doc_rounds": [],
-      "repair_evidence": {}
-    },
-    {
-      "api": "first_n_three_layer_P",
-      "status": "pending",
-      "primary_category": "pending",
-      "runner_category": null,
-      "category_reason": "Not yet observed.",
-      "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
-      "provider_error_attempts": 0,
-      "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
-      "repair_status": "doc-fixed",
-      "doc_rounds_used": 1,
-      "doc_rounds": [
-        {
-          "round": 0,
-          "deep_dive": {
-            "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/deepdive/first_n_three_layer_P.md",
-            "tokens": {
-              "in": 5247,
-              "out": 3947
-            },
-            "wall_s": 37.5
-          },
-          "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING.\nHarness testability: TESTABLE.\nScoring recommendation: include in main user-facing denominator.\n\nROOT CAUSE:\nThe snippet failed due to an environment assumption: it attempted to write mock text files to an `output_dir` path where the underlying dire",
-          "diagnosis_changed": true,
-          "entry_chars": {
-            "old": 3571,
-            "new": 4388
-          },
-          "retry_status": "pass",
-          "error_category": null,
-          "error_head": "pass",
-          "error_progressed": true
-        }
-      ],
       "repair_evidence": {
-        "status": "doc-fixed",
+        "status": "in-progress",
         "created_from_missing": false,
-        "rounds_used": 1,
-        "doc_rounds": [
-          {
-            "round": 0,
-            "deep_dive": {
-              "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/deepdive/first_n_three_layer_P.md",
-              "tokens": {
-                "in": 5247,
-                "out": 3947
-              },
-              "wall_s": 37.5
-            },
-            "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING.\nHarness testability: TESTABLE.\nScoring recommendation: include in main user-facing denominator.\n\nROOT CAUSE:\nThe snippet failed due to an environment assumption: it attempted to write mock text files to an `output_dir` path where the underlying dire",
-            "diagnosis_changed": true,
-            "entry_chars": {
-              "old": 3571,
-              "new": 4388
-            },
-            "retry_status": "pass",
-            "error_category": null,
-            "error_head": "pass",
-            "error_progressed": true
-          }
-        ],
-        "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING.\nHarness testability: TESTABLE.\nScoring recommendation: include in main user-facing denominator.\n\nROOT CAUSE:\nThe snippet failed due to an environment assumption: it attempted to write mock text files to an `output_dir` path where the underlying dire",
-        "entry_chars": {
-          "old": 3571,
-          "new": 4388
-        },
-        "wall_s": 132.5,
-        "tokens": {
-          "in": 18599,
-          "out": 14142
-        }
+        "doc_rounds": []
       }
     },
     {
-      "api": "freq_to_voicing",
+      "api": "determineOutputFormat",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -1080,7 +1539,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "frequencies_to_midi",
+      "api": "dithering",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -1099,7 +1558,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "generate_labels",
+      "api": "filters",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -1118,7 +1577,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "goto",
+      "api": "fitWithinDimenions",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -1137,7 +1596,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "has_kwargs",
+      "api": "fitWithinDimensions",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -1156,7 +1615,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "hierarchy",
+      "api": "forceSize",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -1175,7 +1634,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "hz2cents",
+      "api": "format",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -1194,7 +1653,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "hz_to_midi",
+      "api": "formatType",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -1213,7 +1672,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "index_labels",
+      "api": "fromFilenames",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -1232,7 +1691,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "information_gain",
+      "api": "fromFiles",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -1251,7 +1710,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "interpolate_intervals",
+      "api": "fromImages",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -1270,7 +1729,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "intersect_files",
+      "api": "fromInputStreams",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -1289,7 +1748,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "intervals_to_boundaries",
+      "api": "fromURLs",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -1308,7 +1767,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "intervals_to_durations",
+      "api": "getAlpha",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -1327,7 +1786,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "intervals_to_samples",
+      "api": "getBoolean",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -1346,7 +1805,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "join",
+      "api": "getCount",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -1365,7 +1824,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "karaoke_perceptual_metric",
+      "api": "getDestination",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -1384,7 +1843,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "labeled_intervals",
+      "api": "getExifOrientation",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -1403,7 +1862,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "lmeasure",
+      "api": "getFilterForOrientation",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -1422,7 +1881,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "load_delimited",
+      "api": "getFilters",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -1441,7 +1900,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "load_events",
+      "api": "getFormatName",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -1460,7 +1919,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "load_intervals",
+      "api": "getHeightScalingFactor",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -1479,7 +1938,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "load_key",
+      "api": "getImageFilters",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -1492,726 +1951,13 @@
       "provider_internal_retries": null,
       "recorded_successful_llm_calls": 0,
       "attempt_history": [],
-      "repair_status": "still-failing (no-improvement stop)",
-      "doc_rounds_used": 2,
-      "doc_rounds": [
-        {
-          "round": 0,
-          "deep_dive": {
-            "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/deepdive/load_key.md",
-            "tokens": {
-              "in": 4863,
-              "out": 4209
-            },
-            "wall_s": 63.6
-          },
-          "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING.\nHarness testability: TESTABLE.\nScoring recommendation: include in main user-facing denominator.\n\nROOT CAUSE:\nThe snippet failed due to an environment issue: it attempted to write a file into an `output_dir` directory that did not exist on the filesy",
-          "diagnosis_changed": true,
-          "outcome": "rewrite-rejected (fabricated: remove)"
-        },
-        {
-          "round": 1,
-          "deep_dive": {
-            "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/deepdive/load_key.md",
-            "tokens": {
-              "in": 4887,
-              "out": 2925
-            },
-            "wall_s": 28.1
-          },
-          "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING.\nHarness testability: TESTABLE.\nScoring recommendation: include in main user-facing denominator.\n\nROOT CAUSE:\nThe snippet failed because it attempted to write to an undefined or non-existent directory (`output_dir`). Additionally, the snippet wrote `",
-          "diagnosis_changed": true,
-          "outcome": "rewrite-rejected (fabricated: remove)"
-        }
-      ],
-      "repair_evidence": {
-        "status": "still-failing (no-improvement stop)",
-        "created_from_missing": false,
-        "rounds_used": 2,
-        "doc_rounds": [
-          {
-            "round": 0,
-            "deep_dive": {
-              "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/deepdive/load_key.md",
-              "tokens": {
-                "in": 4863,
-                "out": 4209
-              },
-              "wall_s": 63.6
-            },
-            "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING.\nHarness testability: TESTABLE.\nScoring recommendation: include in main user-facing denominator.\n\nROOT CAUSE:\nThe snippet failed due to an environment issue: it attempted to write a file into an `output_dir` directory that did not exist on the filesy",
-            "diagnosis_changed": true,
-            "outcome": "rewrite-rejected (fabricated: remove)"
-          },
-          {
-            "round": 1,
-            "deep_dive": {
-              "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/deepdive/load_key.md",
-              "tokens": {
-                "in": 4887,
-                "out": 2925
-              },
-              "wall_s": 28.1
-            },
-            "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING.\nHarness testability: TESTABLE.\nScoring recommendation: include in main user-facing denominator.\n\nROOT CAUSE:\nThe snippet failed because it attempted to write to an undefined or non-existent directory (`output_dir`). Additionally, the snippet wrote `",
-            "diagnosis_changed": true,
-            "outcome": "rewrite-rejected (fabricated: remove)"
-          }
-        ],
-        "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING.\nHarness testability: TESTABLE.\nScoring recommendation: include in main user-facing denominator.\n\nROOT CAUSE:\nThe snippet failed because it attempted to write to an undefined or non-existent directory (`output_dir`). Additionally, the snippet wrote `",
-        "entry_chars": null,
-        "wall_s": 164.6,
-        "tokens": {
-          "in": 28464,
-          "out": 15335
-        }
-      }
-    },
-    {
-      "api": "load_labeled_events",
-      "status": "pending",
-      "primary_category": "pending",
-      "runner_category": null,
-      "category_reason": "Not yet observed.",
-      "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
-      "provider_error_attempts": 0,
-      "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
-      "repair_status": null,
-      "doc_rounds_used": null,
-      "doc_rounds": [],
-      "repair_evidence": {}
-    },
-    {
-      "api": "load_labeled_intervals",
-      "status": "pending",
-      "primary_category": "pending",
-      "runner_category": null,
-      "category_reason": "Not yet observed.",
-      "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
-      "provider_error_attempts": 0,
-      "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
-      "repair_status": null,
-      "doc_rounds_used": null,
-      "doc_rounds": [],
-      "repair_evidence": {}
-    },
-    {
-      "api": "load_patterns",
-      "status": "pending",
-      "primary_category": "pending",
-      "runner_category": null,
-      "category_reason": "Not yet observed.",
-      "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
-      "provider_error_attempts": 0,
-      "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
-      "repair_status": "still-failing (no-improvement stop)",
-      "doc_rounds_used": 2,
-      "doc_rounds": [
-        {
-          "round": 0,
-          "deep_dive": {
-            "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/deepdive/load_patterns.md",
-            "tokens": {
-              "in": 5940,
-              "out": 2792
-            },
-            "wall_s": 28.1
-          },
-          "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING.\nHarness testability: TESTABLE.\nScoring recommendation: include in main user-facing denominator.\n\nROOT CAUSE:\nThe snippet failed because it attempted to guess the path to a non-existent test fixture file (`reference.txt`) using an undefined variable ",
-          "diagnosis_changed": true,
-          "outcome": "rewrite-rejected (fabricated: remove)"
-        },
-        {
-          "round": 1,
-          "deep_dive": {
-            "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/deepdive/load_patterns.md",
-            "tokens": {
-              "in": 5964,
-              "out": 3404
-            },
-            "wall_s": 30.7
-          },
-          "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING.\nHarness testability: TESTABLE.\nScoring recommendation: include in main user-facing denominator.\n\nROOT CAUSE:\nThe snippet failed with a `FileNotFoundError` because it attempted to guess the location of a checked-in test fixture using an undefined var",
-          "diagnosis_changed": true,
-          "outcome": "rewrite-rejected (fabricated: remove)"
-        }
-      ],
-      "repair_evidence": {
-        "status": "still-failing (no-improvement stop)",
-        "created_from_missing": false,
-        "rounds_used": 2,
-        "doc_rounds": [
-          {
-            "round": 0,
-            "deep_dive": {
-              "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/deepdive/load_patterns.md",
-              "tokens": {
-                "in": 5940,
-                "out": 2792
-              },
-              "wall_s": 28.1
-            },
-            "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING.\nHarness testability: TESTABLE.\nScoring recommendation: include in main user-facing denominator.\n\nROOT CAUSE:\nThe snippet failed because it attempted to guess the path to a non-existent test fixture file (`reference.txt`) using an undefined variable ",
-            "diagnosis_changed": true,
-            "outcome": "rewrite-rejected (fabricated: remove)"
-          },
-          {
-            "round": 1,
-            "deep_dive": {
-              "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/deepdive/load_patterns.md",
-              "tokens": {
-                "in": 5964,
-                "out": 3404
-              },
-              "wall_s": 30.7
-            },
-            "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING.\nHarness testability: TESTABLE.\nScoring recommendation: include in main user-facing denominator.\n\nROOT CAUSE:\nThe snippet failed with a `FileNotFoundError` because it attempted to guess the location of a checked-in test fixture using an undefined var",
-            "diagnosis_changed": true,
-            "outcome": "rewrite-rejected (fabricated: remove)"
-          }
-        ],
-        "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING.\nHarness testability: TESTABLE.\nScoring recommendation: include in main user-facing denominator.\n\nROOT CAUSE:\nThe snippet failed with a `FileNotFoundError` because it attempted to guess the location of a checked-in test fixture using an undefined var",
-        "entry_chars": null,
-        "wall_s": 136.2,
-        "tokens": {
-          "in": 36520,
-          "out": 15813
-        }
-      }
-    },
-    {
-      "api": "load_ragged_time_series",
-      "status": "pending",
-      "primary_category": "pending",
-      "runner_category": null,
-      "category_reason": "Not yet observed.",
-      "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
-      "provider_error_attempts": 0,
-      "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
-      "repair_status": "still-failing (no-improvement stop)",
-      "doc_rounds_used": 2,
-      "doc_rounds": [
-        {
-          "round": 0,
-          "deep_dive": {
-            "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/deepdive/load_ragged_time_series.md",
-            "tokens": {
-              "in": 4970,
-              "out": 4688
-            },
-            "wall_s": 42.9
-          },
-          "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING.\nHarness testability: TESTABLE.\nScoring recommendation: include in main user-facing denominator.\n\nROOT CAUSE:\nThe snippet fails because of a bug in `mir_eval.io.load_ragged_time_series`: setting `header=True` does not actually skip the first line of ",
-          "diagnosis_changed": true,
-          "outcome": "rewrite-rejected (fabricated: remove)"
-        },
-        {
-          "round": 1,
-          "deep_dive": {
-            "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/deepdive/load_ragged_time_series.md",
-            "tokens": {
-              "in": 4994,
-              "out": 2729
-            },
-            "wall_s": 32.7
-          },
-          "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING.\nHarness testability: TESTABLE.\nScoring recommendation: include in main user-facing denominator.\n\nROOT CAUSE:\nThe documentation implies `header=True` skips the first row, but the source code mistakenly implements this using `enumerate(input_file, sta",
-          "diagnosis_changed": true,
-          "outcome": "rewrite-rejected (fabricated: remove)"
-        }
-      ],
-      "repair_evidence": {
-        "status": "still-failing (no-improvement stop)",
-        "created_from_missing": false,
-        "rounds_used": 2,
-        "doc_rounds": [
-          {
-            "round": 0,
-            "deep_dive": {
-              "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/deepdive/load_ragged_time_series.md",
-              "tokens": {
-                "in": 4970,
-                "out": 4688
-              },
-              "wall_s": 42.9
-            },
-            "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING.\nHarness testability: TESTABLE.\nScoring recommendation: include in main user-facing denominator.\n\nROOT CAUSE:\nThe snippet fails because of a bug in `mir_eval.io.load_ragged_time_series`: setting `header=True` does not actually skip the first line of ",
-            "diagnosis_changed": true,
-            "outcome": "rewrite-rejected (fabricated: remove)"
-          },
-          {
-            "round": 1,
-            "deep_dive": {
-              "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/deepdive/load_ragged_time_series.md",
-              "tokens": {
-                "in": 4994,
-                "out": 2729
-              },
-              "wall_s": 32.7
-            },
-            "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING.\nHarness testability: TESTABLE.\nScoring recommendation: include in main user-facing denominator.\n\nROOT CAUSE:\nThe documentation implies `header=True` skips the first row, but the source code mistakenly implements this using `enumerate(input_file, sta",
-            "diagnosis_changed": true,
-            "outcome": "rewrite-rejected (fabricated: remove)"
-          }
-        ],
-        "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING.\nHarness testability: TESTABLE.\nScoring recommendation: include in main user-facing denominator.\n\nROOT CAUSE:\nThe documentation implies `header=True` skips the first row, but the source code mistakenly implements this using `enumerate(input_file, sta",
-        "entry_chars": null,
-        "wall_s": 225.6,
-        "tokens": {
-          "in": 32003,
-          "out": 22821
-        }
-      }
-    },
-    {
-      "api": "load_tempo",
-      "status": "pending",
-      "primary_category": "pending",
-      "runner_category": null,
-      "category_reason": "Not yet observed.",
-      "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
-      "provider_error_attempts": 0,
-      "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
-      "repair_status": "still-failing (no-improvement stop)",
-      "doc_rounds_used": 2,
-      "doc_rounds": [
-        {
-          "round": 0,
-          "deep_dive": {
-            "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/deepdive/load_tempo.md",
-            "tokens": {
-              "in": 4569,
-              "out": 2747
-            },
-            "wall_s": 26.7
-          },
-          "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING.\nHarness testability: TESTABLE.\nScoring recommendation: include in main user-facing denominator.\n\nROOT CAUSE:\nThe snippet failed due to an environment assumption: it attempted to write a test file to an `output_dir` that did not exist on the filesyst",
-          "diagnosis_changed": true,
-          "outcome": "rewrite-rejected (fabricated: remove)"
-        },
-        {
-          "round": 1,
-          "deep_dive": {
-            "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/deepdive/load_tempo.md",
-            "tokens": {
-              "in": 4593,
-              "out": 3154
-            },
-            "wall_s": 26.8
-          },
-          "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING.\nHarness testability: TESTABLE.\nScoring recommendation: include in main user-facing denominator.\n\nROOT CAUSE:\nThe snippet failed because it assumed the existence of an undefined `output_dir` variable and directory to write its test file, resulting in",
-          "diagnosis_changed": true,
-          "outcome": "rewrite-rejected (fabricated: remove)"
-        }
-      ],
-      "repair_evidence": {
-        "status": "still-failing (no-improvement stop)",
-        "created_from_missing": false,
-        "rounds_used": 2,
-        "doc_rounds": [
-          {
-            "round": 0,
-            "deep_dive": {
-              "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/deepdive/load_tempo.md",
-              "tokens": {
-                "in": 4569,
-                "out": 2747
-              },
-              "wall_s": 26.7
-            },
-            "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING.\nHarness testability: TESTABLE.\nScoring recommendation: include in main user-facing denominator.\n\nROOT CAUSE:\nThe snippet failed due to an environment assumption: it attempted to write a test file to an `output_dir` that did not exist on the filesyst",
-            "diagnosis_changed": true,
-            "outcome": "rewrite-rejected (fabricated: remove)"
-          },
-          {
-            "round": 1,
-            "deep_dive": {
-              "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/deepdive/load_tempo.md",
-              "tokens": {
-                "in": 4593,
-                "out": 3154
-              },
-              "wall_s": 26.8
-            },
-            "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING.\nHarness testability: TESTABLE.\nScoring recommendation: include in main user-facing denominator.\n\nROOT CAUSE:\nThe snippet failed because it assumed the existence of an undefined `output_dir` variable and directory to write its test file, resulting in",
-            "diagnosis_changed": true,
-            "outcome": "rewrite-rejected (fabricated: remove)"
-          }
-        ],
-        "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING.\nHarness testability: TESTABLE.\nScoring recommendation: include in main user-facing denominator.\n\nROOT CAUSE:\nThe snippet failed because it assumed the existence of an undefined `output_dir` variable and directory to write its test file, resulting in",
-        "entry_chars": null,
-        "wall_s": 149.8,
-        "tokens": {
-          "in": 29274,
-          "out": 14710
-        }
-      }
-    },
-    {
-      "api": "load_time_series",
-      "status": "pending",
-      "primary_category": "pending",
-      "runner_category": null,
-      "category_reason": "Not yet observed.",
-      "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
-      "provider_error_attempts": 0,
-      "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
-      "repair_status": null,
-      "doc_rounds_used": null,
-      "doc_rounds": [],
-      "repair_evidence": {}
-    },
-    {
-      "api": "load_valued_intervals",
-      "status": "pending",
-      "primary_category": "pending",
-      "runner_category": null,
-      "category_reason": "Not yet observed.",
-      "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
-      "provider_error_attempts": 0,
-      "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
-      "repair_status": "doc-fixed",
-      "doc_rounds_used": 1,
-      "doc_rounds": [
-        {
-          "round": 0,
-          "deep_dive": {
-            "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/deepdive/load_valued_intervals.md",
-            "tokens": {
-              "in": 5450,
-              "out": 2561
-            },
-            "wall_s": 28.1
-          },
-          "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING\nHarness testability: TESTABLE\nScoring recommendation: include in main user-facing denominator\n\nROOT CAUSE:\nThe snippet failed due to an environment assumption: it attempted to write a test file to an `output_dir` variable that was either undefined or",
-          "diagnosis_changed": true,
-          "entry_chars": {
-            "old": 3961,
-            "new": 3551
-          },
-          "retry_status": "pass",
-          "error_category": null,
-          "error_head": "pass",
-          "error_progressed": true
-        }
-      ],
-      "repair_evidence": {
-        "status": "doc-fixed",
-        "created_from_missing": false,
-        "rounds_used": 1,
-        "doc_rounds": [
-          {
-            "round": 0,
-            "deep_dive": {
-              "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/deepdive/load_valued_intervals.md",
-              "tokens": {
-                "in": 5450,
-                "out": 2561
-              },
-              "wall_s": 28.1
-            },
-            "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING\nHarness testability: TESTABLE\nScoring recommendation: include in main user-facing denominator\n\nROOT CAUSE:\nThe snippet failed due to an environment assumption: it attempted to write a test file to an `output_dir` variable that was either undefined or",
-            "diagnosis_changed": true,
-            "entry_chars": {
-              "old": 3961,
-              "new": 3551
-            },
-            "retry_status": "pass",
-            "error_category": null,
-            "error_head": "pass",
-            "error_progressed": true
-          }
-        ],
-        "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING\nHarness testability: TESTABLE\nScoring recommendation: include in main user-facing denominator\n\nROOT CAUSE:\nThe snippet failed due to an environment assumption: it attempted to write a test file to an `output_dir` variable that was either undefined or",
-        "entry_chars": {
-          "old": 3961,
-          "new": 3551
-        },
-        "wall_s": 87.9,
-        "tokens": {
-          "in": 17921,
-          "out": 9192
-        }
-      }
-    },
-    {
-      "api": "load_wav",
-      "status": "pending",
-      "primary_category": "pending",
-      "runner_category": null,
-      "category_reason": "Not yet observed.",
-      "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
-      "provider_error_attempts": 0,
-      "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
-      "repair_status": "still-failing (no-improvement stop)",
-      "doc_rounds_used": 2,
-      "doc_rounds": [
-        {
-          "round": 0,
-          "deep_dive": {
-            "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/deepdive/load_wav.md",
-            "tokens": {
-              "in": 5257,
-              "out": 4711
-            },
-            "wall_s": 43.7
-          },
-          "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING\nHarness testability: TESTABLE\nScoring recommendation: include in main user-facing denominator\n\nROOT CAUSE:\nThe snippet failed with a `FileNotFoundError` because it attempted to write the test `.wav` file to an uninitialized `output_dir` that does not",
-          "diagnosis_changed": true,
-          "outcome": "rewrite-rejected (fabricated: remove)"
-        },
-        {
-          "round": 1,
-          "deep_dive": {
-            "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/deepdive/load_wav.md",
-            "tokens": {
-              "in": 5281,
-              "out": 3079
-            },
-            "wall_s": 28.3
-          },
-          "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING\nHarness testability: TESTABLE\nScoring recommendation: include in main user-facing denominator\n\nROOT CAUSE:\nThe immediate failure is an environment issue: the snippet attempted to write a dummy `.wav` file to an `output_dir` path that did not exist in",
-          "diagnosis_changed": true,
-          "outcome": "rewrite-rejected (fabricated: mkstemp, remove)"
-        }
-      ],
-      "repair_evidence": {
-        "status": "still-failing (no-improvement stop)",
-        "created_from_missing": false,
-        "rounds_used": 2,
-        "doc_rounds": [
-          {
-            "round": 0,
-            "deep_dive": {
-              "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/deepdive/load_wav.md",
-              "tokens": {
-                "in": 5257,
-                "out": 4711
-              },
-              "wall_s": 43.7
-            },
-            "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING\nHarness testability: TESTABLE\nScoring recommendation: include in main user-facing denominator\n\nROOT CAUSE:\nThe snippet failed with a `FileNotFoundError` because it attempted to write the test `.wav` file to an uninitialized `output_dir` that does not",
-            "diagnosis_changed": true,
-            "outcome": "rewrite-rejected (fabricated: remove)"
-          },
-          {
-            "round": 1,
-            "deep_dive": {
-              "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/deepdive/load_wav.md",
-              "tokens": {
-                "in": 5281,
-                "out": 3079
-              },
-              "wall_s": 28.3
-            },
-            "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING\nHarness testability: TESTABLE\nScoring recommendation: include in main user-facing denominator\n\nROOT CAUSE:\nThe immediate failure is an environment issue: the snippet attempted to write a dummy `.wav` file to an `output_dir` path that did not exist in",
-            "diagnosis_changed": true,
-            "outcome": "rewrite-rejected (fabricated: mkstemp, remove)"
-          }
-        ],
-        "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING\nHarness testability: TESTABLE\nScoring recommendation: include in main user-facing denominator\n\nROOT CAUSE:\nThe immediate failure is an environment issue: the snippet attempted to write a dummy `.wav` file to an `output_dir` path that did not exist in",
-        "entry_chars": null,
-        "wall_s": 193.5,
-        "tokens": {
-          "in": 32041,
-          "out": 23023
-        }
-      }
-    },
-    {
-      "api": "majmin",
-      "status": "pending",
-      "primary_category": "pending",
-      "runner_category": null,
-      "category_reason": "Not yet observed.",
-      "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
-      "provider_error_attempts": 0,
-      "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
-      "repair_status": null,
-      "doc_rounds_used": null,
-      "doc_rounds": [],
-      "repair_evidence": {}
-    },
-    {
-      "api": "majmin_inv",
-      "status": "pending",
-      "primary_category": "pending",
-      "runner_category": null,
-      "category_reason": "Not yet observed.",
-      "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
-      "provider_error_attempts": 0,
-      "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
-      "repair_status": null,
-      "doc_rounds_used": null,
-      "doc_rounds": [],
-      "repair_evidence": {}
-    },
-    {
-      "api": "match_events",
-      "status": "pending",
-      "primary_category": "pending",
-      "runner_category": null,
-      "category_reason": "Not yet observed.",
-      "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
-      "provider_error_attempts": 0,
-      "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
-      "repair_status": null,
-      "doc_rounds_used": null,
-      "doc_rounds": [],
-      "repair_evidence": {}
-    },
-    {
-      "api": "match_note_offsets",
-      "status": "pending",
-      "primary_category": "pending",
-      "runner_category": null,
-      "category_reason": "Not yet observed.",
-      "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
-      "provider_error_attempts": 0,
-      "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
-      "repair_status": null,
-      "doc_rounds_used": null,
-      "doc_rounds": [],
-      "repair_evidence": {}
-    },
-    {
-      "api": "match_note_onsets",
-      "status": "pending",
-      "primary_category": "pending",
-      "runner_category": null,
-      "category_reason": "Not yet observed.",
-      "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
-      "provider_error_attempts": 0,
-      "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
-      "repair_status": null,
-      "doc_rounds_used": null,
-      "doc_rounds": [],
-      "repair_evidence": {}
-    },
-    {
-      "api": "match_notes",
-      "status": "pending",
-      "primary_category": "pending",
-      "runner_category": null,
-      "category_reason": "Not yet observed.",
-      "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
-      "provider_error_attempts": 0,
-      "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
-      "repair_status": null,
-      "doc_rounds_used": null,
-      "doc_rounds": [],
-      "repair_evidence": {}
-    },
-    {
-      "api": "merge_chord_intervals",
-      "status": "pending",
-      "primary_category": "pending",
-      "runner_category": null,
-      "category_reason": "Not yet observed.",
-      "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
-      "provider_error_attempts": 0,
-      "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
-      "repair_status": null,
-      "doc_rounds_used": null,
-      "doc_rounds": [],
-      "repair_evidence": {}
-    },
-    {
-      "api": "merge_labeled_intervals",
-      "status": "pending",
-      "primary_category": "pending",
-      "runner_category": null,
-      "category_reason": "Not yet observed.",
-      "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
-      "provider_error_attempts": 0,
-      "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
       "repair_evidence": {}
     },
     {
-      "api": "metrics",
+      "api": "getInputFormatName",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -2230,7 +1976,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "midi_to_chroma",
+      "api": "getInstance",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -2249,7 +1995,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "midi_to_hz",
+      "api": "getKey",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -2268,7 +2014,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "mirex",
+      "api": "getOffsetValue",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -2287,7 +2033,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "multipitch",
+      "api": "getOrientationFromExif",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -2306,7 +2052,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "mutual_information",
+      "api": "getOutputFormat",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -2325,7 +2071,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "nce",
+      "api": "getOutputFormatType",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -2344,7 +2090,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "occurrence_FPR",
+      "api": "getOutputQuality",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -2363,7 +2109,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "offset_precision_recall_f1",
+      "api": "getParam",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -2382,7 +2128,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "onset_precision_recall_f1",
+      "api": "getPosition",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -2401,7 +2147,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "overall_accuracy",
+      "api": "getProxy",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -2420,7 +2166,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "overseg",
+      "api": "getRenderingHints",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -2437,87 +2183,9 @@
       "doc_rounds_used": null,
       "doc_rounds": [],
       "repair_evidence": {}
-    },
-    {
-      "api": "p_score",
-      "status": "pending",
-      "primary_category": "pending",
-      "runner_category": null,
-      "category_reason": "Not yet observed.",
-      "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
-      "provider_error_attempts": 0,
-      "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
-      "repair_status": "doc-fixed",
-      "doc_rounds_used": 1,
-      "doc_rounds": [
-        {
-          "round": 0,
-          "deep_dive": {
-            "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/deepdive/p_score.md",
-            "tokens": {
-              "in": 5562,
-              "out": 3618
-            },
-            "wall_s": 32.0
-          },
-          "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING.\nHarness testability: TESTABLE.\nScoring recommendation: include in main user-facing denominator.\n\nROOT CAUSE:\nThe snippet failed because the test harness provided dummy beat arrays that, when passed through `mir_eval.beat.trim_beats` (which removes b",
-          "diagnosis_changed": true,
-          "entry_chars": {
-            "old": 3662,
-            "new": 3319
-          },
-          "retry_status": "pass",
-          "error_category": null,
-          "error_head": "pass",
-          "error_progressed": true
-        }
-      ],
-      "repair_evidence": {
-        "status": "doc-fixed",
-        "created_from_missing": false,
-        "rounds_used": 1,
-        "doc_rounds": [
-          {
-            "round": 0,
-            "deep_dive": {
-              "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/deepdive/p_score.md",
-              "tokens": {
-                "in": 5562,
-                "out": 3618
-              },
-              "wall_s": 32.0
-            },
-            "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING.\nHarness testability: TESTABLE.\nScoring recommendation: include in main user-facing denominator.\n\nROOT CAUSE:\nThe snippet failed because the test harness provided dummy beat arrays that, when passed through `mir_eval.beat.trim_beats` (which removes b",
-            "diagnosis_changed": true,
-            "entry_chars": {
-              "old": 3662,
-              "new": 3319
-            },
-            "retry_status": "pass",
-            "error_category": null,
-            "error_head": "pass",
-            "error_progressed": true
-          }
-        ],
-        "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING.\nHarness testability: TESTABLE.\nScoring recommendation: include in main user-facing denominator.\n\nROOT CAUSE:\nThe snippet failed because the test harness provided dummy beat arrays that, when passed through `mir_eval.beat.trim_beats` (which removes b",
-        "entry_chars": {
-          "old": 3662,
-          "new": 3319
-        },
-        "wall_s": 96.6,
-        "tokens": {
-          "in": 18516,
-          "out": 10702
-        }
-      }
     },
     {
-      "api": "pairwise",
+      "api": "getResizer",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -2536,7 +2204,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "percentage_correct",
+      "api": "getResizerFactory",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -2555,7 +2223,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "percentage_correct_segments",
+      "api": "getSink",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -2572,98 +2240,9 @@
       "doc_rounds_used": null,
       "doc_rounds": [],
       "repair_evidence": {}
-    },
-    {
-      "api": "piano_roll",
-      "status": "pending",
-      "primary_category": "pending",
-      "runner_category": null,
-      "category_reason": "Not yet observed.",
-      "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
-      "provider_error_attempts": 0,
-      "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
-      "repair_status": "still-failing (no-improvement stop)",
-      "doc_rounds_used": 2,
-      "doc_rounds": [
-        {
-          "round": 0,
-          "deep_dive": {
-            "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/deepdive/piano_roll.md",
-            "tokens": {
-              "in": 5217,
-              "out": 2907
-            },
-            "wall_s": 28.2
-          },
-          "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING\nHarness testability: TESTABLE\nScoring recommendation: include in main user-facing denominator\n\nROOT CAUSE:\nThe snippet misread the documentation by inventing an assertion about matplotlib's internal state. It assumed `piano_roll` (via `labeled_interv",
-          "diagnosis_changed": true,
-          "outcome": "rewrite-rejected (fabricated: use)"
-        },
-        {
-          "round": 1,
-          "deep_dive": {
-            "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/deepdive/piano_roll.md",
-            "tokens": {
-              "in": 5241,
-              "out": 3120
-            },
-            "wall_s": 29.9
-          },
-          "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING.\nHarness testability: TESTABLE.\nScoring recommendation: include in main user-facing denominator.\n\nROOT CAUSE:\nThe documentation fails to mention that `piano_roll` restricts plotted notes to the standard MIDI range (0 to 127 inclusive). Because the fu",
-          "diagnosis_changed": true,
-          "outcome": "rewrite-rejected (fabricated: use)"
-        }
-      ],
-      "repair_evidence": {
-        "status": "still-failing (no-improvement stop)",
-        "created_from_missing": false,
-        "rounds_used": 2,
-        "doc_rounds": [
-          {
-            "round": 0,
-            "deep_dive": {
-              "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/deepdive/piano_roll.md",
-              "tokens": {
-                "in": 5217,
-                "out": 2907
-              },
-              "wall_s": 28.2
-            },
-            "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING\nHarness testability: TESTABLE\nScoring recommendation: include in main user-facing denominator\n\nROOT CAUSE:\nThe snippet misread the documentation by inventing an assertion about matplotlib's internal state. It assumed `piano_roll` (via `labeled_interv",
-            "diagnosis_changed": true,
-            "outcome": "rewrite-rejected (fabricated: use)"
-          },
-          {
-            "round": 1,
-            "deep_dive": {
-              "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/deepdive/piano_roll.md",
-              "tokens": {
-                "in": 5241,
-                "out": 3120
-              },
-              "wall_s": 29.9
-            },
-            "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING.\nHarness testability: TESTABLE.\nScoring recommendation: include in main user-facing denominator.\n\nROOT CAUSE:\nThe documentation fails to mention that `piano_roll` restricts plotted notes to the standard MIDI range (0 to 127 inclusive). Because the fu",
-            "diagnosis_changed": true,
-            "outcome": "rewrite-rejected (fabricated: use)"
-          }
-        ],
-        "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING.\nHarness testability: TESTABLE.\nScoring recommendation: include in main user-facing denominator.\n\nROOT CAUSE:\nThe documentation fails to mention that `piano_roll` restricts plotted notes to the standard MIDI range (0 to 127 inclusive). Because the fu",
-        "entry_chars": null,
-        "wall_s": 475.5,
-        "tokens": {
-          "in": 31775,
-          "out": 19742
-        }
-      }
     },
     {
-      "api": "pitch",
+      "api": "getSize",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -2682,7 +2261,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "pitch_class_to_semitone",
+      "api": "getSource",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -2701,7 +2280,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "pitch_contour",
+      "api": "getSourceRegion",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -2720,7 +2299,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "precision_recall_f1_overlap",
+      "api": "getSupportedOutputFormatTypes",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -2739,7 +2318,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "quality_to_bitmap",
+      "api": "getSupportedOutputFormats",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -2758,7 +2337,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "rand_index",
+      "api": "getTag",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -2777,7 +2356,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "raw_chroma_accuracy",
+      "api": "getType",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -2796,7 +2375,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "raw_pitch_accuracy",
+      "api": "getValue",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -2815,7 +2394,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "reduce_extended_quality",
+      "api": "getWidthScalingFactor",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -2828,91 +2407,13 @@
       "provider_internal_retries": null,
       "recorded_successful_llm_calls": 0,
       "attempt_history": [],
-      "repair_status": "doc-fixed",
-      "doc_rounds_used": 1,
-      "doc_rounds": [
-        {
-          "round": 0,
-          "deep_dive": {
-            "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/deepdive/reduce_extended_quality.md",
-            "tokens": {
-              "in": 4930,
-              "out": 2228
-            },
-            "wall_s": 21.1
-          },
-          "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: INTERNAL-FRAMEWORK.\nHarness testability: TESTABLE.\nScoring recommendation: include only in advanced/internal bucket.\n\nROOT CAUSE:\nThe snippet misread the behavior of the function by assuming it reduces extended chords all the way down to triads (e.g., `\"maj9\"` t",
-          "diagnosis_changed": true,
-          "entry_chars": {
-            "old": 2891,
-            "new": 3106
-          },
-          "retry_status": "pass",
-          "error_category": null,
-          "error_head": "pass",
-          "error_progressed": true
-        }
-      ],
-      "repair_evidence": {
-        "status": "doc-fixed",
-        "created_from_missing": false,
-        "rounds_used": 1,
-        "doc_rounds": [
-          {
-            "round": 0,
-            "deep_dive": {
-              "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/deepdive/reduce_extended_quality.md",
-              "tokens": {
-                "in": 4930,
-                "out": 2228
-              },
-              "wall_s": 21.1
-            },
-            "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: INTERNAL-FRAMEWORK.\nHarness testability: TESTABLE.\nScoring recommendation: include only in advanced/internal bucket.\n\nROOT CAUSE:\nThe snippet misread the behavior of the function by assuming it reduces extended chords all the way down to triads (e.g., `\"maj9\"` t",
-            "diagnosis_changed": true,
-            "entry_chars": {
-              "old": 2891,
-              "new": 3106
-            },
-            "retry_status": "pass",
-            "error_category": null,
-            "error_head": "pass",
-            "error_progressed": true
-          }
-        ],
-        "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: INTERNAL-FRAMEWORK.\nHarness testability: TESTABLE.\nScoring recommendation: include only in advanced/internal bucket.\n\nROOT CAUSE:\nThe snippet misread the behavior of the function by assuming it reduces extended chords all the way down to triads (e.g., `\"maj9\"` t",
-        "entry_chars": {
-          "old": 2891,
-          "new": 3106
-        },
-        "wall_s": 58.3,
-        "tokens": {
-          "in": 16082,
-          "out": 6272
-        }
-      }
-    },
-    {
-      "api": "register_colormap",
-      "status": "pending",
-      "primary_category": "pending",
-      "runner_category": null,
-      "category_reason": "Not yet observed.",
-      "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
-      "provider_error_attempts": 0,
-      "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
       "repair_evidence": {}
     },
     {
-      "api": "resample_melody_series",
+      "api": "height",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -2931,7 +2432,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "resample_multipitch",
+      "api": "if",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -2950,7 +2451,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "root",
+      "api": "imageType",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -2969,7 +2470,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "rotate_bitmap_to_root",
+      "api": "init",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -2988,7 +2489,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "rotate_bitmaps_to_roots",
+      "api": "isKeepAspectRatio",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -3007,7 +2508,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "scale_degree_to_bitmap",
+      "api": "isOffset",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -3026,7 +2527,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "scale_degree_to_semitone",
+      "api": "isSupportedOutputFormat",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -3045,7 +2546,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "seg",
+      "api": "isSupportedOutputFormatType",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -3064,7 +2565,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "segments",
+      "api": "isValue",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -3083,7 +2584,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "separation",
+      "api": "iterableBufferedImages",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -3102,7 +2603,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "sevenths",
+      "api": "iterator",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -3121,7 +2622,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "sevenths_inv",
+      "api": "keepAspectRatio",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -3140,7 +2641,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "sort_labeled_intervals",
+      "api": "make",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -3159,7 +2660,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "split",
+      "api": "newRotator",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -3178,7 +2679,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "split_key_string",
+      "api": "of",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -3197,7 +2698,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "standard_FPR",
+      "api": "outputFormat",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -3216,7 +2717,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "tetrads",
+      "api": "outputFormatType",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -3235,7 +2736,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "tetrads_inv",
+      "api": "outputQuality",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -3254,7 +2755,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "thirds",
+      "api": "preferredOutputFormatName",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -3273,7 +2774,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "thirds_inv",
+      "api": "quality",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -3292,7 +2793,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "three_layer_FPR",
+      "api": "read",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -3311,7 +2812,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "ticker_notes",
+      "api": "region",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -3328,98 +2829,9 @@
       "doc_rounds_used": null,
       "doc_rounds": [],
       "repair_evidence": {}
-    },
-    {
-      "api": "ticker_pitch",
-      "status": "pending",
-      "primary_category": "pending",
-      "runner_category": null,
-      "category_reason": "Not yet observed.",
-      "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
-      "provider_error_attempts": 0,
-      "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
-      "repair_status": "still-failing (no-improvement stop)",
-      "doc_rounds_used": 2,
-      "doc_rounds": [
-        {
-          "round": 0,
-          "deep_dive": {
-            "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/deepdive/ticker_pitch.md",
-            "tokens": {
-              "in": 4852,
-              "out": 2098
-            },
-            "wall_s": 24.2
-          },
-          "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING.\nHarness testability: TESTABLE.\nScoring recommendation: include in main user-facing denominator.\n\nROOT CAUSE:\nThe documentation contains a severe error: it claims `ticker_pitch` formats the y-axis with \"human-readable musical note names\" (like 'A4').",
-          "diagnosis_changed": true,
-          "outcome": "rewrite-rejected (fabricated: get_major_formatter, use)"
-        },
-        {
-          "round": 1,
-          "deep_dive": {
-            "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/deepdive/ticker_pitch.md",
-            "tokens": {
-              "in": 4882,
-              "out": 3136
-            },
-            "wall_s": 26.5
-          },
-          "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING.\nHarness testability: TESTABLE.\nScoring recommendation: include in main user-facing denominator.\n\nROOT CAUSE:\nThe documentation contains a factual error: it claims `ticker_pitch` formats the y-axis with \"human-readable musical note names\" (like 'A').",
-          "diagnosis_changed": true,
-          "outcome": "rewrite-rejected (fabricated: get_major_formatter, use)"
-        }
-      ],
-      "repair_evidence": {
-        "status": "still-failing (no-improvement stop)",
-        "created_from_missing": false,
-        "rounds_used": 2,
-        "doc_rounds": [
-          {
-            "round": 0,
-            "deep_dive": {
-              "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/deepdive/ticker_pitch.md",
-              "tokens": {
-                "in": 4852,
-                "out": 2098
-              },
-              "wall_s": 24.2
-            },
-            "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING.\nHarness testability: TESTABLE.\nScoring recommendation: include in main user-facing denominator.\n\nROOT CAUSE:\nThe documentation contains a severe error: it claims `ticker_pitch` formats the y-axis with \"human-readable musical note names\" (like 'A4').",
-            "diagnosis_changed": true,
-            "outcome": "rewrite-rejected (fabricated: get_major_formatter, use)"
-          },
-          {
-            "round": 1,
-            "deep_dive": {
-              "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/deepdive/ticker_pitch.md",
-              "tokens": {
-                "in": 4882,
-                "out": 3136
-              },
-              "wall_s": 26.5
-            },
-            "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING.\nHarness testability: TESTABLE.\nScoring recommendation: include in main user-facing denominator.\n\nROOT CAUSE:\nThe documentation contains a factual error: it claims `ticker_pitch` formats the y-axis with \"human-readable musical note names\" (like 'A').",
-            "diagnosis_changed": true,
-            "outcome": "rewrite-rejected (fabricated: get_major_formatter, use)"
-          }
-        ],
-        "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING.\nHarness testability: TESTABLE.\nScoring recommendation: include in main user-facing denominator.\n\nROOT CAUSE:\nThe documentation contains a factual error: it claims `ticker_pitch` formats the y-axis with \"human-readable musical note names\" (like 'A').",
-        "entry_chars": null,
-        "wall_s": 138.1,
-        "tokens": {
-          "in": 27039,
-          "out": 13207
-        }
-      }
     },
     {
-      "api": "time_frequency",
+      "api": "rendering",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -3438,7 +2850,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "tmeasure",
+      "api": "resize",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -3457,7 +2869,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "to_cent_voicing",
+      "api": "resizer",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -3476,7 +2888,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "triads",
+      "api": "resizerFactory",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -3495,7 +2907,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "triads_inv",
+      "api": "rotate",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -3514,7 +2926,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "trim_beats",
+      "api": "scale",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -3533,7 +2945,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "underseg",
+      "api": "scalingMode",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -3552,7 +2964,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "validate",
+      "api": "setOutputFormatName",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -3571,7 +2983,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "validate_boundary",
+      "api": "setThumbnailParameter",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -3590,7 +3002,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "validate_chord_label",
+      "api": "size",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -3609,7 +3021,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "validate_events",
+      "api": "sourceRegion",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -3628,7 +3040,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "validate_frequencies",
+      "api": "toFile",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -3647,7 +3059,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "validate_hier_intervals",
+      "api": "toFiles",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -3666,7 +3078,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "validate_intervals",
+      "api": "toOutputStream",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -3685,7 +3097,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "validate_key",
+      "api": "toOutputStreams",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -3704,7 +3116,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "validate_structure",
+      "api": "typeOf",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -3723,7 +3135,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "validate_tempi",
+      "api": "useExifOrientation",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -3742,7 +3154,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "validate_voicing",
+      "api": "useOriginalFormat",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -3761,7 +3173,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "vmeasure",
+      "api": "useOriginalImageType",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -3780,7 +3192,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "voicing_false_alarm",
+      "api": "value",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -3799,7 +3211,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "voicing_measures",
+      "api": "watermark",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -3816,87 +3228,9 @@
       "doc_rounds_used": null,
       "doc_rounds": [],
       "repair_evidence": {}
-    },
-    {
-      "api": "voicing_recall",
-      "status": "pending",
-      "primary_category": "pending",
-      "runner_category": null,
-      "category_reason": "Not yet observed.",
-      "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
-      "provider_error_attempts": 0,
-      "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
-      "repair_status": "doc-fixed",
-      "doc_rounds_used": 1,
-      "doc_rounds": [
-        {
-          "round": 0,
-          "deep_dive": {
-            "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/deepdive/voicing_recall.md",
-            "tokens": {
-              "in": 5213,
-              "out": 5745
-            },
-            "wall_s": 351.9
-          },
-          "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING.\nHarness testability: TESTABLE.\nScoring recommendation: include in main user-facing denominator.\n\nROOT CAUSE:\nThe snippet failed in its own assertion logic because it applied the bitwise AND operator (`&`) to the arrays returned by `to_cent_voicing`.",
-          "diagnosis_changed": true,
-          "entry_chars": {
-            "old": 3493,
-            "new": 3192
-          },
-          "retry_status": "pass",
-          "error_category": null,
-          "error_head": "pass",
-          "error_progressed": true
-        }
-      ],
-      "repair_evidence": {
-        "status": "doc-fixed",
-        "created_from_missing": false,
-        "rounds_used": 1,
-        "doc_rounds": [
-          {
-            "round": 0,
-            "deep_dive": {
-              "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/deepdive/voicing_recall.md",
-              "tokens": {
-                "in": 5213,
-                "out": 5745
-              },
-              "wall_s": 351.9
-            },
-            "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING.\nHarness testability: TESTABLE.\nScoring recommendation: include in main user-facing denominator.\n\nROOT CAUSE:\nThe snippet failed in its own assertion logic because it applied the bitwise AND operator (`&`) to the arrays returned by `to_cent_voicing`.",
-            "diagnosis_changed": true,
-            "entry_chars": {
-              "old": 3493,
-              "new": 3192
-            },
-            "retry_status": "pass",
-            "error_category": null,
-            "error_head": "pass",
-            "error_progressed": true
-          }
-        ],
-        "diagnosis_head": "AUDIENCE & TESTABILITY:\nAPI audience: USER-FACING.\nHarness testability: TESTABLE.\nScoring recommendation: include in main user-facing denominator.\n\nROOT CAUSE:\nThe snippet failed in its own assertion logic because it applied the bitwise AND operator (`&`) to the arrays returned by `to_cent_voicing`.",
-        "entry_chars": {
-          "old": 3493,
-          "new": 3192
-        },
-        "wall_s": 406.2,
-        "tokens": {
-          "in": 16994,
-          "out": 11740
-        }
-      }
     },
     {
-      "api": "weighted_accuracy",
+      "api": "width",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -3915,7 +3249,7 @@
       "repair_evidence": {}
     },
     {
-      "api": "weighted_score",
+      "api": "write",
       "status": "pending",
       "primary_category": "pending",
       "runner_category": null,
@@ -3934,15 +3268,15 @@
       "repair_evidence": {}
     }
   ],
-  "worktree": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2",
-  "checkpoint": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/.aideal_exec/B2/comprehension_progress.jsonl",
-  "manifest": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/api_manifest.json",
-  "manifest_file_sha256": "67bc70f983ed92137ff2a9c49240abbe57ad0e8e5fdc72a93f4ae56e53623a9e",
+  "worktree": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2",
+  "checkpoint": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/.aideal_exec/B2/comprehension_progress.jsonl",
+  "manifest": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/docs/eval/api_manifest.json",
+  "manifest_file_sha256": "579685342193971274dcfd95e0d95f5a05f5d1ce94c6c57a80d02d715c78873d",
   "evidence": [
     {
-      "path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_B2/experiments/external/mir_eval/docs/eval/B2/docfix.json",
-      "sha256": "b87feefbef809590ba5d45607f19766ecd8f87d5de925f48a830c4199dfdce15",
-      "snapshot": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_overnight_evidence_audit/experiments/external/overnight_audit/snapshots/b87feefbef809590ba5d45607f19766ecd8f87d5de925f48a830c4199dfdce15"
+      "path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_B2/experiments/external/thumbnailator/docs/eval/B2/docfix.json",
+      "sha256": "b19edff528a0c657eabd5cc24ca9a401373fea5dcc3902705eaf3a3b3f988896",
+      "snapshot": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_overnight_evidence_audit/experiments/external/overnight_audit/snapshots/b19edff528a0c657eabd5cc24ca9a401373fea5dcc3902705eaf3a3b3f988896"
     }
   ]
 }

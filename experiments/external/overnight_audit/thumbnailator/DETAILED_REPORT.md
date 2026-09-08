@@ -29,10 +29,10 @@ Effects withheld until all four matched final cells and their repair/test eviden
 
 Primary failure categories: {"llm-error": 4, "unknown": 1}.
 
-Recorded provider-error attempts across all checkpoint fingerprints: 46. Provider-internal retries are not recorded by the existing client and cannot be inferred from the configured limit. Watchdog logs retain process attempts; checkpoint attempts and document-fix rounds are separate ledger fields.
+Recorded provider-error attempts across all checkpoint fingerprints: 47. Provider-internal retries are not recorded by the existing client and cannot be inferred from the configured limit. Watchdog logs retain process attempts; checkpoint attempts and document-fix rounds are separate ledger fields.
 
 - `build`: unknown; native=compile; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `source/src/main/java/net/coobird/thumbnailator/builders/BufferedImageBuilder.java:110`. Error: `/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A1/experiments/external/thumbnailator/.aideal_exec/A1/run_build/ApiTest.java:52: error: cannot find symbol`. Review: Observed compile; doc attribution requires source, document, and snippet review.
-- `clear`: llm-error; native=llm-error; checkpoint attempts=4; provider-error attempts=4; document rounds=None; repair=None. Source: `source/src/main/java/net/coobird/thumbnailator/util/Configurations.java:130`. Error: `ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}`. Review: Provider outcome; retry, never count as a documentation failure.
+- `clear`: llm-error; native=llm-error; checkpoint attempts=5; provider-error attempts=5; document rounds=None; repair=None. Source: `source/src/main/java/net/coobird/thumbnailator/util/Configurations.java:130`. Error: `ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}`. Review: Provider outcome; retry, never count as a documentation failure.
 - `createOutputStream`: llm-error; native=llm-error; checkpoint attempts=4; provider-error attempts=4; document rounds=None; repair=None. Source: `source/src/main/java/net/coobird/thumbnailator/tasks/io/FileImageSink.java:326`. Error: `ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}`. Review: Provider outcome; retry, never count as a documentation failure.
 - `format`: llm-error; native=llm-error; checkpoint attempts=4; provider-error attempts=4; document rounds=None; repair=None. Source: `source/src/main/java/net/coobird/thumbnailator/builders/ThumbnailParameterBuilder.java:243`. Error: `ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}`. Review: Provider outcome; retry, never count as a documentation failure.
 - `region`: llm-error; native=llm-error; checkpoint attempts=4; provider-error attempts=4; document rounds=None; repair=None. Source: `source/src/main/java/net/coobird/thumbnailator/builders/ThumbnailParameterBuilder.java:200`. Error: `ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}`. Review: Provider outcome; retry, never count as a documentation failure.
@@ -75,7 +75,7 @@ Recorded provider-error attempts across all checkpoint fingerprints: 0. Provider
 
 ### B2
 
-Primary failure categories: {"unknown": 1}.
+Primary failure categories: {}.
 
 Recorded provider-error attempts across all checkpoint fingerprints: 0. Provider-internal retries are not recorded by the existing client and cannot be inferred from the configured limit. Watchdog logs retain process attempts; checkpoint attempts and document-fix rounds are separate ledger fields.
 
@@ -84,7 +84,17 @@ Recorded provider-error attempts across all checkpoint fingerprints: 0. Provider
 - `UnsupportedFormatException`: pending; native=None; checkpoint attempts=0; provider-error attempts=0; document rounds=1; repair=doc-fixed. Source: `None`. Error: `none captured`. Review: Not yet observed.
 - `clear`: pending; native=None; checkpoint attempts=0; provider-error attempts=0; document rounds=1; repair=not-testable (entry unchanged). Source: `None`. Error: `none captured`. Review: Not yet observed.
 - `createOutputStream`: pending; native=None; checkpoint attempts=0; provider-error attempts=0; document rounds=1; repair=not-testable (entry unchanged). Source: `None`. Error: `none captured`. Review: Not yet observed.
-- `defaultResizer`: unknown; native=runtime; checkpoint attempts=1; provider-error attempts=0; document rounds=1; repair=in-progress. Source: `source/src/main/java/net/coobird/thumbnailator/makers/ThumbnailMaker.java:263`. Error: `IllegalStateException: Maker not ready to make thumbnail.`. Review: Observed runtime; doc attribution requires source, document, and snippet review.
+- `defaultResizer`: pending; native=None; checkpoint attempts=0; provider-error attempts=0; document rounds=2; repair=doc-fixed. Source: `None`. Error: `none captured`. Review: Not yet observed.
+- `defaultResizerFactory`: pending; native=None; checkpoint attempts=0; provider-error attempts=0; document rounds=1; repair=doc-fixed. Source: `None`. Error: `none captured`. Review: Not yet observed.
+- `filters`: pending; native=None; checkpoint attempts=0; provider-error attempts=0; document rounds=1; repair=doc-fixed. Source: `None`. Error: `none captured`. Review: Not yet observed.
+- `fitWithinDimenions`: pending; native=None; checkpoint attempts=0; provider-error attempts=0; document rounds=1; repair=not-testable (entry unchanged). Source: `None`. Error: `none captured`. Review: Not yet observed.
+- `getDestination`: pending; native=None; checkpoint attempts=0; provider-error attempts=0; document rounds=1; repair=not-testable (entry unchanged). Source: `None`. Error: `none captured`. Review: Not yet observed.
+- `getExifOrientation`: pending; native=None; checkpoint attempts=0; provider-error attempts=0; document rounds=1; repair=doc-fixed. Source: `None`. Error: `none captured`. Review: Not yet observed.
+- `getFormatName`: pending; native=None; checkpoint attempts=0; provider-error attempts=0; document rounds=1; repair=doc-fixed. Source: `None`. Error: `none captured`. Review: Not yet observed.
+- `getInstance`: pending; native=None; checkpoint attempts=0; provider-error attempts=0; document rounds=1; repair=doc-fixed. Source: `None`. Error: `none captured`. Review: Not yet observed.
+- `getOrientationFromExif`: pending; native=None; checkpoint attempts=0; provider-error attempts=0; document rounds=1; repair=doc-fixed. Source: `None`. Error: `none captured`. Review: Not yet observed.
+- `getOutputFormat`: pass; native=None; checkpoint attempts=1; provider-error attempts=0; document rounds=1; repair=doc-fixed. Source: `source/src/main/java/net/coobird/thumbnailator/ThumbnailParameter.java:878`. Error: `none captured`. Review: 
+- `getRenderingHints`: pending; native=None; checkpoint attempts=0; provider-error attempts=0; document rounds=None; repair=in-progress. Source: `None`. Error: `none captured`. Review: Not yet observed.
 
 ## Validity and remaining review
 

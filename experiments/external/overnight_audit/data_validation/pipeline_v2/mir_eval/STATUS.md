@@ -1,6 +1,6 @@
 # mir_eval · A2-only repair pipeline
 
-2026-09-08T01:48:15.116812-07:00
+2026-09-08T02:03:15.855738-07:00
 
 A1 original README → zero fixes. A2 generated README → zero fixes.
 Frozen A2 failures → source-only snippet repair; independently → generated-README repair → fresh B2.
@@ -14,7 +14,7 @@ Original-README repair (historical B1) is intentionally omitted.
 
 Source recovery by new code-fix round: {'0': 0, '1': 11, '2': 13, '3': 13, '4': 13, '5': 13}
 Source statuses: {'recovered_native': 13}
-Document repair: {'attempted': 13, 'processed': 10, 'blocked': None}
+Document repair: {'attempted': 13, 'processed': 13, 'blocked': None}
 
 [Source round details](source/REPORT.md) · [Machine-readable live evidence](live.json)
 

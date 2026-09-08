@@ -2,7 +2,7 @@
 
 ID: `8bbd52b230f0a2c7fecd` · mir_eval/A1 · **open**
 
-Evidence version: `42ba53e68b46f3bf20f094a36d7034ebaf1f34d35933902bab0d9059e4695e1b`
+Evidence version: `0d25765d7be985a0d9523165a9ebea58d437ba9991d4b0262b4666b9f44642e5`
 
 Candidate category: **provider**. Confidence: **high**.
 
@@ -16,9 +16,9 @@ Source: `source/mir_eval/hierarchy.py:548`. Native category: `llm-error`.
 ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}
 ```
 
-[Evidence ledger](../../../mir_eval/A1/ledger.json) · [Saved evidence](../evidence/42ba53e68b46f3bf20f094a36d7034ebaf1f34d35933902bab0d9059e4695e1b.json)
+[Evidence ledger](../../../mir_eval/A1/ledger.json) · [Saved evidence](../evidence/0d25765d7be985a0d9523165a9ebea58d437ba9991d4b0262b4666b9f44642e5.json)
 
-Recorded attempts: 4; provider errors: 4; document rounds: None.
+Recorded attempts: 1; provider errors: 1; document rounds: None.
 
 ## Proposed action
 
