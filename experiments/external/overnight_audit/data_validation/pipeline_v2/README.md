@@ -1,3 +1,5 @@
+**September 8 extension:** the [v3 report index](../pipeline_v3/README.md) adds post-B2 source recovery and a method audit. This page continues to report the unchanged stages 1–2.
+
 # Current AIDEAL pipeline: A2-only repair v2
 
 This is the active report entry point for the September 9, 11 AM Pacific deadline.

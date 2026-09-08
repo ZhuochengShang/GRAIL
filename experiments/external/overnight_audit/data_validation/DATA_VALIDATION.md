@@ -7,7 +7,7 @@ This checks pinned input identity and records test evidence. It does not certify
 | mir_eval | A1 | PASS_WITH_LIMITATIONS | supplied output directory does not currently exist; write APIs may fail before the target call |
 | mir_eval | A2 | PASS_WITH_LIMITATIONS | supplied output directory does not currently exist; write APIs may fail before the target call |
 | mir_eval | B1 | pending | none observed |
-| mir_eval | B2 | pending | none observed |
+| mir_eval | B2 | PASS_WITH_LIMITATIONS | supplied output directory does not currently exist; write APIs may fail before the target call |
 | thumbnailator | A1 | PASS_WITH_LIMITATIONS | none observed |
 | thumbnailator | A2 | PASS_WITH_LIMITATIONS | recorded fixture aggregate differs from input-only aggregate; the runner may include mutable output files |
 | thumbnailator | B1 | pending | none observed |

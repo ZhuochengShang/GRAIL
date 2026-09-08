@@ -1,6 +1,6 @@
 # A2 source-only recovery
 
-Updated: 2026-09-08T01:02:56.685021-07:00
+Updated: 2026-09-08T01:07:26.354600-07:00
 
 Fixed eligible-failure denominator: 13. A2 is round zero; five new proposals maximum; stuck threshold two.
 
@@ -14,11 +14,11 @@ Fixed eligible-failure denominator: 13. A2 is round zero; five new proposals max
 | load_tempo | recovered_native | 1 | /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/mir_eval/cefdd1520279c9cc708b3dfca67ae2f9755094b1b667f75832a27555ea742f2c/project/.aideal_recovery/2cef3a53249b36e00441eb28567b7c9c96faec9c1c3517221e8ac7a6746c78ff/recovery.json |
 | load_valued_intervals | recovered_native | 2 | /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/mir_eval/cefdd1520279c9cc708b3dfca67ae2f9755094b1b667f75832a27555ea742f2c/project/.aideal_recovery/da53fa43c39fb3d16b4ccd1d1488aff3e5c0bb670ae5173bd1e68303243e4185/recovery.json |
 | load_wav | recovered_native | 1 | /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/mir_eval/cefdd1520279c9cc708b3dfca67ae2f9755094b1b667f75832a27555ea742f2c/project/.aideal_recovery/45b5ac3eb5dc62c5b90a4273729d68d9dc329b2e01e1c45fbe760278c8def950/recovery.json |
-| p_score | pending | 0 |  |
-| piano_roll | pending | 0 |  |
-| reduce_extended_quality | pending | 0 |  |
-| ticker_pitch | pending | 0 |  |
-| voicing_recall | pending | 0 |  |
+| p_score | recovered_native | 1 | /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/mir_eval/cefdd1520279c9cc708b3dfca67ae2f9755094b1b667f75832a27555ea742f2c/project/.aideal_recovery/d5707ab6e004c46bf87657165820be6e4c7aeebd2efe37e5137dfb4dbddb6a72/recovery.json |
+| piano_roll | recovered_native | 1 | /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/mir_eval/cefdd1520279c9cc708b3dfca67ae2f9755094b1b667f75832a27555ea742f2c/project/.aideal_recovery/dd01786c36a192353ddc3e95edd6bdc746a8c6a8caefea504241afa2aa326232/recovery.json |
+| reduce_extended_quality | recovered_native | 1 | /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/mir_eval/cefdd1520279c9cc708b3dfca67ae2f9755094b1b667f75832a27555ea742f2c/project/.aideal_recovery/7e6f951f541c6ed45a8fa768ed3e27ddac249c54a4dcabc8884ac4e2a3909208/recovery.json |
+| ticker_pitch | recovered_native | 1 | /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/mir_eval/cefdd1520279c9cc708b3dfca67ae2f9755094b1b667f75832a27555ea742f2c/project/.aideal_recovery/d238720a51f73cbb4ac50369669fa6f426d80f4189d3d6c744ea90512de29dfc/recovery.json |
+| voicing_recall | recovered_native | 1 | /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/mir_eval/cefdd1520279c9cc708b3dfca67ae2f9755094b1b667f75832a27555ea742f2c/project/.aideal_recovery/efd8fd55cf01b8f6c020598d5a4850571af9bf0402c84251ef621e6c4bff6204/recovery.json |
 
 Native recovery does not certify the generated assertions. Semantic review remains required.
 B2 is a separate fresh-reader evaluation of the rewritten generated README. Original README repair is omitted.
