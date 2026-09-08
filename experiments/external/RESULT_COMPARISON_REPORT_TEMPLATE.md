@@ -1,5 +1,10 @@
 **Current report:** use the [v3 separated-stage template](post_b2/REPORT_TEMPLATE_V3.md). Report S_A2, README/B2, and S_B2 independently; native B2 and the B2+S_B2 composite have separate fields.
 
+**Timing and execution amendment:** the current v3 template now requires per-API
+attempt durations, measured retry intervals, transport-policy provenance and
+explicit execution/provider states. See [reporter and timing definitions](provider_retry/README.md).
+The legacy 2×2 material below is historical, not the active experiment protocol.
+
 # AIDEAL 2×2 experiment comparison report
 
 **Protocol change, September 8:** the user omitted original-README repair.

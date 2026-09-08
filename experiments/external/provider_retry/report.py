@@ -32,6 +32,14 @@ def outcome(row):
                 category,'Other recorded failure')
 
 
+def provider_event_kind(row):
+    if row.get('error_category')!='llm-error':return None
+    message=str(row.get('error',''))
+    if message.startswith('ProviderCooldown:'):return 'deferral_no_request'
+    if '504' in message:return 'recorded_504'
+    return 'other_provider_error'
+
+
 def execution(row):
     category=row.get('error_category')
     if category=='llm-error':return 'No test code executed for this provider attempt'
@@ -102,7 +110,8 @@ def publish(parent,out):
                       'latest_native_attempt_s':latest,
                       'retained_checkpoint_events':len(h),
                       'retained_attempt_total_s':round(sum(r.get('wall_s',0) or 0 for r in h),3) if h else None,
-                      'retained_504_events':sum('504' in str(r.get('error','')) for r in h),
+                      'retained_504_events':sum(provider_event_kind(r)=='recorded_504' for r in h),
+                      'retained_cooldown_deferrals':sum(provider_event_kind(r)=='deferral_no_request' for r in h),
                       'historical_idle_retry_s':None,
                       'measured_provider_invocations':len(timing),
                       'last_provider_s':timing[-1].get('provider_wall_s') if timing else None,

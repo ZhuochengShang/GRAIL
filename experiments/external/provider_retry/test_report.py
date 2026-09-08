@@ -1,10 +1,16 @@
-from .report import outcome, execution, provider_timing
+from .report import outcome, execution, provider_timing, provider_event_kind
 
 
 def test_provider_failure_never_described_as_executed():
     row={'status':'fail','error_category':'llm-error','wall_s':600}
     assert outcome(row)=='Waiting for provider / retry'
     assert execution(row).startswith('No test code executed')
+
+
+def test_cooldown_mentioning_504_is_not_counted_as_another_request():
+    row={'error_category':'llm-error','error':'ProviderCooldown: Previous provider 504; no request sent'}
+    assert provider_event_kind(row)=='deferral_no_request'
+    assert provider_event_kind({'error_category':'llm-error','error':'ServerError: 504 DEADLINE_EXCEEDED'})=='recorded_504'
 
 
 def test_compile_failure_is_not_runtime_failure():

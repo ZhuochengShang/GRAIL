@@ -5,7 +5,7 @@
 # AIDEAL separated-stage experiment report
 
 Snapshot `<timestamp/timezone>`; protocol `aideal-separated-recovery-v3`;
-repository/source/AIDEAL commits `<...>`; run state `<complete/partial/blocked>`.
+repository/source/AIDEAL commits `<...>`; run state `<finished / running / awaiting provider / awaiting prerequisites>`.
 Record the amendment time and observations already available at registration.
 
 | Measurement | Denominator | Native result | Independent validation |
@@ -44,6 +44,32 @@ round starts from completed rewrites/validations. Record configured versus actua
 budgets. Check A2 error/snippet seeding into the document worker independently of
 target selection; retain the current limitation if unverified. Stuck-two source
 and document loops have different stopping definitions. SDK retries may be unknown.
+
+### Per-API execution and timing evidence
+
+Use [the execution/timing reporter](../provider_retry/README.md) alongside this
+template. For every API and condition record the latest generation-plus-test
+attempt duration, retained attempt count and summed duration, code-fix rounds,
+document rounds, provider invocations, each measured SDK attempt duration,
+provider start/end timestamps, end-to-next-start retry interval and scheduled
+cooldown. The retry interval includes scheduler/admission delay. Retained duration
+is not a complete lifetime total. Missing historical timestamps mean unavailable,
+never zero. An unfinished invocation has no inferred end or success.
+
+Report native passes, compilation failures, execution failures/timeouts,
+setup/import blocks, unresolved providers and not-started cases separately.
+Provide counts summing to the manifest denominator and explain missing rows.
+An API selected for generation is not necessarily executed; process execution
+does not independently prove the target API was reached or used correctly.
+Cooldown deferrals send no request and must not inflate 504 or code-fix counts.
+
+For the September 8 operational amendment, group results by transport policy
+and adapter hashes: historical 300 seconds × 2 SDK attempts versus enrolled
+600 seconds × 1, both with a 630-second outer guard. Record actual worker
+activation, not just installed configuration. Frozen native fingerprints do
+not encode this extension. Record output-directory setup changes separately.
+Keep native outcomes, unchanged-snippet harness replay, assertion replay and
+source recovery in distinct columns; none silently replaces another score.
 
 For each unresolved API retain error category, actual snippet/error, round-by-round
 change, source/document evidence, proposed developer fix, confidence, alternative
