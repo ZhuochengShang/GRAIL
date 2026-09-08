@@ -3,18 +3,18 @@
   "expected": 235,
   "counts": {
     "pass": 74,
-    "fail": 71,
-    "pending": 90
+    "fail": 73,
+    "pending": 88
   },
   "fingerprint": "964a2ec0df73c3b53c3966c9213dedb1a12bf7e39ad1b8d7d1ddd561ba53212b",
   "errors": [],
   "failure_categories": {
     "test/scaffold": 13,
     "unknown": 14,
-    "api-identity": 13,
-    "llm-error": 31
+    "api-identity": 14,
+    "llm-error": 32
   },
-  "recorded_provider_errors_all_fingerprints": 31,
+  "recorded_provider_errors_all_fingerprints": 32,
   "observed_fingerprints": [
     "964a2ec0df73c3b53c3966c9213dedb1a12bf7e39ad1b8d7d1ddd561ba53212b"
   ],
@@ -3914,6 +3914,56 @@
       "source_other_sites": 1,
       "codebase_frames": null,
       "checkpoint_line": 145
+    },
+    {
+      "name": "is_float32",
+      "doc_source": "original",
+      "experiment_fingerprint": "964a2ec0df73c3b53c3966c9213dedb1a12bf7e39ad1b8d7d1ddd561ba53212b",
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 599.0,
+      "llm_calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "by_model": {},
+      "error_category": "llm-error",
+      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "locus": "",
+      "doc_chars": 92,
+      "document_sha256": "fdf634c555b029b28c37fcd6af35a26a29118f197eecf5f7968e9dfa0355d093",
+      "source": "tslearn/tslearn/backend/numpy_backend.py:110",
+      "source_other_sites": 1,
+      "codebase_frames": null,
+      "checkpoint_line": 146
+    },
+    {
+      "name": "is_float64",
+      "doc_source": "original",
+      "experiment_fingerprint": "964a2ec0df73c3b53c3966c9213dedb1a12bf7e39ad1b8d7d1ddd561ba53212b",
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 21.8,
+      "llm_calls": 1,
+      "input_tokens": 1339,
+      "output_tokens": 2295,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1339,
+          "output_tokens": 2295
+        }
+      },
+      "error_category": "infra",
+      "error": "missing module/import: cannot import name 'NumPyBackend' from 'tslearn.backend' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/backend/__init__.py)",
+      "locus": "",
+      "doc_chars": 92,
+      "document_sha256": "25e6fceffd61d8f93c8db3aaafc5f58da366c88553665a1cde51b5e1c0125d54",
+      "source": "tslearn/tslearn/backend/numpy_backend.py:114",
+      "source_other_sites": 1,
+      "codebase_frames": null,
+      "checkpoint_line": 147
     }
   ],
   "repair_summary": {
@@ -8568,18 +8618,31 @@
     },
     {
       "api": "is_float32",
-      "status": "pending",
-      "primary_category": "pending",
-      "runner_category": null,
-      "category_reason": "Not yet observed.",
-      "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
-      "provider_error_attempts": 0,
+      "status": "fail",
+      "primary_category": "llm-error",
+      "runner_category": "llm-error",
+      "category_reason": "Provider outcome; retry, never count as a documentation failure.",
+      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "source": "tslearn/tslearn/backend/numpy_backend.py:110",
+      "doc_chars": 92,
+      "checkpoint_attempts": 1,
+      "provider_error_attempts": 1,
       "provider_internal_retries": null,
       "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "attempt_history": [
+        {
+          "checkpoint_line": 146,
+          "status": "fail",
+          "error_category": "llm-error",
+          "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+          "attempts": 1,
+          "wall_s": 599.0,
+          "llm_calls": 0,
+          "input_tokens": 0,
+          "output_tokens": 0,
+          "pass_round": null
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -8587,18 +8650,31 @@
     },
     {
       "api": "is_float64",
-      "status": "pending",
-      "primary_category": "pending",
-      "runner_category": null,
-      "category_reason": "Not yet observed.",
-      "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "status": "fail",
+      "primary_category": "api-identity",
+      "runner_category": "infra",
+      "category_reason": "Import/member selection failed; the runner's infrastructure label needs review.",
+      "error": "missing module/import: cannot import name 'NumPyBackend' from 'tslearn.backend' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/backend/__init__.py)",
+      "source": "tslearn/tslearn/backend/numpy_backend.py:114",
+      "doc_chars": 92,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 147,
+          "status": "fail",
+          "error_category": "infra",
+          "error": "missing module/import: cannot import name 'NumPyBackend' from 'tslearn.backend' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/backend/__init__.py)",
+          "attempts": 1,
+          "wall_s": 21.8,
+          "llm_calls": 1,
+          "input_tokens": 1339,
+          "output_tokens": 2295,
+          "pass_round": null
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
