@@ -1,6 +1,6 @@
 # tslearn · A2-only repair pipeline
 
-2026-09-08T15:55:52.723789-07:00
+2026-09-08T16:11:23.494584-07:00
 
 A1 original README → zero fixes. A2 generated README → zero fixes.
 Frozen A2 failures → source-only snippet repair; independently → generated-README repair → fresh B2.
@@ -14,7 +14,7 @@ Original-README repair (historical B1) is intentionally omitted.
 
 Source recovery by new code-fix round: {'0': 0, '1': 26, '2': 32, '3': 32, '4': 32, '5': 32}
 Source statuses: {'recovered_native': 32}
-Document repair: {'attempted': 60, 'processed': 57, 'blocked': None}
+Document repair: {'attempted': 60, 'processed': 60, 'blocked': None}
 
 [Source round details](source/REPORT.md) · [Machine-readable live evidence](live.json)
 
