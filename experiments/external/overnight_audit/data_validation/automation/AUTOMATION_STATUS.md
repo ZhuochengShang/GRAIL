@@ -1,27 +1,27 @@
 # Automation status and deadline forecast
 
-Updated: 2026-09-07T18:23:35.437161-07:00. Hours to Wednesday 11 AM: 40.61.
+Updated: 2026-09-07T18:38:51.765197-07:00. Hours to Wednesday 11 AM: 40.35.
 
 **Whole-pipeline completion time remains unverified.** Estimates below cover remaining comprehension only; generation, document repair, and final validation are additional. Scenarios are not confidence intervals.
 
 | Repository/cell | Remaining APIs | State | Optimistic / likely / conservative hours |
 |---|---:|---|---|
-| mir_eval/A1 | 31 | estimated | 5.16 / 150.03 / 310.21 |
+| mir_eval/A1 | 31 | estimated | 5.16 / 150.04 / 310.46 |
 | mir_eval/A2 | 0 | complete | 0.00 / 0.00 / 0.00 |
 | mir_eval/B1 | 148 | insufficient_observations | unknown |
 | mir_eval/B2 | 148 | insufficient_observations | unknown |
-| thumbnailator/A1 | 48 | estimated | 0.21 / 0.60 / 1.20 |
+| thumbnailator/A1 | 48 | estimated | 0.21 / 0.90 / 1.80 |
 | thumbnailator/A2 | 0 | complete | 0.00 / 0.00 / 0.00 |
 | thumbnailator/B1 | 149 | insufficient_observations | unknown |
 | thumbnailator/B2 | 149 | insufficient_observations | unknown |
-| tslearn/A1 | 152 | estimated | 0.62 / 11.10 / 69.01 |
-| tslearn/A2 | 106 | estimated | 0.29 / 0.38 / 1.02 |
+| tslearn/A1 | 146 | estimated | 0.54 / 7.07 / 58.26 |
+| tslearn/A2 | 85 | estimated | 0.21 / 0.81 / 1.63 |
 | tslearn/B1 | 235 | insufficient_observations | unknown |
 | tslearn/B2 | 235 | insufficient_observations | unknown |
 
-Failure review queue: 222 entries. Mutable cross-condition path conflicts: 0.
+Failure review queue: 236 entries. Mutable cross-condition path conflicts: 0.
 Deadline risks: mir_eval/A1: estimated
-Observation errors: 0. Observer health: `{"results": {"age_seconds": 46.6, "stale": false}, "data": {"age_seconds": 6.5, "stale": false}}`.
+Observation errors: 0. Observer health: `{"results": {"age_seconds": 56.7, "stale": false}, "data": {"age_seconds": 58.0, "stale": false}}`.
 
 - [Failure review queue](failure_review_queue.json): suggested causes, evidence, confidence, attempts and repair rounds.
 - [Resolved configuration bundles](config_bundles.json): actual profile, direct YAML layers, fixture bindings and recorded environments.
