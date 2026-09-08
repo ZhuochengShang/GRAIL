@@ -1,0 +1,30 @@
+AUDIENCE & TESTABILITY:
+API audience: ADVANCED/LOW-LEVEL.
+Harness testability: TESTABLE.
+Scoring recommendation: include only in advanced/internal bucket.
+
+ROOT CAUSE:
+The documentation entry is completely incorrect. It explicitly claims the constructor takes no arguments and warns against passing arrays, but the source code (`def __init__(self, X, Y, ...):`) requires two positional arguments `X` and `Y` (the time series arrays) to instantiate the class, as demonstrated in its own docstring example.
+
+CORRECT USAGE:
+```python
+from tslearn.metrics.softdtw_variants import SquaredEuclidean
+
+# Instantiate with two time series arrays
+metric = SquaredEuclidean([1, 2, 2, 3], [1, 2, 3, 4])
+
+# Compute the pairwise squared Euclidean distance matrix
+D = metric.compute()
+
+assert D.shape == (4, 4)
+assert D[0, 0] == 0.0
+print(D)
+```
+
+REQUIRED TYPES & IMPORTS:
+`tslearn.metrics.softdtw_variants.SquaredEuclidean`
+
+DOC MUST SAY:
+- The constructor requires two positional arguments, `X` and `Y`, which are the two time-series arrays to compare.
+- The class is not a stateless metric factory; it holds the state for a specific pair of time series.
+- To compute the distance matrix, call the `.compute()` method on the instantiated object, which returns an `(m, n)` array.

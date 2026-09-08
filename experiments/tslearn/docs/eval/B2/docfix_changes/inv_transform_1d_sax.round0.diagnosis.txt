@@ -1,0 +1,44 @@
+AUDIENCE & TESTABILITY:
+API audience: INTERNAL-FRAMEWORK
+Harness testability: TESTABLE
+Scoring recommendation: include only in advanced/internal bucket
+
+ROOT CAUSE:
+The documentation incorrectly states that `dataset_sax` should have `dtype=float64` or `float32`. Because `dataset_sax` contains discrete symbols that are used directly as array indices inside a Numba `@njit` compiled function (`breakpoints_avg_middle_[dataset_sax[i, t, di]]`), it must be an integer type (e.g., `np.int64`). Passing a float array causes a Numba `TypingError` during compilation because Numba does not implicitly cast floats to integers for indexing.
+
+CORRECT USAGE:
+```python
+import numpy as np
+from tslearn.metrics.cysax import inv_transform_1d_sax
+
+# Symbols MUST be integers to be used as indices in Numba, despite the docstring.
+dataset_sax = np.array([[[0, 0], [1, 1]]], dtype=np.int64)
+
+# Middle values for the bins
+breakpoints_avg_middle = np.array([0.25, 0.75], dtype=np.float64)
+breakpoints_slope_middle = np.array([-0.1, 0.1], dtype=np.float64)
+
+# Target original length
+original_size = 4
+
+reconstructed = inv_transform_1d_sax(
+    dataset_sax,
+    breakpoints_avg_middle,
+    breakpoints_slope_middle,
+    original_size
+)
+
+expected_sum = 2.0
+assert reconstructed.shape == (1, 4, 1)
+assert np.isclose(reconstructed.sum(), expected_sum)
+print(f"__CHECK__ inv_transform_1d_sax {reconstructed.shape} sum={reconstructed.sum():.1f}")
+```
+
+REQUIRED TYPES & IMPORTS:
+`numpy.ndarray`
+`tslearn.metrics.cysax.inv_transform_1d_sax`
+
+DOC MUST SAY:
+- `dataset_sax` MUST be an integer array (e.g., `np.int64` or `np.int32`), because its values are used as array indices inside a Numba-compiled function.
+- The docstring's claim that `dataset_sax` should be `float64` or `float32` is incorrect and following it will cause a Numba `TypingError`.
+- `breakpoints_avg_middle_` and `breakpoints_slope_middle_` should be 1D `float64` arrays.

@@ -1,0 +1,53 @@
+AUDIENCE & TESTABILITY:
+API audience: USER-FACING.
+Harness testability: TESTABLE.
+Scoring recommendation: include in main user-facing denominator.
+
+ROOT CAUSE:
+The snippet failed during `fit()` because the implicit harness dataset caused the internal `TimeSeriesKMeans` to produce a cluster with only 1 sample, triggering a `ValueError` in scikit-learn's `train_test_split(stratify=c_k)`. The documentation omitted the strict requirement that the dataset must guarantee at least 2 samples per cluster to survive this internal stratified split. Additionally, the snippet blatantly misread the documentation by calling the hallucinated `early_predict` method and testing for `NaN`s despite explicit instructions not to.
+
+CORRECT USAGE:
+```python
+import numpy as np
+from tslearn.utils import to_time_series_dataset
+from tslearn.early_classification import NonMyopicEarlyClassifier
+
+# Construct a dataset with highly distinct groups to guarantee 
+# TimeSeriesKMeans creates clusters with >= 2 members each.
+X_train = to_time_series_dataset([
+    [1.0, 1.0, 1.0, 1.0],
+    [1.0, 1.0, 1.0, 1.0],
+    [1.0, 1.0, 1.0, 1.0],
+    [1.0, 1.0, 1.0, 1.0],
+    [9.0, 9.0, 9.0, 9.0],
+    [9.0, 9.0, 9.0, 9.0],
+    [9.0, 9.0, 9.0, 9.0],
+    [9.0, 9.0, 9.0, 9.0]
+])
+y_train = np.array([0, 0, 0, 0, 1, 1, 1, 1])
+
+model = NonMyopicEarlyClassifier(
+    n_clusters=2,
+    min_t=1,
+    lamb=1.0,
+    cost_time_parameter=0.1,
+    random_state=42
+)
+
+model.fit(X_train, y_train)
+preds, pred_times = model.predict_class_and_earliness(X_train)
+
+assert preds.shape == (8,)
+assert pred_times.shape == (8,)
+```
+
+REQUIRED TYPES & IMPORTS:
+`tslearn.early_classification.NonMyopicEarlyClassifier`
+`tslearn.utils.to_time_series_dataset`
+`numpy`
+
+DOC MUST SAY:
+- `fit(X, y)` internally clusters the data and calls `train_test_split` stratified by these clusters; therefore, the dataset must be large and distinct enough to guarantee that `TimeSeriesKMeans` assigns at least 2 samples to every cluster, otherwise a `ValueError` is raised.
+- To avoid stratification errors in small tests, explicitly construct a dataset with highly distinct, perfectly separable groups (e.g., 4 identical samples per group) matching the `n_clusters` parameter.
+- The correct method to predict classes and their decision delays is `predict_class_and_earliness(X)`, not `early_predict(X)`.
+- Do not expect or handle `np.nan` outputs for short series; this is hallucinated behavior.

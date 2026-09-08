@@ -1,0 +1,26 @@
+AUDIENCE & TESTABILITY:
+API audience: ADVANCED/LOW-LEVEL.
+Harness testability: TESTABLE.
+Scoring recommendation: include only in advanced/internal bucket.
+
+ROOT CAUSE:
+The documentation incorrectly instructs users to import `NumPyBackend` from `tslearn.backend`. The class is not hoisted into that namespace's `__init__.py` and must be imported directly from its defining module, `tslearn.backend.numpy_backend`. Additionally, the failing snippet referenced an undefined variable `X` instead of constructing a test array.
+
+CORRECT USAGE:
+```python
+from tslearn.backend.numpy_backend import NumPyBackend
+
+backend = NumPyBackend()
+X = backend.array([[1.0, 2.0], [3.0, 4.0]])
+shape_X = backend.shape(X)
+
+assert shape_X == (2, 2), f"Expected shape (2, 2), got {shape_X}"
+print(f"__CHECK__ NumPyBackend {shape_X}")
+```
+
+REQUIRED TYPES & IMPORTS:
+tslearn.backend.numpy_backend.NumPyBackend
+
+DOC MUST SAY:
+- `NumPyBackend` must be imported exactly from `tslearn.backend.numpy_backend`, as it is not exposed in the `tslearn.backend` root namespace.
+- Code examples must construct their own arrays (e.g., using `backend.array(...)`) rather than assuming the existence of pre-defined variables like `X`.

@@ -1,0 +1,35 @@
+AUDIENCE & TESTABILITY:
+API audience: INTERNAL-FRAMEWORK.
+Harness testability: TESTABLE-WITH-LOW-LEVEL-CONSTRUCTION.
+Scoring recommendation: include only in advanced/internal bucket.
+
+ROOT CAUSE:
+The environment lacks the optional `keras` (or `tensorflow`) dependency, causing an `ImportError` when the snippet attempts to import `tslearn.shapelets`. The documentation failed to mention that this module requires an optional dependency and that imports must be guarded in environments where it might be missing. Additionally, the snippet used a fragile dynamic search instead of explicitly instantiating `LocalSquaredDistanceLayer` with its required `nb_shapelets` argument.
+
+CORRECT USAGE:
+```python
+try:
+    from tslearn.shapelets.shapelets import LocalSquaredDistanceLayer
+    
+    # Explicitly construct the low-level Keras layer with its required argument
+    layer = LocalSquaredDistanceLayer(nb_shapelets=42, name="custom_shapelet_layer")
+    
+    # Retrieve the configuration dictionary
+    config = layer.get_config()
+    
+    assert isinstance(config, dict)
+    assert config["nb_shapelets"] == 42
+    assert config["name"] == "custom_shapelet_layer"
+    print("Successfully retrieved layer config:", config)
+
+except ImportError as e:
+    print(f"Skipping execution: optional dependency missing ({e})")
+```
+
+REQUIRED TYPES & IMPORTS:
+`tslearn.shapelets.shapelets.LocalSquaredDistanceLayer`
+
+DOC MUST SAY:
+- `tslearn.shapelets` relies on the optional `keras` (or `tensorflow`) dependency; any imports from this module must be wrapped in a `try...except ImportError` block for environments where it is not installed.
+- `get_config` is an instance method of custom Keras layers such as `LocalSquaredDistanceLayer`.
+- `LocalSquaredDistanceLayer` requires the `nb_shapelets` integer argument during initialization.

@@ -1,0 +1,53 @@
+AUDIENCE & TESTABILITY:
+API audience: USER-FACING.
+Harness testability: TESTABLE.
+Scoring recommendation: include in main user-facing denominator.
+
+ROOT CAUSE:
+The snippet failed because `tslearn.shapelets` has a hard dependency on a deep learning backend (`keras`/`tensorflow`), which is not present in the test environment, causing an `ImportError` on import. Additionally, the documentation incorrectly states that `shapelets_` returns a `list` of NumPy arrays; the source code explicitly allocates and returns a 1D NumPy array of `dtype=object` (`numpy.empty((total_nb_shapelets,), dtype=object)`).
+
+CORRECT USAGE:
+```python
+import numpy as np
+
+try:
+    from tslearn.shapelets import LearningShapelets
+    
+    # Prepare a minimal 3D time-series dataset (n_ts, max_sz, d)
+    X = np.array([
+        [[1.0], [2.0], [3.0], [4.0]], 
+        [[3.0], [2.0], [1.0], [0.0]]
+    ])
+    y = np.array([0, 1])
+    
+    # Initialize and fit the model
+    clf = LearningShapelets(
+        n_shapelets_per_size={2: 1}, 
+        max_iter=1, 
+        optimizer="sgd", 
+        random_state=0
+    )
+    clf.fit(X, y)
+    
+    # Access the learned shapelets property
+    shapelets = clf.shapelets_
+    
+    # Verify the output contract
+    assert isinstance(shapelets, np.ndarray), "Expected a NumPy array"
+    assert shapelets.dtype == object, "Expected dtype to be object"
+    assert len(shapelets) == 1, "Expected exactly 1 shapelet"
+    assert shapelets[0].shape == (2, 1), "Expected shapelet shape to be (2, 1)"
+    
+    print(f"Successfully retrieved {len(shapelets)} shapelet(s) of shape {shapelets[0].shape}.")
+
+except ImportError as e:
+    print(f"Skipping execution: tslearn.shapelets requires a deep learning backend. Details: {e}")
+```
+
+REQUIRED TYPES & IMPORTS:
+`tslearn.shapelets.LearningShapelets`
+`numpy`
+
+DOC MUST SAY:
+- `tslearn.shapelets` requires an optional deep learning backend (like `keras` or `tensorflow`); any code using it must wrap the import in a `try...except ImportError` block to avoid crashing in environments without these dependencies.
+- `shapelets_` returns a 1D NumPy array of `dtype=object` containing the individual shapelet arrays, NOT a Python list.

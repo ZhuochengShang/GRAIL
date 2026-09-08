@@ -1,0 +1,27 @@
+AUDIENCE & TESTABILITY:
+API audience: USER-FACING.
+Harness testability: TESTABLE.
+Scoring recommendation: include in main user-facing denominator.
+
+ROOT CAUSE:
+The failure is caused by a combination of a snippet misread and a documentation error. First, the snippet misread the documentation by using `kernel="euclidean"`, which the documentation explicitly forbids. Second, the documentation incorrectly states that the default multiclass return shape is `(n_samples, n_classes * (n_classes-1) / 2)` (One-vs-One); however, modern scikit-learn defaults to `decision_function_shape='ovr'`, meaning the default return shape is actually `(n_samples, n_classes)`.
+
+CORRECT USAGE:
+```python
+X = numpy.random.rand(8, 5, 2)
+y = numpy.array([0, 1, 2, 3, 0, 1, 2, 3])
+
+clf = TimeSeriesSVC(kernel="gak")
+clf.fit(X, y)
+
+scores = clf.decision_function(X)
+assert scores.shape == (8, 4)
+```
+
+REQUIRED TYPES & IMPORTS:
+`tslearn.svm.TimeSeriesSVC`
+`numpy`
+
+DOC MUST SAY:
+- The default `decision_function_shape` is `'ovr'`, meaning the default return shape for multiclass classification is `(n_samples, n_classes)`, not the OvO shape.
+- The `kernel` parameter must be a valid SVM kernel like `"gak"`, `"rbf"`, or `"linear"`; `"euclidean"` is strictly invalid and will cause an `InvalidParameterError`.

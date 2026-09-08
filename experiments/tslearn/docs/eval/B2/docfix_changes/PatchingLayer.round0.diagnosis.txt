@@ -1,0 +1,28 @@
+AUDIENCE & TESTABILITY:
+API audience: ADVANCED-LOW-LEVEL.
+Harness testability: TESTABLE.
+Scoring recommendation: include only in advanced/internal bucket.
+
+ROOT CAUSE:
+The documentation incorrectly states that `PatchingLayer` takes no parameters, but the source explicitly requires `shapelet_length` in its `__init__` signature. Additionally, the snippet explicitly imported `tensorflow` which is not installed in the test environment; `PatchingLayer` is a Keras layer that can be called directly with NumPy arrays.
+
+CORRECT USAGE:
+```python
+import numpy as np
+from tslearn.shapelets import PatchingLayer
+
+layer = PatchingLayer(shapelet_length=3)
+X_np = np.zeros((2, 10, 1), dtype=np.float32)
+out = layer(X_np)
+
+assert len(out.shape) == 4
+```
+
+REQUIRED TYPES & IMPORTS:
+`tslearn.shapelets.PatchingLayer`
+`numpy`
+
+DOC MUST SAY:
+- `PatchingLayer` requires the `shapelet_length` parameter in its constructor.
+- The layer can be called directly with a 3D NumPy array of shape `(batch_size, steps, features)`.
+- Do not explicitly import `tensorflow` as it may not be available in all environments; rely on NumPy arrays for inputs.

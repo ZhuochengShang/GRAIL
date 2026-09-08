@@ -1,0 +1,43 @@
+AUDIENCE & TESTABILITY:
+API audience: ADVANCED/LOW-LEVEL.
+Harness testability: TESTABLE-WITH-LOW-LEVEL-CONSTRUCTION.
+Scoring recommendation: include only in advanced/internal bucket.
+
+ROOT CAUSE:
+The documentation incorrectly stated that `SoftDTW` takes no parameters. The source code explicitly defines `__init__(self, D, gamma=1.0, be=None, compute_with_backend=False)`, requiring a positional argument `D` (a pairwise distance matrix of shape `(m, n)`).
+
+CORRECT USAGE:
+```python
+import numpy as np
+from tslearn.metrics import SoftDTW
+
+# Construct a deterministic pairwise distance matrix D for two time series
+D = np.array([
+    [0.0, 1.0, 4.0, 9.0],
+    [1.0, 0.0, 1.0, 4.0],
+    [4.0, 1.0, 0.0, 1.0]
+], dtype=np.float64)
+
+# Instantiate the low-level SoftDTW helper
+sdtw = SoftDTW(D, gamma=1.0)
+
+# Execute the forward pass
+discrepancy = sdtw.compute()
+
+# Execute the backward pass (gradient w.r.t D)
+gradient = sdtw.grad()
+
+assert gradient.shape == D.shape == (3, 4)
+print(f"__CHECK__ SoftDTW discrepancy: {discrepancy:.4f}, gradient shape: {gradient.shape}")
+```
+
+REQUIRED TYPES & IMPORTS:
+`numpy`
+`tslearn.metrics.SoftDTW`
+
+DOC MUST SAY:
+- `SoftDTW` requires a positional argument `D`, which is an `array-like` of shape `(m, n)` representing pairwise distances between two time series.
+- `SoftDTW` accepts an optional `gamma` float parameter for regularization.
+- `SoftDTW` has a `compute()` method that executes the forward pass and returns the soft-DTW discrepancy as a float.
+- `SoftDTW` has a `grad()` method that returns the gradient with respect to `D` as an `(m, n)` array (requires calling `compute()` first).
+- `SoftDTW` is a low-level class; users typically use the `soft_dtw` function instead, but it can be instantiated directly with a distance matrix.

@@ -1,0 +1,49 @@
+AUDIENCE & TESTABILITY:
+API audience: INTERNAL-FRAMEWORK.
+Harness testability: TESTABLE-WITH-LOW-LEVEL-CONSTRUCTION.
+Scoring recommendation: include only in advanced/internal bucket.
+
+ROOT CAUSE:
+The documentation failed to specify any of the actual methods or properties provided by the mixin, nor the instance attributes required to use them. Because the contract was empty, the snippet writer was forced to fabricate a non-existent property (`support_vectors_time_series_`) and rely on tautological type checks, which the test harness rejected. To test the mixin, a subclass must define configuration attributes (like `kernel` and `gamma`) and invoke the injected `_preprocess_sklearn` method or delegation properties (like `support_`).
+
+CORRECT USAGE:
+```python
+class MockSVM(BaseEstimator, TimeSeriesSVMMixin):
+    def __init__(self):
+        self.kernel = "rbf"
+        self.gamma = 0.1
+        self.random_state = 42
+
+mock = MockSVM()
+X = np.array([[[1.0], [2.0]], [[3.0], [4.0]]])
+y = np.array([0, 1])
+
+# Exercise the mixin's preprocessing logic
+sklearn_X, y_out, nb_features = mock._preprocess_sklearn(X, y, fit_time=True)
+
+# Exercise property delegation
+class DummyUnderlyingSVM:
+    @property
+    def support_(self):
+        return np.array([0])
+
+mock.svm_estimator_ = DummyUnderlyingSVM()
+# _X_fit was set by _preprocess_sklearn(fit_time=True), satisfying check_is_fitted
+support = mock.support_
+
+assert sklearn_X.shape == (2, 2)
+assert nb_features == 1
+assert mock.estimator_kernel_ == "rbf"
+assert support[0] == 0
+```
+
+REQUIRED TYPES & IMPORTS:
+`numpy`
+`sklearn.base.BaseEstimator`
+`tslearn.svm.svm.TimeSeriesSVMMixin`
+
+DOC MUST SAY:
+- The mixin provides the `_preprocess_sklearn(X, y=None, fit_time=False)` method, which reshapes 3D time-series arrays to 2D for `scikit-learn` compatibility and handles GAK precomputation.
+- To use `_preprocess_sklearn`, the inheriting subclass must define `self.kernel`, `self.gamma`, and `self.random_state` attributes.
+- The mixin provides properties `support_`, `dual_coef_`, `coef_`, and `intercept_` which delegate to an underlying `scikit-learn` estimator.
+- To use the delegation properties, the subclass must have `self.svm_estimator_` and `self._X_fit` attributes set (typically populated during a `fit` phase).

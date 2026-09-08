@@ -1,0 +1,27 @@
+AUDIENCE & TESTABILITY:
+API audience: ADVANCED/LOW-LEVEL.
+Harness testability: TESTABLE.
+Scoring recommendation: include only in advanced/internal bucket.
+
+ROOT CAUSE:
+The documentation contained an error by instructing the user to import `NumPyBackend` and `PyTorchBackend` directly from `tslearn.backend`. The actual class is named `NumpyBackend` (lowercase 'p') and is not guaranteed to be exposed at the `tslearn.backend` module level, causing an `ImportError` before the test could run.
+
+CORRECT USAGE:
+```python
+from tslearn.backend import Backend
+
+backend_ = Backend("numpy")
+actual_backend = backend_.get_backend()
+
+assert actual_backend is not None
+assert type(actual_backend).__name__ == "NumpyBackend", f"Expected NumpyBackend, got {type(actual_backend).__name__}"
+
+print(f"__CHECK__ get_backend {type(actual_backend).__name__}")
+```
+
+REQUIRED TYPES & IMPORTS:
+`tslearn.backend.Backend`
+
+DOC MUST SAY:
+- Do not attempt to import `NumPyBackend` or `PyTorchBackend` directly from `tslearn.backend` for `isinstance` checks, as they are not exposed at the module level and use different casing (e.g., `NumpyBackend`).
+- To verify the returned backend type, inspect the `__name__` attribute of the returned object's type dynamically (e.g., `type(actual_backend).__name__ == "NumpyBackend"`).

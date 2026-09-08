@@ -1,0 +1,26 @@
+AUDIENCE & TESTABILITY:
+API audience: USER-FACING.
+Harness testability: TESTABLE.
+Scoring recommendation: include in main user-facing denominator.
+
+ROOT CAUSE:
+The snippet failed because it asserted that `str(e)` exactly matches the passed message `"Test empty cluster"`. However, the `EmptyClusterError` class overrides `__str__` to prepend the hardcoded string `"Cluster assignments lead to at least one empty cluster"` and formats the custom message as a suffix in parentheses. The documentation omitted this custom string formatting behavior.
+
+CORRECT USAGE:
+```python
+from tslearn.clustering.utils import EmptyClusterError
+
+try:
+    raise EmptyClusterError("Test empty cluster")
+except EmptyClusterError as e:
+    assert isinstance(e, Exception), "EmptyClusterError should inherit from Exception"
+    assert str(e) == "Cluster assignments lead to at least one empty cluster (Test empty cluster)"
+    print(f"__CHECK__ EmptyClusterError {type(e).__name__}")
+```
+
+REQUIRED TYPES & IMPORTS:
+`tslearn.clustering.utils.EmptyClusterError`
+
+DOC MUST SAY:
+- `EmptyClusterError` overrides `__str__` to prepend the hardcoded string `"Cluster assignments lead to at least one empty cluster"`.
+- If a custom message is provided during instantiation, it is appended to the string representation in parentheses as a suffix (e.g., `"Cluster assignments lead to at least one empty cluster (my message)"`).

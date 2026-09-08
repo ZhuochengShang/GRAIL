@@ -1,0 +1,32 @@
+AUDIENCE & TESTABILITY:
+API audience: INTERNAL-FRAMEWORK.
+Harness testability: TESTABLE-WITH-LOW-LEVEL-CONSTRUCTION.
+Scoring recommendation: include only in advanced/internal bucket.
+
+ROOT CAUSE:
+The documentation incorrectly presents `iscomplex` as a module-level function. The source code shows it is a `@staticmethod` nested inside a class (the `PyTorchBackend` class). It cannot be imported directly from the module; instead, the class must be imported and the method called on the class namespace.
+
+CORRECT USAGE:
+```python
+import torch
+from tslearn.backend.pytorch_backend import PyTorchBackend
+
+real_tensor = torch.tensor([1.0, 2.0, 3.0], dtype=torch.float32)
+complex_tensor = torch.tensor([1.0+1j, 2.0+2j], dtype=torch.complex64)
+
+is_real_cplx = PyTorchBackend.iscomplex(real_tensor)
+is_cplx_cplx = PyTorchBackend.iscomplex(complex_tensor)
+
+assert is_real_cplx is False, "Real tensor should not be complex"
+assert is_cplx_cplx is True, "Complex tensor should be complex"
+print(f"__CHECK__ iscomplex {is_real_cplx}, {is_cplx_cplx}")
+```
+
+REQUIRED TYPES & IMPORTS:
+`tslearn.backend.pytorch_backend.PyTorchBackend`
+`torch`
+
+DOC MUST SAY:
+- `iscomplex` is not a module-level function; it is a `@staticmethod` of the `PyTorchBackend` class.
+- It must be accessed via `PyTorchBackend.iscomplex(x)`.
+- The caller must import `PyTorchBackend` from `tslearn.backend.pytorch_backend` rather than trying to import `iscomplex` directly.

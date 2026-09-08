@@ -1,0 +1,37 @@
+AUDIENCE & TESTABILITY:
+API audience: INTERNAL-FRAMEWORK.
+Harness testability: TESTABLE-WITH-LOW-LEVEL-CONSTRUCTION.
+Scoring recommendation: include only in advanced/internal bucket.
+
+ROOT CAUSE:
+The documentation incorrectly instructed users to import `KNeighborsTimeSeriesMixin` from `tslearn.neighbors`. Because it is an internal framework mixin, it is not exposed in the package's `__init__.py` and must be imported directly from the submodule `tslearn.neighbors.neighbors`. Additionally, the snippet failed to verify any behavior because it did not populate the internal state (like `metric`, `n_jobs`, and `_ts_fit`) required by the mixin's methods.
+
+CORRECT USAGE:
+```python
+import numpy as np
+from tslearn.neighbors.neighbors import KNeighborsTimeSeriesMixin
+
+class CustomKNN(KNeighborsTimeSeriesMixin):
+    def __init__(self):
+        # Populate the internal state normally set by an estimator's fit()
+        self.metric = "dtw"
+        self.metric_params = None
+        self.n_jobs = 1
+        self._ts_fit = np.array([[[0.0]], [[2.0]], [[4.0]]])
+
+knn = CustomKNN()
+# Test the mixin's internal distance computation logic
+dist_matrix = knn._precompute_cross_dist(np.array([[[2.0]]]))
+
+assert dist_matrix.shape == (1, 3)
+print("__CHECK__ KNeighborsTimeSeriesMixin computed distances:", dist_matrix)
+```
+
+REQUIRED TYPES & IMPORTS:
+`tslearn.neighbors.neighbors.KNeighborsTimeSeriesMixin`
+`numpy`
+
+DOC MUST SAY:
+- `KNeighborsTimeSeriesMixin` is an internal framework class and must be imported from `tslearn.neighbors.neighbors`, not `tslearn.neighbors`.
+- The mixin is not intended for direct instantiation; it must be inherited by a custom estimator class.
+- To use or test the mixin's methods (like `_precompute_cross_dist` or `kneighbors`), the derived class must initialize internal state attributes such as `self.metric`, `self.metric_params`, `self.n_jobs`, and `self._ts_fit` (which are normally populated during `fit()`).

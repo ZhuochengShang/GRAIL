@@ -1,0 +1,35 @@
+AUDIENCE & TESTABILITY:
+API audience: INTERNAL-FRAMEWORK.
+Harness testability: TESTABLE-WITH-LOW-LEVEL-CONSTRUCTION.
+Scoring recommendation: include only in advanced/internal bucket.
+
+ROOT CAUSE:
+The failure was caused by a documentation gap and an explicit negative instruction in the prompt ("Do not assume the existence of specific testing methods"). The source code clearly shows that `PyTorchTesting.__init__` binds two specific methods: `self.assert_allclose` (mapped to `torch.allclose`) and `self.assert_equal` (mapped to `torch.testing.assert_close`), which must be used to verify the object's behavior.
+
+CORRECT USAGE:
+```python
+import torch
+from tslearn.backend.pytorch_backend import PyTorchTesting
+
+tester = PyTorchTesting()
+
+t1 = torch.tensor([1.0, 2.0, 3.0])
+t2 = torch.tensor([1.0, 2.0, 3.0])
+
+# assert_allclose returns a boolean
+is_close = tester.assert_allclose(t1, t2)
+assert is_close is True, "Tensors should be allclose"
+
+# assert_equal raises an AssertionError if not close, returns None otherwise
+tester.assert_equal(t1, t2)
+
+print(f"__CHECK__ PyTorchTesting {type(tester).__name__}")
+```
+
+REQUIRED TYPES & IMPORTS:
+`torch`
+`tslearn.backend.pytorch_backend.PyTorchTesting`
+
+DOC MUST SAY:
+- The `PyTorchTesting` instance exposes two callable attributes: `assert_allclose` (which maps to `torch.allclose` and returns a boolean) and `assert_equal` (which maps to `torch.testing.assert_close` and raises an `AssertionError` if tensors are not close).
+- To verify the instance, callers should import `torch`, create dummy tensors, and pass them to `tester.assert_allclose` or `tester.assert_equal`.

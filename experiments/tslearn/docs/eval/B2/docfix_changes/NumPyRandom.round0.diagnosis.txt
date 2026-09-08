@@ -1,0 +1,38 @@
+AUDIENCE & TESTABILITY:
+API audience: INTERNAL-FRAMEWORK.
+Harness testability: TESTABLE-WITH-LOW-LEVEL-CONSTRUCTION.
+Scoring recommendation: include only in advanced/internal bucket.
+
+ROOT CAUSE:
+The documentation explicitly omitted the bound methods and instructed the user not to assume them, causing the snippet to intentionally fail rather than guess. The source code clearly shows that `NumPyRandom` binds `rand`, `randint`, and `randn` to their `numpy.random` equivalents during initialization, which can and should be called to verify the object's behavior.
+
+CORRECT USAGE:
+```python
+from tslearn.backend.numpy_backend import NumPyRandom
+import numpy as np
+
+# Instantiate the low-level backend helper
+np_random = NumPyRandom()
+
+# Exercise the bound methods (delegates to numpy.random)
+rand_array = np_random.rand(2, 3)
+randint_array = np_random.randint(0, 10, size=(4,))
+randn_array = np_random.randn(2)
+
+# Assert falsifiable properties of the generated outputs
+assert isinstance(rand_array, np.ndarray), "Expected a NumPy array"
+assert rand_array.shape == (2, 3), "Expected shape (2, 3)"
+assert randint_array.shape == (4,), "Expected shape (4,)"
+assert randn_array.shape == (2,), "Expected shape (2,)"
+
+print(f"__CHECK__ NumPyRandom {rand_array.shape}")
+```
+
+REQUIRED TYPES & IMPORTS:
+`tslearn.backend.numpy_backend.NumPyRandom`
+`numpy`
+
+DOC MUST SAY:
+- The `NumPyRandom` instance exposes `rand`, `randint`, and `randn` attributes, which are bound directly to `numpy.random.rand`, `numpy.random.randint`, and `numpy.random.randn`.
+- To verify the instance, callers should invoke one of these bound methods (e.g., `np_random.rand(2, 3)`) and assert the shape or type of the returned NumPy array.
+- Remove the warning against assuming specific method signatures, as the exact bound methods are a stable part of the class contract.

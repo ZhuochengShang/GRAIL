@@ -1,0 +1,31 @@
+AUDIENCE & TESTABILITY:
+API audience: USER-FACING.
+Harness testability: TESTABLE.
+Scoring recommendation: include in main user-facing denominator.
+
+ROOT CAUSE:
+The snippet explicitly provided a standard scikit-learn `DecisionTreeClassifier` as the `base_classifier` for the early classification model. However, `tslearn`'s early classifiers pass 3D arrays `(n_samples, n_timestamps, n_features)` to their base classifiers during prediction, which causes standard scikit-learn estimators to fail with a dimensionality error since they strictly expect 2D arrays.
+
+CORRECT USAGE:
+```python
+early_clf = NonMyopicEarlyClassifier(
+    n_clusters=2,
+    cost_time_parameter=1e-3,
+    random_state=42
+)
+early_clf.fit(X, y)
+
+predicted_classes, prediction_timestamps = early_clf.predict_class_and_earliness(X)
+
+assert predicted_classes.shape == (X.shape[0],)
+assert prediction_timestamps.shape == (X.shape[0],)
+print(f"__CHECK__ predict_class_and_earliness {predicted_classes.shape}, {prediction_timestamps.shape}")
+```
+
+REQUIRED TYPES & IMPORTS:
+`tslearn.early_classification.NonMyopicEarlyClassifier`
+
+DOC MUST SAY:
+- If providing a custom `base_classifier` to the early classification estimator, it must be a time-series classifier from `tslearn` (e.g., `TimeSeriesSVC`) that natively accepts 3D arrays `(n_samples, n_timestamps, n_features)`.
+- Standard scikit-learn classifiers (like `DecisionTreeClassifier`) will fail during prediction because they only accept 2D arrays.
+- Alternatively, omit the `base_classifier` argument to use the default 3D-compatible classifier.

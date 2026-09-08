@@ -1,0 +1,39 @@
+AUDIENCE & TESTABILITY:
+API audience: INTERNAL-FRAMEWORK
+Harness testability: TESTABLE-WITH-LOW-LEVEL-CONSTRUCTION
+Scoring recommendation: include only in advanced/internal bucket
+
+ROOT CAUSE:
+The documentation incorrectly presented `BaseModelPackage` as a concrete class to be instantiated directly. In reality, it is an internal abstract base class (mixin) that must be subclassed. To exercise its logic (like `_to_dict()`), the subclass must implement the abstract method `_is_fitted()` and provide scikit-learn's `get_params()` method, while fitted state is automatically discovered via attributes ending with a trailing underscore.
+
+CORRECT USAGE:
+```python
+class DummyEstimator(BaseModelPackage):
+    def __init__(self, alpha=1.0):
+        self.alpha = alpha
+        
+    def get_params(self, deep=True):
+        return {"alpha": self.alpha}
+        
+    def _is_fitted(self):
+        return hasattr(self, "coef_")
+
+model = DummyEstimator(alpha=2.0)
+# Simulate fitting by setting an attribute with a trailing underscore
+model.coef_ = [1, 2, 3]
+
+pkg_dict = model._to_dict()
+
+assert pkg_dict["hyper_params"]["alpha"] == 2.0
+assert pkg_dict["model_params"]["coef_"] == [1, 2, 3]
+print("__CHECK__ BaseModelPackage successfully packaged dummy estimator.")
+```
+
+REQUIRED TYPES & IMPORTS:
+`tslearn.bases.BaseModelPackage`
+
+DOC MUST SAY:
+- `BaseModelPackage` is an abstract base class/mixin intended for internal framework use and should not be instantiated directly.
+- To use or test it, create a subclass that implements the abstract method `_is_fitted()`.
+- The subclass must also provide a `get_params()` method (typically by inheriting from `sklearn.base.BaseEstimator`) because `_to_dict()` relies on it to extract hyperparameters.
+- Fitted model parameters are automatically extracted by `_get_model_params()` by looking for instance attributes ending with a single underscore (`_`).
