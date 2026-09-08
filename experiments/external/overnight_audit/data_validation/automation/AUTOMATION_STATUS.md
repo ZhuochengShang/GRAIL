@@ -1,6 +1,6 @@
 # Automation status and deadline forecast
 
-Updated: 2026-09-07T21:09:29.863487-07:00. Hours to Wednesday 11 AM: 37.84.
+Updated: 2026-09-07T21:24:46.414668-07:00. Hours to Wednesday 11 AM: 37.59.
 
 **Whole-pipeline completion time remains unverified.** Estimates below cover remaining comprehension only; generation, document repair, and final validation are additional. Scenarios are not confidence intervals.
 
@@ -10,18 +10,18 @@ Updated: 2026-09-07T21:09:29.863487-07:00. Hours to Wednesday 11 AM: 37.84.
 | mir_eval/A2 | 0 | complete | 0.00 / 0.00 / 0.00 |
 | mir_eval/B1 | 148 | insufficient_observations | unknown |
 | mir_eval/B2 | 148 | insufficient_observations | unknown |
-| thumbnailator/A1 | 7 | estimated | 0.03 / 0.08 / 0.17 |
+| thumbnailator/A1 | 7 | estimated | 0.03 / 0.13 / 0.25 |
 | thumbnailator/A2 | 0 | complete | 0.00 / 0.00 / 0.00 |
 | thumbnailator/B1 | 149 | insufficient_observations | unknown |
 | thumbnailator/B2 | 149 | insufficient_observations | unknown |
-| tslearn/A1 | 115 | estimated | 0.48 / 10.61 / 57.47 |
-| tslearn/A2 | 145 | estimated | 0.48 / 1.51 / 3.03 |
+| tslearn/A1 | 101 | estimated | 0.40 / 5.96 / 43.87 |
+| tslearn/A2 | 85 | estimated | 0.20 / 0.35 / 1.17 |
 | tslearn/B1 | 235 | insufficient_observations | unknown |
 | tslearn/B2 | 235 | insufficient_observations | unknown |
 
-Failure review queue: 242 entries. Mutable cross-condition path conflicts: 0.
+Failure review queue: 268 entries. Mutable cross-condition path conflicts: 0.
 Deadline risks: mir_eval/A1: estimated
-Observation errors: 0. Observer health: `{"results": {"age_seconds": 28.9, "stale": false}, "data": {"age_seconds": 19.6, "stale": false}}`.
+Observation errors: 0. Observer health: `{"results": {"age_seconds": 38.4, "stale": false}, "data": {"age_seconds": 9.3, "stale": false}}`.
 
 - [Failure review queue](failure_review_queue.json): suggested causes, evidence, confidence, attempts and repair rounds.
 - [Resolved configuration bundles](config_bundles.json): actual profile, direct YAML layers, fixture bindings and recorded environments.
