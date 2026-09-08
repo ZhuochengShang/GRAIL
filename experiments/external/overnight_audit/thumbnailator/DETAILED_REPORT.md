@@ -27,10 +27,16 @@ Effects withheld until all four matched final cells and their repair/test eviden
 
 ### A1
 
-Primary failure categories: {}.
+Primary failure categories: {"unknown": 6}.
 
 Recorded provider-error attempts across all checkpoint fingerprints: 17. Provider-internal retries are not recorded by the existing client and cannot be inferred from the configured limit. Watchdog logs retain process attempts; checkpoint attempts and document-fix rounds are separate ledger fields.
 
+- `ConsecutivelyNumberedFilenames`: unknown; native=runtime; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `source/src/main/java/net/coobird/thumbnailator/name/ConsecutivelyNumberedFilenames.java:295`. Error: `IOException: Specified path is not a directory or does not exist.`. Review: Observed runtime; doc attribution requires source, document, and snippet review.
+- `FileThumbnailTask`: unknown; native=compile; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `source/src/main/java/net/coobird/thumbnailator/tasks/FileThumbnailTask.java:61`. Error: `/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A1/experiments/external/thumbnailator/.aideal_exec/A1/run_FileThumbnailTask/ApiTest.java:61: error: variable args is already defined in method main(String[])`. Review: Observed compile; doc attribution requires source, document, and snippet review.
+- `FixedSizeThumbnailMaker`: unknown; native=runtime; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `source/src/main/java/net/coobird/thumbnailator/makers/FixedSizeThumbnailMaker.java:158`. Error: `IllegalStateException: Maker not ready to make thumbnail.`. Review: Observed runtime; doc attribution requires source, document, and snippet review.
+- `ThumbnailMaker`: unknown; native=runtime; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `source/src/main/java/net/coobird/thumbnailator/makers/ThumbnailMaker.java:163`. Error: `IllegalStateException: Maker not ready to make thumbnail.`. Review: Observed runtime; doc attribution requires source, document, and snippet review.
+- `ThumbnailParameter`: unknown; native=compile; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `source/src/main/java/net/coobird/thumbnailator/ThumbnailParameter.java:437`. Error: `/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A1/experiments/external/thumbnailator/.aideal_exec/A1/run_ThumbnailParameter/ApiTest.java:60: error: variable args is already defined in method main(String[])`. Review: Observed compile; doc attribution requires source, document, and snippet review.
+- `alphaInterpolation`: unknown; native=compile; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `source/src/main/java/net/coobird/thumbnailator/Thumbnails.java:1379`. Error: `/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A1/experiments/external/thumbnailator/.aideal_exec/A1/run_alphaInterpolation/ApiTest.java:55: error: incompatible types: Object cannot be converted to AlphaInterpolation`. Review: Observed compile; doc attribution requires source, document, and snippet review.
 
 ### A2
 
