@@ -1,6 +1,6 @@
 # AIDEAL: three separate stages
 
-2026-09-08T06:35:43.429810-07:00
+2026-09-08T06:50:44.043154-07:00
 
 A1/A2 are zero-fix controls. S_A2 repairs snippets from A2 failures. Independent README repair produces fresh zero-fix B2. S_B2 repairs only eligible B2 failures.
 
