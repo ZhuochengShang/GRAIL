@@ -1,0 +1,31 @@
+version: 2
+max_parallel: 1
+retry_delay_seconds: 120
+env:
+  PYTHONPATH: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/grail-agent/src:/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal
+  AIDEAL_GOOGLE_MIN_INTERVAL_S: '3'
+  AIDEAL_GOOGLE_RATE_STATE: /tmp/aideal_google_rate_gate.txt
+  AIDEAL_GOOGLE_REQUEST_TIMEOUT_S: '300'
+  AIDEAL_GOOGLE_MAX_RETRIES: '2'
+  AIDEAL_RECOVERY_ENV_INVENTORY: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_freeze/experiments/tslearn/docs/eval/setup/environment_freeze.txt
+jobs:
+- id: tslearn_a2_repair_v2
+  cwd: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal
+  branch: aideal/external-2x2-infra
+  environment_inventory: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_freeze/experiments/tslearn/docs/eval/setup/environment_freeze.txt
+  command:
+  - /Users/clockorangezoe/miniconda3/envs/geo_llm_spark/bin/python
+  - -m
+  - experiments.external.recovery.driver
+  - tslearn
+  - --freeze-worktree
+  - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_freeze
+  - --work
+  - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn
+  - --out
+  - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_overnight_evidence_audit/experiments/external/overnight_audit/data_validation/pipeline_v2/tslearn
+  result: .aideal_exec/tslearn_a2_repair_v2.stdout
+  complete:
+    kind: exit_zero
+  max_runtime_seconds: 1209600
+  max_restarts: 0

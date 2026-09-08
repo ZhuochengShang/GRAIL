@@ -1,0 +1,22 @@
+# mir_eval · A2-only repair pipeline
+
+2026-09-08T00:56:12.812006-07:00
+
+A1 original README → zero fixes. A2 generated README → zero fixes.
+Frozen A2 failures → source-only snippet repair; independently → generated-README repair → fresh B2.
+Original-README repair (historical B1) is intentionally omitted.
+
+| Cell | State | Native pass | API outcomes | Failure categories |
+|---|---|---:|---:|---|
+| A1 | native partial | 69 | 148 | {'llm-error': 29, 'runtime': 47, 'unknown': 1, 'infra': 2} |
+| A2 | native complete | 135 | 148 | {'runtime': 13} |
+| B2 | pending native evidence | — | — | {} |
+
+Source recovery by new code-fix round: {'0': 0, '1': 3, '2': 4, '3': 4, '4': 4, '5': 4}
+Source statuses: {'recovered_native': 4, 'pending': 9}
+Document repair: {'attempted': None, 'processed': None, 'blocked': None}
+
+[Source round details](source/REPORT.md) · [Machine-readable live evidence](live.json)
+
+A2 is round zero; at most five new snippet proposals; stuck threshold two. B2 has at most five document rewrite rounds and a fresh zero-code-fix full-manifest evaluation.
+Provider events, native acceptance, independent replay and semantic validation are separate. A passing generated assertion is not by itself independent proof of correctness.

@@ -1,5 +1,7 @@
 # Final report: data, configuration, and API-test methods
 
+**September 8 update:** [A2-only repair v2](pipeline_v2/README.md) is the active protocol. Original-README repair is omitted. A1/A2 input evidence remains applicable; source recovery and rewritten-README B2 results are reported separately. The four-cell release tables below and in older observer pages are historical views.
+
 Evidence reviewed September 7, 2026, America/Los_Angeles. This is the data and
 methods appendix of the Wednesday report, not a declaration that the study
 is complete. The deadline covers mir_eval, Thumbnailator, and tslearn.
