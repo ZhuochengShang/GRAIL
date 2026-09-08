@@ -1,6 +1,6 @@
 # AIDEAL readiness assessment and improvement queue
 
-Updated: 2026-09-08T23:10:34.448504+00:00
+Updated: 2026-09-08T23:26:36.176124+00:00
 
 **Measured scope:** how documentation affects an LLM’s API use under a fixed harness. Overall agent readiness is not yet fully measured; no composite score is assigned.
 
@@ -8,7 +8,7 @@ Updated: 2026-09-08T23:10:34.448504+00:00
 |---|---|---|---|---|---|
 | mir_eval | 1/148 provisional | 135/148 final | pending (148 APIs) | 137/148 final | WITHHELD/PARTIAL |
 | thumbnailator | 130/149 final | 127/149 final | pending (149 APIs) | 139/149 final | WITHHELD/PARTIAL |
-| tslearn | 3/235 provisional | 175/235 final | pending (235 APIs) | 43/235 provisional | WITHHELD/PARTIAL |
+| tslearn | 3/235 provisional | 175/235 final | pending (235 APIs) | 108/235 provisional | WITHHELD/PARTIAL |
 
 Provisional counts retain pending and provider-error APIs in the denominator. Final counts are native pass/all-API results. Cross-cell effects require the separate matched-comparison release checks.
 
@@ -38,11 +38,11 @@ Provisional counts retain pending and provider-error APIs in the denominator. Fi
 | tslearn | assertion-or-behavior | 16 |
 | tslearn | input-contract-or-api-call | 10 |
 | tslearn | provider | 34 |
-| tslearn | unknown | 31 |
+| tslearn | unknown | 35 |
 
-## Reviewable improvements (213)
+## Reviewable improvements (217)
 
-Review states: `{'open': 212, 'proposed': 1}`. Observation errors: 0. Inactive reviewed IDs retained: 0.
+Review states: `{'open': 216, 'proposed': 1}`. Observation errors: 0. Inactive reviewed IDs retained: 0.
 
 Each card separates native failure, diagnosis confidence, proposed action, validation and review decisions. Provider barriers concern execution infrastructure; they are not automatically codebase or documentation defects.
 
@@ -261,6 +261,10 @@ Each card separates native failure, diagnosis confidence, proposed action, valid
 | [tslearn: LocalSquaredDistanceLayer](suggestions/eb45ba57f07931571043.md) | B2 | needs_diagnosis | low | open |
 | [tslearn: PatchingLayer](suggestions/487cb9d4ac16bce9bc97.md) | B2 | needs_diagnosis | low | open |
 | [tslearn: TimeSeriesMixin](suggestions/11539dd38bd61037c4cb.md) | B2 | needs_diagnosis | medium | open |
+| [tslearn: build](suggestions/43d24967de8de0a3d000.md) | B2 | needs_diagnosis | low | open |
+| [tslearn: call](suggestions/b9635ecc5e10771a1f83.md) | B2 | needs_diagnosis | low | open |
+| [tslearn: compute_output_shape](suggestions/a741b87fdae129fa9481.md) | B2 | needs_diagnosis | low | open |
+| [tslearn: extract_from_zip_url](suggestions/896b6032e9cffff495ef.md) | B2 | needs_diagnosis | low | open |
 
 ## Human and agent workflow
 
