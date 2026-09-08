@@ -1,4 +1,4 @@
-# mir_eval A2 zero-round failure analysis
+# mir_eval A2 failure analysis
 
 - Result: `/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_A2/experiments/external/mir_eval/docs/eval/A2/comprehension.json`
 - Experiment fingerprint: `ea2bfacf7be649de61c9ef34386a0c1981e61766f231e06367304ff9caa25571`
