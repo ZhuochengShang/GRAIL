@@ -17,28 +17,11 @@
     "last_retry_interval_s": null,
     "next_provider_retry_epoch": null,
     "transport_policy": "Historical/uninstrumented",
-    "identity_status": "Provisional last-observed fingerprint group; final identity unverified",
+    "identity_status": "Final or explicitly migrated evidence",
     "error": null,
     "details": "api_details/bda22f545c19d2da4cca.json"
   },
   "native_row": {
-    "name": "SoftDTW",
-    "doc_source": "aideal",
-    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
-    "execution_evidence": {
-      "status": "pass",
-      "rounds": [
-        {
-          "round": 0,
-          "status": "pass"
-        }
-      ],
-      "code": "import numpy as np\nfrom tslearn.metrics import SoftDTW\n\n# Construct a deterministic caller-owned pairwise distance matrix D\nD = (s1[:6, np.newaxis] - s2[np.newaxis, :4]) ** 2\nD = D.astype(np.float64)\n\n# Instantiate the low-level SoftDTW helper\nsdtw = SoftDTW(D, gamma=1.0)\n\n# Execute the forward pass\ndiscrepancy = sdtw.compute()\n\n# Execute the backward pass (gradient w.r.t D)\ngradient = sdtw.grad()\n\nassert gradient.shape == D.shape == (6, 4), f\"Expected gradient shape (6, 4), got {gradient.shape}\"\nassert isinstance(discrepancy, float), \"Discrepancy must be a float\"\n\nprint(f\"__CHECK__ SoftDTW discrepancy: {discrepancy:.4f}, gradient shape: {gradient.shape}\")",
-      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_SoftDTW/api_test.py",
-      "exit_code": 0,
-      "stdout_tail": "__CHECK__ SoftDTW discrepancy: -5.4174, gradient shape: (6, 4)\n__DONE__\n",
-      "stderr_tail": ""
-    },
     "status": "pass",
     "attempts": 1,
     "pass_round": 0,
@@ -60,10 +43,26 @@
     "document_sha256": "356cd178f5f395381d12723cf88026083515811322fc509bd3af60482d760143",
     "source": "tslearn/tslearn/metrics/softdtw_variants.py:1068",
     "source_other_sites": 0,
-    "codebase_frames": null
+    "codebase_frames": null,
+    "name": "SoftDTW",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "import numpy as np\nfrom tslearn.metrics import SoftDTW\n\n# Construct a deterministic caller-owned pairwise distance matrix D\nD = (s1[:6, np.newaxis] - s2[np.newaxis, :4]) ** 2\nD = D.astype(np.float64)\n\n# Instantiate the low-level SoftDTW helper\nsdtw = SoftDTW(D, gamma=1.0)\n\n# Execute the forward pass\ndiscrepancy = sdtw.compute()\n\n# Execute the backward pass (gradient w.r.t D)\ngradient = sdtw.grad()\n\nassert gradient.shape == D.shape == (6, 4), f\"Expected gradient shape (6, 4), got {gradient.shape}\"\nassert isinstance(discrepancy, float), \"Discrepancy must be a float\"\n\nprint(f\"__CHECK__ SoftDTW discrepancy: {discrepancy:.4f}, gradient shape: {gradient.shape}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_SoftDTW/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ SoftDTW discrepancy: -5.4174, gradient shape: (6, 4)\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969"
   },
-  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/comprehension_progress.jsonl",
-  "source_sha256": "0a09dcebc55c1b772f6889a52003ba9fcffd51ad4e99ecb50387e688fe973703",
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/comprehension.json",
+  "source_sha256": "4d1451cc4ea9281931c5a4bd5706a63fe7e77b583aa1866442b55ff2116fddcd",
   "checkpoint_events": [
     {
       "name": "SoftDTW",

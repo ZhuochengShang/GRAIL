@@ -6,7 +6,7 @@ Deadline: 2026-09-09T11:00:00-07:00. Values below come from recorded final resul
 |---|---|---|---|---|---|
 | mir_eval | pending | 135/148 | pending | 137/148 | WITHHELD/PARTIAL |
 | thumbnailator | 130/149 | 127/149 | pending | 139/149 | WITHHELD/PARTIAL |
-| tslearn | pending | 175/235 | pending | pending | WITHHELD/PARTIAL |
+| tslearn | pending | 175/235 | pending | 217/235 | WITHHELD/PARTIAL |
 
 Release requires all four complete matched results, the result observer's validity checks, and matching input provenance for all four cells. COMPLETE_WITH_LIMITATIONS is not a claim that every generated assertion or API/data pairing has been independently verified.
 

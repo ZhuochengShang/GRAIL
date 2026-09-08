@@ -1,0 +1,111 @@
+{
+  "summary": {
+    "repository": "tslearn",
+    "cell": "B2",
+    "api": "ts_zeros",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 7.1,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 7.1,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "error": null,
+    "details": "api_details/be613b76fa3bc425a9ac.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 7.1,
+    "llm_calls": 1,
+    "input_tokens": 2225,
+    "output_tokens": 467,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2225,
+        "output_tokens": 467
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 3113,
+    "document_sha256": "206c42087961d043a8f7750caf8e074a58ca3d71ad6059258dc278f9e64efe9f",
+    "source": "tslearn/tslearn/utils/utils.py:521",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "name": "ts_zeros",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "from tslearn.utils import ts_zeros\nimport numpy as np\n\n# Generate a single 2D zero-filled time series of length 10 and 2 dimensions\nts = ts_zeros(sz=10, d=2)\n\n# Verify the result\nassert isinstance(ts, np.ndarray), \"Output must be a NumPy array\"\nassert ts.shape == (10, 2), f\"Expected shape (10, 2), got {ts.shape}\"\nassert np.all(ts == 0.0), \"All values must be zero\"\n\nprint(f\"__CHECK__ ts_zeros {ts.shape}, sum={np.sum(ts)}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_ts_zeros/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ ts_zeros (10, 2), sum=0.0\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/comprehension.json",
+  "source_sha256": "4d1451cc4ea9281931c5a4bd5706a63fe7e77b583aa1866442b55ff2116fddcd",
+  "checkpoint_events": [
+    {
+      "name": "ts_zeros",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "from tslearn.utils import ts_zeros\nimport numpy as np\n\n# Generate a single 2D zero-filled time series of length 10 and 2 dimensions\nts = ts_zeros(sz=10, d=2)\n\n# Verify the result\nassert isinstance(ts, np.ndarray), \"Output must be a NumPy array\"\nassert ts.shape == (10, 2), f\"Expected shape (10, 2), got {ts.shape}\"\nassert np.all(ts == 0.0), \"All values must be zero\"\n\nprint(f\"__CHECK__ ts_zeros {ts.shape}, sum={np.sum(ts)}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_ts_zeros/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ ts_zeros (10, 2), sum=0.0\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 7.1,
+      "llm_calls": 1,
+      "input_tokens": 2225,
+      "output_tokens": 467,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2225,
+          "output_tokens": 467
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3113,
+      "document_sha256": "206c42087961d043a8f7750caf8e074a58ca3d71ad6059258dc278f9e64efe9f",
+      "source": "tslearn/tslearn/utils/utils.py:521",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

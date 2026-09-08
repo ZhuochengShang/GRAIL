@@ -17,36 +17,11 @@
     "last_retry_interval_s": null,
     "next_provider_retry_epoch": null,
     "transport_policy": "Historical/uninstrumented",
-    "identity_status": "Provisional last-observed fingerprint group; final identity unverified",
+    "identity_status": "Final or explicitly migrated evidence",
     "error": "missing module/import: No module named 'keras'",
     "details": "api_details/82a960b4508445cdc77e.json"
   },
   "native_row": {
-    "name": "GlobalMinPooling1D",
-    "doc_source": "aideal",
-    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
-    "execution_evidence": {
-      "status": "fail",
-      "rounds": [
-        {
-          "round": 0,
-          "status": "fail",
-          "category": "infra",
-          "error": "missing module/import: No module named 'keras'",
-          "codebase_frames": [
-            "tslearn/tslearn/__init__.py:14",
-            "tslearn/tslearn/shapelets/shapelets.py:7"
-          ]
-        }
-      ],
-      "error_category": "infra",
-      "error": "missing module/import: No module named 'keras'",
-      "code": "import numpy as np\nfrom tslearn.shapelets.shapelets import GlobalMinPooling1D\n\n# Instantiate the pooling layer\nlayer = GlobalMinPooling1D()\n\n# Apply the layer to the temporal data X (batch_size=8, steps=40, features=1)\noutput = layer(X)\n\n# Convert output to NumPy array for inspection (handles backend tensors)\nif hasattr(output, \"numpy\"):\n    output_np = output.numpy()\nelse:\n    output_np = np.asarray(output)\n\n# Compute expected output using numpy\nexpected = np.min(X, axis=1)\n\n# Verify the shape and values\nassert output_np.shape == (X.shape[0], X.shape[2]), f\"Expected shape {(X.shape[0], X.shape[2])}, got {output_np.shape}\"\nnp.testing.assert_allclose(output_np, expected, rtol=1e-5, atol=1e-8)\n\nprint(f\"__CHECK__ GlobalMinPooling1D {output_np.shape} {output_np[0, 0]:.4f}\")",
-      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_GlobalMinPooling1D/api_test.py",
-      "exit_code": 1,
-      "stdout_tail": "",
-      "stderr_tail": "__RUN_ERR__ ModuleNotFoundError: No module named 'keras'\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_GlobalMinPooling1D/api_test.py\", line 65, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_GlobalMinPooling1D/api_test.py\", line 60, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_GlobalMinPooling1D/api_test.py\", line 35, in api_test\n    from tslearn.shapelets.shapelets import GlobalMinPooling1D\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/tslearn/tslearn/shapelets/__init__.py\", line 14, in <module>\n    from .shapelets import (\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/tslearn/tslearn/shapelets/shapelets.py\", line 7, in <module>\n    from keras.layers import (\nModuleNotFoundError: No module named 'keras'\n"
-    },
     "status": "fail",
     "attempts": 1,
     "pass_round": null,
@@ -71,10 +46,34 @@
     "codebase_frames": [
       "tslearn/tslearn/__init__.py:14",
       "tslearn/tslearn/shapelets/shapelets.py:7"
-    ]
+    ],
+    "name": "GlobalMinPooling1D",
+    "execution_evidence": {
+      "status": "fail",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "fail",
+          "category": "infra",
+          "error": "missing module/import: No module named 'keras'",
+          "codebase_frames": [
+            "tslearn/tslearn/__init__.py:14",
+            "tslearn/tslearn/shapelets/shapelets.py:7"
+          ]
+        }
+      ],
+      "error_category": "infra",
+      "error": "missing module/import: No module named 'keras'",
+      "code": "import numpy as np\nfrom tslearn.shapelets.shapelets import GlobalMinPooling1D\n\n# Instantiate the pooling layer\nlayer = GlobalMinPooling1D()\n\n# Apply the layer to the temporal data X (batch_size=8, steps=40, features=1)\noutput = layer(X)\n\n# Convert output to NumPy array for inspection (handles backend tensors)\nif hasattr(output, \"numpy\"):\n    output_np = output.numpy()\nelse:\n    output_np = np.asarray(output)\n\n# Compute expected output using numpy\nexpected = np.min(X, axis=1)\n\n# Verify the shape and values\nassert output_np.shape == (X.shape[0], X.shape[2]), f\"Expected shape {(X.shape[0], X.shape[2])}, got {output_np.shape}\"\nnp.testing.assert_allclose(output_np, expected, rtol=1e-5, atol=1e-8)\n\nprint(f\"__CHECK__ GlobalMinPooling1D {output_np.shape} {output_np[0, 0]:.4f}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_GlobalMinPooling1D/api_test.py",
+      "exit_code": 1,
+      "stdout_tail": "",
+      "stderr_tail": "__RUN_ERR__ ModuleNotFoundError: No module named 'keras'\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_GlobalMinPooling1D/api_test.py\", line 65, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_GlobalMinPooling1D/api_test.py\", line 60, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_GlobalMinPooling1D/api_test.py\", line 35, in api_test\n    from tslearn.shapelets.shapelets import GlobalMinPooling1D\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/tslearn/tslearn/shapelets/__init__.py\", line 14, in <module>\n    from .shapelets import (\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/tslearn/tslearn/shapelets/shapelets.py\", line 7, in <module>\n    from keras.layers import (\nModuleNotFoundError: No module named 'keras'\n"
+    },
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969"
   },
-  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/comprehension_progress.jsonl",
-  "source_sha256": "0a09dcebc55c1b772f6889a52003ba9fcffd51ad4e99ecb50387e688fe973703",
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/comprehension.json",
+  "source_sha256": "4d1451cc4ea9281931c5a4bd5706a63fe7e77b583aa1866442b55ff2116fddcd",
   "checkpoint_events": [
     {
       "name": "GlobalMinPooling1D",

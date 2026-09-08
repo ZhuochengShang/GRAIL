@@ -1,0 +1,119 @@
+{
+  "summary": {
+    "repository": "tslearn",
+    "cell": "B2",
+    "api": "PatchingLayer",
+    "outcome": "Setup/import blocked",
+    "test_execution": "Setup/import failed; target execution not established",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 26.5,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 26.5,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "error": "missing module/import: No module named 'tensorflow'",
+    "details": "api_details/8f1b8174628a71c59f4e.json"
+  },
+  "native_row": {
+    "status": "fail",
+    "attempts": 1,
+    "pass_round": null,
+    "wall_s": 26.5,
+    "llm_calls": 1,
+    "input_tokens": 1821,
+    "output_tokens": 3097,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 1821,
+        "output_tokens": 3097
+      }
+    },
+    "error_category": "infra",
+    "error": "missing module/import: No module named 'tensorflow'",
+    "locus": "",
+    "doc_chars": 1930,
+    "document_sha256": "ee3c28aa6690a2cfccc7ae7f8462208770e3cc2e0d178ae72063cf401a495c5f",
+    "source": "tslearn/tslearn/shapelets/shapelets.py:128",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "name": "PatchingLayer",
+    "execution_evidence": {
+      "status": "fail",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "fail",
+          "category": "infra",
+          "error": "missing module/import: No module named 'tensorflow'"
+        }
+      ],
+      "error_category": "infra",
+      "error": "missing module/import: No module named 'tensorflow'",
+      "code": "import tensorflow as tf\nfrom tslearn.shapelets import PatchingLayer\n\nlayer = PatchingLayer()\ntensor_X = tf.convert_to_tensor(X, dtype=tf.float32)\n\ntry:\n    out = layer(tensor_X)\n    witness = str(out.shape)\nexcept Exception as e:\n    witness = type(e).__name__\n\nassert False, \"The documented contract is insufficient to verify the result (missing shapelet_length parameter/call signature).\"\nprint(f\"__CHECK__ PatchingLayer {witness}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_PatchingLayer/api_test.py",
+      "exit_code": 1,
+      "stdout_tail": "",
+      "stderr_tail": "__RUN_ERR__ ModuleNotFoundError: No module named 'tensorflow'\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_PatchingLayer/api_test.py\", line 56, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_PatchingLayer/api_test.py\", line 51, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_PatchingLayer/api_test.py\", line 34, in api_test\n    import tensorflow as tf\nModuleNotFoundError: No module named 'tensorflow'\n"
+    },
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/comprehension.json",
+  "source_sha256": "4d1451cc4ea9281931c5a4bd5706a63fe7e77b583aa1866442b55ff2116fddcd",
+  "checkpoint_events": [
+    {
+      "name": "PatchingLayer",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "infra",
+            "error": "missing module/import: No module named 'tensorflow'"
+          }
+        ],
+        "error_category": "infra",
+        "error": "missing module/import: No module named 'tensorflow'",
+        "code": "import tensorflow as tf\nfrom tslearn.shapelets import PatchingLayer\n\nlayer = PatchingLayer()\ntensor_X = tf.convert_to_tensor(X, dtype=tf.float32)\n\ntry:\n    out = layer(tensor_X)\n    witness = str(out.shape)\nexcept Exception as e:\n    witness = type(e).__name__\n\nassert False, \"The documented contract is insufficient to verify the result (missing shapelet_length parameter/call signature).\"\nprint(f\"__CHECK__ PatchingLayer {witness}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_PatchingLayer/api_test.py",
+        "exit_code": 1,
+        "stdout_tail": "",
+        "stderr_tail": "__RUN_ERR__ ModuleNotFoundError: No module named 'tensorflow'\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_PatchingLayer/api_test.py\", line 56, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_PatchingLayer/api_test.py\", line 51, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_PatchingLayer/api_test.py\", line 34, in api_test\n    import tensorflow as tf\nModuleNotFoundError: No module named 'tensorflow'\n"
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 26.5,
+      "llm_calls": 1,
+      "input_tokens": 1821,
+      "output_tokens": 3097,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1821,
+          "output_tokens": 3097
+        }
+      },
+      "error_category": "infra",
+      "error": "missing module/import: No module named 'tensorflow'",
+      "locus": "",
+      "doc_chars": 1930,
+      "document_sha256": "ee3c28aa6690a2cfccc7ae7f8462208770e3cc2e0d178ae72063cf401a495c5f",
+      "source": "tslearn/tslearn/shapelets/shapelets.py:128",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

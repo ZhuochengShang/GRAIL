@@ -1,0 +1,111 @@
+{
+  "summary": {
+    "repository": "tslearn",
+    "cell": "B2",
+    "api": "lcss_path",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 14.3,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 14.3,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "error": null,
+    "details": "api_details/3cac3c721a426f674bcc.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 14.3,
+    "llm_calls": 1,
+    "input_tokens": 3304,
+    "output_tokens": 1086,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 3304,
+        "output_tokens": 1086
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 7331,
+    "document_sha256": "62e9ad302c8881b8b353fe1d71ec7e6bb35d2fddc05ba9190c45673e526ae6e2",
+    "source": "tslearn/tslearn/metrics/dtw_variants.py:2697",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "name": "lcss_path",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "import tslearn.metrics\n\npath, sim = tslearn.metrics.lcss_path(\n    s1, s2, \n    eps=0.5, \n    global_constraint=\"sakoe_chiba\", \n    sakoe_chiba_radius=5\n)\n\nassert isinstance(path, list), \"Path must be a list\"\nassert isinstance(sim, float), \"Similarity must be a float\"\nassert 0.0 <= sim <= 1.0, \"Similarity must be between 0.0 and 1.0\"\n\nif path:\n    assert isinstance(path[0], tuple) and len(path[0]) == 2, \"Path elements must be 2-tuples\"\n\n# LCSS similarity is defined as the length of the matching path divided by the length of the shortest time series\nexpected_sim = len(path) / min(len(s1), len(s2))\nassert abs(sim - expected_sim) < 1e-7, f\"Expected similarity {expected_sim}, got {sim}\"\n\nprint(f\"__CHECK__ lcss_path {sim:.4f}, path_len={len(path)}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_lcss_path/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ lcss_path 1.0000, path_len=40\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/comprehension.json",
+  "source_sha256": "4d1451cc4ea9281931c5a4bd5706a63fe7e77b583aa1866442b55ff2116fddcd",
+  "checkpoint_events": [
+    {
+      "name": "lcss_path",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import tslearn.metrics\n\npath, sim = tslearn.metrics.lcss_path(\n    s1, s2, \n    eps=0.5, \n    global_constraint=\"sakoe_chiba\", \n    sakoe_chiba_radius=5\n)\n\nassert isinstance(path, list), \"Path must be a list\"\nassert isinstance(sim, float), \"Similarity must be a float\"\nassert 0.0 <= sim <= 1.0, \"Similarity must be between 0.0 and 1.0\"\n\nif path:\n    assert isinstance(path[0], tuple) and len(path[0]) == 2, \"Path elements must be 2-tuples\"\n\n# LCSS similarity is defined as the length of the matching path divided by the length of the shortest time series\nexpected_sim = len(path) / min(len(s1), len(s2))\nassert abs(sim - expected_sim) < 1e-7, f\"Expected similarity {expected_sim}, got {sim}\"\n\nprint(f\"__CHECK__ lcss_path {sim:.4f}, path_len={len(path)}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_lcss_path/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ lcss_path 1.0000, path_len=40\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 14.3,
+      "llm_calls": 1,
+      "input_tokens": 3304,
+      "output_tokens": 1086,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 3304,
+          "output_tokens": 1086
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 7331,
+      "document_sha256": "62e9ad302c8881b8b353fe1d71ec7e6bb35d2fddc05ba9190c45673e526ae6e2",
+      "source": "tslearn/tslearn/metrics/dtw_variants.py:2697",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

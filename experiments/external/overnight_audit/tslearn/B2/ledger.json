@@ -1,15 +1,14 @@
 {
-  "status": "partial",
+  "status": "complete",
   "expected": 235,
   "counts": {
-    "pass": 180,
-    "fail": 17,
-    "pending": 38
+    "pass": 217,
+    "fail": 18
   },
   "fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
   "errors": [],
   "failure_categories": {
-    "test/scaffold": 12,
+    "test/scaffold": 13,
     "unknown": 5
   },
   "recorded_provider_errors_all_fingerprints": 0,
@@ -8456,6 +8455,1613 @@
       "source_other_sites": 0,
       "codebase_frames": null,
       "checkpoint_line": 198
+    },
+    {
+      "name": "shapelets_",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import numpy as np\n\ntry:\n    from tslearn.shapelets import LearningShapelets\nexcept ImportError as e:\n    print(f\"__CHECK__ shapelets_ skipped due to missing optional dependency: {e}\")\nelse:\n    # Initialize the model with a small number of shapelets and iterations for speed\n    clf = LearningShapelets(\n        n_shapelets_per_size={3: 2}, \n        max_iter=1, \n        optimizer=\"sgd\", \n        random_state=0\n    )\n    \n    # Fit the model on the pre-loaded balanced dataset X (8, 40, 1) and labels y\n    clf.fit(X, y)\n    \n    # Access the learned shapelets property\n    shapelets = clf.shapelets_\n    \n    # Verify the output contract\n    assert isinstance(shapelets, np.ndarray), \"Expected shapelets_ to be a NumPy array\"\n    assert shapelets.dtype == object, \"Expected shapelets_ dtype to be object\"\n    assert len(shapelets) == 2, f\"Expected exactly 2 shapelets, got {len(shapelets)}\"\n    assert shapelets[0].shape == (3, 1), f\"Expected shapelet shape to be (3, 1), got {shapelets[0].shape}\"\n    \n    print(f\"__CHECK__ shapelets_ {len(shapelets)} shapelets of shape {shapelets[0].shape}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_shapelets_/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ shapelets_ skipped due to missing optional dependency: No module named 'keras'\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 19.3,
+      "llm_calls": 1,
+      "input_tokens": 2554,
+      "output_tokens": 2224,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2554,
+          "output_tokens": 2224
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 4534,
+      "document_sha256": "8cced3794b0f3d82f70a5320838328720d5f6aaa9762f2437b2ad48d53423c65",
+      "source": "tslearn/tslearn/shapelets/shapelets.py:441",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 199
+    },
+    {
+      "name": "shapelets_as_time_series_",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "infra",
+            "error": "missing module/import: No module named 'keras'",
+            "codebase_frames": [
+              "tslearn/tslearn/__init__.py:14",
+              "tslearn/tslearn/shapelets/shapelets.py:7"
+            ]
+          }
+        ],
+        "error_category": "infra",
+        "error": "missing module/import: No module named 'keras'",
+        "code": "from tslearn.shapelets import LearningShapelets\nimport numpy as np\n\n# Initialize the model requesting 2 shapelets of length 3, and 1 of length 4\nmodel = LearningShapelets(\n    n_shapelets_per_size={3: 2, 4: 1}, \n    max_iter=1, \n    random_state=0\n)\n\n# Fit the model on the provided balanced dataset\nmodel.fit(X, y)\n\n# Access the shapelets as a formatted 3D time-series dataset\nts_shapelets = model.shapelets_as_time_series_\n\n# Verify the output shape: (total_shapelets=3, max_length=4, dimensions=1)\nassert ts_shapelets.shape == (3, 4, 1), f\"Expected shape (3, 4, 1), got {ts_shapelets.shape}\"\n\n# Verify NaN padding: 2 shapelets of length 3 padded to length 4 means exactly 2 NaNs\nnan_count = np.isnan(ts_shapelets).sum()\nassert nan_count == 2, f\"Expected exactly 2 NaNs for padding, got {nan_count}\"\n\nprint(f\"__CHECK__ shapelets_as_time_series_ {ts_shapelets.shape} with {nan_count} NaNs\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_shapelets_as_time_series_/api_test.py",
+        "exit_code": 1,
+        "stdout_tail": "",
+        "stderr_tail": "__RUN_ERR__ ModuleNotFoundError: No module named 'keras'\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_shapelets_as_time_series_/api_test.py\", line 66, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_shapelets_as_time_series_/api_test.py\", line 61, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_shapelets_as_time_series_/api_test.py\", line 34, in api_test\n    from tslearn.shapelets import LearningShapelets\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/tslearn/tslearn/shapelets/__init__.py\", line 14, in <module>\n    from .shapelets import (\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/tslearn/tslearn/shapelets/shapelets.py\", line 7, in <module>\n    from keras.layers import (\nModuleNotFoundError: No module named 'keras'\n"
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 17.2,
+      "llm_calls": 1,
+      "input_tokens": 2571,
+      "output_tokens": 1855,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2571,
+          "output_tokens": 1855
+        }
+      },
+      "error_category": "infra",
+      "error": "missing module/import: No module named 'keras'",
+      "locus": "",
+      "doc_chars": 4124,
+      "document_sha256": "216e0ca4cafb4d85419f45c06ade5c63d814d4d5029a94a7235870b6193e639f",
+      "source": "tslearn/tslearn/shapelets/shapelets.py:455",
+      "source_other_sites": 0,
+      "codebase_frames": [
+        "tslearn/tslearn/__init__.py:14",
+        "tslearn/tslearn/shapelets/shapelets.py:7"
+      ],
+      "checkpoint_line": 200
+    },
+    {
+      "name": "sigma_gak",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import tslearn.metrics\n\n# Compute the suggested sigma for GAK deterministically\nsigma = tslearn.metrics.sigma_gak(X, n_samples=10, random_state=42)\n\n# Verify the result is a strictly positive float (a valid bandwidth)\nassert isinstance(sigma, float), \"Sigma must be a float.\"\nassert sigma > 0.0, \"Bandwidth sigma must be strictly positive.\"\n\nprint(f\"__CHECK__ sigma_gak {sigma:.4f}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_sigma_gak/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ sigma_gak 13.7683\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 9.7,
+      "llm_calls": 1,
+      "input_tokens": 2430,
+      "output_tokens": 771,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2430,
+          "output_tokens": 771
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3922,
+      "document_sha256": "1066878c02d34036968c696133ce7ca0a0431b20d342297777019603e0dde068",
+      "source": "tslearn/tslearn/metrics/_gak.py:20",
+      "source_other_sites": 1,
+      "codebase_frames": null,
+      "checkpoint_line": 201
+    },
+    {
+      "name": "silhouette_score",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import math\nfrom tslearn.clustering import silhouette_score\nfrom tslearn.metrics import cdist_dtw\n\n# Compute silhouette score using the built-in \"dtw\" metric\nscore_dtw = silhouette_score(X, y, metric=\"dtw\")\n\n# Compute silhouette score using a precomputed distance matrix\ndist_matrix = cdist_dtw(X)\nscore_precomputed = silhouette_score(dist_matrix, y, metric=\"precomputed\")\n\n# The scores should match closely, and must fall within the valid [-1, 1] range\nassert math.isclose(score_dtw, score_precomputed, rel_tol=1e-7), f\"Mismatch: {score_dtw} vs {score_precomputed}\"\nassert -1.0 <= score_dtw <= 1.0, \"Silhouette score must be between -1 and 1\"\n\nprint(f\"__CHECK__ silhouette_score {score_dtw:.6f}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_silhouette_score/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ silhouette_score 0.339312\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 19.1,
+      "llm_calls": 1,
+      "input_tokens": 3348,
+      "output_tokens": 1466,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 3348,
+          "output_tokens": 1466
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 7120,
+      "document_sha256": "e0c0088da513b39188e742b1a35e97eecfacdf37ddf0413018f7fc06fd2be256",
+      "source": "tslearn/tslearn/clustering/utils.py:70",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 202
+    },
+    {
+      "name": "soft_dtw",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import torch\nfrom tslearn.metrics import soft_dtw\n\n# Test PyTorch backend with automatic differentiation\nts1_pt = torch.tensor(s1, dtype=torch.float64, requires_grad=True)\nts2_pt = torch.tensor(s2, dtype=torch.float64)\n\nsim_pt = soft_dtw(\n    ts1=ts1_pt, \n    ts2=ts2_pt, \n    gamma=1.0, \n    be=\"pytorch\", \n    compute_with_backend=True\n)\nsim_pt.backward()\n\nassert ts1_pt.grad is not None, \"Gradient was not computed for the PyTorch tensor\"\nassert ts1_pt.grad.shape == ts1_pt.shape, \"Gradient shape does not match input shape\"\n\n# Test NumPy backend and the gamma=0.0 limit case (square of standard DTW)\nsim_self = soft_dtw(s1, s1, gamma=0.0)\nassert -1e-7 < sim_self < 1e-7, f\"Expected soft_dtw(s1, s1, gamma=0.0) to be 0.0, got {sim_self}\"\n\nprint(f\"__CHECK__ soft_dtw {sim_self:.4f} {float(sim_pt):.4f} {ts1_pt.grad.shape}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_soft_dtw/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ soft_dtw 0.0000 -65.9949 torch.Size([40])\n__DONE__\n",
+        "stderr_tail": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_soft_dtw/api_test.py:57: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.\nConsider using tensor.detach() first. (Triggered internally at /Users/runner/work/pytorch/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:837.)\n  print(f\"__CHECK__ soft_dtw {sim_self:.4f} {float(sim_pt):.4f} {ts1_pt.grad.shape}\")\n"
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 23.7,
+      "llm_calls": 1,
+      "input_tokens": 2537,
+      "output_tokens": 2263,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2537,
+          "output_tokens": 2263
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 4105,
+      "document_sha256": "b618f98aa4389f8f5cbff06696fd6db04f02fb30f07bf376b11f717f565399c8",
+      "source": "tslearn/tslearn/metrics/softdtw_variants.py:530",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 203
+    },
+    {
+      "name": "soft_dtw_alignment",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import tslearn.metrics\n\nmatrix_path, dist = tslearn.metrics.soft_dtw_alignment(s1, s2, gamma=1.0)\n\nassert matrix_path.shape == (len(s1), len(s2)), f\"Expected shape {(len(s1), len(s2))}, got {matrix_path.shape}\"\nassert isinstance(dist, float), f\"Expected float, got {type(dist)}\"\n\nprint(f\"__CHECK__ soft_dtw_alignment {matrix_path.shape} {dist:.4f}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_soft_dtw_alignment/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ soft_dtw_alignment (40, 40) -65.9949\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 9.8,
+      "llm_calls": 1,
+      "input_tokens": 3293,
+      "output_tokens": 756,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 3293,
+          "output_tokens": 756
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 6738,
+      "document_sha256": "8a5a29a9c2dd80d001ec8f2c58adcfd5e71e5d7484dc3f20eb7fa4ca9625155e",
+      "source": "tslearn/tslearn/metrics/softdtw_variants.py:641",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 204
+    },
+    {
+      "name": "softdtw_barycenter",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import tslearn.barycenters\n\nbarycenter = tslearn.barycenters.softdtw_barycenter(X, max_iter=5)\n\nassert barycenter.shape == (40, 1), f\"Expected shape (40, 1), got {barycenter.shape}\"\nprint(f\"__CHECK__ softdtw_barycenter {barycenter.shape}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_softdtw_barycenter/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ softdtw_barycenter (40, 1)\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 9.0,
+      "llm_calls": 1,
+      "input_tokens": 3053,
+      "output_tokens": 561,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 3053,
+          "output_tokens": 561
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 5454,
+      "document_sha256": "b967c42e8609be68fe492d9e4f9d6b09e4e0fa1f0d8721c2f508253fb00d3994",
+      "source": "tslearn/tslearn/barycenters/softdtw.py:38",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 205
+    },
+    {
+      "name": "sqrt",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import numpy as np\nfrom tslearn.backend import instantiate_backend\n\nx = np.square(tiny_matrix)\nbackend = instantiate_backend(x)\nresult = backend.sqrt(x)\n\nnp.testing.assert_allclose(result, np.abs(tiny_matrix))\nprint(f\"__CHECK__ sqrt {result.sum():.4f}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_sqrt/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ sqrt 66.0000\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 8.3,
+      "llm_calls": 1,
+      "input_tokens": 2085,
+      "output_tokens": 679,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2085,
+          "output_tokens": 679
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3124,
+      "document_sha256": "3439db286f2ff31dce951dfe4696d8535dcb0f500c690d57de6f2e2f0b3f4521",
+      "source": "tslearn/tslearn/backend/pytorch_backend.py:207",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 206
+    },
+    {
+      "name": "str_to_time_series",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import numpy as np\nfrom tslearn.utils import str_to_time_series\n\nts_str = \"1.5 2.5|3.5 4.5\"\nts_parsed = str_to_time_series(ts_str)\n\nassert ts_parsed.shape == (2, 2), f\"Expected shape (2, 2), got {ts_parsed.shape}\"\nassert np.allclose(ts_parsed, [[1.5, 3.5], [2.5, 4.5]]), \"Parsed values do not match expected array\"\n\nprint(f\"__CHECK__ str_to_time_series {ts_parsed.shape} {ts_parsed[0, 0]}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_str_to_time_series/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ str_to_time_series (2, 2) 1.5\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 7.2,
+      "llm_calls": 1,
+      "input_tokens": 2467,
+      "output_tokens": 518,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2467,
+          "output_tokens": 518
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3774,
+      "document_sha256": "834c00b6b43f29a6c4428513c62f297f065536fc32072a60bce7a81a1fb47ee9",
+      "source": "tslearn/tslearn/utils/utils.py:326",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 207
+    },
+    {
+      "name": "subsequence_cost_matrix",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import tslearn.metrics\nfrom tslearn.utils import to_time_series\n\n# Extract a short subsequence and a longer reference sequence\nsubseq = to_time_series(s1[:10])\nlongseq = to_time_series(s2)\n\n# Compute the accumulated cost matrix\ncost_matrix = tslearn.metrics.subsequence_cost_matrix(subseq, longseq, be=\"numpy\")\n\n# Verify the shape of the resulting matrix (sz1, sz2)\nassert cost_matrix.shape == (10, 40), f\"Expected shape (10, 40), got {cost_matrix.shape}\"\nprint(f\"__CHECK__ subsequence_cost_matrix {cost_matrix.shape}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_subsequence_cost_matrix/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ subsequence_cost_matrix (10, 40)\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 9.3,
+      "llm_calls": 1,
+      "input_tokens": 2542,
+      "output_tokens": 746,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2542,
+          "output_tokens": 746
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 4333,
+      "document_sha256": "093a8a6cf70d45861ec47d7b64578b6232f440524c5d8cb381bfa81f9ae16174",
+      "source": "tslearn/tslearn/metrics/dtw_variants.py:1236",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 208
+    },
+    {
+      "name": "subsequence_path",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import numpy as np\nfrom tslearn.metrics import subsequence_path\n\n# Find the optimal endpoint in the last row of the accumulated cost matrix\noptimal_end_point = int(np.argmin(tiny_matrix[-1, :]))\n\n# Compute the optimal alignment path backtracking from the endpoint\npath = subsequence_path(tiny_matrix, optimal_end_point)\n\n# Verify the path properties\nassert isinstance(path, list), \"Path must be a list of tuples\"\nassert len(path) >= tiny_matrix.shape[0], \"Path length must be at least the subsequence length\"\nassert path[-1] == (tiny_matrix.shape[0] - 1, optimal_end_point), \"Path must end at the specified endpoint\"\nassert path[0][0] == 0, \"Path must start at the beginning of the subsequence (index 0)\"\n\nprint(f\"__CHECK__ subsequence_path {path[0]} to {path[-1]}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_subsequence_path/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ subsequence_path (0, 0) to (2, 0)\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 18.4,
+      "llm_calls": 1,
+      "input_tokens": 2770,
+      "output_tokens": 1804,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2770,
+          "output_tokens": 1804
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 5276,
+      "document_sha256": "5db4196788f0d54df0d177d519eda17497e0ee53bd5c8de5578dcb1af08ad400",
+      "source": "tslearn/tslearn/metrics/dtw_variants.py:1367",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 209
+    },
+    {
+      "name": "support_",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "from tslearn.svm import TimeSeriesSVC\nimport numpy as np\n\n# Initialize and fit the TimeSeriesSVC model\nclf = TimeSeriesSVC(kernel=\"gak\", random_state=42)\nclf.fit(X, y)\n\n# Access the support_ property to get support vector indices\nsupport_indices = clf.support_\n\n# Verify the result\nassert isinstance(support_indices, np.ndarray), \"support_ should return a NumPy array\"\nassert 0 < len(support_indices) <= len(X), \"Number of support vectors should be between 1 and n_samples\"\nassert np.all((support_indices >= 0) & (support_indices < len(X))), \"Support vector indices must be within valid range\"\n\nprint(f\"__CHECK__ support_ {len(support_indices)}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_support_/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ support_ 8\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 11.1,
+      "llm_calls": 1,
+      "input_tokens": 2243,
+      "output_tokens": 922,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2243,
+          "output_tokens": 922
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3292,
+      "document_sha256": "a9162a1189f69f8e89ebcbcf7856ad027cd63608ed278d6558f8ab21ede591ad",
+      "source": "tslearn/tslearn/svm/svm.py:24",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 210
+    },
+    {
+      "name": "support_vectors_",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "from tslearn.svm import TimeSeriesSVC\nimport numpy as np\n\n# Fit the TimeSeriesSVC on the provided balanced dataset\nclf = TimeSeriesSVC(kernel=\"gak\", random_state=42)\nclf.fit(X, y)\n\n# Access the support_vectors_ property\nsv = clf.support_vectors_\n\n# Verify the contract: returns a list of 3D numpy arrays (one per class)\nassert isinstance(sv, list), \"support_vectors_ should be a list\"\nassert len(sv) == len(np.unique(y)), f\"Expected {len(np.unique(y))} classes, got {len(sv)}\"\n\nfor class_idx, class_sv in enumerate(sv):\n    assert isinstance(class_sv, np.ndarray), f\"Element for class {class_idx} should be a numpy array\"\n    assert class_sv.ndim == 3, f\"Support vectors for class {class_idx} should be a 3D array\"\n    assert class_sv.shape[1:] == X.shape[1:], \"Support vectors must match the time series dimensions of the input\"\n\nprint(f\"__CHECK__ support_vectors_ list length {len(sv)}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_support_vectors_/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ support_vectors_ list length 4\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 10.6,
+      "llm_calls": 1,
+      "input_tokens": 2282,
+      "output_tokens": 969,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2282,
+          "output_tokens": 969
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3313,
+      "document_sha256": "a63a7365f65382a8082475417477d434b68bf4e03a6b8608890e5c8907630ba7",
+      "source": "tslearn/tslearn/svm/svm.py:285",
+      "source_other_sites": 1,
+      "codebase_frames": null,
+      "checkpoint_line": 211
+    },
+    {
+      "name": "time_series_to_str",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import numpy as np\nfrom tslearn.utils import time_series_to_str\n\n# Create a 2D time series with 4 time steps and 2 dimensions\nts_multi = np.concatenate([X[0, :4, :], X[1, :4, :]], axis=1)\n\n# Serialize the time series to a string\nres = time_series_to_str(ts_multi, fmt=\"%.4f\")\n\n# Verify the string representation\nassert isinstance(res, str), \"Result must be a string\"\nassert res.count('|') == 1, \"A 2-dimensional time series should have exactly one '|' separator\"\n\ndims = res.split('|')\nassert len(dims) == 2, \"String should be split into 2 dimensions\"\nassert len(dims[0].split(' ')) == 4, \"First dimension should have 4 time steps separated by spaces\"\nassert len(dims[1].split(' ')) == 4, \"Second dimension should have 4 time steps separated by spaces\"\n\nprint(f\"__CHECK__ time_series_to_str {res.count('|')} pipes, {len(dims[0].split(' '))} steps\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_time_series_to_str/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ time_series_to_str 1 pipes, 4 steps\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 20.2,
+      "llm_calls": 1,
+      "input_tokens": 2314,
+      "output_tokens": 2399,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2314,
+          "output_tokens": 2399
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3093,
+      "document_sha256": "347e0d5427e41277b49ccc0275e2f1645ecfdd25a18cc4d6f38c15b6a5840cec",
+      "source": "tslearn/tslearn/utils/utils.py:289",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 212
+    },
+    {
+      "name": "to_cesium_dataset",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "from tslearn.utils import to_cesium_dataset\n\ntry:\n    cesium_ds = to_cesium_dataset(X)\n    assert len(cesium_ds) == 8\n    print(f\"__CHECK__ to_cesium_dataset {len(cesium_ds)}\")\nexcept ImportError as e:\n    assert \"cesium is not installed\" in str(e)\n    print(\"__CHECK__ to_cesium_dataset (cesium not installed)\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_to_cesium_dataset/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ to_cesium_dataset (cesium not installed)\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 8.3,
+      "llm_calls": 1,
+      "input_tokens": 2175,
+      "output_tokens": 663,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2175,
+          "output_tokens": 663
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 2996,
+      "document_sha256": "02a3257e31d2b50ec444fc9d6237308ba2a12c90d6c1149eb9e8429ef2b5b679",
+      "source": "tslearn/tslearn/utils/cast.py:655",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 213
+    },
+    {
+      "name": "to_hdf5",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import os\nfrom tslearn.clustering import TimeSeriesKMeans\n\nmodel = TimeSeriesKMeans(n_clusters=2, max_iter=2, random_state=42)\nmodel.fit(X)\n\npath = os.path.join(output_dir, \"test_model_to_hdf5.hdf5\")\nif os.path.exists(path):\n    os.remove(path)\n\nmodel.to_hdf5(path)\n\nassert os.path.exists(path), \"HDF5 file was not created.\"\nfile_size = os.path.getsize(path)\nassert file_size > 0, \"HDF5 file is empty.\"\n\n# Read back to verify the writer worked correctly\nloaded_model = TimeSeriesKMeans.from_hdf5(path)\nassert loaded_model.n_clusters == model.n_clusters, \"Loaded model has incorrect n_clusters.\"\nassert loaded_model.cluster_centers_.shape == model.cluster_centers_.shape, \"Loaded model has incorrect cluster centers shape.\"\n\nprint(f\"__CHECK__ to_hdf5 {file_size}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_to_hdf5/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ to_hdf5 15520\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 11.9,
+      "llm_calls": 1,
+      "input_tokens": 2153,
+      "output_tokens": 1056,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2153,
+          "output_tokens": 1056
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3141,
+      "document_sha256": "d57793f1924cb8a4c18ae091e3ab2b8b7897fcbd1d884c6fc14ae25ca080b772",
+      "source": "tslearn/tslearn/bases/bases.py:210",
+      "source_other_sites": 1,
+      "codebase_frames": null,
+      "checkpoint_line": 214
+    },
+    {
+      "name": "to_json",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import os\nfrom tslearn.clustering import TimeSeriesKMeans\n\nmodel = TimeSeriesKMeans(n_clusters=2, max_iter=2, random_state=42)\nmodel.fit(X)\n\nfilepath = os.path.join(output_dir, \"test_model.json\")\nmodel.to_json(filepath)\n\nassert os.path.exists(filepath), \"JSON file was not created.\"\nfile_size = os.path.getsize(filepath)\nassert file_size > 0, \"JSON file is empty.\"\n\nloaded_model = TimeSeriesKMeans.from_json(filepath)\nassert loaded_model.cluster_centers_.shape == model.cluster_centers_.shape, \"Loaded model cluster centers shape mismatch.\"\n\nprint(f\"__CHECK__ to_json {file_size}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_to_json/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ to_json 1588\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 11.0,
+      "llm_calls": 1,
+      "input_tokens": 2070,
+      "output_tokens": 998,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2070,
+          "output_tokens": 998
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 2855,
+      "document_sha256": "856c5dca681cbde965ce7c1a9f78331823302ba2a713cd86680c82227bdc09ec",
+      "source": "tslearn/tslearn/bases/bases.py:259",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 215
+    },
+    {
+      "name": "to_numpy",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "from tslearn.backend import instantiate_backend\nimport numpy as np\n\nbe = instantiate_backend(\"numpy\")\nx_np = be.to_numpy(tiny_matrix)\n\nassert isinstance(x_np, np.ndarray), \"Output must be a NumPy array\"\nassert x_np.shape == tiny_matrix.shape, \"Shape must be preserved\"\nassert np.array_equal(x_np, tiny_matrix), \"Values must be preserved during conversion\"\n\nprint(f\"__CHECK__ to_numpy {x_np.shape}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_to_numpy/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ to_numpy (3, 4)\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 8.8,
+      "llm_calls": 1,
+      "input_tokens": 2106,
+      "output_tokens": 739,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2106,
+          "output_tokens": 739
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3215,
+      "document_sha256": "cf7a90cddcecf3943d8796bc108d609bedd3b21db2f98524815f5b6e8ecd1849",
+      "source": "tslearn/tslearn/backend/numpy_backend.py:122",
+      "source_other_sites": 1,
+      "codebase_frames": null,
+      "checkpoint_line": 216
+    },
+    {
+      "name": "to_pickle",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import os\nfrom tslearn.clustering import TimeSeriesKMeans\n\n# Instantiate and fit a model\nmodel = TimeSeriesKMeans(n_clusters=3, random_state=42)\nmodel.fit(X)\n\n# Save the model using to_pickle\nfilepath = os.path.join(output_dir, \"test_model_to_pickle.pkl\")\nmodel.to_pickle(filepath)\n\nassert os.path.exists(filepath), \"Pickle file was not created.\"\n\n# Load the model using the symmetric from_pickle class method\nloaded_model = TimeSeriesKMeans.from_pickle(filepath)\n\n# Verify the loaded model's state\nassert loaded_model.n_clusters == 3, f\"Expected n_clusters=3, got {loaded_model.n_clusters}\"\nassert loaded_model.cluster_centers_.shape == model.cluster_centers_.shape, \"Cluster centers shape mismatch after loading.\"\n\nprint(f\"__CHECK__ to_pickle {loaded_model.n_clusters}_{loaded_model.cluster_centers_.shape[0]}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_to_pickle/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ to_pickle 3_3\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 10.6,
+      "llm_calls": 1,
+      "input_tokens": 2117,
+      "output_tokens": 899,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2117,
+          "output_tokens": 899
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3091,
+      "document_sha256": "777bb31bff6b2f03bd57317dfa48a6b013102133cf36d6828137a6d7ed08fc41",
+      "source": "tslearn/tslearn/bases/bases.py:307",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 217
+    },
+    {
+      "name": "to_pyflux_dataset",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import tslearn.utils\n\nsingle_ts = X[0:1]\npyflux_df = tslearn.utils.to_pyflux_dataset(single_ts)\n\nassert pyflux_df.shape == (40, 1), f\"Expected shape (40, 1), got {pyflux_df.shape}\"\nassert pyflux_df.columns[0] == 'dim_0', f\"Expected column 'dim_0', got {pyflux_df.columns[0]}\"\nassert pyflux_df.iloc[0, 0] == single_ts[0, 0, 0], \"Data mismatch between input and output\"\n\nprint(f\"__CHECK__ to_pyflux_dataset {pyflux_df.shape}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_to_pyflux_dataset/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ to_pyflux_dataset (40, 1)\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 9.2,
+      "llm_calls": 1,
+      "input_tokens": 2469,
+      "output_tokens": 840,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2469,
+          "output_tokens": 840
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3705,
+      "document_sha256": "48c00ea3148b00bec9df3227067c9728ca422196439cbfedcf78b854139f4614",
+      "source": "tslearn/tslearn/utils/cast.py:409",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 218
+    },
+    {
+      "name": "to_pyts_dataset",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "from tslearn.utils import to_pyts_dataset\nimport numpy as np\n\npyts_X = to_pyts_dataset(X)\nassert pyts_X.shape == (X.shape[0], X.shape[1]), f\"Expected shape {(X.shape[0], X.shape[1])}, got {pyts_X.shape}\"\n\nX_multi = np.concatenate([X, X], axis=2)\npyts_multi = to_pyts_dataset(X_multi)\nassert pyts_multi.shape == (X.shape[0], 2, X.shape[1]), f\"Expected shape {(X.shape[0], 2, X.shape[1])}, got {pyts_multi.shape}\"\n\nprint(f\"__CHECK__ to_pyts_dataset {pyts_X.shape} {pyts_multi.shape}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_to_pyts_dataset/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ to_pyts_dataset (8, 40) (8, 2, 40)\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 9.4,
+      "llm_calls": 1,
+      "input_tokens": 2574,
+      "output_tokens": 822,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2574,
+          "output_tokens": 822
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3778,
+      "document_sha256": "73f4c11a43ad38bc5307585ed798064c84ca5cb9379ffecffe446aa27c2fc624",
+      "source": "tslearn/tslearn/utils/cast.py:64",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 219
+    },
+    {
+      "name": "to_seglearn_dataset",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "from tslearn.utils import to_seglearn_dataset\n\nseglearn_dataset = to_seglearn_dataset(X)\n\nassert seglearn_dataset.shape == (8, 40, 1), f\"Expected shape (8, 40, 1), got {seglearn_dataset.shape}\"\n\nprint(f\"__CHECK__ to_seglearn_dataset {seglearn_dataset.shape}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_to_seglearn_dataset/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ to_seglearn_dataset (8, 40, 1)\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 8.7,
+      "llm_calls": 1,
+      "input_tokens": 2568,
+      "output_tokens": 708,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2568,
+          "output_tokens": 708
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3614,
+      "document_sha256": "a2c929eca399238c0bc53a74b4e1c203a9f2534dcfb34c1dcc45f70da5ac2f2e",
+      "source": "tslearn/tslearn/utils/cast.py:141",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 220
+    },
+    {
+      "name": "to_sklearn_dataset",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "from tslearn.utils import to_sklearn_dataset\n\nX_2d, dim = to_sklearn_dataset(X, return_dim=True)\n\nassert X_2d.shape == (X.shape[0], X.shape[1] * X.shape[2]), f\"Expected shape {(X.shape[0], X.shape[1] * X.shape[2])}, got {X_2d.shape}\"\nassert dim == X.shape[2], f\"Expected dim {X.shape[2]}, got {dim}\"\nassert X_2d[0, 0] == X[0, 0, 0], \"Transformed values do not match original\"\n\nprint(f\"__CHECK__ to_sklearn_dataset {X_2d.shape} {dim}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_to_sklearn_dataset/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ to_sklearn_dataset (8, 40) 1\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 8.1,
+      "llm_calls": 1,
+      "input_tokens": 2611,
+      "output_tokens": 680,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2611,
+          "output_tokens": 680
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 4599,
+      "document_sha256": "4780a07a71607ee53c8558d3ed1800c3d3a47ddbc951f58b54f213e3f6c0a65b",
+      "source": "tslearn/tslearn/utils/cast.py:21",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 221
+    },
+    {
+      "name": "to_sktime_dataset",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "from tslearn.utils import to_sktime_dataset\n\nsktime_df = to_sktime_dataset(X)\n\nassert sktime_df.shape == (8, 1), f\"Expected shape (8, 1), got {sktime_df.shape}\"\nassert sktime_df[\"dim_0\"][0].shape == (40,), f\"Expected inner series length of 40, got {sktime_df['dim_0'][0].shape}\"\nassert abs(sktime_df[\"dim_0\"][0].iloc[0] - X[0, 0, 0]) < 1e-6, \"Data mismatch between original array and sktime DataFrame\"\n\nprint(f\"__CHECK__ to_sktime_dataset {sktime_df.shape}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_to_sktime_dataset/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ to_sktime_dataset (8, 1)\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 10.3,
+      "llm_calls": 1,
+      "input_tokens": 2487,
+      "output_tokens": 873,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2487,
+          "output_tokens": 873
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3719,
+      "document_sha256": "19c2b3d62ceef3ef67962d9c4bcafcd613271a82810b6cff42af5f46f18695dd",
+      "source": "tslearn/tslearn/utils/cast.py:288",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 222
+    },
+    {
+      "name": "to_stumpy_dataset",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "from tslearn.utils import to_stumpy_dataset\n\nstumpy_data = to_stumpy_dataset(X)\n\nassert isinstance(stumpy_data, list), \"Output must be a list\"\nassert len(stumpy_data) == X.shape[0], \"Output list length must match number of time series\"\nassert stumpy_data[0].shape == (X.shape[1],), \"Univariate time series should be flattened to (sz,)\"\n\nprint(f\"__CHECK__ to_stumpy_dataset {len(stumpy_data)} {stumpy_data[0].shape}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_to_stumpy_dataset/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ to_stumpy_dataset 8 (40,)\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 8.5,
+      "llm_calls": 1,
+      "input_tokens": 2483,
+      "output_tokens": 726,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2483,
+          "output_tokens": 726
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3483,
+      "document_sha256": "92b47a9a87a5190911a85561eb0bafc154ee04cda4f69d1cf3dceb4e32901cca",
+      "source": "tslearn/tslearn/utils/cast.py:214",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 223
+    },
+    {
+      "name": "to_time_series",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "from tslearn.utils import to_time_series\nimport numpy as np\n\n# Format the pre-loaded 1D series s1 (shape: 40,)\nts_formatted = to_time_series(s1)\n\n# Verify it was converted to a 2D array (sz, 1)\nassert ts_formatted.shape == (s1.shape[0], 1), f\"Expected shape {(s1.shape[0], 1)}, got {ts_formatted.shape}\"\nassert np.allclose(ts_formatted.flatten(), s1), \"Values should match the input series\"\nassert ts_formatted is not s1, \"Output must be a new copy, not a view\"\n\n# Test trailing NaN removal\nraw_ts = [1.5, 2.5, np.nan]\nts_nan_removed = to_time_series(raw_ts, remove_nans=True)\n\nassert ts_nan_removed.shape == (2, 1), f\"Expected shape (2, 1) after NaN removal, got {ts_nan_removed.shape}\"\nassert np.allclose(ts_nan_removed, [[1.5], [2.5]]), \"Values should match the input series without trailing NaNs\"\n\nprint(f\"__CHECK__ to_time_series {ts_formatted.shape}, {ts_nan_removed.shape}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_to_time_series/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ to_time_series (40, 1), (2, 1)\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 10.7,
+      "llm_calls": 1,
+      "input_tokens": 2787,
+      "output_tokens": 955,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2787,
+          "output_tokens": 955
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 5057,
+      "document_sha256": "e24de9437ca4277e6b78468b361d9b9adb6596b08caca01d37df5c3daeabef73",
+      "source": "tslearn/tslearn/utils/utils.py:154",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 224
+    },
+    {
+      "name": "to_time_series_dataset",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "from tslearn.utils import to_time_series_dataset\nimport numpy as np\n\n# Create a list of variable-length time series using the preloaded 1D arrays\nraw_data = [s1, s2[:20]]\n\n# Transform into the strict 3D array structure (n_ts, max_sz, d)\nX = to_time_series_dataset(raw_data)\n\n# Verify the shape and the automatic nan padding\nassert X.shape == (2, 40, 1), f\"Expected shape (2, 40, 1), got {X.shape}\"\nassert np.isnan(X[1, 20, 0]), \"Expected nan padding for the shorter series at index 20\"\nassert not np.isnan(X[1, 19, 0]), \"Expected valid value before padding at index 19\"\nassert np.allclose(X[0, :, 0], s1), \"Expected the first series to match the input exactly\"\n\nprint(f\"__CHECK__ to_time_series_dataset {X.shape}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_to_time_series_dataset/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ to_time_series_dataset (2, 40, 1)\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 10.8,
+      "llm_calls": 1,
+      "input_tokens": 2815,
+      "output_tokens": 992,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2815,
+          "output_tokens": 992
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 5005,
+      "document_sha256": "1b344124bd963f7eacb8e3980b2a3e0249f21925b2a4402ebc07d1af0bedd803",
+      "source": "tslearn/tslearn/utils/utils.py:215",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 225
+    },
+    {
+      "name": "to_tsfresh_dataset",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import pandas as pd\nfrom tslearn.utils import to_tsfresh_dataset\n\ntsfresh_df = to_tsfresh_dataset(X)\n\nassert isinstance(tsfresh_df, pd.DataFrame), \"Output must be a pandas DataFrame\"\nexpected_shape = (X.shape[0] * X.shape[1], X.shape[2] + 2)\nassert tsfresh_df.shape == expected_shape, f\"Expected shape {expected_shape}, got {tsfresh_df.shape}\"\nassert \"id\" in tsfresh_df.columns and \"time\" in tsfresh_df.columns, \"Missing 'id' or 'time' columns in the tsfresh dataset\"\n\nprint(f\"__CHECK__ to_tsfresh_dataset {tsfresh_df.shape}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_to_tsfresh_dataset/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ to_tsfresh_dataset (320, 3)\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 9.7,
+      "llm_calls": 1,
+      "input_tokens": 2525,
+      "output_tokens": 911,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2525,
+          "output_tokens": 911
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3998,
+      "document_sha256": "b38f1ecf0663b261e8417bc35ead585c9c299ee86e758529ae6388ef0c100eb4",
+      "source": "tslearn/tslearn/utils/cast.py:527",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 226
+    },
+    {
+      "name": "transform",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "from tslearn.preprocessing import TimeSeriesScalerMinMax\nimport numpy as np\n\n# Instantiate and fit the estimator on X2\nestimator = TimeSeriesScalerMinMax(value_range=(0.0, 1.0))\nestimator.fit(X2)\n\n# Apply the transformation\nX2_transformed = estimator.transform(X2)\n\n# Verify the output shape matches the input shape\nassert X2_transformed.shape == X2.shape, f\"Expected shape {X2.shape}, got {X2_transformed.shape}\"\n\n# Verify the transformation correctly scaled the data to the specified value_range\nval_min = np.nanmin(X2_transformed)\nval_max = np.nanmax(X2_transformed)\nassert np.isclose(val_min, 0.0, atol=1e-5), f\"Expected min 0.0, got {val_min}\"\nassert np.isclose(val_max, 1.0, atol=1e-5), f\"Expected max 1.0, got {val_max}\"\n\nprint(f\"__CHECK__ transform {X2_transformed.shape}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_transform/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ transform (4, 32, 1)\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 24.4,
+      "llm_calls": 1,
+      "input_tokens": 2487,
+      "output_tokens": 2729,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2487,
+          "output_tokens": 2729
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 4573,
+      "document_sha256": "cbb7bb56094f1cf03aa7fecf5248918f2a5d54e9993fd5e3b79240f96e89b998",
+      "source": "tslearn/tslearn/preprocessing/_synchronizer.py:78",
+      "source_other_sites": 10,
+      "codebase_frames": null,
+      "checkpoint_line": 227
+    },
+    {
+      "name": "tril",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "from tslearn.backend import instantiate_backend\n\nbe = instantiate_backend(\"numpy\")\n# Create a 4x4 2D matrix from the 1D series\nmat = s1[:16].reshape(4, 4)\n\n# Extract the lower triangle\nlower_tri = be.tril(mat, k=0)\n\n# Verify elements above the main diagonal are zeroed\nassert lower_tri.shape == (4, 4)\nassert lower_tri[0, 1] == 0.0\nassert lower_tri[1, 2] == 0.0\nassert lower_tri[2, 3] == 0.0\n\n# Verify elements on and below the main diagonal are intact\nassert lower_tri[0, 0] == mat[0, 0]\nassert lower_tri[1, 0] == mat[1, 0]\nassert lower_tri[3, 2] == mat[3, 2]\n\nprint(f\"__CHECK__ tril {lower_tri[1, 0]:.4f}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_tril/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ tril 0.5322\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 10.0,
+      "llm_calls": 1,
+      "input_tokens": 2101,
+      "output_tokens": 873,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2101,
+          "output_tokens": 873
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 2837,
+      "document_sha256": "1e77567f72a07d0a353f140da626c611a5732e67b28eed0e02d2ed5111f4b754",
+      "source": "tslearn/tslearn/backend/pytorch_backend.py:217",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 228
+    },
+    {
+      "name": "tril_indices",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "from tslearn.backend import instantiate_backend\n\nbe = instantiate_backend(\"numpy\")\nrow_idx, col_idx = be.tril_indices(n=4, k=0)\n\nassert len(row_idx) == 10\nassert len(col_idx) == 10\nassert list(row_idx) == [0, 1, 1, 2, 2, 2, 3, 3, 3, 3]\nassert list(col_idx) == [0, 0, 1, 0, 1, 2, 0, 1, 2, 3]\n\nprint(f\"__CHECK__ tril_indices {len(row_idx)}, {len(col_idx)}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_tril_indices/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ tril_indices 10, 10\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 9.2,
+      "llm_calls": 1,
+      "input_tokens": 2109,
+      "output_tokens": 797,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2109,
+          "output_tokens": 797
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3045,
+      "document_sha256": "860fcbd8a965ee9f77d1e62bb4a795a8c814e5e35477bbceac5793e4db6d82d1",
+      "source": "tslearn/tslearn/backend/pytorch_backend.py:221",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 229
+    },
+    {
+      "name": "triu",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import torch\nfrom tslearn.backend import instantiate_backend\n\nbe = instantiate_backend(\"pytorch\")\nmat = torch.tensor(tiny_matrix, dtype=torch.float64)\nupper_tri = be.triu(mat, k=0)\n\nassert upper_tri.shape == mat.shape, \"Output shape must match input shape\"\n\nrows, cols = mat.shape\nis_correct = True\nfor i in range(rows):\n    for j in range(cols):\n        if i > j and upper_tri[i, j].item() != 0.0:\n            is_correct = False\n        if i <= j and upper_tri[i, j].item() != mat[i, j].item():\n            is_correct = False\n\nassert is_correct, \"triu did not correctly zero out the lower triangle or preserve the upper triangle\"\n\nprint(f\"__CHECK__ triu {upper_tri.sum().item():.4f}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_triu/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ triu 45.0000\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 19.4,
+      "llm_calls": 1,
+      "input_tokens": 2026,
+      "output_tokens": 2207,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2026,
+          "output_tokens": 2207
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 2502,
+      "document_sha256": "846cba1a1625166eba67a1a416d9966d90f33b93641f1ffa7bb01016d9c18508",
+      "source": "tslearn/tslearn/backend/pytorch_backend.py:228",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 230
+    },
+    {
+      "name": "triu_indices",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "from tslearn.backend import instantiate_backend\n\nbe = instantiate_backend(\"numpy\")\nrow_idx, col_idx = be.triu_indices(3, k=0)\n\nassert len(row_idx) == 6\nassert len(col_idx) == 6\nassert list(row_idx) == [0, 0, 0, 1, 1, 2]\nassert list(col_idx) == [0, 1, 2, 1, 2, 2]\n\nprint(f\"__CHECK__ triu_indices {len(row_idx)},{len(col_idx)}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_triu_indices/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ triu_indices 6,6\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 7.6,
+      "llm_calls": 1,
+      "input_tokens": 1986,
+      "output_tokens": 669,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1986,
+          "output_tokens": 669
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 2454,
+      "document_sha256": "67291746aa858ae088d4ccc5e7b78dd3d9a516b0ac8461fe2d5d37a0c21307b9",
+      "source": "tslearn/tslearn/backend/pytorch_backend.py:232",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 231
+    },
+    {
+      "name": "ts_size",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import numpy as np\nfrom tslearn.utils import ts_size\n\n# Pad the provided 1D series with trailing NaNs\nts_padded = np.append(s1, [np.nan, np.nan, np.nan])\n\n# Calculate the true size, which should ignore the trailing NaNs\nactual_size = ts_size(ts_padded)\n\nassert actual_size == len(s1), f\"Expected size {len(s1)}, but got {actual_size}\"\nprint(f\"__CHECK__ ts_size {actual_size}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_ts_size/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ ts_size 40\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 10.3,
+      "llm_calls": 1,
+      "input_tokens": 2630,
+      "output_tokens": 854,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2630,
+          "output_tokens": 854
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 4622,
+      "document_sha256": "5777c1d26be31e859fa3b1626e711b54459024ae45b69a172a10ac3303a54c0b",
+      "source": "tslearn/tslearn/utils/utils.py:465",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 232
+    },
+    {
+      "name": "ts_zeros",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "from tslearn.utils import ts_zeros\nimport numpy as np\n\n# Generate a single 2D zero-filled time series of length 10 and 2 dimensions\nts = ts_zeros(sz=10, d=2)\n\n# Verify the result\nassert isinstance(ts, np.ndarray), \"Output must be a NumPy array\"\nassert ts.shape == (10, 2), f\"Expected shape (10, 2), got {ts.shape}\"\nassert np.all(ts == 0.0), \"All values must be zero\"\n\nprint(f\"__CHECK__ ts_zeros {ts.shape}, sum={np.sum(ts)}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_ts_zeros/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ ts_zeros (10, 2), sum=0.0\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 7.1,
+      "llm_calls": 1,
+      "input_tokens": 2225,
+      "output_tokens": 467,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2225,
+          "output_tokens": 467
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3113,
+      "document_sha256": "206c42087961d043a8f7750caf8e074a58ca3d71ad6059258dc278f9e64efe9f",
+      "source": "tslearn/tslearn/utils/utils.py:521",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 233
+    },
+    {
+      "name": "uniform",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "from tslearn.backend import instantiate_backend\n\nbe = instantiate_backend(\"pytorch\")\narr = be.random.uniform(low=-2.0, high=5.0, size=(3, 4, 5))\n\nassert arr.shape == (3, 4, 5), f\"Expected shape (3, 4, 5), got {arr.shape}\"\nassert (arr >= -2.0).all() and (arr < 5.0).all(), \"Values are out of the specified uniform bounds\"\n\nprint(f\"__CHECK__ uniform {arr.shape}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_uniform/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ uniform torch.Size([3, 4, 5])\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 6.5,
+      "llm_calls": 1,
+      "input_tokens": 2222,
+      "output_tokens": 460,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2222,
+          "output_tokens": 460
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3475,
+      "document_sha256": "d6f9816774906cde8bd35486e36a32c4cffb8bd65710c771717647a5fbb6c7a6",
+      "source": "tslearn/tslearn/backend/pytorch_backend.py:256",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 234
+    },
+    {
+      "name": "unnormalized_gak",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import tslearn.metrics\n\n# Compute unnormalized GAK between s1 and s2, and vice versa to check symmetry\nval1 = tslearn.metrics.unnormalized_gak(s1, s2, sigma=2.0)\nval2 = tslearn.metrics.unnormalized_gak(s2, s1, sigma=2.0)\n\n# Verify the result is a positive float and symmetric\nassert isinstance(val1, float), \"Result must be a float\"\nassert val1 > 0.0, \"Unnormalized GAK must be strictly positive\"\nassert abs(val1 - val2) < 1e-6, \"Unnormalized GAK must be symmetric\"\n\nprint(f\"__CHECK__ unnormalized_gak {val1:.4f}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_unnormalized_gak/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ unnormalized_gak 60039288159691321606783631360.0000\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 10.3,
+      "llm_calls": 1,
+      "input_tokens": 2361,
+      "output_tokens": 852,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2361,
+          "output_tokens": 852
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3485,
+      "document_sha256": "5a62f6eb963035c986fc39f82bc22d67e6840b5c75f73ce1757679b543296a37",
+      "source": "tslearn/tslearn/metrics/_gak.py:178",
+      "source_other_sites": 1,
+      "codebase_frames": null,
+      "checkpoint_line": 235
+    },
+    {
+      "name": "y_shifted_sbd_vec",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import numpy as np\nfrom tslearn.metrics.cycc import y_shifted_sbd_vec\n\n# Prepare deterministic float64 inputs\nref_ts = np.asarray(X[0], dtype=np.float64)\ndataset = np.asarray(X, dtype=np.float64)\n\n# Precompute norms as required by the API\nnorm_ref = float(np.linalg.norm(ref_ts))\nnorms_dataset = np.linalg.norm(dataset, axis=(1, 2)).astype(np.float64)\n\n# Compute the shifted dataset\nshifted_dataset = y_shifted_sbd_vec(ref_ts, dataset, norm_ref, norms_dataset)\n\n# Verify the output shape matches the input dataset\nassert shifted_dataset.shape == (8, 40, 1), f\"Expected shape (8, 40, 1), got {shifted_dataset.shape}\"\n\n# The first time series in the dataset is identical to the reference, \n# so its optimal shift should be 0 (i.e., it remains unchanged)\nassert np.allclose(shifted_dataset[0], ref_ts), \"Self-alignment did not return the original reference series\"\n\nprint(f\"__CHECK__ y_shifted_sbd_vec {shifted_dataset.shape}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_y_shifted_sbd_vec/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ y_shifted_sbd_vec (8, 40, 1)\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 19.5,
+      "llm_calls": 1,
+      "input_tokens": 2704,
+      "output_tokens": 1468,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2704,
+          "output_tokens": 1468
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 4299,
+      "document_sha256": "4cf0b3040278fd0c159246599a334f16a7587159f04c321db11da75551608ae0",
+      "source": "tslearn/tslearn/metrics/cycc.py:99",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 236
     }
   ],
   "repair_summary": {
@@ -18227,18 +19833,31 @@
     },
     {
       "api": "shapelets_",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "tslearn/tslearn/shapelets/shapelets.py:441",
+      "doc_chars": 4534,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 199,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 19.3,
+          "llm_calls": 1,
+          "input_tokens": 2554,
+          "output_tokens": 2224,
+          "pass_round": 0
+        }
+      ],
       "repair_status": "doc-fixed",
       "doc_rounds_used": 1,
       "doc_rounds": [
@@ -18305,18 +19924,31 @@
     },
     {
       "api": "shapelets_as_time_series_",
-      "status": "pending",
-      "primary_category": "pending",
-      "runner_category": null,
-      "category_reason": "Not yet observed.",
-      "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "status": "fail",
+      "primary_category": "test/scaffold",
+      "runner_category": "infra",
+      "category_reason": "Runner classified this as infrastructure.",
+      "error": "missing module/import: No module named 'keras'",
+      "source": "tslearn/tslearn/shapelets/shapelets.py:455",
+      "doc_chars": 4124,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 200,
+          "status": "fail",
+          "error_category": "infra",
+          "error": "missing module/import: No module named 'keras'",
+          "attempts": 1,
+          "wall_s": 17.2,
+          "llm_calls": 1,
+          "input_tokens": 2571,
+          "output_tokens": 1855,
+          "pass_round": null
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -18324,18 +19956,31 @@
     },
     {
       "api": "sigma_gak",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "tslearn/tslearn/metrics/_gak.py:20",
+      "doc_chars": 3922,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 201,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 9.7,
+          "llm_calls": 1,
+          "input_tokens": 2430,
+          "output_tokens": 771,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -18343,18 +19988,31 @@
     },
     {
       "api": "silhouette_score",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "tslearn/tslearn/clustering/utils.py:70",
+      "doc_chars": 7120,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 202,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 19.1,
+          "llm_calls": 1,
+          "input_tokens": 3348,
+          "output_tokens": 1466,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -18362,18 +20020,31 @@
     },
     {
       "api": "soft_dtw",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "tslearn/tslearn/metrics/softdtw_variants.py:530",
+      "doc_chars": 4105,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 203,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 23.7,
+          "llm_calls": 1,
+          "input_tokens": 2537,
+          "output_tokens": 2263,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -18381,18 +20052,31 @@
     },
     {
       "api": "soft_dtw_alignment",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "tslearn/tslearn/metrics/softdtw_variants.py:641",
+      "doc_chars": 6738,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 204,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 9.8,
+          "llm_calls": 1,
+          "input_tokens": 3293,
+          "output_tokens": 756,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -18400,18 +20084,31 @@
     },
     {
       "api": "softdtw_barycenter",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "tslearn/tslearn/barycenters/softdtw.py:38",
+      "doc_chars": 5454,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 205,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 9.0,
+          "llm_calls": 1,
+          "input_tokens": 3053,
+          "output_tokens": 561,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -18419,18 +20116,31 @@
     },
     {
       "api": "sqrt",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "tslearn/tslearn/backend/pytorch_backend.py:207",
+      "doc_chars": 3124,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 206,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 8.3,
+          "llm_calls": 1,
+          "input_tokens": 2085,
+          "output_tokens": 679,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -18438,18 +20148,31 @@
     },
     {
       "api": "str_to_time_series",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "tslearn/tslearn/utils/utils.py:326",
+      "doc_chars": 3774,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 207,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 7.2,
+          "llm_calls": 1,
+          "input_tokens": 2467,
+          "output_tokens": 518,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -18457,18 +20180,31 @@
     },
     {
       "api": "subsequence_cost_matrix",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "tslearn/tslearn/metrics/dtw_variants.py:1236",
+      "doc_chars": 4333,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 208,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 9.3,
+          "llm_calls": 1,
+          "input_tokens": 2542,
+          "output_tokens": 746,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -18476,18 +20212,31 @@
     },
     {
       "api": "subsequence_path",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "tslearn/tslearn/metrics/dtw_variants.py:1367",
+      "doc_chars": 5276,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 209,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 18.4,
+          "llm_calls": 1,
+          "input_tokens": 2770,
+          "output_tokens": 1804,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -18495,18 +20244,31 @@
     },
     {
       "api": "support_",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "tslearn/tslearn/svm/svm.py:24",
+      "doc_chars": 3292,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 210,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 11.1,
+          "llm_calls": 1,
+          "input_tokens": 2243,
+          "output_tokens": 922,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -18514,18 +20276,31 @@
     },
     {
       "api": "support_vectors_",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "tslearn/tslearn/svm/svm.py:285",
+      "doc_chars": 3313,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 211,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 10.6,
+          "llm_calls": 1,
+          "input_tokens": 2282,
+          "output_tokens": 969,
+          "pass_round": 0
+        }
+      ],
       "repair_status": "doc-fixed",
       "doc_rounds_used": 1,
       "doc_rounds": [
@@ -18592,18 +20367,31 @@
     },
     {
       "api": "time_series_to_str",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "tslearn/tslearn/utils/utils.py:289",
+      "doc_chars": 3093,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 212,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 20.2,
+          "llm_calls": 1,
+          "input_tokens": 2314,
+          "output_tokens": 2399,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -18611,18 +20399,31 @@
     },
     {
       "api": "to_cesium_dataset",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "tslearn/tslearn/utils/cast.py:655",
+      "doc_chars": 2996,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 213,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 8.3,
+          "llm_calls": 1,
+          "input_tokens": 2175,
+          "output_tokens": 663,
+          "pass_round": 0
+        }
+      ],
       "repair_status": "doc-fixed",
       "doc_rounds_used": 1,
       "doc_rounds": [
@@ -18689,18 +20490,31 @@
     },
     {
       "api": "to_hdf5",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "tslearn/tslearn/bases/bases.py:210",
+      "doc_chars": 3141,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 214,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 11.9,
+          "llm_calls": 1,
+          "input_tokens": 2153,
+          "output_tokens": 1056,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -18708,18 +20522,31 @@
     },
     {
       "api": "to_json",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "tslearn/tslearn/bases/bases.py:259",
+      "doc_chars": 2855,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 215,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 11.0,
+          "llm_calls": 1,
+          "input_tokens": 2070,
+          "output_tokens": 998,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -18727,18 +20554,31 @@
     },
     {
       "api": "to_numpy",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "tslearn/tslearn/backend/numpy_backend.py:122",
+      "doc_chars": 3215,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 216,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 8.8,
+          "llm_calls": 1,
+          "input_tokens": 2106,
+          "output_tokens": 739,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -18746,18 +20586,31 @@
     },
     {
       "api": "to_pickle",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "tslearn/tslearn/bases/bases.py:307",
+      "doc_chars": 3091,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 217,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 10.6,
+          "llm_calls": 1,
+          "input_tokens": 2117,
+          "output_tokens": 899,
+          "pass_round": 0
+        }
+      ],
       "repair_status": "doc-fixed",
       "doc_rounds_used": 1,
       "doc_rounds": [
@@ -18824,18 +20677,31 @@
     },
     {
       "api": "to_pyflux_dataset",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "tslearn/tslearn/utils/cast.py:409",
+      "doc_chars": 3705,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 218,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 9.2,
+          "llm_calls": 1,
+          "input_tokens": 2469,
+          "output_tokens": 840,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -18843,18 +20709,31 @@
     },
     {
       "api": "to_pyts_dataset",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "tslearn/tslearn/utils/cast.py:64",
+      "doc_chars": 3778,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 219,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 9.4,
+          "llm_calls": 1,
+          "input_tokens": 2574,
+          "output_tokens": 822,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -18862,18 +20741,31 @@
     },
     {
       "api": "to_seglearn_dataset",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "tslearn/tslearn/utils/cast.py:141",
+      "doc_chars": 3614,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 220,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 8.7,
+          "llm_calls": 1,
+          "input_tokens": 2568,
+          "output_tokens": 708,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -18881,18 +20773,31 @@
     },
     {
       "api": "to_sklearn_dataset",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "tslearn/tslearn/utils/cast.py:21",
+      "doc_chars": 4599,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 221,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 8.1,
+          "llm_calls": 1,
+          "input_tokens": 2611,
+          "output_tokens": 680,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -18900,18 +20805,31 @@
     },
     {
       "api": "to_sktime_dataset",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "tslearn/tslearn/utils/cast.py:288",
+      "doc_chars": 3719,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 222,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 10.3,
+          "llm_calls": 1,
+          "input_tokens": 2487,
+          "output_tokens": 873,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -18919,18 +20837,31 @@
     },
     {
       "api": "to_stumpy_dataset",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "tslearn/tslearn/utils/cast.py:214",
+      "doc_chars": 3483,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 223,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 8.5,
+          "llm_calls": 1,
+          "input_tokens": 2483,
+          "output_tokens": 726,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -18938,18 +20869,31 @@
     },
     {
       "api": "to_time_series",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "tslearn/tslearn/utils/utils.py:154",
+      "doc_chars": 5057,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 224,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 10.7,
+          "llm_calls": 1,
+          "input_tokens": 2787,
+          "output_tokens": 955,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -18957,18 +20901,31 @@
     },
     {
       "api": "to_time_series_dataset",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "tslearn/tslearn/utils/utils.py:215",
+      "doc_chars": 5005,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 225,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 10.8,
+          "llm_calls": 1,
+          "input_tokens": 2815,
+          "output_tokens": 992,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -18976,18 +20933,31 @@
     },
     {
       "api": "to_tsfresh_dataset",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "tslearn/tslearn/utils/cast.py:527",
+      "doc_chars": 3998,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 226,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 9.7,
+          "llm_calls": 1,
+          "input_tokens": 2525,
+          "output_tokens": 911,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -18995,18 +20965,31 @@
     },
     {
       "api": "transform",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "tslearn/tslearn/preprocessing/_synchronizer.py:78",
+      "doc_chars": 4573,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 227,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 24.4,
+          "llm_calls": 1,
+          "input_tokens": 2487,
+          "output_tokens": 2729,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -19014,18 +20997,31 @@
     },
     {
       "api": "tril",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "tslearn/tslearn/backend/pytorch_backend.py:217",
+      "doc_chars": 2837,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 228,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 10.0,
+          "llm_calls": 1,
+          "input_tokens": 2101,
+          "output_tokens": 873,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -19033,18 +21029,31 @@
     },
     {
       "api": "tril_indices",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "tslearn/tslearn/backend/pytorch_backend.py:221",
+      "doc_chars": 3045,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 229,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 9.2,
+          "llm_calls": 1,
+          "input_tokens": 2109,
+          "output_tokens": 797,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -19052,18 +21061,31 @@
     },
     {
       "api": "triu",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "tslearn/tslearn/backend/pytorch_backend.py:228",
+      "doc_chars": 2502,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 230,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 19.4,
+          "llm_calls": 1,
+          "input_tokens": 2026,
+          "output_tokens": 2207,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -19071,18 +21093,31 @@
     },
     {
       "api": "triu_indices",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "tslearn/tslearn/backend/pytorch_backend.py:232",
+      "doc_chars": 2454,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 231,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 7.6,
+          "llm_calls": 1,
+          "input_tokens": 1986,
+          "output_tokens": 669,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -19090,18 +21125,31 @@
     },
     {
       "api": "ts_size",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "tslearn/tslearn/utils/utils.py:465",
+      "doc_chars": 4622,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 232,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 10.3,
+          "llm_calls": 1,
+          "input_tokens": 2630,
+          "output_tokens": 854,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -19109,18 +21157,31 @@
     },
     {
       "api": "ts_zeros",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "tslearn/tslearn/utils/utils.py:521",
+      "doc_chars": 3113,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 233,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 7.1,
+          "llm_calls": 1,
+          "input_tokens": 2225,
+          "output_tokens": 467,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -19128,18 +21189,31 @@
     },
     {
       "api": "uniform",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "tslearn/tslearn/backend/pytorch_backend.py:256",
+      "doc_chars": 3475,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 234,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 6.5,
+          "llm_calls": 1,
+          "input_tokens": 2222,
+          "output_tokens": 460,
+          "pass_round": 0
+        }
+      ],
       "repair_status": "doc-fixed",
       "doc_rounds_used": 1,
       "doc_rounds": [
@@ -19206,18 +21280,31 @@
     },
     {
       "api": "unnormalized_gak",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "tslearn/tslearn/metrics/_gak.py:178",
+      "doc_chars": 3485,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 235,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 10.3,
+          "llm_calls": 1,
+          "input_tokens": 2361,
+          "output_tokens": 852,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -19225,18 +21312,31 @@
     },
     {
       "api": "y_shifted_sbd_vec",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "tslearn/tslearn/metrics/cycc.py:99",
+      "doc_chars": 4299,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 236,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 19.5,
+          "llm_calls": 1,
+          "input_tokens": 2704,
+          "output_tokens": 1468,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -19248,6 +21348,11 @@
   "manifest": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/api_manifest.json",
   "manifest_file_sha256": "42dd31265d4fd753eab37f00ea636b5e06bdd2b2203e48be45dc0be6569b967f",
   "evidence": [
+    {
+      "path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/comprehension.json",
+      "sha256": "4d1451cc4ea9281931c5a4bd5706a63fe7e77b583aa1866442b55ff2116fddcd",
+      "snapshot": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_overnight_evidence_audit/experiments/external/overnight_audit/snapshots/4d1451cc4ea9281931c5a4bd5706a63fe7e77b583aa1866442b55ff2116fddcd"
+    },
     {
       "path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/docfix.json",
       "sha256": "f3ad8a8910d19b1f9d0c210f91c6e994075c447a7e4f660a0e02274d91b8fb8c",

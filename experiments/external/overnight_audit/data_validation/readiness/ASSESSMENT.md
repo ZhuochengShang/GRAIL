@@ -1,6 +1,6 @@
 # AIDEAL readiness assessment and improvement queue
 
-Updated: 2026-09-08T23:41:37.874227+00:00
+Updated: 2026-09-08T23:56:39.506532+00:00
 
 **Measured scope:** how documentation affects an LLM’s API use under a fixed harness. Overall agent readiness is not yet fully measured; no composite score is assigned.
 
@@ -8,7 +8,7 @@ Updated: 2026-09-08T23:41:37.874227+00:00
 |---|---|---|---|---|---|
 | mir_eval | 1/148 provisional | 135/148 final | pending (148 APIs) | 137/148 final | WITHHELD/PARTIAL |
 | thumbnailator | 130/149 final | 127/149 final | pending (149 APIs) | 139/149 final | WITHHELD/PARTIAL |
-| tslearn | 3/235 provisional | 175/235 final | pending (235 APIs) | 175/235 provisional | WITHHELD/PARTIAL |
+| tslearn | 3/235 provisional | 175/235 final | pending (235 APIs) | 217/235 final | WITHHELD/PARTIAL |
 
 Provisional counts retain pending and provider-error APIs in the denominator. Final counts are native pass/all-API results. Cross-cell effects require the separate matched-comparison release checks.
 
@@ -38,11 +38,11 @@ Provisional counts retain pending and provider-error APIs in the denominator. Fi
 | tslearn | assertion-or-behavior | 19 |
 | tslearn | input-contract-or-api-call | 10 |
 | tslearn | provider | 34 |
-| tslearn | unknown | 38 |
+| tslearn | unknown | 40 |
 
-## Reviewable improvements (223)
+## Reviewable improvements (225)
 
-Review states: `{'open': 222, 'proposed': 1}`. Observation errors: 0. Inactive reviewed IDs retained: 0.
+Review states: `{'open': 224, 'proposed': 1}`. Observation errors: 0. Inactive reviewed IDs retained: 0.
 
 Each card separates native failure, diagnosis confidence, proposed action, validation and review decisions. Provider barriers concern execution infrastructure; they are not automatically codebase or documentation defects.
 
@@ -271,6 +271,8 @@ Each card separates native failure, diagnosis confidence, proposed action, valid
 | [tslearn: is_float32](suggestions/4312ea140c5d67b30b30.md) | B2 | needs_diagnosis | medium | open |
 | [tslearn: is_float64](suggestions/e91b825ffe942e8a181b.md) | B2 | needs_diagnosis | medium | open |
 | [tslearn: locate](suggestions/f8756110411ba9f8061d.md) | B2 | needs_diagnosis | low | open |
+| [tslearn: set_weights](suggestions/34b923bd31e87c818a5e.md) | B2 | needs_diagnosis | low | open |
+| [tslearn: shapelets_as_time_series_](suggestions/e697b716fe60437245c2.md) | B2 | needs_diagnosis | low | open |
 
 ## Human and agent workflow
 

@@ -1,0 +1,34 @@
+AUDIENCE & TESTABILITY:
+API audience: USER-FACING.
+Harness testability: TESTABLE.
+Scoring recommendation: include in main user-facing denominator.
+
+ROOT CAUSE:
+The snippet failed because the test environment does not have the optional `cesium` dependency installed, causing `from_cesium_dataset` to deterministically raise an `ImportError`. The documentation noted that `cesium` is required but failed to instruct the snippet-writer to gracefully catch the `ImportError` in test environments where the dependency might be missing.
+
+CORRECT USAGE:
+```python
+try:
+    # Attempt to use the function; it will raise ImportError if cesium is missing
+    from_cesium_dataset([])
+except ImportError as e:
+    assert "cesium is not installed" in str(e)
+else:
+    # If cesium is installed, test the actual conversion
+    from cesium.time_series import TimeSeries
+    import numpy as np
+    
+    cesium_ds = [TimeSeries(m=np.array([1.0, 2.0, 3.0, 4.0]))]
+    tslearn_arr = from_cesium_dataset(cesium_ds)
+    
+    assert tslearn_arr.shape == (1, 4, 1)
+```
+
+REQUIRED TYPES & IMPORTS:
+`tslearn.utils.from_cesium_dataset`
+`cesium.time_series.TimeSeries` (external, optional)
+
+DOC MUST SAY:
+- `cesium` is an optional external dependency.
+- If `cesium` is not installed, calling `from_cesium_dataset` will deterministically raise an `ImportError`.
+- Test code or robust scripts must wrap calls to `from_cesium_dataset` in a `try...except ImportError` block to gracefully handle environments where `cesium` is missing.

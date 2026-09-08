@@ -1,0 +1,53 @@
+AUDIENCE & TESTABILITY:
+API audience: ADVANCED-LOW-LEVEL.
+Harness testability: TESTABLE-WITH-LOW-LEVEL-CONSTRUCTION.
+Scoring recommendation: include only in advanced/internal bucket.
+
+ROOT CAUSE:
+The documentation incorrectly states that `sax1` and `sax2` should have `dtype=float64` or `float32`. However, these arrays contain 1d-SAX symbols which are used directly as array indices to look up breakpoints (e.g., `breakpoints_avg_middle_[sax1[t, di]]`). Numba's `nopython` mode strictly forbids indexing with floating-point numbers, causing a `TypingError` during compilation; the arrays must be of an integer type like `np.int64`.
+
+CORRECT USAGE:
+```python
+import numpy as np
+from tslearn.metrics.cysax import cydist_1d_sax
+
+sz = 3
+d = 1
+# sax1 and sax2 must be integers because they are used as indices
+sax1 = np.zeros((sz, 2 * d), dtype=np.int64)
+sax2 = np.ones((sz, 2 * d), dtype=np.int64)
+
+breakpoints_avg_middle = np.array([-0.5, 0.5], dtype=np.float64)
+breakpoints_slope_middle = np.array([-0.1, 0.1], dtype=np.float64)
+
+original_size = 15
+
+dist_zero = cydist_1d_sax(
+    sax1, 
+    sax1, 
+    breakpoints_avg_middle, 
+    breakpoints_slope_middle, 
+    original_size
+)
+
+dist_pos = cydist_1d_sax(
+    sax1, 
+    sax2, 
+    breakpoints_avg_middle, 
+    breakpoints_slope_middle, 
+    original_size
+)
+
+assert dist_zero == 0.0
+assert dist_pos > 0.0
+print(f"__CHECK__ cydist_1d_sax {dist_zero} {dist_pos:.4f}")
+```
+
+REQUIRED TYPES & IMPORTS:
+`numpy`
+`tslearn.metrics.cysax.cydist_1d_sax`
+
+DOC MUST SAY:
+- `sax1` and `sax2` must be integer arrays (e.g., `np.int64` or `np.int32`), not floats, because their values are used as indices to look up breakpoints.
+- The documentation's claim that `sax1` and `sax2` should be `float64` or `float32` is incorrect and will cause a Numba `TypingError`.
+- `breakpoints_avg_middle_` and `breakpoints_slope_middle_` must be 1D float arrays with enough elements to be indexed by the maximum integer symbol present in `sax1` and `sax2`.

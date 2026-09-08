@@ -1,0 +1,111 @@
+{
+  "summary": {
+    "repository": "tslearn",
+    "cell": "B2",
+    "api": "gamma_soft_dtw",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 16.3,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 16.3,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "error": null,
+    "details": "api_details/7ace3dc3668937213274.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 16.3,
+    "llm_calls": 1,
+    "input_tokens": 2716,
+    "output_tokens": 1585,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2716,
+        "output_tokens": 1585
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 5087,
+    "document_sha256": "f19fa4b8dbd74e0fb662831153f67f9d7b50b579eeb9b9954cd716b0a7dcd51b",
+    "source": "tslearn/tslearn/metrics/softdtw_variants.py:474",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "name": "gamma_soft_dtw",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "import numpy as np\nfrom tslearn.metrics import gamma_soft_dtw\n\n# Compute gamma for the provided dataset\ngamma_val = gamma_soft_dtw(dataset=X, n_samples=20, random_state=42)\n\n# Compute gamma for a constant dataset\nX_const = np.zeros((10, 5, 1))\ngamma_const = gamma_soft_dtw(dataset=X_const, n_samples=20, random_state=42)\n\n# A varying dataset should yield a strictly positive gamma heuristic,\n# while a constant dataset should yield exactly zero.\nassert isinstance(gamma_val, float), \"Expected gamma_val to be a float\"\nassert gamma_val > 0.0, \"Gamma should be strictly positive for a varying dataset\"\nassert gamma_const == 0.0, \"Gamma should be zero for a constant dataset\"\n\nprint(f\"__CHECK__ gamma_soft_dtw {gamma_val:.4f}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_gamma_soft_dtw/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ gamma_soft_dtw 327.8783\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/comprehension.json",
+  "source_sha256": "4d1451cc4ea9281931c5a4bd5706a63fe7e77b583aa1866442b55ff2116fddcd",
+  "checkpoint_events": [
+    {
+      "name": "gamma_soft_dtw",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import numpy as np\nfrom tslearn.metrics import gamma_soft_dtw\n\n# Compute gamma for the provided dataset\ngamma_val = gamma_soft_dtw(dataset=X, n_samples=20, random_state=42)\n\n# Compute gamma for a constant dataset\nX_const = np.zeros((10, 5, 1))\ngamma_const = gamma_soft_dtw(dataset=X_const, n_samples=20, random_state=42)\n\n# A varying dataset should yield a strictly positive gamma heuristic,\n# while a constant dataset should yield exactly zero.\nassert isinstance(gamma_val, float), \"Expected gamma_val to be a float\"\nassert gamma_val > 0.0, \"Gamma should be strictly positive for a varying dataset\"\nassert gamma_const == 0.0, \"Gamma should be zero for a constant dataset\"\n\nprint(f\"__CHECK__ gamma_soft_dtw {gamma_val:.4f}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_gamma_soft_dtw/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ gamma_soft_dtw 327.8783\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 16.3,
+      "llm_calls": 1,
+      "input_tokens": 2716,
+      "output_tokens": 1585,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2716,
+          "output_tokens": 1585
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 5087,
+      "document_sha256": "f19fa4b8dbd74e0fb662831153f67f9d7b50b579eeb9b9954cd716b0a7dcd51b",
+      "source": "tslearn/tslearn/metrics/softdtw_variants.py:474",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

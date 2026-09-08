@@ -17,28 +17,11 @@
     "last_retry_interval_s": null,
     "next_provider_retry_epoch": null,
     "transport_policy": "Historical/uninstrumented",
-    "identity_status": "Provisional last-observed fingerprint group; final identity unverified",
+    "identity_status": "Final or explicitly migrated evidence",
     "error": null,
     "details": "api_details/93c8deb20b485c58f17a.json"
   },
   "native_row": {
-    "name": "backward",
-    "doc_source": "aideal",
-    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
-    "execution_evidence": {
-      "status": "pass",
-      "rounds": [
-        {
-          "round": 0,
-          "status": "pass"
-        }
-      ],
-      "code": "import torch\nfrom tslearn.metrics import soft_dtw\nfrom tslearn.metrics.soft_dtw_loss_pytorch import _SoftDTWLossPyTorch\n\n# Convert the preloaded 1-D series to PyTorch tensors with requires_grad=True for the first one\nts1 = torch.tensor(s1.reshape(-1, 1), dtype=torch.float64, requires_grad=True)\nts2 = torch.tensor(s2.reshape(-1, 1), dtype=torch.float64)\n\n# Compute Soft-DTW with the PyTorch backend to build the computation graph\nsim = soft_dtw(ts1, ts2, gamma=1.0, be=\"pytorch\", compute_with_backend=True)\n\n# Implicitly trigger _SoftDTWLossPyTorch.backward(ctx, grad_output)\nsim.backward()\n\n# Verify that the backward pass successfully populated the gradients\nassert ts1.grad is not None, \"Gradient should be populated by the backward pass\"\nassert ts1.grad.shape == ts1.shape, \"Gradient shape should match input shape\"\nassert not torch.all(ts1.grad == 0), \"Gradients should not be all zeros for distinct series\"\n\ngrad_sum = float(ts1.grad.sum())\nprint(f\"__CHECK__ backward {grad_sum:.4f}\")",
-      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_backward/api_test.py",
-      "exit_code": 0,
-      "stdout_tail": "__CHECK__ backward 6.8000\n__DONE__\n",
-      "stderr_tail": ""
-    },
     "status": "pass",
     "attempts": 1,
     "pass_round": 0,
@@ -60,10 +43,26 @@
     "document_sha256": "f441d2eb094c38d91f9bcfb07c46ecc60897b6c107a95fc05fec6cdaffb8b37e",
     "source": "tslearn/tslearn/metrics/soft_dtw_loss_pytorch.py:62",
     "source_other_sites": 0,
-    "codebase_frames": null
+    "codebase_frames": null,
+    "name": "backward",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "import torch\nfrom tslearn.metrics import soft_dtw\nfrom tslearn.metrics.soft_dtw_loss_pytorch import _SoftDTWLossPyTorch\n\n# Convert the preloaded 1-D series to PyTorch tensors with requires_grad=True for the first one\nts1 = torch.tensor(s1.reshape(-1, 1), dtype=torch.float64, requires_grad=True)\nts2 = torch.tensor(s2.reshape(-1, 1), dtype=torch.float64)\n\n# Compute Soft-DTW with the PyTorch backend to build the computation graph\nsim = soft_dtw(ts1, ts2, gamma=1.0, be=\"pytorch\", compute_with_backend=True)\n\n# Implicitly trigger _SoftDTWLossPyTorch.backward(ctx, grad_output)\nsim.backward()\n\n# Verify that the backward pass successfully populated the gradients\nassert ts1.grad is not None, \"Gradient should be populated by the backward pass\"\nassert ts1.grad.shape == ts1.shape, \"Gradient shape should match input shape\"\nassert not torch.all(ts1.grad == 0), \"Gradients should not be all zeros for distinct series\"\n\ngrad_sum = float(ts1.grad.sum())\nprint(f\"__CHECK__ backward {grad_sum:.4f}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_backward/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ backward 6.8000\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969"
   },
-  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/comprehension_progress.jsonl",
-  "source_sha256": "0a09dcebc55c1b772f6889a52003ba9fcffd51ad4e99ecb50387e688fe973703",
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/comprehension.json",
+  "source_sha256": "4d1451cc4ea9281931c5a4bd5706a63fe7e77b583aa1866442b55ff2116fddcd",
   "checkpoint_events": [
     {
       "name": "backward",

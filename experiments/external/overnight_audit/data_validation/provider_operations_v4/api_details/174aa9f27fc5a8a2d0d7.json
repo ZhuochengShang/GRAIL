@@ -1,0 +1,112 @@
+{
+  "summary": {
+    "repository": "tslearn",
+    "cell": "B2",
+    "api": "to_hdf5",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 11.9,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 11.9,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "identity_status": "Final or explicitly migrated evidence",
+    "error": null,
+    "details": "api_details/174aa9f27fc5a8a2d0d7.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 11.9,
+    "llm_calls": 1,
+    "input_tokens": 2153,
+    "output_tokens": 1056,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2153,
+        "output_tokens": 1056
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 3141,
+    "document_sha256": "d57793f1924cb8a4c18ae091e3ab2b8b7897fcbd1d884c6fc14ae25ca080b772",
+    "source": "tslearn/tslearn/bases/bases.py:210",
+    "source_other_sites": 1,
+    "codebase_frames": null,
+    "name": "to_hdf5",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "import os\nfrom tslearn.clustering import TimeSeriesKMeans\n\nmodel = TimeSeriesKMeans(n_clusters=2, max_iter=2, random_state=42)\nmodel.fit(X)\n\npath = os.path.join(output_dir, \"test_model_to_hdf5.hdf5\")\nif os.path.exists(path):\n    os.remove(path)\n\nmodel.to_hdf5(path)\n\nassert os.path.exists(path), \"HDF5 file was not created.\"\nfile_size = os.path.getsize(path)\nassert file_size > 0, \"HDF5 file is empty.\"\n\n# Read back to verify the writer worked correctly\nloaded_model = TimeSeriesKMeans.from_hdf5(path)\nassert loaded_model.n_clusters == model.n_clusters, \"Loaded model has incorrect n_clusters.\"\nassert loaded_model.cluster_centers_.shape == model.cluster_centers_.shape, \"Loaded model has incorrect cluster centers shape.\"\n\nprint(f\"__CHECK__ to_hdf5 {file_size}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_to_hdf5/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ to_hdf5 15520\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/comprehension.json",
+  "source_sha256": "4d1451cc4ea9281931c5a4bd5706a63fe7e77b583aa1866442b55ff2116fddcd",
+  "checkpoint_events": [
+    {
+      "name": "to_hdf5",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import os\nfrom tslearn.clustering import TimeSeriesKMeans\n\nmodel = TimeSeriesKMeans(n_clusters=2, max_iter=2, random_state=42)\nmodel.fit(X)\n\npath = os.path.join(output_dir, \"test_model_to_hdf5.hdf5\")\nif os.path.exists(path):\n    os.remove(path)\n\nmodel.to_hdf5(path)\n\nassert os.path.exists(path), \"HDF5 file was not created.\"\nfile_size = os.path.getsize(path)\nassert file_size > 0, \"HDF5 file is empty.\"\n\n# Read back to verify the writer worked correctly\nloaded_model = TimeSeriesKMeans.from_hdf5(path)\nassert loaded_model.n_clusters == model.n_clusters, \"Loaded model has incorrect n_clusters.\"\nassert loaded_model.cluster_centers_.shape == model.cluster_centers_.shape, \"Loaded model has incorrect cluster centers shape.\"\n\nprint(f\"__CHECK__ to_hdf5 {file_size}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_to_hdf5/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ to_hdf5 15520\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 11.9,
+      "llm_calls": 1,
+      "input_tokens": 2153,
+      "output_tokens": 1056,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2153,
+          "output_tokens": 1056
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3141,
+      "document_sha256": "d57793f1924cb8a4c18ae091e3ab2b8b7897fcbd1d884c6fc14ae25ca080b772",
+      "source": "tslearn/tslearn/bases/bases.py:210",
+      "source_other_sites": 1,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

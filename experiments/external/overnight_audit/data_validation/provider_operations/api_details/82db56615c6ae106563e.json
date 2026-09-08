@@ -1,0 +1,111 @@
+{
+  "summary": {
+    "repository": "tslearn",
+    "cell": "B2",
+    "api": "TimeSeriesImputer",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 13.0,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 13.0,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "error": null,
+    "details": "api_details/82db56615c6ae106563e.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 13.0,
+    "llm_calls": 1,
+    "input_tokens": 3113,
+    "output_tokens": 1243,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 3113,
+        "output_tokens": 1243
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 7076,
+    "document_sha256": "f9b86b9b9602fd737ab54ab123e682860539d3607d095cfe8cf8571f21ff6ed7",
+    "source": "tslearn/tslearn/preprocessing/preprocessing.py:422",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "name": "TimeSeriesImputer",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "import numpy as np\nfrom tslearn.preprocessing import TimeSeriesImputer\n\nunivariate_dataset = [\n    [1.0, np.nan, 3.0],\n    [1.0, 2.0, np.nan, 9.0]\n]\n\nimputer = TimeSeriesImputer(method=\"mean\", keep_trailing_nans=True)\ntransformed = imputer.fit_transform(univariate_dataset)\n\nassert transformed.shape == (2, 4, 1), f\"Expected shape (2, 4, 1), got {transformed.shape}\"\nassert np.isnan(transformed[0, 3, 0]), \"Trailing NaN should be preserved as padding\"\nassert transformed[0, 1, 0] == 2.0, \"Internal NaN in first series should be imputed with mean (2.0)\"\nassert transformed[1, 2, 0] == 4.0, \"Internal NaN in second series should be imputed with mean (4.0)\"\n\nprint(f\"__CHECK__ TimeSeriesImputer {transformed.shape} {transformed[0, 1, 0]} {transformed[1, 2, 0]}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_TimeSeriesImputer/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ TimeSeriesImputer (2, 4, 1) 2.0 4.0\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/comprehension.json",
+  "source_sha256": "4d1451cc4ea9281931c5a4bd5706a63fe7e77b583aa1866442b55ff2116fddcd",
+  "checkpoint_events": [
+    {
+      "name": "TimeSeriesImputer",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import numpy as np\nfrom tslearn.preprocessing import TimeSeriesImputer\n\nunivariate_dataset = [\n    [1.0, np.nan, 3.0],\n    [1.0, 2.0, np.nan, 9.0]\n]\n\nimputer = TimeSeriesImputer(method=\"mean\", keep_trailing_nans=True)\ntransformed = imputer.fit_transform(univariate_dataset)\n\nassert transformed.shape == (2, 4, 1), f\"Expected shape (2, 4, 1), got {transformed.shape}\"\nassert np.isnan(transformed[0, 3, 0]), \"Trailing NaN should be preserved as padding\"\nassert transformed[0, 1, 0] == 2.0, \"Internal NaN in first series should be imputed with mean (2.0)\"\nassert transformed[1, 2, 0] == 4.0, \"Internal NaN in second series should be imputed with mean (4.0)\"\n\nprint(f\"__CHECK__ TimeSeriesImputer {transformed.shape} {transformed[0, 1, 0]} {transformed[1, 2, 0]}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_TimeSeriesImputer/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ TimeSeriesImputer (2, 4, 1) 2.0 4.0\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 13.0,
+      "llm_calls": 1,
+      "input_tokens": 3113,
+      "output_tokens": 1243,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 3113,
+          "output_tokens": 1243
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 7076,
+      "document_sha256": "f9b86b9b9602fd737ab54ab123e682860539d3607d095cfe8cf8571f21ff6ed7",
+      "source": "tslearn/tslearn/preprocessing/preprocessing.py:422",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

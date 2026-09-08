@@ -17,28 +17,11 @@
     "last_retry_interval_s": null,
     "next_provider_retry_epoch": null,
     "transport_policy": "Historical/uninstrumented",
-    "identity_status": "Provisional last-observed fingerprint group; final identity unverified",
+    "identity_status": "Final or explicitly migrated evidence",
     "error": null,
     "details": "api_details/2c8e7cc23a3071b65143.json"
   },
   "native_row": {
-    "name": "is_array",
-    "doc_source": "aideal",
-    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
-    "execution_evidence": {
-      "status": "pass",
-      "rounds": [
-        {
-          "round": 0,
-          "status": "pass"
-        }
-      ],
-      "code": "from tslearn.backend import instantiate_backend\n\nbe = instantiate_backend(\"numpy\")\n\n# Test with a valid NumPy array (X is already an ndarray in scope)\nres_X = be.is_array(X)\n\n# Test with a standard Python list\nres_list = be.is_array([1, 2, 3])\n\nassert res_X is True, \"Expected X (ndarray) to be recognized as an array by the numpy backend.\"\nassert res_list is False, \"Expected standard Python list to not be recognized as an array by the numpy backend.\"\n\nprint(f\"__CHECK__ is_array {res_X}_{res_list}\")",
-      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_is_array/api_test.py",
-      "exit_code": 0,
-      "stdout_tail": "__CHECK__ is_array True_False\n__DONE__\n",
-      "stderr_tail": ""
-    },
     "status": "pass",
     "attempts": 1,
     "pass_round": 0,
@@ -60,10 +43,26 @@
     "document_sha256": "73025599d8b0ba81ccaa96eaf072390b1f15e4c1b858824596618e617b962feb",
     "source": "tslearn/tslearn/backend/numpy_backend.py:102",
     "source_other_sites": 0,
-    "codebase_frames": null
+    "codebase_frames": null,
+    "name": "is_array",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "from tslearn.backend import instantiate_backend\n\nbe = instantiate_backend(\"numpy\")\n\n# Test with a valid NumPy array (X is already an ndarray in scope)\nres_X = be.is_array(X)\n\n# Test with a standard Python list\nres_list = be.is_array([1, 2, 3])\n\nassert res_X is True, \"Expected X (ndarray) to be recognized as an array by the numpy backend.\"\nassert res_list is False, \"Expected standard Python list to not be recognized as an array by the numpy backend.\"\n\nprint(f\"__CHECK__ is_array {res_X}_{res_list}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_is_array/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ is_array True_False\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969"
   },
-  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/comprehension_progress.jsonl",
-  "source_sha256": "0a09dcebc55c1b772f6889a52003ba9fcffd51ad4e99ecb50387e688fe973703",
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/comprehension.json",
+  "source_sha256": "4d1451cc4ea9281931c5a4bd5706a63fe7e77b583aa1866442b55ff2116fddcd",
   "checkpoint_events": [
     {
       "name": "is_array",

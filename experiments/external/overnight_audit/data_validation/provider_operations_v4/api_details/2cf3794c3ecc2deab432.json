@@ -17,28 +17,11 @@
     "last_retry_interval_s": null,
     "next_provider_retry_epoch": null,
     "transport_policy": "Historical/uninstrumented",
-    "identity_status": "Provisional last-observed fingerprint group; final identity unverified",
+    "identity_status": "Final or explicitly migrated evidence",
     "error": null,
     "details": "api_details/2cf3794c3ecc2deab432.json"
   },
   "native_row": {
-    "name": "check_keras_backend",
-    "doc_source": "aideal",
-    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
-    "execution_evidence": {
-      "status": "pass",
-      "rounds": [
-        {
-          "round": 0,
-          "status": "pass"
-        }
-      ],
-      "code": "import os\nfrom tslearn.backend import check_keras_backend\n\noriginal_backend = os.environ.get(\"KERAS_BACKEND\")\nif \"KERAS_BACKEND\" in os.environ:\n    del os.environ[\"KERAS_BACKEND\"]\n\ntry:\n    check_keras_backend()\n    selected = os.environ.get(\"KERAS_BACKEND\")\n    assert selected in [\"torch\", \"tensorflow\", \"jax\"], f\"Unexpected backend: {selected}\"\n    print(f\"__CHECK__ check_keras_backend set KERAS_BACKEND to {selected}\")\nexcept ImportError as e:\n    assert str(e) == \"No Keras backend installed\"\n    print(\"__CHECK__ check_keras_backend raised ImportError (no backends installed)\")\nfinally:\n    if original_backend is not None:\n        os.environ[\"KERAS_BACKEND\"] = original_backend\n    elif \"KERAS_BACKEND\" in os.environ:\n        del os.environ[\"KERAS_BACKEND\"]",
-      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_check_keras_backend/api_test.py",
-      "exit_code": 0,
-      "stdout_tail": "__CHECK__ check_keras_backend set KERAS_BACKEND to torch\n__DONE__\n",
-      "stderr_tail": ""
-    },
     "status": "pass",
     "attempts": 1,
     "pass_round": 0,
@@ -60,10 +43,26 @@
     "document_sha256": "ed3b6fed100c7997072aef7ffb9e360a160c8fa68c6c35a6c27ea4426e3af761",
     "source": "tslearn/tslearn/backend/__init__.py:12",
     "source_other_sites": 0,
-    "codebase_frames": null
+    "codebase_frames": null,
+    "name": "check_keras_backend",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "import os\nfrom tslearn.backend import check_keras_backend\n\noriginal_backend = os.environ.get(\"KERAS_BACKEND\")\nif \"KERAS_BACKEND\" in os.environ:\n    del os.environ[\"KERAS_BACKEND\"]\n\ntry:\n    check_keras_backend()\n    selected = os.environ.get(\"KERAS_BACKEND\")\n    assert selected in [\"torch\", \"tensorflow\", \"jax\"], f\"Unexpected backend: {selected}\"\n    print(f\"__CHECK__ check_keras_backend set KERAS_BACKEND to {selected}\")\nexcept ImportError as e:\n    assert str(e) == \"No Keras backend installed\"\n    print(\"__CHECK__ check_keras_backend raised ImportError (no backends installed)\")\nfinally:\n    if original_backend is not None:\n        os.environ[\"KERAS_BACKEND\"] = original_backend\n    elif \"KERAS_BACKEND\" in os.environ:\n        del os.environ[\"KERAS_BACKEND\"]",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_check_keras_backend/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ check_keras_backend set KERAS_BACKEND to torch\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969"
   },
-  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/comprehension_progress.jsonl",
-  "source_sha256": "0a09dcebc55c1b772f6889a52003ba9fcffd51ad4e99ecb50387e688fe973703",
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/comprehension.json",
+  "source_sha256": "4d1451cc4ea9281931c5a4bd5706a63fe7e77b583aa1866442b55ff2116fddcd",
   "checkpoint_events": [
     {
       "name": "check_keras_backend",

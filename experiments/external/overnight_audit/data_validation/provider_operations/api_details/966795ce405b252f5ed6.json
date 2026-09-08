@@ -1,0 +1,111 @@
+{
+  "summary": {
+    "repository": "tslearn",
+    "cell": "B2",
+    "api": "to_json",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 11.0,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 11.0,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "error": null,
+    "details": "api_details/966795ce405b252f5ed6.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 11.0,
+    "llm_calls": 1,
+    "input_tokens": 2070,
+    "output_tokens": 998,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2070,
+        "output_tokens": 998
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 2855,
+    "document_sha256": "856c5dca681cbde965ce7c1a9f78331823302ba2a713cd86680c82227bdc09ec",
+    "source": "tslearn/tslearn/bases/bases.py:259",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "name": "to_json",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "import os\nfrom tslearn.clustering import TimeSeriesKMeans\n\nmodel = TimeSeriesKMeans(n_clusters=2, max_iter=2, random_state=42)\nmodel.fit(X)\n\nfilepath = os.path.join(output_dir, \"test_model.json\")\nmodel.to_json(filepath)\n\nassert os.path.exists(filepath), \"JSON file was not created.\"\nfile_size = os.path.getsize(filepath)\nassert file_size > 0, \"JSON file is empty.\"\n\nloaded_model = TimeSeriesKMeans.from_json(filepath)\nassert loaded_model.cluster_centers_.shape == model.cluster_centers_.shape, \"Loaded model cluster centers shape mismatch.\"\n\nprint(f\"__CHECK__ to_json {file_size}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_to_json/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ to_json 1588\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/comprehension.json",
+  "source_sha256": "4d1451cc4ea9281931c5a4bd5706a63fe7e77b583aa1866442b55ff2116fddcd",
+  "checkpoint_events": [
+    {
+      "name": "to_json",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import os\nfrom tslearn.clustering import TimeSeriesKMeans\n\nmodel = TimeSeriesKMeans(n_clusters=2, max_iter=2, random_state=42)\nmodel.fit(X)\n\nfilepath = os.path.join(output_dir, \"test_model.json\")\nmodel.to_json(filepath)\n\nassert os.path.exists(filepath), \"JSON file was not created.\"\nfile_size = os.path.getsize(filepath)\nassert file_size > 0, \"JSON file is empty.\"\n\nloaded_model = TimeSeriesKMeans.from_json(filepath)\nassert loaded_model.cluster_centers_.shape == model.cluster_centers_.shape, \"Loaded model cluster centers shape mismatch.\"\n\nprint(f\"__CHECK__ to_json {file_size}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_to_json/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ to_json 1588\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 11.0,
+      "llm_calls": 1,
+      "input_tokens": 2070,
+      "output_tokens": 998,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2070,
+          "output_tokens": 998
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 2855,
+      "document_sha256": "856c5dca681cbde965ce7c1a9f78331823302ba2a713cd86680c82227bdc09ec",
+      "source": "tslearn/tslearn/bases/bases.py:259",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

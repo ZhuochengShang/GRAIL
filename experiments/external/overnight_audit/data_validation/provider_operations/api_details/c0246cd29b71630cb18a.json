@@ -1,0 +1,111 @@
+{
+  "summary": {
+    "repository": "tslearn",
+    "cell": "B2",
+    "api": "y_shifted_sbd_vec",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 19.5,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 19.5,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "error": null,
+    "details": "api_details/c0246cd29b71630cb18a.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 19.5,
+    "llm_calls": 1,
+    "input_tokens": 2704,
+    "output_tokens": 1468,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2704,
+        "output_tokens": 1468
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 4299,
+    "document_sha256": "4cf0b3040278fd0c159246599a334f16a7587159f04c321db11da75551608ae0",
+    "source": "tslearn/tslearn/metrics/cycc.py:99",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "name": "y_shifted_sbd_vec",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "import numpy as np\nfrom tslearn.metrics.cycc import y_shifted_sbd_vec\n\n# Prepare deterministic float64 inputs\nref_ts = np.asarray(X[0], dtype=np.float64)\ndataset = np.asarray(X, dtype=np.float64)\n\n# Precompute norms as required by the API\nnorm_ref = float(np.linalg.norm(ref_ts))\nnorms_dataset = np.linalg.norm(dataset, axis=(1, 2)).astype(np.float64)\n\n# Compute the shifted dataset\nshifted_dataset = y_shifted_sbd_vec(ref_ts, dataset, norm_ref, norms_dataset)\n\n# Verify the output shape matches the input dataset\nassert shifted_dataset.shape == (8, 40, 1), f\"Expected shape (8, 40, 1), got {shifted_dataset.shape}\"\n\n# The first time series in the dataset is identical to the reference, \n# so its optimal shift should be 0 (i.e., it remains unchanged)\nassert np.allclose(shifted_dataset[0], ref_ts), \"Self-alignment did not return the original reference series\"\n\nprint(f\"__CHECK__ y_shifted_sbd_vec {shifted_dataset.shape}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_y_shifted_sbd_vec/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ y_shifted_sbd_vec (8, 40, 1)\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/comprehension.json",
+  "source_sha256": "4d1451cc4ea9281931c5a4bd5706a63fe7e77b583aa1866442b55ff2116fddcd",
+  "checkpoint_events": [
+    {
+      "name": "y_shifted_sbd_vec",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import numpy as np\nfrom tslearn.metrics.cycc import y_shifted_sbd_vec\n\n# Prepare deterministic float64 inputs\nref_ts = np.asarray(X[0], dtype=np.float64)\ndataset = np.asarray(X, dtype=np.float64)\n\n# Precompute norms as required by the API\nnorm_ref = float(np.linalg.norm(ref_ts))\nnorms_dataset = np.linalg.norm(dataset, axis=(1, 2)).astype(np.float64)\n\n# Compute the shifted dataset\nshifted_dataset = y_shifted_sbd_vec(ref_ts, dataset, norm_ref, norms_dataset)\n\n# Verify the output shape matches the input dataset\nassert shifted_dataset.shape == (8, 40, 1), f\"Expected shape (8, 40, 1), got {shifted_dataset.shape}\"\n\n# The first time series in the dataset is identical to the reference, \n# so its optimal shift should be 0 (i.e., it remains unchanged)\nassert np.allclose(shifted_dataset[0], ref_ts), \"Self-alignment did not return the original reference series\"\n\nprint(f\"__CHECK__ y_shifted_sbd_vec {shifted_dataset.shape}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_y_shifted_sbd_vec/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ y_shifted_sbd_vec (8, 40, 1)\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 19.5,
+      "llm_calls": 1,
+      "input_tokens": 2704,
+      "output_tokens": 1468,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2704,
+          "output_tokens": 1468
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 4299,
+      "document_sha256": "4cf0b3040278fd0c159246599a334f16a7587159f04c321db11da75551608ae0",
+      "source": "tslearn/tslearn/metrics/cycc.py:99",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

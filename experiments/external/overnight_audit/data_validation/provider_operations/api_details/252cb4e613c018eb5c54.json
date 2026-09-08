@@ -1,0 +1,111 @@
+{
+  "summary": {
+    "repository": "tslearn",
+    "cell": "B2",
+    "api": "NonMyopicEarlyClassifier",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 17.7,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 17.7,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "error": null,
+    "details": "api_details/252cb4e613c018eb5c54.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 17.7,
+    "llm_calls": 1,
+    "input_tokens": 3151,
+    "output_tokens": 1965,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 3151,
+        "output_tokens": 1965
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 5908,
+    "document_sha256": "f487dbcf2bb88a765f4c341e1f788eeeb47fa0118ffa1abe9f2e30730d19852e",
+    "source": "tslearn/tslearn/early_classification/early_classification.py:18",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "name": "NonMyopicEarlyClassifier",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "import numpy as np\nfrom tslearn.utils import to_time_series_dataset\nfrom tslearn.early_classification import NonMyopicEarlyClassifier\n\nX_train = to_time_series_dataset([\n    [1.0, 1.0, 1.0, 1.0],\n    [1.0, 1.0, 1.0, 1.0],\n    [1.0, 1.0, 1.0, 1.0],\n    [1.0, 1.0, 1.0, 1.0],\n    [9.0, 9.0, 9.0, 9.0],\n    [9.0, 9.0, 9.0, 9.0],\n    [9.0, 9.0, 9.0, 9.0],\n    [9.0, 9.0, 9.0, 9.0]\n])\ny_train = np.array([0, 0, 0, 0, 1, 1, 1, 1])\n\nmodel = NonMyopicEarlyClassifier(\n    n_clusters=2,\n    min_t=1,\n    lamb=1.0,\n    cost_time_parameter=0.1,\n    random_state=42\n)\n\nmodel.fit(X_train, y_train)\npreds, pred_times = model.predict_class_and_earliness(X_train)\n\nassert preds.shape == (8,)\nassert pred_times.shape == (8,)\nassert set(preds).issubset({0, 1})\n\nprint(f\"__CHECK__ NonMyopicEarlyClassifier {preds.shape} {pred_times.shape}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_NonMyopicEarlyClassifier/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ NonMyopicEarlyClassifier (8,) (8,)\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/comprehension.json",
+  "source_sha256": "4d1451cc4ea9281931c5a4bd5706a63fe7e77b583aa1866442b55ff2116fddcd",
+  "checkpoint_events": [
+    {
+      "name": "NonMyopicEarlyClassifier",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import numpy as np\nfrom tslearn.utils import to_time_series_dataset\nfrom tslearn.early_classification import NonMyopicEarlyClassifier\n\nX_train = to_time_series_dataset([\n    [1.0, 1.0, 1.0, 1.0],\n    [1.0, 1.0, 1.0, 1.0],\n    [1.0, 1.0, 1.0, 1.0],\n    [1.0, 1.0, 1.0, 1.0],\n    [9.0, 9.0, 9.0, 9.0],\n    [9.0, 9.0, 9.0, 9.0],\n    [9.0, 9.0, 9.0, 9.0],\n    [9.0, 9.0, 9.0, 9.0]\n])\ny_train = np.array([0, 0, 0, 0, 1, 1, 1, 1])\n\nmodel = NonMyopicEarlyClassifier(\n    n_clusters=2,\n    min_t=1,\n    lamb=1.0,\n    cost_time_parameter=0.1,\n    random_state=42\n)\n\nmodel.fit(X_train, y_train)\npreds, pred_times = model.predict_class_and_earliness(X_train)\n\nassert preds.shape == (8,)\nassert pred_times.shape == (8,)\nassert set(preds).issubset({0, 1})\n\nprint(f\"__CHECK__ NonMyopicEarlyClassifier {preds.shape} {pred_times.shape}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_NonMyopicEarlyClassifier/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ NonMyopicEarlyClassifier (8,) (8,)\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 17.7,
+      "llm_calls": 1,
+      "input_tokens": 3151,
+      "output_tokens": 1965,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 3151,
+          "output_tokens": 1965
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 5908,
+      "document_sha256": "f487dbcf2bb88a765f4c341e1f788eeeb47fa0118ffa1abe9f2e30730d19852e",
+      "source": "tslearn/tslearn/early_classification/early_classification.py:18",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

@@ -1,0 +1,111 @@
+{
+  "summary": {
+    "repository": "tslearn",
+    "cell": "B2",
+    "api": "ndim",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 9.7,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 9.7,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "error": null,
+    "details": "api_details/385df3656b7f76c75cc8.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 9.7,
+    "llm_calls": 1,
+    "input_tokens": 2175,
+    "output_tokens": 962,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2175,
+        "output_tokens": 962
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 3135,
+    "document_sha256": "5395ad7c1ffe73e86a8a9836f47a1c66c1deb4a5a624d98899010004738295bb",
+    "source": "tslearn/tslearn/backend/numpy_backend.py:118",
+    "source_other_sites": 1,
+    "codebase_frames": null,
+    "name": "ndim",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "from tslearn.backend import instantiate_backend\n\n# Test with NumPy backend\nbe_np = instantiate_backend(\"numpy\")\ndims_X = be_np.ndim(X)\ndims_s1 = be_np.ndim(s1)\n\nassert dims_X == 3, f\"Expected 3 dimensions for X, got {dims_X}\"\nassert dims_s1 == 1, f\"Expected 1 dimension for s1, got {dims_s1}\"\n\n# Test with PyTorch backend if available\ntry:\n    import torch\n    be_pt = instantiate_backend(\"pytorch\")\n    X_pt = torch.tensor(X)\n    dims_pt = be_pt.ndim(X_pt)\n    assert dims_pt == 3, f\"Expected 3 dimensions for X_pt, got {dims_pt}\"\nexcept ImportError:\n    pass\n\nprint(f\"__CHECK__ ndim {dims_X},{dims_s1}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_ndim/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ ndim 3,1\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/comprehension.json",
+  "source_sha256": "4d1451cc4ea9281931c5a4bd5706a63fe7e77b583aa1866442b55ff2116fddcd",
+  "checkpoint_events": [
+    {
+      "name": "ndim",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "from tslearn.backend import instantiate_backend\n\n# Test with NumPy backend\nbe_np = instantiate_backend(\"numpy\")\ndims_X = be_np.ndim(X)\ndims_s1 = be_np.ndim(s1)\n\nassert dims_X == 3, f\"Expected 3 dimensions for X, got {dims_X}\"\nassert dims_s1 == 1, f\"Expected 1 dimension for s1, got {dims_s1}\"\n\n# Test with PyTorch backend if available\ntry:\n    import torch\n    be_pt = instantiate_backend(\"pytorch\")\n    X_pt = torch.tensor(X)\n    dims_pt = be_pt.ndim(X_pt)\n    assert dims_pt == 3, f\"Expected 3 dimensions for X_pt, got {dims_pt}\"\nexcept ImportError:\n    pass\n\nprint(f\"__CHECK__ ndim {dims_X},{dims_s1}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_ndim/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ ndim 3,1\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 9.7,
+      "llm_calls": 1,
+      "input_tokens": 2175,
+      "output_tokens": 962,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2175,
+          "output_tokens": 962
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3135,
+      "document_sha256": "5395ad7c1ffe73e86a8a9836f47a1c66c1deb4a5a624d98899010004738295bb",
+      "source": "tslearn/tslearn/backend/numpy_backend.py:118",
+      "source_other_sites": 1,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

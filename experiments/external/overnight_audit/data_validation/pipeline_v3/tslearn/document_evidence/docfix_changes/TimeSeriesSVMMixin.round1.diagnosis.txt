@@ -1,0 +1,56 @@
+AUDIENCE & TESTABILITY:
+API audience: INTERNAL-FRAMEWORK.
+Harness testability: TESTABLE-WITH-LOW-LEVEL-CONSTRUCTION.
+Scoring recommendation: exclude from scored denominator.
+
+ROOT CAUSE:
+The documentation's "Valid Call Patterns" and instructions contain a critical error: the mock subclass `MockSVM` lacks a `fit` method. When the mixin's properties (like `support_`) are accessed, they call `sklearn.utils.validation.check_is_fitted(self, ...)`, which strictly requires the instance to have a `fit` method to be recognized as an estimator. Without it, scikit-learn raises `TypeError: MockSVM() is not an estimator instance.`
+
+CORRECT USAGE:
+```python
+import numpy as np
+from sklearn.base import BaseEstimator
+from tslearn.svm.svm import TimeSeriesSVMMixin
+
+class MockSVM(BaseEstimator, TimeSeriesSVMMixin):
+    def __init__(self):
+        self.kernel = "rbf"
+        self.gamma = 0.1
+        self.random_state = 42
+        
+    # Required by scikit-learn's check_is_fitted
+    def fit(self, X, y=None):
+        return self
+
+class DummyUnderlyingSVM:
+    @property
+    def support_(self):
+        return np.array([0, 1])
+
+mock = MockSVM()
+X = np.array([[[1.0], [2.0]], [[3.0], [4.0]]])
+y = np.array([0, 1])
+
+# Exercise preprocessing logic (populates self._X_fit)
+sklearn_X, y_out, nb_features = mock._preprocess_sklearn(X, y, fit_time=True)
+
+# Exercise property delegation
+mock.svm_estimator_ = DummyUnderlyingSVM()
+support = mock.support_
+
+assert sklearn_X.shape == (2, 2)
+assert nb_features == 1
+assert mock.estimator_kernel_ == "rbf"
+assert np.array_equal(support, np.array([0, 1]))
+```
+
+REQUIRED TYPES & IMPORTS:
+`tslearn.svm.svm.TimeSeriesSVMMixin`
+`sklearn.base.BaseEstimator`
+`numpy`
+
+DOC MUST SAY:
+- The mock subclass inheriting from `BaseEstimator` and `TimeSeriesSVMMixin` MUST define a `fit(self, X, y=None)` method.
+- Without a `fit` method, scikit-learn's `check_is_fitted` (called by the mixin's properties like `support_`) will raise a `TypeError` stating the object is not an estimator instance.
+- The mock subclass must also initialize `self.kernel`, `self.gamma`, and `self.random_state` to successfully call `_preprocess_sklearn`.
+- To test property delegation, inject a dummy object into `self.svm_estimator_` and call `_preprocess_sklearn(X, y, fit_time=True)` to populate `self._X_fit` before accessing properties like `support_`.

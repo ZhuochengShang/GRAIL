@@ -1,0 +1,111 @@
+{
+  "summary": {
+    "repository": "tslearn",
+    "cell": "B2",
+    "api": "NumPyRandom",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 6.2,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 6.2,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "error": null,
+    "details": "api_details/e42de598b346983fdbfb.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 6.2,
+    "llm_calls": 1,
+    "input_tokens": 2156,
+    "output_tokens": 443,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2156,
+        "output_tokens": 443
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 3479,
+    "document_sha256": "fbddc075a77bfbcf8fca092830982690d699d993000557fe923fa2a9c2fb7e01",
+    "source": "tslearn/tslearn/backend/numpy_backend.py:132",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "name": "NumPyRandom",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "from tslearn.backend.numpy_backend import NumPyRandom\nimport numpy as np\n\nnp_random = NumPyRandom()\n\nrand_array = np_random.rand(2, 3)\nrandint_array = np_random.randint(0, 10, size=(4,))\nrandn_array = np_random.randn(2)\n\nassert isinstance(rand_array, np.ndarray), \"Expected a NumPy array\"\nassert rand_array.shape == (2, 3), \"Expected shape (2, 3)\"\nassert randint_array.shape == (4,), \"Expected shape (4,)\"\nassert randn_array.shape == (2,), \"Expected shape (2,)\"\n\nprint(f\"__CHECK__ NumPyRandom {rand_array.shape}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_NumPyRandom/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ NumPyRandom (2, 3)\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/comprehension.json",
+  "source_sha256": "4d1451cc4ea9281931c5a4bd5706a63fe7e77b583aa1866442b55ff2116fddcd",
+  "checkpoint_events": [
+    {
+      "name": "NumPyRandom",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "from tslearn.backend.numpy_backend import NumPyRandom\nimport numpy as np\n\nnp_random = NumPyRandom()\n\nrand_array = np_random.rand(2, 3)\nrandint_array = np_random.randint(0, 10, size=(4,))\nrandn_array = np_random.randn(2)\n\nassert isinstance(rand_array, np.ndarray), \"Expected a NumPy array\"\nassert rand_array.shape == (2, 3), \"Expected shape (2, 3)\"\nassert randint_array.shape == (4,), \"Expected shape (4,)\"\nassert randn_array.shape == (2,), \"Expected shape (2,)\"\n\nprint(f\"__CHECK__ NumPyRandom {rand_array.shape}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_NumPyRandom/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ NumPyRandom (2, 3)\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 6.2,
+      "llm_calls": 1,
+      "input_tokens": 2156,
+      "output_tokens": 443,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2156,
+          "output_tokens": 443
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3479,
+      "document_sha256": "fbddc075a77bfbcf8fca092830982690d699d993000557fe923fa2a9c2fb7e01",
+      "source": "tslearn/tslearn/backend/numpy_backend.py:132",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

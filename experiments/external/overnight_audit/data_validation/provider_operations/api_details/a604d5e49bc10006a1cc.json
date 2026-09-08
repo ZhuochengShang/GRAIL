@@ -1,0 +1,111 @@
+{
+  "summary": {
+    "repository": "tslearn",
+    "cell": "B2",
+    "api": "subsequence_path",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 18.4,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 18.4,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "error": null,
+    "details": "api_details/a604d5e49bc10006a1cc.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 18.4,
+    "llm_calls": 1,
+    "input_tokens": 2770,
+    "output_tokens": 1804,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2770,
+        "output_tokens": 1804
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 5276,
+    "document_sha256": "5db4196788f0d54df0d177d519eda17497e0ee53bd5c8de5578dcb1af08ad400",
+    "source": "tslearn/tslearn/metrics/dtw_variants.py:1367",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "name": "subsequence_path",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "import numpy as np\nfrom tslearn.metrics import subsequence_path\n\n# Find the optimal endpoint in the last row of the accumulated cost matrix\noptimal_end_point = int(np.argmin(tiny_matrix[-1, :]))\n\n# Compute the optimal alignment path backtracking from the endpoint\npath = subsequence_path(tiny_matrix, optimal_end_point)\n\n# Verify the path properties\nassert isinstance(path, list), \"Path must be a list of tuples\"\nassert len(path) >= tiny_matrix.shape[0], \"Path length must be at least the subsequence length\"\nassert path[-1] == (tiny_matrix.shape[0] - 1, optimal_end_point), \"Path must end at the specified endpoint\"\nassert path[0][0] == 0, \"Path must start at the beginning of the subsequence (index 0)\"\n\nprint(f\"__CHECK__ subsequence_path {path[0]} to {path[-1]}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_subsequence_path/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ subsequence_path (0, 0) to (2, 0)\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/comprehension.json",
+  "source_sha256": "4d1451cc4ea9281931c5a4bd5706a63fe7e77b583aa1866442b55ff2116fddcd",
+  "checkpoint_events": [
+    {
+      "name": "subsequence_path",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import numpy as np\nfrom tslearn.metrics import subsequence_path\n\n# Find the optimal endpoint in the last row of the accumulated cost matrix\noptimal_end_point = int(np.argmin(tiny_matrix[-1, :]))\n\n# Compute the optimal alignment path backtracking from the endpoint\npath = subsequence_path(tiny_matrix, optimal_end_point)\n\n# Verify the path properties\nassert isinstance(path, list), \"Path must be a list of tuples\"\nassert len(path) >= tiny_matrix.shape[0], \"Path length must be at least the subsequence length\"\nassert path[-1] == (tiny_matrix.shape[0] - 1, optimal_end_point), \"Path must end at the specified endpoint\"\nassert path[0][0] == 0, \"Path must start at the beginning of the subsequence (index 0)\"\n\nprint(f\"__CHECK__ subsequence_path {path[0]} to {path[-1]}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_subsequence_path/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ subsequence_path (0, 0) to (2, 0)\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 18.4,
+      "llm_calls": 1,
+      "input_tokens": 2770,
+      "output_tokens": 1804,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2770,
+          "output_tokens": 1804
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 5276,
+      "document_sha256": "5db4196788f0d54df0d177d519eda17497e0ee53bd5c8de5578dcb1af08ad400",
+      "source": "tslearn/tslearn/metrics/dtw_variants.py:1367",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

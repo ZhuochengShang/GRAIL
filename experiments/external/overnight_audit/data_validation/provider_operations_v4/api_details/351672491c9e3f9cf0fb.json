@@ -17,36 +17,11 @@
     "last_retry_interval_s": null,
     "next_provider_retry_epoch": null,
     "transport_policy": "Historical/uninstrumented",
-    "identity_status": "Provisional last-observed fingerprint group; final identity unverified",
+    "identity_status": "Final or explicitly migrated evidence",
     "error": "missing module/import: No module named 'keras'",
     "details": "api_details/351672491c9e3f9cf0fb.json"
   },
   "native_row": {
-    "name": "grabocka_params_to_shapelet_size_dict",
-    "doc_source": "aideal",
-    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
-    "execution_evidence": {
-      "status": "fail",
-      "rounds": [
-        {
-          "round": 0,
-          "status": "fail",
-          "category": "infra",
-          "error": "missing module/import: No module named 'keras'",
-          "codebase_frames": [
-            "tslearn/tslearn/__init__.py:14",
-            "tslearn/tslearn/shapelets/shapelets.py:7"
-          ]
-        }
-      ],
-      "error_category": "infra",
-      "error": "missing module/import: No module named 'keras'",
-      "code": "from tslearn.shapelets import grabocka_params_to_shapelet_size_dict\n\nn_ts, ts_sz, _ = X.shape\nn_classes = len(set(y))\n\nshapelet_dict = grabocka_params_to_shapelet_size_dict(\n    n_ts=int(n_ts),\n    ts_sz=int(ts_sz),\n    n_classes=int(n_classes),\n    l=0.1,\n    r=2\n)\n\nkeys = sorted(shapelet_dict.keys())\nassert keys == [4, 8], f\"Expected lengths [4, 8], got {keys}\"\nassert all(isinstance(v, int) and v > 0 for v in shapelet_dict.values()), \"Expected positive integer counts\"\n\nprint(f\"__CHECK__ grabocka_params_to_shapelet_size_dict {keys} {list(shapelet_dict.values())}\")",
-      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_grabocka_params_to_shapelet_size_dict/api_test.py",
-      "exit_code": 1,
-      "stdout_tail": "",
-      "stderr_tail": "__RUN_ERR__ ModuleNotFoundError: No module named 'keras'\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_grabocka_params_to_shapelet_size_dict/api_test.py\", line 60, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_grabocka_params_to_shapelet_size_dict/api_test.py\", line 55, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_grabocka_params_to_shapelet_size_dict/api_test.py\", line 34, in api_test\n    from tslearn.shapelets import grabocka_params_to_shapelet_size_dict\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/tslearn/tslearn/shapelets/__init__.py\", line 14, in <module>\n    from .shapelets import (\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/tslearn/tslearn/shapelets/shapelets.py\", line 7, in <module>\n    from keras.layers import (\nModuleNotFoundError: No module named 'keras'\n"
-    },
     "status": "fail",
     "attempts": 1,
     "pass_round": null,
@@ -71,10 +46,34 @@
     "codebase_frames": [
       "tslearn/tslearn/__init__.py:14",
       "tslearn/tslearn/shapelets/shapelets.py:7"
-    ]
+    ],
+    "name": "grabocka_params_to_shapelet_size_dict",
+    "execution_evidence": {
+      "status": "fail",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "fail",
+          "category": "infra",
+          "error": "missing module/import: No module named 'keras'",
+          "codebase_frames": [
+            "tslearn/tslearn/__init__.py:14",
+            "tslearn/tslearn/shapelets/shapelets.py:7"
+          ]
+        }
+      ],
+      "error_category": "infra",
+      "error": "missing module/import: No module named 'keras'",
+      "code": "from tslearn.shapelets import grabocka_params_to_shapelet_size_dict\n\nn_ts, ts_sz, _ = X.shape\nn_classes = len(set(y))\n\nshapelet_dict = grabocka_params_to_shapelet_size_dict(\n    n_ts=int(n_ts),\n    ts_sz=int(ts_sz),\n    n_classes=int(n_classes),\n    l=0.1,\n    r=2\n)\n\nkeys = sorted(shapelet_dict.keys())\nassert keys == [4, 8], f\"Expected lengths [4, 8], got {keys}\"\nassert all(isinstance(v, int) and v > 0 for v in shapelet_dict.values()), \"Expected positive integer counts\"\n\nprint(f\"__CHECK__ grabocka_params_to_shapelet_size_dict {keys} {list(shapelet_dict.values())}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_grabocka_params_to_shapelet_size_dict/api_test.py",
+      "exit_code": 1,
+      "stdout_tail": "",
+      "stderr_tail": "__RUN_ERR__ ModuleNotFoundError: No module named 'keras'\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_grabocka_params_to_shapelet_size_dict/api_test.py\", line 60, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_grabocka_params_to_shapelet_size_dict/api_test.py\", line 55, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_grabocka_params_to_shapelet_size_dict/api_test.py\", line 34, in api_test\n    from tslearn.shapelets import grabocka_params_to_shapelet_size_dict\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/tslearn/tslearn/shapelets/__init__.py\", line 14, in <module>\n    from .shapelets import (\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/tslearn/tslearn/shapelets/shapelets.py\", line 7, in <module>\n    from keras.layers import (\nModuleNotFoundError: No module named 'keras'\n"
+    },
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969"
   },
-  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/comprehension_progress.jsonl",
-  "source_sha256": "0a09dcebc55c1b772f6889a52003ba9fcffd51ad4e99ecb50387e688fe973703",
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/comprehension.json",
+  "source_sha256": "4d1451cc4ea9281931c5a4bd5706a63fe7e77b583aa1866442b55ff2116fddcd",
   "checkpoint_events": [
     {
       "name": "grabocka_params_to_shapelet_size_dict",

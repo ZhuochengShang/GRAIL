@@ -17,36 +17,11 @@
     "last_retry_interval_s": null,
     "next_provider_retry_epoch": null,
     "transport_policy": "Historical/uninstrumented",
-    "identity_status": "Provisional last-observed fingerprint group; final identity unverified",
+    "identity_status": "Final or explicitly migrated evidence",
     "error": "missing module/import: No module named 'keras'",
     "details": "api_details/d841bbc8b2964c6a2e00.json"
   },
   "native_row": {
-    "name": "LearningShapelets",
-    "doc_source": "aideal",
-    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
-    "execution_evidence": {
-      "status": "fail",
-      "rounds": [
-        {
-          "round": 0,
-          "status": "fail",
-          "category": "infra",
-          "error": "missing module/import: No module named 'keras'",
-          "codebase_frames": [
-            "tslearn/tslearn/__init__.py:14",
-            "tslearn/tslearn/shapelets/shapelets.py:7"
-          ]
-        }
-      ],
-      "error_category": "infra",
-      "error": "missing module/import: No module named 'keras'",
-      "code": "from tslearn.shapelets import LearningShapelets\n\nclf = LearningShapelets(\n    n_shapelets_per_size={3: 2},\n    max_iter=2,\n    verbose=0,\n    optimizer=\"sgd\"\n)\n\nclf.fit(X, y)\npredictions = clf.predict(X)\n\nassert predictions.shape == y.shape, f\"Expected predictions shape {y.shape}, got {predictions.shape}\"\nassert hasattr(clf, \"shapelets_\"), \"Model should have learned shapelets_\"\nassert len(clf.shapelets_) == 2, f\"Expected 2 shapelets, got {len(clf.shapelets_)}\"\n\nprint(f\"__CHECK__ LearningShapelets {predictions.shape}\")",
-      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_LearningShapelets/api_test.py",
-      "exit_code": 1,
-      "stdout_tail": "",
-      "stderr_tail": "__RUN_ERR__ ModuleNotFoundError: No module named 'keras'\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_LearningShapelets/api_test.py\", line 59, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_LearningShapelets/api_test.py\", line 54, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_LearningShapelets/api_test.py\", line 34, in api_test\n    from tslearn.shapelets import LearningShapelets\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/tslearn/tslearn/shapelets/__init__.py\", line 14, in <module>\n    from .shapelets import (\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/tslearn/tslearn/shapelets/shapelets.py\", line 7, in <module>\n    from keras.layers import (\nModuleNotFoundError: No module named 'keras'\n"
-    },
     "status": "fail",
     "attempts": 1,
     "pass_round": null,
@@ -71,10 +46,34 @@
     "codebase_frames": [
       "tslearn/tslearn/__init__.py:14",
       "tslearn/tslearn/shapelets/shapelets.py:7"
-    ]
+    ],
+    "name": "LearningShapelets",
+    "execution_evidence": {
+      "status": "fail",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "fail",
+          "category": "infra",
+          "error": "missing module/import: No module named 'keras'",
+          "codebase_frames": [
+            "tslearn/tslearn/__init__.py:14",
+            "tslearn/tslearn/shapelets/shapelets.py:7"
+          ]
+        }
+      ],
+      "error_category": "infra",
+      "error": "missing module/import: No module named 'keras'",
+      "code": "from tslearn.shapelets import LearningShapelets\n\nclf = LearningShapelets(\n    n_shapelets_per_size={3: 2},\n    max_iter=2,\n    verbose=0,\n    optimizer=\"sgd\"\n)\n\nclf.fit(X, y)\npredictions = clf.predict(X)\n\nassert predictions.shape == y.shape, f\"Expected predictions shape {y.shape}, got {predictions.shape}\"\nassert hasattr(clf, \"shapelets_\"), \"Model should have learned shapelets_\"\nassert len(clf.shapelets_) == 2, f\"Expected 2 shapelets, got {len(clf.shapelets_)}\"\n\nprint(f\"__CHECK__ LearningShapelets {predictions.shape}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_LearningShapelets/api_test.py",
+      "exit_code": 1,
+      "stdout_tail": "",
+      "stderr_tail": "__RUN_ERR__ ModuleNotFoundError: No module named 'keras'\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_LearningShapelets/api_test.py\", line 59, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_LearningShapelets/api_test.py\", line 54, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_LearningShapelets/api_test.py\", line 34, in api_test\n    from tslearn.shapelets import LearningShapelets\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/tslearn/tslearn/shapelets/__init__.py\", line 14, in <module>\n    from .shapelets import (\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/tslearn/tslearn/shapelets/shapelets.py\", line 7, in <module>\n    from keras.layers import (\nModuleNotFoundError: No module named 'keras'\n"
+    },
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969"
   },
-  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/comprehension_progress.jsonl",
-  "source_sha256": "0a09dcebc55c1b772f6889a52003ba9fcffd51ad4e99ecb50387e688fe973703",
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/comprehension.json",
+  "source_sha256": "4d1451cc4ea9281931c5a4bd5706a63fe7e77b583aa1866442b55ff2116fddcd",
   "checkpoint_events": [
     {
       "name": "LearningShapelets",

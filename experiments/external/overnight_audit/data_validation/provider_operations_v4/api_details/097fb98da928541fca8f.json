@@ -17,28 +17,11 @@
     "last_retry_interval_s": null,
     "next_provider_retry_epoch": null,
     "transport_policy": "Historical/uninstrumented",
-    "identity_status": "Provisional last-observed fingerprint group; final identity unverified",
+    "identity_status": "Final or explicitly migrated evidence",
     "error": null,
     "details": "api_details/097fb98da928541fca8f.json"
   },
   "native_row": {
-    "name": "intercept_",
-    "doc_source": "aideal",
-    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
-    "execution_evidence": {
-      "status": "pass",
-      "rounds": [
-        {
-          "round": 0,
-          "status": "pass"
-        }
-      ],
-      "code": "from tslearn.svm import TimeSeriesSVC\nimport numpy as np\n\n# Initialize and fit the SVM estimator\nclf = TimeSeriesSVC(kernel=\"gak\", random_state=42)\nclf.fit(X, y)\n\n# Access the intercept_ property\nintercept = clf.intercept_\n\n# Verify the result\nassert isinstance(intercept, np.ndarray), \"intercept_ should be a numpy array\"\nassert intercept.ndim == 1, \"intercept_ should be a 1D array\"\n# For 4 classes (as provided in y), one-vs-one strategy yields 4 * 3 / 2 = 6 intercepts\nassert intercept.shape[0] == 6, f\"Expected 6 intercepts for 4 classes, got {intercept.shape[0]}\"\n\nprint(f\"__CHECK__ intercept_ {intercept.shape}\")",
-      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_intercept_/api_test.py",
-      "exit_code": 0,
-      "stdout_tail": "__CHECK__ intercept_ (6,)\n__DONE__\n",
-      "stderr_tail": ""
-    },
     "status": "pass",
     "attempts": 1,
     "pass_round": 0,
@@ -60,10 +43,26 @@
     "document_sha256": "70b3368b2545642ae63fff914959d2538f3cc64a78f989da7e076589b1a557cf",
     "source": "tslearn/tslearn/svm/svm.py:39",
     "source_other_sites": 0,
-    "codebase_frames": null
+    "codebase_frames": null,
+    "name": "intercept_",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "from tslearn.svm import TimeSeriesSVC\nimport numpy as np\n\n# Initialize and fit the SVM estimator\nclf = TimeSeriesSVC(kernel=\"gak\", random_state=42)\nclf.fit(X, y)\n\n# Access the intercept_ property\nintercept = clf.intercept_\n\n# Verify the result\nassert isinstance(intercept, np.ndarray), \"intercept_ should be a numpy array\"\nassert intercept.ndim == 1, \"intercept_ should be a 1D array\"\n# For 4 classes (as provided in y), one-vs-one strategy yields 4 * 3 / 2 = 6 intercepts\nassert intercept.shape[0] == 6, f\"Expected 6 intercepts for 4 classes, got {intercept.shape[0]}\"\n\nprint(f\"__CHECK__ intercept_ {intercept.shape}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_intercept_/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ intercept_ (6,)\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969"
   },
-  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/comprehension_progress.jsonl",
-  "source_sha256": "0a09dcebc55c1b772f6889a52003ba9fcffd51ad4e99ecb50387e688fe973703",
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/comprehension.json",
+  "source_sha256": "4d1451cc4ea9281931c5a4bd5706a63fe7e77b583aa1866442b55ff2116fddcd",
   "checkpoint_events": [
     {
       "name": "intercept_",

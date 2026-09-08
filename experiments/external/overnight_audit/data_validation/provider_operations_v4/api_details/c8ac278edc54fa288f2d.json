@@ -17,28 +17,11 @@
     "last_retry_interval_s": null,
     "next_provider_retry_epoch": null,
     "transport_policy": "Historical/uninstrumented",
-    "identity_status": "Provisional last-observed fingerprint group; final identity unverified",
+    "identity_status": "Final or explicitly migrated evidence",
     "error": null,
     "details": "api_details/c8ac278edc54fa288f2d.json"
   },
   "native_row": {
-    "name": "from_cesium_dataset",
-    "doc_source": "aideal",
-    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
-    "execution_evidence": {
-      "status": "pass",
-      "rounds": [
-        {
-          "round": 0,
-          "status": "pass"
-        }
-      ],
-      "code": "import numpy as np\nfrom tslearn.utils import from_cesium_dataset\n\ntry:\n    from_cesium_dataset([])\nexcept ImportError as e:\n    assert \"cesium is not installed\" in str(e)\n    print(\"__CHECK__ from_cesium_dataset missing_dependency\")\nelse:\n    from cesium.time_series import TimeSeries\n    cesium_ds = [TimeSeries(m=np.array([1.0, 2.0, 3.0, 4.0]))]\n    tslearn_arr = from_cesium_dataset(cesium_ds)\n    \n    assert tslearn_arr.shape == (1, 4, 1)\n    assert np.allclose(tslearn_arr[0, :, 0], [1.0, 2.0, 3.0, 4.0])\n    print(f\"__CHECK__ from_cesium_dataset {tslearn_arr.shape}\")",
-      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_from_cesium_dataset/api_test.py",
-      "exit_code": 0,
-      "stdout_tail": "__CHECK__ from_cesium_dataset missing_dependency\n__DONE__\n",
-      "stderr_tail": ""
-    },
     "status": "pass",
     "attempts": 1,
     "pass_round": 0,
@@ -60,10 +43,26 @@
     "document_sha256": "f58aa1ffdcd72be12f26d09952b38d2b854bccd31138203c0cf5a1191f6ee4b0",
     "source": "tslearn/tslearn/utils/cast.py:713",
     "source_other_sites": 0,
-    "codebase_frames": null
+    "codebase_frames": null,
+    "name": "from_cesium_dataset",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "import numpy as np\nfrom tslearn.utils import from_cesium_dataset\n\ntry:\n    from_cesium_dataset([])\nexcept ImportError as e:\n    assert \"cesium is not installed\" in str(e)\n    print(\"__CHECK__ from_cesium_dataset missing_dependency\")\nelse:\n    from cesium.time_series import TimeSeries\n    cesium_ds = [TimeSeries(m=np.array([1.0, 2.0, 3.0, 4.0]))]\n    tslearn_arr = from_cesium_dataset(cesium_ds)\n    \n    assert tslearn_arr.shape == (1, 4, 1)\n    assert np.allclose(tslearn_arr[0, :, 0], [1.0, 2.0, 3.0, 4.0])\n    print(f\"__CHECK__ from_cesium_dataset {tslearn_arr.shape}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_from_cesium_dataset/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ from_cesium_dataset missing_dependency\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969"
   },
-  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/comprehension_progress.jsonl",
-  "source_sha256": "0a09dcebc55c1b772f6889a52003ba9fcffd51ad4e99ecb50387e688fe973703",
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/comprehension.json",
+  "source_sha256": "4d1451cc4ea9281931c5a4bd5706a63fe7e77b583aa1866442b55ff2116fddcd",
   "checkpoint_events": [
     {
       "name": "from_cesium_dataset",

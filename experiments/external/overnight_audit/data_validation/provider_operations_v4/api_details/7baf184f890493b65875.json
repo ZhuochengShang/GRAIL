@@ -17,28 +17,11 @@
     "last_retry_interval_s": null,
     "next_provider_retry_epoch": null,
     "transport_policy": "Historical/uninstrumented",
-    "identity_status": "Provisional last-observed fingerprint group; final identity unverified",
+    "identity_status": "Final or explicitly migrated evidence",
     "error": null,
     "details": "api_details/7baf184f890493b65875.json"
   },
   "native_row": {
-    "name": "load_dict",
-    "doc_source": "aideal",
-    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
-    "execution_evidence": {
-      "status": "pass",
-      "rounds": [
-        {
-          "round": 0,
-          "status": "pass"
-        }
-      ],
-      "code": "import os\nimport numpy as np\nfrom tslearn.hdftools import save_dict, load_dict\n\nfname = os.path.join(output_dir, 'test_load_dict.hdf5')\noriginal_dict = {\n    'matrix': tiny_matrix,\n    'nested': {'val': np.array([1, 2, 3])}\n}\n\n# Precondition: save the dictionary to an HDF5 file\nsave_dict(original_dict, filename=fname, group='test_group')\n\n# Exercise the API\nloaded_dict = load_dict(fname, group='test_group')\n\n# Verify the loaded dictionary matches the original\nassert 'matrix' in loaded_dict, \"Key 'matrix' missing from loaded dict\"\nassert np.array_equal(loaded_dict['matrix'], tiny_matrix), \"Loaded matrix does not match original\"\nassert 'nested' in loaded_dict, \"Key 'nested' missing from loaded dict\"\nassert np.array_equal(loaded_dict['nested']['val'], np.array([1, 2, 3])), \"Loaded nested array does not match original\"\n\nprint(f\"__CHECK__ load_dict {sorted(list(loaded_dict.keys()))}\")",
-      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_load_dict/api_test.py",
-      "exit_code": 0,
-      "stdout_tail": "__CHECK__ load_dict ['matrix', 'nested']\n__DONE__\n",
-      "stderr_tail": ""
-    },
     "status": "pass",
     "attempts": 1,
     "pass_round": 0,
@@ -60,10 +43,26 @@
     "document_sha256": "292f0db33ba4bb7b51fdccd1999b02c5411c3dd98cf0b96adda0117b0cceba84",
     "source": "tslearn/tslearn/hdftools/hdftools.py:118",
     "source_other_sites": 0,
-    "codebase_frames": null
+    "codebase_frames": null,
+    "name": "load_dict",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "import os\nimport numpy as np\nfrom tslearn.hdftools import save_dict, load_dict\n\nfname = os.path.join(output_dir, 'test_load_dict.hdf5')\noriginal_dict = {\n    'matrix': tiny_matrix,\n    'nested': {'val': np.array([1, 2, 3])}\n}\n\n# Precondition: save the dictionary to an HDF5 file\nsave_dict(original_dict, filename=fname, group='test_group')\n\n# Exercise the API\nloaded_dict = load_dict(fname, group='test_group')\n\n# Verify the loaded dictionary matches the original\nassert 'matrix' in loaded_dict, \"Key 'matrix' missing from loaded dict\"\nassert np.array_equal(loaded_dict['matrix'], tiny_matrix), \"Loaded matrix does not match original\"\nassert 'nested' in loaded_dict, \"Key 'nested' missing from loaded dict\"\nassert np.array_equal(loaded_dict['nested']['val'], np.array([1, 2, 3])), \"Loaded nested array does not match original\"\n\nprint(f\"__CHECK__ load_dict {sorted(list(loaded_dict.keys()))}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_load_dict/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ load_dict ['matrix', 'nested']\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969"
   },
-  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/comprehension_progress.jsonl",
-  "source_sha256": "0a09dcebc55c1b772f6889a52003ba9fcffd51ad4e99ecb50387e688fe973703",
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/comprehension.json",
+  "source_sha256": "4d1451cc4ea9281931c5a4bd5706a63fe7e77b583aa1866442b55ff2116fddcd",
   "checkpoint_events": [
     {
       "name": "load_dict",

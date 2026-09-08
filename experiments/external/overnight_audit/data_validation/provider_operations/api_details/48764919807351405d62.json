@@ -1,0 +1,111 @@
+{
+  "summary": {
+    "repository": "tslearn",
+    "cell": "B2",
+    "api": "support_vectors_",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 10.6,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 10.6,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "error": null,
+    "details": "api_details/48764919807351405d62.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 10.6,
+    "llm_calls": 1,
+    "input_tokens": 2282,
+    "output_tokens": 969,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2282,
+        "output_tokens": 969
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 3313,
+    "document_sha256": "a63a7365f65382a8082475417477d434b68bf4e03a6b8608890e5c8907630ba7",
+    "source": "tslearn/tslearn/svm/svm.py:285",
+    "source_other_sites": 1,
+    "codebase_frames": null,
+    "name": "support_vectors_",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "from tslearn.svm import TimeSeriesSVC\nimport numpy as np\n\n# Fit the TimeSeriesSVC on the provided balanced dataset\nclf = TimeSeriesSVC(kernel=\"gak\", random_state=42)\nclf.fit(X, y)\n\n# Access the support_vectors_ property\nsv = clf.support_vectors_\n\n# Verify the contract: returns a list of 3D numpy arrays (one per class)\nassert isinstance(sv, list), \"support_vectors_ should be a list\"\nassert len(sv) == len(np.unique(y)), f\"Expected {len(np.unique(y))} classes, got {len(sv)}\"\n\nfor class_idx, class_sv in enumerate(sv):\n    assert isinstance(class_sv, np.ndarray), f\"Element for class {class_idx} should be a numpy array\"\n    assert class_sv.ndim == 3, f\"Support vectors for class {class_idx} should be a 3D array\"\n    assert class_sv.shape[1:] == X.shape[1:], \"Support vectors must match the time series dimensions of the input\"\n\nprint(f\"__CHECK__ support_vectors_ list length {len(sv)}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_support_vectors_/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ support_vectors_ list length 4\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/comprehension.json",
+  "source_sha256": "4d1451cc4ea9281931c5a4bd5706a63fe7e77b583aa1866442b55ff2116fddcd",
+  "checkpoint_events": [
+    {
+      "name": "support_vectors_",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "from tslearn.svm import TimeSeriesSVC\nimport numpy as np\n\n# Fit the TimeSeriesSVC on the provided balanced dataset\nclf = TimeSeriesSVC(kernel=\"gak\", random_state=42)\nclf.fit(X, y)\n\n# Access the support_vectors_ property\nsv = clf.support_vectors_\n\n# Verify the contract: returns a list of 3D numpy arrays (one per class)\nassert isinstance(sv, list), \"support_vectors_ should be a list\"\nassert len(sv) == len(np.unique(y)), f\"Expected {len(np.unique(y))} classes, got {len(sv)}\"\n\nfor class_idx, class_sv in enumerate(sv):\n    assert isinstance(class_sv, np.ndarray), f\"Element for class {class_idx} should be a numpy array\"\n    assert class_sv.ndim == 3, f\"Support vectors for class {class_idx} should be a 3D array\"\n    assert class_sv.shape[1:] == X.shape[1:], \"Support vectors must match the time series dimensions of the input\"\n\nprint(f\"__CHECK__ support_vectors_ list length {len(sv)}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_support_vectors_/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ support_vectors_ list length 4\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 10.6,
+      "llm_calls": 1,
+      "input_tokens": 2282,
+      "output_tokens": 969,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2282,
+          "output_tokens": 969
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3313,
+      "document_sha256": "a63a7365f65382a8082475417477d434b68bf4e03a6b8608890e5c8907630ba7",
+      "source": "tslearn/tslearn/svm/svm.py:285",
+      "source_other_sites": 1,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

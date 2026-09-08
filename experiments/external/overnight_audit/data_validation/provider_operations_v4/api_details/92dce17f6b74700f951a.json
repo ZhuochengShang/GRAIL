@@ -17,28 +17,11 @@
     "last_retry_interval_s": null,
     "next_provider_retry_epoch": null,
     "transport_policy": "Historical/uninstrumented",
-    "identity_status": "Provisional last-observed fingerprint group; final identity unverified",
+    "identity_status": "Final or explicitly migrated evidence",
     "error": null,
     "details": "api_details/92dce17f6b74700f951a.json"
   },
   "native_row": {
-    "name": "cdist_sax",
-    "doc_source": "aideal",
-    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
-    "execution_evidence": {
-      "status": "pass",
-      "rounds": [
-        {
-          "round": 0,
-          "status": "pass"
-        }
-      ],
-      "code": "import numpy as np\nimport tslearn.metrics\n\nX_sax_symbols = np.array([[0, 1, 2], [2, 1, 0]])\nY_sax_symbols = np.array([[0, 1, 2], [0, 0, 0], [2, 2, 2]])\nmy_breakpoints = np.array([-0.5, 0.0, 0.5])\nsize_fitted = 50\n\ndists = tslearn.metrics.cdist_sax(\n    dataset1=X_sax_symbols,\n    breakpoints_avg=my_breakpoints,\n    size_fitted=size_fitted,\n    dataset2=Y_sax_symbols\n)\n\nassert dists.shape == (2, 3), f\"Expected shape (2, 3), got {dists.shape}\"\nassert dists[0, 0] == 0.0, \"Distance between identical SAX representations should be 0.0\"\nassert dists[1, 0] > 0.0, \"Distance between different SAX representations should be > 0.0\"\n\nprint(f\"__CHECK__ cdist_sax {dists.shape} {dists[0, 0]}\")",
-      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_cdist_sax/api_test.py",
-      "exit_code": 0,
-      "stdout_tail": "__CHECK__ cdist_sax (2, 3) 0.0\n__DONE__\n",
-      "stderr_tail": "/Users/clockorangezoe/miniconda3/envs/geo_llm_spark/lib/python3.10/site-packages/numpy/core/numeric.py:330: RuntimeWarning: invalid value encountered in cast\n  multiarray.copyto(a, fill_value, casting='unsafe')\n"
-    },
     "status": "pass",
     "attempts": 1,
     "pass_round": 0,
@@ -60,10 +43,26 @@
     "document_sha256": "6b590f2189da090c2893c99fceb9756b793f9e5e8578cf1c81e60ac79a08bcd3",
     "source": "tslearn/tslearn/metrics/sax.py:10",
     "source_other_sites": 0,
-    "codebase_frames": null
+    "codebase_frames": null,
+    "name": "cdist_sax",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "import numpy as np\nimport tslearn.metrics\n\nX_sax_symbols = np.array([[0, 1, 2], [2, 1, 0]])\nY_sax_symbols = np.array([[0, 1, 2], [0, 0, 0], [2, 2, 2]])\nmy_breakpoints = np.array([-0.5, 0.0, 0.5])\nsize_fitted = 50\n\ndists = tslearn.metrics.cdist_sax(\n    dataset1=X_sax_symbols,\n    breakpoints_avg=my_breakpoints,\n    size_fitted=size_fitted,\n    dataset2=Y_sax_symbols\n)\n\nassert dists.shape == (2, 3), f\"Expected shape (2, 3), got {dists.shape}\"\nassert dists[0, 0] == 0.0, \"Distance between identical SAX representations should be 0.0\"\nassert dists[1, 0] > 0.0, \"Distance between different SAX representations should be > 0.0\"\n\nprint(f\"__CHECK__ cdist_sax {dists.shape} {dists[0, 0]}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_cdist_sax/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ cdist_sax (2, 3) 0.0\n__DONE__\n",
+      "stderr_tail": "/Users/clockorangezoe/miniconda3/envs/geo_llm_spark/lib/python3.10/site-packages/numpy/core/numeric.py:330: RuntimeWarning: invalid value encountered in cast\n  multiarray.copyto(a, fill_value, casting='unsafe')\n"
+    },
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969"
   },
-  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/comprehension_progress.jsonl",
-  "source_sha256": "0a09dcebc55c1b772f6889a52003ba9fcffd51ad4e99ecb50387e688fe973703",
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/comprehension.json",
+  "source_sha256": "4d1451cc4ea9281931c5a4bd5706a63fe7e77b583aa1866442b55ff2116fddcd",
   "checkpoint_events": [
     {
       "name": "cdist_sax",

@@ -1,0 +1,111 @@
+{
+  "summary": {
+    "repository": "tslearn",
+    "cell": "B2",
+    "api": "shapelets_",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 19.3,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 19.3,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "error": null,
+    "details": "api_details/da2033044dda3cff1903.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 19.3,
+    "llm_calls": 1,
+    "input_tokens": 2554,
+    "output_tokens": 2224,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2554,
+        "output_tokens": 2224
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 4534,
+    "document_sha256": "8cced3794b0f3d82f70a5320838328720d5f6aaa9762f2437b2ad48d53423c65",
+    "source": "tslearn/tslearn/shapelets/shapelets.py:441",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "name": "shapelets_",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "import numpy as np\n\ntry:\n    from tslearn.shapelets import LearningShapelets\nexcept ImportError as e:\n    print(f\"__CHECK__ shapelets_ skipped due to missing optional dependency: {e}\")\nelse:\n    # Initialize the model with a small number of shapelets and iterations for speed\n    clf = LearningShapelets(\n        n_shapelets_per_size={3: 2}, \n        max_iter=1, \n        optimizer=\"sgd\", \n        random_state=0\n    )\n    \n    # Fit the model on the pre-loaded balanced dataset X (8, 40, 1) and labels y\n    clf.fit(X, y)\n    \n    # Access the learned shapelets property\n    shapelets = clf.shapelets_\n    \n    # Verify the output contract\n    assert isinstance(shapelets, np.ndarray), \"Expected shapelets_ to be a NumPy array\"\n    assert shapelets.dtype == object, \"Expected shapelets_ dtype to be object\"\n    assert len(shapelets) == 2, f\"Expected exactly 2 shapelets, got {len(shapelets)}\"\n    assert shapelets[0].shape == (3, 1), f\"Expected shapelet shape to be (3, 1), got {shapelets[0].shape}\"\n    \n    print(f\"__CHECK__ shapelets_ {len(shapelets)} shapelets of shape {shapelets[0].shape}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_shapelets_/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ shapelets_ skipped due to missing optional dependency: No module named 'keras'\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/comprehension.json",
+  "source_sha256": "4d1451cc4ea9281931c5a4bd5706a63fe7e77b583aa1866442b55ff2116fddcd",
+  "checkpoint_events": [
+    {
+      "name": "shapelets_",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import numpy as np\n\ntry:\n    from tslearn.shapelets import LearningShapelets\nexcept ImportError as e:\n    print(f\"__CHECK__ shapelets_ skipped due to missing optional dependency: {e}\")\nelse:\n    # Initialize the model with a small number of shapelets and iterations for speed\n    clf = LearningShapelets(\n        n_shapelets_per_size={3: 2}, \n        max_iter=1, \n        optimizer=\"sgd\", \n        random_state=0\n    )\n    \n    # Fit the model on the pre-loaded balanced dataset X (8, 40, 1) and labels y\n    clf.fit(X, y)\n    \n    # Access the learned shapelets property\n    shapelets = clf.shapelets_\n    \n    # Verify the output contract\n    assert isinstance(shapelets, np.ndarray), \"Expected shapelets_ to be a NumPy array\"\n    assert shapelets.dtype == object, \"Expected shapelets_ dtype to be object\"\n    assert len(shapelets) == 2, f\"Expected exactly 2 shapelets, got {len(shapelets)}\"\n    assert shapelets[0].shape == (3, 1), f\"Expected shapelet shape to be (3, 1), got {shapelets[0].shape}\"\n    \n    print(f\"__CHECK__ shapelets_ {len(shapelets)} shapelets of shape {shapelets[0].shape}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_shapelets_/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ shapelets_ skipped due to missing optional dependency: No module named 'keras'\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 19.3,
+      "llm_calls": 1,
+      "input_tokens": 2554,
+      "output_tokens": 2224,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2554,
+          "output_tokens": 2224
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 4534,
+      "document_sha256": "8cced3794b0f3d82f70a5320838328720d5f6aaa9762f2437b2ad48d53423c65",
+      "source": "tslearn/tslearn/shapelets/shapelets.py:441",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

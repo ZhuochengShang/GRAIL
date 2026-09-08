@@ -1,0 +1,111 @@
+{
+  "summary": {
+    "repository": "tslearn",
+    "cell": "B2",
+    "api": "grad",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 18.5,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 18.5,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "error": null,
+    "details": "api_details/52c62c9b0c0cc0e2943f.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 18.5,
+    "llm_calls": 1,
+    "input_tokens": 2185,
+    "output_tokens": 1825,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2185,
+        "output_tokens": 1825
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 3030,
+    "document_sha256": "01f3010c8c3a7e3cfa58665ef8af087a6e6d05234781330925e9038c0d7b7ba8",
+    "source": "tslearn/tslearn/metrics/softdtw_variants.py:1137",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "name": "grad",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "import numpy as np\nfrom tslearn.metrics.softdtw_variants import SoftDTW\n\n# Ensure the distance matrix is non-negative\nD = np.abs(tiny_matrix)\n\n# Instantiate SoftDTW and perform the forward pass\nsdtw = SoftDTW(D, gamma=1.0)\nsdtw.compute()\n\n# Compute the gradient w.r.t. the distance matrix D\ngrad_D = sdtw.grad()\n\n# The gradient of Soft-DTW w.r.t D represents the expected alignment matrix.\n# All valid alignment paths must start at (0, 0) and end at (m-1, n-1),\n# so the expected visits to these cells should be exactly 1.0.\nassert grad_D.shape == D.shape\nassert isinstance(grad_D, np.ndarray)\nassert np.isclose(grad_D[0, 0], 1.0), f\"Expected 1.0 at start, got {grad_D[0, 0]}\"\nassert np.isclose(grad_D[-1, -1], 1.0), f\"Expected 1.0 at end, got {grad_D[-1, -1]}\"\n\nprint(f\"__CHECK__ grad {grad_D.shape} {grad_D[-1, -1]:.1f}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_grad/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ grad (3, 4) 1.0\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/comprehension.json",
+  "source_sha256": "4d1451cc4ea9281931c5a4bd5706a63fe7e77b583aa1866442b55ff2116fddcd",
+  "checkpoint_events": [
+    {
+      "name": "grad",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import numpy as np\nfrom tslearn.metrics.softdtw_variants import SoftDTW\n\n# Ensure the distance matrix is non-negative\nD = np.abs(tiny_matrix)\n\n# Instantiate SoftDTW and perform the forward pass\nsdtw = SoftDTW(D, gamma=1.0)\nsdtw.compute()\n\n# Compute the gradient w.r.t. the distance matrix D\ngrad_D = sdtw.grad()\n\n# The gradient of Soft-DTW w.r.t D represents the expected alignment matrix.\n# All valid alignment paths must start at (0, 0) and end at (m-1, n-1),\n# so the expected visits to these cells should be exactly 1.0.\nassert grad_D.shape == D.shape\nassert isinstance(grad_D, np.ndarray)\nassert np.isclose(grad_D[0, 0], 1.0), f\"Expected 1.0 at start, got {grad_D[0, 0]}\"\nassert np.isclose(grad_D[-1, -1], 1.0), f\"Expected 1.0 at end, got {grad_D[-1, -1]}\"\n\nprint(f\"__CHECK__ grad {grad_D.shape} {grad_D[-1, -1]:.1f}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_grad/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ grad (3, 4) 1.0\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 18.5,
+      "llm_calls": 1,
+      "input_tokens": 2185,
+      "output_tokens": 1825,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2185,
+          "output_tokens": 1825
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3030,
+      "document_sha256": "01f3010c8c3a7e3cfa58665ef8af087a6e6d05234781330925e9038c0d7b7ba8",
+      "source": "tslearn/tslearn/metrics/softdtw_variants.py:1137",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

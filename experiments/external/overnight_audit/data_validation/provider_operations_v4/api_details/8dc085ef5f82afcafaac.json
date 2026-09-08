@@ -17,28 +17,11 @@
     "last_retry_interval_s": null,
     "next_provider_retry_epoch": null,
     "transport_policy": "Historical/uninstrumented",
-    "identity_status": "Provisional last-observed fingerprint group; final identity unverified",
+    "identity_status": "Final or explicitly migrated evidence",
     "error": null,
     "details": "api_details/8dc085ef5f82afcafaac.json"
   },
   "native_row": {
-    "name": "distance",
-    "doc_source": "aideal",
-    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
-    "execution_evidence": {
-      "status": "pass",
-      "rounds": [
-        {
-          "round": 0,
-          "status": "pass"
-        }
-      ],
-      "code": "from tslearn.piecewise import PiecewiseAggregateApproximation\n\npaa = PiecewiseAggregateApproximation(n_segments=5)\npaa.fit(X)\n\ndist = paa.distance(X[0], X[1])\ndist_same = paa.distance(X[0], X[0])\n\nassert isinstance(dist, float), \"Distance must be a float\"\nassert dist >= 0.0, \"Distance must be non-negative\"\nassert dist_same == 0.0, \"Distance between identical time series must be 0.0\"\n\nprint(f\"__CHECK__ distance {dist:.4f}\")",
-      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_distance/api_test.py",
-      "exit_code": 0,
-      "stdout_tail": "__CHECK__ distance 0.3443\n__DONE__\n",
-      "stderr_tail": ""
-    },
     "status": "pass",
     "attempts": 1,
     "pass_round": 0,
@@ -60,10 +43,26 @@
     "document_sha256": "9f44122aa6b6a2998f0841da057b11ab4040f9355a18565f91418ff0bc5c89a2",
     "source": "tslearn/tslearn/piecewise/piecewise.py:219",
     "source_other_sites": 2,
-    "codebase_frames": null
+    "codebase_frames": null,
+    "name": "distance",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "from tslearn.piecewise import PiecewiseAggregateApproximation\n\npaa = PiecewiseAggregateApproximation(n_segments=5)\npaa.fit(X)\n\ndist = paa.distance(X[0], X[1])\ndist_same = paa.distance(X[0], X[0])\n\nassert isinstance(dist, float), \"Distance must be a float\"\nassert dist >= 0.0, \"Distance must be non-negative\"\nassert dist_same == 0.0, \"Distance between identical time series must be 0.0\"\n\nprint(f\"__CHECK__ distance {dist:.4f}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_distance/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ distance 0.3443\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969"
   },
-  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/comprehension_progress.jsonl",
-  "source_sha256": "0a09dcebc55c1b772f6889a52003ba9fcffd51ad4e99ecb50387e688fe973703",
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/comprehension.json",
+  "source_sha256": "4d1451cc4ea9281931c5a4bd5706a63fe7e77b583aa1866442b55ff2116fddcd",
   "checkpoint_events": [
     {
       "name": "distance",

@@ -1,0 +1,134 @@
+{
+  "summary": {
+    "repository": "tslearn",
+    "cell": "B2",
+    "api": "shapelets_as_time_series_",
+    "outcome": "Setup/import blocked",
+    "test_execution": "Setup/import failed; target execution not established",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 17.2,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 17.2,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "identity_status": "Final or explicitly migrated evidence",
+    "error": "missing module/import: No module named 'keras'",
+    "details": "api_details/05393355974293a409b1.json"
+  },
+  "native_row": {
+    "status": "fail",
+    "attempts": 1,
+    "pass_round": null,
+    "wall_s": 17.2,
+    "llm_calls": 1,
+    "input_tokens": 2571,
+    "output_tokens": 1855,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2571,
+        "output_tokens": 1855
+      }
+    },
+    "error_category": "infra",
+    "error": "missing module/import: No module named 'keras'",
+    "locus": "",
+    "doc_chars": 4124,
+    "document_sha256": "216e0ca4cafb4d85419f45c06ade5c63d814d4d5029a94a7235870b6193e639f",
+    "source": "tslearn/tslearn/shapelets/shapelets.py:455",
+    "source_other_sites": 0,
+    "codebase_frames": [
+      "tslearn/tslearn/__init__.py:14",
+      "tslearn/tslearn/shapelets/shapelets.py:7"
+    ],
+    "name": "shapelets_as_time_series_",
+    "execution_evidence": {
+      "status": "fail",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "fail",
+          "category": "infra",
+          "error": "missing module/import: No module named 'keras'",
+          "codebase_frames": [
+            "tslearn/tslearn/__init__.py:14",
+            "tslearn/tslearn/shapelets/shapelets.py:7"
+          ]
+        }
+      ],
+      "error_category": "infra",
+      "error": "missing module/import: No module named 'keras'",
+      "code": "from tslearn.shapelets import LearningShapelets\nimport numpy as np\n\n# Initialize the model requesting 2 shapelets of length 3, and 1 of length 4\nmodel = LearningShapelets(\n    n_shapelets_per_size={3: 2, 4: 1}, \n    max_iter=1, \n    random_state=0\n)\n\n# Fit the model on the provided balanced dataset\nmodel.fit(X, y)\n\n# Access the shapelets as a formatted 3D time-series dataset\nts_shapelets = model.shapelets_as_time_series_\n\n# Verify the output shape: (total_shapelets=3, max_length=4, dimensions=1)\nassert ts_shapelets.shape == (3, 4, 1), f\"Expected shape (3, 4, 1), got {ts_shapelets.shape}\"\n\n# Verify NaN padding: 2 shapelets of length 3 padded to length 4 means exactly 2 NaNs\nnan_count = np.isnan(ts_shapelets).sum()\nassert nan_count == 2, f\"Expected exactly 2 NaNs for padding, got {nan_count}\"\n\nprint(f\"__CHECK__ shapelets_as_time_series_ {ts_shapelets.shape} with {nan_count} NaNs\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_shapelets_as_time_series_/api_test.py",
+      "exit_code": 1,
+      "stdout_tail": "",
+      "stderr_tail": "__RUN_ERR__ ModuleNotFoundError: No module named 'keras'\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_shapelets_as_time_series_/api_test.py\", line 66, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_shapelets_as_time_series_/api_test.py\", line 61, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_shapelets_as_time_series_/api_test.py\", line 34, in api_test\n    from tslearn.shapelets import LearningShapelets\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/tslearn/tslearn/shapelets/__init__.py\", line 14, in <module>\n    from .shapelets import (\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/tslearn/tslearn/shapelets/shapelets.py\", line 7, in <module>\n    from keras.layers import (\nModuleNotFoundError: No module named 'keras'\n"
+    },
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/comprehension.json",
+  "source_sha256": "4d1451cc4ea9281931c5a4bd5706a63fe7e77b583aa1866442b55ff2116fddcd",
+  "checkpoint_events": [
+    {
+      "name": "shapelets_as_time_series_",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "infra",
+            "error": "missing module/import: No module named 'keras'",
+            "codebase_frames": [
+              "tslearn/tslearn/__init__.py:14",
+              "tslearn/tslearn/shapelets/shapelets.py:7"
+            ]
+          }
+        ],
+        "error_category": "infra",
+        "error": "missing module/import: No module named 'keras'",
+        "code": "from tslearn.shapelets import LearningShapelets\nimport numpy as np\n\n# Initialize the model requesting 2 shapelets of length 3, and 1 of length 4\nmodel = LearningShapelets(\n    n_shapelets_per_size={3: 2, 4: 1}, \n    max_iter=1, \n    random_state=0\n)\n\n# Fit the model on the provided balanced dataset\nmodel.fit(X, y)\n\n# Access the shapelets as a formatted 3D time-series dataset\nts_shapelets = model.shapelets_as_time_series_\n\n# Verify the output shape: (total_shapelets=3, max_length=4, dimensions=1)\nassert ts_shapelets.shape == (3, 4, 1), f\"Expected shape (3, 4, 1), got {ts_shapelets.shape}\"\n\n# Verify NaN padding: 2 shapelets of length 3 padded to length 4 means exactly 2 NaNs\nnan_count = np.isnan(ts_shapelets).sum()\nassert nan_count == 2, f\"Expected exactly 2 NaNs for padding, got {nan_count}\"\n\nprint(f\"__CHECK__ shapelets_as_time_series_ {ts_shapelets.shape} with {nan_count} NaNs\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_shapelets_as_time_series_/api_test.py",
+        "exit_code": 1,
+        "stdout_tail": "",
+        "stderr_tail": "__RUN_ERR__ ModuleNotFoundError: No module named 'keras'\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_shapelets_as_time_series_/api_test.py\", line 66, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_shapelets_as_time_series_/api_test.py\", line 61, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_shapelets_as_time_series_/api_test.py\", line 34, in api_test\n    from tslearn.shapelets import LearningShapelets\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/tslearn/tslearn/shapelets/__init__.py\", line 14, in <module>\n    from .shapelets import (\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/tslearn/tslearn/shapelets/shapelets.py\", line 7, in <module>\n    from keras.layers import (\nModuleNotFoundError: No module named 'keras'\n"
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 17.2,
+      "llm_calls": 1,
+      "input_tokens": 2571,
+      "output_tokens": 1855,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2571,
+          "output_tokens": 1855
+        }
+      },
+      "error_category": "infra",
+      "error": "missing module/import: No module named 'keras'",
+      "locus": "",
+      "doc_chars": 4124,
+      "document_sha256": "216e0ca4cafb4d85419f45c06ade5c63d814d4d5029a94a7235870b6193e639f",
+      "source": "tslearn/tslearn/shapelets/shapelets.py:455",
+      "source_other_sites": 0,
+      "codebase_frames": [
+        "tslearn/tslearn/__init__.py:14",
+        "tslearn/tslearn/shapelets/shapelets.py:7"
+      ]
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

@@ -1,0 +1,119 @@
+{
+  "summary": {
+    "repository": "tslearn",
+    "cell": "B2",
+    "api": "TimeSeriesMixin",
+    "outcome": "Execution failed",
+    "test_execution": "Test process returned exit code 1; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 10.6,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 10.6,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "error": "AssertionError: TimeSeriesMixin should set 'allow_nan' to True in tags",
+    "details": "api_details/31f6725f216beaf7f4c7.json"
+  },
+  "native_row": {
+    "status": "fail",
+    "attempts": 1,
+    "pass_round": null,
+    "wall_s": 10.6,
+    "llm_calls": 1,
+    "input_tokens": 2135,
+    "output_tokens": 1075,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2135,
+        "output_tokens": 1075
+      }
+    },
+    "error_category": "runtime",
+    "error": "AssertionError: TimeSeriesMixin should set 'allow_nan' to True in tags",
+    "locus": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_TimeSeriesMixin/api_test.py:49",
+    "doc_chars": 3312,
+    "document_sha256": "f1bede7c20cbeec8c21b17d99305a3625c13a1bcab836178ad7320fd7f9c6e8f",
+    "source": "tslearn/tslearn/bases/bases.py:53",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "name": "TimeSeriesMixin",
+    "execution_evidence": {
+      "status": "fail",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "fail",
+          "category": "runtime",
+          "error": "AssertionError: TimeSeriesMixin should set 'allow_nan' to True in tags"
+        }
+      ],
+      "error_category": "runtime",
+      "error": "AssertionError: TimeSeriesMixin should set 'allow_nan' to True in tags",
+      "code": "from tslearn.bases import TimeSeriesMixin\nfrom sklearn.base import BaseEstimator\n\nclass CustomTimeSeriesModel(BaseEstimator, TimeSeriesMixin):\n    def fit(self, X, y=None):\n        return self\n\nmodel = CustomTimeSeriesModel()\n\n# Verify inheritance\nassert isinstance(model, TimeSeriesMixin), \"Model must be an instance of TimeSeriesMixin\"\n\n# Verify the mixin provides the expected scikit-learn tags (e.g., allow_nan)\ntags = model._more_tags()\nassert isinstance(tags, dict), \"_more_tags() should return a dictionary\"\nassert tags.get(\"allow_nan\") is True, \"TimeSeriesMixin should set 'allow_nan' to True in tags\"\n\nprint(f\"__CHECK__ TimeSeriesMixin {tags.get('allow_nan')}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_TimeSeriesMixin/api_test.py",
+      "exit_code": 1,
+      "stdout_tail": "",
+      "stderr_tail": "__RUN_ERR__ AssertionError: TimeSeriesMixin should set 'allow_nan' to True in tags\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_TimeSeriesMixin/api_test.py\", line 60, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_TimeSeriesMixin/api_test.py\", line 55, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_TimeSeriesMixin/api_test.py\", line 49, in api_test\n    assert tags.get(\"allow_nan\") is True, \"TimeSeriesMixin should set 'allow_nan' to True in tags\"\nAssertionError: TimeSeriesMixin should set 'allow_nan' to True in tags\n"
+    },
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/comprehension.json",
+  "source_sha256": "4d1451cc4ea9281931c5a4bd5706a63fe7e77b583aa1866442b55ff2116fddcd",
+  "checkpoint_events": [
+    {
+      "name": "TimeSeriesMixin",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "runtime",
+            "error": "AssertionError: TimeSeriesMixin should set 'allow_nan' to True in tags"
+          }
+        ],
+        "error_category": "runtime",
+        "error": "AssertionError: TimeSeriesMixin should set 'allow_nan' to True in tags",
+        "code": "from tslearn.bases import TimeSeriesMixin\nfrom sklearn.base import BaseEstimator\n\nclass CustomTimeSeriesModel(BaseEstimator, TimeSeriesMixin):\n    def fit(self, X, y=None):\n        return self\n\nmodel = CustomTimeSeriesModel()\n\n# Verify inheritance\nassert isinstance(model, TimeSeriesMixin), \"Model must be an instance of TimeSeriesMixin\"\n\n# Verify the mixin provides the expected scikit-learn tags (e.g., allow_nan)\ntags = model._more_tags()\nassert isinstance(tags, dict), \"_more_tags() should return a dictionary\"\nassert tags.get(\"allow_nan\") is True, \"TimeSeriesMixin should set 'allow_nan' to True in tags\"\n\nprint(f\"__CHECK__ TimeSeriesMixin {tags.get('allow_nan')}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_TimeSeriesMixin/api_test.py",
+        "exit_code": 1,
+        "stdout_tail": "",
+        "stderr_tail": "__RUN_ERR__ AssertionError: TimeSeriesMixin should set 'allow_nan' to True in tags\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_TimeSeriesMixin/api_test.py\", line 60, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_TimeSeriesMixin/api_test.py\", line 55, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_TimeSeriesMixin/api_test.py\", line 49, in api_test\n    assert tags.get(\"allow_nan\") is True, \"TimeSeriesMixin should set 'allow_nan' to True in tags\"\nAssertionError: TimeSeriesMixin should set 'allow_nan' to True in tags\n"
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 10.6,
+      "llm_calls": 1,
+      "input_tokens": 2135,
+      "output_tokens": 1075,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2135,
+          "output_tokens": 1075
+        }
+      },
+      "error_category": "runtime",
+      "error": "AssertionError: TimeSeriesMixin should set 'allow_nan' to True in tags",
+      "locus": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_TimeSeriesMixin/api_test.py:49",
+      "doc_chars": 3312,
+      "document_sha256": "f1bede7c20cbeec8c21b17d99305a3625c13a1bcab836178ad7320fd7f9c6e8f",
+      "source": "tslearn/tslearn/bases/bases.py:53",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

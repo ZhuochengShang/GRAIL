@@ -17,28 +17,11 @@
     "last_retry_interval_s": null,
     "next_provider_retry_epoch": null,
     "transport_policy": "Historical/uninstrumented",
-    "identity_status": "Provisional last-observed fingerprint group; final identity unverified",
+    "identity_status": "Final or explicitly migrated evidence",
     "error": null,
     "details": "api_details/6710517b509c74b7f726.json"
   },
   "native_row": {
-    "name": "TimeSeriesScalerMeanVariance",
-    "doc_source": "aideal",
-    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
-    "execution_evidence": {
-      "status": "pass",
-      "rounds": [
-        {
-          "round": 0,
-          "status": "pass"
-        }
-      ],
-      "code": "import numpy as np\nfrom tslearn.preprocessing import TimeSeriesScalerMeanVariance\n\n# Instantiate the scaler with default parameters (mu=0.0, std=1.0, per_timeseries=True)\nscaler = TimeSeriesScalerMeanVariance(mu=0.0, std=1.0)\n\n# Fit and transform the 3D time-series dataset X\nX_scaled = scaler.fit_transform(X)\n\n# Verify the output shape matches the input shape\nassert X_scaled.shape == X.shape, f\"Expected shape {X.shape}, got {X_scaled.shape}\"\n\n# Verify that each time series has mean ~0 and std ~1\nmeans = np.nanmean(X_scaled, axis=1)\nstds = np.nanstd(X_scaled, axis=1)\n\nnp.testing.assert_allclose(means, 0.0, atol=1e-6, err_msg=\"Means are not 0\")\nnp.testing.assert_allclose(stds, 1.0, atol=1e-6, err_msg=\"Standard deviations are not 1\")\n\nprint(f\"__CHECK__ TimeSeriesScalerMeanVariance {X_scaled.shape}\")",
-      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_TimeSeriesScalerMeanVariance/api_test.py",
-      "exit_code": 0,
-      "stdout_tail": "__CHECK__ TimeSeriesScalerMeanVariance (8, 40, 1)\n__DONE__\n",
-      "stderr_tail": ""
-    },
     "status": "pass",
     "attempts": 1,
     "pass_round": 0,
@@ -60,10 +43,26 @@
     "document_sha256": "ee5f394c20395db7726d2c40767fda5a5c371c19a69a0660516a374864ed5aea",
     "source": "tslearn/tslearn/preprocessing/preprocessing.py:283",
     "source_other_sites": 0,
-    "codebase_frames": null
+    "codebase_frames": null,
+    "name": "TimeSeriesScalerMeanVariance",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "import numpy as np\nfrom tslearn.preprocessing import TimeSeriesScalerMeanVariance\n\n# Instantiate the scaler with default parameters (mu=0.0, std=1.0, per_timeseries=True)\nscaler = TimeSeriesScalerMeanVariance(mu=0.0, std=1.0)\n\n# Fit and transform the 3D time-series dataset X\nX_scaled = scaler.fit_transform(X)\n\n# Verify the output shape matches the input shape\nassert X_scaled.shape == X.shape, f\"Expected shape {X.shape}, got {X_scaled.shape}\"\n\n# Verify that each time series has mean ~0 and std ~1\nmeans = np.nanmean(X_scaled, axis=1)\nstds = np.nanstd(X_scaled, axis=1)\n\nnp.testing.assert_allclose(means, 0.0, atol=1e-6, err_msg=\"Means are not 0\")\nnp.testing.assert_allclose(stds, 1.0, atol=1e-6, err_msg=\"Standard deviations are not 1\")\n\nprint(f\"__CHECK__ TimeSeriesScalerMeanVariance {X_scaled.shape}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_TimeSeriesScalerMeanVariance/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ TimeSeriesScalerMeanVariance (8, 40, 1)\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969"
   },
-  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/comprehension_progress.jsonl",
-  "source_sha256": "0a09dcebc55c1b772f6889a52003ba9fcffd51ad4e99ecb50387e688fe973703",
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/comprehension.json",
+  "source_sha256": "4d1451cc4ea9281931c5a4bd5706a63fe7e77b583aa1866442b55ff2116fddcd",
   "checkpoint_events": [
     {
       "name": "TimeSeriesScalerMeanVariance",

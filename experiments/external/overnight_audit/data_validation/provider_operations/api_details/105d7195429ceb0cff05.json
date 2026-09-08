@@ -1,0 +1,111 @@
+{
+  "summary": {
+    "repository": "tslearn",
+    "cell": "B2",
+    "api": "compute_mask",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 15.7,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 15.7,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "error": null,
+    "details": "api_details/105d7195429ceb0cff05.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 15.7,
+    "llm_calls": 1,
+    "input_tokens": 3199,
+    "output_tokens": 1283,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 3199,
+        "output_tokens": 1283
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 6647,
+    "document_sha256": "b3bf11d18ed6abc54afabf68bfa44afa2d92d0c4826ac2db337a38e01dd77a8b",
+    "source": "tslearn/tslearn/metrics/_masks.py:199",
+    "source_other_sites": 2,
+    "codebase_frames": null,
+    "name": "compute_mask",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "import tslearn.metrics\n\nmask = tslearn.metrics.compute_mask(\n    s1=s1,\n    s2=s2,\n    global_constraint=2,\n    sakoe_chiba_radius=5\n)\n\nassert mask.shape == (40, 40), f\"Expected shape (40, 40), got {mask.shape}\"\nassert mask[0, 5], \"Expected mask[0, 5] to be True within radius 5\"\nassert not mask[0, 6], \"Expected mask[0, 6] to be False outside radius 5\"\nassert mask[39, 34], \"Expected mask[39, 34] to be True within radius 5\"\nassert not mask[39, 33], \"Expected mask[39, 33] to be False outside radius 5\"\n\nprint(f\"__CHECK__ compute_mask {mask.shape} {int(mask.sum())}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_compute_mask/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ compute_mask (40, 40) 410\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/comprehension.json",
+  "source_sha256": "4d1451cc4ea9281931c5a4bd5706a63fe7e77b583aa1866442b55ff2116fddcd",
+  "checkpoint_events": [
+    {
+      "name": "compute_mask",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import tslearn.metrics\n\nmask = tslearn.metrics.compute_mask(\n    s1=s1,\n    s2=s2,\n    global_constraint=2,\n    sakoe_chiba_radius=5\n)\n\nassert mask.shape == (40, 40), f\"Expected shape (40, 40), got {mask.shape}\"\nassert mask[0, 5], \"Expected mask[0, 5] to be True within radius 5\"\nassert not mask[0, 6], \"Expected mask[0, 6] to be False outside radius 5\"\nassert mask[39, 34], \"Expected mask[39, 34] to be True within radius 5\"\nassert not mask[39, 33], \"Expected mask[39, 33] to be False outside radius 5\"\n\nprint(f\"__CHECK__ compute_mask {mask.shape} {int(mask.sum())}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_compute_mask/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ compute_mask (40, 40) 410\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 15.7,
+      "llm_calls": 1,
+      "input_tokens": 3199,
+      "output_tokens": 1283,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 3199,
+          "output_tokens": 1283
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 6647,
+      "document_sha256": "b3bf11d18ed6abc54afabf68bfa44afa2d92d0c4826ac2db337a38e01dd77a8b",
+      "source": "tslearn/tslearn/metrics/_masks.py:199",
+      "source_other_sites": 2,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

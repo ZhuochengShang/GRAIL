@@ -1,0 +1,34 @@
+AUDIENCE & TESTABILITY:
+API audience: USER-FACING.
+Harness testability: TESTABLE.
+Scoring recommendation: include in main user-facing denominator.
+
+ROOT CAUSE:
+The documentation entry contained a critical error: it incorrectly referred to the transformer class as `PAA`. As shown in the source code, the actual class name is `PiecewiseAggregateApproximation` (which is also the base class for `SymbolicAggregateApproximation`). The snippet failed because it tried to import the non-existent `PAA` alias from `tslearn.piecewise`.
+
+CORRECT USAGE:
+```python
+import numpy as np
+from tslearn.piecewise import PiecewiseAggregateApproximation
+
+# Create a dummy dataset of 8 time series, 40 time steps, 1 dimension
+X = np.arange(320).reshape(8, 40, 1)
+
+# Instantiate and fit the correct transformer class
+paa = PiecewiseAggregateApproximation(n_segments=10)
+X_paa = paa.fit_transform(X)
+
+# Reconstruct the time series
+X_reconstructed = paa.inverse_transform(X_paa)
+
+assert X_reconstructed.shape == (8, 40, 1)
+print(f"__CHECK__ inverse_transform {X_reconstructed.shape}")
+```
+
+REQUIRED TYPES & IMPORTS:
+`tslearn.piecewise.PiecewiseAggregateApproximation`
+
+DOC MUST SAY:
+- The correct class name for the PAA transformer is `PiecewiseAggregateApproximation`, not `PAA`.
+- The class must be imported via `from tslearn.piecewise import PiecewiseAggregateApproximation`.
+- `inverse_transform` must be called on a fitted instance of `PiecewiseAggregateApproximation` (or its subclasses like `SymbolicAggregateApproximation`).

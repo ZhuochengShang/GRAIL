@@ -17,28 +17,11 @@
     "last_retry_interval_s": null,
     "next_provider_retry_epoch": null,
     "transport_policy": "Historical/uninstrumented",
-    "identity_status": "Provisional last-observed fingerprint group; final identity unverified",
+    "identity_status": "Final or explicitly migrated evidence",
     "error": null,
     "details": "api_details/10d809f15202b308be26.json"
   },
   "native_row": {
-    "name": "gak",
-    "doc_source": "aideal",
-    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
-    "execution_evidence": {
-      "status": "pass",
-      "rounds": [
-        {
-          "round": 0,
-          "status": "pass"
-        }
-      ],
-      "code": "from tslearn.metrics import gak\n\nsim = gak(s1, s2, sigma=2.5)\nsim_self = gak(s1, s1, sigma=2.5)\n\nassert 0.0 <= float(sim) <= 1.0, \"GAK similarity must be in [0, 1]\"\nassert abs(float(sim_self) - 1.0) < 1e-6, \"Normalized GAK similarity with itself must be 1.0\"\n\nprint(f\"__CHECK__ gak {float(sim):.4f}\")",
-      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_gak/api_test.py",
-      "exit_code": 0,
-      "stdout_tail": "__CHECK__ gak 0.9674\n__DONE__\n",
-      "stderr_tail": ""
-    },
     "status": "pass",
     "attempts": 1,
     "pass_round": 0,
@@ -60,10 +43,26 @@
     "document_sha256": "8920c8e15fa676fca10f2decd661f6da1e8edffbaf71caf705775a968ac7b8ed",
     "source": "tslearn/tslearn/metrics/_gak.py:99",
     "source_other_sites": 1,
-    "codebase_frames": null
+    "codebase_frames": null,
+    "name": "gak",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "from tslearn.metrics import gak\n\nsim = gak(s1, s2, sigma=2.5)\nsim_self = gak(s1, s1, sigma=2.5)\n\nassert 0.0 <= float(sim) <= 1.0, \"GAK similarity must be in [0, 1]\"\nassert abs(float(sim_self) - 1.0) < 1e-6, \"Normalized GAK similarity with itself must be 1.0\"\n\nprint(f\"__CHECK__ gak {float(sim):.4f}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_gak/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ gak 0.9674\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969"
   },
-  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/comprehension_progress.jsonl",
-  "source_sha256": "0a09dcebc55c1b772f6889a52003ba9fcffd51ad4e99ecb50387e688fe973703",
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/comprehension.json",
+  "source_sha256": "4d1451cc4ea9281931c5a4bd5706a63fe7e77b583aa1866442b55ff2116fddcd",
   "checkpoint_events": [
     {
       "name": "gak",

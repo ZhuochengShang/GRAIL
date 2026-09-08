@@ -17,28 +17,11 @@
     "last_retry_interval_s": null,
     "next_provider_retry_epoch": null,
     "transport_policy": "Historical/uninstrumented",
-    "identity_status": "Provisional last-observed fingerprint group; final identity unverified",
+    "identity_status": "Final or explicitly migrated evidence",
     "error": null,
     "details": "api_details/2671079d246eecaacaef.json"
   },
   "native_row": {
-    "name": "from_hdf5",
-    "doc_source": "aideal",
-    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
-    "execution_evidence": {
-      "status": "pass",
-      "rounds": [
-        {
-          "round": 0,
-          "status": "pass"
-        }
-      ],
-      "code": "import os\nimport numpy as np\nfrom tslearn.clustering import TimeSeriesKMeans\n\n# Train a small model to serialize\nmodel = TimeSeriesKMeans(n_clusters=2, max_iter=2, random_state=42)\nmodel.fit(X)\n\n# Save the model to an HDF5 file\nhdf5_path = os.path.join(output_dir, \"test_model.hdf5\")\nmodel.to_hdf5(hdf5_path)\n\n# Load the model using from_hdf5\nloaded_model = TimeSeriesKMeans.from_hdf5(hdf5_path)\n\n# Verify the loaded model retains the learned parameters\nassert loaded_model.n_clusters == model.n_clusters, \"Hyperparameters do not match after loading\"\nassert np.allclose(model.cluster_centers_, loaded_model.cluster_centers_), \"Learned cluster centers do not match after loading\"\n\nprint(f\"__CHECK__ from_hdf5 {loaded_model.cluster_centers_.shape}\")",
-      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_from_hdf5/api_test.py",
-      "exit_code": 0,
-      "stdout_tail": "__CHECK__ from_hdf5 (2, 40, 1)\n__DONE__\n",
-      "stderr_tail": ""
-    },
     "status": "pass",
     "attempts": 1,
     "pass_round": 0,
@@ -60,10 +43,26 @@
     "document_sha256": "9d713f80d0ac20f1af710405dbcf5ad5271cac22e30c64cdd5fba9b1cebd063b",
     "source": "tslearn/tslearn/bases/bases.py:232",
     "source_other_sites": 0,
-    "codebase_frames": null
+    "codebase_frames": null,
+    "name": "from_hdf5",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "import os\nimport numpy as np\nfrom tslearn.clustering import TimeSeriesKMeans\n\n# Train a small model to serialize\nmodel = TimeSeriesKMeans(n_clusters=2, max_iter=2, random_state=42)\nmodel.fit(X)\n\n# Save the model to an HDF5 file\nhdf5_path = os.path.join(output_dir, \"test_model.hdf5\")\nmodel.to_hdf5(hdf5_path)\n\n# Load the model using from_hdf5\nloaded_model = TimeSeriesKMeans.from_hdf5(hdf5_path)\n\n# Verify the loaded model retains the learned parameters\nassert loaded_model.n_clusters == model.n_clusters, \"Hyperparameters do not match after loading\"\nassert np.allclose(model.cluster_centers_, loaded_model.cluster_centers_), \"Learned cluster centers do not match after loading\"\n\nprint(f\"__CHECK__ from_hdf5 {loaded_model.cluster_centers_.shape}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_from_hdf5/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ from_hdf5 (2, 40, 1)\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969"
   },
-  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/comprehension_progress.jsonl",
-  "source_sha256": "0a09dcebc55c1b772f6889a52003ba9fcffd51ad4e99ecb50387e688fe973703",
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/comprehension.json",
+  "source_sha256": "4d1451cc4ea9281931c5a4bd5706a63fe7e77b583aa1866442b55ff2116fddcd",
   "checkpoint_events": [
     {
       "name": "from_hdf5",

@@ -17,32 +17,11 @@
     "last_retry_interval_s": null,
     "next_provider_retry_epoch": null,
     "transport_policy": "Historical/uninstrumented",
-    "identity_status": "Provisional last-observed fingerprint group; final identity unverified",
+    "identity_status": "Final or explicitly migrated evidence",
     "error": "AssertionError: Expected True for float32 array",
     "details": "api_details/cdbed452c2ac64b9f3e6.json"
   },
   "native_row": {
-    "name": "is_float32",
-    "doc_source": "aideal",
-    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
-    "execution_evidence": {
-      "status": "fail",
-      "rounds": [
-        {
-          "round": 0,
-          "status": "fail",
-          "category": "runtime",
-          "error": "AssertionError: Expected True for float32 array"
-        }
-      ],
-      "error_category": "runtime",
-      "error": "AssertionError: Expected True for float32 array",
-      "code": "import numpy as np\nfrom tslearn.backend import instantiate_backend\n\nbe = instantiate_backend(\"numpy\")\n\nx_32 = np.array([1.0, 2.0, 3.0], dtype=np.float32)\nx_64 = np.array([1.0, 2.0, 3.0], dtype=np.float64)\n\nres_32 = be.is_float32(x_32)\nres_64 = be.is_float32(x_64)\n\nassert res_32 is True, \"Expected True for float32 array\"\nassert res_64 is False, \"Expected False for float64 array\"\n\nprint(f\"__CHECK__ is_float32 {res_32}, {res_64}\")",
-      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_is_float32/api_test.py",
-      "exit_code": 1,
-      "stdout_tail": "",
-      "stderr_tail": "__RUN_ERR__ AssertionError: Expected True for float32 array\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_is_float32/api_test.py\", line 57, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_is_float32/api_test.py\", line 52, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_is_float32/api_test.py\", line 45, in api_test\n    assert res_32 is True, \"Expected True for float32 array\"\nAssertionError: Expected True for float32 array\n"
-    },
     "status": "fail",
     "attempts": 1,
     "pass_round": null,
@@ -64,10 +43,30 @@
     "document_sha256": "d0d34a83e7072c6aa7ecd6e9e312e00184fa18b9ea2b7062eaf2668dbe757776",
     "source": "tslearn/tslearn/backend/numpy_backend.py:110",
     "source_other_sites": 1,
-    "codebase_frames": null
+    "codebase_frames": null,
+    "name": "is_float32",
+    "execution_evidence": {
+      "status": "fail",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "fail",
+          "category": "runtime",
+          "error": "AssertionError: Expected True for float32 array"
+        }
+      ],
+      "error_category": "runtime",
+      "error": "AssertionError: Expected True for float32 array",
+      "code": "import numpy as np\nfrom tslearn.backend import instantiate_backend\n\nbe = instantiate_backend(\"numpy\")\n\nx_32 = np.array([1.0, 2.0, 3.0], dtype=np.float32)\nx_64 = np.array([1.0, 2.0, 3.0], dtype=np.float64)\n\nres_32 = be.is_float32(x_32)\nres_64 = be.is_float32(x_64)\n\nassert res_32 is True, \"Expected True for float32 array\"\nassert res_64 is False, \"Expected False for float64 array\"\n\nprint(f\"__CHECK__ is_float32 {res_32}, {res_64}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_is_float32/api_test.py",
+      "exit_code": 1,
+      "stdout_tail": "",
+      "stderr_tail": "__RUN_ERR__ AssertionError: Expected True for float32 array\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_is_float32/api_test.py\", line 57, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_is_float32/api_test.py\", line 52, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_is_float32/api_test.py\", line 45, in api_test\n    assert res_32 is True, \"Expected True for float32 array\"\nAssertionError: Expected True for float32 array\n"
+    },
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969"
   },
-  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/comprehension_progress.jsonl",
-  "source_sha256": "0a09dcebc55c1b772f6889a52003ba9fcffd51ad4e99ecb50387e688fe973703",
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/comprehension.json",
+  "source_sha256": "4d1451cc4ea9281931c5a4bd5706a63fe7e77b583aa1866442b55ff2116fddcd",
   "checkpoint_events": [
     {
       "name": "is_float32",

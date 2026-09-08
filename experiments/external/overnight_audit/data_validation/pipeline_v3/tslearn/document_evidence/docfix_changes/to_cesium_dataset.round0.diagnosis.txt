@@ -1,0 +1,32 @@
+AUDIENCE & TESTABILITY:
+API audience: USER-FACING.
+Harness testability: TESTABLE.
+Scoring recommendation: include in main user-facing denominator.
+
+ROOT CAUSE:
+The test environment does not have the optional `cesium` dependency installed. As explicitly defined in the source code, `to_cesium_dataset` raises an `ImportError` if `cesium.time_series` cannot be imported. The snippet failed because it did not catch this expected exception.
+
+CORRECT USAGE:
+```python
+import numpy as np
+from tslearn.utils import to_cesium_dataset
+
+X = np.random.randn(3, 16, 1)
+
+try:
+    cesium_ds = to_cesium_dataset(X)
+    assert len(cesium_ds) == 3
+    print(f"__CHECK__ to_cesium_dataset {len(cesium_ds)}")
+except ImportError as e:
+    assert "cesium is not installed" in str(e)
+    print("__CHECK__ to_cesium_dataset (cesium not installed)")
+```
+
+REQUIRED TYPES & IMPORTS:
+`tslearn.utils.to_cesium_dataset`
+`numpy`
+
+DOC MUST SAY:
+- The function requires the external `cesium` package to be installed.
+- If `cesium` is not installed, calling this function will immediately raise an `ImportError`.
+- Test snippets and robust integrations must wrap the call in a `try...except ImportError` block to gracefully handle environments where `cesium` is missing.

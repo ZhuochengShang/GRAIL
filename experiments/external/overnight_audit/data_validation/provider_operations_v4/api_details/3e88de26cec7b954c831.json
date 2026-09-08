@@ -17,28 +17,11 @@
     "last_retry_interval_s": null,
     "next_provider_retry_epoch": null,
     "transport_policy": "Historical/uninstrumented",
-    "identity_status": "Provisional last-observed fingerprint group; final identity unverified",
+    "identity_status": "Final or explicitly migrated evidence",
     "error": null,
     "details": "api_details/3e88de26cec7b954c831.json"
   },
   "native_row": {
-    "name": "fix_force_all_finite_warning",
-    "doc_source": "aideal",
-    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
-    "execution_evidence": {
-      "status": "pass",
-      "rounds": [
-        {
-          "round": 0,
-          "status": "pass"
-        }
-      ],
-      "code": "from tslearn.utils.utils import fix_force_all_finite_warning\n\n@fix_force_all_finite_warning\ndef mock_validation(**kwargs):\n    return kwargs\n\nresult = mock_validation(force_all_finite=False)\n\nassert isinstance(result, dict), \"Wrapped function should return the kwargs dictionary\"\nassert \"force_all_finite\" in result or \"ensure_all_finite\" in result, \"Missing finite check kwarg in intercepted arguments\"\nassert any(v is False for v in result.values()), \"The False value was not passed through by the decorator\"\n\nwitness = \"ensure_all_finite\" if \"ensure_all_finite\" in result else \"force_all_finite\"\nprint(f\"__CHECK__ fix_force_all_finite_warning {witness}={result[witness]}\")",
-      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_fix_force_all_finite_warning/api_test.py",
-      "exit_code": 0,
-      "stdout_tail": "__CHECK__ fix_force_all_finite_warning ensure_all_finite=False\n__DONE__\n",
-      "stderr_tail": ""
-    },
     "status": "pass",
     "attempts": 1,
     "pass_round": 0,
@@ -60,10 +43,26 @@
     "document_sha256": "591d63774bf73e8acd297b83f519d08f04e2f45e939d9ee5ef33429499adac67",
     "source": "tslearn/tslearn/utils/utils.py:24",
     "source_other_sites": 0,
-    "codebase_frames": null
+    "codebase_frames": null,
+    "name": "fix_force_all_finite_warning",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "from tslearn.utils.utils import fix_force_all_finite_warning\n\n@fix_force_all_finite_warning\ndef mock_validation(**kwargs):\n    return kwargs\n\nresult = mock_validation(force_all_finite=False)\n\nassert isinstance(result, dict), \"Wrapped function should return the kwargs dictionary\"\nassert \"force_all_finite\" in result or \"ensure_all_finite\" in result, \"Missing finite check kwarg in intercepted arguments\"\nassert any(v is False for v in result.values()), \"The False value was not passed through by the decorator\"\n\nwitness = \"ensure_all_finite\" if \"ensure_all_finite\" in result else \"force_all_finite\"\nprint(f\"__CHECK__ fix_force_all_finite_warning {witness}={result[witness]}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_fix_force_all_finite_warning/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ fix_force_all_finite_warning ensure_all_finite=False\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969"
   },
-  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/comprehension_progress.jsonl",
-  "source_sha256": "0a09dcebc55c1b772f6889a52003ba9fcffd51ad4e99ecb50387e688fe973703",
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/comprehension.json",
+  "source_sha256": "4d1451cc4ea9281931c5a4bd5706a63fe7e77b583aa1866442b55ff2116fddcd",
   "checkpoint_events": [
     {
       "name": "fix_force_all_finite_warning",

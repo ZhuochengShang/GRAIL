@@ -17,28 +17,11 @@
     "last_retry_interval_s": null,
     "next_provider_retry_epoch": null,
     "transport_policy": "Historical/uninstrumented",
-    "identity_status": "Provisional last-observed fingerprint group; final identity unverified",
+    "identity_status": "Final or explicitly migrated evidence",
     "error": null,
     "details": "api_details/73c00fb1305bc3743533.json"
   },
   "native_row": {
-    "name": "accumulated_matrix",
-    "doc_source": "aideal",
-    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
-    "execution_evidence": {
-      "status": "pass",
-      "rounds": [
-        {
-          "round": 0,
-          "status": "pass"
-        }
-      ],
-      "code": "import warnings\nimport numpy as np\nimport tslearn.metrics.dtw_variants\nfrom tslearn.utils import to_time_series\n\ns1_ts = to_time_series(s1)\ns2_ts = to_time_series(s2)\n\n# Create a boolean mask allowing all cells to be computed\nmask = np.ones((len(s1_ts), len(s2_ts)), dtype=bool)\n\nwith warnings.catch_warnings():\n    warnings.simplefilter(\"ignore\")\n    mat = tslearn.metrics.dtw_variants.accumulated_matrix(s1_ts, s2_ts, mask)\n\nassert mat.shape == (40, 40), f\"Expected shape (40, 40), got {mat.shape}\"\nassert mat[-1, -1] >= 0, \"Accumulated cost must be non-negative\"\nassert not np.isinf(mat[-1, -1]), \"Unmasked accumulated cost should not be infinite\"\n\nprint(f\"__CHECK__ accumulated_matrix {mat.shape}\")",
-      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_accumulated_matrix/api_test.py",
-      "exit_code": 0,
-      "stdout_tail": "__CHECK__ accumulated_matrix (40, 40)\n__DONE__\n",
-      "stderr_tail": ""
-    },
     "status": "pass",
     "attempts": 1,
     "pass_round": 0,
@@ -60,10 +43,26 @@
     "document_sha256": "ebb9f30dc29595dffb29539ae96b167ae6f304c4c38f59ab50f769f4ecdaa920",
     "source": "tslearn/tslearn/metrics/_dtw.py:286",
     "source_other_sites": 2,
-    "codebase_frames": null
+    "codebase_frames": null,
+    "name": "accumulated_matrix",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "import warnings\nimport numpy as np\nimport tslearn.metrics.dtw_variants\nfrom tslearn.utils import to_time_series\n\ns1_ts = to_time_series(s1)\ns2_ts = to_time_series(s2)\n\n# Create a boolean mask allowing all cells to be computed\nmask = np.ones((len(s1_ts), len(s2_ts)), dtype=bool)\n\nwith warnings.catch_warnings():\n    warnings.simplefilter(\"ignore\")\n    mat = tslearn.metrics.dtw_variants.accumulated_matrix(s1_ts, s2_ts, mask)\n\nassert mat.shape == (40, 40), f\"Expected shape (40, 40), got {mat.shape}\"\nassert mat[-1, -1] >= 0, \"Accumulated cost must be non-negative\"\nassert not np.isinf(mat[-1, -1]), \"Unmasked accumulated cost should not be infinite\"\n\nprint(f\"__CHECK__ accumulated_matrix {mat.shape}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_accumulated_matrix/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ accumulated_matrix (40, 40)\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969"
   },
-  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/comprehension_progress.jsonl",
-  "source_sha256": "0a09dcebc55c1b772f6889a52003ba9fcffd51ad4e99ecb50387e688fe973703",
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/comprehension.json",
+  "source_sha256": "4d1451cc4ea9281931c5a4bd5706a63fe7e77b583aa1866442b55ff2116fddcd",
   "checkpoint_events": [
     {
       "name": "accumulated_matrix",

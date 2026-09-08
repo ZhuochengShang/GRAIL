@@ -1,0 +1,40 @@
+AUDIENCE & TESTABILITY:
+API audience: USER-FACING.
+Harness testability: TESTABLE.
+Scoring recommendation: include in main user-facing denominator.
+
+ROOT CAUSE:
+The snippet failed because it attempted to serialize an unfitted `TimeSeriesKMeans` model using `to_json` to set up the test file for `from_json`. In `tslearn`, `to_json` delegates to `_to_dict()`, which enforces scikit-learn's `check_is_fitted` constraint and raises a `NotFittedError` if the model hasn't been trained. The model must be fitted with data (e.g., `model.fit(X)`) before it can be serialized to JSON.
+
+CORRECT USAGE:
+```python
+import os
+import numpy as np
+from tslearn.clustering import TimeSeriesKMeans
+
+model = TimeSeriesKMeans(n_clusters=2, max_iter=2, random_state=42)
+# Create deterministic data and fit the model before serialization
+X = np.zeros((10, 5, 1))
+X[5:] = 1.0
+model.fit(X)
+
+model_path = os.path.join(output_dir, "test_model_from_json.json")
+model.to_json(model_path)
+
+# Target API
+loaded_model = TimeSeriesKMeans.from_json(model_path)
+
+assert isinstance(loaded_model, TimeSeriesKMeans)
+assert loaded_model.n_clusters == 2
+assert hasattr(loaded_model, "cluster_centers_")
+print(f"__CHECK__ from_json {loaded_model.n_clusters}_{loaded_model.max_iter}_{loaded_model.random_state}")
+```
+
+REQUIRED TYPES & IMPORTS:
+`tslearn.clustering.TimeSeriesKMeans`
+`numpy`
+
+DOC MUST SAY:
+- To test or use `from_json`, the JSON file must be created by calling `to_json` on a model that has already been fitted (e.g., using `model.fit(X)`).
+- Calling `to_json` on an unfitted model will raise a `NotFittedError`.
+- `from_json` is a class method and should be called on the specific estimator class (e.g., `TimeSeriesKMeans.from_json(path)`).

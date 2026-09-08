@@ -17,28 +17,11 @@
     "last_retry_interval_s": null,
     "next_provider_retry_epoch": null,
     "transport_policy": "Historical/uninstrumented",
-    "identity_status": "Provisional last-observed fingerprint group; final identity unverified",
+    "identity_status": "Final or explicitly migrated evidence",
     "error": null,
     "details": "api_details/cceaec4fca30dfa30060.json"
   },
   "native_row": {
-    "name": "pairwise_distances",
-    "doc_source": "aideal",
-    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
-    "execution_evidence": {
-      "status": "pass",
-      "rounds": [
-        {
-          "round": 0,
-          "status": "pass"
-        }
-      ],
-      "code": "import torch\nfrom tslearn.backend.pytorch_backend import PyTorchBackend\n\n# Convert the provided numeric matrix to a 2D PyTorch tensor\nX_tensor = torch.tensor(tiny_matrix, dtype=torch.float32)\nif X_tensor.ndim == 1:\n    X_tensor = X_tensor.unsqueeze(0)\nelif X_tensor.ndim > 2:\n    X_tensor = X_tensor.view(X_tensor.shape[0], -1)\n\nY_tensor = X_tensor[:2]\n\n# Call the static method on the backend class\ndist_matrix = PyTorchBackend.pairwise_distances(X_tensor, Y_tensor, metric='euclidean')\n\n# Verify the result\nexpected_shape = (X_tensor.shape[0], Y_tensor.shape[0])\nassert dist_matrix.shape == expected_shape, f\"Expected shape {expected_shape}, got {dist_matrix.shape}\"\nassert torch.allclose(dist_matrix[0, 0], torch.tensor(0.0), atol=1e-5), \"Distance between identical elements should be 0\"\n\nprint(f\"__CHECK__ pairwise_distances {dist_matrix.shape} {dist_matrix[0, 0].item():.4f}\")",
-      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_pairwise_distances/api_test.py",
-      "exit_code": 0,
-      "stdout_tail": "__CHECK__ pairwise_distances torch.Size([3, 2]) 0.0000\n__DONE__\n",
-      "stderr_tail": ""
-    },
     "status": "pass",
     "attempts": 1,
     "pass_round": 0,
@@ -60,10 +43,26 @@
     "document_sha256": "8c430965b5d07d941704cdf12c75ddf8ee7a80949b796b48e990e6f8f1f0974f",
     "source": "tslearn/tslearn/backend/pytorch_backend.py:177",
     "source_other_sites": 0,
-    "codebase_frames": null
+    "codebase_frames": null,
+    "name": "pairwise_distances",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "import torch\nfrom tslearn.backend.pytorch_backend import PyTorchBackend\n\n# Convert the provided numeric matrix to a 2D PyTorch tensor\nX_tensor = torch.tensor(tiny_matrix, dtype=torch.float32)\nif X_tensor.ndim == 1:\n    X_tensor = X_tensor.unsqueeze(0)\nelif X_tensor.ndim > 2:\n    X_tensor = X_tensor.view(X_tensor.shape[0], -1)\n\nY_tensor = X_tensor[:2]\n\n# Call the static method on the backend class\ndist_matrix = PyTorchBackend.pairwise_distances(X_tensor, Y_tensor, metric='euclidean')\n\n# Verify the result\nexpected_shape = (X_tensor.shape[0], Y_tensor.shape[0])\nassert dist_matrix.shape == expected_shape, f\"Expected shape {expected_shape}, got {dist_matrix.shape}\"\nassert torch.allclose(dist_matrix[0, 0], torch.tensor(0.0), atol=1e-5), \"Distance between identical elements should be 0\"\n\nprint(f\"__CHECK__ pairwise_distances {dist_matrix.shape} {dist_matrix[0, 0].item():.4f}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_pairwise_distances/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ pairwise_distances torch.Size([3, 2]) 0.0000\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969"
   },
-  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/comprehension_progress.jsonl",
-  "source_sha256": "0a09dcebc55c1b772f6889a52003ba9fcffd51ad4e99ecb50387e688fe973703",
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/comprehension.json",
+  "source_sha256": "4d1451cc4ea9281931c5a4bd5706a63fe7e77b583aa1866442b55ff2116fddcd",
   "checkpoint_events": [
     {
       "name": "pairwise_distances",

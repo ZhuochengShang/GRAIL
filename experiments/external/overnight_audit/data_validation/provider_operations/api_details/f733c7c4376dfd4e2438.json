@@ -1,0 +1,111 @@
+{
+  "summary": {
+    "repository": "tslearn",
+    "cell": "B2",
+    "api": "get_early_predict_proba_generator",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 25.1,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 25.1,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "error": null,
+    "details": "api_details/f733c7c4376dfd4e2438.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 25.1,
+    "llm_calls": 1,
+    "input_tokens": 2869,
+    "output_tokens": 3349,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2869,
+        "output_tokens": 3349
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 5142,
+    "document_sha256": "74a4ccaec293e1c169f60b0469ecef0947162fa05aedad6636c4986430e26c71",
+    "source": "tslearn/tslearn/early_classification/early_classification.py:677",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "name": "get_early_predict_proba_generator",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "import numpy as np\nfrom tslearn.early_classification import NonMyopicEarlyClassifier\n\n# Use a small, deterministic dummy dataset to avoid dropped classes and slow fitting\ndataset = np.array([\n    [[1], [2], [3], [4], [5], [6]],\n    [[1], [2], [3], [4], [5], [6]],\n    [[1], [2], [3], [4], [5], [6]],\n    [[1], [2], [3], [3], [2], [1]],\n    [[1], [2], [3], [3], [2], [1]],\n    [[1], [2], [3], [3], [2], [1]],\n    [[3], [2], [1], [1], [2], [3]],\n    [[3], [2], [1], [1], [2], [3]]\n], dtype=float)\ny_dummy = np.array([0, 0, 0, 1, 1, 1, 0, 0])\n\nmodel = NonMyopicEarlyClassifier(\n    n_clusters=3, \n    lamb=1000.0, \n    cost_time_parameter=0.1, \n    random_state=0\n)\nmodel.fit(dataset, y_dummy)\n\n# Create the generator for 1 time series\ngen = model.get_early_predict_proba_generator(n_ts=1)\n\n# Simulate incoming data stream: 3 time steps, 1 time series, 1 feature\nincoming_timestamps = np.array([1.0, 2.0, 3.0]).reshape(3, 1, 1, 1)\n\nprobas_list = []\ndelays_list = []\n\nfor x in incoming_timestamps:\n    # x has shape (1, 1, 1) -> (n_ts, n_timestamps, n_features)\n    probas, delays = gen.send(x)\n    probas_list.append(probas)\n    delays_list.append(delays)\n\nassert len(probas_list) == 3, f\"Expected 3 probability arrays, got {len(probas_list)}\"\nassert probas_list[-1].shape == (1, 2), f\"Expected probas shape (1, 2), got {probas_list[-1].shape}\"\nassert delays_list[-1].shape == (1,), f\"Expected delays shape (1,), got {delays_list[-1].shape}\"\n\nprint(f\"__CHECK__ get_early_predict_proba_generator probas_shape={probas_list[-1].shape} delays_shape={delays_list[-1].shape}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_get_early_predict_proba_generator/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ get_early_predict_proba_generator probas_shape=(1, 2) delays_shape=(1,)\n__DONE__\n",
+      "stderr_tail": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/tslearn/tslearn/early_classification/early_classification.py:283: RuntimeWarning: overflow encountered in exp\n  s_k = 1. / (1. + np.exp(-self.lamb * delta_k))\n/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/tslearn/tslearn/early_classification/early_classification.py:283: RuntimeWarning: overflow encountered in exp\n  s_k = 1. / (1. + np.exp(-self.lamb * delta_k))\n/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/tslearn/tslearn/early_classification/early_classification.py:283: RuntimeWarning: overflow encountered in exp\n  s_k = 1. / (1. + np.exp(-self.lamb * delta_k))\n"
+    },
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/comprehension.json",
+  "source_sha256": "4d1451cc4ea9281931c5a4bd5706a63fe7e77b583aa1866442b55ff2116fddcd",
+  "checkpoint_events": [
+    {
+      "name": "get_early_predict_proba_generator",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import numpy as np\nfrom tslearn.early_classification import NonMyopicEarlyClassifier\n\n# Use a small, deterministic dummy dataset to avoid dropped classes and slow fitting\ndataset = np.array([\n    [[1], [2], [3], [4], [5], [6]],\n    [[1], [2], [3], [4], [5], [6]],\n    [[1], [2], [3], [4], [5], [6]],\n    [[1], [2], [3], [3], [2], [1]],\n    [[1], [2], [3], [3], [2], [1]],\n    [[1], [2], [3], [3], [2], [1]],\n    [[3], [2], [1], [1], [2], [3]],\n    [[3], [2], [1], [1], [2], [3]]\n], dtype=float)\ny_dummy = np.array([0, 0, 0, 1, 1, 1, 0, 0])\n\nmodel = NonMyopicEarlyClassifier(\n    n_clusters=3, \n    lamb=1000.0, \n    cost_time_parameter=0.1, \n    random_state=0\n)\nmodel.fit(dataset, y_dummy)\n\n# Create the generator for 1 time series\ngen = model.get_early_predict_proba_generator(n_ts=1)\n\n# Simulate incoming data stream: 3 time steps, 1 time series, 1 feature\nincoming_timestamps = np.array([1.0, 2.0, 3.0]).reshape(3, 1, 1, 1)\n\nprobas_list = []\ndelays_list = []\n\nfor x in incoming_timestamps:\n    # x has shape (1, 1, 1) -> (n_ts, n_timestamps, n_features)\n    probas, delays = gen.send(x)\n    probas_list.append(probas)\n    delays_list.append(delays)\n\nassert len(probas_list) == 3, f\"Expected 3 probability arrays, got {len(probas_list)}\"\nassert probas_list[-1].shape == (1, 2), f\"Expected probas shape (1, 2), got {probas_list[-1].shape}\"\nassert delays_list[-1].shape == (1,), f\"Expected delays shape (1,), got {delays_list[-1].shape}\"\n\nprint(f\"__CHECK__ get_early_predict_proba_generator probas_shape={probas_list[-1].shape} delays_shape={delays_list[-1].shape}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_get_early_predict_proba_generator/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ get_early_predict_proba_generator probas_shape=(1, 2) delays_shape=(1,)\n__DONE__\n",
+        "stderr_tail": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/tslearn/tslearn/early_classification/early_classification.py:283: RuntimeWarning: overflow encountered in exp\n  s_k = 1. / (1. + np.exp(-self.lamb * delta_k))\n/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/tslearn/tslearn/early_classification/early_classification.py:283: RuntimeWarning: overflow encountered in exp\n  s_k = 1. / (1. + np.exp(-self.lamb * delta_k))\n/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/tslearn/tslearn/early_classification/early_classification.py:283: RuntimeWarning: overflow encountered in exp\n  s_k = 1. / (1. + np.exp(-self.lamb * delta_k))\n"
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 25.1,
+      "llm_calls": 1,
+      "input_tokens": 2869,
+      "output_tokens": 3349,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2869,
+          "output_tokens": 3349
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 5142,
+      "document_sha256": "74a4ccaec293e1c169f60b0469ecef0947162fa05aedad6636c4986430e26c71",
+      "source": "tslearn/tslearn/early_classification/early_classification.py:677",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

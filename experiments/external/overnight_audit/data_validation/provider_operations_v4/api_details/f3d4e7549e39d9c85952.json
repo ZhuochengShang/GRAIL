@@ -17,28 +17,11 @@
     "last_retry_interval_s": null,
     "next_provider_retry_epoch": null,
     "transport_policy": "Historical/uninstrumented",
-    "identity_status": "Provisional last-observed fingerprint group; final identity unverified",
+    "identity_status": "Final or explicitly migrated evidence",
     "error": null,
     "details": "api_details/f3d4e7549e39d9c85952.json"
   },
   "native_row": {
-    "name": "cdist_soft_dtw_normalized",
-    "doc_source": "aideal",
-    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
-    "execution_evidence": {
-      "status": "pass",
-      "rounds": [
-        {
-          "round": 0,
-          "status": "pass"
-        }
-      ],
-      "code": "from tslearn.metrics import cdist_soft_dtw_normalized\nimport numpy as np\n\n# Compute the self-similarity matrix for the balanced dataset X\ndist_matrix = cdist_soft_dtw_normalized(X, gamma=1.0, be=\"numpy\")\n\n# The output should be an 8x8 matrix since X has 8 time series\nassert dist_matrix.shape == (8, 8), f\"Expected shape (8, 8), got {dist_matrix.shape}\"\n\n# The normalized Soft-DTW distance of any time series to itself must be exactly 0\ndiag_sum = np.diag(dist_matrix).sum()\nnp.testing.assert_allclose(np.diag(dist_matrix), 0.0, atol=1e-7)\n\nprint(f\"__CHECK__ cdist_soft_dtw_normalized {dist_matrix.shape} {diag_sum:.4f}\")",
-      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_cdist_soft_dtw_normalized/api_test.py",
-      "exit_code": 0,
-      "stdout_tail": "__CHECK__ cdist_soft_dtw_normalized (8, 8) 0.0000\n__DONE__\n",
-      "stderr_tail": ""
-    },
     "status": "pass",
     "attempts": 1,
     "pass_round": 0,
@@ -60,10 +43,26 @@
     "document_sha256": "efd5bf4e58fc5f35e7563f38d4ef207c1d8cc16e115801e73e04ed90c80ef2c1",
     "source": "tslearn/tslearn/metrics/softdtw_variants.py:911",
     "source_other_sites": 0,
-    "codebase_frames": null
+    "codebase_frames": null,
+    "name": "cdist_soft_dtw_normalized",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "from tslearn.metrics import cdist_soft_dtw_normalized\nimport numpy as np\n\n# Compute the self-similarity matrix for the balanced dataset X\ndist_matrix = cdist_soft_dtw_normalized(X, gamma=1.0, be=\"numpy\")\n\n# The output should be an 8x8 matrix since X has 8 time series\nassert dist_matrix.shape == (8, 8), f\"Expected shape (8, 8), got {dist_matrix.shape}\"\n\n# The normalized Soft-DTW distance of any time series to itself must be exactly 0\ndiag_sum = np.diag(dist_matrix).sum()\nnp.testing.assert_allclose(np.diag(dist_matrix), 0.0, atol=1e-7)\n\nprint(f\"__CHECK__ cdist_soft_dtw_normalized {dist_matrix.shape} {diag_sum:.4f}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_cdist_soft_dtw_normalized/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ cdist_soft_dtw_normalized (8, 8) 0.0000\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969"
   },
-  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/comprehension_progress.jsonl",
-  "source_sha256": "0a09dcebc55c1b772f6889a52003ba9fcffd51ad4e99ecb50387e688fe973703",
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/comprehension.json",
+  "source_sha256": "4d1451cc4ea9281931c5a4bd5706a63fe7e77b583aa1866442b55ff2116fddcd",
   "checkpoint_events": [
     {
       "name": "cdist_soft_dtw_normalized",

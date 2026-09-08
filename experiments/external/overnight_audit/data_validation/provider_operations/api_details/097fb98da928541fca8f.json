@@ -1,0 +1,111 @@
+{
+  "summary": {
+    "repository": "tslearn",
+    "cell": "B2",
+    "api": "intercept_",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 14.3,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 14.3,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "error": null,
+    "details": "api_details/097fb98da928541fca8f.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 14.3,
+    "llm_calls": 1,
+    "input_tokens": 2128,
+    "output_tokens": 815,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2128,
+        "output_tokens": 815
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 2853,
+    "document_sha256": "70b3368b2545642ae63fff914959d2538f3cc64a78f989da7e076589b1a557cf",
+    "source": "tslearn/tslearn/svm/svm.py:39",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "name": "intercept_",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "from tslearn.svm import TimeSeriesSVC\nimport numpy as np\n\n# Initialize and fit the SVM estimator\nclf = TimeSeriesSVC(kernel=\"gak\", random_state=42)\nclf.fit(X, y)\n\n# Access the intercept_ property\nintercept = clf.intercept_\n\n# Verify the result\nassert isinstance(intercept, np.ndarray), \"intercept_ should be a numpy array\"\nassert intercept.ndim == 1, \"intercept_ should be a 1D array\"\n# For 4 classes (as provided in y), one-vs-one strategy yields 4 * 3 / 2 = 6 intercepts\nassert intercept.shape[0] == 6, f\"Expected 6 intercepts for 4 classes, got {intercept.shape[0]}\"\n\nprint(f\"__CHECK__ intercept_ {intercept.shape}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_intercept_/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ intercept_ (6,)\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/comprehension.json",
+  "source_sha256": "4d1451cc4ea9281931c5a4bd5706a63fe7e77b583aa1866442b55ff2116fddcd",
+  "checkpoint_events": [
+    {
+      "name": "intercept_",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "from tslearn.svm import TimeSeriesSVC\nimport numpy as np\n\n# Initialize and fit the SVM estimator\nclf = TimeSeriesSVC(kernel=\"gak\", random_state=42)\nclf.fit(X, y)\n\n# Access the intercept_ property\nintercept = clf.intercept_\n\n# Verify the result\nassert isinstance(intercept, np.ndarray), \"intercept_ should be a numpy array\"\nassert intercept.ndim == 1, \"intercept_ should be a 1D array\"\n# For 4 classes (as provided in y), one-vs-one strategy yields 4 * 3 / 2 = 6 intercepts\nassert intercept.shape[0] == 6, f\"Expected 6 intercepts for 4 classes, got {intercept.shape[0]}\"\n\nprint(f\"__CHECK__ intercept_ {intercept.shape}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_intercept_/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ intercept_ (6,)\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 14.3,
+      "llm_calls": 1,
+      "input_tokens": 2128,
+      "output_tokens": 815,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2128,
+          "output_tokens": 815
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 2853,
+      "document_sha256": "70b3368b2545642ae63fff914959d2538f3cc64a78f989da7e076589b1a557cf",
+      "source": "tslearn/tslearn/svm/svm.py:39",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

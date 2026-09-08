@@ -17,28 +17,11 @@
     "last_retry_interval_s": null,
     "next_provider_retry_epoch": null,
     "transport_policy": "Historical/uninstrumented",
-    "identity_status": "Provisional last-observed fingerprint group; final identity unverified",
+    "identity_status": "Final or explicitly migrated evidence",
     "error": null,
     "details": "api_details/83a4a861653c3786237b.json"
   },
   "native_row": {
-    "name": "lcss_accumulated_matrix",
-    "doc_source": "aideal",
-    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
-    "execution_evidence": {
-      "status": "pass",
-      "rounds": [
-        {
-          "round": 0,
-          "status": "pass"
-        }
-      ],
-      "code": "import numpy as np\nfrom tslearn.metrics.dtw_variants import lcss_accumulated_matrix\n\nmask = np.ones((len(s1), len(s2)), dtype=bool)\neps = 0.5\n\nacc_mat = lcss_accumulated_matrix(s1, s2, eps=eps, mask=mask)\n\nexpected_shape = (len(s1) + 1, len(s2) + 1)\nassert acc_mat.shape == expected_shape, f\"Expected shape {expected_shape}, got {acc_mat.shape}\"\n\nprint(f\"__CHECK__ lcss_accumulated_matrix {acc_mat.shape} {acc_mat[-1, -1]}\")",
-      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_lcss_accumulated_matrix/api_test.py",
-      "exit_code": 0,
-      "stdout_tail": "__CHECK__ lcss_accumulated_matrix (41, 41) 40\n__DONE__\n",
-      "stderr_tail": ""
-    },
     "status": "pass",
     "attempts": 1,
     "pass_round": 0,
@@ -60,10 +43,26 @@
     "document_sha256": "73a7f6ffbb439902793fd8215f4872af9d3a248a6616f80fbdda9f721bdbc8cf",
     "source": "tslearn/tslearn/metrics/dtw_variants.py:2270",
     "source_other_sites": 0,
-    "codebase_frames": null
+    "codebase_frames": null,
+    "name": "lcss_accumulated_matrix",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "import numpy as np\nfrom tslearn.metrics.dtw_variants import lcss_accumulated_matrix\n\nmask = np.ones((len(s1), len(s2)), dtype=bool)\neps = 0.5\n\nacc_mat = lcss_accumulated_matrix(s1, s2, eps=eps, mask=mask)\n\nexpected_shape = (len(s1) + 1, len(s2) + 1)\nassert acc_mat.shape == expected_shape, f\"Expected shape {expected_shape}, got {acc_mat.shape}\"\n\nprint(f\"__CHECK__ lcss_accumulated_matrix {acc_mat.shape} {acc_mat[-1, -1]}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_lcss_accumulated_matrix/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ lcss_accumulated_matrix (41, 41) 40\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969"
   },
-  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/comprehension_progress.jsonl",
-  "source_sha256": "0a09dcebc55c1b772f6889a52003ba9fcffd51ad4e99ecb50387e688fe973703",
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/comprehension.json",
+  "source_sha256": "4d1451cc4ea9281931c5a4bd5706a63fe7e77b583aa1866442b55ff2116fddcd",
   "checkpoint_events": [
     {
       "name": "lcss_accumulated_matrix",

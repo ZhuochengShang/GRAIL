@@ -17,28 +17,11 @@
     "last_retry_interval_s": null,
     "next_provider_retry_epoch": null,
     "transport_policy": "Historical/uninstrumented",
-    "identity_status": "Provisional last-observed fingerprint group; final identity unverified",
+    "identity_status": "Final or explicitly migrated evidence",
     "error": null,
     "details": "api_details/0a5a183003530979259d.json"
   },
   "native_row": {
-    "name": "from_json",
-    "doc_source": "aideal",
-    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
-    "execution_evidence": {
-      "status": "pass",
-      "rounds": [
-        {
-          "round": 0,
-          "status": "pass"
-        }
-      ],
-      "code": "import os\nfrom tslearn.clustering import TimeSeriesKMeans\n\n# Create and fit a model on the provided dataset X\nmodel = TimeSeriesKMeans(n_clusters=2, max_iter=2, random_state=42)\nmodel.fit(X)\n\n# Serialize the fitted model to JSON in the provided output directory\nmodel_path = os.path.join(output_dir, \"test_model_from_json.json\")\nmodel.to_json(model_path)\n\n# Target API: Deserialize the model using the class method\nloaded_model = TimeSeriesKMeans.from_json(model_path)\n\n# Verify correctness\nassert isinstance(loaded_model, TimeSeriesKMeans), \"Loaded model is not a TimeSeriesKMeans instance\"\nassert loaded_model.n_clusters == 2, f\"Expected 2 clusters, got {loaded_model.n_clusters}\"\nassert hasattr(loaded_model, \"cluster_centers_\"), \"Loaded model is missing 'cluster_centers_' attribute\"\nassert loaded_model.cluster_centers_.shape == (2, 40, 1), f\"Unexpected cluster centers shape: {loaded_model.cluster_centers_.shape}\"\n\nprint(f\"__CHECK__ from_json {loaded_model.n_clusters}_{loaded_model.max_iter}_{loaded_model.random_state}\")",
-      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_from_json/api_test.py",
-      "exit_code": 0,
-      "stdout_tail": "__CHECK__ from_json 2_2_42\n__DONE__\n",
-      "stderr_tail": ""
-    },
     "status": "pass",
     "attempts": 1,
     "pass_round": 0,
@@ -60,10 +43,26 @@
     "document_sha256": "596625bc96bbbcd7a1687a4916df1a38f6f9449d941b1390fbfc55ca92c6f22e",
     "source": "tslearn/tslearn/bases/bases.py:273",
     "source_other_sites": 0,
-    "codebase_frames": null
+    "codebase_frames": null,
+    "name": "from_json",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "import os\nfrom tslearn.clustering import TimeSeriesKMeans\n\n# Create and fit a model on the provided dataset X\nmodel = TimeSeriesKMeans(n_clusters=2, max_iter=2, random_state=42)\nmodel.fit(X)\n\n# Serialize the fitted model to JSON in the provided output directory\nmodel_path = os.path.join(output_dir, \"test_model_from_json.json\")\nmodel.to_json(model_path)\n\n# Target API: Deserialize the model using the class method\nloaded_model = TimeSeriesKMeans.from_json(model_path)\n\n# Verify correctness\nassert isinstance(loaded_model, TimeSeriesKMeans), \"Loaded model is not a TimeSeriesKMeans instance\"\nassert loaded_model.n_clusters == 2, f\"Expected 2 clusters, got {loaded_model.n_clusters}\"\nassert hasattr(loaded_model, \"cluster_centers_\"), \"Loaded model is missing 'cluster_centers_' attribute\"\nassert loaded_model.cluster_centers_.shape == (2, 40, 1), f\"Unexpected cluster centers shape: {loaded_model.cluster_centers_.shape}\"\n\nprint(f\"__CHECK__ from_json {loaded_model.n_clusters}_{loaded_model.max_iter}_{loaded_model.random_state}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_from_json/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ from_json 2_2_42\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969"
   },
-  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/comprehension_progress.jsonl",
-  "source_sha256": "0a09dcebc55c1b772f6889a52003ba9fcffd51ad4e99ecb50387e688fe973703",
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/comprehension.json",
+  "source_sha256": "4d1451cc4ea9281931c5a4bd5706a63fe7e77b583aa1866442b55ff2116fddcd",
   "checkpoint_events": [
     {
       "name": "from_json",

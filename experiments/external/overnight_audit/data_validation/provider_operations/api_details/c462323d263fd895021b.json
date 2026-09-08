@@ -1,0 +1,111 @@
+{
+  "summary": {
+    "repository": "tslearn",
+    "cell": "B2",
+    "api": "n_iter_",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 12.3,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 12.3,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "error": null,
+    "details": "api_details/c462323d263fd895021b.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 12.3,
+    "llm_calls": 1,
+    "input_tokens": 2203,
+    "output_tokens": 992,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2203,
+        "output_tokens": 992
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 3054,
+    "document_sha256": "a78f38c6f00f9a7dc25cc70f18dc9a37585f8f48c4edae30dbae34895c6e4f01",
+    "source": "tslearn/tslearn/svm/svm.py:279",
+    "source_other_sites": 1,
+    "codebase_frames": null,
+    "name": "n_iter_",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "from tslearn.svm import TimeSeriesSVC\nimport numpy as np\n\n# Instantiate and fit the estimator on the provided 3D dataset\nclf = TimeSeriesSVC(kernel=\"gak\", random_state=42)\nclf.fit(X, y)\n\n# Access the n_iter_ property\niterations = clf.n_iter_\n\n# Verify the result\nassert iterations is not None, \"n_iter_ should be populated after fitting\"\nassert np.size(iterations) > 0, \"n_iter_ should not be empty\"\nassert np.max(iterations) > 0, \"The maximum number of iterations should be positive\"\n\nprint(f\"__CHECK__ n_iter_ {np.max(iterations)}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_n_iter_/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ n_iter_ 1\n__DONE__\n",
+      "stderr_tail": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/tslearn/tslearn/svm/svm.py:280: UserWarning: n_iter_ is always set to 1 for TimeSeriesSVC, since it is non-trivial to access the underlying libsvm\n  warnings.warn('n_iter_ is always set to 1 for TimeSeriesSVC, since '\n"
+    },
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/comprehension.json",
+  "source_sha256": "4d1451cc4ea9281931c5a4bd5706a63fe7e77b583aa1866442b55ff2116fddcd",
+  "checkpoint_events": [
+    {
+      "name": "n_iter_",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "from tslearn.svm import TimeSeriesSVC\nimport numpy as np\n\n# Instantiate and fit the estimator on the provided 3D dataset\nclf = TimeSeriesSVC(kernel=\"gak\", random_state=42)\nclf.fit(X, y)\n\n# Access the n_iter_ property\niterations = clf.n_iter_\n\n# Verify the result\nassert iterations is not None, \"n_iter_ should be populated after fitting\"\nassert np.size(iterations) > 0, \"n_iter_ should not be empty\"\nassert np.max(iterations) > 0, \"The maximum number of iterations should be positive\"\n\nprint(f\"__CHECK__ n_iter_ {np.max(iterations)}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_n_iter_/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ n_iter_ 1\n__DONE__\n",
+        "stderr_tail": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/tslearn/tslearn/svm/svm.py:280: UserWarning: n_iter_ is always set to 1 for TimeSeriesSVC, since it is non-trivial to access the underlying libsvm\n  warnings.warn('n_iter_ is always set to 1 for TimeSeriesSVC, since '\n"
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 12.3,
+      "llm_calls": 1,
+      "input_tokens": 2203,
+      "output_tokens": 992,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2203,
+          "output_tokens": 992
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3054,
+      "document_sha256": "a78f38c6f00f9a7dc25cc70f18dc9a37585f8f48c4edae30dbae34895c6e4f01",
+      "source": "tslearn/tslearn/svm/svm.py:279",
+      "source_other_sites": 1,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

@@ -1,0 +1,111 @@
+{
+  "summary": {
+    "repository": "tslearn",
+    "cell": "B2",
+    "api": "cdist_dtw",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 14.2,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 14.2,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "error": null,
+    "details": "api_details/b9be693fb5c055544e98.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 14.2,
+    "llm_calls": 1,
+    "input_tokens": 2801,
+    "output_tokens": 934,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2801,
+        "output_tokens": 934
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 4759,
+    "document_sha256": "559de8b6fb9e0d0a88f3fa691ea5f32c2076eb9e00e2540fe5cb2f922b81ffc9",
+    "source": "tslearn/tslearn/metrics/_dtw.py:639",
+    "source_other_sites": 1,
+    "codebase_frames": null,
+    "name": "cdist_dtw",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "from tslearn.metrics import cdist_dtw\nimport numpy as np\n\n# Compute cross-similarity matrix between two datasets\ndist_matrix = cdist_dtw(X, X2, global_constraint=\"sakoe_chiba\", sakoe_chiba_radius=3)\n\n# Compute self-similarity matrix for a subset of the first dataset\nself_dist = cdist_dtw(X[:3])\n\n# Verify shapes\nassert dist_matrix.shape == (X.shape[0], X2.shape[0]), f\"Expected shape {(X.shape[0], X2.shape[0])}, got {dist_matrix.shape}\"\nassert self_dist.shape == (3, 3), f\"Expected shape (3, 3), got {self_dist.shape}\"\n\n# Verify self-similarity diagonal is zero\nassert np.allclose(np.diag(self_dist), 0.0), \"Self-distance of identical time series must be 0.0\"\n\nprint(f\"__CHECK__ cdist_dtw {dist_matrix.shape} {self_dist[0, 0]}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_cdist_dtw/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ cdist_dtw (8, 4) 0.0\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/comprehension.json",
+  "source_sha256": "4d1451cc4ea9281931c5a4bd5706a63fe7e77b583aa1866442b55ff2116fddcd",
+  "checkpoint_events": [
+    {
+      "name": "cdist_dtw",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "from tslearn.metrics import cdist_dtw\nimport numpy as np\n\n# Compute cross-similarity matrix between two datasets\ndist_matrix = cdist_dtw(X, X2, global_constraint=\"sakoe_chiba\", sakoe_chiba_radius=3)\n\n# Compute self-similarity matrix for a subset of the first dataset\nself_dist = cdist_dtw(X[:3])\n\n# Verify shapes\nassert dist_matrix.shape == (X.shape[0], X2.shape[0]), f\"Expected shape {(X.shape[0], X2.shape[0])}, got {dist_matrix.shape}\"\nassert self_dist.shape == (3, 3), f\"Expected shape (3, 3), got {self_dist.shape}\"\n\n# Verify self-similarity diagonal is zero\nassert np.allclose(np.diag(self_dist), 0.0), \"Self-distance of identical time series must be 0.0\"\n\nprint(f\"__CHECK__ cdist_dtw {dist_matrix.shape} {self_dist[0, 0]}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_cdist_dtw/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ cdist_dtw (8, 4) 0.0\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 14.2,
+      "llm_calls": 1,
+      "input_tokens": 2801,
+      "output_tokens": 934,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2801,
+          "output_tokens": 934
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 4759,
+      "document_sha256": "559de8b6fb9e0d0a88f3fa691ea5f32c2076eb9e00e2540fe5cb2f922b81ffc9",
+      "source": "tslearn/tslearn/metrics/_dtw.py:639",
+      "source_other_sites": 1,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

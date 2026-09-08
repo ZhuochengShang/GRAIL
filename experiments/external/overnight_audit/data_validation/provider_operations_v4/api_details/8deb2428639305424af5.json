@@ -17,28 +17,11 @@
     "last_retry_interval_s": null,
     "next_provider_retry_epoch": null,
     "transport_policy": "Historical/uninstrumented",
-    "identity_status": "Provisional last-observed fingerprint group; final identity unverified",
+    "identity_status": "Final or explicitly migrated evidence",
     "error": null,
     "details": "api_details/8deb2428639305424af5.json"
   },
   "native_row": {
-    "name": "instantiate_backend",
-    "doc_source": "aideal",
-    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
-    "execution_evidence": {
-      "status": "pass",
-      "rounds": [
-        {
-          "round": 0,
-          "status": "pass"
-        }
-      ],
-      "code": "from tslearn.backend import instantiate_backend\n\n# Instantiate using a data array hint (X is a numpy array)\nbackend_from_array = instantiate_backend(X, \"numpy\")\nassert backend_from_array.backend_string == \"numpy\", f\"Expected 'numpy', got {backend_from_array.backend_string}\"\nassert backend_from_array.is_numpy is True, \"Expected is_numpy to be True for numpy backend\"\n\n# Instantiate using an explicit string hint\nbackend_from_string = instantiate_backend(\"numpy\")\nassert backend_from_string.backend_string == \"numpy\", \"Expected 'numpy' from string hint\"\n\n# Fallback behavior (evaluates left-to-right)\nbackend_fallback = instantiate_backend(None, \"unrecognized_string\", X)\nassert backend_fallback.backend_string == \"numpy\", \"Expected 'numpy' from fallback evaluation\"\n\nprint(f\"__CHECK__ instantiate_backend {backend_from_array.backend_string}\")",
-      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_instantiate_backend/api_test.py",
-      "exit_code": 0,
-      "stdout_tail": "__CHECK__ instantiate_backend numpy\n__DONE__\n",
-      "stderr_tail": ""
-    },
     "status": "pass",
     "attempts": 1,
     "pass_round": 0,
@@ -60,10 +43,26 @@
     "document_sha256": "af155bca1920e6d40584532ae8b58c7e5301b334a3fdedd3a7141eef850810ef",
     "source": "tslearn/tslearn/backend/backend.py:7",
     "source_other_sites": 0,
-    "codebase_frames": null
+    "codebase_frames": null,
+    "name": "instantiate_backend",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "from tslearn.backend import instantiate_backend\n\n# Instantiate using a data array hint (X is a numpy array)\nbackend_from_array = instantiate_backend(X, \"numpy\")\nassert backend_from_array.backend_string == \"numpy\", f\"Expected 'numpy', got {backend_from_array.backend_string}\"\nassert backend_from_array.is_numpy is True, \"Expected is_numpy to be True for numpy backend\"\n\n# Instantiate using an explicit string hint\nbackend_from_string = instantiate_backend(\"numpy\")\nassert backend_from_string.backend_string == \"numpy\", \"Expected 'numpy' from string hint\"\n\n# Fallback behavior (evaluates left-to-right)\nbackend_fallback = instantiate_backend(None, \"unrecognized_string\", X)\nassert backend_fallback.backend_string == \"numpy\", \"Expected 'numpy' from fallback evaluation\"\n\nprint(f\"__CHECK__ instantiate_backend {backend_from_array.backend_string}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_instantiate_backend/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ instantiate_backend numpy\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969"
   },
-  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/comprehension_progress.jsonl",
-  "source_sha256": "0a09dcebc55c1b772f6889a52003ba9fcffd51ad4e99ecb50387e688fe973703",
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/comprehension.json",
+  "source_sha256": "4d1451cc4ea9281931c5a4bd5706a63fe7e77b583aa1866442b55ff2116fddcd",
   "checkpoint_events": [
     {
       "name": "instantiate_backend",

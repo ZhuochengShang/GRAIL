@@ -1,0 +1,111 @@
+{
+  "summary": {
+    "repository": "tslearn",
+    "cell": "B2",
+    "api": "from_stumpy_dataset",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 14.2,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 14.2,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "error": null,
+    "details": "api_details/18e05f62dfe036a7e4ae.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 14.2,
+    "llm_calls": 1,
+    "input_tokens": 2541,
+    "output_tokens": 1539,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2541,
+        "output_tokens": 1539
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 3825,
+    "document_sha256": "b62486838e167aa5a76e421d06730484a374d7ae2d91f3aa42c4a946a19481b0",
+    "source": "tslearn/tslearn/utils/cast.py:256",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "name": "from_stumpy_dataset",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "import numpy as np\nfrom tslearn.utils import from_stumpy_dataset\n\n# Create a stumpy-formatted dataset: list of (d, sz_i) arrays\n# d=2, sz_1=20, sz_2=30\nstumpy_data = [\n    np.vstack([s1[:20], s2[:20]]),\n    np.vstack([s1[:30], s2[:30]])\n]\n\n# Convert to tslearn format (n_ts, max_sz, d)\ntslearn_data = from_stumpy_dataset(stumpy_data)\n\n# Verify shape, padding, and data integrity\nassert tslearn_data.shape == (2, 30, 2), f\"Expected shape (2, 30, 2), got {tslearn_data.shape}\"\nassert np.isnan(tslearn_data[0, 25, 0]), \"Expected NaN padding for shorter series\"\nassert np.allclose(tslearn_data[0, :20, 0], s1[:20]), \"Data mismatch after conversion\"\nassert np.allclose(tslearn_data[1, :30, 1], s2[:30]), \"Data mismatch after conversion\"\n\nprint(f\"__CHECK__ from_stumpy_dataset {tslearn_data.shape}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_from_stumpy_dataset/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ from_stumpy_dataset (2, 30, 2)\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/comprehension.json",
+  "source_sha256": "4d1451cc4ea9281931c5a4bd5706a63fe7e77b583aa1866442b55ff2116fddcd",
+  "checkpoint_events": [
+    {
+      "name": "from_stumpy_dataset",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import numpy as np\nfrom tslearn.utils import from_stumpy_dataset\n\n# Create a stumpy-formatted dataset: list of (d, sz_i) arrays\n# d=2, sz_1=20, sz_2=30\nstumpy_data = [\n    np.vstack([s1[:20], s2[:20]]),\n    np.vstack([s1[:30], s2[:30]])\n]\n\n# Convert to tslearn format (n_ts, max_sz, d)\ntslearn_data = from_stumpy_dataset(stumpy_data)\n\n# Verify shape, padding, and data integrity\nassert tslearn_data.shape == (2, 30, 2), f\"Expected shape (2, 30, 2), got {tslearn_data.shape}\"\nassert np.isnan(tslearn_data[0, 25, 0]), \"Expected NaN padding for shorter series\"\nassert np.allclose(tslearn_data[0, :20, 0], s1[:20]), \"Data mismatch after conversion\"\nassert np.allclose(tslearn_data[1, :30, 1], s2[:30]), \"Data mismatch after conversion\"\n\nprint(f\"__CHECK__ from_stumpy_dataset {tslearn_data.shape}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_from_stumpy_dataset/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ from_stumpy_dataset (2, 30, 2)\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 14.2,
+      "llm_calls": 1,
+      "input_tokens": 2541,
+      "output_tokens": 1539,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2541,
+          "output_tokens": 1539
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3825,
+      "document_sha256": "b62486838e167aa5a76e421d06730484a374d7ae2d91f3aa42c4a946a19481b0",
+      "source": "tslearn/tslearn/utils/cast.py:256",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

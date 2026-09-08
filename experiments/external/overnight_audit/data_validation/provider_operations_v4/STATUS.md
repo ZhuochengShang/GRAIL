@@ -1,6 +1,6 @@
 # Execution status and API timing
 
-2026-09-08T16:41:30.121019-07:00
+2026-09-08T16:56:39.596929-07:00
 
 **No single “partial” label:** each unresolved case has an explicit reason. A finished evaluation can contain real failures. A provider failure is not executed code. A running test does not prove the target API was reached.
 
@@ -14,7 +14,7 @@
 | Thumbnailator | B2 | 149/149 | Native evaluation finished (failures still count) | 139 | 7 | 3 | 0 | 0 | 0 |
 | tslearn | A1 | 235/235 | 34 provider cases unresolved | 121 | 0 | 29 | 51 | 34 | 0 |
 | tslearn | A2 | 235/235 | Native evaluation finished (failures still count) | 175 | 0 | 32 | 28 | 0 | 0 |
-| tslearn | B2 | 196/235 | Supervisor reports running; Provisional last-observed fingerprint group; final identity unverified | 179 | 0 | 5 | 12 | 0 | 0 |
+| tslearn | B2 | 235/235 | Native evaluation finished (failures still count) | 217 | 0 | 5 | 13 | 0 | 0 |
 
 Other failures/timeouts, if present, remain explicit in summary.json and the full API table. B1 is intentionally omitted. MDAnalysis, Sedona and RDPro reruns are deferred.
 
@@ -31,6 +31,7 @@ New workers may use the explicitly registered 600s × 1 transport and output-dir
 - Thumbnailator / A2 source fixes: {'recovered_native': 20, 'stuck': 2}; cohort 22 APIs.
 - Thumbnailator / Post-B2 source fixes: {'recovered_native': 8, 'stuck': 2}; cohort 10 APIs.
 - tslearn / A2 source fixes: {'recovered_native': 32}; cohort 32 APIs.
+- tslearn / Post-B2 source fixes: {'preflight_blocked': 5}; cohort 5 APIs.
 
 ## Transport rollout
 

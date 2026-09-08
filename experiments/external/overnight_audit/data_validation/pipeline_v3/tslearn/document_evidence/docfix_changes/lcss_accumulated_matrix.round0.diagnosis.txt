@@ -1,0 +1,27 @@
+AUDIENCE & TESTABILITY:
+API audience: ADVANCED-LOW-LEVEL.
+Harness testability: TESTABLE.
+Scoring recommendation: include only in advanced/internal bucket.
+
+ROOT CAUSE:
+The documentation incorrectly implies that `lcss_accumulated_matrix` is exported in the top-level `tslearn.metrics` namespace. It is an internal/advanced helper function that is not exposed in `tslearn.metrics.__init__.py`, so it must be imported directly from its defining module `tslearn.metrics.dtw_variants`.
+
+CORRECT USAGE:
+```python
+mask = np.ones((len(s1), len(s2)), dtype=bool)
+eps = 0.5
+
+acc_mat = lcss_accumulated_matrix(s1, s2, eps=eps, mask=mask)
+
+expected_shape = (len(s1) + 1, len(s2) + 1)
+assert acc_mat.shape == expected_shape, f"Expected shape {expected_shape}, got {acc_mat.shape}"
+
+print(f"__CHECK__ lcss_accumulated_matrix {acc_mat.shape} {acc_mat[-1, -1]}")
+```
+
+REQUIRED TYPES & IMPORTS:
+`from tslearn.metrics.dtw_variants import lcss_accumulated_matrix`
+
+DOC MUST SAY:
+- `lcss_accumulated_matrix` is an advanced/low-level helper and is not exported in the main `tslearn.metrics` namespace.
+- It must be imported directly from its defining module using `from tslearn.metrics.dtw_variants import lcss_accumulated_matrix`.

@@ -1,0 +1,27 @@
+AUDIENCE & TESTABILITY:
+API audience: ADVANCED-LOW-LEVEL
+Harness testability: TESTABLE-WITH-LOW-LEVEL-CONSTRUCTION
+Scoring recommendation: include only in advanced/internal bucket
+
+ROOT CAUSE:
+The documentation incorrectly states that `uniform` should be called directly on the backend instance (`be.uniform`). In the `tslearn` backend architecture, random generation methods are encapsulated within a nested class (e.g., `PyTorchRandom`) and must be accessed via the `random` attribute on the instantiated backend (`be.random.uniform`). Additionally, the snippet used the NumPy backend, whereas the provided source defines the PyTorch backend's implementation.
+
+CORRECT USAGE:
+```python
+from tslearn.backend import instantiate_backend
+
+be = instantiate_backend("pytorch")
+arr = be.random.uniform(low=-2.0, high=5.0, size=(3, 4, 5))
+
+assert arr.shape == (3, 4, 5), f"Expected shape (3, 4, 5), got {arr.shape}"
+assert (arr >= -2.0).all() and (arr < 5.0).all(), "Values are out of the specified uniform bounds"
+
+print(f"__CHECK__ uniform {arr.shape}")
+```
+
+REQUIRED TYPES & IMPORTS:
+`tslearn.backend.instantiate_backend`
+
+DOC MUST SAY:
+- `uniform` is not a direct method of the backend object; it must be accessed via the `random` attribute of an instantiated backend (e.g., `be.random.uniform(...)`).
+- The PyTorch backend must be instantiated via `instantiate_backend("pytorch")` to use the PyTorch-specific implementation of `uniform`.

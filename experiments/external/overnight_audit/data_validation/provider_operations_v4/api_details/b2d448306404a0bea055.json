@@ -17,28 +17,11 @@
     "last_retry_interval_s": null,
     "next_provider_retry_epoch": null,
     "transport_policy": "Historical/uninstrumented",
-    "identity_status": "Provisional last-observed fingerprint group; final identity unverified",
+    "identity_status": "Final or explicitly migrated evidence",
     "error": null,
     "details": "api_details/b2d448306404a0bea055.json"
   },
   "native_row": {
-    "name": "PiecewiseAggregateApproximation",
-    "doc_source": "aideal",
-    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
-    "execution_evidence": {
-      "status": "pass",
-      "rounds": [
-        {
-          "round": 0,
-          "status": "pass"
-        }
-      ],
-      "code": "import numpy as np\nfrom tslearn.piecewise import PiecewiseAggregateApproximation\n\n# Initialize the PAA transformer with 10 segments\npaa = PiecewiseAggregateApproximation(n_segments=10)\n\n# Fit and transform the balanced time-series dataset X (shape: 8, 40, 1)\nX_paa = paa.fit_transform(X)\n\n# Verify the output shape\nassert X_paa.shape == (8, 10, 1), f\"Expected shape (8, 10, 1), got {X_paa.shape}\"\n\n# Compute distances using the fitted estimator\ndist = paa.distance(X[0], X[1])\ndist_paa = paa.distance_paa(X_paa[0], X_paa[1])\n\n# The distance computed on original series (using PAA distance) should match the distance on PAA-transformed series\nassert np.isclose(dist, dist_paa), f\"Distances do not match: {dist} vs {dist_paa}\"\n\n# Verify that the first segment of the first time series is the mean of its first 4 elements (40 / 10 = 4)\nexpected_mean = np.mean(X[0, :4, 0])\nassert np.isclose(X_paa[0, 0, 0], expected_mean), f\"Expected mean {expected_mean}, got {X_paa[0, 0, 0]}\"\n\nprint(f\"__CHECK__ PiecewiseAggregateApproximation {X_paa.shape} {dist:.4f}\")",
-      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_PiecewiseAggregateApproximation/api_test.py",
-      "exit_code": 0,
-      "stdout_tail": "__CHECK__ PiecewiseAggregateApproximation (8, 10, 1) 0.3572\n__DONE__\n",
-      "stderr_tail": ""
-    },
     "status": "pass",
     "attempts": 1,
     "pass_round": 0,
@@ -60,10 +43,26 @@
     "document_sha256": "e98ae3e95e2e8a3b361457c42a147802fcac6c44708bedb86a3b315ed0bd0b7a",
     "source": "tslearn/tslearn/piecewise/piecewise.py:61",
     "source_other_sites": 0,
-    "codebase_frames": null
+    "codebase_frames": null,
+    "name": "PiecewiseAggregateApproximation",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "import numpy as np\nfrom tslearn.piecewise import PiecewiseAggregateApproximation\n\n# Initialize the PAA transformer with 10 segments\npaa = PiecewiseAggregateApproximation(n_segments=10)\n\n# Fit and transform the balanced time-series dataset X (shape: 8, 40, 1)\nX_paa = paa.fit_transform(X)\n\n# Verify the output shape\nassert X_paa.shape == (8, 10, 1), f\"Expected shape (8, 10, 1), got {X_paa.shape}\"\n\n# Compute distances using the fitted estimator\ndist = paa.distance(X[0], X[1])\ndist_paa = paa.distance_paa(X_paa[0], X_paa[1])\n\n# The distance computed on original series (using PAA distance) should match the distance on PAA-transformed series\nassert np.isclose(dist, dist_paa), f\"Distances do not match: {dist} vs {dist_paa}\"\n\n# Verify that the first segment of the first time series is the mean of its first 4 elements (40 / 10 = 4)\nexpected_mean = np.mean(X[0, :4, 0])\nassert np.isclose(X_paa[0, 0, 0], expected_mean), f\"Expected mean {expected_mean}, got {X_paa[0, 0, 0]}\"\n\nprint(f\"__CHECK__ PiecewiseAggregateApproximation {X_paa.shape} {dist:.4f}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_PiecewiseAggregateApproximation/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ PiecewiseAggregateApproximation (8, 10, 1) 0.3572\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969"
   },
-  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/comprehension_progress.jsonl",
-  "source_sha256": "0a09dcebc55c1b772f6889a52003ba9fcffd51ad4e99ecb50387e688fe973703",
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/comprehension.json",
+  "source_sha256": "4d1451cc4ea9281931c5a4bd5706a63fe7e77b583aa1866442b55ff2116fddcd",
   "checkpoint_events": [
     {
       "name": "PiecewiseAggregateApproximation",

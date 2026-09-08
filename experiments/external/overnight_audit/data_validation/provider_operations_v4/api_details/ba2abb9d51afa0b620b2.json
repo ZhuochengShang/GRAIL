@@ -17,28 +17,11 @@
     "last_retry_interval_s": null,
     "next_provider_retry_epoch": null,
     "transport_policy": "Historical/uninstrumented",
-    "identity_status": "Provisional last-observed fingerprint group; final identity unverified",
+    "identity_status": "Final or explicitly migrated evidence",
     "error": null,
     "details": "api_details/ba2abb9d51afa0b620b2.json"
   },
   "native_row": {
-    "name": "AutoVARIMA",
-    "doc_source": "aideal",
-    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
-    "execution_evidence": {
-      "status": "pass",
-      "rounds": [
-        {
-          "round": 0,
-          "status": "pass"
-        }
-      ],
-      "code": "from tslearn.forecasting import AutoVARIMA\n\n# Instantiate and fit the AutoVARIMA model with small search bounds\nmodel = AutoVARIMA(max_p=1, max_q=1, max_d=1, max_iter=2)\nmodel.fit(X)\n\n# Inspect the best selected estimator\nbest_model = model.best_estimator_\n\n# Assert that the selected orders are within the specified bounds\nassert best_model.p <= 1, f\"Expected p <= 1, got {best_model.p}\"\nassert best_model.q <= 1, f\"Expected q <= 1, got {best_model.q}\"\nassert best_model.d <= 1, f\"Expected d <= 1, got {best_model.d}\"\n\nprint(f\"__CHECK__ AutoVARIMA p={best_model.p}, d={best_model.d}, q={best_model.q}\")",
-      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_AutoVARIMA/api_test.py",
-      "exit_code": 0,
-      "stdout_tail": "__CHECK__ AutoVARIMA p=1, d=0, q=1\n__DONE__\n",
-      "stderr_tail": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/tslearn/tslearn/forecasting/_arima.py:75: NumbaPerformanceWarning: np.dot() is faster on contiguous arrays, called on (Array(float64, 2, 'A', False, aligned=True), Array(float64, 2, 'C', False, aligned=True))\n  current_err = X[:, i] - _varma_next(\n"
-    },
     "status": "pass",
     "attempts": 1,
     "pass_round": 0,
@@ -60,10 +43,26 @@
     "document_sha256": "b6aaa06b54f3179aef65007c0c14e9069e2d0a3f83408f9a4ce6dafe8cce1f20",
     "source": "tslearn/tslearn/forecasting/_arima.py:466",
     "source_other_sites": 0,
-    "codebase_frames": null
+    "codebase_frames": null,
+    "name": "AutoVARIMA",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "from tslearn.forecasting import AutoVARIMA\n\n# Instantiate and fit the AutoVARIMA model with small search bounds\nmodel = AutoVARIMA(max_p=1, max_q=1, max_d=1, max_iter=2)\nmodel.fit(X)\n\n# Inspect the best selected estimator\nbest_model = model.best_estimator_\n\n# Assert that the selected orders are within the specified bounds\nassert best_model.p <= 1, f\"Expected p <= 1, got {best_model.p}\"\nassert best_model.q <= 1, f\"Expected q <= 1, got {best_model.q}\"\nassert best_model.d <= 1, f\"Expected d <= 1, got {best_model.d}\"\n\nprint(f\"__CHECK__ AutoVARIMA p={best_model.p}, d={best_model.d}, q={best_model.q}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_AutoVARIMA/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ AutoVARIMA p=1, d=0, q=1\n__DONE__\n",
+      "stderr_tail": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/tslearn/tslearn/forecasting/_arima.py:75: NumbaPerformanceWarning: np.dot() is faster on contiguous arrays, called on (Array(float64, 2, 'A', False, aligned=True), Array(float64, 2, 'C', False, aligned=True))\n  current_err = X[:, i] - _varma_next(\n"
+    },
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969"
   },
-  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/comprehension_progress.jsonl",
-  "source_sha256": "0a09dcebc55c1b772f6889a52003ba9fcffd51ad4e99ecb50387e688fe973703",
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/comprehension.json",
+  "source_sha256": "4d1451cc4ea9281931c5a4bd5706a63fe7e77b583aa1866442b55ff2116fddcd",
   "checkpoint_events": [
     {
       "name": "AutoVARIMA",

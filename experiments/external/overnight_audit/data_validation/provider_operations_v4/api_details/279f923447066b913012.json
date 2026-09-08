@@ -17,28 +17,11 @@
     "last_retry_interval_s": null,
     "next_provider_retry_epoch": null,
     "transport_policy": "Historical/uninstrumented",
-    "identity_status": "Provisional last-observed fingerprint group; final identity unverified",
+    "identity_status": "Final or explicitly migrated evidence",
     "error": null,
     "details": "api_details/279f923447066b913012.json"
   },
   "native_row": {
-    "name": "random_walks",
-    "doc_source": "aideal",
-    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
-    "execution_evidence": {
-      "status": "pass",
-      "rounds": [
-        {
-          "round": 0,
-          "status": "pass"
-        }
-      ],
-      "code": "from tslearn.generators import random_walks\nimport numpy as np\n\n# Generate a small synthetic dataset of random walks\nX_gen = random_walks(n_ts=4, sz=8, d=3, mu=0.5, std=1.2, random_state=123)\n\n# Verify the output shape and type\nassert isinstance(X_gen, np.ndarray), \"Output must be a NumPy array\"\nassert X_gen.shape == (4, 8, 3), f\"Expected shape (4, 8, 3), got {X_gen.shape}\"\n\n# Verify that the random walk actually progressed (not constant)\nassert not np.allclose(X_gen[:, 0, :], X_gen[:, -1, :]), \"Random walk should not be constant with std > 0\"\n\n# Generate a constant random walk to test the edge case\nX_const = random_walks(n_ts=2, sz=5, d=1, mu=0.0, std=0.0, random_state=42)\nnp.testing.assert_array_equal(X_const[:, 0, :], X_const[:, -1, :], err_msg=\"Random walk with std=0 and mu=0 should be constant\")\n\nprint(f\"__CHECK__ random_walks {X_gen.shape} {X_gen[0, -1, 0]:.4f}\")",
-      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_random_walks/api_test.py",
-      "exit_code": 0,
-      "stdout_tail": "__CHECK__ random_walks (4, 8, 3) 1.1998\n__DONE__\n",
-      "stderr_tail": ""
-    },
     "status": "pass",
     "attempts": 1,
     "pass_round": 0,
@@ -60,10 +43,26 @@
     "document_sha256": "5080b2972f02d57790aa11ed08fae9ef81ad105d64d249f644cff3cc856f9495",
     "source": "tslearn/tslearn/generators/generators.py:7",
     "source_other_sites": 0,
-    "codebase_frames": null
+    "codebase_frames": null,
+    "name": "random_walks",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "from tslearn.generators import random_walks\nimport numpy as np\n\n# Generate a small synthetic dataset of random walks\nX_gen = random_walks(n_ts=4, sz=8, d=3, mu=0.5, std=1.2, random_state=123)\n\n# Verify the output shape and type\nassert isinstance(X_gen, np.ndarray), \"Output must be a NumPy array\"\nassert X_gen.shape == (4, 8, 3), f\"Expected shape (4, 8, 3), got {X_gen.shape}\"\n\n# Verify that the random walk actually progressed (not constant)\nassert not np.allclose(X_gen[:, 0, :], X_gen[:, -1, :]), \"Random walk should not be constant with std > 0\"\n\n# Generate a constant random walk to test the edge case\nX_const = random_walks(n_ts=2, sz=5, d=1, mu=0.0, std=0.0, random_state=42)\nnp.testing.assert_array_equal(X_const[:, 0, :], X_const[:, -1, :], err_msg=\"Random walk with std=0 and mu=0 should be constant\")\n\nprint(f\"__CHECK__ random_walks {X_gen.shape} {X_gen[0, -1, 0]:.4f}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_random_walks/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ random_walks (4, 8, 3) 1.1998\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969"
   },
-  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/comprehension_progress.jsonl",
-  "source_sha256": "0a09dcebc55c1b772f6889a52003ba9fcffd51ad4e99ecb50387e688fe973703",
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/comprehension.json",
+  "source_sha256": "4d1451cc4ea9281931c5a4bd5706a63fe7e77b583aa1866442b55ff2116fddcd",
   "checkpoint_events": [
     {
       "name": "random_walks",

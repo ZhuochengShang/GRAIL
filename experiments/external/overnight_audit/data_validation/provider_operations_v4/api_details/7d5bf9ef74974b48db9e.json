@@ -17,28 +17,11 @@
     "last_retry_interval_s": null,
     "next_provider_retry_epoch": null,
     "transport_policy": "Historical/uninstrumented",
-    "identity_status": "Provisional last-observed fingerprint group; final identity unverified",
+    "identity_status": "Final or explicitly migrated evidence",
     "error": null,
     "details": "api_details/7d5bf9ef74974b48db9e.json"
   },
   "native_row": {
-    "name": "from_sktime_dataset",
-    "doc_source": "aideal",
-    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
-    "execution_evidence": {
-      "status": "pass",
-      "rounds": [
-        {
-          "round": 0,
-          "status": "pass"
-        }
-      ],
-      "code": "import pandas as pd\nimport numpy as np\nfrom tslearn.utils import from_sktime_dataset\n\n# Construct a sktime-formatted DataFrame with variable-length series\n# Rows are instances (n_ts=2), columns are dimensions (d=2)\nsktime_df = pd.DataFrame({\n    \"dim_0\": [pd.Series(s1[:10]), pd.Series(s2[:5])],\n    \"dim_1\": [pd.Series(s1[10:20]), pd.Series(s2[5:10])]\n})\n\n# Convert to tslearn 3D array format\ntslearn_arr = from_sktime_dataset(sktime_df)\n\n# Verify the shape (n_ts=2, max_sz=10, d=2) and padding\nassert tslearn_arr.shape == (2, 10, 2), f\"Expected shape (2, 10, 2), got {tslearn_arr.shape}\"\nassert np.isnan(tslearn_arr[1, 5, 0]), \"Expected shorter series to be padded with nan\"\nassert np.isnan(tslearn_arr[1, 5, 1]), \"Expected shorter series to be padded with nan\"\nassert np.allclose(tslearn_arr[0, :10, 0], s1[:10]), \"Data mismatch in dim_0 for first instance\"\nassert np.allclose(tslearn_arr[1, :5, 1], s2[5:10]), \"Data mismatch in dim_1 for second instance\"\n\nprint(f\"__CHECK__ from_sktime_dataset {tslearn_arr.shape}\")",
-      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_from_sktime_dataset/api_test.py",
-      "exit_code": 0,
-      "stdout_tail": "__CHECK__ from_sktime_dataset (2, 10, 2)\n__DONE__\n",
-      "stderr_tail": ""
-    },
     "status": "pass",
     "attempts": 1,
     "pass_round": 0,
@@ -60,10 +43,26 @@
     "document_sha256": "a3e273926418e419d2318617d2f4eb441133736143a3ed58b6b6f8447848b4cb",
     "source": "tslearn/tslearn/utils/cast.py:335",
     "source_other_sites": 0,
-    "codebase_frames": null
+    "codebase_frames": null,
+    "name": "from_sktime_dataset",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "import pandas as pd\nimport numpy as np\nfrom tslearn.utils import from_sktime_dataset\n\n# Construct a sktime-formatted DataFrame with variable-length series\n# Rows are instances (n_ts=2), columns are dimensions (d=2)\nsktime_df = pd.DataFrame({\n    \"dim_0\": [pd.Series(s1[:10]), pd.Series(s2[:5])],\n    \"dim_1\": [pd.Series(s1[10:20]), pd.Series(s2[5:10])]\n})\n\n# Convert to tslearn 3D array format\ntslearn_arr = from_sktime_dataset(sktime_df)\n\n# Verify the shape (n_ts=2, max_sz=10, d=2) and padding\nassert tslearn_arr.shape == (2, 10, 2), f\"Expected shape (2, 10, 2), got {tslearn_arr.shape}\"\nassert np.isnan(tslearn_arr[1, 5, 0]), \"Expected shorter series to be padded with nan\"\nassert np.isnan(tslearn_arr[1, 5, 1]), \"Expected shorter series to be padded with nan\"\nassert np.allclose(tslearn_arr[0, :10, 0], s1[:10]), \"Data mismatch in dim_0 for first instance\"\nassert np.allclose(tslearn_arr[1, :5, 1], s2[5:10]), \"Data mismatch in dim_1 for second instance\"\n\nprint(f\"__CHECK__ from_sktime_dataset {tslearn_arr.shape}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_from_sktime_dataset/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ from_sktime_dataset (2, 10, 2)\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969"
   },
-  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/comprehension_progress.jsonl",
-  "source_sha256": "0a09dcebc55c1b772f6889a52003ba9fcffd51ad4e99ecb50387e688fe973703",
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/comprehension.json",
+  "source_sha256": "4d1451cc4ea9281931c5a4bd5706a63fe7e77b583aa1866442b55ff2116fddcd",
   "checkpoint_events": [
     {
       "name": "from_sktime_dataset",

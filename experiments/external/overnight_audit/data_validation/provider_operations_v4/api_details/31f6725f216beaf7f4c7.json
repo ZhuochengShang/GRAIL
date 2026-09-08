@@ -17,32 +17,11 @@
     "last_retry_interval_s": null,
     "next_provider_retry_epoch": null,
     "transport_policy": "Historical/uninstrumented",
-    "identity_status": "Provisional last-observed fingerprint group; final identity unverified",
+    "identity_status": "Final or explicitly migrated evidence",
     "error": "AssertionError: TimeSeriesMixin should set 'allow_nan' to True in tags",
     "details": "api_details/31f6725f216beaf7f4c7.json"
   },
   "native_row": {
-    "name": "TimeSeriesMixin",
-    "doc_source": "aideal",
-    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
-    "execution_evidence": {
-      "status": "fail",
-      "rounds": [
-        {
-          "round": 0,
-          "status": "fail",
-          "category": "runtime",
-          "error": "AssertionError: TimeSeriesMixin should set 'allow_nan' to True in tags"
-        }
-      ],
-      "error_category": "runtime",
-      "error": "AssertionError: TimeSeriesMixin should set 'allow_nan' to True in tags",
-      "code": "from tslearn.bases import TimeSeriesMixin\nfrom sklearn.base import BaseEstimator\n\nclass CustomTimeSeriesModel(BaseEstimator, TimeSeriesMixin):\n    def fit(self, X, y=None):\n        return self\n\nmodel = CustomTimeSeriesModel()\n\n# Verify inheritance\nassert isinstance(model, TimeSeriesMixin), \"Model must be an instance of TimeSeriesMixin\"\n\n# Verify the mixin provides the expected scikit-learn tags (e.g., allow_nan)\ntags = model._more_tags()\nassert isinstance(tags, dict), \"_more_tags() should return a dictionary\"\nassert tags.get(\"allow_nan\") is True, \"TimeSeriesMixin should set 'allow_nan' to True in tags\"\n\nprint(f\"__CHECK__ TimeSeriesMixin {tags.get('allow_nan')}\")",
-      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_TimeSeriesMixin/api_test.py",
-      "exit_code": 1,
-      "stdout_tail": "",
-      "stderr_tail": "__RUN_ERR__ AssertionError: TimeSeriesMixin should set 'allow_nan' to True in tags\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_TimeSeriesMixin/api_test.py\", line 60, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_TimeSeriesMixin/api_test.py\", line 55, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_TimeSeriesMixin/api_test.py\", line 49, in api_test\n    assert tags.get(\"allow_nan\") is True, \"TimeSeriesMixin should set 'allow_nan' to True in tags\"\nAssertionError: TimeSeriesMixin should set 'allow_nan' to True in tags\n"
-    },
     "status": "fail",
     "attempts": 1,
     "pass_round": null,
@@ -64,10 +43,30 @@
     "document_sha256": "f1bede7c20cbeec8c21b17d99305a3625c13a1bcab836178ad7320fd7f9c6e8f",
     "source": "tslearn/tslearn/bases/bases.py:53",
     "source_other_sites": 0,
-    "codebase_frames": null
+    "codebase_frames": null,
+    "name": "TimeSeriesMixin",
+    "execution_evidence": {
+      "status": "fail",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "fail",
+          "category": "runtime",
+          "error": "AssertionError: TimeSeriesMixin should set 'allow_nan' to True in tags"
+        }
+      ],
+      "error_category": "runtime",
+      "error": "AssertionError: TimeSeriesMixin should set 'allow_nan' to True in tags",
+      "code": "from tslearn.bases import TimeSeriesMixin\nfrom sklearn.base import BaseEstimator\n\nclass CustomTimeSeriesModel(BaseEstimator, TimeSeriesMixin):\n    def fit(self, X, y=None):\n        return self\n\nmodel = CustomTimeSeriesModel()\n\n# Verify inheritance\nassert isinstance(model, TimeSeriesMixin), \"Model must be an instance of TimeSeriesMixin\"\n\n# Verify the mixin provides the expected scikit-learn tags (e.g., allow_nan)\ntags = model._more_tags()\nassert isinstance(tags, dict), \"_more_tags() should return a dictionary\"\nassert tags.get(\"allow_nan\") is True, \"TimeSeriesMixin should set 'allow_nan' to True in tags\"\n\nprint(f\"__CHECK__ TimeSeriesMixin {tags.get('allow_nan')}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_TimeSeriesMixin/api_test.py",
+      "exit_code": 1,
+      "stdout_tail": "",
+      "stderr_tail": "__RUN_ERR__ AssertionError: TimeSeriesMixin should set 'allow_nan' to True in tags\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_TimeSeriesMixin/api_test.py\", line 60, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_TimeSeriesMixin/api_test.py\", line 55, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_TimeSeriesMixin/api_test.py\", line 49, in api_test\n    assert tags.get(\"allow_nan\") is True, \"TimeSeriesMixin should set 'allow_nan' to True in tags\"\nAssertionError: TimeSeriesMixin should set 'allow_nan' to True in tags\n"
+    },
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969"
   },
-  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/comprehension_progress.jsonl",
-  "source_sha256": "0a09dcebc55c1b772f6889a52003ba9fcffd51ad4e99ecb50387e688fe973703",
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/comprehension.json",
+  "source_sha256": "4d1451cc4ea9281931c5a4bd5706a63fe7e77b583aa1866442b55ff2116fddcd",
   "checkpoint_events": [
     {
       "name": "TimeSeriesMixin",

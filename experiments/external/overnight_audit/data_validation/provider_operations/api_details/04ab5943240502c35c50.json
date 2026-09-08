@@ -1,0 +1,111 @@
+{
+  "summary": {
+    "repository": "tslearn",
+    "cell": "B2",
+    "api": "cdist_gak",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 15.5,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 15.5,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "error": null,
+    "details": "api_details/04ab5943240502c35c50.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 15.5,
+    "llm_calls": 1,
+    "input_tokens": 2493,
+    "output_tokens": 1512,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2493,
+        "output_tokens": 1512
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 3855,
+    "document_sha256": "b6f79dcab3505bfa4eccf3f4840245286cef5a6bec36297747d70d3556109cd9",
+    "source": "tslearn/tslearn/metrics/_gak.py:289",
+    "source_other_sites": 1,
+    "codebase_frames": null,
+    "name": "cdist_gak",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "import tslearn.metrics\nimport numpy as np\n\n# Compute cross-similarity matrix between X and X2\nsim_matrix = tslearn.metrics.cdist_gak(X, X2, sigma=2.0)\nassert sim_matrix.shape == (8, 4), f\"Expected cross-similarity shape (8, 4), got {sim_matrix.shape}\"\n\n# Compute self-similarity matrix for X\nself_sim = tslearn.metrics.cdist_gak(X, sigma=2.0)\nassert self_sim.shape == (8, 8), f\"Expected self-similarity shape (8, 8), got {self_sim.shape}\"\n\n# GAK similarity is normalized such that self-similarity of identical series is 1.0\nnp.testing.assert_allclose(np.diag(self_sim), 1.0, atol=1e-5)\n\nprint(f\"__CHECK__ cdist_gak {sim_matrix.shape} {self_sim.shape}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_cdist_gak/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ cdist_gak (8, 4) (8, 8)\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/comprehension.json",
+  "source_sha256": "4d1451cc4ea9281931c5a4bd5706a63fe7e77b583aa1866442b55ff2116fddcd",
+  "checkpoint_events": [
+    {
+      "name": "cdist_gak",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import tslearn.metrics\nimport numpy as np\n\n# Compute cross-similarity matrix between X and X2\nsim_matrix = tslearn.metrics.cdist_gak(X, X2, sigma=2.0)\nassert sim_matrix.shape == (8, 4), f\"Expected cross-similarity shape (8, 4), got {sim_matrix.shape}\"\n\n# Compute self-similarity matrix for X\nself_sim = tslearn.metrics.cdist_gak(X, sigma=2.0)\nassert self_sim.shape == (8, 8), f\"Expected self-similarity shape (8, 8), got {self_sim.shape}\"\n\n# GAK similarity is normalized such that self-similarity of identical series is 1.0\nnp.testing.assert_allclose(np.diag(self_sim), 1.0, atol=1e-5)\n\nprint(f\"__CHECK__ cdist_gak {sim_matrix.shape} {self_sim.shape}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_cdist_gak/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ cdist_gak (8, 4) (8, 8)\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 15.5,
+      "llm_calls": 1,
+      "input_tokens": 2493,
+      "output_tokens": 1512,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2493,
+          "output_tokens": 1512
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3855,
+      "document_sha256": "b6f79dcab3505bfa4eccf3f4840245286cef5a6bec36297747d70d3556109cd9",
+      "source": "tslearn/tslearn/metrics/_gak.py:289",
+      "source_other_sites": 1,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

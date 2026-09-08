@@ -17,32 +17,11 @@
     "last_retry_interval_s": null,
     "next_provider_retry_epoch": null,
     "transport_policy": "Historical/uninstrumented",
-    "identity_status": "Provisional last-observed fingerprint group; final identity unverified",
+    "identity_status": "Final or explicitly migrated evidence",
     "error": "AssertionError: Expected the backend to identify the float array X as a float type.",
     "details": "api_details/c83099a57f268dd3d2e3.json"
   },
   "native_row": {
-    "name": "is_float",
-    "doc_source": "aideal",
-    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
-    "execution_evidence": {
-      "status": "fail",
-      "rounds": [
-        {
-          "round": 0,
-          "status": "fail",
-          "category": "runtime",
-          "error": "AssertionError: Expected the backend to identify the float array X as a float type."
-        }
-      ],
-      "error_category": "runtime",
-      "error": "AssertionError: Expected the backend to identify the float array X as a float type.",
-      "code": "from tslearn.backend import instantiate_backend\nimport numpy as np\n\nbackend = instantiate_backend(\"numpy\")\n\n# Check a float array (X is a balanced time-series dataset ndarray, typically float)\nres_float = backend.is_float(X)\n\n# Check an integer array\nres_int = backend.is_float(np.array([1, 2, 3], dtype=np.int32))\n\nassert res_float is True, \"Expected the backend to identify the float array X as a float type.\"\nassert res_int is False, \"Expected the backend to identify the int32 array as not a float type.\"\n\nprint(f\"__CHECK__ is_float {res_float}, {res_int}\")",
-      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_is_float/api_test.py",
-      "exit_code": 1,
-      "stdout_tail": "",
-      "stderr_tail": "__RUN_ERR__ AssertionError: Expected the backend to identify the float array X as a float type.\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_is_float/api_test.py\", line 57, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_is_float/api_test.py\", line 52, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_is_float/api_test.py\", line 45, in api_test\n    assert res_float is True, \"Expected the backend to identify the float array X as a float type.\"\nAssertionError: Expected the backend to identify the float array X as a float type.\n"
-    },
     "status": "fail",
     "attempts": 1,
     "pass_round": null,
@@ -64,10 +43,30 @@
     "document_sha256": "f15734b13d6fba530942dba58bcdc2e10874b7c25bc32b18697fd4cc845a8c61",
     "source": "tslearn/tslearn/backend/numpy_backend.py:106",
     "source_other_sites": 1,
-    "codebase_frames": null
+    "codebase_frames": null,
+    "name": "is_float",
+    "execution_evidence": {
+      "status": "fail",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "fail",
+          "category": "runtime",
+          "error": "AssertionError: Expected the backend to identify the float array X as a float type."
+        }
+      ],
+      "error_category": "runtime",
+      "error": "AssertionError: Expected the backend to identify the float array X as a float type.",
+      "code": "from tslearn.backend import instantiate_backend\nimport numpy as np\n\nbackend = instantiate_backend(\"numpy\")\n\n# Check a float array (X is a balanced time-series dataset ndarray, typically float)\nres_float = backend.is_float(X)\n\n# Check an integer array\nres_int = backend.is_float(np.array([1, 2, 3], dtype=np.int32))\n\nassert res_float is True, \"Expected the backend to identify the float array X as a float type.\"\nassert res_int is False, \"Expected the backend to identify the int32 array as not a float type.\"\n\nprint(f\"__CHECK__ is_float {res_float}, {res_int}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_is_float/api_test.py",
+      "exit_code": 1,
+      "stdout_tail": "",
+      "stderr_tail": "__RUN_ERR__ AssertionError: Expected the backend to identify the float array X as a float type.\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_is_float/api_test.py\", line 57, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_is_float/api_test.py\", line 52, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_is_float/api_test.py\", line 45, in api_test\n    assert res_float is True, \"Expected the backend to identify the float array X as a float type.\"\nAssertionError: Expected the backend to identify the float array X as a float type.\n"
+    },
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969"
   },
-  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/comprehension_progress.jsonl",
-  "source_sha256": "0a09dcebc55c1b772f6889a52003ba9fcffd51ad4e99ecb50387e688fe973703",
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/comprehension.json",
+  "source_sha256": "4d1451cc4ea9281931c5a4bd5706a63fe7e77b583aa1866442b55ff2116fddcd",
   "checkpoint_events": [
     {
       "name": "is_float",

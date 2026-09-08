@@ -17,28 +17,11 @@
     "last_retry_interval_s": null,
     "next_provider_retry_epoch": null,
     "transport_policy": "Historical/uninstrumented",
-    "identity_status": "Provisional last-observed fingerprint group; final identity unverified",
+    "identity_status": "Final or explicitly migrated evidence",
     "error": null,
     "details": "api_details/035ba5a9ea14cae94931.json"
   },
   "native_row": {
-    "name": "lcss_path_from_metric",
-    "doc_source": "aideal",
-    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
-    "execution_evidence": {
-      "status": "pass",
-      "rounds": [
-        {
-          "round": 0,
-          "status": "pass"
-        }
-      ],
-      "code": "from tslearn.metrics import lcss_path_from_metric\n\npath, sim = lcss_path_from_metric(s1, s2, eps=0.5, metric=\"euclidean\")\n\nassert isinstance(path, list), \"Path must be a list of index pairs\"\nassert isinstance(sim, float), \"Similarity must be a float\"\n\n# The similarity is computed as the percentage of the LCSS length regarding the length of the shortest time series\nexpected_sim = len(path) / min(len(s1), len(s2))\nassert abs(sim - expected_sim) < 1e-7, f\"Expected similarity {expected_sim}, got {sim}\"\nassert len(path) <= min(len(s1), len(s2)), \"LCSS path length cannot exceed the shortest series length\"\n\nprint(f\"__CHECK__ lcss_path_from_metric {len(path)}_{sim:.4f}\")",
-      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_lcss_path_from_metric/api_test.py",
-      "exit_code": 0,
-      "stdout_tail": "__CHECK__ lcss_path_from_metric 40_1.0000\n__DONE__\n",
-      "stderr_tail": ""
-    },
     "status": "pass",
     "attempts": 1,
     "pass_round": 0,
@@ -60,10 +43,26 @@
     "document_sha256": "37d791ac852803a4056353f91f5aa61e9f2c5e72ebc872bd2143c087744ed3f3",
     "source": "tslearn/tslearn/metrics/dtw_variants.py:2908",
     "source_other_sites": 0,
-    "codebase_frames": null
+    "codebase_frames": null,
+    "name": "lcss_path_from_metric",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "from tslearn.metrics import lcss_path_from_metric\n\npath, sim = lcss_path_from_metric(s1, s2, eps=0.5, metric=\"euclidean\")\n\nassert isinstance(path, list), \"Path must be a list of index pairs\"\nassert isinstance(sim, float), \"Similarity must be a float\"\n\n# The similarity is computed as the percentage of the LCSS length regarding the length of the shortest time series\nexpected_sim = len(path) / min(len(s1), len(s2))\nassert abs(sim - expected_sim) < 1e-7, f\"Expected similarity {expected_sim}, got {sim}\"\nassert len(path) <= min(len(s1), len(s2)), \"LCSS path length cannot exceed the shortest series length\"\n\nprint(f\"__CHECK__ lcss_path_from_metric {len(path)}_{sim:.4f}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_lcss_path_from_metric/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ lcss_path_from_metric 40_1.0000\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969"
   },
-  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/comprehension_progress.jsonl",
-  "source_sha256": "0a09dcebc55c1b772f6889a52003ba9fcffd51ad4e99ecb50387e688fe973703",
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/comprehension.json",
+  "source_sha256": "4d1451cc4ea9281931c5a4bd5706a63fe7e77b583aa1866442b55ff2116fddcd",
   "checkpoint_events": [
     {
       "name": "lcss_path_from_metric",

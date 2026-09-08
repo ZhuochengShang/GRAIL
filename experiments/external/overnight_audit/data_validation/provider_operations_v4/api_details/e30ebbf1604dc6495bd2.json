@@ -17,28 +17,11 @@
     "last_retry_interval_s": null,
     "next_provider_retry_epoch": null,
     "transport_policy": "Historical/uninstrumented",
-    "identity_status": "Provisional last-observed fingerprint group; final identity unverified",
+    "identity_status": "Final or explicitly migrated evidence",
     "error": null,
     "details": "api_details/e30ebbf1604dc6495bd2.json"
   },
   "native_row": {
-    "name": "VARIMA",
-    "doc_source": "aideal",
-    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
-    "execution_evidence": {
-      "status": "pass",
-      "rounds": [
-        {
-          "round": 0,
-          "status": "pass"
-        }
-      ],
-      "code": "from tslearn.forecasting import VARIMA\n\nmodel = VARIMA(1, 0, 0, with_constant=False)\nhorizon = 3\npredicted = model.fit_predict(X, n=horizon)\n\nassert predicted.shape == (X.shape[0], horizon, X.shape[2]), f\"Unexpected forecast shape: {predicted.shape}\"\nprint(f\"__CHECK__ VARIMA {predicted.shape}\")",
-      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_VARIMA/api_test.py",
-      "exit_code": 0,
-      "stdout_tail": "__CHECK__ VARIMA (8, 3, 1)\n__DONE__\n",
-      "stderr_tail": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/tslearn/tslearn/forecasting/_arima.py:75: NumbaPerformanceWarning: np.dot() is faster on contiguous arrays, called on (Array(float64, 2, 'A', False, aligned=True), Array(float64, 2, 'C', False, aligned=True))\n  current_err = X[:, i] - _varma_next(\n"
-    },
     "status": "pass",
     "attempts": 1,
     "pass_round": 0,
@@ -60,10 +43,26 @@
     "document_sha256": "7a419716dd6ca2a2509e313b25169fba016a034bd5fee76ca1bb86c9c617ef3a",
     "source": "tslearn/tslearn/forecasting/_arima.py:111",
     "source_other_sites": 0,
-    "codebase_frames": null
+    "codebase_frames": null,
+    "name": "VARIMA",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "from tslearn.forecasting import VARIMA\n\nmodel = VARIMA(1, 0, 0, with_constant=False)\nhorizon = 3\npredicted = model.fit_predict(X, n=horizon)\n\nassert predicted.shape == (X.shape[0], horizon, X.shape[2]), f\"Unexpected forecast shape: {predicted.shape}\"\nprint(f\"__CHECK__ VARIMA {predicted.shape}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_VARIMA/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ VARIMA (8, 3, 1)\n__DONE__\n",
+      "stderr_tail": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/tslearn/tslearn/forecasting/_arima.py:75: NumbaPerformanceWarning: np.dot() is faster on contiguous arrays, called on (Array(float64, 2, 'A', False, aligned=True), Array(float64, 2, 'C', False, aligned=True))\n  current_err = X[:, i] - _varma_next(\n"
+    },
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969"
   },
-  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/comprehension_progress.jsonl",
-  "source_sha256": "0a09dcebc55c1b772f6889a52003ba9fcffd51ad4e99ecb50387e688fe973703",
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/comprehension.json",
+  "source_sha256": "4d1451cc4ea9281931c5a4bd5706a63fe7e77b583aa1866442b55ff2116fddcd",
   "checkpoint_events": [
     {
       "name": "VARIMA",

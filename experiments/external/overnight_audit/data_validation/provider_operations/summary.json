@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-08T16:41:40.769717-07:00",
+  "updated_at": "2026-09-08T16:56:49.462651-07:00",
   "native_cells": [
     {
       "repository": "mir_eval",
@@ -94,9 +94,13 @@
     {
       "repository": "tslearn",
       "cell": "B2",
-      "state": "Not started / no native results",
-      "n": 0,
-      "statuses": {}
+      "n": 235,
+      "statuses": {
+        "Passed native checks": 217,
+        "Setup/import blocked": 13,
+        "Execution failed": 5
+      },
+      "state": "Native evaluation finished (failures still count)"
     }
   ],
   "separate_recovery": [
@@ -591,6 +595,41 @@
           "provider_events": 0
         }
       }
+    },
+    {
+      "repository": "tslearn",
+      "stage": "Post-B2 source fixes",
+      "statuses": {
+        "preflight_blocked": 5
+      },
+      "cohort": 5,
+      "apis": {
+        "TimeSeriesMixin": {
+          "status": "preflight_blocked",
+          "code_fix_rounds": null,
+          "provider_events": null
+        },
+        "extract_from_zip_url": {
+          "status": "preflight_blocked",
+          "code_fix_rounds": null,
+          "provider_events": null
+        },
+        "is_float": {
+          "status": "preflight_blocked",
+          "code_fix_rounds": null,
+          "provider_events": null
+        },
+        "is_float32": {
+          "status": "preflight_blocked",
+          "code_fix_rounds": null,
+          "provider_events": null
+        },
+        "is_float64": {
+          "status": "preflight_blocked",
+          "code_fix_rounds": null,
+          "provider_events": null
+        }
+      }
     }
   ],
   "transport_rollout": [
@@ -621,8 +660,14 @@
         12853
       ],
       "state": "New transport observed in worker logs"
+    },
+    {
+      "repository": "tslearn",
+      "cell": "B2",
+      "observed_enrolled_worker_pids": [],
+      "state": "Installed; awaiting next natural worker start"
     }
   ],
-  "api_rows": 1361,
+  "api_rows": 1596,
   "B1": "Omitted: no original-document repair"
 }

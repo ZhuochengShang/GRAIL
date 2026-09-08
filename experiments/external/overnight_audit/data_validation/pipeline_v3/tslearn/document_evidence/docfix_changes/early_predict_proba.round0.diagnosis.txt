@@ -1,0 +1,48 @@
+AUDIENCE & TESTABILITY:
+API audience: USER-FACING
+Harness testability: TESTABLE
+Scoring recommendation: include in main user-facing denominator
+
+ROOT CAUSE:
+The snippet failed due to a flawed assertion that assumed the number of columns in the returned probabilities array would exactly match `len(np.unique(y))` of the input labels. On small harness datasets, `NonMyopicEarlyClassifier` may drop a class during internal fitting (e.g., due to insufficient samples for internal cross-validation splits), meaning the returned array will have `len(model.classes_)` columns, which can be strictly less than the original number of unique labels.
+
+CORRECT USAGE:
+```python
+from tslearn.utils import to_time_series_dataset
+from tslearn.early_classification import NonMyopicEarlyClassifier
+
+# 1. Prepare full-length training data
+X_train = to_time_series_dataset([
+    [1.0, 2.0, 3.0, 4.0, 5.0],
+    [1.1, 2.1, 3.1, 4.1, 5.1],
+    [4.0, 3.0, 2.0, 1.0, 0.0],
+    [4.1, 3.1, 2.1, 1.1, 0.1]
+])
+y_train = [0, 0, 1, 1]
+
+# 2. Initialize and fit the early classifier
+model = NonMyopicEarlyClassifier(
+    n_clusters=2,
+    min_t=2,
+    lamb=1000.0,
+    cost_time_parameter=0.1,
+    random_state=0
+)
+model.fit(X_train, y_train)
+
+# 3. Predict probabilities on incomplete time series (first 3 timestamps)
+X_incomplete = X_train[:, :3, :]
+probas, delays = model.early_predict_proba(X_incomplete)
+
+# 4. Verify outputs against the classes actually retained by the model
+assert probas.shape == (4, len(model.classes_))
+assert delays.shape == (4,)
+```
+
+REQUIRED TYPES & IMPORTS:
+tslearn.utils.to_time_series_dataset
+tslearn.early_classification.NonMyopicEarlyClassifier
+
+DOC MUST SAY:
+- The number of columns in the returned probabilities array is exactly `len(self.classes_)`, which may be smaller than the number of unique classes in the original training data if classes with too few samples are dropped during internal fitting.
+- Code asserting the shape of the returned probabilities should check against `len(self.classes_)` rather than `len(np.unique(y))`.

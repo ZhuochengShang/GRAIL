@@ -1,0 +1,112 @@
+{
+  "summary": {
+    "repository": "tslearn",
+    "cell": "B2",
+    "api": "to_time_series",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 10.7,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 10.7,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "identity_status": "Final or explicitly migrated evidence",
+    "error": null,
+    "details": "api_details/32ca0014ae50aebf5f06.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 10.7,
+    "llm_calls": 1,
+    "input_tokens": 2787,
+    "output_tokens": 955,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2787,
+        "output_tokens": 955
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 5057,
+    "document_sha256": "e24de9437ca4277e6b78468b361d9b9adb6596b08caca01d37df5c3daeabef73",
+    "source": "tslearn/tslearn/utils/utils.py:154",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "name": "to_time_series",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "from tslearn.utils import to_time_series\nimport numpy as np\n\n# Format the pre-loaded 1D series s1 (shape: 40,)\nts_formatted = to_time_series(s1)\n\n# Verify it was converted to a 2D array (sz, 1)\nassert ts_formatted.shape == (s1.shape[0], 1), f\"Expected shape {(s1.shape[0], 1)}, got {ts_formatted.shape}\"\nassert np.allclose(ts_formatted.flatten(), s1), \"Values should match the input series\"\nassert ts_formatted is not s1, \"Output must be a new copy, not a view\"\n\n# Test trailing NaN removal\nraw_ts = [1.5, 2.5, np.nan]\nts_nan_removed = to_time_series(raw_ts, remove_nans=True)\n\nassert ts_nan_removed.shape == (2, 1), f\"Expected shape (2, 1) after NaN removal, got {ts_nan_removed.shape}\"\nassert np.allclose(ts_nan_removed, [[1.5], [2.5]]), \"Values should match the input series without trailing NaNs\"\n\nprint(f\"__CHECK__ to_time_series {ts_formatted.shape}, {ts_nan_removed.shape}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_to_time_series/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ to_time_series (40, 1), (2, 1)\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/comprehension.json",
+  "source_sha256": "4d1451cc4ea9281931c5a4bd5706a63fe7e77b583aa1866442b55ff2116fddcd",
+  "checkpoint_events": [
+    {
+      "name": "to_time_series",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "from tslearn.utils import to_time_series\nimport numpy as np\n\n# Format the pre-loaded 1D series s1 (shape: 40,)\nts_formatted = to_time_series(s1)\n\n# Verify it was converted to a 2D array (sz, 1)\nassert ts_formatted.shape == (s1.shape[0], 1), f\"Expected shape {(s1.shape[0], 1)}, got {ts_formatted.shape}\"\nassert np.allclose(ts_formatted.flatten(), s1), \"Values should match the input series\"\nassert ts_formatted is not s1, \"Output must be a new copy, not a view\"\n\n# Test trailing NaN removal\nraw_ts = [1.5, 2.5, np.nan]\nts_nan_removed = to_time_series(raw_ts, remove_nans=True)\n\nassert ts_nan_removed.shape == (2, 1), f\"Expected shape (2, 1) after NaN removal, got {ts_nan_removed.shape}\"\nassert np.allclose(ts_nan_removed, [[1.5], [2.5]]), \"Values should match the input series without trailing NaNs\"\n\nprint(f\"__CHECK__ to_time_series {ts_formatted.shape}, {ts_nan_removed.shape}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_to_time_series/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ to_time_series (40, 1), (2, 1)\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 10.7,
+      "llm_calls": 1,
+      "input_tokens": 2787,
+      "output_tokens": 955,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2787,
+          "output_tokens": 955
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 5057,
+      "document_sha256": "e24de9437ca4277e6b78468b361d9b9adb6596b08caca01d37df5c3daeabef73",
+      "source": "tslearn/tslearn/utils/utils.py:154",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

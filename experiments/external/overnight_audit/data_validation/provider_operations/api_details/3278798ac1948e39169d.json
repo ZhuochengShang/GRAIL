@@ -1,0 +1,111 @@
+{
+  "summary": {
+    "repository": "tslearn",
+    "cell": "B2",
+    "api": "mase",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 23.5,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 23.5,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "error": null,
+    "details": "api_details/3278798ac1948e39169d.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 23.5,
+    "llm_calls": 1,
+    "input_tokens": 2917,
+    "output_tokens": 2548,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2917,
+        "output_tokens": 2548
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 5845,
+    "document_sha256": "a062e08f67a09a6b106b5e754f1ad49eb4883eba644e4f6dd1c8df945bb91ff4",
+    "source": "tslearn/tslearn/metrics/performance.py:153",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "name": "mase",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "from tslearn.metrics.performance import mase\nimport numpy as np\n\ny_train = X[0:2, :20, :]\ny_true = X[0:2, 20:30, :]\ny_pred = X[2:4, 20:30, :]\nseasonal_period = 2\n\nerror = mase(y_true, y_pred, y_train, seasonal_period=seasonal_period)\n\nmae_pred = np.mean(np.abs(y_true - y_pred), axis=(0, 1))\nmae_train = np.mean(np.abs(y_train[:, seasonal_period:, :] - y_train[:, :-seasonal_period, :]), axis=(0, 1))\nexpected_error = np.mean(mae_pred / mae_train)\n\nnp.testing.assert_allclose(error, expected_error, rtol=1e-5)\nprint(f\"__CHECK__ mase {error:.4f}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_mase/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ mase 3.0405\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/comprehension.json",
+  "source_sha256": "4d1451cc4ea9281931c5a4bd5706a63fe7e77b583aa1866442b55ff2116fddcd",
+  "checkpoint_events": [
+    {
+      "name": "mase",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "from tslearn.metrics.performance import mase\nimport numpy as np\n\ny_train = X[0:2, :20, :]\ny_true = X[0:2, 20:30, :]\ny_pred = X[2:4, 20:30, :]\nseasonal_period = 2\n\nerror = mase(y_true, y_pred, y_train, seasonal_period=seasonal_period)\n\nmae_pred = np.mean(np.abs(y_true - y_pred), axis=(0, 1))\nmae_train = np.mean(np.abs(y_train[:, seasonal_period:, :] - y_train[:, :-seasonal_period, :]), axis=(0, 1))\nexpected_error = np.mean(mae_pred / mae_train)\n\nnp.testing.assert_allclose(error, expected_error, rtol=1e-5)\nprint(f\"__CHECK__ mase {error:.4f}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_mase/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ mase 3.0405\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 23.5,
+      "llm_calls": 1,
+      "input_tokens": 2917,
+      "output_tokens": 2548,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2917,
+          "output_tokens": 2548
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 5845,
+      "document_sha256": "a062e08f67a09a6b106b5e754f1ad49eb4883eba644e4f6dd1c8df945bb91ff4",
+      "source": "tslearn/tslearn/metrics/performance.py:153",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

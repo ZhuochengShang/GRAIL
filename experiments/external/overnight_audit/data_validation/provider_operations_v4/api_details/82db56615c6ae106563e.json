@@ -17,28 +17,11 @@
     "last_retry_interval_s": null,
     "next_provider_retry_epoch": null,
     "transport_policy": "Historical/uninstrumented",
-    "identity_status": "Provisional last-observed fingerprint group; final identity unverified",
+    "identity_status": "Final or explicitly migrated evidence",
     "error": null,
     "details": "api_details/82db56615c6ae106563e.json"
   },
   "native_row": {
-    "name": "TimeSeriesImputer",
-    "doc_source": "aideal",
-    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
-    "execution_evidence": {
-      "status": "pass",
-      "rounds": [
-        {
-          "round": 0,
-          "status": "pass"
-        }
-      ],
-      "code": "import numpy as np\nfrom tslearn.preprocessing import TimeSeriesImputer\n\nunivariate_dataset = [\n    [1.0, np.nan, 3.0],\n    [1.0, 2.0, np.nan, 9.0]\n]\n\nimputer = TimeSeriesImputer(method=\"mean\", keep_trailing_nans=True)\ntransformed = imputer.fit_transform(univariate_dataset)\n\nassert transformed.shape == (2, 4, 1), f\"Expected shape (2, 4, 1), got {transformed.shape}\"\nassert np.isnan(transformed[0, 3, 0]), \"Trailing NaN should be preserved as padding\"\nassert transformed[0, 1, 0] == 2.0, \"Internal NaN in first series should be imputed with mean (2.0)\"\nassert transformed[1, 2, 0] == 4.0, \"Internal NaN in second series should be imputed with mean (4.0)\"\n\nprint(f\"__CHECK__ TimeSeriesImputer {transformed.shape} {transformed[0, 1, 0]} {transformed[1, 2, 0]}\")",
-      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_TimeSeriesImputer/api_test.py",
-      "exit_code": 0,
-      "stdout_tail": "__CHECK__ TimeSeriesImputer (2, 4, 1) 2.0 4.0\n__DONE__\n",
-      "stderr_tail": ""
-    },
     "status": "pass",
     "attempts": 1,
     "pass_round": 0,
@@ -60,10 +43,26 @@
     "document_sha256": "f9b86b9b9602fd737ab54ab123e682860539d3607d095cfe8cf8571f21ff6ed7",
     "source": "tslearn/tslearn/preprocessing/preprocessing.py:422",
     "source_other_sites": 0,
-    "codebase_frames": null
+    "codebase_frames": null,
+    "name": "TimeSeriesImputer",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "import numpy as np\nfrom tslearn.preprocessing import TimeSeriesImputer\n\nunivariate_dataset = [\n    [1.0, np.nan, 3.0],\n    [1.0, 2.0, np.nan, 9.0]\n]\n\nimputer = TimeSeriesImputer(method=\"mean\", keep_trailing_nans=True)\ntransformed = imputer.fit_transform(univariate_dataset)\n\nassert transformed.shape == (2, 4, 1), f\"Expected shape (2, 4, 1), got {transformed.shape}\"\nassert np.isnan(transformed[0, 3, 0]), \"Trailing NaN should be preserved as padding\"\nassert transformed[0, 1, 0] == 2.0, \"Internal NaN in first series should be imputed with mean (2.0)\"\nassert transformed[1, 2, 0] == 4.0, \"Internal NaN in second series should be imputed with mean (4.0)\"\n\nprint(f\"__CHECK__ TimeSeriesImputer {transformed.shape} {transformed[0, 1, 0]} {transformed[1, 2, 0]}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_TimeSeriesImputer/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ TimeSeriesImputer (2, 4, 1) 2.0 4.0\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969"
   },
-  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/comprehension_progress.jsonl",
-  "source_sha256": "0a09dcebc55c1b772f6889a52003ba9fcffd51ad4e99ecb50387e688fe973703",
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/comprehension.json",
+  "source_sha256": "4d1451cc4ea9281931c5a4bd5706a63fe7e77b583aa1866442b55ff2116fddcd",
   "checkpoint_events": [
     {
       "name": "TimeSeriesImputer",

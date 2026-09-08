@@ -1,0 +1,111 @@
+{
+  "summary": {
+    "repository": "tslearn",
+    "cell": "B2",
+    "api": "sakoe_chiba_mask",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 11.3,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 11.3,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "error": null,
+    "details": "api_details/5debd81437c71c0f37dc.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 11.3,
+    "llm_calls": 1,
+    "input_tokens": 2383,
+    "output_tokens": 1069,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2383,
+        "output_tokens": 1069
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 3615,
+    "document_sha256": "7bb7ba20e5e45573f5da37a286c488b9537c872ba593d210d79454e77b440bb6",
+    "source": "tslearn/tslearn/metrics/_masks.py:42",
+    "source_other_sites": 1,
+    "codebase_frames": null,
+    "name": "sakoe_chiba_mask",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "from tslearn.metrics import sakoe_chiba_mask\nimport numpy as np\n\nsk_mask = sakoe_chiba_mask(4, 4, radius=1, be=\"numpy\")\n\nreference_mask = np.array([\n    [ True,  True, False, False],\n    [ True,  True,  True, False],\n    [False,  True,  True,  True],\n    [False, False,  True,  True]\n])\n\nnp.testing.assert_array_equal(sk_mask, reference_mask)\n\ntrue_count = int(np.sum(sk_mask))\nassert true_count == 10, f\"Expected 10 True values, got {true_count}\"\n\nprint(f\"__CHECK__ sakoe_chiba_mask {true_count}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_sakoe_chiba_mask/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ sakoe_chiba_mask 10\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/comprehension.json",
+  "source_sha256": "4d1451cc4ea9281931c5a4bd5706a63fe7e77b583aa1866442b55ff2116fddcd",
+  "checkpoint_events": [
+    {
+      "name": "sakoe_chiba_mask",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "from tslearn.metrics import sakoe_chiba_mask\nimport numpy as np\n\nsk_mask = sakoe_chiba_mask(4, 4, radius=1, be=\"numpy\")\n\nreference_mask = np.array([\n    [ True,  True, False, False],\n    [ True,  True,  True, False],\n    [False,  True,  True,  True],\n    [False, False,  True,  True]\n])\n\nnp.testing.assert_array_equal(sk_mask, reference_mask)\n\ntrue_count = int(np.sum(sk_mask))\nassert true_count == 10, f\"Expected 10 True values, got {true_count}\"\n\nprint(f\"__CHECK__ sakoe_chiba_mask {true_count}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_sakoe_chiba_mask/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ sakoe_chiba_mask 10\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 11.3,
+      "llm_calls": 1,
+      "input_tokens": 2383,
+      "output_tokens": 1069,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2383,
+          "output_tokens": 1069
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3615,
+      "document_sha256": "7bb7ba20e5e45573f5da37a286c488b9537c872ba593d210d79454e77b440bb6",
+      "source": "tslearn/tslearn/metrics/_masks.py:42",
+      "source_other_sites": 1,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

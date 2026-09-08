@@ -17,28 +17,11 @@
     "last_retry_interval_s": null,
     "next_provider_retry_epoch": null,
     "transport_policy": "Historical/uninstrumented",
-    "identity_status": "Provisional last-observed fingerprint group; final identity unverified",
+    "identity_status": "Final or explicitly migrated evidence",
     "error": null,
     "details": "api_details/d48f63db0d0c78287734.json"
   },
   "native_row": {
-    "name": "ctw",
-    "doc_source": "aideal",
-    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
-    "execution_evidence": {
-      "status": "pass",
-      "rounds": [
-        {
-          "round": 0,
-          "status": "pass"
-        }
-      ],
-      "code": "from tslearn.metrics import ctw\n\n# Use individual time series with different lengths and different dimensionalities\nts1 = X[0]  # shape (40, 1)\nts2 = X2[0].reshape(16, 2)  # shape (16, 2)\n\n# Compute CTW similarity\nsim1 = ctw(ts1, ts2, max_iter=5, be=\"numpy\")\nsim2 = ctw(ts1, ts2, max_iter=5, be=\"numpy\")\n\nassert isinstance(sim1, float), \"CTW similarity must be a float\"\nassert sim1 == sim2, \"CTW computation should be deterministic for the same inputs\"\n\nprint(f\"__CHECK__ ctw {sim1:.4f}\")",
-      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_ctw/api_test.py",
-      "exit_code": 0,
-      "stdout_tail": "__CHECK__ ctw 11.8332\n__DONE__\n",
-      "stderr_tail": ""
-    },
     "status": "pass",
     "attempts": 1,
     "pass_round": 0,
@@ -60,10 +43,26 @@
     "document_sha256": "ca33bd4687230fe2b7937b71e160d7b4906dde7bd51577147399c891151b0ae1",
     "source": "tslearn/tslearn/metrics/ctw.py:200",
     "source_other_sites": 0,
-    "codebase_frames": null
+    "codebase_frames": null,
+    "name": "ctw",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "from tslearn.metrics import ctw\n\n# Use individual time series with different lengths and different dimensionalities\nts1 = X[0]  # shape (40, 1)\nts2 = X2[0].reshape(16, 2)  # shape (16, 2)\n\n# Compute CTW similarity\nsim1 = ctw(ts1, ts2, max_iter=5, be=\"numpy\")\nsim2 = ctw(ts1, ts2, max_iter=5, be=\"numpy\")\n\nassert isinstance(sim1, float), \"CTW similarity must be a float\"\nassert sim1 == sim2, \"CTW computation should be deterministic for the same inputs\"\n\nprint(f\"__CHECK__ ctw {sim1:.4f}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_ctw/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ ctw 11.8332\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969"
   },
-  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/comprehension_progress.jsonl",
-  "source_sha256": "0a09dcebc55c1b772f6889a52003ba9fcffd51ad4e99ecb50387e688fe973703",
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/comprehension.json",
+  "source_sha256": "4d1451cc4ea9281931c5a4bd5706a63fe7e77b583aa1866442b55ff2116fddcd",
   "checkpoint_events": [
     {
       "name": "ctw",

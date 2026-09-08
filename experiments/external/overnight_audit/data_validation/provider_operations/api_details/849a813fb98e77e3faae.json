@@ -1,0 +1,111 @@
+{
+  "summary": {
+    "repository": "tslearn",
+    "cell": "B2",
+    "api": "cast",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 9.6,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 9.6,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "error": null,
+    "details": "api_details/849a813fb98e77e3faae.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 9.6,
+    "llm_calls": 1,
+    "input_tokens": 2077,
+    "output_tokens": 907,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2077,
+        "output_tokens": 907
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 2701,
+    "document_sha256": "dff7cc3b603564267d93d103f94ed4bc905fe1b13cdcd8b51debc0a6f5719723",
+    "source": "tslearn/tslearn/backend/backend.py:91",
+    "source_other_sites": 2,
+    "codebase_frames": null,
+    "name": "cast",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "from tslearn.backend import cast\nimport numpy as np\n\n# Cast the preloaded numpy array to a standard Python list\ns1_list = cast(s1, array_type=\"list\")\nassert isinstance(s1_list, list), \"Result should be a Python list\"\nassert len(s1_list) == 40, f\"Expected length 40, got {len(s1_list)}\"\n\n# Cast the list back to a numpy array\ns1_np = cast(s1_list, array_type=\"numpy\")\nassert isinstance(s1_np, np.ndarray), \"Result should be a numpy ndarray\"\nassert s1_np.shape == (40,), f\"Expected shape (40,), got {s1_np.shape}\"\nassert np.allclose(s1_np, s1), \"Data mismatch after round-trip casting\"\n\nprint(f\"__CHECK__ cast {type(s1_list).__name__}_{type(s1_np).__name__}_{len(s1_list)}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_cast/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ cast list_ndarray_40\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/comprehension.json",
+  "source_sha256": "4d1451cc4ea9281931c5a4bd5706a63fe7e77b583aa1866442b55ff2116fddcd",
+  "checkpoint_events": [
+    {
+      "name": "cast",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "from tslearn.backend import cast\nimport numpy as np\n\n# Cast the preloaded numpy array to a standard Python list\ns1_list = cast(s1, array_type=\"list\")\nassert isinstance(s1_list, list), \"Result should be a Python list\"\nassert len(s1_list) == 40, f\"Expected length 40, got {len(s1_list)}\"\n\n# Cast the list back to a numpy array\ns1_np = cast(s1_list, array_type=\"numpy\")\nassert isinstance(s1_np, np.ndarray), \"Result should be a numpy ndarray\"\nassert s1_np.shape == (40,), f\"Expected shape (40,), got {s1_np.shape}\"\nassert np.allclose(s1_np, s1), \"Data mismatch after round-trip casting\"\n\nprint(f\"__CHECK__ cast {type(s1_list).__name__}_{type(s1_np).__name__}_{len(s1_list)}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_cast/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ cast list_ndarray_40\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 9.6,
+      "llm_calls": 1,
+      "input_tokens": 2077,
+      "output_tokens": 907,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2077,
+          "output_tokens": 907
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 2701,
+      "document_sha256": "dff7cc3b603564267d93d103f94ed4bc905fe1b13cdcd8b51debc0a6f5719723",
+      "source": "tslearn/tslearn/backend/backend.py:91",
+      "source_other_sites": 2,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

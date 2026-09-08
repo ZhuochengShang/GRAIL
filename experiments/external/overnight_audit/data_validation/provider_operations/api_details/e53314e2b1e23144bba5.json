@@ -1,0 +1,111 @@
+{
+  "summary": {
+    "repository": "tslearn",
+    "cell": "B2",
+    "api": "jacobian_product",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 23.2,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 23.2,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "error": null,
+    "details": "api_details/e53314e2b1e23144bba5.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 23.2,
+    "llm_calls": 1,
+    "input_tokens": 2286,
+    "output_tokens": 2576,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2286,
+        "output_tokens": 2576
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 3126,
+    "document_sha256": "2538727951bfb6ca97c7309bfc107515ebf90a422effb2c632c7b4481d7484e8",
+    "source": "tslearn/tslearn/metrics/softdtw_variants.py:1218",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "name": "jacobian_product",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "import numpy as np\nfrom tslearn.metrics.softdtw_variants import SquaredEuclidean\n\n# Extract 2D time series from the preloaded 3D datasets\nX_ts = X[0]   # shape (40, 1), m=40, d=1\nY_ts = X2[0]  # shape (32, 1), n=32, d=1\n\n# Instantiate the low-level distance object\ndist_obj = SquaredEuclidean(X_ts, Y_ts)\n\n# E is the gradient w.r.t the (m x n) distance matrix\nE = np.ones((40, 32))\n\n# Compute the Jacobian-vector product\nG = dist_obj.jacobian_product(E)\n\n# Verify the shape of the resulting gradient\nassert G.shape == (40, 1), f\"Expected shape (40, 1), got {G.shape}\"\n\n# Oracle: For SquaredEuclidean and E=ones, the gradient w.r.t X_i is 2 * sum_j (X_i - Y_j)\nexpected_g0 = 2 * np.sum(X_ts[0] - Y_ts, axis=0)\nnp.testing.assert_allclose(\n    G[0], \n    expected_g0, \n    rtol=1e-5, \n    atol=1e-8, \n    err_msg=\"Jacobian product did not match the expected analytical gradient\"\n)\n\nprint(f\"__CHECK__ jacobian_product {G.shape}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_jacobian_product/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ jacobian_product (40, 1)\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/comprehension.json",
+  "source_sha256": "4d1451cc4ea9281931c5a4bd5706a63fe7e77b583aa1866442b55ff2116fddcd",
+  "checkpoint_events": [
+    {
+      "name": "jacobian_product",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import numpy as np\nfrom tslearn.metrics.softdtw_variants import SquaredEuclidean\n\n# Extract 2D time series from the preloaded 3D datasets\nX_ts = X[0]   # shape (40, 1), m=40, d=1\nY_ts = X2[0]  # shape (32, 1), n=32, d=1\n\n# Instantiate the low-level distance object\ndist_obj = SquaredEuclidean(X_ts, Y_ts)\n\n# E is the gradient w.r.t the (m x n) distance matrix\nE = np.ones((40, 32))\n\n# Compute the Jacobian-vector product\nG = dist_obj.jacobian_product(E)\n\n# Verify the shape of the resulting gradient\nassert G.shape == (40, 1), f\"Expected shape (40, 1), got {G.shape}\"\n\n# Oracle: For SquaredEuclidean and E=ones, the gradient w.r.t X_i is 2 * sum_j (X_i - Y_j)\nexpected_g0 = 2 * np.sum(X_ts[0] - Y_ts, axis=0)\nnp.testing.assert_allclose(\n    G[0], \n    expected_g0, \n    rtol=1e-5, \n    atol=1e-8, \n    err_msg=\"Jacobian product did not match the expected analytical gradient\"\n)\n\nprint(f\"__CHECK__ jacobian_product {G.shape}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_jacobian_product/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ jacobian_product (40, 1)\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 23.2,
+      "llm_calls": 1,
+      "input_tokens": 2286,
+      "output_tokens": 2576,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2286,
+          "output_tokens": 2576
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3126,
+      "document_sha256": "2538727951bfb6ca97c7309bfc107515ebf90a422effb2c632c7b4481d7484e8",
+      "source": "tslearn/tslearn/metrics/softdtw_variants.py:1218",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

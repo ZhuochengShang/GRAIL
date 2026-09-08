@@ -1,6 +1,6 @@
 # AIDEAL: three separate stages
 
-2026-09-08T16:41:24.945641-07:00
+2026-09-08T16:49:30.087154-07:00
 
 A1/A2 are zero-fix controls. S_A2 repairs snippets from A2 failures. Independent README repair produces fresh zero-fix B2. S_B2 repairs only eligible B2 failures.
 
@@ -18,9 +18,9 @@ A1/A2 are zero-fix controls. S_A2 repairs snippets from A2 failures. Independent
 | thumbnailator | S_B2 | {'recovered_native': 8, 'stuck': 2} | 8 | 10 |
 | tslearn | A1 | native partial | 121 | 235 |
 | tslearn | A2 | native complete | 175 | 235 |
-| tslearn | B2 | pending native evidence | — | — |
+| tslearn | B2 | native complete | 217 | 235 |
 | tslearn | S_A2 | {'recovered_native': 32} | 32 | 32 |
-| tslearn | S_B2 | FileNotFoundError: [Errno 2] No such file or directory: '/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/comprehension.json' | — | — |
+| tslearn | S_B2 | {'preflight_blocked': 5} | 0 | 5 |
 
 Denominators: A1/A2/B2 use the full manifest; S_A2 and S_B2 use different frozen eligible-failure cohorts.
 The composite B2 + S_B2 endpoint is never reported as the native B2 score.

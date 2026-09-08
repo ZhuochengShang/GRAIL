@@ -17,28 +17,11 @@
     "last_retry_interval_s": null,
     "next_provider_retry_epoch": null,
     "transport_policy": "Historical/uninstrumented",
-    "identity_status": "Provisional last-observed fingerprint group; final identity unverified",
+    "identity_status": "Final or explicitly migrated evidence",
     "error": null,
     "details": "api_details/ee6940f952b90929a531.json"
   },
   "native_row": {
-    "name": "frechet_path",
-    "doc_source": "aideal",
-    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
-    "execution_evidence": {
-      "status": "pass",
-      "rounds": [
-        {
-          "round": 0,
-          "status": "pass"
-        }
-      ],
-      "code": "import tslearn.metrics\n\npath, dist = tslearn.metrics.frechet_path(s1, s2)\n\nassert isinstance(path, list), \"Path must be a list\"\nassert len(path) >= max(len(s1), len(s2)), \"Path length must be at least the maximum length of the input series\"\nassert path[0] == (0, 0), \"Path must start at (0, 0)\"\nassert path[-1] == (len(s1) - 1, len(s2) - 1), \"Path must end at the last indices of the series\"\nassert isinstance(dist, float), \"Distance must be a float\"\nassert dist >= 0.0, \"Distance must be non-negative\"\n\nprint(f\"__CHECK__ frechet_path {len(path)}\")",
-      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_frechet_path/api_test.py",
-      "exit_code": 0,
-      "stdout_tail": "__CHECK__ frechet_path 70\n__DONE__\n",
-      "stderr_tail": ""
-    },
     "status": "pass",
     "attempts": 1,
     "pass_round": 0,
@@ -60,10 +43,26 @@
     "document_sha256": "02d7ebe0536e83c23c6a559d6bfdcb6ee7fe1125159a116288078ef94af477df",
     "source": "tslearn/tslearn/metrics/_frechet.py:171",
     "source_other_sites": 0,
-    "codebase_frames": null
+    "codebase_frames": null,
+    "name": "frechet_path",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "import tslearn.metrics\n\npath, dist = tslearn.metrics.frechet_path(s1, s2)\n\nassert isinstance(path, list), \"Path must be a list\"\nassert len(path) >= max(len(s1), len(s2)), \"Path length must be at least the maximum length of the input series\"\nassert path[0] == (0, 0), \"Path must start at (0, 0)\"\nassert path[-1] == (len(s1) - 1, len(s2) - 1), \"Path must end at the last indices of the series\"\nassert isinstance(dist, float), \"Distance must be a float\"\nassert dist >= 0.0, \"Distance must be non-negative\"\n\nprint(f\"__CHECK__ frechet_path {len(path)}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_frechet_path/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ frechet_path 70\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969"
   },
-  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/comprehension_progress.jsonl",
-  "source_sha256": "0a09dcebc55c1b772f6889a52003ba9fcffd51ad4e99ecb50387e688fe973703",
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/comprehension.json",
+  "source_sha256": "4d1451cc4ea9281931c5a4bd5706a63fe7e77b583aa1866442b55ff2116fddcd",
   "checkpoint_events": [
     {
       "name": "frechet_path",

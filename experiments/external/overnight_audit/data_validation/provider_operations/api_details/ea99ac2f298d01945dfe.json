@@ -1,0 +1,111 @@
+{
+  "summary": {
+    "repository": "tslearn",
+    "cell": "B2",
+    "api": "to_pickle",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 10.6,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 10.6,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "error": null,
+    "details": "api_details/ea99ac2f298d01945dfe.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 10.6,
+    "llm_calls": 1,
+    "input_tokens": 2117,
+    "output_tokens": 899,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2117,
+        "output_tokens": 899
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 3091,
+    "document_sha256": "777bb31bff6b2f03bd57317dfa48a6b013102133cf36d6828137a6d7ed08fc41",
+    "source": "tslearn/tslearn/bases/bases.py:307",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "name": "to_pickle",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "import os\nfrom tslearn.clustering import TimeSeriesKMeans\n\n# Instantiate and fit a model\nmodel = TimeSeriesKMeans(n_clusters=3, random_state=42)\nmodel.fit(X)\n\n# Save the model using to_pickle\nfilepath = os.path.join(output_dir, \"test_model_to_pickle.pkl\")\nmodel.to_pickle(filepath)\n\nassert os.path.exists(filepath), \"Pickle file was not created.\"\n\n# Load the model using the symmetric from_pickle class method\nloaded_model = TimeSeriesKMeans.from_pickle(filepath)\n\n# Verify the loaded model's state\nassert loaded_model.n_clusters == 3, f\"Expected n_clusters=3, got {loaded_model.n_clusters}\"\nassert loaded_model.cluster_centers_.shape == model.cluster_centers_.shape, \"Cluster centers shape mismatch after loading.\"\n\nprint(f\"__CHECK__ to_pickle {loaded_model.n_clusters}_{loaded_model.cluster_centers_.shape[0]}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_to_pickle/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ to_pickle 3_3\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/comprehension.json",
+  "source_sha256": "4d1451cc4ea9281931c5a4bd5706a63fe7e77b583aa1866442b55ff2116fddcd",
+  "checkpoint_events": [
+    {
+      "name": "to_pickle",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import os\nfrom tslearn.clustering import TimeSeriesKMeans\n\n# Instantiate and fit a model\nmodel = TimeSeriesKMeans(n_clusters=3, random_state=42)\nmodel.fit(X)\n\n# Save the model using to_pickle\nfilepath = os.path.join(output_dir, \"test_model_to_pickle.pkl\")\nmodel.to_pickle(filepath)\n\nassert os.path.exists(filepath), \"Pickle file was not created.\"\n\n# Load the model using the symmetric from_pickle class method\nloaded_model = TimeSeriesKMeans.from_pickle(filepath)\n\n# Verify the loaded model's state\nassert loaded_model.n_clusters == 3, f\"Expected n_clusters=3, got {loaded_model.n_clusters}\"\nassert loaded_model.cluster_centers_.shape == model.cluster_centers_.shape, \"Cluster centers shape mismatch after loading.\"\n\nprint(f\"__CHECK__ to_pickle {loaded_model.n_clusters}_{loaded_model.cluster_centers_.shape[0]}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_to_pickle/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ to_pickle 3_3\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 10.6,
+      "llm_calls": 1,
+      "input_tokens": 2117,
+      "output_tokens": 899,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2117,
+          "output_tokens": 899
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3091,
+      "document_sha256": "777bb31bff6b2f03bd57317dfa48a6b013102133cf36d6828137a6d7ed08fc41",
+      "source": "tslearn/tslearn/bases/bases.py:307",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

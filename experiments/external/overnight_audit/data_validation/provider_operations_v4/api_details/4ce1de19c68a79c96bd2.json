@@ -1,0 +1,112 @@
+{
+  "summary": {
+    "repository": "tslearn",
+    "cell": "B2",
+    "api": "soft_dtw",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 23.7,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 23.7,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "identity_status": "Final or explicitly migrated evidence",
+    "error": null,
+    "details": "api_details/4ce1de19c68a79c96bd2.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 23.7,
+    "llm_calls": 1,
+    "input_tokens": 2537,
+    "output_tokens": 2263,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2537,
+        "output_tokens": 2263
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 4105,
+    "document_sha256": "b618f98aa4389f8f5cbff06696fd6db04f02fb30f07bf376b11f717f565399c8",
+    "source": "tslearn/tslearn/metrics/softdtw_variants.py:530",
+    "source_other_sites": 0,
+    "codebase_frames": null,
+    "name": "soft_dtw",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "import torch\nfrom tslearn.metrics import soft_dtw\n\n# Test PyTorch backend with automatic differentiation\nts1_pt = torch.tensor(s1, dtype=torch.float64, requires_grad=True)\nts2_pt = torch.tensor(s2, dtype=torch.float64)\n\nsim_pt = soft_dtw(\n    ts1=ts1_pt, \n    ts2=ts2_pt, \n    gamma=1.0, \n    be=\"pytorch\", \n    compute_with_backend=True\n)\nsim_pt.backward()\n\nassert ts1_pt.grad is not None, \"Gradient was not computed for the PyTorch tensor\"\nassert ts1_pt.grad.shape == ts1_pt.shape, \"Gradient shape does not match input shape\"\n\n# Test NumPy backend and the gamma=0.0 limit case (square of standard DTW)\nsim_self = soft_dtw(s1, s1, gamma=0.0)\nassert -1e-7 < sim_self < 1e-7, f\"Expected soft_dtw(s1, s1, gamma=0.0) to be 0.0, got {sim_self}\"\n\nprint(f\"__CHECK__ soft_dtw {sim_self:.4f} {float(sim_pt):.4f} {ts1_pt.grad.shape}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_soft_dtw/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ soft_dtw 0.0000 -65.9949 torch.Size([40])\n__DONE__\n",
+      "stderr_tail": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_soft_dtw/api_test.py:57: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.\nConsider using tensor.detach() first. (Triggered internally at /Users/runner/work/pytorch/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:837.)\n  print(f\"__CHECK__ soft_dtw {sim_self:.4f} {float(sim_pt):.4f} {ts1_pt.grad.shape}\")\n"
+    },
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/comprehension.json",
+  "source_sha256": "4d1451cc4ea9281931c5a4bd5706a63fe7e77b583aa1866442b55ff2116fddcd",
+  "checkpoint_events": [
+    {
+      "name": "soft_dtw",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import torch\nfrom tslearn.metrics import soft_dtw\n\n# Test PyTorch backend with automatic differentiation\nts1_pt = torch.tensor(s1, dtype=torch.float64, requires_grad=True)\nts2_pt = torch.tensor(s2, dtype=torch.float64)\n\nsim_pt = soft_dtw(\n    ts1=ts1_pt, \n    ts2=ts2_pt, \n    gamma=1.0, \n    be=\"pytorch\", \n    compute_with_backend=True\n)\nsim_pt.backward()\n\nassert ts1_pt.grad is not None, \"Gradient was not computed for the PyTorch tensor\"\nassert ts1_pt.grad.shape == ts1_pt.shape, \"Gradient shape does not match input shape\"\n\n# Test NumPy backend and the gamma=0.0 limit case (square of standard DTW)\nsim_self = soft_dtw(s1, s1, gamma=0.0)\nassert -1e-7 < sim_self < 1e-7, f\"Expected soft_dtw(s1, s1, gamma=0.0) to be 0.0, got {sim_self}\"\n\nprint(f\"__CHECK__ soft_dtw {sim_self:.4f} {float(sim_pt):.4f} {ts1_pt.grad.shape}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_soft_dtw/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ soft_dtw 0.0000 -65.9949 torch.Size([40])\n__DONE__\n",
+        "stderr_tail": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_soft_dtw/api_test.py:57: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.\nConsider using tensor.detach() first. (Triggered internally at /Users/runner/work/pytorch/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:837.)\n  print(f\"__CHECK__ soft_dtw {sim_self:.4f} {float(sim_pt):.4f} {ts1_pt.grad.shape}\")\n"
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 23.7,
+      "llm_calls": 1,
+      "input_tokens": 2537,
+      "output_tokens": 2263,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2537,
+          "output_tokens": 2263
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 4105,
+      "document_sha256": "b618f98aa4389f8f5cbff06696fd6db04f02fb30f07bf376b11f717f565399c8",
+      "source": "tslearn/tslearn/metrics/softdtw_variants.py:530",
+      "source_other_sites": 0,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

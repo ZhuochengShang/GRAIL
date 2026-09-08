@@ -1,0 +1,47 @@
+AUDIENCE & TESTABILITY:
+API audience: USER-FACING
+Harness testability: TESTABLE
+Scoring recommendation: include in main user-facing denominator
+
+ROOT CAUSE:
+The snippet failed because it asserted that the probability array shape would match `len(np.unique(y))` from the global harness dataset (which has 4 classes), but `NonMyopicEarlyClassifier` dropped a class during fitting on that dataset (resulting in 3 classes). Furthermore, fitting `NonMyopicEarlyClassifier` on the full harness dataset (which has 275 time steps) is extremely slow and error-prone because it trains a separate classifier for every time step; a small, deterministic dummy dataset must be used instead.
+
+CORRECT USAGE:
+```python
+dataset = np.array([
+    [[1], [2], [3], [4], [5], [6]],
+    [[1], [2], [3], [4], [5], [6]],
+    [[1], [2], [3], [4], [5], [6]],
+    [[1], [2], [3], [3], [2], [1]],
+    [[1], [2], [3], [3], [2], [1]],
+    [[1], [2], [3], [3], [2], [1]],
+    [[3], [2], [1], [1], [2], [3]],
+    [[3], [2], [1], [1], [2], [3]]
+])
+y = np.array([0, 0, 0, 1, 1, 1, 0, 0])
+
+model = NonMyopicEarlyClassifier(
+    n_clusters=3, 
+    lamb=1000.0, 
+    cost_time_parameter=0.1, 
+    random_state=0
+)
+model.fit(dataset, y)
+
+gen = model.get_early_predict_proba_generator(n_ts=1)
+incoming_timestamps = np.array([1, 2, 3]).reshape(3, 1, 1, 1)
+
+for x in incoming_timestamps:
+    probas, delays = gen.send(x)
+    assert probas.shape == (1, 2)
+    assert delays.shape == (1,)
+```
+
+REQUIRED TYPES & IMPORTS:
+numpy
+tslearn.early_classification.NonMyopicEarlyClassifier
+
+DOC MUST SAY:
+- Do not use large or arbitrary datasets (like the global harness dataset) to test `NonMyopicEarlyClassifier`, as it trains a classifier per time step and may drop classes if samples are insufficient, causing shape mismatches.
+- Always use a small, deterministic dummy dataset with a known number of classes to fit the model before testing the generator.
+- The `probas` array yielded by the generator will have shape `(n_ts, n_classes)`, where `n_classes` is the number of classes successfully fitted by the model.

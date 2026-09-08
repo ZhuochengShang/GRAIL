@@ -17,28 +17,11 @@
     "last_retry_interval_s": null,
     "next_provider_retry_epoch": null,
     "transport_policy": "Historical/uninstrumented",
-    "identity_status": "Provisional last-observed fingerprint group; final identity unverified",
+    "identity_status": "Final or explicitly migrated evidence",
     "error": null,
     "details": "api_details/5b23017edf07b254e773.json"
   },
   "native_row": {
-    "name": "BaseModelPackage",
-    "doc_source": "aideal",
-    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
-    "execution_evidence": {
-      "status": "pass",
-      "rounds": [
-        {
-          "round": 0,
-          "status": "pass"
-        }
-      ],
-      "code": "from tslearn.bases import BaseModelPackage\n\nclass DummyEstimator(BaseModelPackage):\n    def __init__(self, alpha=1.0):\n        self.alpha = alpha\n        \n    def get_params(self, deep=True):\n        return {\"alpha\": self.alpha}\n        \n    def _is_fitted(self):\n        return hasattr(self, \"coef_\")\n\nmodel = DummyEstimator(alpha=2.0)\nmodel.coef_ = [1, 2, 3]\n\npkg_dict = model._to_dict()\n\nassert pkg_dict[\"hyper_params\"][\"alpha\"] == 2.0, \"Hyperparameters not correctly extracted\"\nassert pkg_dict[\"model_params\"][\"coef_\"] == [1, 2, 3], \"Model parameters not correctly extracted\"\nprint(f\"__CHECK__ BaseModelPackage {pkg_dict['hyper_params']['alpha']} {pkg_dict['model_params']['coef_']}\")",
-      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_BaseModelPackage/api_test.py",
-      "exit_code": 0,
-      "stdout_tail": "__CHECK__ BaseModelPackage 2.0 [1, 2, 3]\n__DONE__\n",
-      "stderr_tail": ""
-    },
     "status": "pass",
     "attempts": 1,
     "pass_round": 0,
@@ -60,10 +43,26 @@
     "document_sha256": "4c865702c716d4a81c1d1f4dfc6b4950b51206367115da2c878131d7978ae2c0",
     "source": "tslearn/tslearn/bases/bases.py:78",
     "source_other_sites": 0,
-    "codebase_frames": null
+    "codebase_frames": null,
+    "name": "BaseModelPackage",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "from tslearn.bases import BaseModelPackage\n\nclass DummyEstimator(BaseModelPackage):\n    def __init__(self, alpha=1.0):\n        self.alpha = alpha\n        \n    def get_params(self, deep=True):\n        return {\"alpha\": self.alpha}\n        \n    def _is_fitted(self):\n        return hasattr(self, \"coef_\")\n\nmodel = DummyEstimator(alpha=2.0)\nmodel.coef_ = [1, 2, 3]\n\npkg_dict = model._to_dict()\n\nassert pkg_dict[\"hyper_params\"][\"alpha\"] == 2.0, \"Hyperparameters not correctly extracted\"\nassert pkg_dict[\"model_params\"][\"coef_\"] == [1, 2, 3], \"Model parameters not correctly extracted\"\nprint(f\"__CHECK__ BaseModelPackage {pkg_dict['hyper_params']['alpha']} {pkg_dict['model_params']['coef_']}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_BaseModelPackage/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ BaseModelPackage 2.0 [1, 2, 3]\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969"
   },
-  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/comprehension_progress.jsonl",
-  "source_sha256": "0a09dcebc55c1b772f6889a52003ba9fcffd51ad4e99ecb50387e688fe973703",
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/comprehension.json",
+  "source_sha256": "4d1451cc4ea9281931c5a4bd5706a63fe7e77b583aa1866442b55ff2116fddcd",
   "checkpoint_events": [
     {
       "name": "BaseModelPackage",

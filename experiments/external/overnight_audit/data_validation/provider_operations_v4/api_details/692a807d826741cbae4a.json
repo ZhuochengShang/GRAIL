@@ -17,28 +17,11 @@
     "last_retry_interval_s": null,
     "next_provider_retry_epoch": null,
     "transport_policy": "Historical/uninstrumented",
-    "identity_status": "Provisional last-observed fingerprint group; final identity unverified",
+    "identity_status": "Final or explicitly migrated evidence",
     "error": null,
     "details": "api_details/692a807d826741cbae4a.json"
   },
   "native_row": {
-    "name": "dtw",
-    "doc_source": "aideal",
-    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
-    "execution_evidence": {
-      "status": "pass",
-      "rounds": [
-        {
-          "round": 0,
-          "status": "pass"
-        }
-      ],
-      "code": "import numpy as np\nimport tslearn.metrics\n\n# Compute DTW distance of a series to itself\ndist_self = tslearn.metrics.dtw(s1, s1)\nassert np.isclose(dist_self, 0.0), f\"DTW distance to self must be 0.0, got {dist_self}\"\n\n# Compute unconstrained DTW distance between s1 and s2\ndist_s1_s2 = tslearn.metrics.dtw(s1, s2)\n\n# Compute DTW distance with Sakoe-Chiba band constraint\ndist_constrained = tslearn.metrics.dtw(s1, s2, global_constraint=\"sakoe_chiba\", sakoe_chiba_radius=2)\n\n# Constraining the warping path can only increase (or maintain) the minimum distance\nassert dist_constrained >= dist_s1_s2 - 1e-9, \"Constrained DTW distance cannot be less than unconstrained\"\n\nprint(f\"__CHECK__ dtw {dist_self:.1f} {dist_s1_s2:.4f} {dist_constrained:.4f}\")",
-      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_dtw/api_test.py",
-      "exit_code": 0,
-      "stdout_tail": "__CHECK__ dtw 0.0 0.2702 0.3327\n__DONE__\n",
-      "stderr_tail": ""
-    },
     "status": "pass",
     "attempts": 1,
     "pass_round": 0,
@@ -60,10 +43,26 @@
     "document_sha256": "2038037c74ebce49b253c95b85bb6d558e112bcf87e7b1a525c28e35877ea1de",
     "source": "tslearn/tslearn/metrics/_dtw.py:30",
     "source_other_sites": 1,
-    "codebase_frames": null
+    "codebase_frames": null,
+    "name": "dtw",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "import numpy as np\nimport tslearn.metrics\n\n# Compute DTW distance of a series to itself\ndist_self = tslearn.metrics.dtw(s1, s1)\nassert np.isclose(dist_self, 0.0), f\"DTW distance to self must be 0.0, got {dist_self}\"\n\n# Compute unconstrained DTW distance between s1 and s2\ndist_s1_s2 = tslearn.metrics.dtw(s1, s2)\n\n# Compute DTW distance with Sakoe-Chiba band constraint\ndist_constrained = tslearn.metrics.dtw(s1, s2, global_constraint=\"sakoe_chiba\", sakoe_chiba_radius=2)\n\n# Constraining the warping path can only increase (or maintain) the minimum distance\nassert dist_constrained >= dist_s1_s2 - 1e-9, \"Constrained DTW distance cannot be less than unconstrained\"\n\nprint(f\"__CHECK__ dtw {dist_self:.1f} {dist_s1_s2:.4f} {dist_constrained:.4f}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_dtw/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ dtw 0.0 0.2702 0.3327\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969"
   },
-  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/comprehension_progress.jsonl",
-  "source_sha256": "0a09dcebc55c1b772f6889a52003ba9fcffd51ad4e99ecb50387e688fe973703",
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/comprehension.json",
+  "source_sha256": "4d1451cc4ea9281931c5a4bd5706a63fe7e77b583aa1866442b55ff2116fddcd",
   "checkpoint_events": [
     {
       "name": "dtw",

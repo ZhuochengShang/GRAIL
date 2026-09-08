@@ -17,28 +17,11 @@
     "last_retry_interval_s": null,
     "next_provider_retry_epoch": null,
     "transport_policy": "Historical/uninstrumented",
-    "identity_status": "Provisional last-observed fingerprint group; final identity unverified",
+    "identity_status": "Final or explicitly migrated evidence",
     "error": null,
     "details": "api_details/a21a32017deca2c8ef43.json"
   },
   "native_row": {
-    "name": "baseline_accuracy",
-    "doc_source": "aideal",
-    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
-    "execution_evidence": {
-      "status": "pass",
-      "rounds": [
-        {
-          "round": 0,
-          "status": "pass"
-        }
-      ],
-      "code": "from tslearn.datasets import UCR_UEA_datasets\n\n# Instantiate the dataset loader\nuea_ucr = UCR_UEA_datasets()\n\n# Query specific datasets and methods\ndict_acc = uea_ucr.baseline_accuracy(\n    list_datasets=[\"Adiac\", \"ChlorineConcentration\"],\n    list_methods=[\"C45\"]\n)\n\n# Verify the result structure and content\nassert isinstance(dict_acc, dict), \"Result must be a dictionary\"\nassert len(dict_acc) == 2, f\"Expected 2 datasets in result, got {len(dict_acc)}\"\nassert \"Adiac\" in dict_acc and \"ChlorineConcentration\" in dict_acc, \"Requested datasets missing from result\"\nassert \"C45\" in dict_acc[\"Adiac\"], \"Requested method missing from Adiac result\"\n\nadiac_c45_acc = dict_acc[\"Adiac\"][\"C45\"]\nassert isinstance(adiac_c45_acc, float), \"Accuracy must be a float\"\nassert 0.0 <= adiac_c45_acc <= 1.0, \"Accuracy must be between 0 and 1\"\n\nprint(f\"__CHECK__ baseline_accuracy {len(dict_acc)} {adiac_c45_acc:.4f}\")",
-      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_baseline_accuracy/api_test.py",
-      "exit_code": 0,
-      "stdout_tail": "__CHECK__ baseline_accuracy 2 0.5422\n__DONE__\n",
-      "stderr_tail": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_baseline_accuracy/api_test.py:40: DeprecationWarning: The method baseline_accuracy will soon be deprecated because the data provider no longer maintains this information.\n  dict_acc = uea_ucr.baseline_accuracy(\n"
-    },
     "status": "pass",
     "attempts": 1,
     "pass_round": 0,
@@ -60,10 +43,26 @@
     "document_sha256": "2e769a97aa6cd10beb83871cd48a92ff6fb968897cce749b16bb3f345e17d338",
     "source": "tslearn/tslearn/datasets/ucr_uea.py:121",
     "source_other_sites": 0,
-    "codebase_frames": null
+    "codebase_frames": null,
+    "name": "baseline_accuracy",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "from tslearn.datasets import UCR_UEA_datasets\n\n# Instantiate the dataset loader\nuea_ucr = UCR_UEA_datasets()\n\n# Query specific datasets and methods\ndict_acc = uea_ucr.baseline_accuracy(\n    list_datasets=[\"Adiac\", \"ChlorineConcentration\"],\n    list_methods=[\"C45\"]\n)\n\n# Verify the result structure and content\nassert isinstance(dict_acc, dict), \"Result must be a dictionary\"\nassert len(dict_acc) == 2, f\"Expected 2 datasets in result, got {len(dict_acc)}\"\nassert \"Adiac\" in dict_acc and \"ChlorineConcentration\" in dict_acc, \"Requested datasets missing from result\"\nassert \"C45\" in dict_acc[\"Adiac\"], \"Requested method missing from Adiac result\"\n\nadiac_c45_acc = dict_acc[\"Adiac\"][\"C45\"]\nassert isinstance(adiac_c45_acc, float), \"Accuracy must be a float\"\nassert 0.0 <= adiac_c45_acc <= 1.0, \"Accuracy must be between 0 and 1\"\n\nprint(f\"__CHECK__ baseline_accuracy {len(dict_acc)} {adiac_c45_acc:.4f}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_baseline_accuracy/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ baseline_accuracy 2 0.5422\n__DONE__\n",
+      "stderr_tail": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_baseline_accuracy/api_test.py:40: DeprecationWarning: The method baseline_accuracy will soon be deprecated because the data provider no longer maintains this information.\n  dict_acc = uea_ucr.baseline_accuracy(\n"
+    },
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969"
   },
-  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/comprehension_progress.jsonl",
-  "source_sha256": "0a09dcebc55c1b772f6889a52003ba9fcffd51ad4e99ecb50387e688fe973703",
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/comprehension.json",
+  "source_sha256": "4d1451cc4ea9281931c5a4bd5706a63fe7e77b583aa1866442b55ff2116fddcd",
   "checkpoint_events": [
     {
       "name": "baseline_accuracy",

@@ -1,0 +1,111 @@
+{
+  "summary": {
+    "repository": "tslearn",
+    "cell": "B2",
+    "api": "SoftDTWLossPyTorch",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
+    "target_api_reached": "Not independently verified",
+    "latest_native_attempt_s": 16.4,
+    "retained_checkpoint_events": 1,
+    "retained_attempt_total_s": 16.4,
+    "retained_504_events": 0,
+    "retained_cooldown_deferrals": 0,
+    "historical_idle_retry_s": null,
+    "measured_provider_invocations": 0,
+    "last_provider_s": null,
+    "last_retry_interval_s": null,
+    "next_provider_retry_epoch": null,
+    "transport_policy": "Historical/uninstrumented",
+    "error": null,
+    "details": "api_details/f579d8dc8f684eee10af.json"
+  },
+  "native_row": {
+    "status": "pass",
+    "attempts": 1,
+    "pass_round": 0,
+    "wall_s": 16.4,
+    "llm_calls": 1,
+    "input_tokens": 2438,
+    "output_tokens": 1551,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 2438,
+        "output_tokens": 1551
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
+    "doc_chars": 3946,
+    "document_sha256": "a769a7ce41ccf738646a5f6b1768787a8c66c6c518a48cdf3f61651015df926d",
+    "source": "tslearn/tslearn/metrics/soft_dtw_loss_pytorch.py:75",
+    "source_other_sites": 1,
+    "codebase_frames": null,
+    "name": "SoftDTWLossPyTorch",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "import torch\nimport tslearn.metrics\n\nx_tensor = torch.tensor(X[:4], dtype=torch.float32, requires_grad=True)\ny_tensor = torch.tensor(X2, dtype=torch.float32)\n\ncriterion = tslearn.metrics.SoftDTWLossPyTorch(gamma=1.0, normalize=True)\nloss = criterion.forward(x_tensor, y_tensor)\n\nassert loss.shape == (4,), f\"Expected loss shape (4,), got {loss.shape}\"\nassert loss.requires_grad is True, \"Expected loss to require gradients\"\n\nloss.sum().backward()\n\nassert x_tensor.grad is not None, \"Expected gradients to be populated on x_tensor\"\nassert x_tensor.grad.shape == (4, 40, 1), f\"Expected grad shape (4, 40, 1), got {x_tensor.grad.shape}\"\n\nprint(f\"__CHECK__ SoftDTWLossPyTorch {loss.detach().numpy().sum():.4f}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_SoftDTWLossPyTorch/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ SoftDTWLossPyTorch 534.7407\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969"
+  },
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/comprehension.json",
+  "source_sha256": "4d1451cc4ea9281931c5a4bd5706a63fe7e77b583aa1866442b55ff2116fddcd",
+  "checkpoint_events": [
+    {
+      "name": "SoftDTWLossPyTorch",
+      "doc_source": "aideal",
+      "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import torch\nimport tslearn.metrics\n\nx_tensor = torch.tensor(X[:4], dtype=torch.float32, requires_grad=True)\ny_tensor = torch.tensor(X2, dtype=torch.float32)\n\ncriterion = tslearn.metrics.SoftDTWLossPyTorch(gamma=1.0, normalize=True)\nloss = criterion.forward(x_tensor, y_tensor)\n\nassert loss.shape == (4,), f\"Expected loss shape (4,), got {loss.shape}\"\nassert loss.requires_grad is True, \"Expected loss to require gradients\"\n\nloss.sum().backward()\n\nassert x_tensor.grad is not None, \"Expected gradients to be populated on x_tensor\"\nassert x_tensor.grad.shape == (4, 40, 1), f\"Expected grad shape (4, 40, 1), got {x_tensor.grad.shape}\"\n\nprint(f\"__CHECK__ SoftDTWLossPyTorch {loss.detach().numpy().sum():.4f}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_SoftDTWLossPyTorch/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ SoftDTWLossPyTorch 534.7407\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 16.4,
+      "llm_calls": 1,
+      "input_tokens": 2438,
+      "output_tokens": 1551,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 2438,
+          "output_tokens": 1551
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 3946,
+      "document_sha256": "a769a7ce41ccf738646a5f6b1768787a8c66c6c518a48cdf3f61651015df926d",
+      "source": "tslearn/tslearn/metrics/soft_dtw_loss_pytorch.py:75",
+      "source_other_sites": 1,
+      "codebase_frames": null
+    }
+  ],
+  "provider_timing": [],
+  "transport_events": [],
+  "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
+}

@@ -15,7 +15,7 @@ Exact result paths, branches, commits, environment hashes and PASS_TO_PASS evide
 | A1 | pending/partial | — | 235 | — | — | — |
 | A2 | complete | 175 | 235 | 28 | 74.47 | 84.54 |
 | B1 | pending/partial | — | 235 | — | — | — |
-| B2 | pending/partial | — | 235 | — | — | — |
+| B2 | complete | 217 | 235 | 13 | 92.34 | 97.75 |
 
 The scored column uses native infrastructure/provider labels. Secondary harness diagnoses are reported separately and do not rewrite outcomes.
 
@@ -29,7 +29,7 @@ Effects withheld until all four matched final cells and their repair/test eviden
 
 Primary failure categories: {"api-identity": 2, "llm-error": 34, "test/scaffold": 4, "unknown": 4}.
 
-Recorded provider-error attempts across all checkpoint fingerprints: 144. Provider-internal retries are not recorded by the existing client and cannot be inferred from the configured limit. Watchdog logs retain process attempts; checkpoint attempts and document-fix rounds are separate ledger fields.
+Recorded provider-error attempts across all checkpoint fingerprints: 146. Provider-internal retries are not recorded by the existing client and cannot be inferred from the configured limit. Watchdog logs retain process attempts; checkpoint attempts and document-fix rounds are separate ledger fields.
 
 - `PatchingLayer`: llm-error; native=llm-error; checkpoint attempts=3; provider-error attempts=3; document rounds=None; repair=None. Source: `tslearn/tslearn/shapelets/shapelets.py:128`. Error: `ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}`. Review: Provider outcome; retry, never count as a documentation failure.
 - `SquaredEuclidean`: unknown; native=runtime; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `tslearn/tslearn/metrics/softdtw_variants.py:1176`. Error: `TypeError: SquaredEuclidean.__init__() missing 2 required positional arguments: 'X' and 'Y'`. Review: Observed runtime; doc attribution requires source, document, and snippet review.
@@ -64,8 +64,8 @@ Recorded provider-error attempts across all checkpoint fingerprints: 144. Provid
 - `is_float32`: llm-error; native=llm-error; checkpoint attempts=3; provider-error attempts=3; document rounds=None; repair=None. Source: `tslearn/tslearn/backend/numpy_backend.py:110`. Error: `ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}`. Review: Provider outcome; retry, never count as a documentation failure.
 - `is_numpy`: llm-error; native=llm-error; checkpoint attempts=3; provider-error attempts=3; document rounds=None; repair=None. Source: `tslearn/tslearn/backend/backend.py:77`. Error: `ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}`. Review: Provider outcome; retry, never count as a documentation failure.
 - `iscomplex`: llm-error; native=llm-error; checkpoint attempts=3; provider-error attempts=3; document rounds=None; repair=None. Source: `tslearn/tslearn/backend/pytorch_backend.py:153`. Error: `ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}`. Review: Provider outcome; retry, never count as a documentation failure.
-- `jacobian_product`: llm-error; native=llm-error; checkpoint attempts=2; provider-error attempts=2; document rounds=None; repair=None. Source: `tslearn/tslearn/metrics/softdtw_variants.py:1218`. Error: `ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}`. Review: Provider outcome; retry, never count as a documentation failure.
-- `mase`: llm-error; native=llm-error; checkpoint attempts=2; provider-error attempts=2; document rounds=None; repair=None. Source: `tslearn/tslearn/metrics/performance.py:153`. Error: `ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}`. Review: Provider outcome; retry, never count as a documentation failure.
+- `jacobian_product`: llm-error; native=llm-error; checkpoint attempts=3; provider-error attempts=3; document rounds=None; repair=None. Source: `tslearn/tslearn/metrics/softdtw_variants.py:1218`. Error: `ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}`. Review: Provider outcome; retry, never count as a documentation failure.
+- `mase`: llm-error; native=llm-error; checkpoint attempts=3; provider-error attempts=3; document rounds=None; repair=None. Source: `tslearn/tslearn/metrics/performance.py:153`. Error: `ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}`. Review: Provider outcome; retry, never count as a documentation failure.
 - `mse`: llm-error; native=llm-error; checkpoint attempts=2; provider-error attempts=2; document rounds=None; repair=None. Source: `tslearn/tslearn/metrics/performance.py:83`. Error: `ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}`. Review: Provider outcome; retry, never count as a documentation failure.
 - `njit_lcss_accumulated_matrix`: test/scaffold; native=infra; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `tslearn/tslearn/metrics/dtw_variants.py:2233`. Error: `missing module/import: No module named 'tslearn.metrics.lcss'`. Review: Runner classified this as infrastructure.
 - `njit_sakoe_chiba_mask`: llm-error; native=llm-error; checkpoint attempts=2; provider-error attempts=2; document rounds=None; repair=None. Source: `tslearn/tslearn/metrics/dtw_variants.py:1487`. Error: `ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}`. Review: Provider outcome; retry, never count as a documentation failure.
@@ -152,7 +152,7 @@ Recorded provider-error attempts across all checkpoint fingerprints: 0. Provider
 
 ### B2
 
-Primary failure categories: {"test/scaffold": 12, "unknown": 5}.
+Primary failure categories: {"test/scaffold": 13, "unknown": 5}.
 
 Recorded provider-error attempts across all checkpoint fingerprints: 0. Provider-internal retries are not recorded by the existing client and cannot be inferred from the configured limit. Watchdog logs retain process attempts; checkpoint attempts and document-fix rounds are separate ledger fields.
 
@@ -212,11 +212,12 @@ Recorded provider-error attempts across all checkpoint fingerprints: 0. Provider
 - `select_backend`: pass; native=None; checkpoint attempts=1; provider-error attempts=0; document rounds=1; repair=doc-fixed. Source: `tslearn/tslearn/backend/backend.py:31`. Error: `none captured`. Review: 
 - `set_backend`: pass; native=None; checkpoint attempts=1; provider-error attempts=0; document rounds=1; repair=doc-fixed. Source: `tslearn/tslearn/backend/backend.py:87`. Error: `none captured`. Review: 
 - `set_weights`: test/scaffold; native=infra; checkpoint attempts=1; provider-error attempts=0; document rounds=1; repair=not-testable (entry unchanged). Source: `tslearn/tslearn/shapelets/shapelets.py:866`. Error: `missing module/import: No module named 'keras'`. Review: Runner classified this as infrastructure.
-- `shapelets_`: pending; native=None; checkpoint attempts=0; provider-error attempts=0; document rounds=1; repair=doc-fixed. Source: `None`. Error: `none captured`. Review: Not yet observed.
-- `support_vectors_`: pending; native=None; checkpoint attempts=0; provider-error attempts=0; document rounds=1; repair=doc-fixed. Source: `None`. Error: `none captured`. Review: Not yet observed.
-- `to_cesium_dataset`: pending; native=None; checkpoint attempts=0; provider-error attempts=0; document rounds=1; repair=doc-fixed. Source: `None`. Error: `none captured`. Review: Not yet observed.
-- `to_pickle`: pending; native=None; checkpoint attempts=0; provider-error attempts=0; document rounds=1; repair=doc-fixed. Source: `None`. Error: `none captured`. Review: Not yet observed.
-- `uniform`: pending; native=None; checkpoint attempts=0; provider-error attempts=0; document rounds=1; repair=doc-fixed. Source: `None`. Error: `none captured`. Review: Not yet observed.
+- `shapelets_`: pass; native=None; checkpoint attempts=1; provider-error attempts=0; document rounds=1; repair=doc-fixed. Source: `tslearn/tslearn/shapelets/shapelets.py:441`. Error: `none captured`. Review: 
+- `shapelets_as_time_series_`: test/scaffold; native=infra; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `tslearn/tslearn/shapelets/shapelets.py:455`. Error: `missing module/import: No module named 'keras'`. Review: Runner classified this as infrastructure.
+- `support_vectors_`: pass; native=None; checkpoint attempts=1; provider-error attempts=0; document rounds=1; repair=doc-fixed. Source: `tslearn/tslearn/svm/svm.py:285`. Error: `none captured`. Review: 
+- `to_cesium_dataset`: pass; native=None; checkpoint attempts=1; provider-error attempts=0; document rounds=1; repair=doc-fixed. Source: `tslearn/tslearn/utils/cast.py:655`. Error: `none captured`. Review: 
+- `to_pickle`: pass; native=None; checkpoint attempts=1; provider-error attempts=0; document rounds=1; repair=doc-fixed. Source: `tslearn/tslearn/bases/bases.py:307`. Error: `none captured`. Review: 
+- `uniform`: pass; native=None; checkpoint attempts=1; provider-error attempts=0; document rounds=1; repair=doc-fixed. Source: `tslearn/tslearn/backend/pytorch_backend.py:256`. Error: `none captured`. Review: 
 
 ## Validity and remaining review
 

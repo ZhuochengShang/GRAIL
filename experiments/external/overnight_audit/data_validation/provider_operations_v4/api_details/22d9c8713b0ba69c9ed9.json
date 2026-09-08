@@ -17,28 +17,11 @@
     "last_retry_interval_s": null,
     "next_provider_retry_epoch": null,
     "transport_policy": "Historical/uninstrumented",
-    "identity_status": "Provisional last-observed fingerprint group; final identity unverified",
+    "identity_status": "Final or explicitly migrated evidence",
     "error": null,
     "details": "api_details/22d9c8713b0ba69c9ed9.json"
   },
   "native_row": {
-    "name": "array",
-    "doc_source": "aideal",
-    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
-    "execution_evidence": {
-      "status": "pass",
-      "rounds": [
-        {
-          "round": 0,
-          "status": "pass"
-        }
-      ],
-      "code": "import torch\nfrom tslearn.backend import instantiate_backend\n\nbe = instantiate_backend(\"pytorch\")\narr = be.array(tiny_matrix, dtype=torch.float64)\n\nassert isinstance(arr, torch.Tensor), \"Result is not a PyTorch tensor\"\nassert arr.dtype == torch.float64, \"Result dtype does not match requested dtype\"\nassert arr.shape == tiny_matrix.shape, \"Result shape does not match input shape\"\n\nprint(f\"__CHECK__ array {arr.shape}\")",
-      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_array/api_test.py",
-      "exit_code": 0,
-      "stdout_tail": "__CHECK__ array torch.Size([3, 4])\n__DONE__\n",
-      "stderr_tail": ""
-    },
     "status": "pass",
     "attempts": 1,
     "pass_round": 0,
@@ -60,10 +43,26 @@
     "document_sha256": "973841c6f71c76c835670ed8024e78cd306cf7ee84311024e65170cb0048f11a",
     "source": "tslearn/tslearn/backend/pytorch_backend.py:106",
     "source_other_sites": 0,
-    "codebase_frames": null
+    "codebase_frames": null,
+    "name": "array",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "import torch\nfrom tslearn.backend import instantiate_backend\n\nbe = instantiate_backend(\"pytorch\")\narr = be.array(tiny_matrix, dtype=torch.float64)\n\nassert isinstance(arr, torch.Tensor), \"Result is not a PyTorch tensor\"\nassert arr.dtype == torch.float64, \"Result dtype does not match requested dtype\"\nassert arr.shape == tiny_matrix.shape, \"Result shape does not match input shape\"\n\nprint(f\"__CHECK__ array {arr.shape}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_array/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ array torch.Size([3, 4])\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969"
   },
-  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/comprehension_progress.jsonl",
-  "source_sha256": "0a09dcebc55c1b772f6889a52003ba9fcffd51ad4e99ecb50387e688fe973703",
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/comprehension.json",
+  "source_sha256": "4d1451cc4ea9281931c5a4bd5706a63fe7e77b583aa1866442b55ff2116fddcd",
   "checkpoint_events": [
     {
       "name": "array",

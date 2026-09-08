@@ -17,28 +17,11 @@
     "last_retry_interval_s": null,
     "next_provider_retry_epoch": null,
     "transport_policy": "Historical/uninstrumented",
-    "identity_status": "Provisional last-observed fingerprint group; final identity unverified",
+    "identity_status": "Final or explicitly migrated evidence",
     "error": null,
     "details": "api_details/6be88cc5f7a696df3def.json"
   },
   "native_row": {
-    "name": "TimeSeriesMLPClassifier",
-    "doc_source": "aideal",
-    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
-    "execution_evidence": {
-      "status": "pass",
-      "rounds": [
-        {
-          "round": 0,
-          "status": "pass"
-        }
-      ],
-      "code": "from tslearn.neural_network import TimeSeriesMLPClassifier\n\nmlp = TimeSeriesMLPClassifier(\n    hidden_layer_sizes=(8,), \n    max_iter=50, \n    random_state=42\n)\n\nmlp.fit(X, y)\npreds = mlp.predict(X)\n\n# X has shape (8, 40, 1), so the flattened input size is 40.\n# The first hidden layer has size 8, so the first coefficient matrix should be (40, 8).\nassert preds.shape == (8,), f\"Expected predictions shape (8,), got {preds.shape}\"\nassert mlp.coefs_[0].shape == (40, 8), f\"Expected coefs_[0] shape (40, 8), got {mlp.coefs_[0].shape}\"\n\nprint(f\"__CHECK__ TimeSeriesMLPClassifier {preds.shape} {mlp.coefs_[0].shape}\")",
-      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_TimeSeriesMLPClassifier/api_test.py",
-      "exit_code": 0,
-      "stdout_tail": "__CHECK__ TimeSeriesMLPClassifier (8,) (40, 8)\n__DONE__\n",
-      "stderr_tail": "/Users/clockorangezoe/miniconda3/envs/geo_llm_spark/lib/python3.10/site-packages/sklearn/neural_network/_multilayer_perceptron.py:781: ConvergenceWarning: Stochastic Optimizer: Maximum iterations (50) reached and the optimization hasn't converged yet.\n  warnings.warn(\n"
-    },
     "status": "pass",
     "attempts": 1,
     "pass_round": 0,
@@ -60,10 +43,26 @@
     "document_sha256": "bc7463e899aa61701cda9127c0f4b392c9d3aae07a332b3378739e9a1f0d0025",
     "source": "tslearn/tslearn/neural_network/neural_network.py:11",
     "source_other_sites": 0,
-    "codebase_frames": null
+    "codebase_frames": null,
+    "name": "TimeSeriesMLPClassifier",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "from tslearn.neural_network import TimeSeriesMLPClassifier\n\nmlp = TimeSeriesMLPClassifier(\n    hidden_layer_sizes=(8,), \n    max_iter=50, \n    random_state=42\n)\n\nmlp.fit(X, y)\npreds = mlp.predict(X)\n\n# X has shape (8, 40, 1), so the flattened input size is 40.\n# The first hidden layer has size 8, so the first coefficient matrix should be (40, 8).\nassert preds.shape == (8,), f\"Expected predictions shape (8,), got {preds.shape}\"\nassert mlp.coefs_[0].shape == (40, 8), f\"Expected coefs_[0] shape (40, 8), got {mlp.coefs_[0].shape}\"\n\nprint(f\"__CHECK__ TimeSeriesMLPClassifier {preds.shape} {mlp.coefs_[0].shape}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_TimeSeriesMLPClassifier/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ TimeSeriesMLPClassifier (8,) (40, 8)\n__DONE__\n",
+      "stderr_tail": "/Users/clockorangezoe/miniconda3/envs/geo_llm_spark/lib/python3.10/site-packages/sklearn/neural_network/_multilayer_perceptron.py:781: ConvergenceWarning: Stochastic Optimizer: Maximum iterations (50) reached and the optimization hasn't converged yet.\n  warnings.warn(\n"
+    },
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969"
   },
-  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/comprehension_progress.jsonl",
-  "source_sha256": "0a09dcebc55c1b772f6889a52003ba9fcffd51ad4e99ecb50387e688fe973703",
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/comprehension.json",
+  "source_sha256": "4d1451cc4ea9281931c5a4bd5706a63fe7e77b583aa1866442b55ff2116fddcd",
   "checkpoint_events": [
     {
       "name": "TimeSeriesMLPClassifier",

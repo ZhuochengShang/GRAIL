@@ -17,28 +17,11 @@
     "last_retry_interval_s": null,
     "next_provider_retry_epoch": null,
     "transport_policy": "Historical/uninstrumented",
-    "identity_status": "Provisional last-observed fingerprint group; final identity unverified",
+    "identity_status": "Final or explicitly migrated evidence",
     "error": null,
     "details": "api_details/7212078ec3b11082cfa2.json"
   },
   "native_row": {
-    "name": "dtw_subsequence_path",
-    "doc_source": "aideal",
-    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
-    "execution_evidence": {
-      "status": "pass",
-      "rounds": [
-        {
-          "round": 0,
-          "status": "pass"
-        }
-      ],
-      "code": "import tslearn.metrics\nimport numpy as np\n\n# Create a short query from the longer sequence to guarantee an exact match\nsubseq = s1[10:15]\nlongseq = s1\n\n# Compute subsequence path and distance\npath, dist = tslearn.metrics.dtw_subsequence_path(subseq, longseq)\n\n# Verify the distance is 0.0 (exact match) and the path covers the query\nassert np.isclose(dist, 0.0), f\"Expected distance 0.0 for exact subsequence, got {dist}\"\nassert isinstance(path, list) and len(path) >= len(subseq), \"Path should be at least as long as the subsequence\"\nassert path[0][0] == 0, f\"Path must start at subseq index 0, got {path[0][0]}\"\nassert path[-1][0] == len(subseq) - 1, f\"Path must end at subseq last index, got {path[-1][0]}\"\n\nprint(f\"__CHECK__ dtw_subsequence_path {dist:.4f} {path}\")",
-      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_dtw_subsequence_path/api_test.py",
-      "exit_code": 0,
-      "stdout_tail": "__CHECK__ dtw_subsequence_path 0.0000 [(0, 10), (1, 11), (2, 12), (3, 13), (4, 14)]\n__DONE__\n",
-      "stderr_tail": ""
-    },
     "status": "pass",
     "attempts": 1,
     "pass_round": 0,
@@ -60,10 +43,26 @@
     "document_sha256": "d0b83c10c1dbfedc5fecb138bcb326e7e43a5e989362cb73628ac39136f3c94e",
     "source": "tslearn/tslearn/metrics/dtw_variants.py:1417",
     "source_other_sites": 0,
-    "codebase_frames": null
+    "codebase_frames": null,
+    "name": "dtw_subsequence_path",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "import tslearn.metrics\nimport numpy as np\n\n# Create a short query from the longer sequence to guarantee an exact match\nsubseq = s1[10:15]\nlongseq = s1\n\n# Compute subsequence path and distance\npath, dist = tslearn.metrics.dtw_subsequence_path(subseq, longseq)\n\n# Verify the distance is 0.0 (exact match) and the path covers the query\nassert np.isclose(dist, 0.0), f\"Expected distance 0.0 for exact subsequence, got {dist}\"\nassert isinstance(path, list) and len(path) >= len(subseq), \"Path should be at least as long as the subsequence\"\nassert path[0][0] == 0, f\"Path must start at subseq index 0, got {path[0][0]}\"\nassert path[-1][0] == len(subseq) - 1, f\"Path must end at subseq last index, got {path[-1][0]}\"\n\nprint(f\"__CHECK__ dtw_subsequence_path {dist:.4f} {path}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_dtw_subsequence_path/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ dtw_subsequence_path 0.0000 [(0, 10), (1, 11), (2, 12), (3, 13), (4, 14)]\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969"
   },
-  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/comprehension_progress.jsonl",
-  "source_sha256": "0a09dcebc55c1b772f6889a52003ba9fcffd51ad4e99ecb50387e688fe973703",
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/comprehension.json",
+  "source_sha256": "4d1451cc4ea9281931c5a4bd5706a63fe7e77b583aa1866442b55ff2116fddcd",
   "checkpoint_events": [
     {
       "name": "dtw_subsequence_path",

@@ -17,28 +17,11 @@
     "last_retry_interval_s": null,
     "next_provider_retry_epoch": null,
     "transport_policy": "Historical/uninstrumented",
-    "identity_status": "Provisional last-observed fingerprint group; final identity unverified",
+    "identity_status": "Final or explicitly migrated evidence",
     "error": null,
     "details": "api_details/660b137b0fa8d695370f.json"
   },
   "native_row": {
-    "name": "cdist_frechet",
-    "doc_source": "aideal",
-    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
-    "execution_evidence": {
-      "status": "pass",
-      "rounds": [
-        {
-          "round": 0,
-          "status": "pass"
-        }
-      ],
-      "code": "from tslearn.metrics import cdist_frechet\nimport numpy as np\n\ndist_matrix = cdist_frechet(X, X2)\nself_dist_matrix = cdist_frechet(X)\n\nassert dist_matrix.shape == (X.shape[0], X2.shape[0]), f\"Expected shape {(X.shape[0], X2.shape[0])}, got {dist_matrix.shape}\"\nassert self_dist_matrix.shape == (X.shape[0], X.shape[0]), f\"Expected shape {(X.shape[0], X.shape[0])}, got {self_dist_matrix.shape}\"\nnp.testing.assert_allclose(np.diag(self_dist_matrix), 0.0, atol=1e-5)\n\nprint(f\"__CHECK__ cdist_frechet {dist_matrix.shape} {self_dist_matrix.shape}\")",
-      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_cdist_frechet/api_test.py",
-      "exit_code": 0,
-      "stdout_tail": "__CHECK__ cdist_frechet (8, 4) (8, 8)\n__DONE__\n",
-      "stderr_tail": ""
-    },
     "status": "pass",
     "attempts": 1,
     "pass_round": 0,
@@ -60,10 +43,26 @@
     "document_sha256": "756ff7709d3d5c13446976cbd39a93b3f60e2b2e71da758758c34826b8ff6b83",
     "source": "tslearn/tslearn/metrics/_frechet.py:647",
     "source_other_sites": 0,
-    "codebase_frames": null
+    "codebase_frames": null,
+    "name": "cdist_frechet",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "from tslearn.metrics import cdist_frechet\nimport numpy as np\n\ndist_matrix = cdist_frechet(X, X2)\nself_dist_matrix = cdist_frechet(X)\n\nassert dist_matrix.shape == (X.shape[0], X2.shape[0]), f\"Expected shape {(X.shape[0], X2.shape[0])}, got {dist_matrix.shape}\"\nassert self_dist_matrix.shape == (X.shape[0], X.shape[0]), f\"Expected shape {(X.shape[0], X.shape[0])}, got {self_dist_matrix.shape}\"\nnp.testing.assert_allclose(np.diag(self_dist_matrix), 0.0, atol=1e-5)\n\nprint(f\"__CHECK__ cdist_frechet {dist_matrix.shape} {self_dist_matrix.shape}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_cdist_frechet/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ cdist_frechet (8, 4) (8, 8)\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969"
   },
-  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/comprehension_progress.jsonl",
-  "source_sha256": "0a09dcebc55c1b772f6889a52003ba9fcffd51ad4e99ecb50387e688fe973703",
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/comprehension.json",
+  "source_sha256": "4d1451cc4ea9281931c5a4bd5706a63fe7e77b583aa1866442b55ff2116fddcd",
   "checkpoint_events": [
     {
       "name": "cdist_frechet",

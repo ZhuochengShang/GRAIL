@@ -17,28 +17,11 @@
     "last_retry_interval_s": null,
     "next_provider_retry_epoch": null,
     "transport_policy": "Historical/uninstrumented",
-    "identity_status": "Provisional last-observed fingerprint group; final identity unverified",
+    "identity_status": "Final or explicitly migrated evidence",
     "error": null,
     "details": "api_details/d064b741563453e98fbf.json"
   },
   "native_row": {
-    "name": "njit_lcss_accumulated_matrix",
-    "doc_source": "aideal",
-    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
-    "execution_evidence": {
-      "status": "pass",
-      "rounds": [
-        {
-          "round": 0,
-          "status": "pass"
-        }
-      ],
-      "code": "import numpy as np\nfrom tslearn.metrics.dtw_variants import njit_lcss_accumulated_matrix\n\ns1_2d = X[0]\ns2_2d = X2[0]\nsz1 = s1_2d.shape[0]\nsz2 = s2_2d.shape[0]\n\nmask = np.ones((sz1, sz2), dtype=bool)\neps = 0.5\n\nacc_cost_mat = njit_lcss_accumulated_matrix(s1_2d, s2_2d, eps, mask)\n\nexpected_shape = (sz1 + 1, sz2 + 1)\nassert acc_cost_mat.shape == expected_shape, f\"Expected shape {expected_shape}, got {acc_cost_mat.shape}\"\nassert acc_cost_mat[0, 0] == 0.0, \"LCSS accumulated cost matrix should start at 0.0\"\n\nprint(f\"__CHECK__ njit_lcss_accumulated_matrix {acc_cost_mat.shape}\")",
-      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_njit_lcss_accumulated_matrix/api_test.py",
-      "exit_code": 0,
-      "stdout_tail": "__CHECK__ njit_lcss_accumulated_matrix (41, 33)\n__DONE__\n",
-      "stderr_tail": ""
-    },
     "status": "pass",
     "attempts": 1,
     "pass_round": 0,
@@ -60,10 +43,26 @@
     "document_sha256": "f75c4fad58b6e104a16dd60e692cd842ea2e4494ea3ebacaf1ffa548e2f77a47",
     "source": "tslearn/tslearn/metrics/dtw_variants.py:2233",
     "source_other_sites": 0,
-    "codebase_frames": null
+    "codebase_frames": null,
+    "name": "njit_lcss_accumulated_matrix",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "import numpy as np\nfrom tslearn.metrics.dtw_variants import njit_lcss_accumulated_matrix\n\ns1_2d = X[0]\ns2_2d = X2[0]\nsz1 = s1_2d.shape[0]\nsz2 = s2_2d.shape[0]\n\nmask = np.ones((sz1, sz2), dtype=bool)\neps = 0.5\n\nacc_cost_mat = njit_lcss_accumulated_matrix(s1_2d, s2_2d, eps, mask)\n\nexpected_shape = (sz1 + 1, sz2 + 1)\nassert acc_cost_mat.shape == expected_shape, f\"Expected shape {expected_shape}, got {acc_cost_mat.shape}\"\nassert acc_cost_mat[0, 0] == 0.0, \"LCSS accumulated cost matrix should start at 0.0\"\n\nprint(f\"__CHECK__ njit_lcss_accumulated_matrix {acc_cost_mat.shape}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/run_njit_lcss_accumulated_matrix/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ njit_lcss_accumulated_matrix (41, 33)\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969"
   },
-  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/.aideal_exec/B2/comprehension_progress.jsonl",
-  "source_sha256": "0a09dcebc55c1b772f6889a52003ba9fcffd51ad4e99ecb50387e688fe973703",
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/experiments/tslearn/docs/eval/B2/comprehension.json",
+  "source_sha256": "4d1451cc4ea9281931c5a4bd5706a63fe7e77b583aa1866442b55ff2116fddcd",
   "checkpoint_events": [
     {
       "name": "njit_lcss_accumulated_matrix",

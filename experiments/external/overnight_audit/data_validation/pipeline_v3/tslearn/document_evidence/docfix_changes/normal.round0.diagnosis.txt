@@ -1,0 +1,26 @@
+AUDIENCE & TESTABILITY:
+API audience: INTERNAL-FRAMEWORK
+Harness testability: TESTABLE-WITH-LOW-LEVEL-CONSTRUCTION
+Scoring recommendation: include only in advanced/internal bucket
+
+ROOT CAUSE:
+The documentation incorrectly states that `normal` is called directly on the backend instance (`be.normal(...)`). In reality, `normal` is a method of the backend's `random` namespace object (e.g., `PyTorchRandom`), so it must be accessed via `be.random.normal(...)`. Additionally, the snippet instantiated the NumPy backend, but the source defines this specific `normal` method for the PyTorch backend.
+
+CORRECT USAGE:
+```python
+from tslearn.backend import instantiate_backend
+
+be = instantiate_backend("pytorch")
+noise_tensor = be.random.normal(loc=0.0, scale=0.1, size=(2, 5, 1))
+
+assert noise_tensor.shape == (2, 5, 1)
+print(f"__CHECK__ normal {noise_tensor.shape}")
+```
+
+REQUIRED TYPES & IMPORTS:
+`tslearn.backend.instantiate_backend`
+
+DOC MUST SAY:
+- `normal` is not a direct method of the backend object; it must be accessed through the backend's `random` attribute (e.g., `be.random.normal(...)`).
+- The method is defined on the backend's random namespace class (e.g., `PyTorchRandom` for the PyTorch backend).
+- To use the PyTorch implementation, instantiate the backend with `"pytorch"`.
