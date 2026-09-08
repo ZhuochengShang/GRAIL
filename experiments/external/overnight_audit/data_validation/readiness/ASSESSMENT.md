@@ -1,6 +1,6 @@
 # AIDEAL readiness assessment and improvement queue
 
-Updated: 2026-09-08T11:49:34.504800+00:00
+Updated: 2026-09-08T12:04:35.623909+00:00
 
 **Measured scope:** how documentation affects an LLM’s API use under a fixed harness. Overall agent readiness is not yet fully measured; no composite score is assigned.
 
@@ -36,12 +36,12 @@ Provisional counts retain pending and provider-error APIs in the denominator. Fi
 | thumbnailator | provider | 4 |
 | thumbnailator | unknown | 31 |
 | tslearn | api-identity-or-version | 3 |
-| tslearn | input-contract-or-api-call | 2 |
-| tslearn | provider | 30 |
+| tslearn | input-contract-or-api-call | 3 |
+| tslearn | provider | 31 |
 
-## Reviewable improvements (124)
+## Reviewable improvements (126)
 
-Review states: `{'open': 123, 'proposed': 1}`. Observation errors: 0. Inactive reviewed IDs retained: 0.
+Review states: `{'open': 125, 'proposed': 1}`. Observation errors: 0. Inactive reviewed IDs retained: 0.
 
 Each card separates native failure, diagnosis confidence, proposed action, validation and review decisions. Provider barriers concern execution infrastructure; they are not automatically codebase or documentation defects.
 
@@ -106,9 +106,10 @@ Each card separates native failure, diagnosis confidence, proposed action, valid
 | [tslearn: is_float](suggestions/0b0c74d7bbfc877ac3f6.md) | A1 | execution_blocker | high | open |
 | [tslearn: is_float32](suggestions/e4a6a53c15dc8f409272.md) | A1 | execution_blocker | high | open |
 | [tslearn: is_numpy](suggestions/585c5d6b183ad80a9a85.md) | A1 | execution_blocker | high | open |
+| [tslearn: iscomplex](suggestions/25813de0f12d953e9275.md) | A1 | execution_blocker | high | open |
+| [tslearn: jacobian_product](suggestions/efe13aead9dc33ab2b15.md) | A1 | execution_blocker | high | open |
 | [tslearn: compute](suggestions/4a28af1f1c30cd779151.md) | A2 | execution_blocker | high | open |
 | [tslearn: jacobian_product](suggestions/5eb42a36285bbdb40258.md) | A2 | execution_blocker | high | open |
-| [tslearn: predict_class_and_earliness](suggestions/d2ff189e60095b0de249.md) | A2 | execution_blocker | high | open |
 | [mir_eval: deprecated](suggestions/8c1892028fee0fa4c019.md) | A2 | reviewed_barrier | reviewed | open |
 | [mir_eval: first_n_three_layer_P](suggestions/1350063ad65ccf061962.md) | A2 | reviewed_barrier | reviewed | open |
 | [mir_eval: load_key](suggestions/436854cbe884009d1ba7.md) | A2 | reviewed_barrier | reviewed | open |
@@ -171,6 +172,7 @@ Each card separates native failure, diagnosis confidence, proposed action, valid
 | [tslearn: fix_force_all_finite_warning](suggestions/31a797e1c04a6d32d433.md) | A1 | needs_diagnosis | medium | open |
 | [tslearn: get_backend](suggestions/5b561e6f3abaf83879f5.md) | A1 | needs_diagnosis | medium | open |
 | [tslearn: is_array](suggestions/e1024e725bbecccd33ed.md) | A1 | needs_diagnosis | medium | open |
+| [tslearn: predict_class_and_earliness](suggestions/d2ff189e60095b0de249.md) | A2 | needs_diagnosis | medium | open |
 
 ## Human and agent workflow
 

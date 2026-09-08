@@ -1,6 +1,6 @@
 # mir_eval · A2-only repair pipeline
 
-2026-09-08T04:49:54.869528-07:00
+2026-09-08T05:04:55.682350-07:00
 
 A1 original README → zero fixes. A2 generated README → zero fixes.
 Frozen A2 failures → source-only snippet repair; independently → generated-README repair → fresh B2.
