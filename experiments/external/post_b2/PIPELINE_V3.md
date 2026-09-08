@@ -1,3 +1,5 @@
+**Input handoff correction:** [Verified A2 errors and CLI paths](INPUT_HANDOFF_CORRECTION.md) supersedes the initial-error-seeding caveat below for repositories whose handoff status is `prepared`. The document-round restart limitation remains.
+
 # AIDEAL: three separate repair stages
 
 Registered September 8, 2026, after the user approved the third stage.
