@@ -1,8 +1,8 @@
-# compute: Investigate provider failures and recorded retry behavior
+# jacobian_product: Investigate provider failures and recorded retry behavior
 
-ID: `4a28af1f1c30cd779151` · tslearn/A2 · **open**
+ID: `efe13aead9dc33ab2b15` · tslearn/A1 · **open**
 
-Evidence version: `c879b8e95babcb80fe71b1347297d82771613ccb0d03949566aa1370a3440c29`
+Evidence version: `36e56c8fbed0faa358f088a2af385467a38043901ab061b25dfd013530f533a4`
 
 Candidate category: **provider**. Confidence: **high**.
 
@@ -10,13 +10,13 @@ Candidate category: **provider**. Confidence: **high**.
 
 Recorded provider failure; preserve and retry under existing policy.
 
-Source: `tslearn/tslearn/metrics/softdtw_variants.py:1111`. Native category: `llm-error`.
+Source: `tslearn/tslearn/metrics/softdtw_variants.py:1218`. Native category: `llm-error`.
 
 ```text
 ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}
 ```
 
-[Evidence ledger](../../../tslearn/A2/ledger.json) · [Saved evidence](../evidence/c879b8e95babcb80fe71b1347297d82771613ccb0d03949566aa1370a3440c29.json)
+[Evidence ledger](../../../tslearn/A1/ledger.json) · [Saved evidence](../evidence/36e56c8fbed0faa358f088a2af385467a38043901ab061b25dfd013530f533a4.json)
 
 Recorded attempts: 1; provider errors: 1; document rounds: None.
 
