@@ -1,6 +1,6 @@
 # AIDEAL: three separate stages
 
-2026-09-08T05:04:39.626515-07:00
+2026-09-08T05:20:10.315068-07:00
 
 A1/A2 are zero-fix controls. S_A2 repairs snippets from A2 failures. Independent README repair produces fresh zero-fix B2. S_B2 repairs only eligible B2 failures.
 
@@ -11,7 +11,7 @@ A1/A2 are zero-fix controls. S_A2 repairs snippets from A2 failures. Independent
 | mir_eval | B2 | native complete | 137 | 148 |
 | mir_eval | S_A2 | {'recovered_native': 13} | 13 | 13 |
 | mir_eval | S_B2 | priority complete | — | — |
-| thumbnailator | A1 | native partial | 128 | 149 |
+| thumbnailator | A1 | native partial | 129 | 149 |
 | thumbnailator | A2 | native complete | 127 | 149 |
 | thumbnailator | B2 | native complete | 139 | 149 |
 | thumbnailator | S_A2 | {'recovered_native': 18, 'provider_blocked': 2, 'stuck': 2} | 18 | 22 |

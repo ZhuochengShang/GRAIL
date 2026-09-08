@@ -1,12 +1,12 @@
 # Thumbnailator native outcomes and isolated assertion replay
 
-Updated: 2026-09-08T05:03:22.677976-07:00
+Updated: 2026-09-08T05:19:26.506881-07:00
 
 No native score is replaced. Both replay variants use identical code, copied fixture bytes, a fresh output root and Java 8 isolation; only `-da` versus `-ea` differs.
 
 | Cell | Native state | Native pass / API outcomes | Replayed | Off pass | On pass | Off pass → on fail | Unbound retained replays |
 |---|---|---:|---:|---:|---:|---:|---:|
-| A1 | native partial | 128/149 | 142 | 125 | 111 | 14 | 139 |
+| A1 | native partial | 129/149 | 143 | 126 | 112 | 14 | 139 |
 | A2 | native complete | 127/149 | 149 | 120 | 114 | 6 | 0 |
 | B1 | awaiting native evidence | — | — | — | — | — | — |
 | B2 | native complete | 139/149 | 149 | 134 | 126 | 8 | 0 |
@@ -86,7 +86,7 @@ No native score is replaced. Both replay variants use identical code, copied fix
 | A1 | `fitWithinDimenions` | pass | pass | pass | retained_unbound_legacy |
 | A1 | `fitWithinDimensions` | pass | pass | pass | retained_unbound_legacy |
 | A1 | `forceSize` | pass | pass | pass | retained_unbound_legacy |
-| A1 | `format` | fail | not_replayed | not_replayed | provider failure; stale retained files are not this attempt |
+| A1 | `format` | pass | pass | pass | full_native_code |
 | A1 | `formatType` | pass | pass | pass | retained_unbound_legacy |
 | A1 | `fromFilenames` | pass | pass | pass | retained_unbound_legacy |
 | A1 | `fromFiles` | pass | pass | assertion_failure | retained_unbound_legacy |
