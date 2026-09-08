@@ -42,6 +42,14 @@ def matched(a2, b2, count):
     for key in keys:
         if left[key] != right[key]:
             raise ValueError(f'A2/B2 mismatch: {key}')
+    if left.get('schema') != right.get('schema'):
+        raise ValueError('A2/B2 fingerprint schema differs')
+    if left.get('schema') == 4:
+        for key in ('prompt_contract', 'transport_contract'):
+            if not left.get(key) or left[key] != right.get(key):
+                raise ValueError(f'A2/B2 mismatch: {key}')
+    elif a2['run'].get('transport_policy') != b2['run'].get('transport_policy'):
+        raise ValueError('A2/B2 separately recorded transport policy differs')
     normalize = lambda ex: {k: v for k, v in ex.items() if k not in ('work_dir', 'output_dir')}
     if normalize(left['execute_config']) != normalize(right['execute_config']):
         raise ValueError('A2/B2 execution policy differs')

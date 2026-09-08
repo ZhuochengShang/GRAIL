@@ -30,6 +30,16 @@ def sha(value):
     return hashlib.sha256(raw).hexdigest()
 
 
+def treatment_policy(policy):
+    """Compare behavior across isolated paths; keep the full hash in telemetry."""
+    keys = ('version', 'request_timeout_s', 'sdk_attempts', 'cooldown_base_s',
+            'cooldown_max_s', 'adapter_sha256', 'input_contract_sha256', 'sdk_versions')
+    value = {key: policy.get(key) for key in keys}
+    setup = policy.get('harness_setup')
+    value['setup'] = {'input_files': setup['input_files'], 'output_setup': True} if setup else None
+    return value
+
+
 def atomic(path, value):
     tmp = path.with_name(path.name + f'.{os.getpid()}.tmp')
     tmp.write_text(json.dumps(value, indent=2) + '\n')
@@ -165,6 +175,9 @@ def install(policy_path):
         recorder.metadata['harness_setup_version'] = 'aideal-output-setup-v1'
         recorder.event('harness_setup_checked', bindings=bindings,
                        note='Input bytes preserved; output directory created; prompt unchanged')
+    os.environ['AIDEAL_TRANSPORT_ADAPTER_SHA256'] = recorder.metadata['adapter_sha256']
+    os.environ['AIDEAL_TRANSPORT_POLICY_SHA256'] = sha(treatment_policy(policy))
+    os.environ['AIDEAL_SETUP_POLICY_SHA256'] = sha(treatment_policy(policy)['setup'])
     os.environ['AIDEAL_GOOGLE_REQUEST_TIMEOUT_S'] = '600'
     os.environ['AIDEAL_GOOGLE_MAX_RETRIES'] = '1'
     original = llm.invoke_text

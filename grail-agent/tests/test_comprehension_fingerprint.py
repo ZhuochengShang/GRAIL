@@ -22,7 +22,7 @@ def _cfg(root: Path, audience: str = "gemini-2.5-pro"):
         "fixer": ModelSpec("google", "gemini-2.5-pro"),
     }
     return SimpleNamespace(
-        root=root,
+        root=root, raw={},
         source_globs=["source/**/*.py"],
         project_name="fixture-project",
         language="Python",

@@ -12,30 +12,32 @@ from pathlib import Path
 from .transport import atomic, sha
 
 
-BOOTSTRAP = '''# AIDEAL explicit transport-v2 bootstrap; enrolled config only.
+BOOTSTRAP = r'''# AIDEAL transport bootstrap: fail closed for intended resume workers.
 from pathlib import Path as _Path
 import hashlib as _hashlib
 import json as _json
 import sys as _sys
 _base = _Path(__file__).resolve().parent
-_policy_path = _base / "aideal_transport_policy.json"
-if _policy_path.exists():
-    _policy = _json.loads(_policy_path.read_text())
-    if ("comprehension" in _sys.argv and "--resume" in _sys.argv
-            and "--config" in _sys.argv
-            and str(_Path(_sys.argv[_sys.argv.index("--config")+1]).resolve()) == _policy["config"]):
-        try:
-            _module = _base / "_aideal_transport_retry.py"
-            if _hashlib.sha256(_module.read_bytes()).hexdigest() != _policy["adapter_sha256"]:
-                raise RuntimeError("Transport adapter hash mismatch")
-            if _hashlib.sha256((_base / "_aideal_input_contract.py").read_bytes()).hexdigest() != _policy["input_contract_sha256"]:
-                raise RuntimeError("Input contract hash mismatch")
+_args = _sys.argv
+if "comprehension" in _args and "--resume" in _args and "--config" in _args:
+    try:
+        _policy_path = _base / "aideal_transport_policy.json"
+        _policy = _json.loads(_policy_path.read_text())
+        if not isinstance(_policy, dict) or not isinstance(_policy.get("config"), str):
+            raise ValueError("Invalid transport policy schema")
+        _config = str(_Path(_args[_args.index("--config") + 1]).resolve())
+        if _config == _policy["config"]:
+            for _name, _key in (("_aideal_transport_retry.py", "adapter_sha256"),
+                                ("_aideal_input_contract.py", "input_contract_sha256")):
+                if _hashlib.sha256((_base / _name).read_bytes()).hexdigest() != _policy[_key]:
+                    raise RuntimeError("Transport helper hash mismatch")
             from _aideal_transport_retry import install as _install
             _install(_policy_path)
-        except Exception as _exc:
-            _sys.stderr.write("AIDEAL transport bootstrap failed: " + type(_exc).__name__ + "\\n")
-            raise SystemExit(78)
+    except Exception as _exc:
+        _sys.stderr.write("AIDEAL transport bootstrap failed: " + type(_exc).__name__ + "\n")
+        raise SystemExit(78)
 '''
+
 
 
 def enroll(worktree, config, output, harness_setup=None):

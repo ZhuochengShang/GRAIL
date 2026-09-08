@@ -1,0 +1,24 @@
+version: 2
+max_parallel: 1
+retry_delay_seconds: 60
+env:
+  PYTHONPATH: grail-agent/src:.
+  AIDEAL_ENV_FINGERPRINT: passive-report-no-test-execution
+jobs:
+- id: provider_operations_v4_report
+  cwd: ../..
+  branch: aideal/robust-core-v4
+  command:
+  - /Users/clockorangezoe/miniconda3/envs/geo_llm_spark/bin/python
+  - -m
+  - experiments.external.provider_retry.report
+  - --workspace-parent
+  - /Users/clockorangezoe/Documents/phd_projects/code/geoAI
+  - --out
+  - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_overnight_evidence_audit/experiments/external/overnight_audit/data_validation/provider_operations_v4
+  - --watch
+  result: .aideal_exec/provider_operations_v4_report.stdout
+  complete:
+    kind: exit_zero
+  max_restarts: 0
+  max_runtime_seconds: 0

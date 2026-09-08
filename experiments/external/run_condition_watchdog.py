@@ -119,7 +119,12 @@ class Supervisor:
         self.active: dict[str, dict] = {}
         self.inherited_env = dict(os.environ)
         self.stopping = False
-        self.state = load_json(self.state_path)
+        # A corrupt saved state must never turn surviving jobs into a fresh plan.
+        self.state = json.loads(self.state_path.read_text()) if self.state_path.exists() else {}
+        if self.state_path.exists() and (not isinstance(self.state, dict)
+                or not isinstance(self.state.get('jobs'), dict)
+                or not self.state.get('plan_sha256')):
+            raise ValueError(f'invalid supervisor state; reconcile before resuming: {self.state_path}')
         if self.state and self.state.get("plan_sha256") != self.plan_sha:
             raise RuntimeError(
                 f"plan changed since {self.state_path}; use a new state path to avoid mixing runs")

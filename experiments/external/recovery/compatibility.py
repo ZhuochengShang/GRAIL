@@ -9,7 +9,7 @@ from aideal.checkpoint_compatibility import fingerprint, load_compatibility
 def components(result):
     run = result['run']
     recorded = run['fingerprint_components']
-    if recorded.get('schema') == 3:
+    if recorded.get('schema') in (3, 4):
         return recorded, None
     path = Path(run['checkpoint']).with_name('checkpoint_compatibility.json')
     if not path.exists():
@@ -40,8 +40,10 @@ def components(result):
 
 def engine_files(directory, schema):
     names = ['config.py', 'doc_checks.py', 'llm.py', 'prompts.py', 'readme_agent.py']
-    if schema == 3:
+    if schema in (3, 4):
         names += ['checkpoint_compatibility.py', 'provider_deadline.py']
     elif schema != 2:
         raise ValueError('unsupported baseline fingerprint schema')
+    if schema == 4:
+        names += ['experiment_identity.py', 'profile.py', 'execution.py']
     return [directory / name for name in names]

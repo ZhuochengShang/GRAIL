@@ -34,6 +34,20 @@ def test_match_allows_document_treatment_and_output_paths_only():
     assert e.matched(left, right, 2)
 
 
+@pytest.mark.parametrize('field', ['prompt_contract', 'transport_contract'])
+def test_schema4_comparison_rejects_prompt_or_transport_drift(field):
+    left, right = result(), result()
+    for value in (left, right):
+        value['run']['fingerprint_components'].update(schema=4, prompt_contract={'hash':'same'},
+                                                    transport_contract={'hash':'same'})
+        seal(value)
+    assert e.matched(left, right, 2)
+    right['run']['fingerprint_components'][field] = {'hash':'changed'}
+    seal(right)
+    with pytest.raises(ValueError, match=field):
+        e.matched(left, right, 2)
+
+
 @pytest.mark.parametrize('field', ['source', 'fixtures', 'scaffold', 'engine', 'models', 'manifest_sha256', 'timeout_s'])
 def test_match_rejects_confounders(field):
     left, right = result(), result()
@@ -180,6 +194,8 @@ def test_scheduler_runs_ready_repo_even_when_another_is_pending(tmp_path, monkey
     from . import __main__ as controller
     class ObservedWait(Exception):
         pass
+    # Scheduling is independent of the immutable historical registration receipt.
+    monkeypatch.setattr(controller.stage, 'registered', lambda: {})
     monkeypatch.setattr(controller, 'admission', lambda *args: ({'mir_eval': {}}, {'tslearn': 'A2 incomplete'}))
     monkeypatch.setattr(controller.time, 'sleep', lambda *args: (_ for _ in ()).throw(ObservedWait()))
     monkeypatch.setattr(controller.report, 'publish', lambda *args: None)

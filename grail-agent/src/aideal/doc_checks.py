@@ -26,6 +26,7 @@ from pathlib import Path
 
 from .config import AidealConfig
 from .error_log import ErrorLog, new_run_id
+from .execution import exclusive_work_dir
 from .notes_to_self import NotesToSelf
 from .readme_agent import parse_readme, public_api_surface, public_api_details
 
@@ -88,11 +89,14 @@ def _comprehension_fingerprint_components(
     engine_dir = Path(__file__).resolve().parent
     engine_paths = [engine_dir / name for name in (
         "config.py", "doc_checks.py", "llm.py", "prompts.py", "readme_agent.py",
-        "checkpoint_compatibility.py", "provider_deadline.py")]
+        "checkpoint_compatibility.py", "provider_deadline.py", "experiment_identity.py",
+        "profile.py", "execution.py")]
+    from .experiment_identity import extra_components
     audience = cfg.model_for_role("audience")
     fixer = cfg.model_for_role("fixer")
     return {
-        "schema": 3,
+        "schema": 4,
+        **extra_components(cfg),
         "project": cfg.project_name,
         "language": cfg.language,
         "doc_source": doc_source,
@@ -905,6 +909,9 @@ def _classify_error_py(merged: str, rc: int, error_marker: str) -> tuple[str, st
     doc problem — excluded from the doc-quality denominator like JVM
     NoClassDefFoundError); runtime = everything raised while running."""
     import re as _re
+    invalid_symbol = _re.search(r"ImportError: cannot import name (.+)", merged)
+    if invalid_symbol:
+        return "api-import", invalid_symbol.group(0)[:300], ""
     m = _re.search(r"(?:ModuleNotFoundError|ImportError)[:\s]+(.+)", merged)
     if m:
         return "infra", f"missing module/import: {m.group(1).strip()[:200]}", ""
@@ -1060,6 +1067,7 @@ def _codebase_frames(merged: str, file_index: dict[str, str], limit: int = 5) ->
     return out
 
 
+@exclusive_work_dir
 def _comprehension_execute(cfg: AidealConfig, inventory, sample, seed, doc_source: str,
                            show_code: bool = False, class_context: bool = False,
                            max_fix_rounds: int | None = None,
@@ -1252,6 +1260,8 @@ def _comprehension_execute(cfg: AidealConfig, inventory, sample, seed, doc_sourc
     # Without --resume the checkpoint restarts with the run.
     ckpt = work_dir / "comprehension_progress.jsonl"
     from .checkpoint_compatibility import load_compatibility
+    from .experiment_identity import write_run_identity
+    write_run_identity(work_dir / "run_identity.json", fingerprint_components)
     reuse = load_compatibility(ckpt, fingerprint_components) if resume else {}
     legacy_fingerprint = reuse.get("legacy_fingerprint")
     done_rows: dict[str, dict] = {}
@@ -1387,7 +1397,7 @@ def _comprehension_execute(cfg: AidealConfig, inventory, sample, seed, doc_sourc
                 "status", "attempts", "pass_round", "wall_s", "llm_calls",
                 "input_tokens", "output_tokens", "by_model", "error_category",
                 "error", "locus", "doc_chars", "document_sha256", "source",
-                "source_other_sites", "codebase_frames")}
+                "source_other_sites", "codebase_frames", "rendered_prompt_sha256")}
             metrics[entry.name]["evidence_fingerprint"] = row.get("experiment_fingerprint")
             per_api[entry.name] = row.get("execution_evidence") or f"resumed: {row.get('status')}"
             if row.get("status") == "pass":
@@ -1412,6 +1422,7 @@ def _comprehension_execute(cfg: AidealConfig, inventory, sample, seed, doc_sourc
         last = {}
         last_run = {"stdout": "", "stderr": "", "exit_code": None}
         rounds_trace: list[dict] = []
+        prompt_hashes = []
         prev_sig, same_sig = None, 0   # stuck detector state (per API)
         import sys as _sys
         receiver = _receiver_hint(entry.name, owner_map)
@@ -1421,17 +1432,18 @@ def _comprehension_execute(cfg: AidealConfig, inventory, sample, seed, doc_sourc
             # with max_fix_rounds=0. Only an actual retry may see failures.
             known = [] if attempt == 0 else log.failures_for(entry.name)
             try:
-                snippet = _strip_fences(invoke_text(
-                    writer_spec if attempt == 0 else fixer_spec,
-                    *load_prompt(cfg, "aideal/comprehension_write_exec",
+                delivered_prompt = load_prompt(cfg, "aideal/comprehension_write_exec",
                                  api_body=body_for(entry), api_name=entry.name,
                                  available_inputs=available_inputs,
                                  receiver=receiver or "(receiver type not resolved)",
                                  known_failures=known or "(none yet)",
                                  execution_context=ex.get("execution_context", ""),
                                  exec_hints=ex.get("exec_hints", ""),
-                                 io_hints=io_hints_text),
-                ), strip_imports=strip_snippet_imports)
+                                 io_hints=io_hints_text)
+                prompt_hashes.append(_hashlib.sha256(_json.dumps(delivered_prompt).encode()).hexdigest())
+                snippet = _strip_fences(invoke_text(
+                    writer_spec if attempt == 0 else fixer_spec, *delivered_prompt),
+                    strip_imports=strip_snippet_imports)
             except Exception as llm_exc:
                 # provider error (quota/network/bad model id) must not kill a
                 # 200-API run — record it as this API's failure and move on.
@@ -1452,8 +1464,8 @@ def _comprehension_execute(cfg: AidealConfig, inventory, sample, seed, doc_sourc
             scala_file.write_text(scala, encoding="utf-8")
             try:
                 # shell=True so the `scalac && jar && spark-submit` pipeline runs
-                proc = subprocess.run(cmd, shell=True, cwd=work_dir, capture_output=True,
-                                      text=True, timeout=timeout, env=dict(os.environ))
+                from .execution import run_command
+                proc = run_command(cmd, cwd=work_dir, timeout=timeout, env=dict(os.environ))
                 out, err_out, rc = proc.stdout, proc.stderr, proc.returncode
             except subprocess.TimeoutExpired as e:
                 # TimeoutExpired carries the captured streams as BYTES even with
@@ -1553,6 +1565,7 @@ def _comprehension_execute(cfg: AidealConfig, inventory, sample, seed, doc_sourc
         metrics[entry.name] = {
             "status": "pass" if ran else "fail",
             "attempts": len(rounds_trace),
+            "rendered_prompt_sha256": prompt_hashes,
             "pass_round": next((r["round"] for r in rounds_trace
                                 if r["status"] == "pass"), None),
             "wall_s": round(_time.time() - api_t0, 1),
