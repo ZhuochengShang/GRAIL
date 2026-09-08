@@ -169,3 +169,8 @@ The user confirmed the stagnation threshold remains **2** consistently. See the 
 ## Unresolved checkpoint issue — September 7, 22:27 PDT
 
 The [late-evening runtime inspection](STATUS_2026-09-07_CHECKPOINT_DEFECT.md) reproduced generated output files entering the fixture fingerprint, causing repeated full passes in tslearn A2 and Thumbnailator. Workers and publishers are alive, but this resumability defect and provider 504 errors threaten completion. No active engine, checkpoint, or score was changed. Treat this issue as unresolved when interpreting the final package.
+
+
+## September 7 checkpoint repair and rollout
+
+The output-directory fingerprint defect has a committed repair and explicit, hash-bound legacy reuse records. See [repair evidence and rollout](checkpoint_repair_20260907/README.md). Running workers were preserved; new code takes effect on normal worker retries. Preserve the schema transition, all discarded fingerprint groups, unresolved provider outcomes, and missing historical snippet evidence in the final report. Completed native A2 results remain unchanged; strict mixed-schema comparison warnings require review rather than silent normalization.

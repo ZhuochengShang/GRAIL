@@ -1,5 +1,11 @@
 # September 7 late-evening runtime check: alive, with a resumability defect
 
+**Remediation update (approximately 22:40 PDT):** the repair is now committed
+and deployed for subsequent worker invocations, with verified compatibility
+records and preserved checkpoint backups. Existing processes were not restarted.
+See [repair evidence and rollout state](checkpoint_repair/README.md). The original
+diagnosis below is preserved as the pre-repair observation.
+
 Inspected approximately 22:23–22:27 PDT. This is a diagnosis, not a remediation
 or completed-result claim. No active process, checkpoint, fixture, output,
 configuration, or result was changed during this inspection.
