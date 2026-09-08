@@ -1,32 +1,32 @@
-# is_array: Investigate provider failures and recorded retry behavior
+# is_array: Investigate the observed API-use barrier
 
 ID: `e1024e725bbecccd33ed` · tslearn/A1 · **open**
 
-Evidence version: `c57370c011644257045adc6095a4af19209163ee00cd9361f623cb9aba748175`
+Evidence version: `22409a957d0543028551fa6dd5fe3a1f65691242829d782e50d2501873690a64`
 
-Candidate category: **provider**. Confidence: **high**.
+Candidate category: **api-identity-or-version**. Confidence: **medium**.
 
 ## Barrier and evidence
 
-Recorded provider failure; preserve and retry under existing policy.
+Verify intended owner and installed version; not proof of missing dependency.
 
-Source: `tslearn/tslearn/backend/numpy_backend.py:102`. Native category: `llm-error`.
+Source: `tslearn/tslearn/backend/numpy_backend.py:102`. Native category: `runtime`.
 
 ```text
-ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}
+AttributeError: module 'tslearn.backend.numpy_backend' has no attribute 'is_array'
 ```
 
-[Evidence ledger](../../../tslearn/A1/ledger.json) · [Saved evidence](../evidence/c57370c011644257045adc6095a4af19209163ee00cd9361f623cb9aba748175.json)
+[Evidence ledger](../../../tslearn/A1/ledger.json) · [Saved evidence](../evidence/22409a957d0543028551fa6dd5fe3a1f65691242829d782e50d2501873690a64.json)
 
-Recorded attempts: 1; provider errors: 1; document rounds: None.
+Recorded attempts: 1; provider errors: 0; document rounds: None.
 
 ## Proposed action
 
-Check quota/cooldown and error histories; preserve existing retry policy and completed checkpoints.
+Verify intended owner and installed version; not proof of missing dependency.
 
 ## Required validation
 
-Reattempt only compatible unresolved requests under authorized policy; report recovery separately from documentation benefit.
+Reproduce in an isolated diagnostic; establish input, call and assertion validity before attributing a documentation or code defect.
 
 Hypothesis only; measure against the pinned baseline before claiming improvement.
 

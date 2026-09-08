@@ -2,18 +2,18 @@
   "status": "partial",
   "expected": 235,
   "counts": {
-    "pending": 207,
-    "fail": 27,
+    "pending": 205,
+    "fail": 29,
     "pass": 1
   },
   "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
   "errors": [],
   "failure_categories": {
-    "llm-error": 23,
-    "unknown": 2,
+    "llm-error": 24,
+    "unknown": 3,
     "api-identity": 2
   },
-  "recorded_provider_errors_all_fingerprints": 70,
+  "recorded_provider_errors_all_fingerprints": 71,
   "observed_fingerprints": [
     "964a2ec0df73c3b53c3966c9213dedb1a12bf7e39ad1b8d7d1ddd561ba53212b",
     "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea"
@@ -7502,6 +7502,92 @@
       "source_other_sites": 0,
       "codebase_frames": null,
       "checkpoint_line": 263
+    },
+    {
+      "name": "get_early_predict_proba_generator",
+      "doc_source": "original",
+      "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "llm-error",
+            "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}"
+          }
+        ],
+        "error_category": "llm-error",
+        "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+        "code": "",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_get_early_predict_proba_generator/api_test.py",
+        "exit_code": null,
+        "stdout_tail": "",
+        "stderr_tail": ""
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 597.3,
+      "llm_calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "by_model": {},
+      "error_category": "llm-error",
+      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "locus": "",
+      "doc_chars": 115,
+      "document_sha256": "15ba3f0387c8d478427e374791caaf752c8e4fd4f03887a1a39901b668dd6c08",
+      "source": "tslearn/tslearn/early_classification/early_classification.py:677",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 264
+    },
+    {
+      "name": "is_array",
+      "doc_source": "original",
+      "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "runtime",
+            "error": "AttributeError: module 'tslearn.backend.numpy_backend' has no attribute 'is_array'"
+          }
+        ],
+        "error_category": "runtime",
+        "error": "AttributeError: module 'tslearn.backend.numpy_backend' has no attribute 'is_array'",
+        "code": "from tslearn.backend import numpy_backend\n\n# X is a pre-loaded numpy array\nres_true = numpy_backend.is_array(X)\nres_false = numpy_backend.is_array([1, 2, 3])\n\nassert res_true is True, \"X should be recognized as an array by the numpy backend\"\nassert res_false is False, \"A standard Python list should not be recognized as an array by the numpy backend\"\n\nprint(f\"__CHECK__ is_array {res_true}, {res_false}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_is_array/api_test.py",
+        "exit_code": 1,
+        "stdout_tail": "",
+        "stderr_tail": "__RUN_ERR__ AttributeError: module 'tslearn.backend.numpy_backend' has no attribute 'is_array'\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_is_array/api_test.py\", line 52, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_is_array/api_test.py\", line 47, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_is_array/api_test.py\", line 37, in api_test\n    res_true = numpy_backend.is_array(X)\nAttributeError: module 'tslearn.backend.numpy_backend' has no attribute 'is_array'\n"
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 29.0,
+      "llm_calls": 1,
+      "input_tokens": 1323,
+      "output_tokens": 2446,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1323,
+          "output_tokens": 2446
+        }
+      },
+      "error_category": "runtime",
+      "error": "AttributeError: module 'tslearn.backend.numpy_backend' has no attribute 'is_array'",
+      "locus": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_is_array/api_test.py:37",
+      "doc_chars": 90,
+      "document_sha256": "5e22d7f8368d45e095138dd15f06ee46c9680aff00a54e257dfe708c0d0a5202",
+      "source": "tslearn/tslearn/backend/numpy_backend.py:102",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 265
     }
   ],
   "repair_summary": {
@@ -10388,18 +10474,31 @@
     },
     {
       "api": "get_early_predict_proba_generator",
-      "status": "pending",
-      "primary_category": "pending",
-      "runner_category": null,
-      "category_reason": "Not yet observed.",
-      "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
-      "provider_error_attempts": 0,
+      "status": "fail",
+      "primary_category": "llm-error",
+      "runner_category": "llm-error",
+      "category_reason": "Provider outcome; retry, never count as a documentation failure.",
+      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "source": "tslearn/tslearn/early_classification/early_classification.py:677",
+      "doc_chars": 115,
+      "checkpoint_attempts": 1,
+      "provider_error_attempts": 1,
       "provider_internal_retries": null,
       "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "attempt_history": [
+        {
+          "checkpoint_line": 264,
+          "status": "fail",
+          "error_category": "llm-error",
+          "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+          "attempts": 1,
+          "wall_s": 597.3,
+          "llm_calls": 0,
+          "input_tokens": 0,
+          "output_tokens": 0,
+          "pass_round": null
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -10597,18 +10696,31 @@
     },
     {
       "api": "is_array",
-      "status": "pending",
-      "primary_category": "pending",
-      "runner_category": null,
-      "category_reason": "Not yet observed.",
-      "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "status": "fail",
+      "primary_category": "unknown",
+      "runner_category": "runtime",
+      "category_reason": "Observed runtime; doc attribution requires source, document, and snippet review.",
+      "error": "AttributeError: module 'tslearn.backend.numpy_backend' has no attribute 'is_array'",
+      "source": "tslearn/tslearn/backend/numpy_backend.py:102",
+      "doc_chars": 90,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 265,
+          "status": "fail",
+          "error_category": "runtime",
+          "error": "AttributeError: module 'tslearn.backend.numpy_backend' has no attribute 'is_array'",
+          "attempts": 1,
+          "wall_s": 29.0,
+          "llm_calls": 1,
+          "input_tokens": 1323,
+          "output_tokens": 2446,
+          "pass_round": null
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
