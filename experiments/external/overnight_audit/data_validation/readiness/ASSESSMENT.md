@@ -1,6 +1,6 @@
 # AIDEAL readiness assessment and improvement queue
 
-Updated: 2026-09-08T16:51:59.371925+00:00
+Updated: 2026-09-08T17:07:00.624631+00:00
 
 **Measured scope:** how documentation affects an LLM’s API use under a fixed harness. Overall agent readiness is not yet fully measured; no composite score is assigned.
 
@@ -24,12 +24,12 @@ Provisional counts retain pending and provider-error APIs in the denominator. Fi
 
 | Repository | Candidate barrier | Affected API/cell records |
 |---|---|---:|
-| mir_eval | assertion-or-behavior | 5 |
+| mir_eval | assertion-or-behavior | 6 |
 | mir_eval | doc-wrong | 2 |
 | mir_eval | example-invalid | 1 |
 | mir_eval | input-contract-or-api-call | 3 |
 | mir_eval | input-or-output-path | 4 |
-| mir_eval | provider | 27 |
+| mir_eval | provider | 26 |
 | mir_eval | test/scaffold | 5 |
 | mir_eval | unknown | 5 |
 | thumbnailator | input-or-output-path | 2 |
@@ -54,7 +54,6 @@ Each card separates native failure, diagnosis confidence, proposed action, valid
 | [mir_eval: compute_accuracy](suggestions/3e452364bc3ce7629a00.md) | A1 | execution_blocker | high | open |
 | [mir_eval: compute_err_score](suggestions/15ea9b007008778fffe3.md) | A1 | execution_blocker | high | open |
 | [mir_eval: compute_num_true_positives](suggestions/a94de7dba8b2518329b0.md) | A1 | execution_blocker | high | open |
-| [mir_eval: constant_hop_timebase](suggestions/a94d44ba733dc35068c1.md) | A1 | execution_blocker | high | open |
 | [mir_eval: deprecated](suggestions/beb42a32875dfb8074a9.md) | A1 | execution_blocker | high | open |
 | [mir_eval: deviation](suggestions/485cfbe27e59e994869a.md) | A1 | execution_blocker | high | open |
 | [mir_eval: generate_labels](suggestions/206b1afbab047351560f.md) | A1 | execution_blocker | high | open |
@@ -129,6 +128,7 @@ Each card separates native failure, diagnosis confidence, proposed action, valid
 | [mir_eval: reduce_extended_quality](suggestions/84d3132e80a965f61bc2.md) | A2 | reviewed_barrier | reviewed | open |
 | [mir_eval: ticker_pitch](suggestions/f0e1ab94a6656e53a513.md) | A2 | reviewed_barrier | reviewed | proposed |
 | [mir_eval: voicing_recall](suggestions/049822fa462033a54c69.md) | A2 | reviewed_barrier | reviewed | open |
+| [mir_eval: constant_hop_timebase](suggestions/a94d44ba733dc35068c1.md) | A1 | needs_diagnosis | medium | open |
 | [mir_eval: register_colormap](suggestions/d6485c290c7bda782770.md) | A1 | needs_diagnosis | medium | open |
 | [mir_eval: cemgil](suggestions/b787266701666609d246.md) | B2 | needs_diagnosis | medium | open |
 | [mir_eval: hierarchy](suggestions/2e97254929aecf73fb7a.md) | B2 | needs_diagnosis | medium | open |
