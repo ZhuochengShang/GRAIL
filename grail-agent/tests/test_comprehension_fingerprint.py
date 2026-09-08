@@ -100,3 +100,19 @@ def test_resume_retries_transient_provider_failures():
         {"experiment_fingerprint": "same", "error_category": "llm-error"}, "same")
     assert not _checkpoint_row_reusable(
         {"experiment_fingerprint": "old", "error_category": "runtime"}, "same")
+
+
+def test_outputs_do_not_change_fingerprint_but_uri_input_bytes_do(tmp_path):
+    fixture = tmp_path / "input space.txt"
+    fixture.write_text("original input")
+    output = tmp_path / "out"
+    bindings = {"fixture": fixture.as_uri(), "output_dir": str(output)}
+    before = _components(tmp_path, sample_data=bindings)
+    assert before["fixtures"]["file_count"] == 1
+    output.mkdir()
+    (output / "model.pkl").write_text("generated")
+    assert _components(tmp_path, sample_data=bindings) == before
+    (output / "model.pkl").write_text("rewritten")
+    assert _components(tmp_path, sample_data=bindings) == before
+    fixture.write_text("changed real input")
+    assert _components(tmp_path, sample_data=bindings) != before
