@@ -2,9 +2,9 @@
   "status": "partial",
   "expected": 235,
   "counts": {
-    "pass": 95,
-    "fail": 100,
-    "pending": 40
+    "pass": 96,
+    "fail": 101,
+    "pending": 38
   },
   "fingerprint": "964a2ec0df73c3b53c3966c9213dedb1a12bf7e39ad1b8d7d1ddd561ba53212b",
   "errors": [],
@@ -12,9 +12,9 @@
     "test/scaffold": 15,
     "unknown": 19,
     "api-identity": 23,
-    "llm-error": 43
+    "llm-error": 44
   },
-  "recorded_provider_errors_all_fingerprints": 43,
+  "recorded_provider_errors_all_fingerprints": 44,
   "observed_fingerprints": [
     "964a2ec0df73c3b53c3966c9213dedb1a12bf7e39ad1b8d7d1ddd561ba53212b"
   ],
@@ -5248,6 +5248,56 @@
       "source_other_sites": 0,
       "codebase_frames": null,
       "checkpoint_line": 195
+    },
+    {
+      "name": "set_weights",
+      "doc_source": "original",
+      "experiment_fingerprint": "964a2ec0df73c3b53c3966c9213dedb1a12bf7e39ad1b8d7d1ddd561ba53212b",
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 599.7,
+      "llm_calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "by_model": {},
+      "error_category": "llm-error",
+      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "locus": "",
+      "doc_chars": 93,
+      "document_sha256": "79c91960606a06317970ccfb655b5d1feb521da22e1df736768b44f14241f04c",
+      "source": "tslearn/tslearn/shapelets/shapelets.py:866",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 196
+    },
+    {
+      "name": "shape",
+      "doc_source": "original",
+      "experiment_fingerprint": "964a2ec0df73c3b53c3966c9213dedb1a12bf7e39ad1b8d7d1ddd561ba53212b",
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 10.9,
+      "llm_calls": 1,
+      "input_tokens": 4948,
+      "output_tokens": 954,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 4948,
+          "output_tokens": 954
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 12000,
+      "document_sha256": "c859626cdc79790c59e11f9b93aac3bd64f5cf39f94942a58c7854fd53cf5d50",
+      "source": "tslearn/tslearn/backend/pytorch_backend.py:202",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 197
     }
   ],
   "repair_summary": {
@@ -11502,18 +11552,31 @@
     },
     {
       "api": "set_weights",
-      "status": "pending",
-      "primary_category": "pending",
-      "runner_category": null,
-      "category_reason": "Not yet observed.",
-      "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
-      "provider_error_attempts": 0,
+      "status": "fail",
+      "primary_category": "llm-error",
+      "runner_category": "llm-error",
+      "category_reason": "Provider outcome; retry, never count as a documentation failure.",
+      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "source": "tslearn/tslearn/shapelets/shapelets.py:866",
+      "doc_chars": 93,
+      "checkpoint_attempts": 1,
+      "provider_error_attempts": 1,
       "provider_internal_retries": null,
       "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "attempt_history": [
+        {
+          "checkpoint_line": 196,
+          "status": "fail",
+          "error_category": "llm-error",
+          "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+          "attempts": 1,
+          "wall_s": 599.7,
+          "llm_calls": 0,
+          "input_tokens": 0,
+          "output_tokens": 0,
+          "pass_round": null
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -11521,18 +11584,31 @@
     },
     {
       "api": "shape",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "tslearn/tslearn/backend/pytorch_backend.py:202",
+      "doc_chars": 12000,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 197,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 10.9,
+          "llm_calls": 1,
+          "input_tokens": 4948,
+          "output_tokens": 954,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],

@@ -1,6 +1,6 @@
 # AIDEAL readiness assessment and improvement queue
 
-Updated: 2026-09-08T06:01:08.547003+00:00
+Updated: 2026-09-08T06:17:10.281029+00:00
 
 **Measured scope:** how documentation affects an LLM’s API use under a fixed harness. Overall agent readiness is not yet fully measured; no composite score is assigned.
 
@@ -8,7 +8,7 @@ Updated: 2026-09-08T06:01:08.547003+00:00
 |---|---|---|---|---|---|
 | mir_eval | 68/148 provisional | 135/148 final | pending (148 APIs) | pending (148 APIs) | WITHHELD/PARTIAL |
 | thumbnailator | 0/149 provisional | 127/149 final | pending (149 APIs) | pending (149 APIs) | WITHHELD/PARTIAL |
-| tslearn | 95/235 provisional | 78/235 provisional | pending (235 APIs) | pending (235 APIs) | WITHHELD/PARTIAL |
+| tslearn | 96/235 provisional | 104/235 provisional | pending (235 APIs) | pending (235 APIs) | WITHHELD/PARTIAL |
 
 Provisional counts retain pending and provider-error APIs in the denominator. Final counts are native pass/all-API results. Cross-cell effects require the separate matched-comparison release checks.
 
@@ -33,17 +33,17 @@ Provisional counts retain pending and provider-error APIs in the denominator. Fi
 | mir_eval | provider | 30 |
 | mir_eval | test/scaffold | 5 |
 | mir_eval | unknown | 9 |
-| thumbnailator | provider | 1 |
+| thumbnailator | provider | 3 |
 | thumbnailator | unknown | 23 |
-| tslearn | api-identity-or-version | 32 |
-| tslearn | assertion-or-behavior | 15 |
-| tslearn | input-contract-or-api-call | 7 |
-| tslearn | provider | 44 |
-| tslearn | unknown | 31 |
+| tslearn | api-identity-or-version | 36 |
+| tslearn | assertion-or-behavior | 19 |
+| tslearn | input-contract-or-api-call | 9 |
+| tslearn | provider | 45 |
+| tslearn | unknown | 39 |
 
-## Reviewable improvements (246)
+## Reviewable improvements (267)
 
-Review states: `{'open': 245, 'proposed': 1}`. Observation errors: 0. Inactive reviewed IDs retained: 0.
+Review states: `{'open': 266, 'proposed': 1}`. Observation errors: 0. Inactive reviewed IDs retained: 0.
 
 Each card separates native failure, diagnosis confidence, proposed action, validation and review decisions. Provider barriers concern execution infrastructure; they are not automatically codebase or documentation defects.
 
@@ -80,6 +80,8 @@ Each card separates native failure, diagnosis confidence, proposed action, valid
 | [mir_eval: validate_voicing](suggestions/e0708b0abc31ac82b20f.md) | A1 | execution_blocker | high | open |
 | [mir_eval: vmeasure](suggestions/24f231e5d234a7e41345.md) | A1 | execution_blocker | high | open |
 | [thumbnailator: clear](suggestions/3f911dbe0befc683e80e.md) | A1 | execution_blocker | high | open |
+| [thumbnailator: createOutputStream](suggestions/8c69e4aae53d75a4ecbd.md) | A1 | execution_blocker | high | open |
+| [thumbnailator: format](suggestions/a4ae9b56216ff3fc31e1.md) | A1 | execution_blocker | high | open |
 | [tslearn: PatchingLayer](suggestions/492a7a8c40fbef8c50dd.md) | A1 | execution_blocker | high | open |
 | [tslearn: SquaredEuclidean](suggestions/9cb2806d53f90d5dc13a.md) | A1 | execution_blocker | high | open |
 | [tslearn: TimeSeriesDBSCAN](suggestions/1268880b6e8ce0e28497.md) | A1 | execution_blocker | high | open |
@@ -123,6 +125,7 @@ Each card separates native failure, diagnosis confidence, proposed action, valid
 | [tslearn: partial_fit](suggestions/f0c4cd50ddf3925e7c6a.md) | A1 | execution_blocker | high | open |
 | [tslearn: predict_proba_and_earliness](suggestions/2caa8ac2f3722ae16c2d.md) | A1 | execution_blocker | high | open |
 | [tslearn: save_dict](suggestions/64042927743239068f2f.md) | A1 | execution_blocker | high | open |
+| [tslearn: set_weights](suggestions/c6e70a9295e0b43a89cb.md) | A1 | execution_blocker | high | open |
 | [tslearn: compute](suggestions/4a28af1f1c30cd779151.md) | A2 | execution_blocker | high | open |
 | [mir_eval: deprecated](suggestions/8c1892028fee0fa4c019.md) | A2 | reviewed_barrier | reviewed | open |
 | [mir_eval: first_n_three_layer_P](suggestions/1350063ad65ccf061962.md) | A2 | reviewed_barrier | reviewed | open |
@@ -295,6 +298,24 @@ Each card separates native failure, diagnosis confidence, proposed action, valid
 | [tslearn: dtw_barycenter_averaging_one_init](suggestions/c58de824dd094aad07bc.md) | A2 | needs_diagnosis | medium | open |
 | [tslearn: early_predict_proba](suggestions/1d9195b5c2bf45a1c7da.md) | A2 | needs_diagnosis | medium | open |
 | [tslearn: extract_from_zip_url](suggestions/556446f978a96da3cd17.md) | A2 | needs_diagnosis | low | open |
+| [tslearn: fix_force_all_finite_warning](suggestions/19d92b0287f41c177588.md) | A2 | needs_diagnosis | medium | open |
+| [tslearn: from_cesium_dataset](suggestions/983fb54c898d2b3bb990.md) | A2 | needs_diagnosis | low | open |
+| [tslearn: from_hdf5](suggestions/db7a06f2638d29b9e384.md) | A2 | needs_diagnosis | low | open |
+| [tslearn: from_json](suggestions/c00cb00d746fa1ffa697.md) | A2 | needs_diagnosis | low | open |
+| [tslearn: from_pickle](suggestions/0f71db7bc37749a20233.md) | A2 | needs_diagnosis | medium | open |
+| [tslearn: get_backend](suggestions/1f1c9231449a82dd76e1.md) | A2 | needs_diagnosis | medium | open |
+| [tslearn: get_cluster_probas](suggestions/dbbbd6d4fe034fb71a4c.md) | A2 | needs_diagnosis | medium | open |
+| [tslearn: get_config](suggestions/e7e4aeb1e4da6544276e.md) | A2 | needs_diagnosis | low | open |
+| [tslearn: get_early_predict_proba_generator](suggestions/c7c8a7deba0271c30c59.md) | A2 | needs_diagnosis | medium | open |
+| [tslearn: get_weights](suggestions/d062f90a19b6676ec7cf.md) | A2 | needs_diagnosis | low | open |
+| [tslearn: grabocka_params_to_shapelet_size_dict](suggestions/d09163a6488511cf5a43.md) | A2 | needs_diagnosis | low | open |
+| [tslearn: inv_transform_1d_sax](suggestions/dfdfaa2f4d3624d46ed2.md) | A2 | needs_diagnosis | low | open |
+| [tslearn: inv_transform_sax](suggestions/0141328727366391a9f5.md) | A2 | needs_diagnosis | low | open |
+| [tslearn: inverse_transform](suggestions/27b2acd83b60d8ed2f90.md) | A2 | needs_diagnosis | medium | open |
+| [tslearn: is_float](suggestions/d24aaded888f4b4bfc87.md) | A2 | needs_diagnosis | medium | open |
+| [tslearn: is_float32](suggestions/b64a87449b75059926df.md) | A2 | needs_diagnosis | medium | open |
+| [tslearn: is_float64](suggestions/24b26619da067b29ed62.md) | A2 | needs_diagnosis | medium | open |
+| [tslearn: iscomplex](suggestions/ec9c6d62bb40991b43d6.md) | A2 | needs_diagnosis | medium | open |
 
 ## Human and agent workflow
 
