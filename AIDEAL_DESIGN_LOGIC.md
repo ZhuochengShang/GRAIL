@@ -1,3 +1,5 @@
+**September 8 v3 amendment:** [Three separate repair stages](experiments/external/post_b2/PIPELINE_V3.md) now define the current design. The running A2/source/README/B2 path is preserved; a separately queued post-B2 source stage is added. Read its method audit before interpreting legacy sections below.
+
 # AIDEAL design logic and automation boundaries
 
 **September 8 protocol update:** the active priority continuation is

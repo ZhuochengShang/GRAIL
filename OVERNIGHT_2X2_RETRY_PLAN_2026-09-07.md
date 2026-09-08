@@ -1,3 +1,5 @@
+**Current amendment:** [v3 separated stages](experiments/external/post_b2/PIPELINE_V3.md) adds post-B2 source recovery after priority B2 work. Original-README repair is omitted. Historical plans below remain provenance.
+
 # AIDEAL overnight A1/A2/B1/B2 retry and fix-round plan
 
 Date: 2026-09-07 (America/Los_Angeles)

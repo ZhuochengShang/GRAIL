@@ -1,3 +1,5 @@
+**Current report:** use the [v3 separated-stage template](post_b2/REPORT_TEMPLATE_V3.md). Report S_A2, README/B2, and S_B2 independently; native B2 and the B2+S_B2 composite have separate fields.
+
 # AIDEAL 2×2 experiment comparison report
 
 **Protocol change, September 8:** the user omitted original-README repair.
