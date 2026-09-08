@@ -1,6 +1,6 @@
 # A2 source-only recovery
 
-Updated: 2026-09-08T01:12:52.037765-07:00
+Updated: 2026-09-08T01:29:40.177720-07:00
 
 Fixed eligible-failure denominator: 22. A2 is round zero; five new proposals maximum; stuck threshold two.
 
@@ -16,17 +16,17 @@ Fixed eligible-failure denominator: 22. A2 is round zero; five new proposals max
 | filters | recovered_native | 2 | /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/thumbnailator/3fe01b3536324b3252b28fced5b3557f3a6256f162fb7548eb376b14ca5f2ea0/project/.aideal_recovery/b4e238aab29f43c0887153a3e48ff53310e91420e9dd2ad001fed09dc26962e8/recovery.json |
 | fitWithinDimenions | recovered_native | 2 | /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/thumbnailator/3fe01b3536324b3252b28fced5b3557f3a6256f162fb7548eb376b14ca5f2ea0/project/.aideal_recovery/f7e0283ac8d9bd3b0da6527dd56b2f0b81d52495837dc520af84f8ddf6beb787/recovery.json |
 | getDestination | recovered_native | 2 | /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/thumbnailator/3fe01b3536324b3252b28fced5b3557f3a6256f162fb7548eb376b14ca5f2ea0/project/.aideal_recovery/196156e00870386f20cd37a7e55024a5bc5ab253609e13a939bf82fc83698759/recovery.json |
-| getExifOrientation | pending | 0 |  |
-| getFormatName | pending | 0 |  |
-| getInstance | pending | 0 |  |
-| getOrientationFromExif | pending | 0 |  |
-| getOutputFormat | pending | 0 |  |
-| getRenderingHints | pending | 0 |  |
-| getSourceRegion | pending | 0 |  |
-| init | pending | 0 |  |
-| quality | pending | 0 |  |
-| region | pending | 0 |  |
-| resizerFactory | pending | 0 |  |
+| getExifOrientation | recovered_native | 2 | /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/thumbnailator/3fe01b3536324b3252b28fced5b3557f3a6256f162fb7548eb376b14ca5f2ea0/project/.aideal_recovery/f2ff26b687e931d9860ae038af22bf983afb496a208d619fa7eb7190ce311215/recovery.json |
+| getFormatName | recovered_native | 1 | /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/thumbnailator/3fe01b3536324b3252b28fced5b3557f3a6256f162fb7548eb376b14ca5f2ea0/project/.aideal_recovery/1b58e4748b8b9408da2cf69f5b040899af8b601c703d39c67bd8f6f53d99c5ae/recovery.json |
+| getInstance | recovered_native | 1 | /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/thumbnailator/3fe01b3536324b3252b28fced5b3557f3a6256f162fb7548eb376b14ca5f2ea0/project/.aideal_recovery/e6e5429ddff9da2d5f2836074b9f00d0c3992543fd73ddb384b4664d6a268028/recovery.json |
+| getOrientationFromExif | recovered_native | 1 | /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/thumbnailator/3fe01b3536324b3252b28fced5b3557f3a6256f162fb7548eb376b14ca5f2ea0/project/.aideal_recovery/91aa1096102db22ee8b6585e68678b3ed22ab074a6fad0082afe010202f7da48/recovery.json |
+| getOutputFormat | recovered_native | 1 | /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/thumbnailator/3fe01b3536324b3252b28fced5b3557f3a6256f162fb7548eb376b14ca5f2ea0/project/.aideal_recovery/9bdd65a1107620a2f6749ccf169ada02b31da5dfdeba309f8b2170479781c91f/recovery.json |
+| getRenderingHints | stuck | 2 | /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/thumbnailator/3fe01b3536324b3252b28fced5b3557f3a6256f162fb7548eb376b14ca5f2ea0/project/.aideal_recovery/900228316a7845876e6f8e5b72a5c70da0673c7df4a938534f8e4c816e8d1aab/recovery.json |
+| getSourceRegion | stuck | 2 | /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/thumbnailator/3fe01b3536324b3252b28fced5b3557f3a6256f162fb7548eb376b14ca5f2ea0/project/.aideal_recovery/f9f60fca40c2ed39b2f800015446b1173aa813394f9c555ea76cffbf1ca5ef8f/recovery.json |
+| init | recovered_native | 1 | /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/thumbnailator/3fe01b3536324b3252b28fced5b3557f3a6256f162fb7548eb376b14ca5f2ea0/project/.aideal_recovery/a1fc4ab6c153dc53c47c0d94c3dc3d646719e5565c2366988b9a4988f2503003/recovery.json |
+| quality | recovered_native | 1 | /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/thumbnailator/3fe01b3536324b3252b28fced5b3557f3a6256f162fb7548eb376b14ca5f2ea0/project/.aideal_recovery/37c4309b1e961c214210cf78d67a216398201ab8a852c8d73af46d550e6208a9/recovery.json |
+| region | recovered_native | 1 | /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/thumbnailator/3fe01b3536324b3252b28fced5b3557f3a6256f162fb7548eb376b14ca5f2ea0/project/.aideal_recovery/cc7aec898c789eecd7b0ea39645d63cd8cc9fc3f23ca6735e37ad547113a12bb/recovery.json |
+| resizerFactory | recovered_native | 1 | /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/thumbnailator/3fe01b3536324b3252b28fced5b3557f3a6256f162fb7548eb376b14ca5f2ea0/project/.aideal_recovery/90404a1780526631902ab8c625d89b956a72e18fe9f7df58fb3e9f73ef565cad/recovery.json |
 | setThumbnailParameter | pending | 0 |  |
 
 Native recovery does not certify the generated assertions. Semantic review remains required.
