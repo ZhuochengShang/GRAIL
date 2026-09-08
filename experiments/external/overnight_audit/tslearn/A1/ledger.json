@@ -2,17 +2,18 @@
   "status": "partial",
   "expected": 235,
   "counts": {
-    "pending": 212,
-    "fail": 23
+    "pending": 209,
+    "fail": 25,
+    "pass": 1
   },
   "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
   "errors": [],
   "failure_categories": {
-    "llm-error": 20,
+    "llm-error": 22,
     "unknown": 2,
     "api-identity": 1
   },
-  "recorded_provider_errors_all_fingerprints": 67,
+  "recorded_provider_errors_all_fingerprints": 69,
   "observed_fingerprints": [
     "964a2ec0df73c3b53c3966c9213dedb1a12bf7e39ad1b8d7d1ddd561ba53212b",
     "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea"
@@ -7293,6 +7294,128 @@
       "source_other_sites": 0,
       "codebase_frames": null,
       "checkpoint_line": 258
+    },
+    {
+      "name": "from_numpy",
+      "doc_source": "original",
+      "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "llm-error",
+            "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}"
+          }
+        ],
+        "error_category": "llm-error",
+        "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+        "code": "",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_from_numpy/api_test.py",
+        "exit_code": null,
+        "stdout_tail": "",
+        "stderr_tail": ""
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 599.6,
+      "llm_calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "by_model": {},
+      "error_category": "llm-error",
+      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "locus": "",
+      "doc_chars": 92,
+      "document_sha256": "a07c101006e92fcd30df3f2d1dc50b52cc24ed60258b704ff86504e85ff8f96f",
+      "source": "tslearn/tslearn/backend/numpy_backend.py:98",
+      "source_other_sites": 1,
+      "codebase_frames": null,
+      "checkpoint_line": 259
+    },
+    {
+      "name": "from_pickle",
+      "doc_source": "original",
+      "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "from tslearn.clustering import TimeSeriesKMeans\nimport os\n\n# Train a small model to serialize\nmodel = TimeSeriesKMeans(n_clusters=2, max_iter=2, random_state=42)\nmodel.fit(X)\n\n# Save the model to a pickle file\npkl_path = os.path.join(output_dir, \"test_from_pickle.pkl\")\nmodel.to_pickle(pkl_path)\n\n# Load the model using from_pickle\nloaded_model = TimeSeriesKMeans.from_pickle(pkl_path)\n\n# Verify the loaded model retains the learned attributes\nassert loaded_model.n_clusters == 2, \"Loaded model has incorrect n_clusters\"\nassert loaded_model.cluster_centers_.shape == model.cluster_centers_.shape, \"Loaded model cluster centers shape mismatch\"\nassert (loaded_model.cluster_centers_ == model.cluster_centers_).all(), \"Loaded model cluster centers values mismatch\"\n\nprint(f\"__CHECK__ from_pickle {loaded_model.cluster_centers_.shape}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_from_pickle/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ from_pickle (2, 40, 1)\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 16.9,
+      "llm_calls": 1,
+      "input_tokens": 1323,
+      "output_tokens": 1565,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1323,
+          "output_tokens": 1565
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 93,
+      "document_sha256": "94e14516d14a09153c5604f5deb9f1013de60c7ec07135c1dd02d967616fc033",
+      "source": "tslearn/tslearn/bases/bases.py:321",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 260
+    },
+    {
+      "name": "gamma_soft_dtw",
+      "doc_source": "original",
+      "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "llm-error",
+            "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}"
+          }
+        ],
+        "error_category": "llm-error",
+        "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+        "code": "",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_gamma_soft_dtw/api_test.py",
+        "exit_code": null,
+        "stdout_tail": "",
+        "stderr_tail": ""
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 598.7,
+      "llm_calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "by_model": {},
+      "error_category": "llm-error",
+      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "locus": "",
+      "doc_chars": 96,
+      "document_sha256": "906fc53ed687fe303f6d355aded6293421e4ae91fd6a5eeb08e3c58d83a2495c",
+      "source": "tslearn/tslearn/metrics/softdtw_variants.py:474",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 261
     }
   ],
   "repair_summary": {
@@ -9848,18 +9971,31 @@
     },
     {
       "api": "from_numpy",
-      "status": "pending",
-      "primary_category": "pending",
-      "runner_category": null,
-      "category_reason": "Not yet observed.",
-      "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
-      "provider_error_attempts": 0,
+      "status": "fail",
+      "primary_category": "llm-error",
+      "runner_category": "llm-error",
+      "category_reason": "Provider outcome; retry, never count as a documentation failure.",
+      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "source": "tslearn/tslearn/backend/numpy_backend.py:98",
+      "doc_chars": 92,
+      "checkpoint_attempts": 1,
+      "provider_error_attempts": 1,
       "provider_internal_retries": null,
       "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "attempt_history": [
+        {
+          "checkpoint_line": 259,
+          "status": "fail",
+          "error_category": "llm-error",
+          "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+          "attempts": 1,
+          "wall_s": 599.6,
+          "llm_calls": 0,
+          "input_tokens": 0,
+          "output_tokens": 0,
+          "pass_round": null
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -9867,18 +10003,31 @@
     },
     {
       "api": "from_pickle",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "tslearn/tslearn/bases/bases.py:321",
+      "doc_chars": 93,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 260,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 16.9,
+          "llm_calls": 1,
+          "input_tokens": 1323,
+          "output_tokens": 1565,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -10019,18 +10168,31 @@
     },
     {
       "api": "gamma_soft_dtw",
-      "status": "pending",
-      "primary_category": "pending",
-      "runner_category": null,
-      "category_reason": "Not yet observed.",
-      "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
-      "provider_error_attempts": 0,
+      "status": "fail",
+      "primary_category": "llm-error",
+      "runner_category": "llm-error",
+      "category_reason": "Provider outcome; retry, never count as a documentation failure.",
+      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "source": "tslearn/tslearn/metrics/softdtw_variants.py:474",
+      "doc_chars": 96,
+      "checkpoint_attempts": 1,
+      "provider_error_attempts": 1,
       "provider_internal_retries": null,
       "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "attempt_history": [
+        {
+          "checkpoint_line": 261,
+          "status": "fail",
+          "error_category": "llm-error",
+          "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+          "attempts": 1,
+          "wall_s": 598.7,
+          "llm_calls": 0,
+          "input_tokens": 0,
+          "output_tokens": 0,
+          "pass_round": null
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],

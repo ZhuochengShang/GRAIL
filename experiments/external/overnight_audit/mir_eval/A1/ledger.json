@@ -2,15 +2,16 @@
   "status": "partial",
   "expected": 148,
   "counts": {
-    "fail": 23,
-    "pending": 125
+    "fail": 24,
+    "pending": 123,
+    "pass": 1
   },
   "fingerprint": "6f5bcaa71d6a868167732ff1b08ada63654abf63b2bc6f0777aae06911a1e74f",
   "errors": [],
   "failure_categories": {
-    "llm-error": 23
+    "llm-error": 24
   },
-  "recorded_provider_errors_all_fingerprints": 149,
+  "recorded_provider_errors_all_fingerprints": 150,
   "observed_fingerprints": [
     "6f5bcaa71d6a868167732ff1b08ada63654abf63b2bc6f0777aae06911a1e74f",
     "a20bd403c94a3ffc66c81ac309055c6fd79b6cb921d20b07a2e1800727c1cb61"
@@ -7071,6 +7072,88 @@
       "source_other_sites": 0,
       "codebase_frames": null,
       "checkpoint_line": 268
+    },
+    {
+      "name": "seg",
+      "doc_source": "original",
+      "experiment_fingerprint": "6f5bcaa71d6a868167732ff1b08ada63654abf63b2bc6f0777aae06911a1e74f",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "llm-error",
+            "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}"
+          }
+        ],
+        "error_category": "llm-error",
+        "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+        "code": "",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_A1/experiments/external/mir_eval/.aideal_exec/A1/run_seg/api_test.py",
+        "exit_code": null,
+        "stdout_tail": "",
+        "stderr_tail": ""
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 599.2,
+      "llm_calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "by_model": {},
+      "error_category": "llm-error",
+      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "locus": "",
+      "doc_chars": 85,
+      "document_sha256": "745cc6f0f69f4dcba3e36b85a48951a9768ead143a9d48a20f7550828458218a",
+      "source": "source/mir_eval/chord.py:1461",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 269
+    },
+    {
+      "name": "split",
+      "doc_source": "original",
+      "experiment_fingerprint": "6f5bcaa71d6a868167732ff1b08ada63654abf63b2bc6f0777aae06911a1e74f",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import mir_eval\n\nroot, shorthand, extensions, bass = mir_eval.chord.split('D#:min7(*b5)/b3')\n\nassert root == 'D#'\nassert shorthand == 'min7'\nassert '*b5' in extensions\nassert bass == 'b3'\n\nprint(f\"__CHECK__ split {root}-{shorthand}-{bass}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_A1/experiments/external/mir_eval/.aideal_exec/A1/run_split/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ split D#-min7-b3\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 316.4,
+      "llm_calls": 1,
+      "input_tokens": 1324,
+      "output_tokens": 1764,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1324,
+          "output_tokens": 1764
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 87,
+      "document_sha256": "d716cf5059ec4d35cca8aa76c80c1fcb505122a4561e2ec427bd5128844c836c",
+      "source": "source/mir_eval/chord.py:361",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 270
     }
   ],
   "repair_summary": {
@@ -9436,18 +9519,31 @@
     },
     {
       "api": "seg",
-      "status": "pending",
-      "primary_category": "pending",
-      "runner_category": null,
-      "category_reason": "Not yet observed.",
-      "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
-      "provider_error_attempts": 0,
+      "status": "fail",
+      "primary_category": "llm-error",
+      "runner_category": "llm-error",
+      "category_reason": "Provider outcome; retry, never count as a documentation failure.",
+      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "source": "source/mir_eval/chord.py:1461",
+      "doc_chars": 85,
+      "checkpoint_attempts": 1,
+      "provider_error_attempts": 1,
       "provider_internal_retries": null,
       "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "attempt_history": [
+        {
+          "checkpoint_line": 269,
+          "status": "fail",
+          "error_category": "llm-error",
+          "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+          "attempts": 1,
+          "wall_s": 599.2,
+          "llm_calls": 0,
+          "input_tokens": 0,
+          "output_tokens": 0,
+          "pass_round": null
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
@@ -9550,18 +9646,31 @@
     },
     {
       "api": "split",
-      "status": "pending",
-      "primary_category": "pending",
+      "status": "pass",
+      "primary_category": "pass",
       "runner_category": null,
-      "category_reason": "Not yet observed.",
+      "category_reason": "",
       "error": null,
-      "source": null,
-      "doc_chars": null,
-      "checkpoint_attempts": 0,
+      "source": "source/mir_eval/chord.py:361",
+      "doc_chars": 87,
+      "checkpoint_attempts": 1,
       "provider_error_attempts": 0,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
-      "attempt_history": [],
+      "recorded_successful_llm_calls": 1,
+      "attempt_history": [
+        {
+          "checkpoint_line": 270,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 316.4,
+          "llm_calls": 1,
+          "input_tokens": 1324,
+          "output_tokens": 1764,
+          "pass_round": 0
+        }
+      ],
       "repair_status": null,
       "doc_rounds_used": null,
       "doc_rounds": [],
