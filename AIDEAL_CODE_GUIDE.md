@@ -1,3 +1,5 @@
+**Current implementation review (September 8):** [Separated pipeline, code map and open findings](AIDEAL_PIPELINE_CODE_REVIEW_2026-09-08.md) · [Visual guide with code excerpts](AIDEAL_PIPELINE_CODE_REVIEW_2026-09-08.html). This older guide includes superseded four-cell descriptions.
+
 # AIDEAL: design, execution logic, and code navigation
 
 Source inspected September 7, 2026, at `8738c5d3ed055c67326b72a8b03758cff845f2f0`.
