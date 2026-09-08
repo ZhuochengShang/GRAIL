@@ -1,6 +1,6 @@
 # A2 source-only recovery
 
-Updated: 2026-09-08T00:56:18.930308-07:00
+Updated: 2026-09-08T01:02:56.685021-07:00
 
 Fixed eligible-failure denominator: 13. A2 is round zero; five new proposals maximum; stuck threshold two.
 
@@ -11,9 +11,9 @@ Fixed eligible-failure denominator: 13. A2 is round zero; five new proposals max
 | load_key | recovered_native | 1 | /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/mir_eval/cefdd1520279c9cc708b3dfca67ae2f9755094b1b667f75832a27555ea742f2c/project/.aideal_recovery/8149b606101c5e209268e0fd0d227550faf361b62da22651e1006a84f8f1becf/recovery.json |
 | load_patterns | recovered_native | 2 | /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/mir_eval/cefdd1520279c9cc708b3dfca67ae2f9755094b1b667f75832a27555ea742f2c/project/.aideal_recovery/24519635b49128919acf2903197bbc3077c70e14fd776aa1ca7c3d9b09c3f81e/recovery.json |
 | load_ragged_time_series | recovered_native | 1 | /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/mir_eval/cefdd1520279c9cc708b3dfca67ae2f9755094b1b667f75832a27555ea742f2c/project/.aideal_recovery/ca388b468f04d8a36c34ef874bd0c383aca12b07bdd74af522d5f0cd01e5af96/recovery.json |
-| load_tempo | pending | 0 |  |
-| load_valued_intervals | pending | 0 |  |
-| load_wav | pending | 0 |  |
+| load_tempo | recovered_native | 1 | /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/mir_eval/cefdd1520279c9cc708b3dfca67ae2f9755094b1b667f75832a27555ea742f2c/project/.aideal_recovery/2cef3a53249b36e00441eb28567b7c9c96faec9c1c3517221e8ac7a6746c78ff/recovery.json |
+| load_valued_intervals | recovered_native | 2 | /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/mir_eval/cefdd1520279c9cc708b3dfca67ae2f9755094b1b667f75832a27555ea742f2c/project/.aideal_recovery/da53fa43c39fb3d16b4ccd1d1488aff3e5c0bb670ae5173bd1e68303243e4185/recovery.json |
+| load_wav | recovered_native | 1 | /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/mir_eval/cefdd1520279c9cc708b3dfca67ae2f9755094b1b667f75832a27555ea742f2c/project/.aideal_recovery/45b5ac3eb5dc62c5b90a4273729d68d9dc329b2e01e1c45fbe760278c8def950/recovery.json |
 | p_score | pending | 0 |  |
 | piano_roll | pending | 0 |  |
 | reduce_extended_quality | pending | 0 |  |
