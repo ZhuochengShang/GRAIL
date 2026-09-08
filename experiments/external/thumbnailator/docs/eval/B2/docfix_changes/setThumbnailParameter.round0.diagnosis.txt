@@ -1,0 +1,28 @@
+AUDIENCE & TESTABILITY:
+API audience: ADVANCED-LOW-LEVEL.
+Harness testability: TESTABLE-WITH-LOW-LEVEL-CONSTRUCTION.
+Scoring recommendation: include only in advanced/internal bucket.
+
+ROOT CAUSE:
+The snippet failed with a `cannot find symbol` error because it incorrectly assumed `ThumbnailParameterBuilder` is in the root `net.coobird.thumbnailator` package. The builder is actually located in `net.coobird.thumbnailator.builders.ThumbnailParameterBuilder`. Furthermore, the snippet attempted to guess the packages for `Region` and `AbsoluteSize`, which likely also caused resolution failures.
+
+CORRECT USAGE:
+```java
+net.coobird.thumbnailator.tasks.io.BufferedImageSource source = new net.coobird.thumbnailator.tasks.io.BufferedImageSource(sourceImage);
+
+net.coobird.thumbnailator.ThumbnailParameter param = new net.coobird.thumbnailator.builders.ThumbnailParameterBuilder()
+    .size(20, 20)
+    .build();
+
+source.setThumbnailParameter(param);
+```
+
+REQUIRED TYPES & IMPORTS:
+net.coobird.thumbnailator.tasks.io.BufferedImageSource
+net.coobird.thumbnailator.ThumbnailParameter
+net.coobird.thumbnailator.builders.ThumbnailParameterBuilder
+
+DOC MUST SAY:
+- `ThumbnailParameterBuilder` is located in the `net.coobird.thumbnailator.builders` package, not the root `net.coobird.thumbnailator` package.
+- Code examples must use the correct fully-qualified imports for builders (e.g., `net.coobird.thumbnailator.builders.ThumbnailParameterBuilder`).
+- Avoid using complex geometry classes like `Region` or `AbsoluteSize` in basic examples without providing their exact fully-qualified package names.

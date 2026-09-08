@@ -1,0 +1,39 @@
+AUDIENCE & TESTABILITY:
+API audience: ADVANCED-LOW-LEVEL.
+Harness testability: TESTABLE-WITH-LOW-LEVEL-CONSTRUCTION.
+Scoring recommendation: include only in advanced/internal bucket.
+
+ROOT CAUSE:
+The documentation incorrectly suggests using `DefaultResizerFactory.getInstance()`, but `DefaultResizerFactory` is either package-private or not in the expected package, leading to a `cannot find symbol` compilation error. To use `resizerFactory`, callers must provide a valid implementation of the public `net.coobird.thumbnailator.resizers.ResizerFactory` interface rather than relying on internal/undocumented factory classes.
+
+CORRECT USAGE:
+```java
+net.coobird.thumbnailator.resizers.ResizerFactory customFactory = new net.coobird.thumbnailator.resizers.ResizerFactory() {
+    @Override
+    public net.coobird.thumbnailator.resizers.Resizer getResizer() {
+        return null; // Stub for configuration test
+    }
+    
+    @Override
+    public net.coobird.thumbnailator.resizers.Resizer getResizer(java.awt.Dimension originalSize, java.awt.Dimension thumbnailSize) {
+        return null; // Stub for configuration test
+    }
+};
+
+net.coobird.thumbnailator.Thumbnails.Builder<java.awt.image.BufferedImage> builder = 
+    net.coobird.thumbnailator.Thumbnails.of(new java.awt.image.BufferedImage(100, 100, java.awt.image.BufferedImage.TYPE_INT_ARGB))
+        .size(50, 50)
+        .resizerFactory(customFactory);
+```
+
+REQUIRED TYPES & IMPORTS:
+net.coobird.thumbnailator.Thumbnails
+net.coobird.thumbnailator.resizers.ResizerFactory
+net.coobird.thumbnailator.resizers.Resizer
+java.awt.Dimension
+java.awt.image.BufferedImage
+
+DOC MUST SAY:
+- `DefaultResizerFactory` is not part of the public API and cannot be accessed directly by external callers.
+- To use `resizerFactory`, callers must implement the `net.coobird.thumbnailator.resizers.ResizerFactory` interface themselves (or use a publicly accessible factory if one is explicitly provided by the library).
+- The `ResizerFactory` interface requires implementing `getResizer()` and `getResizer(Dimension, Dimension)`, both of which must return a `net.coobird.thumbnailator.resizers.Resizer`.

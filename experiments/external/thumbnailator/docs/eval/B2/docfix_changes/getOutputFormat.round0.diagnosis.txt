@@ -1,0 +1,33 @@
+AUDIENCE & TESTABILITY:
+API audience: ADVANCED/LOW-LEVEL
+Harness testability: TESTABLE-WITH-LOW-LEVEL-CONSTRUCTION
+Scoring recommendation: include only in advanced/internal bucket
+
+ROOT CAUSE:
+The documentation contains a critical error in its code example: it suggests calling `ThumbnailParameter.ORIGINAL_FORMAT.equals(format)`. In Thumbnailator, the constant `ThumbnailParameter.ORIGINAL_FORMAT` is defined as `null`, so invoking `.equals()` on it directly causes a `NullPointerException` at runtime. The snippet copied this flawed pattern from the documentation.
+
+CORRECT USAGE:
+```java
+net.coobird.thumbnailator.builders.ThumbnailParameterBuilder builder = new net.coobird.thumbnailator.builders.ThumbnailParameterBuilder();
+builder.size(100, 100);
+net.coobird.thumbnailator.ThumbnailParameter param = builder.build();
+
+String format = param.getOutputFormat();
+
+if (format == net.coobird.thumbnailator.ThumbnailParameter.ORIGINAL_FORMAT) {
+    System.out.println("Format is ORIGINAL_FORMAT (null)");
+} else if (net.coobird.thumbnailator.ThumbnailParameter.DETERMINE_FORMAT.equals(format)) {
+    System.out.println("Format is DETERMINE_FORMAT");
+} else {
+    System.out.println("Explicit format: " + format);
+}
+```
+
+REQUIRED TYPES & IMPORTS:
+net.coobird.thumbnailator.ThumbnailParameter
+net.coobird.thumbnailator.builders.ThumbnailParameterBuilder
+
+DOC MUST SAY:
+- `ThumbnailParameter.ORIGINAL_FORMAT` is defined as `null`.
+- Do not call `.equals()` on `ThumbnailParameter.ORIGINAL_FORMAT` because it will throw a `NullPointerException`.
+- To check if the format is the original format, use reference equality (`format == ThumbnailParameter.ORIGINAL_FORMAT`) or check if the returned string is `null`.

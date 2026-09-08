@@ -1,0 +1,25 @@
+AUDIENCE & TESTABILITY:
+API audience: INTERNAL-FRAMEWORK.
+Harness testability: TESTABLE-WITH-LOW-LEVEL-CONSTRUCTION.
+Scoring recommendation: include only in advanced/internal bucket.
+
+ROOT CAUSE:
+The snippet failed with a `BufferUnderflowException` because it passed an empty or truncated byte array (less than 4 bytes) to the method. The documentation failed to mention that `getOrientationFromExif` wraps the input in a `ByteBuffer` and unconditionally reads the first 4 bytes to check for the Exif magic string, throwing an exception if the array is too short.
+
+CORRECT USAGE:
+```java
+// Providing at least 4 bytes prevents the initial BufferUnderflowException.
+// Because it does not match the Exif magic string, it safely returns null.
+byte[] dummyExifData = new byte[] { 0, 0, 0, 0 };
+net.coobird.thumbnailator.util.exif.Orientation orientation = net.coobird.thumbnailator.util.exif.ExifUtils.getOrientationFromExif(dummyExifData);
+```
+
+REQUIRED TYPES & IMPORTS:
+net.coobird.thumbnailator.util.exif.ExifUtils
+net.coobird.thumbnailator.util.exif.Orientation
+
+DOC MUST SAY:
+- The `exifData` byte array must be at least 4 bytes long to avoid a `BufferUnderflowException`.
+- The method wraps the input in a `ByteBuffer` and unconditionally reads the first 4 bytes to check for the Exif magic string.
+- If the array is at least 4 bytes but does not start with the Exif magic string, the method safely returns `null`.
+- Passing truncated or malformed Exif data that passes the magic string check but lacks required TIFF headers or IFD fields will also result in a `BufferUnderflowException`.

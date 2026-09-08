@@ -1,0 +1,43 @@
+AUDIENCE & TESTABILITY:
+API audience: ADVANCED-LOW-LEVEL
+Harness testability: TESTABLE-WITH-LOW-LEVEL-CONSTRUCTION
+Scoring recommendation: include only in advanced/internal bucket
+
+ROOT CAUSE:
+The snippet failed with a `NullPointerException` before entering library code because it attempted to instantiate a `java.io.File` using an uninitialized or null test harness variable (`exif_jpeg`). Furthermore, the documentation fails to warn about a latent bug: if the `ImageReader` is given an invalid JPEG or an image completely lacking metadata, `reader.getImageMetadata(imageIndex)` will return `null`, causing `ExifUtils.getExifOrientation` to throw an undocumented `NullPointerException` when it unconditionally calls `.getAsTree(...)` on the null metadata object.
+
+CORRECT USAGE:
+```java
+java.awt.image.BufferedImage img = new java.awt.image.BufferedImage(1, 1, java.awt.image.BufferedImage.TYPE_INT_RGB);
+java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();
+javax.imageio.ImageIO.write(img, "jpg", baos);
+
+java.util.Iterator<javax.imageio.ImageReader> readers = javax.imageio.ImageIO.getImageReadersByFormatName("jpg");
+if (readers.hasNext()) {
+    javax.imageio.ImageReader reader = readers.next();
+    try (java.io.InputStream is = new java.io.ByteArrayInputStream(baos.toByteArray());
+         javax.imageio.stream.ImageInputStream iis = javax.imageio.ImageIO.createImageInputStream(is)) {
+        reader.setInput(iis);
+        net.coobird.thumbnailator.util.exif.Orientation orientation = net.coobird.thumbnailator.util.exif.ExifUtils.getExifOrientation(reader, 0);
+    } finally {
+        reader.dispose();
+    }
+}
+```
+
+REQUIRED TYPES & IMPORTS:
+javax.imageio.ImageIO
+javax.imageio.ImageReader
+javax.imageio.stream.ImageInputStream
+java.io.ByteArrayInputStream
+java.io.ByteArrayOutputStream
+java.io.InputStream
+java.awt.image.BufferedImage
+java.util.Iterator
+net.coobird.thumbnailator.util.exif.ExifUtils
+net.coobird.thumbnailator.util.exif.Orientation
+
+DOC MUST SAY:
+- The caller must provide an `ImageReader` that has been initialized with a valid JPEG input stream (e.g., via `reader.setInput(...)`).
+- If the provided image stream is not a valid JPEG or completely lacks metadata, `reader.getImageMetadata` will return `null`, causing this method to throw an undocumented `NullPointerException` when it attempts to parse the metadata tree.
+- To safely exercise this API in a test environment without relying on external files, generate an in-memory JPEG using `ImageIO.write(new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB), "jpg", outputStream)` and feed its bytes to the `ImageReader`.

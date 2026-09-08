@@ -1,0 +1,24 @@
+AUDIENCE & TESTABILITY:
+API audience: ADVANCED/LOW-LEVEL
+Harness testability: TESTABLE-WITH-LOW-LEVEL-CONSTRUCTION
+Scoring recommendation: include only in advanced/internal bucket
+
+ROOT CAUSE:
+The documentation incorrectly suggested declaring the receiver as the `Resizer` interface (`Resizer resizer = new BicubicResizer();`). The `Resizer` interface does not declare `getRenderingHints()`; the method is defined in `AbstractResizer` and inherited by its concrete subclasses. The snippet failed with a "cannot find symbol" error because it attempted to call the method on the interface type rather than the abstract or concrete class type.
+
+CORRECT USAGE:
+```java
+net.coobird.thumbnailator.resizers.BicubicResizer resizer = new net.coobird.thumbnailator.resizers.BicubicResizer();
+java.util.Map<java.awt.RenderingHints.Key, Object> hints = resizer.getRenderingHints();
+
+Object interpValue = hints.get(java.awt.RenderingHints.KEY_INTERPOLATION);
+System.out.println("__CHECK__ getRenderingHints " + interpValue);
+```
+
+REQUIRED TYPES & IMPORTS:
+net.coobird.thumbnailator.resizers.BicubicResizer
+java.util.Map
+java.awt.RenderingHints
+
+DOC MUST SAY:
+- The receiver variable must be typed as `AbstractResizer` or a concrete subclass (such as `BicubicResizer`), because the `Resizer` interface does not declare the `getRenderingHints()` method.
