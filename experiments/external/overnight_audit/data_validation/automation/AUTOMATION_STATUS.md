@@ -1,6 +1,6 @@
 # Automation status and deadline forecast
 
-Updated: 2026-09-08T13:24:25.349805-07:00. Hours to Wednesday 11 AM: 21.59.
+Updated: 2026-09-08T13:39:42.263140-07:00. Hours to Wednesday 11 AM: 21.34.
 
 **Whole-pipeline completion time remains unverified.** Estimates below cover remaining comprehension only; generation, document repair, and final validation are additional. Scenarios are not confidence intervals.
 
@@ -14,14 +14,14 @@ Updated: 2026-09-08T13:24:25.349805-07:00. Hours to Wednesday 11 AM: 21.59.
 | thumbnailator/A2 | 0 | complete | 0.00 / 0.00 / 0.00 |
 | thumbnailator/B1 | 149 | insufficient_observations | unknown |
 | thumbnailator/B2 | 0 | complete | 0.00 / 0.00 / 0.00 |
-| tslearn/A1 | 222 | estimated | 36.94 / 1073.14 / 2219.63 |
+| tslearn/A1 | 222 | estimated | 36.94 / 1073.43 / 2219.63 |
 | tslearn/A2 | 234 | stalled_no_recent_terminal_outcomes | unknown |
 | tslearn/B1 | 235 | insufficient_observations | unknown |
 | tslearn/B2 | 235 | insufficient_observations | unknown |
 
 Failure review queue: 135 entries. Mutable cross-condition path conflicts: 0.
 Deadline risks: mir_eval/A1: estimated; thumbnailator/A1: stalled_no_recent_terminal_outcomes; tslearn/A1: estimated; tslearn/A2: stalled_no_recent_terminal_outcomes
-Observation errors: 0. Observer health: `{"results": {"age_seconds": 45.0, "stale": false}, "data": {"age_seconds": 27.3, "stale": false}}`.
+Observation errors: 0. Observer health: `{"results": {"age_seconds": 53.4, "stale": false}, "data": {"age_seconds": 9.3, "stale": false}}`.
 
 - [Failure review queue](failure_review_queue.json): suggested causes, evidence, confidence, attempts and repair rounds.
 - [Resolved configuration bundles](config_bundles.json): actual profile, direct YAML layers, fixture bindings and recorded environments.

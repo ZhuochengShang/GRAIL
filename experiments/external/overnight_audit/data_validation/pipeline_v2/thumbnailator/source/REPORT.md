@@ -1,6 +1,6 @@
 # A2 source-only recovery
 
-Updated: 2026-09-08T13:22:25.737077-07:00
+Updated: 2026-09-08T13:37:58.171456-07:00
 
 Fixed eligible-failure denominator: 22. A2 is round zero; five new proposals maximum; stuck threshold two.
 
@@ -27,7 +27,7 @@ Fixed eligible-failure denominator: 22. A2 is round zero; five new proposals max
 | quality | recovered_native | 1 | /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/thumbnailator/3fe01b3536324b3252b28fced5b3557f3a6256f162fb7548eb376b14ca5f2ea0/project/.aideal_recovery/37c4309b1e961c214210cf78d67a216398201ab8a852c8d73af46d550e6208a9/recovery.json |
 | region | recovered_native | 1 | /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/thumbnailator/3fe01b3536324b3252b28fced5b3557f3a6256f162fb7548eb376b14ca5f2ea0/project/.aideal_recovery/cc7aec898c789eecd7b0ea39645d63cd8cc9fc3f23ca6735e37ad547113a12bb/recovery.json |
 | resizerFactory | recovered_native | 1 | /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/thumbnailator/3fe01b3536324b3252b28fced5b3557f3a6256f162fb7548eb376b14ca5f2ea0/project/.aideal_recovery/90404a1780526631902ab8c625d89b956a72e18fe9f7df58fb3e9f73ef565cad/recovery.json |
-| setThumbnailParameter | provider_blocked | 0 | /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/thumbnailator/3fe01b3536324b3252b28fced5b3557f3a6256f162fb7548eb376b14ca5f2ea0/project/.aideal_recovery/f24221d17541703794d35162c7731628ac1df46f8ef66b67223a8f858448306a/recovery.json |
+| setThumbnailParameter | recovered_native | 1 | /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/thumbnailator/3fe01b3536324b3252b28fced5b3557f3a6256f162fb7548eb376b14ca5f2ea0/project/.aideal_recovery/f24221d17541703794d35162c7731628ac1df46f8ef66b67223a8f858448306a/recovery.json |
 
 Native recovery does not certify the generated assertions. Semantic review remains required.
 B2 is a separate fresh-reader evaluation of the rewritten generated README. Original README repair is omitted.
