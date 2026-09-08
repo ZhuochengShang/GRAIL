@@ -1,15 +1,15 @@
 # Thumbnailator native outcomes and isolated assertion replay
 
-Updated: 2026-09-07T23:41:38.476104-07:00
+Updated: 2026-09-08T00:01:41.461746-07:00
 
 No native score is replaced. Both replay variants use identical code, copied fixture bytes, a fresh output root and Java 8 isolation; only `-da` versus `-ea` differs.
 
-| Cell | Native state | Native pass / API outcomes | Replayed | Assertions-on pass | Off pass → on fail | Unbound retained replays |
-|---|---|---:|---:|---:|---:|---:|
-| A1 | native partial | 128/149 | 142 | 111 | 14 | 139 |
-| A2 | native complete | 127/149 | 149 | 114 | 6 | 0 |
-| B1 | awaiting native evidence | — | — | — | — | — |
-| B2 | awaiting native evidence | — | — | — | — | — |
+| Cell | Native state | Native pass / API outcomes | Replayed | Off pass | On pass | Off pass → on fail | Unbound retained replays |
+|---|---|---:|---:|---:|---:|---:|---:|
+| A1 | native partial | 128/149 | 142 | 125 | 111 | 14 | 139 |
+| A2 | native complete | 127/149 | 149 | 120 | 114 | 6 | 0 |
+| B1 | awaiting native evidence | — | — | — | — | — | — |
+| B2 | awaiting native evidence | — | — | — | — | — | — |
 
 ## Interpretation
 
