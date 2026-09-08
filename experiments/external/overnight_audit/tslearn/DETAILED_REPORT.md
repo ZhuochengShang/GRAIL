@@ -27,7 +27,7 @@ Effects withheld until all four matched final cells and their repair/test eviden
 
 ### A1
 
-Primary failure categories: {"api-identity": 26, "llm-error": 47, "test/scaffold": 18, "unknown": 23}.
+Primary failure categories: {"api-identity": 27, "llm-error": 47, "test/scaffold": 18, "unknown": 25}.
 
 Recorded provider-error attempts across all checkpoint fingerprints: 47. Provider-internal retries are not recorded by the existing client and cannot be inferred from the configured limit. Watchdog logs retain process attempts; checkpoint attempts and document-fix rounds are separate ledger fields.
 
@@ -145,10 +145,13 @@ Recorded provider-error attempts across all checkpoint fingerprints: 47. Provide
 - `tril`: api-identity; native=infra; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `tslearn/tslearn/backend/pytorch_backend.py:217`. Error: `missing module/import: cannot import name 'NumPyBackend' from 'tslearn.backend' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/backend/__init__.py)`. Review: Import/member selection failed; the runner's infrastructure label needs review.
 - `tril_indices`: api-identity; native=infra; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `tslearn/tslearn/backend/pytorch_backend.py:221`. Error: `missing module/import: cannot import name 'NumPyBackend' from 'tslearn.backend' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/backend/__init__.py)`. Review: Import/member selection failed; the runner's infrastructure label needs review.
 - `triu`: api-identity; native=infra; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `tslearn/tslearn/backend/pytorch_backend.py:228`. Error: `missing module/import: cannot import name 'NumPyBackend' from 'tslearn.backend' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/backend/__init__.py)`. Review: Import/member selection failed; the runner's infrastructure label needs review.
+- `triu_indices`: api-identity; native=infra; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `tslearn/tslearn/backend/pytorch_backend.py:232`. Error: `missing module/import: cannot import name 'NumPyBackend' from 'tslearn.backend' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/backend/__init__.py)`. Review: Import/member selection failed; the runner's infrastructure label needs review.
+- `uniform`: unknown; native=runtime; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `tslearn/tslearn/backend/pytorch_backend.py:256`. Error: `AttributeError: 'NumPyBackend' object has no attribute 'uniform'`. Review: Observed runtime; doc attribution requires source, document, and snippet review.
+- `y_shifted_sbd_vec`: unknown; native=runtime; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `tslearn/tslearn/metrics/cycc.py:99`. Error: `TypeError: not enough arguments: expected 4, got 2`. Review: Observed runtime; doc attribution requires source, document, and snippet review.
 
 ### A2
 
-Primary failure categories: {"api-identity": 11, "llm-error": 3, "test/scaffold": 17, "unknown": 31}.
+Primary failure categories: {"api-identity": 11, "llm-error": 3, "test/scaffold": 17, "unknown": 32}.
 
 Recorded provider-error attempts across all checkpoint fingerprints: 15. Provider-internal retries are not recorded by the existing client and cannot be inferred from the configured limit. Watchdog logs retain process attempts; checkpoint attempts and document-fix rounds are separate ledger fields.
 
@@ -214,6 +217,7 @@ Recorded provider-error attempts across all checkpoint fingerprints: 15. Provide
 - `support_vectors_`: unknown; native=runtime; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `tslearn/tslearn/svm/svm.py:285`. Error: `AssertionError: support_vectors_ should be a numpy array`. Review: Observed runtime; doc attribution requires source, document, and snippet review.
 - `to_cesium_dataset`: test/scaffold; native=infra; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `tslearn/tslearn/utils/cast.py:655`. Error: `missing module/import: Conversion from/to cesium cannot be performed if cesium is not installed.`. Review: Runner classified this as infrastructure.
 - `to_pickle`: unknown; native=runtime; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `tslearn/tslearn/bases/bases.py:307`. Error: `AttributeError: 'dict' object has no attribute 'n_clusters'`. Review: Observed runtime; doc attribution requires source, document, and snippet review.
+- `uniform`: unknown; native=runtime; checkpoint attempts=1; provider-error attempts=0; document rounds=None; repair=None. Source: `tslearn/tslearn/backend/pytorch_backend.py:256`. Error: `AttributeError: 'NumPyBackend' object has no attribute 'uniform'`. Review: Observed runtime; doc attribution requires source, document, and snippet review.
 
 ### B1
 

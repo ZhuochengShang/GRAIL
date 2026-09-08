@@ -1,14 +1,14 @@
 # AIDEAL readiness assessment and improvement queue
 
-Updated: 2026-09-08T06:47:14.051238+00:00
+Updated: 2026-09-08T07:02:15.700301+00:00
 
 **Measured scope:** how documentation affects an LLM’s API use under a fixed harness. Overall agent readiness is not yet fully measured; no composite score is assigned.
 
 | Repository | A1 | A2 | B1 | B2 | Matched comparison |
 |---|---|---|---|---|---|
-| mir_eval | 69/148 provisional | 135/148 final | pending (148 APIs) | pending (148 APIs) | WITHHELD/PARTIAL |
+| mir_eval | 0/148 provisional | 135/148 final | pending (148 APIs) | pending (148 APIs) | WITHHELD/PARTIAL |
 | thumbnailator | 1/149 provisional | 127/149 final | pending (149 APIs) | pending (149 APIs) | WITHHELD/PARTIAL |
-| tslearn | 115/235 provisional | 153/235 provisional | pending (235 APIs) | pending (235 APIs) | WITHHELD/PARTIAL |
+| tslearn | 118/235 provisional | 172/235 provisional | pending (235 APIs) | pending (235 APIs) | WITHHELD/PARTIAL |
 
 Provisional counts retain pending and provider-error APIs in the denominator. Final counts are native pass/all-API results. Cross-cell effects require the separate matched-comparison release checks.
 
@@ -24,26 +24,22 @@ Provisional counts retain pending and provider-error APIs in the denominator. Fi
 
 | Repository | Candidate barrier | Affected API/cell records |
 |---|---|---:|
-| mir_eval | api-identity-or-version | 4 |
-| mir_eval | assertion-or-behavior | 17 |
 | mir_eval | doc-wrong | 2 |
 | mir_eval | example-invalid | 1 |
-| mir_eval | input-contract-or-api-call | 19 |
-| mir_eval | input-or-output-path | 6 |
-| mir_eval | provider | 29 |
+| mir_eval | provider | 2 |
 | mir_eval | test/scaffold | 5 |
-| mir_eval | unknown | 9 |
+| mir_eval | unknown | 5 |
 | thumbnailator | provider | 4 |
 | thumbnailator | unknown | 23 |
-| tslearn | api-identity-or-version | 42 |
+| tslearn | api-identity-or-version | 48 |
 | tslearn | assertion-or-behavior | 23 |
-| tslearn | input-contract-or-api-call | 9 |
+| tslearn | input-contract-or-api-call | 10 |
 | tslearn | provider | 50 |
 | tslearn | unknown | 49 |
 
-## Reviewable improvements (292)
+## Reviewable improvements (222)
 
-Review states: `{'open': 291, 'proposed': 1}`. Observation errors: 0. Inactive reviewed IDs retained: 0.
+Review states: `{'open': 221, 'proposed': 1}`. Observation errors: 0. Inactive reviewed IDs retained: 0.
 
 Each card separates native failure, diagnosis confidence, proposed action, validation and review decisions. Provider barriers concern execution infrastructure; they are not automatically codebase or documentation defects.
 
@@ -51,33 +47,6 @@ Each card separates native failure, diagnosis confidence, proposed action, valid
 |---|---|---|---|---|
 | [mir_eval: IntervalFormatter](suggestions/43eb9410c759c001a0ca.md) | A1 | execution_blocker | high | open |
 | [mir_eval: absolute_error](suggestions/082799557f3d00ef3959.md) | A1 | execution_blocker | high | open |
-| [mir_eval: compute_accuracy](suggestions/3e452364bc3ce7629a00.md) | A1 | execution_blocker | high | open |
-| [mir_eval: compute_err_score](suggestions/15ea9b007008778fffe3.md) | A1 | execution_blocker | high | open |
-| [mir_eval: compute_num_true_positives](suggestions/a94de7dba8b2518329b0.md) | A1 | execution_blocker | high | open |
-| [mir_eval: constant_hop_timebase](suggestions/a94d44ba733dc35068c1.md) | A1 | execution_blocker | high | open |
-| [mir_eval: deprecated](suggestions/beb42a32875dfb8074a9.md) | A1 | execution_blocker | high | open |
-| [mir_eval: deviation](suggestions/485cfbe27e59e994869a.md) | A1 | execution_blocker | high | open |
-| [mir_eval: generate_labels](suggestions/206b1afbab047351560f.md) | A1 | execution_blocker | high | open |
-| [mir_eval: goto](suggestions/31d759747e60a47ee7f0.md) | A1 | execution_blocker | high | open |
-| [mir_eval: hz_to_midi](suggestions/0fc9f77b57e5ec9906c5.md) | A1 | execution_blocker | high | open |
-| [mir_eval: join](suggestions/d1241d280613693e892c.md) | A1 | execution_blocker | high | open |
-| [mir_eval: karaoke_perceptual_metric](suggestions/9118ca03cd85bcb44076.md) | A1 | execution_blocker | high | open |
-| [mir_eval: lmeasure](suggestions/8bbd52b230f0a2c7fecd.md) | A1 | execution_blocker | high | open |
-| [mir_eval: merge_chord_intervals](suggestions/81c93234379912055f49.md) | A1 | execution_blocker | high | open |
-| [mir_eval: midi_to_hz](suggestions/211e4c04d67f8fca45b9.md) | A1 | execution_blocker | high | open |
-| [mir_eval: overseg](suggestions/6e74d2f73232d8dff637.md) | A1 | execution_blocker | high | open |
-| [mir_eval: percentage_correct](suggestions/e9ac493292c3af9f7a53.md) | A1 | execution_blocker | high | open |
-| [mir_eval: percentage_correct_segments](suggestions/9c570f531c4d4f940760.md) | A1 | execution_blocker | high | open |
-| [mir_eval: piano_roll](suggestions/0a2ca18c14109cd4b39e.md) | A1 | execution_blocker | high | open |
-| [mir_eval: rand_index](suggestions/43e353481c75a9c347f4.md) | A1 | execution_blocker | high | open |
-| [mir_eval: reduce_extended_quality](suggestions/f4e1161a1968ed0e9d38.md) | A1 | execution_blocker | high | open |
-| [mir_eval: register_colormap](suggestions/d6485c290c7bda782770.md) | A1 | execution_blocker | high | open |
-| [mir_eval: seg](suggestions/8203ae2ebabf0a487d90.md) | A1 | execution_blocker | high | open |
-| [mir_eval: split](suggestions/5a88eb99e29f3d5b416e.md) | A1 | execution_blocker | high | open |
-| [mir_eval: underseg](suggestions/d815da7665f94bd15133.md) | A1 | execution_blocker | high | open |
-| [mir_eval: validate_boundary](suggestions/641d57339a66dbb3993a.md) | A1 | execution_blocker | high | open |
-| [mir_eval: validate_structure](suggestions/970d60a4c88d8d112a3e.md) | A1 | execution_blocker | high | open |
-| [mir_eval: vmeasure](suggestions/24f231e5d234a7e41345.md) | A1 | execution_blocker | high | open |
 | [thumbnailator: clear](suggestions/3f911dbe0befc683e80e.md) | A1 | execution_blocker | high | open |
 | [thumbnailator: createOutputStream](suggestions/8c69e4aae53d75a4ecbd.md) | A1 | execution_blocker | high | open |
 | [thumbnailator: format](suggestions/a4ae9b56216ff3fc31e1.md) | A1 | execution_blocker | high | open |
@@ -145,56 +114,6 @@ Each card separates native failure, diagnosis confidence, proposed action, valid
 | [mir_eval: reduce_extended_quality](suggestions/84d3132e80a965f61bc2.md) | A2 | reviewed_barrier | reviewed | open |
 | [mir_eval: ticker_pitch](suggestions/f0e1ab94a6656e53a513.md) | A2 | reviewed_barrier | reviewed | proposed |
 | [mir_eval: voicing_recall](suggestions/049822fa462033a54c69.md) | A2 | reviewed_barrier | reviewed | open |
-| [mir_eval: adjust_events](suggestions/b5d8d720382ae6f3937c.md) | A1 | needs_diagnosis | medium | open |
-| [mir_eval: bss_eval_images_framewise](suggestions/ee546cfee6a917867a24.md) | A1 | needs_diagnosis | low | open |
-| [mir_eval: cemgil](suggestions/c6506c88fc534d7355a4.md) | A1 | needs_diagnosis | medium | open |
-| [mir_eval: directional_hamming_distance](suggestions/2f801be73cdc571eaa87.md) | A1 | needs_diagnosis | medium | open |
-| [mir_eval: encode](suggestions/c0b0ea84a8bbdb141a5c.md) | A1 | needs_diagnosis | medium | open |
-| [mir_eval: establishment_FPR](suggestions/fb3df82af9d781a1029f.md) | A1 | needs_diagnosis | medium | open |
-| [mir_eval: filter_kwargs](suggestions/d21e6895b4ba7d321840.md) | A1 | needs_diagnosis | medium | open |
-| [mir_eval: freq_to_voicing](suggestions/9d92f0294a7e43670cce.md) | A1 | needs_diagnosis | medium | open |
-| [mir_eval: hierarchy](suggestions/e80a3571919b0a3060aa.md) | A1 | needs_diagnosis | medium | open |
-| [mir_eval: index_labels](suggestions/6748fbb926345164f1d3.md) | A1 | needs_diagnosis | medium | open |
-| [mir_eval: intervals_to_samples](suggestions/22787fa4aeff29aba5bc.md) | A1 | needs_diagnosis | medium | open |
-| [mir_eval: labeled_intervals](suggestions/f19880ca9e62ee01d0f2.md) | A1 | needs_diagnosis | medium | open |
-| [mir_eval: load_intervals](suggestions/e28c89662ce0bddd2858.md) | A1 | needs_diagnosis | medium | open |
-| [mir_eval: load_key](suggestions/07935a2cc87763bd5029.md) | A1 | needs_diagnosis | medium | open |
-| [mir_eval: load_labeled_events](suggestions/435fb3ecec357acd1560.md) | A1 | needs_diagnosis | medium | open |
-| [mir_eval: load_patterns](suggestions/b0f6efc6ada8ec91bae2.md) | A1 | needs_diagnosis | medium | open |
-| [mir_eval: load_tempo](suggestions/ee0ffa4decac662d0a75.md) | A1 | needs_diagnosis | medium | open |
-| [mir_eval: load_valued_intervals](suggestions/5294f3212213f9d21189.md) | A1 | needs_diagnosis | medium | open |
-| [mir_eval: load_wav](suggestions/38ea0baa3c61534b7a7e.md) | A1 | needs_diagnosis | medium | open |
-| [mir_eval: match_note_offsets](suggestions/cab7744907893c737877.md) | A1 | needs_diagnosis | low | open |
-| [mir_eval: match_note_onsets](suggestions/8c47855a97838c3c58c4.md) | A1 | needs_diagnosis | medium | open |
-| [mir_eval: match_notes](suggestions/4bf8494d3551483021cb.md) | A1 | needs_diagnosis | medium | open |
-| [mir_eval: merge_labeled_intervals](suggestions/43aa2b1071c2e3da200d.md) | A1 | needs_diagnosis | medium | open |
-| [mir_eval: metrics](suggestions/941c61218671eccf5b9c.md) | A1 | needs_diagnosis | medium | open |
-| [mir_eval: midi_to_chroma](suggestions/0c1ac2019580dec1cc7a.md) | A1 | needs_diagnosis | medium | open |
-| [mir_eval: mirex](suggestions/d1e8c581e99ac74b898a.md) | A1 | needs_diagnosis | medium | open |
-| [mir_eval: mutual_information](suggestions/c31dbc02e1005fbaf427.md) | A1 | needs_diagnosis | medium | open |
-| [mir_eval: nce](suggestions/a92aa7c41c283dded174.md) | A1 | needs_diagnosis | medium | open |
-| [mir_eval: occurrence_FPR](suggestions/491f0c1de7473c2033c6.md) | A1 | needs_diagnosis | medium | open |
-| [mir_eval: offset_precision_recall_f1](suggestions/7349ba90280378efdc50.md) | A1 | needs_diagnosis | medium | open |
-| [mir_eval: onset_precision_recall_f1](suggestions/7100e1f4c564b26a4619.md) | A1 | needs_diagnosis | medium | open |
-| [mir_eval: precision_recall_f1_overlap](suggestions/5b99bf662ca3113b5cc7.md) | A1 | needs_diagnosis | medium | open |
-| [mir_eval: raw_chroma_accuracy](suggestions/304393ce33554ee7d978.md) | A1 | needs_diagnosis | medium | open |
-| [mir_eval: raw_pitch_accuracy](suggestions/1ae98db80158b959aac2.md) | A1 | needs_diagnosis | medium | open |
-| [mir_eval: rotate_bitmap_to_root](suggestions/4b04290420ac757e9c40.md) | A1 | needs_diagnosis | medium | open |
-| [mir_eval: rotate_bitmaps_to_roots](suggestions/d036fb8b6d4739ea3ef9.md) | A1 | needs_diagnosis | medium | open |
-| [mir_eval: segments](suggestions/9793c2361b05ee449388.md) | A1 | needs_diagnosis | medium | open |
-| [mir_eval: split_key_string](suggestions/2666c133dc301e4d1ba4.md) | A1 | needs_diagnosis | medium | open |
-| [mir_eval: standard_FPR](suggestions/fe10055b088c95ed3948.md) | A1 | needs_diagnosis | medium | open |
-| [mir_eval: tetrads_inv](suggestions/d22f4169f098fc3a9d7c.md) | A1 | needs_diagnosis | medium | open |
-| [mir_eval: thirds](suggestions/6c1ad712345a7259ceb0.md) | A1 | needs_diagnosis | low | open |
-| [mir_eval: ticker_notes](suggestions/189cb354c4b873209fcd.md) | A1 | needs_diagnosis | medium | open |
-| [mir_eval: ticker_pitch](suggestions/fa6ec02b12da0c18e301.md) | A1 | needs_diagnosis | medium | open |
-| [mir_eval: tmeasure](suggestions/676c59a8af6e8969699c.md) | A1 | needs_diagnosis | medium | open |
-| [mir_eval: to_cent_voicing](suggestions/60bb7e394ebacc6994b1.md) | A1 | needs_diagnosis | medium | open |
-| [mir_eval: validate_chord_label](suggestions/7d86acd1d5814a7b82ba.md) | A1 | needs_diagnosis | low | open |
-| [mir_eval: validate_frequencies](suggestions/9891f992fd74be0eda19.md) | A1 | needs_diagnosis | medium | open |
-| [mir_eval: validate_hier_intervals](suggestions/40e5a297c10597e0956c.md) | A1 | needs_diagnosis | medium | open |
-| [mir_eval: validate_tempi](suggestions/7f53a0233f322c209ab8.md) | A1 | needs_diagnosis | medium | open |
-| [mir_eval: weighted_accuracy](suggestions/565d2c3c8c28402a7c31.md) | A1 | needs_diagnosis | medium | open |
 | [thumbnailator: build](suggestions/3f447775fd599b0e1381.md) | A1 | needs_diagnosis | low | open |
 | [thumbnailator: Pipeline](suggestions/bef11a67152a2a4d29da.md) | A2 | needs_diagnosis | low | open |
 | [thumbnailator: ThumbnailMaker](suggestions/c03bfc3c50c6bd4fe7f4.md) | A2 | needs_diagnosis | low | open |
@@ -283,6 +202,11 @@ Each card separates native failure, diagnosis confidence, proposed action, valid
 | [tslearn: to_pickle](suggestions/b3bae748f28acda78bca.md) | A1 | needs_diagnosis | medium | open |
 | [tslearn: transform](suggestions/24cec3efaf9a7aad4548.md) | A1 | needs_diagnosis | low | open |
 | [tslearn: tril](suggestions/e05bdc1a311e4986ce33.md) | A1 | needs_diagnosis | medium | open |
+| [tslearn: tril_indices](suggestions/74dcb9c00104264d76ff.md) | A1 | needs_diagnosis | medium | open |
+| [tslearn: triu](suggestions/eb410220623eddf2a39d.md) | A1 | needs_diagnosis | medium | open |
+| [tslearn: triu_indices](suggestions/2b0c145acb8fe92a71a8.md) | A1 | needs_diagnosis | medium | open |
+| [tslearn: uniform](suggestions/fe38236ea9ba8c3a2aad.md) | A1 | needs_diagnosis | medium | open |
+| [tslearn: y_shifted_sbd_vec](suggestions/a116a86c554f8be3af5f.md) | A1 | needs_diagnosis | medium | open |
 | [tslearn: BaseModelPackage](suggestions/f995a70ba75a6f818ba5.md) | A2 | needs_diagnosis | medium | open |
 | [tslearn: EmptyClusterError](suggestions/3bb29d868c529bcad84e.md) | A2 | needs_diagnosis | medium | open |
 | [tslearn: GlobalArgminPooling1D](suggestions/7fec39a7ce54e7122bf8.md) | A2 | needs_diagnosis | low | open |
@@ -341,6 +265,8 @@ Each card separates native failure, diagnosis confidence, proposed action, valid
 | [tslearn: shapelets_as_time_series_](suggestions/d6a9bb0ebcc53693508b.md) | A2 | needs_diagnosis | low | open |
 | [tslearn: support_vectors_](suggestions/2ac402a74c2257cb4cfd.md) | A2 | needs_diagnosis | medium | open |
 | [tslearn: to_cesium_dataset](suggestions/7e892c56816236b0eeff.md) | A2 | needs_diagnosis | low | open |
+| [tslearn: to_pickle](suggestions/fbf9d5a6bd05cc38a021.md) | A2 | needs_diagnosis | medium | open |
+| [tslearn: uniform](suggestions/8e82751fb4e01235d481.md) | A2 | needs_diagnosis | medium | open |
 
 ## Human and agent workflow
 
