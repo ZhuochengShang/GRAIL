@@ -4,7 +4,7 @@ Deadline: 2026-09-09T11:00:00-07:00. This observer never starts, stops, or resta
 
 | Repository | Cell | State | Pass | Fail | Pending | Recorded provider-error attempts |
 |---|---|---|---:|---:|---:|---:|
-| mir_eval | A1 | partial | 1 | 28 | 119 | 214 |
+| mir_eval | A1 | partial | 1 | 28 | 119 | 216 |
 | mir_eval | A2 | complete | 135 | 13 | 0 | 1 |
 | mir_eval | B1 | pending | 0 | 0 | 148 | 0 |
 | mir_eval | B2 | complete | 137 | 11 | 0 | 0 |
@@ -12,7 +12,7 @@ Deadline: 2026-09-09T11:00:00-07:00. This observer never starts, stops, or resta
 | thumbnailator | A2 | complete | 127 | 22 | 0 | 1 |
 | thumbnailator | B1 | pending | 0 | 0 | 149 | 0 |
 | thumbnailator | B2 | complete | 139 | 10 | 0 | 2 |
-| tslearn | A1 | partial | 3 | 44 | 188 | 134 |
+| tslearn | A1 | partial | 3 | 44 | 188 | 135 |
 | tslearn | A2 | complete | 175 | 60 | 0 | 83 |
 | tslearn | B1 | pending | 0 | 0 | 235 | 0 |
 | tslearn | B2 | partial | 1 | 0 | 234 | 0 |
