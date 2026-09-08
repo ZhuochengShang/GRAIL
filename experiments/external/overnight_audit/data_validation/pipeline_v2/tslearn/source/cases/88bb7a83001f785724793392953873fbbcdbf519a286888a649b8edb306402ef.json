@@ -1,0 +1,119 @@
+{
+  "fingerprint": "091caea9db1abe44f2777a948ac4671c645fd32561d0fde8089542f4df59d726",
+  "identity": {
+    "baseline_fingerprint": "366e0c64f58ebac296ba554d7ae3f9d9ca2a6b85bf15faf250291bc1c2198bb9",
+    "baseline_result_sha256": "cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab",
+    "api": "uniform",
+    "script_sha256": "f64a66038e008993ffb22e60012d60e3169df66cfc2d2ae384b6b080fe0aaf20",
+    "prompt_sha256": {
+      "comprehension_write_exec": "f557fcc5d4534cdfa6e596066b2106fd4d9f1ed459be8afccb8676070275c501",
+      "deep_dive": "bcaacb96d675d8e898784eea65319e5ded213c06eb8578f5e40627fd3adce504"
+    },
+    "current_effective_config_sha256": "8f538c73b1313fa0053891b34eebf92d5423a22486707c2010f1cdbca48fc715",
+    "current_profile_sha256": "a9124a6c32a7bd4813d62b15ebee0bd7810d32a3f1e770cc67b21aac37b28a46",
+    "upstream_test_context": {
+      "sha256": "71eff9e405056f9b6670608d1c983b7c14f9ac268ae1869c767bf8d06b8ff241",
+      "file_count": 21
+    },
+    "context_engine": {
+      "deepdive.py": "11b4bd8f2c2761c17c43d43a4747ee3660173c94c1a621811c8f720e13898c73",
+      "docfix.py": "1d2f7cf6acdf9455ede12acdf35dcb93d91aa5bc7fe05514fbf783a5eca877b9"
+    },
+    "protocol_sha256": "b6caeb1e279ff5f30bd90547071380caf7efd19a54ea2f5972fddd266f91b5a2",
+    "source": {
+      "sha256": "90ffcaf2949df6e6efb7c82e0eb692117803de7fbb7c5d61178bc44fd411cdfc",
+      "file_count": 62
+    },
+    "document_sha256": "99563bb64e9b9f98f0fec08a242860867eed80fba8e6adf21ddee63e26efb4ff",
+    "script_binding": "retained_unbound_legacy",
+    "baseline_compatibility": null,
+    "mode": "source",
+    "max_code_fix_rounds": 5,
+    "stuck_rounds": 2,
+    "runner_sha256": "0b5d7370459006a623d7084ab5c63a2ecdaa953fc2494a65627175671b994abf",
+    "engine_sha256": "6d9f4310015755d44f7e002ef5add7fb29dfaad0685c7e9d61ca495c1cddeaf1",
+    "validation_sha256": "6b57fe6df9a3049e7b76fbe76ca8042f885bcd507d87040a28032401879cdeb9",
+    "compatibility_adapter_sha256": "86d978d07814e35310da027da25d1e59bafd84dd350be5f66dc278050b1d43f9"
+  },
+  "initial": {
+    "status": "fail",
+    "category": "runtime",
+    "error": "AttributeError: 'NumPyBackend' object has no attribute 'uniform'",
+    "code": "\"\"\"Shared infrastructure-only scaffold for tslearn's full-surface 2x2.\n\nThis exact file is used in A1, A2, B1, and B2. It intentionally imports no\ntested tslearn API because discovering the public import is part of the\naudience task in every cell.\n\"\"\"\n\nfrom pathlib import Path\nimport sys\nimport traceback\n\nimport numpy as np\n\n\ndef run():\n    # Typed repository fixture path and condition-specific output directory:\n    trace_npz = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/tslearn/tslearn/.cached_datasets/Trace.npz\"\n    output_dir = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_exec/A2/output\"\n\n    # pre-loaded typed inputs (comprehension.execute.preamble)\n    Path(output_dir).mkdir(parents=True, exist_ok=True)\n    _trace = np.load(trace_npz)\n    _balanced = np.array([0, 4, 1, 17, 3, 13, 2, 5], dtype=int)\n    X = _trace[\"X_train\"][_balanced, :40, :]  # type: balanced time-series dataset ndarray (8, 40, 1)\n    X2 = _trace[\"X_test\"][:4, :32, :]  # type: second dataset ndarray (4, 32, 1)\n    s1 = X[0].ravel()  # type: 1-D series ndarray (40,)\n    s2 = X[1].ravel()  # type: 1-D series ndarray (40,)\n    y = _trace[\"y_train\"][_balanced]  # type: four balanced labels, two examples per class\n    tiny_matrix = np.arange(12.0).reshape(3, 4)  # type: deterministic numeric matrix\n\n    # Keep audience imports local so they cannot shadow fixture construction.\n    def api_test():\n        # TODO API_TEST_START\n        from tslearn.backend import instantiate_backend\n\n        be = instantiate_backend(\"numpy\")\n        arr = be.uniform(low=-2.0, high=5.0, size=(3, 4, 5))\n\n        assert arr.shape == (3, 4, 5), f\"Expected shape (3, 4, 5), got {arr.shape}\"\n        assert (arr >= -2.0).all() and (arr < 5.0).all(), \"Values are out of the specified uniform bounds\"\n\n        print(f\"__CHECK__ uniform {arr.shape}\")\n        # TODO API_TEST_END\n        pass\n\n    api_test()\n\n\nif __name__ == \"__main__\":\n    try:\n        run()\n        print(\"__DONE__\")\n    except Exception as exc:  # noqa: BLE001 - execution boundary\n        sys.stderr.write(\"__RUN_ERR__ \" + type(exc).__name__ + \": \" + str(exc) + \"\\n\")\n        traceback.print_exc()\n        raise SystemExit(1)\n"
+  },
+  "events": [
+    {
+      "status": "fail",
+      "category": "runtime",
+      "error": "AttributeError: 'NumPyRandom' object has no attribute 'uniform'",
+      "code": "\"\"\"Shared infrastructure-only scaffold for tslearn's full-surface 2x2.\n\nThis exact file is used in A1, A2, B1, and B2. It intentionally imports no\ntested tslearn API because discovering the public import is part of the\naudience task in every cell.\n\"\"\"\n\nfrom pathlib import Path\nimport sys\nimport traceback\n\nimport numpy as np\n\n\ndef run():\n    # Typed repository fixture path and condition-specific output directory:\n    trace_npz = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/tslearn/tslearn/.cached_datasets/Trace.npz\"\n    output_dir = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/ebf91a74b10528f7c1790b00df27d2999355a9b7cb0ff05a578008944f64deb9/round_01/attempt_0001/output\"\n\n    # pre-loaded typed inputs (comprehension.execute.preamble)\n    Path(output_dir).mkdir(parents=True, exist_ok=True)\n    _trace = np.load(trace_npz)\n    _balanced = np.array([0, 4, 1, 17, 3, 13, 2, 5], dtype=int)\n    X = _trace[\"X_train\"][_balanced, :40, :]  # type: balanced time-series dataset ndarray (8, 40, 1)\n    X2 = _trace[\"X_test\"][:4, :32, :]  # type: second dataset ndarray (4, 32, 1)\n    s1 = X[0].ravel()  # type: 1-D series ndarray (40,)\n    s2 = X[1].ravel()  # type: 1-D series ndarray (40,)\n    y = _trace[\"y_train\"][_balanced]  # type: four balanced labels, two examples per class\n    tiny_matrix = np.arange(12.0).reshape(3, 4)  # type: deterministic numeric matrix\n\n    # Keep audience imports local so they cannot shadow fixture construction.\n    def api_test():\n        # TODO API_TEST_START\n        from tslearn.backend import instantiate_backend\n\n        be = instantiate_backend(\"numpy\")\n        arr = be.random.uniform(low=-2.0, high=5.0, size=(3, 4, 5))\n\n        assert arr.shape == (3, 4, 5), f\"Expected shape (3, 4, 5), got {arr.shape}\"\n        assert (arr >= -2.0).all() and (arr < 5.0).all(), \"Values are out of the specified uniform bounds\"\n\n        print(f\"__CHECK__ uniform {arr.shape}\")\n        # TODO API_TEST_END\n        pass\n\n    api_test()\n\n\nif __name__ == \"__main__\":\n    try:\n        run()\n        print(\"__DONE__\")\n    except Exception as exc:  # noqa: BLE001 - execution boundary\n        sys.stderr.write(\"__RUN_ERR__ \" + type(exc).__name__ + \": \" + str(exc) + \"\\n\")\n        traceback.print_exc()\n        raise SystemExit(1)\n",
+      "native_result": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/ebf91a74b10528f7c1790b00df27d2999355a9b7cb0ff05a578008944f64deb9/round_01/attempt_0001/native_result.json",
+      "script_sha256": "d17a71a1d99ce2bb8b58bbe9adad273746e535e58679377804c68c9476fcc2f0",
+      "wall_s": 11.0,
+      "llm_calls": 1,
+      "input_tokens": 3451,
+      "output_tokens": 939,
+      "code_fix_round": 1
+    },
+    {
+      "status": "pass",
+      "category": null,
+      "error": null,
+      "code": "\"\"\"Shared infrastructure-only scaffold for tslearn's full-surface 2x2.\n\nThis exact file is used in A1, A2, B1, and B2. It intentionally imports no\ntested tslearn API because discovering the public import is part of the\naudience task in every cell.\n\"\"\"\n\nfrom pathlib import Path\nimport sys\nimport traceback\n\nimport numpy as np\n\n\ndef run():\n    # Typed repository fixture path and condition-specific output directory:\n    trace_npz = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/tslearn/tslearn/.cached_datasets/Trace.npz\"\n    output_dir = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/ebf91a74b10528f7c1790b00df27d2999355a9b7cb0ff05a578008944f64deb9/round_02/attempt_0001/output\"\n\n    # pre-loaded typed inputs (comprehension.execute.preamble)\n    Path(output_dir).mkdir(parents=True, exist_ok=True)\n    _trace = np.load(trace_npz)\n    _balanced = np.array([0, 4, 1, 17, 3, 13, 2, 5], dtype=int)\n    X = _trace[\"X_train\"][_balanced, :40, :]  # type: balanced time-series dataset ndarray (8, 40, 1)\n    X2 = _trace[\"X_test\"][:4, :32, :]  # type: second dataset ndarray (4, 32, 1)\n    s1 = X[0].ravel()  # type: 1-D series ndarray (40,)\n    s2 = X[1].ravel()  # type: 1-D series ndarray (40,)\n    y = _trace[\"y_train\"][_balanced]  # type: four balanced labels, two examples per class\n    tiny_matrix = np.arange(12.0).reshape(3, 4)  # type: deterministic numeric matrix\n\n    # Keep audience imports local so they cannot shadow fixture construction.\n    def api_test():\n        # TODO API_TEST_START\n        from tslearn.backend import instantiate_backend\n\n        be = instantiate_backend(\"pytorch\")\n        arr = be.random.uniform(low=-2.0, high=5.0, size=(3, 4, 5))\n\n        assert tuple(arr.shape) == (3, 4, 5), f\"Expected shape (3, 4, 5), got {arr.shape}\"\n        assert bool((arr >= -2.0).all().item()) and bool((arr < 5.0).all().item()), \"Values are out of the specified uniform bounds\"\n\n        print(f\"__CHECK__ uniform {tuple(arr.shape)}\")\n        # TODO API_TEST_END\n        pass\n\n    api_test()\n\n\nif __name__ == \"__main__\":\n    try:\n        run()\n        print(\"__DONE__\")\n    except Exception as exc:  # noqa: BLE001 - execution boundary\n        sys.stderr.write(\"__RUN_ERR__ \" + type(exc).__name__ + \": \" + str(exc) + \"\\n\")\n        traceback.print_exc()\n        raise SystemExit(1)\n",
+      "native_result": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/ebf91a74b10528f7c1790b00df27d2999355a9b7cb0ff05a578008944f64deb9/round_02/attempt_0001/native_result.json",
+      "script_sha256": "1bb9785678616c52100f58aa066139ace89817910913b4bf3c5cd306470058e1",
+      "wall_s": 14.7,
+      "llm_calls": 1,
+      "input_tokens": 3453,
+      "output_tokens": 1605,
+      "code_fix_round": 2
+    }
+  ],
+  "rounds": [
+    {
+      "status": "fail",
+      "category": "runtime",
+      "error": "AttributeError: 'NumPyRandom' object has no attribute 'uniform'",
+      "code": "\"\"\"Shared infrastructure-only scaffold for tslearn's full-surface 2x2.\n\nThis exact file is used in A1, A2, B1, and B2. It intentionally imports no\ntested tslearn API because discovering the public import is part of the\naudience task in every cell.\n\"\"\"\n\nfrom pathlib import Path\nimport sys\nimport traceback\n\nimport numpy as np\n\n\ndef run():\n    # Typed repository fixture path and condition-specific output directory:\n    trace_npz = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/tslearn/tslearn/.cached_datasets/Trace.npz\"\n    output_dir = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/ebf91a74b10528f7c1790b00df27d2999355a9b7cb0ff05a578008944f64deb9/round_01/attempt_0001/output\"\n\n    # pre-loaded typed inputs (comprehension.execute.preamble)\n    Path(output_dir).mkdir(parents=True, exist_ok=True)\n    _trace = np.load(trace_npz)\n    _balanced = np.array([0, 4, 1, 17, 3, 13, 2, 5], dtype=int)\n    X = _trace[\"X_train\"][_balanced, :40, :]  # type: balanced time-series dataset ndarray (8, 40, 1)\n    X2 = _trace[\"X_test\"][:4, :32, :]  # type: second dataset ndarray (4, 32, 1)\n    s1 = X[0].ravel()  # type: 1-D series ndarray (40,)\n    s2 = X[1].ravel()  # type: 1-D series ndarray (40,)\n    y = _trace[\"y_train\"][_balanced]  # type: four balanced labels, two examples per class\n    tiny_matrix = np.arange(12.0).reshape(3, 4)  # type: deterministic numeric matrix\n\n    # Keep audience imports local so they cannot shadow fixture construction.\n    def api_test():\n        # TODO API_TEST_START\n        from tslearn.backend import instantiate_backend\n\n        be = instantiate_backend(\"numpy\")\n        arr = be.random.uniform(low=-2.0, high=5.0, size=(3, 4, 5))\n\n        assert arr.shape == (3, 4, 5), f\"Expected shape (3, 4, 5), got {arr.shape}\"\n        assert (arr >= -2.0).all() and (arr < 5.0).all(), \"Values are out of the specified uniform bounds\"\n\n        print(f\"__CHECK__ uniform {arr.shape}\")\n        # TODO API_TEST_END\n        pass\n\n    api_test()\n\n\nif __name__ == \"__main__\":\n    try:\n        run()\n        print(\"__DONE__\")\n    except Exception as exc:  # noqa: BLE001 - execution boundary\n        sys.stderr.write(\"__RUN_ERR__ \" + type(exc).__name__ + \": \" + str(exc) + \"\\n\")\n        traceback.print_exc()\n        raise SystemExit(1)\n",
+      "native_result": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/ebf91a74b10528f7c1790b00df27d2999355a9b7cb0ff05a578008944f64deb9/round_01/attempt_0001/native_result.json",
+      "script_sha256": "d17a71a1d99ce2bb8b58bbe9adad273746e535e58679377804c68c9476fcc2f0",
+      "wall_s": 11.0,
+      "llm_calls": 1,
+      "input_tokens": 3451,
+      "output_tokens": 939,
+      "code_fix_round": 1
+    },
+    {
+      "status": "pass",
+      "category": null,
+      "error": null,
+      "code": "\"\"\"Shared infrastructure-only scaffold for tslearn's full-surface 2x2.\n\nThis exact file is used in A1, A2, B1, and B2. It intentionally imports no\ntested tslearn API because discovering the public import is part of the\naudience task in every cell.\n\"\"\"\n\nfrom pathlib import Path\nimport sys\nimport traceback\n\nimport numpy as np\n\n\ndef run():\n    # Typed repository fixture path and condition-specific output directory:\n    trace_npz = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/tslearn/tslearn/.cached_datasets/Trace.npz\"\n    output_dir = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/ebf91a74b10528f7c1790b00df27d2999355a9b7cb0ff05a578008944f64deb9/round_02/attempt_0001/output\"\n\n    # pre-loaded typed inputs (comprehension.execute.preamble)\n    Path(output_dir).mkdir(parents=True, exist_ok=True)\n    _trace = np.load(trace_npz)\n    _balanced = np.array([0, 4, 1, 17, 3, 13, 2, 5], dtype=int)\n    X = _trace[\"X_train\"][_balanced, :40, :]  # type: balanced time-series dataset ndarray (8, 40, 1)\n    X2 = _trace[\"X_test\"][:4, :32, :]  # type: second dataset ndarray (4, 32, 1)\n    s1 = X[0].ravel()  # type: 1-D series ndarray (40,)\n    s2 = X[1].ravel()  # type: 1-D series ndarray (40,)\n    y = _trace[\"y_train\"][_balanced]  # type: four balanced labels, two examples per class\n    tiny_matrix = np.arange(12.0).reshape(3, 4)  # type: deterministic numeric matrix\n\n    # Keep audience imports local so they cannot shadow fixture construction.\n    def api_test():\n        # TODO API_TEST_START\n        from tslearn.backend import instantiate_backend\n\n        be = instantiate_backend(\"pytorch\")\n        arr = be.random.uniform(low=-2.0, high=5.0, size=(3, 4, 5))\n\n        assert tuple(arr.shape) == (3, 4, 5), f\"Expected shape (3, 4, 5), got {arr.shape}\"\n        assert bool((arr >= -2.0).all().item()) and bool((arr < 5.0).all().item()), \"Values are out of the specified uniform bounds\"\n\n        print(f\"__CHECK__ uniform {tuple(arr.shape)}\")\n        # TODO API_TEST_END\n        pass\n\n    api_test()\n\n\nif __name__ == \"__main__\":\n    try:\n        run()\n        print(\"__DONE__\")\n    except Exception as exc:  # noqa: BLE001 - execution boundary\n        sys.stderr.write(\"__RUN_ERR__ \" + type(exc).__name__ + \": \" + str(exc) + \"\\n\")\n        traceback.print_exc()\n        raise SystemExit(1)\n",
+      "native_result": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/ebf91a74b10528f7c1790b00df27d2999355a9b7cb0ff05a578008944f64deb9/round_02/attempt_0001/native_result.json",
+      "script_sha256": "1bb9785678616c52100f58aa066139ace89817910913b4bf3c5cd306470058e1",
+      "wall_s": 14.7,
+      "llm_calls": 1,
+      "input_tokens": 3453,
+      "output_tokens": 1605,
+      "code_fix_round": 2
+    }
+  ],
+  "status": "recovered_native",
+  "diagnosis": {
+    "api": "uniform",
+    "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/ebf91a74b10528f7c1790b00df27d2999355a9b7cb0ff05a578008944f64deb9/deepdive/uniform.md",
+    "model": "google:gemini-3.1-pro-preview",
+    "tokens": {
+      "in": 2537,
+      "out": 3107
+    },
+    "wall_s": 37.2,
+    "report_text": "**L0 AUDIENCE + TESTABILITY CLASSIFICATION**\n- **Classification:** ADVANCED/LOW-LEVEL\n- **Testability:** TESTABLE ONLY WITH EXPLICIT LOW-LEVEL CONSTRUCTION\n- **Explanation:** This API is a backend-specific helper method (`PyTorchRandom.uniform`) used internally by `tslearn` to generate random tensors in a backend-agnostic way. It is not meant for typical end-users, who would use standard `numpy` or `torch` functions directly, but rather for developers writing backend-compatible algorithms within the library. It is testable by explicitly instantiating the PyTorch backend and accessing its `random` submodule.\n\n**L1 PURPOSE**\nThe `uniform` method provides a unified interface for generating uniformly distributed random numbers using the PyTorch backend. It sits in the backend abstraction layer of `tslearn`, allowing algorithms to initialize weights or generate random time-series data without hardcoding `torch.rand`, ensuring compatibility across different computational backends (NumPy vs. PyTorch).\n\n**L2 CONTRACT**\n- **Receiver:** An instance of `PyTorchRandom` (typically accessed via the `random` attribute of an instantiated `PyTorchBackend`). Alternatively, because it is a `@staticmethod`, it can be called directly on the `PyTorchRandom` class if imported.\n- **Parameters:**\n  - `low` (float, default `0.0`): The inclusive lower bound of the uniform distribution.\n  - `high` (float, default `1.0`): The exclusive upper bound of the uniform distribution. Must be strictly greater than `low`.\n  - `size` (tuple or int, default `(1,)`): The desired shape of the output tensor. If an integer is provided, it is automatically wrapped in a tuple.\n  - `dtype` (torch.dtype or None, default `None`): The desired PyTorch data type of the output tensor. If `None`, uses the default PyTorch float type.\n- **Return value:** A PyTorch `Tensor` of shape `size` containing random values sampled from the uniform distribution `[low, high)`.\n- **Visibility:** Public within the backend module, though primarily intended for internal framework use.\n- **Thread-safety/Laziness:** Executes eagerly. Thread-safety depends on the underlying `torch.rand` implementation and PyTorch's global random number generator state.\n\n**L3 MECHANICS**\n- The method first checks if `size` is iterable (using `hasattr(size, \"__iter__\")`). If it is a scalar (e.g., an `int`), it wraps it in a tuple `(size,)` (lines 257-258).\n- It validates the bounds: if `low >= high`, it raises a `ValueError(\"Upper bound must be higher than lower bound\")` (lines 259-260).\n- It delegates the actual random generation to `_torch.rand(*size, dtype=dtype)`, which generates values in `[0, 1)`.\n- It scales and shifts the standard uniform tensor to the requested range using the formula `(high - low) * tensor + low` (line 261) and returns the result.\n\n**L4 CORRECT MINIMAL USAGE**\n```python\nfrom tslearn.backend import instantiate_backend\n\n# 1. Instantiate the PyTorch backend\nbe = instantiate_backend(\"pytorch\")\n\n# 2. Access the uniform method through the backend's random submodule\n# (The documentation incorrectly suggests calling it directly on `be`)\nrandom_tensor = be.random.uniform(low=-2.0, high=2.0, size=(3, 4))\n\n# 3. Verify the output\nassert random_tensor.shape == (3, 4)\nprint(\"Generated Tensor Shape:\", random_tensor.shape)\nprint(\"Generated Tensor:\\n\", random_tensor)\n```\n\n**L5 FAILURE FORENSICS**\n- **Failed Attempt:** `AttributeError: 'NumPyBackend' object has no attribute 'uniform'`\n- **Why it failed:** The user followed the flawed documentation entry which suggested calling `be.uniform(...)` directly on the backend object. As seen in the source code, `uniform` is defined inside the `PyTorchRandom` class (line 243), not directly on the backend class. The backend object exposes these methods through a `random` attribute (i.e., `be.random.uniform(...)`), mirroring the structure of `numpy.random`.\n\n**L6 SELF-ASSESSMENT**\n- **Inferences:** \n  - I inferred that `PyTorchRandom` is attached to the `PyTorchBackend` instance as the `random` attribute (e.g., `self.random = self.PyTorchRandom()`). This is standard practice for array API compatibility layers and perfectly explains why `be.uniform` fails but `be.random.uniform` succeeds.\n  - I inferred that `_torch` is an alias for the `torch` module, imported at the top of `pytorch_backend.py`.\n- **Information needed for certainty:** The `__init__` method of `PyTorchBackend` to definitively confirm how `PyTorchRandom` is instantiated and attached.\n- **Confidence Scores:**\n  - **L2 (Contract):** 9/10. The parameter types and return values are explicitly clear from the source, though the exact receiver path relies on standard backend conventions.\n  - **L3 (Mechanics):** 10/10. The source code for the method is fully provided and straightforward.\n  - **L4 (Minimal Usage):** 9/10. Highly confident in the usage pattern, assuming the standard `be.random` attribute mapping holds true.",
+    "report_sha256": "3ee6422fcdd5f30685915c87e60f8866e1f8908cde65390066e9f5f3e935760f"
+  },
+  "max_rounds": 5,
+  "stuck_threshold": 2,
+  "stop_reason": null,
+  "semantic_validation": "needs_independent_review",
+  "headline_credit": false,
+  "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/ebf91a74b10528f7c1790b00df27d2999355a9b7cb0ff05a578008944f64deb9/recovery.json"
+}

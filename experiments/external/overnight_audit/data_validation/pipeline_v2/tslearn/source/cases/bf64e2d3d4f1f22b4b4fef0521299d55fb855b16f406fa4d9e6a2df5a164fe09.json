@@ -1,0 +1,93 @@
+{
+  "fingerprint": "3c9cb00da18df0c144508e26607f9680baad2da1e7334883f367af2c859e0ec3",
+  "identity": {
+    "baseline_fingerprint": "366e0c64f58ebac296ba554d7ae3f9d9ca2a6b85bf15faf250291bc1c2198bb9",
+    "baseline_result_sha256": "cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab",
+    "api": "select_backend",
+    "script_sha256": "596f34320406a5ccf42ed5658d3dff4b22b7bb0f09e5258044e1c3685d79bfb6",
+    "prompt_sha256": {
+      "comprehension_write_exec": "f557fcc5d4534cdfa6e596066b2106fd4d9f1ed459be8afccb8676070275c501",
+      "deep_dive": "bcaacb96d675d8e898784eea65319e5ded213c06eb8578f5e40627fd3adce504"
+    },
+    "current_effective_config_sha256": "8f538c73b1313fa0053891b34eebf92d5423a22486707c2010f1cdbca48fc715",
+    "current_profile_sha256": "a9124a6c32a7bd4813d62b15ebee0bd7810d32a3f1e770cc67b21aac37b28a46",
+    "upstream_test_context": {
+      "sha256": "71eff9e405056f9b6670608d1c983b7c14f9ac268ae1869c767bf8d06b8ff241",
+      "file_count": 21
+    },
+    "context_engine": {
+      "deepdive.py": "11b4bd8f2c2761c17c43d43a4747ee3660173c94c1a621811c8f720e13898c73",
+      "docfix.py": "1d2f7cf6acdf9455ede12acdf35dcb93d91aa5bc7fe05514fbf783a5eca877b9"
+    },
+    "protocol_sha256": "b6caeb1e279ff5f30bd90547071380caf7efd19a54ea2f5972fddd266f91b5a2",
+    "source": {
+      "sha256": "90ffcaf2949df6e6efb7c82e0eb692117803de7fbb7c5d61178bc44fd411cdfc",
+      "file_count": 62
+    },
+    "document_sha256": "99563bb64e9b9f98f0fec08a242860867eed80fba8e6adf21ddee63e26efb4ff",
+    "script_binding": "retained_unbound_legacy",
+    "baseline_compatibility": null,
+    "mode": "source",
+    "max_code_fix_rounds": 5,
+    "stuck_rounds": 2,
+    "runner_sha256": "0b5d7370459006a623d7084ab5c63a2ecdaa953fc2494a65627175671b994abf",
+    "engine_sha256": "6d9f4310015755d44f7e002ef5add7fb29dfaad0685c7e9d61ca495c1cddeaf1",
+    "validation_sha256": "6b57fe6df9a3049e7b76fbe76ca8042f885bcd507d87040a28032401879cdeb9",
+    "compatibility_adapter_sha256": "86d978d07814e35310da027da25d1e59bafd84dd350be5f66dc278050b1d43f9"
+  },
+  "initial": {
+    "status": "fail",
+    "category": "runtime",
+    "error": "AssertionError: Expected NumpyBackend, got NumPyBackend",
+    "code": "\"\"\"Shared infrastructure-only scaffold for tslearn's full-surface 2x2.\n\nThis exact file is used in A1, A2, B1, and B2. It intentionally imports no\ntested tslearn API because discovering the public import is part of the\naudience task in every cell.\n\"\"\"\n\nfrom pathlib import Path\nimport sys\nimport traceback\n\nimport numpy as np\n\n\ndef run():\n    # Typed repository fixture path and condition-specific output directory:\n    trace_npz = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/tslearn/tslearn/.cached_datasets/Trace.npz\"\n    output_dir = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_exec/A2/output\"\n\n    # pre-loaded typed inputs (comprehension.execute.preamble)\n    Path(output_dir).mkdir(parents=True, exist_ok=True)\n    _trace = np.load(trace_npz)\n    _balanced = np.array([0, 4, 1, 17, 3, 13, 2, 5], dtype=int)\n    X = _trace[\"X_train\"][_balanced, :40, :]  # type: balanced time-series dataset ndarray (8, 40, 1)\n    X2 = _trace[\"X_test\"][:4, :32, :]  # type: second dataset ndarray (4, 32, 1)\n    s1 = X[0].ravel()  # type: 1-D series ndarray (40,)\n    s2 = X[1].ravel()  # type: 1-D series ndarray (40,)\n    y = _trace[\"y_train\"][_balanced]  # type: four balanced labels, two examples per class\n    tiny_matrix = np.arange(12.0).reshape(3, 4)  # type: deterministic numeric matrix\n\n    # Keep audience imports local so they cannot shadow fixture construction.\n    def api_test():\n        # TODO API_TEST_START\n        from tslearn.backend import select_backend\n\n        # Call select_backend with different inputs\n        be_from_data = select_backend(X)\n        be_from_str = select_backend(\"numpy\")\n        be_default = select_backend(None)\n\n        # Assert falsifiable property: all three should resolve to the same NumPy backend class\n        assert type(be_from_data).__name__ == \"NumpyBackend\", f\"Expected NumpyBackend, got {type(be_from_data).__name__}\"\n        assert type(be_from_data) == type(be_from_str) == type(be_default), \"Backend types diverged unexpectedly.\"\n\n        # Print correctness witness\n        print(f\"__CHECK__ select_backend {type(be_from_data).__name__}\")\n        # TODO API_TEST_END\n        pass\n\n    api_test()\n\n\nif __name__ == \"__main__\":\n    try:\n        run()\n        print(\"__DONE__\")\n    except Exception as exc:  # noqa: BLE001 - execution boundary\n        sys.stderr.write(\"__RUN_ERR__ \" + type(exc).__name__ + \": \" + str(exc) + \"\\n\")\n        traceback.print_exc()\n        raise SystemExit(1)\n"
+  },
+  "events": [
+    {
+      "status": "pass",
+      "category": null,
+      "error": null,
+      "code": "\"\"\"Shared infrastructure-only scaffold for tslearn's full-surface 2x2.\n\nThis exact file is used in A1, A2, B1, and B2. It intentionally imports no\ntested tslearn API because discovering the public import is part of the\naudience task in every cell.\n\"\"\"\n\nfrom pathlib import Path\nimport sys\nimport traceback\n\nimport numpy as np\n\n\ndef run():\n    # Typed repository fixture path and condition-specific output directory:\n    trace_npz = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/tslearn/tslearn/.cached_datasets/Trace.npz\"\n    output_dir = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/2a48d26ba46ce4b84b31a3d3039710ff8309b12dce1b099a4ee708ad56622d0e/round_01/attempt_0001/output\"\n\n    # pre-loaded typed inputs (comprehension.execute.preamble)\n    Path(output_dir).mkdir(parents=True, exist_ok=True)\n    _trace = np.load(trace_npz)\n    _balanced = np.array([0, 4, 1, 17, 3, 13, 2, 5], dtype=int)\n    X = _trace[\"X_train\"][_balanced, :40, :]  # type: balanced time-series dataset ndarray (8, 40, 1)\n    X2 = _trace[\"X_test\"][:4, :32, :]  # type: second dataset ndarray (4, 32, 1)\n    s1 = X[0].ravel()  # type: 1-D series ndarray (40,)\n    s2 = X[1].ravel()  # type: 1-D series ndarray (40,)\n    y = _trace[\"y_train\"][_balanced]  # type: four balanced labels, two examples per class\n    tiny_matrix = np.arange(12.0).reshape(3, 4)  # type: deterministic numeric matrix\n\n    # Keep audience imports local so they cannot shadow fixture construction.\n    def api_test():\n        # TODO API_TEST_START\n        from tslearn.backend import select_backend\n\n        be_from_data = select_backend(X)\n        be_from_str = select_backend(\"numpy\")\n        be_default = select_backend(None)\n\n        assert type(be_from_data).__name__ == \"NumPyBackend\", f\"Expected NumPyBackend, got {type(be_from_data).__name__}\"\n        assert type(be_from_data) == type(be_from_str) == type(be_default), \"Backend types diverged unexpectedly.\"\n\n        print(f\"__CHECK__ select_backend {type(be_from_data).__name__}\")\n        # TODO API_TEST_END\n        pass\n\n    api_test()\n\n\nif __name__ == \"__main__\":\n    try:\n        run()\n        print(\"__DONE__\")\n    except Exception as exc:  # noqa: BLE001 - execution boundary\n        sys.stderr.write(\"__RUN_ERR__ \" + type(exc).__name__ + \": \" + str(exc) + \"\\n\")\n        traceback.print_exc()\n        raise SystemExit(1)\n",
+      "native_result": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/2a48d26ba46ce4b84b31a3d3039710ff8309b12dce1b099a4ee708ad56622d0e/round_01/attempt_0001/native_result.json",
+      "script_sha256": "03a104f5c216a258f441cd979c21653ac4d89d057f94bdd13a7188f3dfa594b3",
+      "wall_s": 12.1,
+      "llm_calls": 1,
+      "input_tokens": 3630,
+      "output_tokens": 1030,
+      "code_fix_round": 1
+    }
+  ],
+  "rounds": [
+    {
+      "status": "pass",
+      "category": null,
+      "error": null,
+      "code": "\"\"\"Shared infrastructure-only scaffold for tslearn's full-surface 2x2.\n\nThis exact file is used in A1, A2, B1, and B2. It intentionally imports no\ntested tslearn API because discovering the public import is part of the\naudience task in every cell.\n\"\"\"\n\nfrom pathlib import Path\nimport sys\nimport traceback\n\nimport numpy as np\n\n\ndef run():\n    # Typed repository fixture path and condition-specific output directory:\n    trace_npz = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/tslearn/tslearn/.cached_datasets/Trace.npz\"\n    output_dir = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/2a48d26ba46ce4b84b31a3d3039710ff8309b12dce1b099a4ee708ad56622d0e/round_01/attempt_0001/output\"\n\n    # pre-loaded typed inputs (comprehension.execute.preamble)\n    Path(output_dir).mkdir(parents=True, exist_ok=True)\n    _trace = np.load(trace_npz)\n    _balanced = np.array([0, 4, 1, 17, 3, 13, 2, 5], dtype=int)\n    X = _trace[\"X_train\"][_balanced, :40, :]  # type: balanced time-series dataset ndarray (8, 40, 1)\n    X2 = _trace[\"X_test\"][:4, :32, :]  # type: second dataset ndarray (4, 32, 1)\n    s1 = X[0].ravel()  # type: 1-D series ndarray (40,)\n    s2 = X[1].ravel()  # type: 1-D series ndarray (40,)\n    y = _trace[\"y_train\"][_balanced]  # type: four balanced labels, two examples per class\n    tiny_matrix = np.arange(12.0).reshape(3, 4)  # type: deterministic numeric matrix\n\n    # Keep audience imports local so they cannot shadow fixture construction.\n    def api_test():\n        # TODO API_TEST_START\n        from tslearn.backend import select_backend\n\n        be_from_data = select_backend(X)\n        be_from_str = select_backend(\"numpy\")\n        be_default = select_backend(None)\n\n        assert type(be_from_data).__name__ == \"NumPyBackend\", f\"Expected NumPyBackend, got {type(be_from_data).__name__}\"\n        assert type(be_from_data) == type(be_from_str) == type(be_default), \"Backend types diverged unexpectedly.\"\n\n        print(f\"__CHECK__ select_backend {type(be_from_data).__name__}\")\n        # TODO API_TEST_END\n        pass\n\n    api_test()\n\n\nif __name__ == \"__main__\":\n    try:\n        run()\n        print(\"__DONE__\")\n    except Exception as exc:  # noqa: BLE001 - execution boundary\n        sys.stderr.write(\"__RUN_ERR__ \" + type(exc).__name__ + \": \" + str(exc) + \"\\n\")\n        traceback.print_exc()\n        raise SystemExit(1)\n",
+      "native_result": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/2a48d26ba46ce4b84b31a3d3039710ff8309b12dce1b099a4ee708ad56622d0e/round_01/attempt_0001/native_result.json",
+      "script_sha256": "03a104f5c216a258f441cd979c21653ac4d89d057f94bdd13a7188f3dfa594b3",
+      "wall_s": 12.1,
+      "llm_calls": 1,
+      "input_tokens": 3630,
+      "output_tokens": 1030,
+      "code_fix_round": 1
+    }
+  ],
+  "status": "recovered_native",
+  "diagnosis": {
+    "api": "select_backend",
+    "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/2a48d26ba46ce4b84b31a3d3039710ff8309b12dce1b099a4ee708ad56622d0e/deepdive/select_backend.md",
+    "model": "google:gemini-3.1-pro-preview",
+    "tokens": {
+      "in": 3540,
+      "out": 2256
+    },
+    "wall_s": 20.4,
+    "report_text": "**L0 AUDIENCE + TESTABILITY CLASSIFICATION**\n- **Audience:** ADVANCED/LOW-LEVEL. This function is part of the backend-agnostic infrastructure of `tslearn`. While exposed publicly, it is primarily used internally by the `Backend` wrapper class or by advanced users writing custom metrics that need to dynamically dispatch to NumPy or PyTorch operations.\n- **Testability:** TESTABLE FROM PUBLIC INPUTS. The function can be directly imported and tested by passing standard Python strings or NumPy arrays.\n\n**L1 PURPOSE**\n`select_backend` is a foundational dispatch helper that determines and instantiates the appropriate computational backend (`NumPyBackend` or `PyTorchBackend`) based on the provided data. It sits at the very bottom of `tslearn`'s data flow, enabling higher-level algorithms to seamlessly switch between CPU-bound NumPy operations and GPU-accelerated/autograd-enabled PyTorch operations without changing their core logic.\n\n**L2 CONTRACT**\n- **Receiver:** None (standalone module-level function).\n- **Parameters:**\n  - `data` (array-like, string, or `None`): The input used to infer the desired backend. It can be a string identifier (e.g., `\"numpy\"`, `\"pytorch\"`), an actual data array (e.g., a NumPy array or PyTorch tensor), or `None`.\n- **Return value:** An instantiated backend object. Specifically, it returns an instance of `NumPyBackend` or `PyTorchBackend`.\n- **Visibility:** Public (exported in `tslearn.backend`).\n- **Thread-safety/Laziness:** The function evaluates eagerly and is thread-safe, as it only performs string matching and instantiates stateless (or thread-safe) backend objects.\n\n**L3 MECHANICS**\n- The function determines the backend through a brute-force string matching heuristic. It concatenates the string representation of the `data`'s type and the string representation of the `data` itself, then converts the result to lowercase: `arg_string = (str(type(data)) + str(data)).lower()`.\n- It checks if the substring `\"torch\"` is present in `arg_string`. This cleverly catches both explicit string inputs like `\"pytorch\"` and actual PyTorch tensors whose type string looks like `<class 'torch.Tensor'>`.\n- If `\"torch\"` is found, it instantiates and returns `PyTorchBackend()`.\n- If `\"torch\"` is not found (which covers `\"numpy\"`, NumPy arrays, lists, `None`, or unrecognized garbage), it safely falls back to instantiating and returning `NumPyBackend()`.\n\n**L4 CORRECT MINIMAL USAGE**\n```python\nimport numpy as np\nfrom tslearn.backend import select_backend\n\n# 1. Select backend using a string identifier\nbackend_from_str = select_backend(\"numpy\")\n\n# 2. Select backend dynamically from a NumPy array\ndata_array = np.array([1.0, 2.0, 3.0])\nbackend_from_data = select_backend(data_array)\n\n# 3. Default fallback behavior\nbackend_default = select_backend(None)\n\n# Assert falsifiable property: all three should resolve to the NumPyBackend class\nassert backend_from_str.__class__.__name__ == \"NumPyBackend\", \"String dispatch failed.\"\nassert backend_from_data.__class__.__name__ == \"NumPyBackend\", \"Array dispatch failed.\"\nassert backend_default.__class__.__name__ == \"NumPyBackend\", \"Default fallback failed.\"\n\n# Print correctness witness\nprint(f\"Successfully resolved backend: {backend_from_str.__class__.__name__}\")\n```\n\n**L5 FAILURE FORENSICS**\n- **Failed Attempt:** `AssertionError: Expected NumpyBackend, got NumPyBackend`\n- **Why it failed:** The previous test author relied on the docstring, which incorrectly documents the class name as `NumpyBackend()` (lowercase 'p'). However, looking at the actual imports at the top of `tslearn/backend/backend.py` (line 3: `from tslearn.backend.numpy_backend import NumPyBackend`), the class is strictly named `NumPyBackend` (capital 'P'). The assertion failed because it compared the actual class name against the typo in the documentation.\n\n**L6 SELF-ASSESSMENT**\n- **Inferences:** I inferred that `NumPyBackend` and `PyTorchBackend` are stateless or thread-safe classes based on how they are instantiated on the fly without arguments.\n- **Information needed for certainty:** To be absolutely certain about thread-safety, I would need to see the implementations of `NumPyBackend` and `PyTorchBackend` to ensure their `__init__` methods do not mutate global state.\n- **Confidence Scores:**\n  - **L2 (Contract):** 10/10. The parameter types and return values are explicitly clear from the source code and type checks.\n  - **L3 (Mechanics):** 10/10. The logic is entirely contained within the provided 5-line function body.\n  - **L4 (Usage):** 10/10. The snippet relies only on standard library/NumPy features and correctly asserts against the verified class name.",
+    "report_sha256": "2861b4a87ed210281b73d6ebc68b932708b69c49aa2959dd96edd9824fcf0c55"
+  },
+  "max_rounds": 5,
+  "stuck_threshold": 2,
+  "stop_reason": null,
+  "semantic_validation": "needs_independent_review",
+  "headline_credit": false,
+  "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/2a48d26ba46ce4b84b31a3d3039710ff8309b12dce1b099a4ee708ad56622d0e/recovery.json"
+}

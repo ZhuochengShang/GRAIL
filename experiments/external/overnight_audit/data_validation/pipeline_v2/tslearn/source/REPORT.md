@@ -1,6 +1,6 @@
 # A2 source-only recovery
 
-Updated: 2026-09-08T14:24:59.812955-07:00
+Updated: 2026-09-08T14:31:44.644353-07:00
 
 Fixed eligible-failure denominator: 32. A2 is round zero; five new proposals maximum; stuck threshold two.
 
@@ -31,13 +31,13 @@ Fixed eligible-failure denominator: 32. A2 is round zero; five new proposals max
 | inv_transform_sax | recovered_native | 1 | /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/98e16b31d1b15a5bccb0923f5fa7d776fec9cc9e15809c8e803f61b6d1c60caa/recovery.json |
 | is_float | recovered_native | 1 | /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/da2d77e659bf5c70e8d51f6e57d6639db9e6230879a9ada535042a3dea3574ab/recovery.json |
 | is_float32 | recovered_native | 1 | /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/12dd073b0e36ecef609d6444a075ded1b5208016979d848f1004a65de9146eee/recovery.json |
-| is_float64 | pending | 0 |  |
-| normal | pending | 0 |  |
-| predict_class_and_earliness | pending | 0 |  |
-| select_backend | pending | 0 |  |
-| support_vectors_ | pending | 0 |  |
-| to_pickle | pending | 0 |  |
-| uniform | pending | 0 |  |
+| is_float64 | recovered_native | 1 | /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/4ec67873e2fcca74debfbccfe55807d7178b5beefff1ed8901c9738b4296adac/recovery.json |
+| normal | recovered_native | 2 | /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/2f034b56f73d006cf958954b8e2f4c74df38a4a8028a97850fa77fc31cd5a5a8/recovery.json |
+| predict_class_and_earliness | recovered_native | 1 | /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/d0bfed99cc8a802518323ea0e2ce7f58d9aacca9625fbb774a66d0b29be507a6/recovery.json |
+| select_backend | recovered_native | 1 | /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/2a48d26ba46ce4b84b31a3d3039710ff8309b12dce1b099a4ee708ad56622d0e/recovery.json |
+| support_vectors_ | recovered_native | 1 | /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/5d74dd72cef72d450cbb201ad80e67493c37b7aeba6e9d3096590e4d9a562de3/recovery.json |
+| to_pickle | recovered_native | 2 | /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/83fe31bc5519cd46c9122c48a2fcb0c0cc25e47c57cbcb137ea838ce69092bcd/recovery.json |
+| uniform | recovered_native | 2 | /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v2/tslearn/cf4036f258f9de5bd752b9fc37439ea05e18d94b0d346279ad14ce61ae4681ab/project/.aideal_recovery/ebf91a74b10528f7c1790b00df27d2999355a9b7cb0ff05a578008944f64deb9/recovery.json |
 
 Native recovery does not certify the generated assertions. Semantic review remains required.
 B2 is a separate fresh-reader evaluation of the rewritten generated README. Original README repair is omitted.

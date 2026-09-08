@@ -1,6 +1,6 @@
 # A2 source-only recovery
 
-Updated: 2026-09-08T13:45:31.428547-07:00
+Updated: 2026-09-08T14:29:04.239182-07:00
 
 Fixed eligible-failure denominator: 22. A2 is round zero; five new proposals maximum; stuck threshold two.
 

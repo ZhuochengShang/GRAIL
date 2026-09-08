@@ -15,7 +15,7 @@ This checks pinned input identity and records test evidence. It does not certify
 | tslearn | A1 | PASS_WITH_LIMITATIONS | none observed |
 | tslearn | A2 | PASS_WITH_LIMITATIONS | none observed |
 | tslearn | B1 | pending | none observed |
-| tslearn | B2 | pending | none observed |
+| tslearn | B2 | PASS_WITH_LIMITATIONS | none observed |
 
 For each active cell, data_evidence.json lists absolute input paths, SHA-256, pinned Git blobs, decoded file metadata, manifest/config/profile/scaffold hashes, and completed-result consistency checks. api_test_data.csv covers every manifest API and records which supplied fixtures or preloaded values are referenced inside its generated snippet, plus target-call/assertion/witness text. Textual references are evidence for review, not proof of runtime dataflow or semantic correctness.
 

@@ -1,12 +1,12 @@
 # Thumbnailator native outcomes and isolated assertion replay
 
-Updated: 2026-09-08T14:24:41.880437-07:00
+Updated: 2026-09-08T14:39:51.765730-07:00
 
 No native score is replaced. Both replay variants use identical code, copied fixture bytes, a fresh output root and Java 8 isolation; only `-da` versus `-ea` differs.
 
 | Cell | Native state | Native pass / API outcomes | Replayed | Off pass | On pass | Off pass → on fail | Unbound retained replays |
 |---|---|---:|---:|---:|---:|---:|---:|
-| A1 | native partial | 130/149 | 145 | 127 | 113 | 14 | 139 |
+| A1 | native complete | 130/149 | 146 | 127 | 113 | 14 | 139 |
 | A2 | native complete | 127/149 | 149 | 120 | 114 | 6 | 0 |
 | B1 | awaiting native evidence | — | — | — | — | — | — |
 | B2 | native complete | 139/149 | 149 | 134 | 126 | 8 | 0 |
@@ -148,7 +148,7 @@ No native score is replaced. Both replay variants use identical code, copied fix
 | A1 | `preferredOutputFormatName` | pass | pass | pass | retained_unbound_legacy |
 | A1 | `quality` | pass | pass | pass | retained_unbound_legacy |
 | A1 | `read` | pass | pass | pass | retained_unbound_legacy |
-| A1 | `region` | fail | not_replayed | not_replayed | provider failure; stale retained files are not this attempt |
+| A1 | `region` | fail | missing_check_marker | assertion_failure | retained_matches_native_failure_prefix |
 | A1 | `rendering` | pass | pass | pass | retained_unbound_legacy |
 | A1 | `resize` | pass | pass | pass | retained_unbound_legacy |
 | A1 | `resizer` | pass | pass | pass | retained_unbound_legacy |

@@ -1,0 +1,96 @@
+version: 2
+max_parallel: 1
+retry_delay_seconds: 300
+jobs:
+- cwd: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2
+  branch: aideal/tslearn-full235-B2
+  environment_inventory: experiments/tslearn/docs/eval/setup/environment_B2.txt
+  env:
+    PYTHONPATH: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/grail-agent/src
+  max_restarts: 0
+  id: tslearn_B2_repair
+  command:
+  - /Users/clockorangezoe/miniconda3/envs/geo_llm_spark/bin/python
+  - -m
+  - aideal.cli
+  - --config
+  - experiments/tslearn/configs/aideal_B2_full235.yaml
+  - fix-docs
+  - --from-results
+  - docs/eval/A2/comprehension.json
+  - --deep-dive-first
+  - --doc-rounds
+  - '5'
+  - --doc-stuck
+  - '2'
+  - --retry-rounds
+  - '0'
+  - --doc
+  - aideal
+  - --doc-scope
+  - relevant
+  - --manifest
+  - docs/eval/api_manifest.json
+  - --report
+  - docs/eval/B2/docfix.json
+  - --deep-dive-out
+  - docs/eval/B2/deepdive
+  - --timeout
+  - '300'
+  result: experiments/tslearn/docs/eval/B2/docfix_command.json
+  complete:
+    kind: docfix
+    path: experiments/tslearn/docs/eval/B2/docfix.json
+  max_runtime_seconds: 259200
+- cwd: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2
+  branch: aideal/tslearn-full235-B2
+  environment_inventory: experiments/tslearn/docs/eval/setup/environment_B2.txt
+  env:
+    PYTHONPATH: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/grail-agent/src
+  max_restarts: 0
+  id: tslearn_B2_validate_readme
+  depends_on:
+  - tslearn_B2_repair
+  command:
+  - /Users/clockorangezoe/miniconda3/envs/geo_llm_spark/bin/python
+  - experiments/tslearn/validate_full235.py
+  - --condition
+  - B2
+  - --require-readme
+  result: experiments/tslearn/docs/eval/B2/static_validation.json
+  complete:
+    kind: file_nonempty
+  max_runtime_seconds: 1800
+- cwd: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2
+  branch: aideal/tslearn-full235-B2
+  environment_inventory: experiments/tslearn/docs/eval/setup/environment_B2.txt
+  env:
+    PYTHONPATH: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_B2/grail-agent/src
+  max_restarts: 0
+  id: tslearn_B2_zero
+  depends_on:
+  - tslearn_B2_validate_readme
+  command:
+  - /Users/clockorangezoe/miniconda3/envs/geo_llm_spark/bin/python
+  - -m
+  - aideal.cli
+  - --config
+  - experiments/tslearn/configs/aideal_B2_full235.yaml
+  - comprehension
+  - --execute
+  - --show-code
+  - --doc
+  - aideal
+  - --doc-scope
+  - relevant
+  - --manifest
+  - docs/eval/api_manifest.json
+  - --max-fix-rounds
+  - '0'
+  - --resume
+  - --timeout
+  - '300'
+  result: experiments/tslearn/docs/eval/B2/comprehension.json
+  complete:
+    kind: json_metrics_no_transient
+  max_runtime_seconds: 172800

@@ -1,14 +1,14 @@
 # AIDEAL readiness assessment and improvement queue
 
-Updated: 2026-09-08T21:24:23.900871+00:00
+Updated: 2026-09-08T21:40:25.438639+00:00
 
 **Measured scope:** how documentation affects an LLM’s API use under a fixed harness. Overall agent readiness is not yet fully measured; no composite score is assigned.
 
 | Repository | A1 | A2 | B1 | B2 | Matched comparison |
 |---|---|---|---|---|---|
 | mir_eval | 1/148 provisional | 135/148 final | pending (148 APIs) | 137/148 final | WITHHELD/PARTIAL |
-| thumbnailator | 3/149 provisional | 127/149 final | pending (149 APIs) | 139/149 final | WITHHELD/PARTIAL |
-| tslearn | 3/235 provisional | 175/235 final | pending (235 APIs) | pending (235 APIs) | WITHHELD/PARTIAL |
+| thumbnailator | 130/149 final | 127/149 final | pending (149 APIs) | 139/149 final | WITHHELD/PARTIAL |
+| tslearn | 3/235 provisional | 175/235 final | pending (235 APIs) | 1/235 provisional | WITHHELD/PARTIAL |
 
 Provisional counts retain pending and provider-error APIs in the denominator. Final counts are native pass/all-API results. Cross-cell effects require the separate matched-comparison release checks.
 
@@ -32,18 +32,17 @@ Provisional counts retain pending and provider-error APIs in the denominator. Fi
 | mir_eval | provider | 26 |
 | mir_eval | test/scaffold | 5 |
 | mir_eval | unknown | 5 |
-| thumbnailator | input-or-output-path | 2 |
-| thumbnailator | provider | 1 |
-| thumbnailator | unknown | 32 |
+| thumbnailator | input-or-output-path | 4 |
+| thumbnailator | unknown | 47 |
 | tslearn | api-identity-or-version | 19 |
 | tslearn | assertion-or-behavior | 15 |
 | tslearn | input-contract-or-api-call | 10 |
 | tslearn | provider | 34 |
 | tslearn | unknown | 26 |
 
-## Reviewable improvements (191)
+## Reviewable improvements (207)
 
-Review states: `{'open': 190, 'proposed': 1}`. Observation errors: 0. Inactive reviewed IDs retained: 0.
+Review states: `{'open': 206, 'proposed': 1}`. Observation errors: 0. Inactive reviewed IDs retained: 0.
 
 Each card separates native failure, diagnosis confidence, proposed action, validation and review decisions. Provider barriers concern execution infrastructure; they are not automatically codebase or documentation defects.
 
@@ -75,7 +74,6 @@ Each card separates native failure, diagnosis confidence, proposed action, valid
 | [mir_eval: validate_boundary](suggestions/641d57339a66dbb3993a.md) | A1 | execution_blocker | high | open |
 | [mir_eval: validate_structure](suggestions/970d60a4c88d8d112a3e.md) | A1 | execution_blocker | high | open |
 | [mir_eval: vmeasure](suggestions/24f231e5d234a7e41345.md) | A1 | execution_blocker | high | open |
-| [thumbnailator: region](suggestions/760de2afb8c91ba44d2a.md) | A1 | execution_blocker | high | open |
 | [tslearn: PatchingLayer](suggestions/492a7a8c40fbef8c50dd.md) | A1 | execution_blocker | high | open |
 | [tslearn: TimeSeriesDBSCAN](suggestions/1268880b6e8ce0e28497.md) | A1 | execution_blocker | high | open |
 | [tslearn: accumulated_matrix](suggestions/31932007a7b91d0395d7.md) | A1 | execution_blocker | high | open |
@@ -136,8 +134,25 @@ Each card separates native failure, diagnosis confidence, proposed action, valid
 | [mir_eval: precision_recall_f1_overlap](suggestions/efa556125d5bfd4e4716.md) | B2 | needs_diagnosis | medium | open |
 | [mir_eval: ticker_pitch](suggestions/42f7138e489af3f99f74.md) | B2 | needs_diagnosis | medium | open |
 | [mir_eval: tmeasure](suggestions/50128731544757af10c4.md) | B2 | needs_diagnosis | medium | open |
+| [thumbnailator: ConsecutivelyNumberedFilenames](suggestions/5016037ef7fc294905d0.md) | A1 | needs_diagnosis | low | open |
+| [thumbnailator: FileThumbnailTask](suggestions/58bf3dac62f80d4532db.md) | A1 | needs_diagnosis | low | open |
+| [thumbnailator: FixedSizeThumbnailMaker](suggestions/bd5578d463c01aa0aa71.md) | A1 | needs_diagnosis | low | open |
+| [thumbnailator: ThumbnailMaker](suggestions/96208bacc216a9d49c24.md) | A1 | needs_diagnosis | low | open |
+| [thumbnailator: ThumbnailParameter](suggestions/ecf7381933b438eedfea.md) | A1 | needs_diagnosis | low | open |
+| [thumbnailator: alphaInterpolation](suggestions/dac238e929493b14167d.md) | A1 | needs_diagnosis | low | open |
+| [thumbnailator: asFiles](suggestions/5a7c1bfd405f2798481a.md) | A1 | needs_diagnosis | medium | open |
 | [thumbnailator: build](suggestions/3f447775fd599b0e1381.md) | A1 | needs_diagnosis | low | open |
 | [thumbnailator: clear](suggestions/3f911dbe0befc683e80e.md) | A1 | needs_diagnosis | low | open |
+| [thumbnailator: defaultResizer](suggestions/01249be854056fa380ea.md) | A1 | needs_diagnosis | low | open |
+| [thumbnailator: determineOutputFormat](suggestions/8048ba5d90202c25e5c5.md) | A1 | needs_diagnosis | medium | open |
+| [thumbnailator: getDestination](suggestions/bd7fb5599c84e7077452.md) | A1 | needs_diagnosis | low | open |
+| [thumbnailator: getExifOrientation](suggestions/21091435f0dc321f37a9.md) | A1 | needs_diagnosis | low | open |
+| [thumbnailator: getParam](suggestions/7a961ff4cb09e9b60bbe.md) | A1 | needs_diagnosis | low | open |
+| [thumbnailator: getSourceRegion](suggestions/02d5d206d8aafbc672ff.md) | A1 | needs_diagnosis | low | open |
+| [thumbnailator: keepAspectRatio](suggestions/cf4fae30d2fbbc61ab70.md) | A1 | needs_diagnosis | low | open |
+| [thumbnailator: make](suggestions/afd3fa4d36040d0f8661.md) | A1 | needs_diagnosis | low | open |
+| [thumbnailator: region](suggestions/760de2afb8c91ba44d2a.md) | A1 | needs_diagnosis | low | open |
+| [thumbnailator: write](suggestions/889cbec3814af3365502.md) | A1 | needs_diagnosis | low | open |
 | [thumbnailator: Pipeline](suggestions/bef11a67152a2a4d29da.md) | A2 | needs_diagnosis | low | open |
 | [thumbnailator: ThumbnailMaker](suggestions/c03bfc3c50c6bd4fe7f4.md) | A2 | needs_diagnosis | low | open |
 | [thumbnailator: UnsupportedFormatException](suggestions/015a729896c83e876640.md) | A2 | needs_diagnosis | low | open |

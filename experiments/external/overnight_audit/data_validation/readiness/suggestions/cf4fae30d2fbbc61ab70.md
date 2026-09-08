@@ -2,7 +2,7 @@
 
 ID: `cf4fae30d2fbbc61ab70` · thumbnailator/A1 · **open**
 
-Evidence version: `127b27d4a493e91deff0ef6e234322e94c62b8e24cb32709f211270dca4e617b`
+Evidence version: `e812f640aeee4f5d336509b1831dfaeef09eddc4b65cb8d2115fbd2ea07a23e6`
 
 Candidate category: **unknown**. Confidence: **low**.
 
@@ -16,9 +16,9 @@ Source: `source/src/main/java/net/coobird/thumbnailator/Thumbnails.java:1491`. N
 IllegalStateException: Maker not ready to make thumbnail.
 ```
 
-[Evidence ledger](../../../thumbnailator/A1/ledger.json) · [Saved evidence](../evidence/127b27d4a493e91deff0ef6e234322e94c62b8e24cb32709f211270dca4e617b.json)
+[Evidence ledger](../../../thumbnailator/A1/ledger.json) · [Saved evidence](../evidence/e812f640aeee4f5d336509b1831dfaeef09eddc4b65cb8d2115fbd2ea07a23e6.json)
 
-Recorded attempts: 1; provider errors: 0; document rounds: None.
+Recorded attempts: 0; provider errors: 0; document rounds: None.
 
 ## Proposed action
 

@@ -21,23 +21,6 @@
     "details": "api_details/3058871bac25f1015197.json"
   },
   "native_row": {
-    "name": "format",
-    "doc_source": "original",
-    "experiment_fingerprint": "b3f55a8b3e67c862b177dad68ab837550254e5f262c7bf4387c9a25ecd9241ed",
-    "execution_evidence": {
-      "status": "pass",
-      "rounds": [
-        {
-          "round": 0,
-          "status": "pass"
-        }
-      ],
-      "code": "String formatName = String.format(\"%s\", \"png\");\nnet.coobird.thumbnailator.Thumbnails.of(sourceImage)\n    .size(10, 10)\n    .outputFormat(formatName)\n    .toOutputStream(imageBytes);\n\nbyte[] outBytes = imageBytes.toByteArray();\nassert outBytes.length > 8 : \"Output image is too small\";\n// Verify the PNG magic number to ensure the format was applied correctly\nassert outBytes[1] == 'P' && outBytes[2] == 'N' && outBytes[3] == 'G' : \"Output is not in PNG format\";\n\nSystem.out.println(\"__CHECK__ format \" + outBytes.length);",
-      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A1/experiments/external/thumbnailator/.aideal_exec/A1/run_format/ApiTest.java",
-      "exit_code": 0,
-      "stdout_tail": "__CHECK__ format 87\n__DONE__\n",
-      "stderr_tail": ""
-    },
     "status": "pass",
     "attempts": 1,
     "pass_round": 0,
@@ -59,10 +42,27 @@
     "document_sha256": "a2d756c1d5779271f73237a971c6afb27146221fe848d78c72f54491e69d0266",
     "source": "source/src/main/java/net/coobird/thumbnailator/builders/ThumbnailParameterBuilder.java:243",
     "source_other_sites": 0,
-    "codebase_frames": null
+    "codebase_frames": null,
+    "evidence_fingerprint": "b3f55a8b3e67c862b177dad68ab837550254e5f262c7bf4387c9a25ecd9241ed",
+    "name": "format",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "String formatName = String.format(\"%s\", \"png\");\nnet.coobird.thumbnailator.Thumbnails.of(sourceImage)\n    .size(10, 10)\n    .outputFormat(formatName)\n    .toOutputStream(imageBytes);\n\nbyte[] outBytes = imageBytes.toByteArray();\nassert outBytes.length > 8 : \"Output image is too small\";\n// Verify the PNG magic number to ensure the format was applied correctly\nassert outBytes[1] == 'P' && outBytes[2] == 'N' && outBytes[3] == 'G' : \"Output is not in PNG format\";\n\nSystem.out.println(\"__CHECK__ format \" + outBytes.length);",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A1/experiments/external/thumbnailator/.aideal_exec/A1/run_format/ApiTest.java",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ format 87\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "b3f55a8b3e67c862b177dad68ab837550254e5f262c7bf4387c9a25ecd9241ed"
   },
-  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A1/experiments/external/thumbnailator/.aideal_exec/A1/comprehension_progress.jsonl",
-  "source_sha256": "f7fe237c266e622424a8d7768e07cb8fd7e482403434107ba89f368cfec83709",
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A1/experiments/external/thumbnailator/docs/eval/A1/comprehension.json",
+  "source_sha256": "76caf8a69008d2bac64ebab7f3ac56df757fd4f69a0db9e08ba72846ce485365",
   "checkpoint_events": [
     {
       "name": "format",
