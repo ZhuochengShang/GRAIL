@@ -1,6 +1,6 @@
 # mir_eval · A2-only repair pipeline
 
-2026-09-08T19:13:45.637530-07:00
+2026-09-08T19:28:46.574675-07:00
 
 A1 original README → zero fixes. A2 generated README → zero fixes.
 Frozen A2 failures → source-only snippet repair; independently → generated-README repair → fresh B2.
@@ -8,7 +8,7 @@ Original-README repair (historical B1) is intentionally omitted.
 
 | Cell | State | Native pass | API outcomes | Failure categories |
 |---|---|---:|---:|---|
-| A1 | native partial | 72 | 148 | {'runtime': 54, 'llm-error': 17, 'unknown': 1, 'no-correctness-check': 1, 'infra': 3} |
+| A1 | native partial | 72 | 148 | {'runtime': 55, 'llm-error': 15, 'unknown': 1, 'no-correctness-check': 1, 'infra': 4} |
 | A2 | native complete | 135 | 148 | {'runtime': 13} |
 | B2 | native complete | 137 | 148 | {'runtime': 11} |
 

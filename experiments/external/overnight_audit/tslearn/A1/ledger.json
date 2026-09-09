@@ -10,9 +10,9 @@
   "errors": [],
   "failure_categories": {
     "unknown": 11,
-    "api-identity": 4,
+    "api-identity": 6,
     "test/scaffold": 4,
-    "llm-error": 21
+    "llm-error": 19
   },
   "recorded_provider_errors_all_fingerprints": 151,
   "observed_fingerprints": [
@@ -11704,6 +11704,98 @@
       "source_other_sites": 0,
       "codebase_frames": null,
       "checkpoint_line": 365
+    },
+    {
+      "name": "cydist_1d_sax",
+      "doc_source": "original",
+      "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "infra",
+            "error": "missing module/import: cannot import name 'cydist_1d_sax' from 'tslearn.metrics' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_"
+          }
+        ],
+        "error_category": "infra",
+        "error": "missing module/import: cannot import name 'cydist_1d_sax' from 'tslearn.metrics' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/metrics/__init__.py)",
+        "code": "from tslearn.metrics import cydist_1d_sax\nimport numpy as np\n\n# cydist_1d_sax computes the SAX distance between two 1D arrays of integers (SAX symbols)\n# We create two small integer arrays representing SAX symbols\nsax_s1 = np.array([0, 1, 2, 3, 2, 1], dtype=np.int32)\nsax_s2 = np.array([0, 0, 2, 3, 3, 1], dtype=np.int32)\n\n# We need a breakpoints array to compute the distance between symbols\n# For an alphabet of size 4, there are 3 breakpoints (e.g., from a standard normal distribution)\nbreakpoints = np.array([-0.67, 0.0, 0.67], dtype=np.float64)\n\n# Compute the SAX distance\ndist = cydist_1d_sax(sax_s1, sax_s2, breakpoints)\n\n# The distance should be a non-negative float\nassert isinstance(dist, float) and dist >= 0.0, f\"Expected non-negative float distance, got {dist}\"\n\n# For identical sequences, the distance should be exactly 0.0\ndist_self = cydist_1d_sax(sax_s1, sax_s1, breakpoints)\nassert dist_self == 0.0, f\"Expected distance to self to be 0.0, got {dist_self}\"\n\nprint(f\"__CHECK__ cydist",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_cydist_1d_sax/api_test.py",
+        "exit_code": 1,
+        "stdout_tail": "",
+        "stderr_tail": "__RUN_ERR__ ImportError: cannot import name 'cydist_1d_sax' from 'tslearn.metrics' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/metrics/__init__.py)\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_cydist_1d_sax/api_test.py\", line 65, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_cydist_1d_sax/api_test.py\", line 60, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_cydist_1d_sax/api_test.py\", line 34, in api_test\n    from tslearn.metrics import cydist_1d_sax\nImportError: cannot import name 'cydist_1d_sax' from 'tslearn.metrics' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/metrics/__init__.py)\n"
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 384.2,
+      "llm_calls": 1,
+      "input_tokens": 1363,
+      "output_tokens": 63280,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1363,
+          "output_tokens": 63280
+        }
+      },
+      "error_category": "infra",
+      "error": "missing module/import: cannot import name 'cydist_1d_sax' from 'tslearn.metrics' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/metrics/__init__.py)",
+      "locus": "",
+      "doc_chars": 95,
+      "document_sha256": "6ed70e934c30e33de7d0224a0500360de97cf5290fddba5cef22bc4688fd2def",
+      "source": "tslearn/tslearn/metrics/cysax.py:135",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 366
+    },
+    {
+      "name": "cydist_sax",
+      "doc_source": "original",
+      "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "infra",
+            "error": "missing module/import: cannot import name 'cydist_sax' from 'tslearn.metrics' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/"
+          }
+        ],
+        "error_category": "infra",
+        "error": "missing module/import: cannot import name 'cydist_sax' from 'tslearn.metrics' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/metrics/__init__.py)",
+        "code": "import numpy as np\nfrom tslearn.metrics import cydist_sax\n\n# The documentation for cydist_sax is missing, but it is a Cython helper for SAX distance.\n# It likely takes two 1D arrays of integers (SAX symbols) and a distance matrix.\n# However, without documentation, we cannot verify its exact contract.\n# We will deliberately fail the assertion to indicate the unverifiable contract.\n\ntry:\n    # Attempt to call it with dummy data to see if it exists and is callable\n    s1_sax = np.array([0, 1, 2, 3], dtype=np.int32)\n    s2_sax = np.array([1, 2, 3, 0], dtype=np.int32)\n    dist_mat = np.ones((4, 4), dtype=np.float64)\n    res = cydist_sax(s1_sax, s2_sax, dist_mat)\nexcept Exception:\n    pass\n\nassert False, \"cydist_sax lacks documentation to verify its contract\"",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_cydist_sax/api_test.py",
+        "exit_code": 1,
+        "stdout_tail": "",
+        "stderr_tail": "__RUN_ERR__ ImportError: cannot import name 'cydist_sax' from 'tslearn.metrics' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/metrics/__init__.py)\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_cydist_sax/api_test.py\", line 60, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_cydist_sax/api_test.py\", line 55, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_cydist_sax/api_test.py\", line 35, in api_test\n    from tslearn.metrics import cydist_sax\nImportError: cannot import name 'cydist_sax' from 'tslearn.metrics' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/metrics/__init__.py)\n"
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 364.6,
+      "llm_calls": 1,
+      "input_tokens": 1339,
+      "output_tokens": 63163,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1339,
+          "output_tokens": 63163
+        }
+      },
+      "error_category": "infra",
+      "error": "missing module/import: cannot import name 'cydist_sax' from 'tslearn.metrics' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/metrics/__init__.py)",
+      "locus": "",
+      "doc_chars": 92,
+      "document_sha256": "d0adea21509e9dfce9721f73f6c7d69535eea2745caeccd30558e602481b6dee",
+      "source": "tslearn/tslearn/metrics/cysax.py:38",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 367
     }
   ],
   "repair_summary": {
@@ -13960,16 +14052,16 @@
     {
       "api": "cydist_1d_sax",
       "status": "fail",
-      "primary_category": "llm-error",
-      "runner_category": "llm-error",
-      "category_reason": "Provider outcome; retry, never count as a documentation failure.",
-      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "primary_category": "api-identity",
+      "runner_category": "infra",
+      "category_reason": "Import/member selection failed; the runner's infrastructure label needs review.",
+      "error": "missing module/import: cannot import name 'cydist_1d_sax' from 'tslearn.metrics' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/metrics/__init__.py)",
       "source": "tslearn/tslearn/metrics/cysax.py:135",
       "doc_chars": 95,
-      "checkpoint_attempts": 3,
+      "checkpoint_attempts": 4,
       "provider_error_attempts": 3,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
+      "recorded_successful_llm_calls": 1,
       "attempt_history": [
         {
           "checkpoint_line": 252,
@@ -14006,6 +14098,18 @@
           "input_tokens": 0,
           "output_tokens": 0,
           "pass_round": null
+        },
+        {
+          "checkpoint_line": 366,
+          "status": "fail",
+          "error_category": "infra",
+          "error": "missing module/import: cannot import name 'cydist_1d_sax' from 'tslearn.metrics' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/metrics/__init__.py)",
+          "attempts": 1,
+          "wall_s": 384.2,
+          "llm_calls": 1,
+          "input_tokens": 1363,
+          "output_tokens": 63280,
+          "pass_round": null
         }
       ],
       "repair_status": null,
@@ -14016,16 +14120,16 @@
     {
       "api": "cydist_sax",
       "status": "fail",
-      "primary_category": "llm-error",
-      "runner_category": "llm-error",
-      "category_reason": "Provider outcome; retry, never count as a documentation failure.",
-      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "primary_category": "api-identity",
+      "runner_category": "infra",
+      "category_reason": "Import/member selection failed; the runner's infrastructure label needs review.",
+      "error": "missing module/import: cannot import name 'cydist_sax' from 'tslearn.metrics' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/metrics/__init__.py)",
       "source": "tslearn/tslearn/metrics/cysax.py:38",
       "doc_chars": 92,
-      "checkpoint_attempts": 3,
+      "checkpoint_attempts": 4,
       "provider_error_attempts": 3,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
+      "recorded_successful_llm_calls": 1,
       "attempt_history": [
         {
           "checkpoint_line": 253,
@@ -14061,6 +14165,18 @@
           "llm_calls": 0,
           "input_tokens": 0,
           "output_tokens": 0,
+          "pass_round": null
+        },
+        {
+          "checkpoint_line": 367,
+          "status": "fail",
+          "error_category": "infra",
+          "error": "missing module/import: cannot import name 'cydist_sax' from 'tslearn.metrics' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/metrics/__init__.py)",
+          "attempts": 1,
+          "wall_s": 364.6,
+          "llm_calls": 1,
+          "input_tokens": 1339,
+          "output_tokens": 63163,
           "pass_round": null
         }
       ],

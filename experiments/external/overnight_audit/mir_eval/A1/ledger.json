@@ -9,9 +9,9 @@
   "fingerprint": "6f5bcaa71d6a868167732ff1b08ada63654abf63b2bc6f0777aae06911a1e74f",
   "errors": [],
   "failure_categories": {
-    "unknown": 8,
-    "llm-error": 17,
-    "api-identity": 1
+    "unknown": 9,
+    "llm-error": 15,
+    "api-identity": 2
   },
   "recorded_provider_errors_all_fingerprints": 234,
   "observed_fingerprints": [
@@ -11014,6 +11014,98 @@
       "source_other_sites": 0,
       "codebase_frames": null,
       "checkpoint_line": 365
+    },
+    {
+      "name": "join",
+      "doc_source": "original",
+      "experiment_fingerprint": "6f5bcaa71d6a868167732ff1b08ada63654abf63b2bc6f0777aae06911a1e74f",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "runtime",
+            "error": "AssertionError: The documented contract for `join` is insufficient to verify the result."
+          }
+        ],
+        "error_category": "runtime",
+        "error": "AssertionError: The documented contract for `join` is insufficient to verify the result.",
+        "code": "import mir_eval\n\ntry:\n    # Attempt to find join in mir_eval\n    # It might be in mir_eval.util or mir_eval.io, but since it's not documented,\n    # we will deliberately fail the test as requested by the prompt.\n    if hasattr(mir_eval, 'join'):\n        mir_eval.join()\n    elif hasattr(mir_eval.util, 'join'):\n        mir_eval.util.join()\n    elif hasattr(mir_eval.io, 'join'):\n        mir_eval.io.join()\nexcept Exception:\n    pass\n\nassert False, \"The documented contract for `join` is insufficient to verify the result.\"",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_A1/experiments/external/mir_eval/.aideal_exec/A1/run_join/api_test.py",
+        "exit_code": 1,
+        "stdout_tail": "",
+        "stderr_tail": "__RUN_ERR__ AssertionError: The documented contract for `join` is insufficient to verify the result.\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_A1/experiments/external/mir_eval/.aideal_exec/A1/run_join/api_test.py\", line 57, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_A1/experiments/external/mir_eval/.aideal_exec/A1/run_join/api_test.py\", line 52, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_A1/experiments/external/mir_eval/.aideal_exec/A1/run_join/api_test.py\", line 48, in api_test\n    assert False, \"The documented contract for `join` is insufficient to verify the result.\"\nAssertionError: The documented contract for `join` is insufficient to verify the result.\n"
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 384.6,
+      "llm_calls": 1,
+      "input_tokens": 1324,
+      "output_tokens": 63069,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1324,
+          "output_tokens": 63069
+        }
+      },
+      "error_category": "runtime",
+      "error": "AssertionError: The documented contract for `join` is insufficient to verify the result.",
+      "locus": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_A1/experiments/external/mir_eval/.aideal_exec/A1/run_join/api_test.py:48",
+      "doc_chars": 86,
+      "document_sha256": "c4728a497492c27c6ddf90fe6a0e89c1d8e6d285a44c48b2be05dd08e9f5f9bd",
+      "source": "source/mir_eval/chord.py:436",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 366
+    },
+    {
+      "name": "karaoke_perceptual_metric",
+      "doc_source": "original",
+      "experiment_fingerprint": "6f5bcaa71d6a868167732ff1b08ada63654abf63b2bc6f0777aae06911a1e74f",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "infra",
+            "error": "missing module/import: cannot import name 'karaoke_perceptual_metric' from 'mir_eval.separation' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_"
+          }
+        ],
+        "error_category": "infra",
+        "error": "missing module/import: cannot import name 'karaoke_perceptual_metric' from 'mir_eval.separation' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_A1/experiments/external/mir_eval/source/mir_eval/separ",
+        "code": "import numpy as np\nfrom mir_eval.separation import bss_eval_sources\n\n# The documentation does not list karaoke_perceptual_metric, but mir_eval.separation\n# has bss_eval_sources which is the standard metric for source separation.\n# We will use bss_eval_sources with the provided reference and estimated sources.\n# Since the prompt asks for karaoke_perceptual_metric, we will deliberately fail\n# the assertion as instructed for an unverifiable contract.\n\ntry:\n    from mir_eval.separation import karaoke_perceptual_metric\n    \n    # If it exists, we call it with the sources\n    result = karaoke_perceptual_metric(ref_sources, est_sources)\n    \n    # Deliberately fail the assertion as the contract is unverifiable from docs\n    assert False, \"The documented contract for karaoke_perceptual_metric is insufficient to verify the result.\"\nexcept ImportError:\n    # If it doesn't exist, we still need to fail the assertion as instructed\n    assert False, \"karaoke_perceptual_metric is not available in mir",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_A1/experiments/external/mir_eval/.aideal_exec/A1/run_karaoke_perceptual_metric/api_test.py",
+        "exit_code": 1,
+        "stdout_tail": "",
+        "stderr_tail": "__RUN_ERR__ AssertionError: karaoke_perceptual_metric is not available in mir_eval.separation and its contract is unverifiable.\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_A1/experiments/external/mir_eval/.aideal_exec/A1/run_karaoke_perceptual_metric/api_test.py\", line 43, in api_test\n    from mir_eval.separation import karaoke_perceptual_metric\nImportError: cannot import name 'karaoke_perceptual_metric' from 'mir_eval.separation' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_A1/experiments/external/mir_eval/source/mir_eval/separation.py)\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_A1/experiments/external/mir_eval/.aideal_exec/A1/run_karaoke_perceptual_metric/api_test.py\", line 61, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_A1/experiments/external/mir_eval/.aideal_exec/A1/run_karaoke_perceptual_metric/api_test.py\", line 56, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_A1/experiments/external/mir_eval/.aideal_exec/A1/run_karaoke_perceptual_metric/api_test.py\", line 52, in api_test\n    assert False, \"karaoke_perceptual_metric is not available in mir_eval.separation and its contract is unverifiable.\"\nAssertionError: karaoke_perceptual_metric is not available in mir_eval.separation and its contract is unverifiable.\n"
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 394.5,
+      "llm_calls": 1,
+      "input_tokens": 1379,
+      "output_tokens": 63174,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1379,
+          "output_tokens": 63174
+        }
+      },
+      "error_category": "infra",
+      "error": "missing module/import: cannot import name 'karaoke_perceptual_metric' from 'mir_eval.separation' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_A1/experiments/external/mir_eval/source/mir_eval/separ",
+      "locus": "",
+      "doc_chars": 107,
+      "document_sha256": "8957cdcc8da9abf4789a40aba4b5a69e3b93315f4e6b3f6ae0b0b2e1dcfa1c8d",
+      "source": "source/mir_eval/alignment.py:269",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 367
     }
   ],
   "repair_summary": {
@@ -12626,16 +12718,16 @@
     {
       "api": "join",
       "status": "fail",
-      "primary_category": "llm-error",
-      "runner_category": "llm-error",
-      "category_reason": "Provider outcome; retry, never count as a documentation failure.",
-      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "primary_category": "unknown",
+      "runner_category": "runtime",
+      "category_reason": "Observed runtime; doc attribution requires source, document, and snippet review.",
+      "error": "AssertionError: The documented contract for `join` is insufficient to verify the result.",
       "source": "source/mir_eval/chord.py:436",
       "doc_chars": 86,
-      "checkpoint_attempts": 4,
+      "checkpoint_attempts": 5,
       "provider_error_attempts": 4,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
+      "recorded_successful_llm_calls": 1,
       "attempt_history": [
         {
           "checkpoint_line": 257,
@@ -12684,6 +12776,18 @@
           "input_tokens": 0,
           "output_tokens": 0,
           "pass_round": null
+        },
+        {
+          "checkpoint_line": 366,
+          "status": "fail",
+          "error_category": "runtime",
+          "error": "AssertionError: The documented contract for `join` is insufficient to verify the result.",
+          "attempts": 1,
+          "wall_s": 384.6,
+          "llm_calls": 1,
+          "input_tokens": 1324,
+          "output_tokens": 63069,
+          "pass_round": null
         }
       ],
       "repair_status": null,
@@ -12694,16 +12798,16 @@
     {
       "api": "karaoke_perceptual_metric",
       "status": "fail",
-      "primary_category": "llm-error",
-      "runner_category": "llm-error",
-      "category_reason": "Provider outcome; retry, never count as a documentation failure.",
-      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "primary_category": "api-identity",
+      "runner_category": "infra",
+      "category_reason": "Import/member selection failed; the runner's infrastructure label needs review.",
+      "error": "missing module/import: cannot import name 'karaoke_perceptual_metric' from 'mir_eval.separation' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_A1/experiments/external/mir_eval/source/mir_eval/separ",
       "source": "source/mir_eval/alignment.py:269",
       "doc_chars": 107,
-      "checkpoint_attempts": 4,
+      "checkpoint_attempts": 5,
       "provider_error_attempts": 4,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
+      "recorded_successful_llm_calls": 1,
       "attempt_history": [
         {
           "checkpoint_line": 258,
@@ -12751,6 +12855,18 @@
           "llm_calls": 0,
           "input_tokens": 0,
           "output_tokens": 0,
+          "pass_round": null
+        },
+        {
+          "checkpoint_line": 367,
+          "status": "fail",
+          "error_category": "infra",
+          "error": "missing module/import: cannot import name 'karaoke_perceptual_metric' from 'mir_eval.separation' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_A1/experiments/external/mir_eval/source/mir_eval/separ",
+          "attempts": 1,
+          "wall_s": 394.5,
+          "llm_calls": 1,
+          "input_tokens": 1379,
+          "output_tokens": 63174,
           "pass_round": null
         }
       ],

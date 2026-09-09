@@ -1,6 +1,6 @@
 # AIDEAL readiness assessment and improvement queue
 
-Updated: 2026-09-09T02:13:55.796122+00:00
+Updated: 2026-09-09T02:28:57.496929+00:00
 
 **Measured scope:** how documentation affects an LLM’s API use under a fixed harness. Overall agent readiness is not yet fully measured; no composite score is assigned.
 
@@ -24,21 +24,21 @@ Provisional counts retain pending and provider-error APIs in the denominator. Fi
 
 | Repository | Candidate barrier | Affected API/cell records |
 |---|---|---:|
-| mir_eval | api-identity-or-version | 1 |
-| mir_eval | assertion-or-behavior | 7 |
+| mir_eval | api-identity-or-version | 2 |
+| mir_eval | assertion-or-behavior | 8 |
 | mir_eval | doc-wrong | 2 |
 | mir_eval | example-invalid | 1 |
 | mir_eval | input-contract-or-api-call | 7 |
 | mir_eval | input-or-output-path | 4 |
-| mir_eval | provider | 17 |
+| mir_eval | provider | 15 |
 | mir_eval | test/scaffold | 5 |
 | mir_eval | unknown | 6 |
 | thumbnailator | input-or-output-path | 4 |
 | thumbnailator | unknown | 47 |
-| tslearn | api-identity-or-version | 22 |
+| tslearn | api-identity-or-version | 24 |
 | tslearn | assertion-or-behavior | 22 |
 | tslearn | input-contract-or-api-call | 12 |
-| tslearn | provider | 21 |
+| tslearn | provider | 19 |
 | tslearn | unknown | 41 |
 
 ## Reviewable improvements (219)
@@ -50,8 +50,6 @@ Each card separates native failure, diagnosis confidence, proposed action, valid
 | Suggestion | Cell | Priority | Confidence | Review |
 |---|---|---|---|---|
 | [mir_eval: absolute_error](suggestions/082799557f3d00ef3959.md) | A1 | execution_blocker | high | open |
-| [mir_eval: join](suggestions/d1241d280613693e892c.md) | A1 | execution_blocker | high | open |
-| [mir_eval: karaoke_perceptual_metric](suggestions/9118ca03cd85bcb44076.md) | A1 | execution_blocker | high | open |
 | [mir_eval: lmeasure](suggestions/8bbd52b230f0a2c7fecd.md) | A1 | execution_blocker | high | open |
 | [mir_eval: merge_chord_intervals](suggestions/81c93234379912055f49.md) | A1 | execution_blocker | high | open |
 | [mir_eval: midi_to_hz](suggestions/211e4c04d67f8fca45b9.md) | A1 | execution_blocker | high | open |
@@ -66,8 +64,6 @@ Each card separates native failure, diagnosis confidence, proposed action, valid
 | [mir_eval: validate_boundary](suggestions/641d57339a66dbb3993a.md) | A1 | execution_blocker | high | open |
 | [mir_eval: validate_structure](suggestions/970d60a4c88d8d112a3e.md) | A1 | execution_blocker | high | open |
 | [mir_eval: vmeasure](suggestions/24f231e5d234a7e41345.md) | A1 | execution_blocker | high | open |
-| [tslearn: cydist_1d_sax](suggestions/00d5cb3b04ed3df7886c.md) | A1 | execution_blocker | high | open |
-| [tslearn: cydist_sax](suggestions/dc883b22a8c2a53c612c.md) | A1 | execution_blocker | high | open |
 | [tslearn: distance](suggestions/bc355c8ca83308070d8a.md) | A1 | execution_blocker | high | open |
 | [tslearn: distance_paa](suggestions/e04db690a2878d710e3c.md) | A1 | execution_blocker | high | open |
 | [tslearn: early_predict](suggestions/3c11412b7b124c2586be.md) | A1 | execution_blocker | high | open |
@@ -108,6 +104,8 @@ Each card separates native failure, diagnosis confidence, proposed action, valid
 | [mir_eval: deprecated](suggestions/beb42a32875dfb8074a9.md) | A1 | needs_diagnosis | medium | open |
 | [mir_eval: deviation](suggestions/485cfbe27e59e994869a.md) | A1 | needs_diagnosis | low | open |
 | [mir_eval: hz_to_midi](suggestions/0fc9f77b57e5ec9906c5.md) | A1 | needs_diagnosis | medium | open |
+| [mir_eval: join](suggestions/d1241d280613693e892c.md) | A1 | needs_diagnosis | medium | open |
+| [mir_eval: karaoke_perceptual_metric](suggestions/9118ca03cd85bcb44076.md) | A1 | needs_diagnosis | medium | open |
 | [mir_eval: register_colormap](suggestions/d6485c290c7bda782770.md) | A1 | needs_diagnosis | medium | open |
 | [mir_eval: cemgil](suggestions/b787266701666609d246.md) | B2 | needs_diagnosis | medium | open |
 | [mir_eval: hierarchy](suggestions/2e97254929aecf73fb7a.md) | B2 | needs_diagnosis | medium | open |
@@ -183,6 +181,8 @@ Each card separates native failure, diagnosis confidence, proposed action, valid
 | [tslearn: check_keras_backend](suggestions/66e5440c2bd6bad1b798.md) | A1 | needs_diagnosis | medium | open |
 | [tslearn: compute_mask](suggestions/0512d9254c63496e4707.md) | A1 | needs_diagnosis | medium | open |
 | [tslearn: compute_var](suggestions/87cd83f687ee55e86575.md) | A1 | needs_diagnosis | medium | open |
+| [tslearn: cydist_1d_sax](suggestions/00d5cb3b04ed3df7886c.md) | A1 | needs_diagnosis | medium | open |
+| [tslearn: cydist_sax](suggestions/dc883b22a8c2a53c612c.md) | A1 | needs_diagnosis | medium | open |
 | [tslearn: fix_force_all_finite_warning](suggestions/31a797e1c04a6d32d433.md) | A1 | needs_diagnosis | medium | open |
 | [tslearn: get_backend](suggestions/5b561e6f3abaf83879f5.md) | A1 | needs_diagnosis | medium | open |
 | [tslearn: is_array](suggestions/e1024e725bbecccd33ed.md) | A1 | needs_diagnosis | medium | open |
