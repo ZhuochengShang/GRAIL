@@ -5,8 +5,9 @@ Historical reference: `aideal/external-2x2-infra` at `3db92a9`.
 
 The current experiment workers remain on their historical code. This branch
 implements and tests the next core revision without changing their treatment,
-restarting them, or rewriting their checkpoints. The only new running service
-is a passive report reader with its own supervisor and output directory.
+restarting them, or rewriting their checkpoints. New services are a passive
+report reader and a separately recorded tslearn inventory retry using the
+unchanged historical v3 engine, each with its own supervisor/output namespace.
 
 ## Findings and reviewable changes
 
@@ -137,7 +138,37 @@ intentionally rejects this changed source-recovery implementation. Do not update
 that receipt to disguise a v4 run as v3. Deploying a new matched study requires a
 new protocol registration, fresh compatible A2/B2 identities, a defined `api-import`
 recovery cohort, and host process-cleanup validation. Existing v3 controllers keep
-running from their original worktree. No running job was restarted or deleted.
+running from their original worktree. No pre-existing experiment job was
+restarted or deleted. The newly created inventory-retry service was replaced
+with user-approved network-enabled execution after sandbox connection failures;
+its state and failed-request evidence were retained.
+
+## Operational correction after B2 completion
+
+At 16:49 PDT, tslearn B2 finished with **217/235 native passes**, 13 setup/import
+failures and 5 execution failures. Post-B2 recovery initially recorded all five
+eligible cases as `preflight_blocked`: its inventory search omitted the full235
+freeze worktree. No code-fix proposal was made in those blocked cases.
+
+The existing `environment_freeze.txt` has SHA-256
+`7ca2807ace989a2abd86169a3f038cdb7370f04a9ec38930e8478222ff596c60`, exactly matching
+the B2 runtime fingerprint. Supplying it through the existing
+`AIDEAL_RECOVERY_ENV_INVENTORY` setting passed runtime/import and source-treatment
+preflight for `TimeSeriesMixin`, `extract_from_zip_url`, `is_float`, `is_float32`
+and `is_float64` without model calls.
+
+`post_b2_inventory_retry_watchdog.yaml` now runs the unchanged registered v3
+controller with that explicit inventory. The original `pipeline_v3` output is
+preserved. `pipeline_v3_inventory_retry` retains compatible completed mir_eval
+and Thumbnailator evidence and retries only those five tslearn cases. The
+shared Gemini admission lock/rate file and five-round/two-stagnant-round policy
+remain unchanged. Initial sandbox connection failures and the authorized
+network-enabled replacement are operational attempts, not new code-fix rounds.
+
+The retry report is `data_validation/pipeline_v3_inventory_retry/REPORT.html`.
+The native status observer continues to show the original post-B2 block separately;
+consult this retry report for the corrected continuation. It must not be silently
+substituted for the historical blocked result in the final paper/report.
 
 ## Improvement queue requiring further evidence
 

@@ -1,0 +1,36 @@
+version: 2
+max_parallel: 1
+retry_delay_seconds: 120
+env:
+  PYTHONPATH: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/grail-agent/src:/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal
+  AIDEAL_GOOGLE_MIN_INTERVAL_S: '3'
+  AIDEAL_GOOGLE_RATE_STATE: /tmp/aideal_google_rate_gate.txt
+  AIDEAL_GOOGLE_REQUEST_TIMEOUT_S: '300'
+  AIDEAL_GOOGLE_MAX_RETRIES: '2'
+  AIDEAL_GOOGLE_RECOVERY_ADMISSION_LOCK: /tmp/aideal_google_recovery_admission.lock
+  AIDEAL_RECOVERY_ENV_INVENTORY: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_freeze/experiments/tslearn/docs/eval/setup/environment_freeze.txt
+jobs:
+- id: post_b2_inventory_retry_v3
+  cwd: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal
+  branch: aideal/external-2x2-infra
+  environment_inventory: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_freeze/experiments/tslearn/docs/eval/setup/environment_freeze.txt
+  command:
+  - /Users/clockorangezoe/miniconda3/envs/geo_llm_spark/bin/python
+  - -m
+  - experiments.external.post_b2
+  - --workspace-parent
+  - /Users/clockorangezoe/Documents/phd_projects/code/geoAI
+  - --upstream
+  - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_overnight_evidence_audit/experiments/external/overnight_audit/data_validation/pipeline_v2
+  - --work
+  - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v3
+  - --out
+  - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_overnight_evidence_audit/experiments/external/overnight_audit/data_validation/pipeline_v3_inventory_retry
+  - --admit-until
+  - '2026-09-09T10:15:00-07:00'
+  - --watch
+  result: .aideal_exec/post_b2_inventory_retry_v3.stdout
+  complete:
+    kind: exit_zero
+  max_runtime_seconds: 1209600
+  max_restarts: 0
