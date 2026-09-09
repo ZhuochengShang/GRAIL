@@ -1,0 +1,149 @@
+version: 2
+max_parallel: 5
+retry_delay_seconds: 300
+env:
+  AIDEAL_GOOGLE_RATE_STATE: /tmp/aideal_google_rate_gate.txt
+  AIDEAL_GOOGLE_MIN_INTERVAL_S: '3'
+  AIDEAL_GOOGLE_REQUEST_TIMEOUT_S: '300'
+  AIDEAL_GOOGLE_MAX_RETRIES: '2'
+jobs:
+- id: mir_eval_B2_1_feedback
+  cwd: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_robust_core_v4
+  branch: aideal/robust-core-v4
+  env:
+    PYTHONPATH: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/grail-agent/src:/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_robust_core_v4
+  environment_inventory: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_mdanalysis_v4/environment_v4.json
+  command:
+  - /Users/clockorangezoe/miniconda3/envs/geo_llm_spark/bin/python
+  - -m
+  - experiments.external.main_plan.worker
+  - --repo
+  - mir_eval
+  - --config
+  - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_A2/experiments/external/mir_eval/configs/aideal_A2.yaml
+  - --result
+  - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_A2/experiments/external/mir_eval/docs/eval/A2/comprehension.json
+  - --work
+  - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_main_plan_v5/mir_eval
+  - --out
+  - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_overnight_evidence_audit/experiments/external/overnight_audit/data_validation/main_plan_v5/mir_eval
+  - --upstream
+  - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_overnight_evidence_audit/experiments/external/overnight_audit/data_validation/pipeline_v2
+  - --manifest
+  - docs/eval/api_manifest.json
+  - --execute
+  result: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_main_plan_v5/mir_eval.stdout
+  complete:
+    kind: exit_zero
+  max_restarts: 0
+  max_runtime_seconds: 1209600
+- id: thumbnailator_B2_1_feedback
+  cwd: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_robust_core_v4
+  branch: aideal/robust-core-v4
+  env:
+    PYTHONPATH: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/grail-agent/src:/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_robust_core_v4
+  environment_inventory: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_mdanalysis_v4/environment_v4.json
+  command:
+  - /Users/clockorangezoe/miniconda3/envs/geo_llm_spark/bin/python
+  - -m
+  - experiments.external.main_plan.worker
+  - --repo
+  - thumbnailator
+  - --config
+  - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/configs/aideal_A2.yaml
+  - --result
+  - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_thumbnailator_A2/experiments/external/thumbnailator/docs/eval/A2/comprehension.json
+  - --work
+  - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_main_plan_v5/thumbnailator
+  - --out
+  - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_overnight_evidence_audit/experiments/external/overnight_audit/data_validation/main_plan_v5/thumbnailator
+  - --upstream
+  - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_overnight_evidence_audit/experiments/external/overnight_audit/data_validation/pipeline_v2
+  - --manifest
+  - docs/eval/api_manifest.json
+  - --execute
+  result: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_main_plan_v5/thumbnailator.stdout
+  complete:
+    kind: exit_zero
+  max_restarts: 0
+  max_runtime_seconds: 1209600
+- id: tslearn_B2_1_feedback
+  cwd: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_robust_core_v4
+  branch: aideal/robust-core-v4
+  env:
+    PYTHONPATH: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/grail-agent/src:/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_robust_core_v4
+    AIDEAL_RECOVERY_ENV_INVENTORY: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_freeze/experiments/tslearn/docs/eval/setup/environment_freeze.txt
+  environment_inventory: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_mdanalysis_v4/environment_v4.json
+  command:
+  - /Users/clockorangezoe/miniconda3/envs/geo_llm_spark/bin/python
+  - -m
+  - experiments.external.main_plan.worker
+  - --repo
+  - tslearn
+  - --config
+  - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A2/experiments/tslearn/configs/aideal_A2_full235.yaml
+  - --result
+  - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A2/experiments/tslearn/docs/eval/A2/comprehension.json
+  - --work
+  - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_main_plan_v5/tslearn
+  - --out
+  - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_overnight_evidence_audit/experiments/external/overnight_audit/data_validation/main_plan_v5/tslearn
+  - --upstream
+  - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_overnight_evidence_audit/experiments/external/overnight_audit/data_validation/pipeline_v2
+  - --manifest
+  - docs/eval/api_manifest.json
+  - --execute
+  result: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_main_plan_v5/tslearn.stdout
+  complete:
+    kind: exit_zero
+  max_restarts: 0
+  max_runtime_seconds: 1209600
+- id: mdanalysis_B2_1_feedback
+  cwd: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_robust_core_v4
+  branch: aideal/robust-core-v4
+  env:
+    PYTHONPATH: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mdanalysis_full1032_v4_A2/grail-agent/src:/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_robust_core_v4
+    AIDEAL_RECOVERY_ENV_INVENTORY: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_mdanalysis_v4/environment_v4.json
+  environment_inventory: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_mdanalysis_v4/environment_v4.json
+  command:
+  - /Users/clockorangezoe/miniconda3/envs/geo_llm_spark/bin/python
+  - -m
+  - experiments.external.main_plan.worker
+  - --repo
+  - mdanalysis
+  - --config
+  - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mdanalysis_full1032_v4_A2/experiments/mdanalysis/configs/aideal.full1032.A2.yaml
+  - --result
+  - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mdanalysis_full1032_v4_A2/experiments/mdanalysis/docs/full_1032/A2/comprehension.json
+  - --work
+  - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_main_plan_v5/mdanalysis
+  - --out
+  - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_overnight_evidence_audit/experiments/external/overnight_audit/data_validation/main_plan_v5/mdanalysis
+  - --upstream
+  - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_overnight_evidence_audit/experiments/external/overnight_audit/data_validation/pipeline_v2
+  - --manifest
+  - docs/full_1032/api_manifest.json
+  - --execute
+  result: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_main_plan_v5/mdanalysis.stdout
+  complete:
+    kind: exit_zero
+  max_restarts: 0
+  max_runtime_seconds: 1209600
+- id: main_plan_report
+  cwd: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_robust_core_v4
+  branch: aideal/robust-core-v4
+  env:
+    PYTHONPATH: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_robust_core_v4/grail-agent/src:/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_robust_core_v4
+  environment_inventory: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_mdanalysis_v4/environment_v4.json
+  command:
+  - /Users/clockorangezoe/miniconda3/envs/geo_llm_spark/bin/python
+  - -m
+  - experiments.external.main_plan.report
+  - --root
+  - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_overnight_evidence_audit/experiments/external/overnight_audit/data_validation/main_plan_v5
+  - --watch
+  result: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_main_plan_v5/report.stdout
+  complete:
+    kind: exit_zero
+  max_restarts: 0
+  max_runtime_seconds: 1209600

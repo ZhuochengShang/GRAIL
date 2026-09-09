@@ -1,0 +1,24 @@
+version: 2
+max_parallel: 1
+retry_delay_seconds: 60
+jobs:
+- id: main_plan_live_report
+  cwd: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_robust_core_v4
+  branch: aideal/robust-core-v4
+  env:
+    PYTHONPATH: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_robust_core_v4/grail-agent/src:/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_robust_core_v4
+  environment_inventory: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_mdanalysis_v4/environment_v4.json
+  command:
+  - /Users/clockorangezoe/miniconda3/envs/geo_llm_spark/bin/python
+  - -m
+  - experiments.external.main_plan.report
+  - --root
+  - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_overnight_evidence_audit/experiments/external/overnight_audit/data_validation/main_plan_v5
+  - --watch
+  - --out
+  - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_overnight_evidence_audit/experiments/external/overnight_audit/data_validation/main_plan_v5/live
+  result: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_main_plan_v5/live_report.stdout
+  complete:
+    kind: exit_zero
+  max_restarts: 0
+  max_runtime_seconds: 1209600

@@ -1,3 +1,5 @@
+**Current agreed main plan (September 8, 18:23 onward):** [Independent A2 branches](experiments/external/main_plan/README.md): B2-1 README/error-only snippet fixes; B2-2 independent source-informed README repair; then fresh full-manifest evaluation. Earlier S_A2/S_B2 source-recovery descriptions below are supplementary history. Existing jobs remain preserved.
+
 **September 8 v3 amendment:** [Three separate repair stages](experiments/external/post_b2/PIPELINE_V3.md) now define the current design. The running A2/source/README/B2 path is preserved; a separately queued post-B2 source stage is added. Read its method audit before interpreting legacy sections below.
 
 **September 8 implementation review:** [Current pipeline and open correctness findings](AIDEAL_PIPELINE_CODE_REVIEW_2026-09-08.md) qualifies the older guarantees below, including fingerprint completeness, restart budgets and execution isolation. [Visual code guide](AIDEAL_PIPELINE_CODE_REVIEW_2026-09-08.html).

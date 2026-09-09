@@ -1,0 +1,50 @@
+version: aideal-independent-a2-branches-v5
+registered: '2026-09-08'
+basis: User-approved amendment after observing historical outcomes; not prospective preregistration
+baseline_cells: [A2]
+modes: [feedback]
+max_code_fix_rounds: 5
+stuck_rounds: 2
+eligible_categories: [compile, runtime, timeout, no-correctness-check, unknown, infra]
+cohort: all recorded A2 failures after provider completion
+infrastructure_policy: include in denominator; attempt feedback repair; persistent infra may stop early
+baseline_round: retained A2 snippet and error; no new round zero
+deep_dive_calls_per_api: 0
+document_changes: false
+fixture_changes: false
+harness_changes: false
+library_source_changes: false
+headline_score_changes: false
+branches:
+  B2-1:
+    mode: feedback
+    input: frozen A2 README, previous snippet, execution error, unchanged baseline harness context
+    forbidden: new source/tests diagnosis or B2-2 edits or S_A2 repairs
+  B2-2:
+    input: independently frozen A2 failures and generated README
+    changes: source-informed README repair
+    max_document_rounds: 5
+    stuck_rounds: 2
+    validation_snippet_fixes: 0
+  B2-fresh:
+    input: final B2-2 README
+    scope: full frozen manifest
+    snippet_fixes: 0
+supplementary: [historical_S_A2_source_recovery, historical_S_B2_post_recovery]
+admission:
+  additional_callers: 1
+  shared_supplemental_lock: existing post-B2 recovery admission lock
+  shared_google_gate: existing account-wide request-start state
+  min_interval_seconds: 3
+  provider_retry_delay_seconds: 300
+  request_timeout_seconds: 300
+  sdk_attempts: 2
+reuse:
+  priority_A2_B2: retain structural treatment evidence with reviewed schema migrations and native-harness limitations
+  RDPro: historical only; no rerun scheduled
+  MDAnalysis: preserve active v4 A1/A2 and document branch; add B2-1 after own A2 completion
+measurement:
+  preserve_native_and_reviewed_outcomes: true
+  skip_is_not_target_execution: true
+  expected_exception_is_not_normal_output: true
+  identical_execution_engine_across_repositories: false
