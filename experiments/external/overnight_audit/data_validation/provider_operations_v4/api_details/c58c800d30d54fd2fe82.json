@@ -3,22 +3,22 @@
     "repository": "tslearn",
     "cell": "A1",
     "api": "iscomplex",
-    "outcome": "Waiting for provider / retry",
-    "test_execution": "No test code executed for this provider attempt",
+    "outcome": "Setup/import blocked",
+    "test_execution": "Setup/import failed; target execution not established",
     "target_api_reached": "Not independently verified",
-    "latest_native_attempt_s": 600.1,
-    "retained_checkpoint_events": 4,
-    "retained_attempt_total_s": 2399.5,
+    "latest_native_attempt_s": 363.1,
+    "retained_checkpoint_events": 5,
+    "retained_attempt_total_s": 2762.6,
     "retained_504_events": 4,
     "retained_cooldown_deferrals": 0,
     "historical_idle_retry_s": null,
-    "measured_provider_invocations": 0,
-    "last_provider_s": null,
+    "measured_provider_invocations": 1,
+    "last_provider_s": 361.0248105000355,
     "last_retry_interval_s": null,
     "next_provider_retry_epoch": null,
-    "transport_policy": "Historical/uninstrumented",
+    "transport_policy": "d3dc72bd6e8ae61bf387f53095432a592ef5ad022245486ca7883f4a0dfff6ed",
     "identity_status": "Final or explicitly migrated evidence",
-    "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+    "error": "missing module/import: cannot import name 'iscomplex' from 'tslearn.backend' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/backend/__init__.py)",
     "details": "api_details/c58c800d30d54fd2fe82.json"
   },
   "native_row": {
@@ -31,28 +31,34 @@
         {
           "round": 0,
           "status": "fail",
-          "category": "llm-error",
-          "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}"
+          "category": "infra",
+          "error": "missing module/import: cannot import name 'iscomplex' from 'tslearn.backend' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/e"
         }
       ],
-      "error_category": "llm-error",
-      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
-      "code": "",
+      "error_category": "infra",
+      "error": "missing module/import: cannot import name 'iscomplex' from 'tslearn.backend' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/backend/__init__.py)",
+      "code": "import numpy as np\nfrom tslearn.backend import iscomplex\n\n# Create a complex array and a real array\ncomplex_arr = np.array([1 + 2j, 3 + 4j])\nreal_arr = np.array([1.0, 2.0])\n\n# Call iscomplex on both\nres_complex = iscomplex(complex_arr)\nres_real = iscomplex(real_arr)\n\n# Verify the results\nassert np.all(res_complex), \"iscomplex failed to identify a complex array\"\nassert not np.any(res_real), \"iscomplex incorrectly identified a real array as complex\"\n\nprint(f\"__CHECK__ iscomplex {res_complex.tolist()}\")",
       "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_iscomplex/api_test.py",
-      "exit_code": null,
+      "exit_code": 1,
       "stdout_tail": "",
-      "stderr_tail": ""
+      "stderr_tail": "__RUN_ERR__ ImportError: cannot import name 'iscomplex' from 'tslearn.backend' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/backend/__init__.py)\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_iscomplex/api_test.py\", line 58, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_iscomplex/api_test.py\", line 53, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_iscomplex/api_test.py\", line 35, in api_test\n    from tslearn.backend import iscomplex\nImportError: cannot import name 'iscomplex' from 'tslearn.backend' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/backend/__init__.py)\n"
     },
     "status": "fail",
     "attempts": 1,
     "pass_round": null,
-    "wall_s": 600.1,
-    "llm_calls": 0,
-    "input_tokens": 0,
-    "output_tokens": 0,
-    "by_model": {},
-    "error_category": "llm-error",
-    "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+    "wall_s": 363.1,
+    "llm_calls": 1,
+    "input_tokens": 1315,
+    "output_tokens": 63076,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 1315,
+        "output_tokens": 63076
+      }
+    },
+    "error_category": "infra",
+    "error": "missing module/import: cannot import name 'iscomplex' from 'tslearn.backend' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/backend/__init__.py)",
     "locus": "",
     "doc_chars": 91,
     "document_sha256": "82a098590b6796919a2ccd802a1caec41258110144fc8e7ca3eafafbbb3762eb",
@@ -61,7 +67,7 @@
     "codebase_frames": null
   },
   "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/comprehension_progress.jsonl",
-  "source_sha256": "4e4a5aa06dc3d466ec8b3eefb24f62cc40997eeca4fe53fe7372be38f58794b6",
+  "source_sha256": "da48ae39fd5eca44c1928b18fbb300b0166a3c171f5a1b9871122443b3244526",
   "checkpoint_events": [
     {
       "name": "iscomplex",
@@ -200,9 +206,150 @@
       "source": "tslearn/tslearn/backend/pytorch_backend.py:153",
       "source_other_sites": 0,
       "codebase_frames": null
+    },
+    {
+      "name": "iscomplex",
+      "doc_source": "original",
+      "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "infra",
+            "error": "missing module/import: cannot import name 'iscomplex' from 'tslearn.backend' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/e"
+          }
+        ],
+        "error_category": "infra",
+        "error": "missing module/import: cannot import name 'iscomplex' from 'tslearn.backend' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/backend/__init__.py)",
+        "code": "import numpy as np\nfrom tslearn.backend import iscomplex\n\n# Create a complex array and a real array\ncomplex_arr = np.array([1 + 2j, 3 + 4j])\nreal_arr = np.array([1.0, 2.0])\n\n# Call iscomplex on both\nres_complex = iscomplex(complex_arr)\nres_real = iscomplex(real_arr)\n\n# Verify the results\nassert np.all(res_complex), \"iscomplex failed to identify a complex array\"\nassert not np.any(res_real), \"iscomplex incorrectly identified a real array as complex\"\n\nprint(f\"__CHECK__ iscomplex {res_complex.tolist()}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_iscomplex/api_test.py",
+        "exit_code": 1,
+        "stdout_tail": "",
+        "stderr_tail": "__RUN_ERR__ ImportError: cannot import name 'iscomplex' from 'tslearn.backend' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/backend/__init__.py)\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_iscomplex/api_test.py\", line 58, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_iscomplex/api_test.py\", line 53, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_iscomplex/api_test.py\", line 35, in api_test\n    from tslearn.backend import iscomplex\nImportError: cannot import name 'iscomplex' from 'tslearn.backend' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/backend/__init__.py)\n"
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 363.1,
+      "llm_calls": 1,
+      "input_tokens": 1315,
+      "output_tokens": 63076,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1315,
+          "output_tokens": 63076
+        }
+      },
+      "error_category": "infra",
+      "error": "missing module/import: cannot import name 'iscomplex' from 'tslearn.backend' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/backend/__init__.py)",
+      "locus": "",
+      "doc_chars": 91,
+      "document_sha256": "82a098590b6796919a2ccd802a1caec41258110144fc8e7ca3eafafbbb3762eb",
+      "source": "tslearn/tslearn/backend/pytorch_backend.py:153",
+      "source_other_sites": 0,
+      "codebase_frames": null
     }
   ],
-  "provider_timing": [],
-  "transport_events": [],
+  "provider_timing": [
+    {
+      "id": "604fb34baebb4b70b16d341474133777",
+      "start_epoch": 1788924793.302062,
+      "end_epoch": 1788925154.3318,
+      "provider_wall_s": 361.0248105000355,
+      "since_previous_provider_end_s": null,
+      "outcome": "invocation_success",
+      "retry_after_epoch": null,
+      "policy_sha256": "d3dc72bd6e8ae61bf387f53095432a592ef5ad022245486ca7883f4a0dfff6ed"
+    }
+  ],
+  "transport_events": [
+    {
+      "adapter_sha256": "c78fd8935b37fdd9337d9e036be2e4c864195eb052d1335cbff68d5a5fb96697",
+      "api": "iscomplex",
+      "epoch": 1788924793.302062,
+      "event": "invocation_start",
+      "harness_setup_version": "aideal-output-setup-v1",
+      "invocation_id": "604fb34baebb4b70b16d341474133777",
+      "model": "google:gemini-3.1-pro-preview",
+      "outer_deadline_s": 630,
+      "pid": 50349,
+      "policy_sha256": "d3dc72bd6e8ae61bf387f53095432a592ef5ad022245486ca7883f4a0dfff6ed",
+      "previous_end_epoch": null,
+      "prompt_chars": 6094,
+      "prompt_sha256": "b670a173e2d6d1d392ed6507f6ae548f27bfad20a629e8a126b64de68dca0209",
+      "request_key": "d7656d9d76cc44dffb47021678e27742133df8a6d572db68f38ea0ccca49856d",
+      "request_timeout_s": 600,
+      "sdk_attempts": 1,
+      "transport_version": "aideal-provider-transport-v2"
+    },
+    {
+      "actual_timeout_s": 600.0,
+      "adapter_sha256": "c78fd8935b37fdd9337d9e036be2e4c864195eb052d1335cbff68d5a5fb96697",
+      "api": "iscomplex",
+      "epoch": 1788924793.317934,
+      "event": "sdk_attempt_start",
+      "harness_setup_version": "aideal-output-setup-v1",
+      "invocation_id": "604fb34baebb4b70b16d341474133777",
+      "model": "google:gemini-3.1-pro-preview",
+      "outer_deadline_s": 630,
+      "payload_sha256": "bf304dd2ba0f09a203790a9eae19c00637f293a139c087927f7b3121e7bebc5a",
+      "pid": 50349,
+      "policy_sha256": "d3dc72bd6e8ae61bf387f53095432a592ef5ad022245486ca7883f4a0dfff6ed",
+      "prompt_chars": 6094,
+      "prompt_sha256": "b670a173e2d6d1d392ed6507f6ae548f27bfad20a629e8a126b64de68dca0209",
+      "request_key": "d7656d9d76cc44dffb47021678e27742133df8a6d572db68f38ea0ccca49856d",
+      "request_timeout_s": 600,
+      "sdk_attempt_id": "0d68a096b0974f52be3f4cb0e2a4f340",
+      "sdk_attempts": 1,
+      "server_timeout_s": "600",
+      "transport_version": "aideal-provider-transport-v2"
+    },
+    {
+      "actual_timeout_s": 600.0,
+      "adapter_sha256": "c78fd8935b37fdd9337d9e036be2e4c864195eb052d1335cbff68d5a5fb96697",
+      "api": "iscomplex",
+      "epoch": 1788925154.321863,
+      "event": "sdk_attempt_success",
+      "harness_setup_version": "aideal-output-setup-v1",
+      "invocation_id": "604fb34baebb4b70b16d341474133777",
+      "model": "google:gemini-3.1-pro-preview",
+      "outer_deadline_s": 630,
+      "payload_sha256": "bf304dd2ba0f09a203790a9eae19c00637f293a139c087927f7b3121e7bebc5a",
+      "pid": 50349,
+      "policy_sha256": "d3dc72bd6e8ae61bf387f53095432a592ef5ad022245486ca7883f4a0dfff6ed",
+      "prompt_chars": 6094,
+      "prompt_sha256": "b670a173e2d6d1d392ed6507f6ae548f27bfad20a629e8a126b64de68dca0209",
+      "request_key": "d7656d9d76cc44dffb47021678e27742133df8a6d572db68f38ea0ccca49856d",
+      "request_timeout_s": 600,
+      "sdk_attempt_id": "0d68a096b0974f52be3f4cb0e2a4f340",
+      "sdk_attempts": 1,
+      "server_timeout_s": "600",
+      "transport_version": "aideal-provider-transport-v2",
+      "wall_s": 360.9989045000402
+    },
+    {
+      "adapter_sha256": "c78fd8935b37fdd9337d9e036be2e4c864195eb052d1335cbff68d5a5fb96697",
+      "api": "iscomplex",
+      "epoch": 1788925154.3318,
+      "event": "invocation_success",
+      "harness_setup_version": "aideal-output-setup-v1",
+      "invocation_id": "604fb34baebb4b70b16d341474133777",
+      "model": "google:gemini-3.1-pro-preview",
+      "outer_deadline_s": 630,
+      "pid": 50349,
+      "policy_sha256": "d3dc72bd6e8ae61bf387f53095432a592ef5ad022245486ca7883f4a0dfff6ed",
+      "prompt_chars": 6094,
+      "prompt_sha256": "b670a173e2d6d1d392ed6507f6ae548f27bfad20a629e8a126b64de68dca0209",
+      "request_key": "d7656d9d76cc44dffb47021678e27742133df8a6d572db68f38ea0ccca49856d",
+      "request_timeout_s": 600,
+      "response_sha256": "58efceabe0dc00202abbd1dfa88184fcec64ffea7428e1e0995782a759a2e73a",
+      "sdk_attempts": 1,
+      "transport_version": "aideal-provider-transport-v2",
+      "wall_s": 361.0248105000355
+    }
+  ],
   "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
 }

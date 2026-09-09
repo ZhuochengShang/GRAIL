@@ -27,7 +27,7 @@ Effects withheld until all four matched final cells and their repair/test eviden
 
 ### A1
 
-Primary failure categories: {"api-identity": 3, "llm-error": 5, "unknown": 14}.
+Primary failure categories: {"api-identity": 3, "llm-error": 3, "unknown": 16}.
 
 Recorded provider-error attempts across all checkpoint fingerprints: 235. Provider-internal retries are not recorded by the existing client and cannot be inferred from the configured limit. Watchdog logs retain process attempts; checkpoint attempts and document-fix rounds are separate ledger fields.
 
@@ -50,8 +50,8 @@ Recorded provider-error attempts across all checkpoint fingerprints: 235. Provid
 - `register_colormap`: unknown; native=runtime; checkpoint attempts=2; provider-error attempts=1; document rounds=None; repair=None. Source: `source/mir_eval/display.py:117`. Error: `TypeError: register_colormap() missing 2 required positional arguments: 'name' and 'cmap'`. Review: Observed runtime; doc attribution requires source, document, and snippet review.
 - `seg`: api-identity; native=infra; checkpoint attempts=5; provider-error attempts=4; document rounds=None; repair=None. Source: `source/mir_eval/chord.py:1461`. Error: `missing module/import: cannot import name 'seg' from 'mir_eval' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_A1/experiments/external/mir_eval/source/mir_eval/__init__.py)`. Review: Import/member selection failed; the runner's infrastructure label needs review.
 - `underseg`: unknown; native=runtime; checkpoint attempts=5; provider-error attempts=4; document rounds=None; repair=None. Source: `source/mir_eval/chord.py:1435`. Error: `AttributeError: module 'mir_eval.segment' has no attribute 'underseg'`. Review: Observed runtime; doc attribution requires source, document, and snippet review.
-- `validate_boundary`: llm-error; native=llm-error; checkpoint attempts=4; provider-error attempts=4; document rounds=None; repair=None. Source: `source/mir_eval/segment.py:86`. Error: `ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}`. Review: Provider outcome; retry, never count as a documentation failure.
-- `validate_structure`: llm-error; native=llm-error; checkpoint attempts=4; provider-error attempts=4; document rounds=None; repair=None. Source: `source/mir_eval/segment.py:121`. Error: `ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}`. Review: Provider outcome; retry, never count as a documentation failure.
+- `validate_boundary`: unknown; native=runtime; checkpoint attempts=5; provider-error attempts=4; document rounds=None; repair=None. Source: `source/mir_eval/segment.py:86`. Error: `TypeError: validate_boundary() missing 2 required positional arguments: 'estimated_intervals' and 'trim'`. Review: Observed runtime; doc attribution requires source, document, and snippet review.
+- `validate_structure`: unknown; native=runtime; checkpoint attempts=5; provider-error attempts=4; document rounds=None; repair=None. Source: `source/mir_eval/segment.py:121`. Error: `AssertionError: validate_structure should pass for valid intervals and labels`. Review: Observed runtime; doc attribution requires source, document, and snippet review.
 - `vmeasure`: llm-error; native=llm-error; checkpoint attempts=4; provider-error attempts=4; document rounds=None; repair=None. Source: `source/mir_eval/segment.py:1100`. Error: `ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}`. Review: Provider outcome; retry, never count as a documentation failure.
 
 ### A2

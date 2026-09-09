@@ -9,8 +9,8 @@
   "fingerprint": "6f5bcaa71d6a868167732ff1b08ada63654abf63b2bc6f0777aae06911a1e74f",
   "errors": [],
   "failure_categories": {
-    "unknown": 14,
-    "llm-error": 5,
+    "unknown": 16,
+    "llm-error": 3,
     "api-identity": 3
   },
   "recorded_provider_errors_all_fingerprints": 235,
@@ -11590,6 +11590,98 @@
       "source_other_sites": 0,
       "codebase_frames": null,
       "checkpoint_line": 378
+    },
+    {
+      "name": "validate_boundary",
+      "doc_source": "original",
+      "experiment_fingerprint": "6f5bcaa71d6a868167732ff1b08ada63654abf63b2bc6f0777aae06911a1e74f",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "runtime",
+            "error": "TypeError: validate_boundary() missing 2 required positional arguments: 'estimated_intervals' and 'trim'"
+          }
+        ],
+        "error_category": "runtime",
+        "error": "TypeError: validate_boundary() missing 2 required positional arguments: 'estimated_intervals' and 'trim'",
+        "code": "import mir_eval\n\ntry:\n    # The documentation does not provide a contract for validate_boundary,\n    # and it is not a standard mir_eval function (validate_intervals, validate_events, etc. are).\n    # We will attempt to call it if it exists, but fail the test as requested.\n    if hasattr(mir_eval.util, 'validate_boundary'):\n        mir_eval.util.validate_boundary(ref_intervals)\n    elif hasattr(mir_eval.segment, 'validate_boundary'):\n        mir_eval.segment.validate_boundary(ref_intervals)\n    \n    assert False, \"The documented contract is insufficient to verify the result of validate_boundary.\"\nexcept AttributeError:\n    assert False, \"The documented contract is insufficient to verify the result of validate_boundary.\"",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_A1/experiments/external/mir_eval/.aideal_exec/A1/run_validate_boundary/api_test.py",
+        "exit_code": 1,
+        "stdout_tail": "",
+        "stderr_tail": "__RUN_ERR__ TypeError: validate_boundary() missing 2 required positional arguments: 'estimated_intervals' and 'trim'\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_A1/experiments/external/mir_eval/.aideal_exec/A1/run_validate_boundary/api_test.py\", line 55, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_A1/experiments/external/mir_eval/.aideal_exec/A1/run_validate_boundary/api_test.py\", line 50, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_A1/experiments/external/mir_eval/.aideal_exec/A1/run_validate_boundary/api_test.py\", line 42, in api_test\n    mir_eval.segment.validate_boundary(ref_intervals)\nTypeError: validate_boundary() missing 2 required positional arguments: 'estimated_intervals' and 'trim'\n"
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 359.4,
+      "llm_calls": 1,
+      "input_tokens": 1340,
+      "output_tokens": 63094,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1340,
+          "output_tokens": 63094
+        }
+      },
+      "error_category": "runtime",
+      "error": "TypeError: validate_boundary() missing 2 required positional arguments: 'estimated_intervals' and 'trim'",
+      "locus": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_A1/experiments/external/mir_eval/.aideal_exec/A1/run_validate_boundary/api_test.py:42",
+      "doc_chars": 99,
+      "document_sha256": "edc5431201df125262543f53efcfe4d09a5f2639f5c8eac1d8b5de84fe7435e3",
+      "source": "source/mir_eval/segment.py:86",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 379
+    },
+    {
+      "name": "validate_structure",
+      "doc_source": "original",
+      "experiment_fingerprint": "6f5bcaa71d6a868167732ff1b08ada63654abf63b2bc6f0777aae06911a1e74f",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "runtime",
+            "error": "AssertionError: validate_structure should pass for valid intervals and labels"
+          }
+        ],
+        "error_category": "runtime",
+        "error": "AssertionError: validate_structure should pass for valid intervals and labels",
+        "code": "import mir_eval\n\ntry:\n    mir_eval.segment.validate_structure(ref_intervals, ref_labels)\n    passed = True\nexcept Exception:\n    passed = False\n\nassert passed, \"validate_structure should pass for valid intervals and labels\"\nprint(f\"__CHECK__ validate_structure {passed}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_A1/experiments/external/mir_eval/.aideal_exec/A1/run_validate_structure/api_test.py",
+        "exit_code": 1,
+        "stdout_tail": "",
+        "stderr_tail": "__RUN_ERR__ AssertionError: validate_structure should pass for valid intervals and labels\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_A1/experiments/external/mir_eval/.aideal_exec/A1/run_validate_structure/api_test.py\", line 51, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_A1/experiments/external/mir_eval/.aideal_exec/A1/run_validate_structure/api_test.py\", line 46, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_A1/experiments/external/mir_eval/.aideal_exec/A1/run_validate_structure/api_test.py\", line 41, in api_test\n    assert passed, \"validate_structure should pass for valid intervals and labels\"\nAssertionError: validate_structure should pass for valid intervals and labels\n"
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 342.2,
+      "llm_calls": 1,
+      "input_tokens": 1340,
+      "output_tokens": 62986,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1340,
+          "output_tokens": 62986
+        }
+      },
+      "error_category": "runtime",
+      "error": "AssertionError: validate_structure should pass for valid intervals and labels",
+      "locus": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_A1/experiments/external/mir_eval/.aideal_exec/A1/run_validate_structure/api_test.py:41",
+      "doc_chars": 100,
+      "document_sha256": "7fa7bd80e49e18e350992c2de41e6a938e6fac3eefd26ed2c0956617fcb59d65",
+      "source": "source/mir_eval/segment.py:121",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 380
     }
   ],
   "repair_summary": {
@@ -15591,16 +15683,16 @@
     {
       "api": "validate_boundary",
       "status": "fail",
-      "primary_category": "llm-error",
-      "runner_category": "llm-error",
-      "category_reason": "Provider outcome; retry, never count as a documentation failure.",
-      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "primary_category": "unknown",
+      "runner_category": "runtime",
+      "category_reason": "Observed runtime; doc attribution requires source, document, and snippet review.",
+      "error": "TypeError: validate_boundary() missing 2 required positional arguments: 'estimated_intervals' and 'trim'",
       "source": "source/mir_eval/segment.py:86",
       "doc_chars": 99,
-      "checkpoint_attempts": 4,
+      "checkpoint_attempts": 5,
       "provider_error_attempts": 4,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
+      "recorded_successful_llm_calls": 1,
       "attempt_history": [
         {
           "checkpoint_line": 272,
@@ -15648,6 +15740,18 @@
           "llm_calls": 0,
           "input_tokens": 0,
           "output_tokens": 0,
+          "pass_round": null
+        },
+        {
+          "checkpoint_line": 379,
+          "status": "fail",
+          "error_category": "runtime",
+          "error": "TypeError: validate_boundary() missing 2 required positional arguments: 'estimated_intervals' and 'trim'",
+          "attempts": 1,
+          "wall_s": 359.4,
+          "llm_calls": 1,
+          "input_tokens": 1340,
+          "output_tokens": 63094,
           "pass_round": null
         }
       ],
@@ -15773,16 +15877,16 @@
     {
       "api": "validate_structure",
       "status": "fail",
-      "primary_category": "llm-error",
-      "runner_category": "llm-error",
-      "category_reason": "Provider outcome; retry, never count as a documentation failure.",
-      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "primary_category": "unknown",
+      "runner_category": "runtime",
+      "category_reason": "Observed runtime; doc attribution requires source, document, and snippet review.",
+      "error": "AssertionError: validate_structure should pass for valid intervals and labels",
       "source": "source/mir_eval/segment.py:121",
       "doc_chars": 100,
-      "checkpoint_attempts": 4,
+      "checkpoint_attempts": 5,
       "provider_error_attempts": 4,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
+      "recorded_successful_llm_calls": 1,
       "attempt_history": [
         {
           "checkpoint_line": 273,
@@ -15830,6 +15934,18 @@
           "llm_calls": 0,
           "input_tokens": 0,
           "output_tokens": 0,
+          "pass_round": null
+        },
+        {
+          "checkpoint_line": 380,
+          "status": "fail",
+          "error_category": "runtime",
+          "error": "AssertionError: validate_structure should pass for valid intervals and labels",
+          "attempts": 1,
+          "wall_s": 342.2,
+          "llm_calls": 1,
+          "input_tokens": 1340,
+          "output_tokens": 62986,
           "pass_round": null
         }
       ],

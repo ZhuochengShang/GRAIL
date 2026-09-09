@@ -9,10 +9,10 @@
   "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
   "errors": [],
   "failure_categories": {
-    "unknown": 16,
-    "api-identity": 7,
+    "unknown": 17,
+    "api-identity": 8,
     "test/scaffold": 4,
-    "llm-error": 10
+    "llm-error": 8
   },
   "recorded_provider_errors_all_fingerprints": 152,
   "observed_fingerprints": [
@@ -12238,6 +12238,98 @@
       "source_other_sites": 1,
       "codebase_frames": null,
       "checkpoint_line": 377
+    },
+    {
+      "name": "is_numpy",
+      "doc_source": "original",
+      "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "runtime",
+            "error": "TypeError: 'bool' object is not callable"
+          }
+        ],
+        "error_category": "runtime",
+        "error": "TypeError: 'bool' object is not callable",
+        "code": "import tslearn.utils\n\ntry:\n    result = tslearn.utils.is_numpy(X)\n    assert result is True, \"Expected is_numpy to return True for a NumPy ndarray\"\n    print(f\"__CHECK__ is_numpy {result}\")\nexcept AttributeError:\n    # If it's not in tslearn.utils, it might be in tslearn.backend\n    import tslearn.backend\n    try:\n        result = tslearn.backend.is_numpy(X)\n        assert result is True, \"Expected is_numpy to return True for a NumPy ndarray\"\n        print(f\"__CHECK__ is_numpy {result}\")\n    except AttributeError:\n        # If it's a method on a Backend instance\n        backend = tslearn.backend.instantiate_backend(\"numpy\")\n        result = backend.is_numpy(X)\n        assert result is True, \"Expected is_numpy to return True for a NumPy ndarray\"\n        print(f\"__CHECK__ is_numpy {result}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_is_numpy/api_test.py",
+        "exit_code": 1,
+        "stdout_tail": "",
+        "stderr_tail": "__RUN_ERR__ TypeError: 'bool' object is not callable\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_is_numpy/api_test.py\", line 37, in api_test\n    result = tslearn.utils.is_numpy(X)\nAttributeError: module 'tslearn.utils' has no attribute 'is_numpy'\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_is_numpy/api_test.py\", line 44, in api_test\n    result = tslearn.backend.is_numpy(X)\nAttributeError: module 'tslearn.backend' has no attribute 'is_numpy'\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_is_numpy/api_test.py\", line 61, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_is_numpy/api_test.py\", line 56, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_is_numpy/api_test.py\", line 50, in api_test\n    result = backend.is_numpy(X)\nTypeError: 'bool' object is not callable\n"
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 407.2,
+      "llm_calls": 1,
+      "input_tokens": 1323,
+      "output_tokens": 63144,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1323,
+          "output_tokens": 63144
+        }
+      },
+      "error_category": "runtime",
+      "error": "TypeError: 'bool' object is not callable",
+      "locus": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_is_numpy/api_test.py:50",
+      "doc_chars": 90,
+      "document_sha256": "35f8f1f0c54342c1c226b0d665bd195fc2ec91a0aa3939ebc39794008c94d6dc",
+      "source": "tslearn/tslearn/backend/backend.py:77",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 378
+    },
+    {
+      "name": "iscomplex",
+      "doc_source": "original",
+      "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "infra",
+            "error": "missing module/import: cannot import name 'iscomplex' from 'tslearn.backend' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/e"
+          }
+        ],
+        "error_category": "infra",
+        "error": "missing module/import: cannot import name 'iscomplex' from 'tslearn.backend' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/backend/__init__.py)",
+        "code": "import numpy as np\nfrom tslearn.backend import iscomplex\n\n# Create a complex array and a real array\ncomplex_arr = np.array([1 + 2j, 3 + 4j])\nreal_arr = np.array([1.0, 2.0])\n\n# Call iscomplex on both\nres_complex = iscomplex(complex_arr)\nres_real = iscomplex(real_arr)\n\n# Verify the results\nassert np.all(res_complex), \"iscomplex failed to identify a complex array\"\nassert not np.any(res_real), \"iscomplex incorrectly identified a real array as complex\"\n\nprint(f\"__CHECK__ iscomplex {res_complex.tolist()}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_iscomplex/api_test.py",
+        "exit_code": 1,
+        "stdout_tail": "",
+        "stderr_tail": "__RUN_ERR__ ImportError: cannot import name 'iscomplex' from 'tslearn.backend' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/backend/__init__.py)\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_iscomplex/api_test.py\", line 58, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_iscomplex/api_test.py\", line 53, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_iscomplex/api_test.py\", line 35, in api_test\n    from tslearn.backend import iscomplex\nImportError: cannot import name 'iscomplex' from 'tslearn.backend' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/backend/__init__.py)\n"
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 363.1,
+      "llm_calls": 1,
+      "input_tokens": 1315,
+      "output_tokens": 63076,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1315,
+          "output_tokens": 63076
+        }
+      },
+      "error_category": "infra",
+      "error": "missing module/import: cannot import name 'iscomplex' from 'tslearn.backend' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/backend/__init__.py)",
+      "locus": "",
+      "doc_chars": 91,
+      "document_sha256": "82a098590b6796919a2ccd802a1caec41258110144fc8e7ca3eafafbbb3762eb",
+      "source": "tslearn/tslearn/backend/pytorch_backend.py:153",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 379
     }
   ],
   "repair_summary": {
@@ -16350,16 +16442,16 @@
     {
       "api": "is_numpy",
       "status": "fail",
-      "primary_category": "llm-error",
-      "runner_category": "llm-error",
-      "category_reason": "Provider outcome; retry, never count as a documentation failure.",
-      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "primary_category": "unknown",
+      "runner_category": "runtime",
+      "category_reason": "Observed runtime; doc attribution requires source, document, and snippet review.",
+      "error": "TypeError: 'bool' object is not callable",
       "source": "tslearn/tslearn/backend/backend.py:77",
       "doc_chars": 90,
-      "checkpoint_attempts": 3,
+      "checkpoint_attempts": 4,
       "provider_error_attempts": 3,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
+      "recorded_successful_llm_calls": 1,
       "attempt_history": [
         {
           "checkpoint_line": 268,
@@ -16396,6 +16488,18 @@
           "input_tokens": 0,
           "output_tokens": 0,
           "pass_round": null
+        },
+        {
+          "checkpoint_line": 378,
+          "status": "fail",
+          "error_category": "runtime",
+          "error": "TypeError: 'bool' object is not callable",
+          "attempts": 1,
+          "wall_s": 407.2,
+          "llm_calls": 1,
+          "input_tokens": 1323,
+          "output_tokens": 63144,
+          "pass_round": null
         }
       ],
       "repair_status": null,
@@ -16425,16 +16529,16 @@
     {
       "api": "iscomplex",
       "status": "fail",
-      "primary_category": "llm-error",
-      "runner_category": "llm-error",
-      "category_reason": "Provider outcome; retry, never count as a documentation failure.",
-      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "primary_category": "api-identity",
+      "runner_category": "infra",
+      "category_reason": "Import/member selection failed; the runner's infrastructure label needs review.",
+      "error": "missing module/import: cannot import name 'iscomplex' from 'tslearn.backend' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/backend/__init__.py)",
       "source": "tslearn/tslearn/backend/pytorch_backend.py:153",
       "doc_chars": 91,
-      "checkpoint_attempts": 3,
+      "checkpoint_attempts": 4,
       "provider_error_attempts": 3,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
+      "recorded_successful_llm_calls": 1,
       "attempt_history": [
         {
           "checkpoint_line": 269,
@@ -16470,6 +16574,18 @@
           "llm_calls": 0,
           "input_tokens": 0,
           "output_tokens": 0,
+          "pass_round": null
+        },
+        {
+          "checkpoint_line": 379,
+          "status": "fail",
+          "error_category": "infra",
+          "error": "missing module/import: cannot import name 'iscomplex' from 'tslearn.backend' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/backend/__init__.py)",
+          "attempts": 1,
+          "wall_s": 363.1,
+          "llm_calls": 1,
+          "input_tokens": 1315,
+          "output_tokens": 63076,
           "pass_round": null
         }
       ],
