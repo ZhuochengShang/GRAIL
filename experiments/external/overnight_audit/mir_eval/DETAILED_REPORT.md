@@ -27,11 +27,11 @@ Effects withheld until all four matched final cells and their repair/test eviden
 
 ### A1
 
-Primary failure categories: {"llm-error": 26, "unknown": 2}.
+Primary failure categories: {"llm-error": 25, "unknown": 3}.
 
 Recorded provider-error attempts across all checkpoint fingerprints: 233. Provider-internal retries are not recorded by the existing client and cannot be inferred from the configured limit. Watchdog logs retain process attempts; checkpoint attempts and document-fix rounds are separate ledger fields.
 
-- `IntervalFormatter`: llm-error; native=llm-error; checkpoint attempts=4; provider-error attempts=4; document rounds=None; repair=None. Source: `source/mir_eval/display.py:478`. Error: `ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}`. Review: Provider outcome; retry, never count as a documentation failure.
+- `IntervalFormatter`: unknown; native=runtime; checkpoint attempts=5; provider-error attempts=4; document rounds=None; repair=None. Source: `source/mir_eval/display.py:478`. Error: `TypeError: IntervalFormatter.__init__() missing 2 required positional arguments: 'base' and 'ticks'`. Review: Observed runtime; doc attribution requires source, document, and snippet review.
 - `absolute_error`: llm-error; native=llm-error; checkpoint attempts=4; provider-error attempts=4; document rounds=None; repair=None. Source: `source/mir_eval/alignment.py:115`. Error: `ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}`. Review: Provider outcome; retry, never count as a documentation failure.
 - `compute_accuracy`: llm-error; native=llm-error; checkpoint attempts=4; provider-error attempts=4; document rounds=None; repair=None. Source: `source/mir_eval/multipitch.py:248`. Error: `ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}`. Review: Provider outcome; retry, never count as a documentation failure.
 - `compute_err_score`: llm-error; native=llm-error; checkpoint attempts=4; provider-error attempts=4; document rounds=None; repair=None. Source: `source/mir_eval/multipitch.py:296`. Error: `ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}`. Review: Provider outcome; retry, never count as a documentation failure.

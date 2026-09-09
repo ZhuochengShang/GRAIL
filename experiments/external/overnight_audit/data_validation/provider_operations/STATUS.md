@@ -1,18 +1,18 @@
 # Execution status and API timing
 
-2026-09-08T17:57:30.255920-07:00
+2026-09-08T18:12:39.944220-07:00
 
 **No single “partial” label:** each unresolved case has an explicit reason. A finished evaluation can contain real failures. A provider failure is not executed code. A running test does not prove the target API was reached.
 
 | Repository | Cell | State | Pass | Compile fail | Execution fail | Setup/import | Provider pending | Other/timeout |
 |---|---|---|---:|---:|---:|---:|---:|---:|
-| mir_eval | A1 | 26 provider cases unresolved | 70 | 0 | 49 | 2 | 26 | 1 |
+| mir_eval | A1 | 25 provider cases unresolved | 70 | 0 | 50 | 2 | 25 | 1 |
 | mir_eval | A2 | Native evaluation finished (failures still count) | 135 | 0 | 13 | 0 | 0 | 0 |
 | mir_eval | B2 | Native evaluation finished (failures still count) | 137 | 0 | 11 | 0 | 0 | 0 |
 | Thumbnailator | A1 | Native evaluation finished (failures still count) | 130 | 8 | 9 | 0 | 0 | 2 |
 | Thumbnailator | A2 | Native evaluation finished (failures still count) | 127 | 14 | 8 | 0 | 0 | 0 |
 | Thumbnailator | B2 | Native evaluation finished (failures still count) | 139 | 7 | 3 | 0 | 0 | 0 |
-| tslearn | A1 | 33 provider cases unresolved | 121 | 0 | 30 | 51 | 33 | 0 |
+| tslearn | A1 | 31 provider cases unresolved | 121 | 0 | 31 | 51 | 31 | 1 |
 | tslearn | A2 | Native evaluation finished (failures still count) | 175 | 0 | 32 | 28 | 0 | 0 |
 | tslearn | B2 | Native evaluation finished (failures still count) | 217 | 0 | 5 | 13 | 0 | 0 |
 
@@ -35,7 +35,7 @@ New workers may use the explicitly registered 600s × 1 transport and output-dir
 
 ## Transport rollout
 
-- mir_eval A1: Installed; awaiting next natural worker start; observed workers [].
+- mir_eval A1: New transport observed in worker logs; observed workers [51361].
 - Thumbnailator A1: New transport observed in worker logs; observed workers [16216].
 - tslearn A1: New transport observed in worker logs; observed workers [50349].
 - tslearn A2: New transport observed in worker logs; observed workers [12853].

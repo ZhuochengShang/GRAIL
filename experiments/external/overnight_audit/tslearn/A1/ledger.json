@@ -9,8 +9,8 @@
   "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
   "errors": [],
   "failure_categories": {
-    "llm-error": 33,
-    "unknown": 5,
+    "unknown": 7,
+    "llm-error": 31,
     "test/scaffold": 4,
     "api-identity": 2
   },
@@ -11163,6 +11163,98 @@
       "source_other_sites": 0,
       "codebase_frames": null,
       "checkpoint_line": 353
+    },
+    {
+      "name": "PatchingLayer",
+      "doc_source": "original",
+      "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "unknown",
+            "error": "__CHECK__ PatchingLayer not found or optional dependency missing"
+          }
+        ],
+        "error_category": "unknown",
+        "error": "__CHECK__ PatchingLayer not found or optional dependency missing",
+        "code": "import sys\n\ntry:\n    from tslearn.shapelets import PatchingLayer\nexcept ImportError:\n    print(\"__CHECK__ PatchingLayer not found or optional dependency missing\")\n    sys.exit(0)\n\n# The documentation for PatchingLayer is missing, but it is a Keras/TensorFlow layer\n# used internally by LearningShapelets to extract patches from time series.\n# We will instantiate it and deliberately fail the assertion as requested for\n# undocumented/unverifiable contracts, while still calling it.\n\ntry:\n    layer = PatchingLayer(shapelet_length=5)\n    # We cannot reliably test its forward pass without a full TF/Keras context\n    # and knowing its exact input shape requirements (e.g., (batch, length, dim)).\n    # We will just assert False with the required message.\n    assert False, \"The documented contract is insufficient to verify the result.\"\nexcept Exception as e:\n    if \"The documented contract is insufficient\" in str(e):\n        raise\n    # If instantiation fails due to TF not being configured, we jus",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_PatchingLayer/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ PatchingLayer not found or optional dependency missing\n",
+        "stderr_tail": ""
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 365.9,
+      "llm_calls": 1,
+      "input_tokens": 1323,
+      "output_tokens": 63169,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1323,
+          "output_tokens": 63169
+        }
+      },
+      "error_category": "unknown",
+      "error": "__CHECK__ PatchingLayer not found or optional dependency missing",
+      "locus": "",
+      "doc_chars": 95,
+      "document_sha256": "048449430f8afc635500098170ba752c1921f258e791ae43c8e64320ac0aec87",
+      "source": "tslearn/tslearn/shapelets/shapelets.py:128",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 354
+    },
+    {
+      "name": "TimeSeriesDBSCAN",
+      "doc_source": "original",
+      "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "runtime",
+            "error": "TypeError: TimeSeriesDBSCAN.__init__() got an unexpected keyword argument 'min_samples'"
+          }
+        ],
+        "error_category": "runtime",
+        "error": "TypeError: TimeSeriesDBSCAN.__init__() got an unexpected keyword argument 'min_samples'",
+        "code": "from tslearn.clustering import TimeSeriesDBSCAN\n\ndbscan = TimeSeriesDBSCAN(min_samples=2, eps=1.0, metric=\"dtw\")\nlabels = dbscan.fit_predict(X)\n\nassert labels.shape == (len(X),)\nassert hasattr(dbscan, \"labels_\")\nassert hasattr(dbscan, \"core_ts_indices_\")\nassert len(dbscan.labels_) == len(X)\n\nprint(f\"__CHECK__ TimeSeriesDBSCAN {labels.shape}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_TimeSeriesDBSCAN/api_test.py",
+        "exit_code": 1,
+        "stdout_tail": "",
+        "stderr_tail": "__RUN_ERR__ TypeError: TimeSeriesDBSCAN.__init__() got an unexpected keyword argument 'min_samples'\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_TimeSeriesDBSCAN/api_test.py\", line 53, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_TimeSeriesDBSCAN/api_test.py\", line 48, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_TimeSeriesDBSCAN/api_test.py\", line 36, in api_test\n    dbscan = TimeSeriesDBSCAN(min_samples=2, eps=1.0, metric=\"dtw\")\nTypeError: TimeSeriesDBSCAN.__init__() got an unexpected keyword argument 'min_samples'\n"
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 384.7,
+      "llm_calls": 1,
+      "input_tokens": 3076,
+      "output_tokens": 63040,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 3076,
+          "output_tokens": 63040
+        }
+      },
+      "error_category": "runtime",
+      "error": "TypeError: TimeSeriesDBSCAN.__init__() got an unexpected keyword argument 'min_samples'",
+      "locus": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_TimeSeriesDBSCAN/api_test.py:36",
+      "doc_chars": 6016,
+      "document_sha256": "571e971b93ebc5187b583b2140946b70c01166714c5bba978b31f539153b8cab",
+      "source": "tslearn/tslearn/clustering/dbscan.py:19",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 355
     }
   ],
   "repair_summary": {
@@ -11596,16 +11688,16 @@
     {
       "api": "PatchingLayer",
       "status": "fail",
-      "primary_category": "llm-error",
-      "runner_category": "llm-error",
-      "category_reason": "Provider outcome; retry, never count as a documentation failure.",
-      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "primary_category": "unknown",
+      "runner_category": "unknown",
+      "category_reason": "Observed unknown; doc attribution requires source, document, and snippet review.",
+      "error": "__CHECK__ PatchingLayer not found or optional dependency missing",
       "source": "tslearn/tslearn/shapelets/shapelets.py:128",
       "doc_chars": 95,
-      "checkpoint_attempts": 3,
+      "checkpoint_attempts": 4,
       "provider_error_attempts": 3,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
+      "recorded_successful_llm_calls": 1,
       "attempt_history": [
         {
           "checkpoint_line": 236,
@@ -11641,6 +11733,18 @@
           "llm_calls": 0,
           "input_tokens": 0,
           "output_tokens": 0,
+          "pass_round": null
+        },
+        {
+          "checkpoint_line": 354,
+          "status": "fail",
+          "error_category": "unknown",
+          "error": "__CHECK__ PatchingLayer not found or optional dependency missing",
+          "attempts": 1,
+          "wall_s": 365.9,
+          "llm_calls": 1,
+          "input_tokens": 1323,
+          "output_tokens": 63169,
           "pass_round": null
         }
       ],
@@ -11855,16 +11959,16 @@
     {
       "api": "TimeSeriesDBSCAN",
       "status": "fail",
-      "primary_category": "llm-error",
-      "runner_category": "llm-error",
-      "category_reason": "Provider outcome; retry, never count as a documentation failure.",
-      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "primary_category": "unknown",
+      "runner_category": "runtime",
+      "category_reason": "Observed runtime; doc attribution requires source, document, and snippet review.",
+      "error": "TypeError: TimeSeriesDBSCAN.__init__() got an unexpected keyword argument 'min_samples'",
       "source": "tslearn/tslearn/clustering/dbscan.py:19",
       "doc_chars": 6016,
-      "checkpoint_attempts": 3,
+      "checkpoint_attempts": 4,
       "provider_error_attempts": 3,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
+      "recorded_successful_llm_calls": 1,
       "attempt_history": [
         {
           "checkpoint_line": 238,
@@ -11900,6 +12004,18 @@
           "llm_calls": 0,
           "input_tokens": 0,
           "output_tokens": 0,
+          "pass_round": null
+        },
+        {
+          "checkpoint_line": 355,
+          "status": "fail",
+          "error_category": "runtime",
+          "error": "TypeError: TimeSeriesDBSCAN.__init__() got an unexpected keyword argument 'min_samples'",
+          "attempts": 1,
+          "wall_s": 384.7,
+          "llm_calls": 1,
+          "input_tokens": 3076,
+          "output_tokens": 63040,
           "pass_round": null
         }
       ],
