@@ -1,0 +1,48 @@
+AUDIENCE & TESTABILITY:
+API audience: INTERNAL-FRAMEWORK.
+Harness testability: TESTABLE-WITH-LOW-LEVEL-CONSTRUCTION.
+Scoring recommendation: exclude from scored denominator.
+
+ROOT CAUSE:
+The documentation incorrectly stated that `TsLearnTags` takes no arguments. In environments with scikit-learn >= 1.6, `TsLearnTags` inherits from `sklearn.utils.Tags` (a dataclass) and requires keyword arguments for its fields (such as `estimator_type` and `target_tags`). The snippet failed because it did not provide these required arguments, which must be extracted from an existing estimator's tags (as `tslearn` does internally) to satisfy the dataclass constructor.
+
+CORRECT USAGE:
+```python
+from tslearn.bases.bases import TsLearnTags
+
+if TsLearnTags is dict:
+    # Fallback for scikit-learn < 1.6
+    tags = TsLearnTags()
+    assert isinstance(tags, dict)
+else:
+    # scikit-learn >= 1.6
+    from sklearn.base import BaseEstimator
+    from dataclasses import fields
+    
+    # Extract default tags from a base estimator to satisfy required dataclass fields
+    tags_orig = BaseEstimator().__sklearn_tags__()
+    as_dict = {
+        field.name: getattr(tags_orig, field.name)
+        for field in fields(tags_orig)
+    }
+    
+    tags = TsLearnTags(**as_dict)
+    
+    assert tags.input_tags.sparse is False
+    assert tags.input_tags.three_d_array is True
+    assert tags.allow_variable_length is False
+
+print(f"__CHECK__ TsLearnTags {type(tags).__name__}")
+```
+
+REQUIRED TYPES & IMPORTS:
+`tslearn.bases.bases.TsLearnTags`
+`sklearn.base.BaseEstimator`
+`dataclasses.fields`
+
+DOC MUST SAY:
+- `TsLearnTags` is an internal compatibility shim for scikit-learn's estimator tags.
+- In scikit-learn >= 1.6, it inherits from `sklearn.utils.Tags` (a dataclass) and requires keyword arguments matching the fields of the `Tags` dataclass (e.g., `estimator_type`, `target_tags`).
+- To instantiate it safely in scikit-learn >= 1.6, extract the fields from `sklearn.base.BaseEstimator().__sklearn_tags__()` using `dataclasses.fields` and pass them as `**kwargs`.
+- In scikit-learn < 1.6, it falls back to being an alias for `dict` and takes no required arguments.
+- The resulting object will have `input_tags.sparse = False`, `input_tags.three_d_array = True`, and `allow_variable_length = False`.

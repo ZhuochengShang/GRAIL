@@ -1,0 +1,28 @@
+version: 2
+max_parallel: 1
+retry_delay_seconds: 120
+env:
+  PYTHONPATH: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal/grail-agent/src:/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal
+  AIDEAL_GOOGLE_MIN_INTERVAL_S: '3'
+  AIDEAL_GOOGLE_RATE_STATE: /tmp/aideal_google_rate_gate.txt
+  AIDEAL_GOOGLE_REQUEST_TIMEOUT_S: '300'
+  AIDEAL_GOOGLE_MAX_RETRIES: '2'
+jobs:
+- id: docfix_input_handoff_v3
+  cwd: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_puzzle_aideal
+  branch: aideal/external-2x2-infra
+  environment_inventory: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_setup/experiments/external/mir_eval/docs/eval/setup/environment_inventory.txt
+  command:
+  - /Users/clockorangezoe/miniconda3/envs/geo_llm_spark/bin/python
+  - -m
+  - experiments.external.docfix_input_handoff
+  - --workspace-parent
+  - /Users/clockorangezoe/Documents/phd_projects/code/geoAI
+  - --out
+  - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_overnight_evidence_audit/experiments/external/overnight_audit/data_validation/pipeline_v3/input_preparation
+  - --watch
+  result: .aideal_exec/docfix_input_handoff_v3.stdout
+  complete:
+    kind: exit_zero
+  max_runtime_seconds: 1209600
+  max_restarts: 0

@@ -1,0 +1,30 @@
+AUDIENCE & TESTABILITY:
+API audience: INTERNAL-FRAMEWORK.
+Harness testability: TESTABLE-WITH-LOW-LEVEL-CONSTRUCTION.
+Scoring recommendation: include only in advanced/internal bucket.
+
+ROOT CAUSE:
+The documentation contains a direct error in its "Valid Call Patterns" section. It suggests instantiating `ThumbnailMaker` directly with `new ThumbnailMaker()`, but the source code defines `ThumbnailMaker` as a `public abstract class`. To invoke this constructor, the caller must define a concrete subclass (such as an anonymous inner class) that implements the abstract `make(BufferedImage)` method.
+
+CORRECT USAGE:
+```java
+ThumbnailMaker maker = new ThumbnailMaker() {
+    @Override
+    public BufferedImage make(BufferedImage img) {
+        // Delegate to the protected helper method provided by the base class
+        return makeThumbnail(img, 100, 100);
+    }
+};
+
+BufferedImage img = new BufferedImage(200, 200, BufferedImage.TYPE_INT_ARGB);
+BufferedImage result = maker.make(img);
+```
+
+REQUIRED TYPES & IMPORTS:
+net.coobird.thumbnailator.makers.ThumbnailMaker
+java.awt.image.BufferedImage
+
+DOC MUST SAY:
+- `ThumbnailMaker` is an `abstract` class and cannot be instantiated directly.
+- To use this class, callers must define a concrete subclass (e.g., via an anonymous inner class) that implements the `public abstract BufferedImage make(BufferedImage img)` method.
+- The "Valid Call Patterns" snippet showing `new ThumbnailMaker();` is incorrect and must be replaced with an anonymous subclass implementation.

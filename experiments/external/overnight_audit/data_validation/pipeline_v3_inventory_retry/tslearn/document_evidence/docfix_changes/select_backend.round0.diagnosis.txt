@@ -1,0 +1,33 @@
+AUDIENCE & TESTABILITY:
+API audience: ADVANCED/LOW-LEVEL.
+Harness testability: TESTABLE.
+Scoring recommendation: include only in advanced/internal bucket.
+
+ROOT CAUSE:
+The documentation contains a typo regarding the exact class names returned by the function. It states the function returns `NumpyBackend` or `PytorchBackend`, but the actual classes instantiated in the source code are `NumPyBackend` (capital 'P') and `PyTorchBackend` (capital 'T'). The snippet failed because it asserted the exact string name based on the documentation's incorrect casing.
+
+CORRECT USAGE:
+```python
+import numpy as np
+from tslearn.backend import select_backend
+
+X = np.array([1, 2, 3])
+be_from_data = select_backend(X)
+be_from_str = select_backend("numpy")
+be_default = select_backend(None)
+
+# Assert falsifiable property: all three should resolve to the same NumPy backend class
+assert type(be_from_data).__name__ == "NumPyBackend", f"Expected NumPyBackend, got {type(be_from_data).__name__}"
+assert type(be_from_data) == type(be_from_str) == type(be_default), "Backend types diverged unexpectedly."
+
+# Print correctness witness
+print(f"__CHECK__ select_backend {type(be_from_data).__name__}")
+```
+
+REQUIRED TYPES & IMPORTS:
+`tslearn.backend.select_backend`
+`numpy`
+
+DOC MUST SAY:
+- The returned backend class for NumPy is exactly named `NumPyBackend` (with a capital 'P'), not `NumpyBackend`.
+- The returned backend class for PyTorch is exactly named `PyTorchBackend` (with a capital 'T'), not `PytorchBackend`.

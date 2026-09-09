@@ -1,0 +1,32 @@
+AUDIENCE & TESTABILITY:
+API audience: INTERNAL-FRAMEWORK.
+Harness testability: TESTABLE.
+Scoring recommendation: include only in advanced/internal bucket.
+
+ROOT CAUSE:
+The snippet failed because it asserted the emitted warning was a `DeprecationWarning`, but the `deprecated` decorator actually emits a `FutureWarning` (as explicitly defined by `category=FutureWarning` in the source). The documentation did not specify the exact warning category, leading the snippet to guess incorrectly.
+
+CORRECT USAGE:
+```python
+import warnings
+from mir_eval.util import deprecated
+
+@deprecated(version="0.8", version_removed="0.9")
+def dummy_func():
+    return 42
+
+with warnings.catch_warnings(record=True) as w:
+    warnings.simplefilter("always")
+    result = dummy_func()
+
+assert result == 42
+assert len(w) == 1
+assert issubclass(w[-1].category, FutureWarning)
+```
+
+REQUIRED TYPES & IMPORTS:
+`warnings` (Python standard library)
+`mir_eval.util.deprecated`
+
+DOC MUST SAY:
+- Calling the decorated function emits a `FutureWarning` (not a `DeprecationWarning`).

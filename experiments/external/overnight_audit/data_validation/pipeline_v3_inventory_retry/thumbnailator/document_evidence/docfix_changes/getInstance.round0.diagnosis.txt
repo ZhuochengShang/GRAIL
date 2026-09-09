@@ -1,0 +1,26 @@
+AUDIENCE & TESTABILITY:
+API audience: ADVANCED/LOW-LEVEL
+Harness testability: TESTABLE
+Scoring recommendation: include only in advanced/internal bucket
+
+ROOT CAUSE:
+The documentation incorrectly provided a "Valid Call Pattern" that instantiates a `ThumbnailParameterBuilder`. This builder class is either package-private or not located in the `net.coobird.thumbnailator` package, causing a `cannot find symbol` compilation error. The `getInstance()` methods themselves are perfectly testable in isolation and do not require being passed into a builder to be exercised.
+
+CORRECT USAGE:
+```java
+net.coobird.thumbnailator.resizers.ResizerFactory resizerFactory = net.coobird.thumbnailator.resizers.DefaultResizerFactory.getInstance();
+net.coobird.thumbnailator.filters.SwapDimensions swapFilter = net.coobird.thumbnailator.filters.SwapDimensions.getInstance();
+
+if (resizerFactory == null || swapFilter == null) {
+    throw new IllegalStateException("Instances should not be null");
+}
+```
+
+REQUIRED TYPES & IMPORTS:
+net.coobird.thumbnailator.resizers.ResizerFactory
+net.coobird.thumbnailator.resizers.DefaultResizerFactory
+net.coobird.thumbnailator.filters.SwapDimensions
+
+DOC MUST SAY:
+- Do not attempt to use `ThumbnailParameterBuilder` to demonstrate `getInstance()`, as it is not publicly accessible in the expected package and will cause a compilation error.
+- To test or use the API, simply call `DefaultResizerFactory.getInstance()` and `SwapDimensions.getInstance()` directly and assign them to their respective types.

@@ -1,0 +1,23 @@
+AUDIENCE & TESTABILITY:
+API audience: ADVANCED/LOW-LEVEL.
+Harness testability: TESTABLE-WITH-LOW-LEVEL-CONSTRUCTION.
+Scoring recommendation: include only in advanced/internal bucket.
+
+ROOT CAUSE:
+The documentation incorrectly claims that calling `defaultImageType()` is sufficient to satisfy the `ReadinessTracker` and allow `make()` to be called. In reality, `ThumbnailMaker` requires additional undocumented parameters to be set before `make()` can be legally invoked, causing an `IllegalStateException`. The snippet should only exercise the `defaultResizer()` method and verify its fluent return without attempting to execute `make()`.
+
+CORRECT USAGE:
+```java
+net.coobird.thumbnailator.makers.FixedSizeThumbnailMaker maker = new net.coobird.thumbnailator.makers.FixedSizeThumbnailMaker(50, 50);
+net.coobird.thumbnailator.makers.ThumbnailMaker returnedMaker = maker.defaultResizer();
+System.out.println("__CHECK__ defaultResizer fluent return: " + (returnedMaker == maker));
+```
+
+REQUIRED TYPES & IMPORTS:
+net.coobird.thumbnailator.makers.FixedSizeThumbnailMaker
+net.coobird.thumbnailator.makers.ThumbnailMaker
+
+DOC MUST SAY:
+- `ThumbnailMaker` requires multiple undocumented parameters to be set before `make()` can be called; do not call `make()` in standalone snippets.
+- The snippet should only instantiate a concrete subclass (e.g., `FixedSizeThumbnailMaker`), call `defaultResizer()`, and verify the fluent return.
+- Do not attempt to satisfy the readiness tracker manually, as the required parameters are not fully documented.

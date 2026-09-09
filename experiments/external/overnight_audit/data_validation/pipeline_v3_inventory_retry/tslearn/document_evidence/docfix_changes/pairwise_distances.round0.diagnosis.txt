@@ -1,0 +1,32 @@
+AUDIENCE & TESTABILITY:
+API audience: INTERNAL-FRAMEWORK.
+Harness testability: TESTABLE-WITH-LOW-LEVEL-CONSTRUCTION.
+Scoring recommendation: include only in advanced/internal bucket.
+
+ROOT CAUSE:
+The documentation incorrectly presents `pairwise_distances` as a module-level function. In reality, it is a `@staticmethod` defined on the `PyTorchBackend` class within the `tslearn.backend.pytorch_backend` module. The snippet failed because it attempted to import the method directly from the module instead of importing the class and calling the method on it.
+
+CORRECT USAGE:
+```python
+import torch
+from tslearn.backend.pytorch_backend import PyTorchBackend
+
+X_tensor = torch.tensor([[1.0, 2.0], [3.0, 4.0]], dtype=torch.float32)
+Y_tensor = torch.tensor([[1.0, 2.0]], dtype=torch.float32)
+
+dist_matrix = PyTorchBackend.pairwise_distances(X_tensor, Y_tensor, metric='euclidean')
+
+assert dist_matrix.shape == (2, 1), f"Expected shape (2, 1), got {dist_matrix.shape}"
+assert torch.allclose(dist_matrix[0, 0], torch.tensor(0.0), atol=1e-5), "Distance between identical elements should be 0"
+
+print(f"__CHECK__ pairwise_distances {dist_matrix.shape} {dist_matrix[0, 0].item():.4f}")
+```
+
+REQUIRED TYPES & IMPORTS:
+`tslearn.backend.pytorch_backend.PyTorchBackend`
+`torch`
+
+DOC MUST SAY:
+- `pairwise_distances` is not a module-level function; it is a `@staticmethod` of the `PyTorchBackend` class.
+- Callers must import `PyTorchBackend` from `tslearn.backend.pytorch_backend` and invoke it as `PyTorchBackend.pairwise_distances(X, Y, metric)`.
+- The inputs `X` and `Y` must be PyTorch tensors.

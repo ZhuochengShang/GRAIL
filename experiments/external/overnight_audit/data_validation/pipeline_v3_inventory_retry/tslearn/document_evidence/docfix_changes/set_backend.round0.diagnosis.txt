@@ -1,0 +1,27 @@
+AUDIENCE & TESTABILITY:
+API audience: ADVANCED/LOW-LEVEL.
+Harness testability: TESTABLE.
+Scoring recommendation: include only in advanced/internal bucket.
+
+ROOT CAUSE:
+The documentation explicitly (and incorrectly) instructed the user to import `NumPyBackend` from `tslearn.backend` to perform an `isinstance` check. However, `NumPyBackend` is an internal implementation class not exposed in the public `tslearn.backend.__init__.py` namespace, causing an `ImportError`.
+
+CORRECT USAGE:
+```python
+from tslearn.backend import Backend
+
+backend_ = Backend("pytorch")
+backend_.set_backend("numpy")
+
+assert not backend_.is_pytorch
+assert backend_.is_numpy
+
+print("__CHECK__ set_backend")
+```
+
+REQUIRED TYPES & IMPORTS:
+`tslearn.backend.Backend`
+
+DOC MUST SAY:
+- Do not import `NumPyBackend` or `PyTorchBackend` directly from `tslearn.backend`, as they are not exposed in the public namespace.
+- To verify the backend has changed, use the boolean properties `.is_numpy` and `.is_pytorch` on the `Backend` instance instead of `isinstance` checks against internal classes.

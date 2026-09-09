@@ -1,0 +1,56 @@
+version: aideal-separated-recovery-v3
+registered: '2026-09-08'
+amendment: User-approved adaptive extension; prior A2/source observations already
+  available, not retrospective preregistration
+base_protocol: aideal-a2-repair-v2
+stages:
+  S_A2:
+    baseline: A2
+    readme: unchanged generated
+    max_new_code_proposals: 5
+    stuck_rounds: 2
+  README_B2:
+    target_selection: independent original A2 failures
+    max_doc_rounds_per_api_invocation: 5
+    doc_stuck_rounds: 2
+    fresh_full_manifest_code_fixes: 0
+  S_B2:
+    baseline: B2
+    readme: unchanged rewritten
+    max_new_code_proposals: 5
+    stuck_rounds: 2
+    baseline_round: 0
+eligibility:
+- compile
+- runtime
+- timeout
+- no-correctness-check
+- unknown
+exclude:
+- pass
+- llm-error
+- infra
+scheduling:
+  priority_barrier: this repository B2 succeeded; no A1 or other-repository dependency
+  max_additional_model_workers: 1
+  rate_pool: same existing Google state file
+  provider_retry_delay_seconds: 300
+  max_local_study_callers: 6
+  shared_recovery_admission: one file-lock slot; reserve 1 native caller per B2-complete
+    repo, otherwise 2
+  source_retries: resume same S_A2 checkpoint after own B2, independently of A1
+  amended_at: 2026-09-08; before any S_B2 execution
+measurement:
+  native_scores_immutable: true
+  fixed_cohort_denominators: true
+  paired_comparison_on_original_A2_eligible_failures: true
+  B2_plus_S_B2_is_separate_composite: true
+  equal_cost_causal_claim: false
+  semantic_validation: independent review required
+source_implementation:
+  recovery/runner.py: 0b5d7370459006a623d7084ab5c63a2ecdaa953fc2494a65627175671b994abf
+  recovery/engine.py: 6d9f4310015755d44f7e002ef5add7fb29dfaad0685c7e9d61ca495c1cddeaf1
+  recovery/validation.py: 6b57fe6df9a3049e7b76fbe76ca8042f885bcd507d87040a28032401879cdeb9
+  recovery/compatibility.py: 86d978d07814e35310da027da25d1e59bafd84dd350be5f66dc278050b1d43f9
+  recovery/snapshot.py: 70084513da29d4d6731f6d20b63f5035e9b5a44226ca8714fb92c7f98c1ede47
+  recovery/protocol.yaml: b6caeb1e279ff5f30bd90547071380caf7efd19a54ea2f5972fddd266f91b5a2

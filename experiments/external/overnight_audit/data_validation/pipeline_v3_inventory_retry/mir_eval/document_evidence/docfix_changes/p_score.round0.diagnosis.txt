@@ -1,0 +1,24 @@
+AUDIENCE & TESTABILITY:
+API audience: USER-FACING.
+Harness testability: TESTABLE.
+Scoring recommendation: include in main user-facing denominator.
+
+ROOT CAUSE:
+The snippet failed because the test harness provided dummy beat arrays that, when passed through `mir_eval.beat.trim_beats` (which removes beats before 5 seconds), resulted in arrays with 1 or fewer elements. The source code for `p_score` explicitly returns `0.0` if either input array has a size of 1 or less, causing the perfect score assertion to fail.
+
+CORRECT USAGE:
+```python
+ref_beats = np.array([5.5, 6.0, 6.5, 7.0, 7.5])
+est_beats = np.array([5.5, 6.0, 6.5, 7.0, 7.5])
+score = mir_eval.beat.p_score(ref_beats, est_beats)
+```
+
+REQUIRED TYPES & IMPORTS:
+`numpy`
+`numpy.ndarray`
+`mir_eval`
+
+DOC MUST SAY:
+- `p_score` returns `0.0` if either `reference_beats` or `estimated_beats` contains 1 or fewer elements.
+- If preprocessing with `mir_eval.beat.trim_beats` (which removes beats before 5 seconds), ensure the input arrays contain at least two beats after the 5-second mark to avoid receiving a `0.0` score.
+- Inputs must be 1D numpy arrays of floats representing timestamps in seconds.

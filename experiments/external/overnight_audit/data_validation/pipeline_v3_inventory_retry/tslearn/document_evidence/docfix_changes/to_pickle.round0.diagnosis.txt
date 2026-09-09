@@ -1,0 +1,35 @@
+AUDIENCE & TESTABILITY:
+API audience: USER-FACING.
+Harness testability: TESTABLE.
+Scoring recommendation: include in main user-facing denominator.
+
+ROOT CAUSE:
+The documentation failed to mention that `to_pickle` serializes the model's internal state as a dictionary rather than pickling the object directly. Because of this, the snippet used standard `pickle.load()`, which returned a `dict` instead of a model instance, causing an `AttributeError` when accessing `.n_clusters`. The model must be deserialized using the corresponding `from_pickle` class method (e.g., `TimeSeriesKMeans.from_pickle(path)`).
+
+CORRECT USAGE:
+```python
+import os
+import tempfile
+from tslearn.clustering import TimeSeriesKMeans
+
+model = TimeSeriesKMeans(n_clusters=2, random_state=42)
+
+with tempfile.TemporaryDirectory() as tmpdir:
+    filepath = os.path.join(tmpdir, "test_model.pkl")
+    
+    # Save the model
+    model.to_pickle(filepath)
+    assert os.path.exists(filepath)
+    
+    # Load the model using the class method, NOT standard pickle.load
+    loaded_model = TimeSeriesKMeans.from_pickle(filepath)
+    
+    assert loaded_model.n_clusters == 2
+```
+
+REQUIRED TYPES & IMPORTS:
+`tslearn.clustering.TimeSeriesKMeans`
+
+DOC MUST SAY:
+- `to_pickle` serializes the model's internal state as a dictionary, not as a standard pickled Python object.
+- To load a model saved with `to_pickle`, callers MUST use the corresponding `from_pickle` class method on the estimator (e.g., `TimeSeriesKMeans.from_pickle(path)`) rather than standard `pickle.load`.

@@ -1,0 +1,32 @@
+AUDIENCE & TESTABILITY:
+API audience: USER-FACING.
+Harness testability: TESTABLE.
+Scoring recommendation: include in main user-facing denominator.
+
+ROOT CAUSE:
+The documentation incorrectly claims that requesting an unsupported format via `Thumbnails.Builder.outputFormat(String)` will throw an `UnsupportedFormatException` during the terminal sink operation. In reality, `outputFormat(String)` eagerly validates the format against registered ImageIO writers and throws an `IllegalArgumentException` immediately. The snippet failed because it attempted to trigger the exception organically using this flawed pipeline advice instead of directly exercising the exception's constructors and methods.
+
+CORRECT USAGE:
+```java
+net.coobird.thumbnailator.tasks.UnsupportedFormatException ex1 = 
+    new net.coobird.thumbnailator.tasks.UnsupportedFormatException("webp");
+
+net.coobird.thumbnailator.tasks.UnsupportedFormatException ex2 = 
+    new net.coobird.thumbnailator.tasks.UnsupportedFormatException(
+        net.coobird.thumbnailator.tasks.UnsupportedFormatException.UNKNOWN, 
+        "No suitable ImageWriter found"
+    );
+
+assert "webp".equals(ex1.getFormatName());
+assert net.coobird.thumbnailator.tasks.UnsupportedFormatException.UNKNOWN.equals(ex2.getFormatName());
+assert "No suitable ImageWriter found".equals(ex2.getMessage());
+```
+
+REQUIRED TYPES & IMPORTS:
+net.coobird.thumbnailator.tasks.UnsupportedFormatException
+
+DOC MUST SAY:
+- `Thumbnails.Builder.outputFormat(String)` eagerly throws `IllegalArgumentException` if the format is unsupported, it does NOT throw `UnsupportedFormatException`.
+- To test or use the `UnsupportedFormatException` API itself, instantiate it directly using its public constructors `(String formatName)` or `(String formatName, String message)`.
+- The exception provides a `getFormatName()` method to retrieve the unsupported format name.
+- The class provides a `public static final String UNKNOWN` constant to represent unidentified formats.

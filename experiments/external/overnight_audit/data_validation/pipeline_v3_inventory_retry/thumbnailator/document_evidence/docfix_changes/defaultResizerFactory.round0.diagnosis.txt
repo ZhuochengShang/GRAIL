@@ -1,0 +1,22 @@
+AUDIENCE & TESTABILITY:
+API audience: ADVANCED/LOW-LEVEL.
+Harness testability: TESTABLE-WITH-LOW-LEVEL-CONSTRUCTION.
+Scoring recommendation: include only in advanced/internal bucket.
+
+ROOT CAUSE:
+The snippet failed because it attempted to call `make()` on the `ThumbnailMaker` after only configuring the resizer factory. `ThumbnailMaker` uses an internal `ReadinessTracker` that throws an `IllegalStateException` if `make()` is called before all required parameters (such as image type or aspect ratio constraints) are set. The documentation failed to warn that `make()` requires a fully configured maker, but testing `defaultResizerFactory()` itself only requires invoking the method and checking its fluent return.
+
+CORRECT USAGE:
+```java
+net.coobird.thumbnailator.makers.ThumbnailMaker maker = new net.coobird.thumbnailator.makers.FixedSizeThumbnailMaker(50, 50);
+net.coobird.thumbnailator.makers.ThumbnailMaker chained = maker.defaultResizerFactory();
+```
+
+REQUIRED TYPES & IMPORTS:
+net.coobird.thumbnailator.makers.ThumbnailMaker
+net.coobird.thumbnailator.makers.FixedSizeThumbnailMaker
+
+DOC MUST SAY:
+- `ThumbnailMaker` is an abstract class and must be instantiated via a concrete subclass like `FixedSizeThumbnailMaker`.
+- Calling `make()` on a `ThumbnailMaker` requires all parameters to be fully configured, otherwise it throws an `IllegalStateException`.
+- To exercise `defaultResizerFactory()`, simply invoke it on the instantiated maker and verify the fluent return; do not call `make()` unless all other required parameters are also explicitly set.

@@ -1,0 +1,31 @@
+AUDIENCE & TESTABILITY:
+API audience: INTERNAL-FRAMEWORK.
+Harness testability: TESTABLE-WITH-LOW-LEVEL-CONSTRUCTION.
+Scoring recommendation: include only in advanced/internal bucket.
+
+ROOT CAUSE:
+The documentation incorrectly suggests importing `PyTorchBackend` from `tslearn.backend`. It is an internal class not exposed in the package root's `__init__.py`, so it must be imported directly from its defining module `tslearn.backend.pytorch_backend`. Additionally, the failing snippet relied on an undefined variable `s1` and an unverified `shape` method instead of using the explicitly defined `array` and `is_array` methods.
+
+CORRECT USAGE:
+```python
+import torch
+from tslearn.backend.pytorch_backend import PyTorchBackend
+
+be = PyTorchBackend()
+tensor = be.array([1.0, 2.0, 3.0], dtype=be.float32)
+
+assert be.backend_string == "pytorch", "Expected backend string to be 'pytorch'"
+assert be.is_array(tensor), "Expected the created object to be recognized as a tensor"
+
+print(f"__CHECK__ PyTorchBackend {tensor.shape}")
+```
+
+REQUIRED TYPES & IMPORTS:
+`tslearn.backend.pytorch_backend.PyTorchBackend`
+`torch`
+
+DOC MUST SAY:
+- `PyTorchBackend` is an internal class and is not exposed in the `tslearn.backend` namespace.
+- It must be imported directly from `tslearn.backend.pytorch_backend import PyTorchBackend`.
+- The constructor takes no arguments.
+- The caller must ensure `torch` is installed in the environment, otherwise instantiation will raise a `ValueError`.

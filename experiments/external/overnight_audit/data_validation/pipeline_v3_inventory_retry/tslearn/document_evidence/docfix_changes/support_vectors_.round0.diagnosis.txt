@@ -1,0 +1,38 @@
+AUDIENCE & TESTABILITY:
+API audience: USER-FACING.
+Harness testability: TESTABLE.
+Scoring recommendation: include in main user-facing denominator.
+
+ROOT CAUSE:
+The documentation incorrectly states that `support_vectors_` returns a single 3D numpy array. The source code explicitly constructs and returns a Python `list` of 3D numpy arrays, where each element in the list contains the support vectors for a specific class.
+
+CORRECT USAGE:
+```python
+from tslearn.svm import TimeSeriesSVC
+import numpy as np
+
+n_samples = min(len(X), len(y))
+X_sub = X[:n_samples]
+y_sub = y[:n_samples]
+
+clf = TimeSeriesSVC(kernel="gak", random_state=42)
+clf.fit(X_sub, y_sub)
+
+sv = clf.support_vectors_
+
+assert isinstance(sv, list), "support_vectors_ should be a list"
+assert len(sv) > 0, "List should not be empty"
+assert isinstance(sv[0], np.ndarray), "Elements of the list should be numpy arrays"
+assert sv[0].ndim == 3, "Each class's support vectors should be a 3D array"
+
+print(f"__CHECK__ support_vectors_ list length {len(sv)}")
+```
+
+REQUIRED TYPES & IMPORTS:
+`tslearn.svm.TimeSeriesSVC`
+`numpy.ndarray`
+
+DOC MUST SAY:
+- `support_vectors_` returns a Python `list` of 3D `numpy.ndarray` objects, not a single array.
+- Each array in the returned list contains the support vectors for a specific class.
+- The shape of each array in the list is `(n_SV_c, max_sz, d)`, where `n_SV_c` is the number of support vectors for that class.

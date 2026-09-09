@@ -1,0 +1,32 @@
+AUDIENCE & TESTABILITY:
+API audience: INTERNAL-FRAMEWORK.
+Harness testability: TESTABLE-WITH-LOW-LEVEL-CONSTRUCTION.
+Scoring recommendation: include only in advanced/internal bucket.
+
+ROOT CAUSE:
+The documentation incorrectly suggests importing `fix_force_all_finite_warning` from the public `tslearn.utils` namespace. It is an internal helper function that is not exposed in the package's `__init__.py` and must be imported directly from its defining submodule: `tslearn.utils.utils`.
+
+CORRECT USAGE:
+```python
+from tslearn.utils.utils import fix_force_all_finite_warning
+
+@fix_force_all_finite_warning
+def mock_validation(**kwargs):
+    return kwargs
+
+result = mock_validation(force_all_finite=False)
+
+assert isinstance(result, dict), "Wrapped function should return the kwargs dictionary"
+assert "force_all_finite" in result or "ensure_all_finite" in result, "Missing finite check kwarg in intercepted arguments"
+assert any(v is False for v in result.values()), "The False value was not passed through by the decorator"
+
+witness = "ensure_all_finite" if "ensure_all_finite" in result else "force_all_finite"
+print(f"__CHECK__ fix_force_all_finite_warning {witness}={result[witness]}")
+```
+
+REQUIRED TYPES & IMPORTS:
+`from tslearn.utils.utils import fix_force_all_finite_warning`
+
+DOC MUST SAY:
+- `fix_force_all_finite_warning` is an internal framework helper and must be imported exactly from `tslearn.utils.utils`, not `tslearn.utils`.
+- It is used as a decorator to intercept `kwargs` and translate `force_all_finite` to `ensure_all_finite` if the installed `scikit-learn` version requires it.

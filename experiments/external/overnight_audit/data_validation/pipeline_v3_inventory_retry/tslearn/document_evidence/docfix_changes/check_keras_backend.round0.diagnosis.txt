@@ -1,0 +1,41 @@
+AUDIENCE & TESTABILITY:
+API audience: INTERNAL/FRAMEWORK.
+Harness testability: TESTABLE.
+Scoring recommendation: include only in advanced/internal bucket.
+
+ROOT CAUSE:
+The documentation failed to specify the exact side effect of the function, which is mutating `os.environ["KERAS_BACKEND"]`. Because the snippet only asserted that the return value was `None`, the test harness rejected it as insufficient for verifying a side-effect-only function. The test must clear the environment variable, call the function, and assert that `os.environ["KERAS_BACKEND"]` was populated (or that an `ImportError` was raised if no backends are installed).
+
+CORRECT USAGE:
+```python
+import os
+from tslearn.backend import check_keras_backend
+
+original_backend = os.environ.get("KERAS_BACKEND")
+if "KERAS_BACKEND" in os.environ:
+    del os.environ["KERAS_BACKEND"]
+
+try:
+    check_keras_backend()
+    selected = os.environ.get("KERAS_BACKEND")
+    assert selected in ["torch", "tensorflow", "jax"], f"Unexpected backend: {selected}"
+    print(f"__CHECK__ check_keras_backend set KERAS_BACKEND to {selected}")
+except ImportError as e:
+    assert str(e) == "No Keras backend installed"
+    print("__CHECK__ check_keras_backend raised ImportError (no backends installed)")
+finally:
+    if original_backend is not None:
+        os.environ["KERAS_BACKEND"] = original_backend
+    elif "KERAS_BACKEND" in os.environ:
+        del os.environ["KERAS_BACKEND"]
+```
+
+REQUIRED TYPES & IMPORTS:
+`os` (Python standard library)
+`tslearn.backend.check_keras_backend`
+
+DOC MUST SAY:
+- The function operates via side effects by mutating `os.environ["KERAS_BACKEND"]`.
+- If `KERAS_BACKEND` is not already set in the environment, it attempts to import `torch`, `tensorflow`, or `jax` and sets the environment variable to the first one found.
+- If no supported backend is installed, it raises an `ImportError("No Keras backend installed")`.
+- Tests must verify the side effect by checking `os.environ["KERAS_BACKEND"]` or catching the `ImportError`, rather than just asserting the return value is `None`.

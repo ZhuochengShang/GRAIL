@@ -1,0 +1,100 @@
+{
+  "fingerprint": "da1ace37b5f3ee4662c817215cc128073a448ae90d21e297ad833b0417b28312",
+  "identity": {
+    "baseline_fingerprint": "30cc839a6cf5014970320c8ba149a2470efab72ef9275c5c4eccb4eb6c6ff969",
+    "baseline_result_sha256": "cb0bd3e4a52cdcc1f6b2a04c4a3d421a184fa727e326281f6e7d770641d49c34",
+    "api": "extract_from_zip_url",
+    "script_sha256": "b18bf80944718bc799574f8fcfc1e8f37e2d45d575eb8f07cec5353700277fca",
+    "prompt_sha256": {
+      "comprehension_write_exec": "f557fcc5d4534cdfa6e596066b2106fd4d9f1ed459be8afccb8676070275c501",
+      "deep_dive": "bcaacb96d675d8e898784eea65319e5ded213c06eb8578f5e40627fd3adce504"
+    },
+    "current_effective_config_sha256": "369bcde31d6125a25d25b57e0a6b2df106895fb534f3fdcce90c6a6ac3313993",
+    "current_profile_sha256": "a9124a6c32a7bd4813d62b15ebee0bd7810d32a3f1e770cc67b21aac37b28a46",
+    "upstream_test_context": {
+      "sha256": "71eff9e405056f9b6670608d1c983b7c14f9ac268ae1869c767bf8d06b8ff241",
+      "file_count": 21
+    },
+    "context_engine": {
+      "deepdive.py": "11b4bd8f2c2761c17c43d43a4747ee3660173c94c1a621811c8f720e13898c73",
+      "docfix.py": "1d2f7cf6acdf9455ede12acdf35dcb93d91aa5bc7fe05514fbf783a5eca877b9"
+    },
+    "protocol_sha256": "b6caeb1e279ff5f30bd90547071380caf7efd19a54ea2f5972fddd266f91b5a2",
+    "source": {
+      "sha256": "90ffcaf2949df6e6efb7c82e0eb692117803de7fbb7c5d61178bc44fd411cdfc",
+      "file_count": 62
+    },
+    "document_sha256": "d276dc0c5d215d650365bbc6eee74a33bd760edcab6f054df077bbd35b1938eb",
+    "script_binding": "retained_matches_native_failure_prefix",
+    "baseline_compatibility": null,
+    "mode": "source",
+    "max_code_fix_rounds": 5,
+    "stuck_rounds": 2,
+    "runner_sha256": "0b5d7370459006a623d7084ab5c63a2ecdaa953fc2494a65627175671b994abf",
+    "engine_sha256": "6d9f4310015755d44f7e002ef5add7fb29dfaad0685c7e9d61ca495c1cddeaf1",
+    "validation_sha256": "6b57fe6df9a3049e7b76fbe76ca8042f885bcd507d87040a28032401879cdeb9",
+    "compatibility_adapter_sha256": "86d978d07814e35310da027da25d1e59bafd84dd350be5f66dc278050b1d43f9"
+  },
+  "initial": {
+    "status": "fail",
+    "category": "runtime",
+    "error": "URLError: <urlopen error [Errno 61] Connection refused>",
+    "code": "\"\"\"Shared infrastructure-only scaffold for tslearn's full-surface 2x2.\n\nThis exact file is used in A1, A2, B1, and B2. It intentionally imports no\ntested tslearn API because discovering the public import is part of the\naudience task in every cell.\n\"\"\"\n\nfrom pathlib import Path\nimport sys\nimport traceback\n\nimport numpy as np\n\n\ndef run():\n    # Typed repository fixture path and condition-specific output directory:\n    trace_npz = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v3/tslearn/cb0bd3e4a52cdcc1f6b2a04c4a3d421a184fa727e326281f6e7d770641d49c34/project/tslearn/tslearn/.cached_datasets/Trace.npz\"\n    output_dir = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v3/tslearn/cb0bd3e4a52cdcc1f6b2a04c4a3d421a184fa727e326281f6e7d770641d49c34/project/.aideal_exec/B2/output\"\n\n    # pre-loaded typed inputs (comprehension.execute.preamble)\n    Path(output_dir).mkdir(parents=True, exist_ok=True)\n    _trace = np.load(trace_npz)\n    _balanced = np.array([0, 4, 1, 17, 3, 13, 2, 5], dtype=int)\n    X = _trace[\"X_train\"][_balanced, :40, :]  # type: balanced time-series dataset ndarray (8, 40, 1)\n    X2 = _trace[\"X_test\"][:4, :32, :]  # type: second dataset ndarray (4, 32, 1)\n    s1 = X[0].ravel()  # type: 1-D series ndarray (40,)\n    s2 = X[1].ravel()  # type: 1-D series ndarray (40,)\n    y = _trace[\"y_train\"][_balanced]  # type: four balanced labels, two examples per class\n    tiny_matrix = np.arange(12.0).reshape(3, 4)  # type: deterministic numeric matrix\n\n    # Keep audience imports local so they cannot shadow fixture construction.\n    def api_test():\n        # TODO API_TEST_START\n        import warnings\n        from tslearn.datasets import extract_from_zip_url\n\n        with warnings.catch_warnings(record=True) as w:\n            warnings.simplefilter(\"always\")\n            # Using an invalid URL to avoid network access and demonstrate the failure mode\n            out_dir = extract_from_zip_url(\n                url=\"http://0.0.0.0/nonexistent_dataset.zip\", \n                target_dir=output_dir, \n                verbose=False\n            )\n\n        assert out_dir is None, f\"Expected None on failure, got {out_dir}\"\n        assert any(issubclass(warn.category, RuntimeWarning) for warn in w), \"Expected a RuntimeWarning to be emitted on failure\"\n\n        print(f\"__CHECK__ extract_from_zip_url {out_dir}\")\n        # TODO API_TEST_END\n        pass\n\n    api_test()\n\n\nif __name__ == \"__main__\":\n    try:\n        run()\n        print(\"__DONE__\")\n    except Exception as exc:  # noqa: BLE001 - execution boundary\n        sys.stderr.write(\"__RUN_ERR__ \" + type(exc).__name__ + \": \" + str(exc) + \"\\n\")\n        traceback.print_exc()\n        raise SystemExit(1)\n"
+  },
+  "events": [
+    {
+      "stage": "deep_dive",
+      "error": "[Errno 8] nodename nor servname provided, or not known",
+      "status": "blocked"
+    },
+    {
+      "status": "pass",
+      "category": null,
+      "error": null,
+      "code": "\"\"\"Shared infrastructure-only scaffold for tslearn's full-surface 2x2.\n\nThis exact file is used in A1, A2, B1, and B2. It intentionally imports no\ntested tslearn API because discovering the public import is part of the\naudience task in every cell.\n\"\"\"\n\nfrom pathlib import Path\nimport sys\nimport traceback\n\nimport numpy as np\n\n\ndef run():\n    # Typed repository fixture path and condition-specific output directory:\n    trace_npz = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v3/tslearn/cb0bd3e4a52cdcc1f6b2a04c4a3d421a184fa727e326281f6e7d770641d49c34/project/tslearn/tslearn/.cached_datasets/Trace.npz\"\n    output_dir = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v3/tslearn/cb0bd3e4a52cdcc1f6b2a04c4a3d421a184fa727e326281f6e7d770641d49c34/project/.aideal_recovery/8fe8d895bec7f27edd373429d73ef2fb66ba10252ba9cd1caf38c0a7f3382612/round_01/attempt_0001/output\"\n\n    # pre-loaded typed inputs (comprehension.execute.preamble)\n    Path(output_dir).mkdir(parents=True, exist_ok=True)\n    _trace = np.load(trace_npz)\n    _balanced = np.array([0, 4, 1, 17, 3, 13, 2, 5], dtype=int)\n    X = _trace[\"X_train\"][_balanced, :40, :]  # type: balanced time-series dataset ndarray (8, 40, 1)\n    X2 = _trace[\"X_test\"][:4, :32, :]  # type: second dataset ndarray (4, 32, 1)\n    s1 = X[0].ravel()  # type: 1-D series ndarray (40,)\n    s2 = X[1].ravel()  # type: 1-D series ndarray (40,)\n    y = _trace[\"y_train\"][_balanced]  # type: four balanced labels, two examples per class\n    tiny_matrix = np.arange(12.0).reshape(3, 4)  # type: deterministic numeric matrix\n\n    # Keep audience imports local so they cannot shadow fixture construction.\n    def api_test():\n        # TODO API_TEST_START\n        import zipfile\n        from pathlib import Path\n        from tslearn.datasets import extract_from_zip_url\n\n        # Create a valid local zip file to avoid network access\n        zip_path = Path(output_dir) / \"test.zip\"\n        with zipfile.ZipFile(zip_path, 'w') as zf:\n            zf.writestr(\"data.txt\", b\"time series data\")\n\n        # Convert local path to a file:// URI\n        url = zip_path.as_uri()\n        target_dir = Path(output_dir) / \"extracted\"\n\n        # Call the API (target_dir must be provided despite the default)\n        out_dir = extract_from_zip_url(url, target_dir=str(target_dir))\n\n        # Verify the return type and extraction success\n        assert isinstance(out_dir, Path), f\"Expected Path object, got {type(out_dir)}\"\n        assert out_dir == target_dir, f\"Expected {target_dir}, got {out_dir}\"\n        assert (target_dir / \"data.txt\").read_text() == \"time series data\", \"Extracted content mismatch\"\n\n        print(f\"__CHECK__ extract_from_zip_url {out_dir.name}\")\n        # TODO API_TEST_END\n        pass\n\n    api_test()\n\n\nif __name__ == \"__main__\":\n    try:\n        run()\n        print(\"__DONE__\")\n    except Exception as exc:  # noqa: BLE001 - execution boundary\n        sys.stderr.write(\"__RUN_ERR__ \" + type(exc).__name__ + \": \" + str(exc) + \"\\n\")\n        traceback.print_exc()\n        raise SystemExit(1)\n",
+      "native_result": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v3/tslearn/cb0bd3e4a52cdcc1f6b2a04c4a3d421a184fa727e326281f6e7d770641d49c34/project/.aideal_recovery/8fe8d895bec7f27edd373429d73ef2fb66ba10252ba9cd1caf38c0a7f3382612/round_01/attempt_0001/native_result.json",
+      "script_sha256": "6633d15d00b94820215ebf1a474587d72e73fc1facd96a27e37c48f7e6ca52b0",
+      "wall_s": 11.0,
+      "llm_calls": 1,
+      "input_tokens": 3768,
+      "output_tokens": 984,
+      "code_fix_round": 1
+    }
+  ],
+  "rounds": [
+    {
+      "status": "pass",
+      "category": null,
+      "error": null,
+      "code": "\"\"\"Shared infrastructure-only scaffold for tslearn's full-surface 2x2.\n\nThis exact file is used in A1, A2, B1, and B2. It intentionally imports no\ntested tslearn API because discovering the public import is part of the\naudience task in every cell.\n\"\"\"\n\nfrom pathlib import Path\nimport sys\nimport traceback\n\nimport numpy as np\n\n\ndef run():\n    # Typed repository fixture path and condition-specific output directory:\n    trace_npz = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v3/tslearn/cb0bd3e4a52cdcc1f6b2a04c4a3d421a184fa727e326281f6e7d770641d49c34/project/tslearn/tslearn/.cached_datasets/Trace.npz\"\n    output_dir = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v3/tslearn/cb0bd3e4a52cdcc1f6b2a04c4a3d421a184fa727e326281f6e7d770641d49c34/project/.aideal_recovery/8fe8d895bec7f27edd373429d73ef2fb66ba10252ba9cd1caf38c0a7f3382612/round_01/attempt_0001/output\"\n\n    # pre-loaded typed inputs (comprehension.execute.preamble)\n    Path(output_dir).mkdir(parents=True, exist_ok=True)\n    _trace = np.load(trace_npz)\n    _balanced = np.array([0, 4, 1, 17, 3, 13, 2, 5], dtype=int)\n    X = _trace[\"X_train\"][_balanced, :40, :]  # type: balanced time-series dataset ndarray (8, 40, 1)\n    X2 = _trace[\"X_test\"][:4, :32, :]  # type: second dataset ndarray (4, 32, 1)\n    s1 = X[0].ravel()  # type: 1-D series ndarray (40,)\n    s2 = X[1].ravel()  # type: 1-D series ndarray (40,)\n    y = _trace[\"y_train\"][_balanced]  # type: four balanced labels, two examples per class\n    tiny_matrix = np.arange(12.0).reshape(3, 4)  # type: deterministic numeric matrix\n\n    # Keep audience imports local so they cannot shadow fixture construction.\n    def api_test():\n        # TODO API_TEST_START\n        import zipfile\n        from pathlib import Path\n        from tslearn.datasets import extract_from_zip_url\n\n        # Create a valid local zip file to avoid network access\n        zip_path = Path(output_dir) / \"test.zip\"\n        with zipfile.ZipFile(zip_path, 'w') as zf:\n            zf.writestr(\"data.txt\", b\"time series data\")\n\n        # Convert local path to a file:// URI\n        url = zip_path.as_uri()\n        target_dir = Path(output_dir) / \"extracted\"\n\n        # Call the API (target_dir must be provided despite the default)\n        out_dir = extract_from_zip_url(url, target_dir=str(target_dir))\n\n        # Verify the return type and extraction success\n        assert isinstance(out_dir, Path), f\"Expected Path object, got {type(out_dir)}\"\n        assert out_dir == target_dir, f\"Expected {target_dir}, got {out_dir}\"\n        assert (target_dir / \"data.txt\").read_text() == \"time series data\", \"Extracted content mismatch\"\n\n        print(f\"__CHECK__ extract_from_zip_url {out_dir.name}\")\n        # TODO API_TEST_END\n        pass\n\n    api_test()\n\n\nif __name__ == \"__main__\":\n    try:\n        run()\n        print(\"__DONE__\")\n    except Exception as exc:  # noqa: BLE001 - execution boundary\n        sys.stderr.write(\"__RUN_ERR__ \" + type(exc).__name__ + \": \" + str(exc) + \"\\n\")\n        traceback.print_exc()\n        raise SystemExit(1)\n",
+      "native_result": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v3/tslearn/cb0bd3e4a52cdcc1f6b2a04c4a3d421a184fa727e326281f6e7d770641d49c34/project/.aideal_recovery/8fe8d895bec7f27edd373429d73ef2fb66ba10252ba9cd1caf38c0a7f3382612/round_01/attempt_0001/native_result.json",
+      "script_sha256": "6633d15d00b94820215ebf1a474587d72e73fc1facd96a27e37c48f7e6ca52b0",
+      "wall_s": 11.0,
+      "llm_calls": 1,
+      "input_tokens": 3768,
+      "output_tokens": 984,
+      "code_fix_round": 1
+    }
+  ],
+  "status": "recovered_native",
+  "diagnosis": {
+    "api": "extract_from_zip_url",
+    "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v3/tslearn/cb0bd3e4a52cdcc1f6b2a04c4a3d421a184fa727e326281f6e7d770641d49c34/project/.aideal_recovery/8fe8d895bec7f27edd373429d73ef2fb66ba10252ba9cd1caf38c0a7f3382612/deepdive/extract_from_zip_url.md",
+    "model": "google:gemini-3.1-pro-preview",
+    "tokens": {
+      "in": 3174,
+      "out": 5312
+    },
+    "wall_s": 41.5,
+    "report_text": "**L0 AUDIENCE + TESTABILITY CLASSIFICATION**\nADVANCED/LOW-LEVEL\nTESTABLE FROM PUBLIC INPUTS\n\n**L1 PURPOSE**\n`extract_from_zip_url` is a utility function designed to download a zip archive from a given URL and extract its contents into a specified directory. Within the `tslearn` library, it acts as a backend helper for dataset loaders (such as those in `ucr_uea.py`) to fetch standard time-series datasets from remote repositories.\n\n**L2 CONTRACT**\n- `url` (`str`): The URL from which to download the zip file. It supports standard schemes handled by `urllib`, including `http://`, `https://`, and `file://`.\n- `target_dir` (`str` or `pathlib.Path`): The directory where the unzipped files should be extracted. **Warning:** Although the signature defaults to `None` and the docstring claims `None` is valid, passing `None` will raise a `TypeError` at runtime because `Path(None)` is invalid in Python. A valid path must be explicitly provided.\n- `verbose` (`bool`, default `False`): If `True`, prints a success message to standard output upon successful extraction.\n- **Returns**: A `pathlib.Path` object representing the extraction directory on success (contradicting the docstring which claims it returns a `str`), or `None` if the downloaded file is a corrupted or invalid zip archive.\n- **Raises**: \n  - `urllib.error.URLError` / `urllib.error.HTTPError` if the URL is unreachable or invalid.\n  - `TypeError` if `target_dir` is `None`.\n\n**L3 MECHANICS**\n- The function extracts the filename from the provided URL (line 36).\n- It creates a temporary directory using `tempfile.mkdtemp()` to hold the downloaded archive (line 37).\n- It downloads the file to the temporary directory using `urllib.request.urlretrieve` (line 39). **Crucially, this step is unprotected by any `try/except` block**, meaning network errors will propagate directly to the caller.\n- It casts `target_dir` to a `Path` object and creates the directory structure if it doesn't exist (lines 40-41).\n- It enters a `try` block to open and extract the zip file using `zipfile.ZipFile.extractall` (lines 43-44).\n- If a `zipfile.BadZipFile` exception is raised during extraction, it catches it, emits a `RuntimeWarning`, and returns `None` (lines 49-52).\n- A `finally` block ensures the temporary directory created for the download is safely deleted using `shutil.rmtree` (lines 53-54).\n\n**L4 CORRECT MINIMAL USAGE**\n```python\nimport tempfile\nimport zipfile\nfrom pathlib import Path\nfrom tslearn.datasets import extract_from_zip_url\n\nwith tempfile.TemporaryDirectory() as tmpdir:\n    # 1. Create a valid local zip file to avoid network access\n    zip_path = Path(tmpdir) / \"test.zip\"\n    with zipfile.ZipFile(zip_path, 'w') as zf:\n        zf.writestr(\"data.txt\", b\"time series data\")\n    \n    # 2. Convert local path to a file:// URI\n    url = zip_path.as_uri()\n    target_dir = Path(tmpdir) / \"extracted\"\n    \n    # 3. Call the API (target_dir must be provided despite the default)\n    out_dir = extract_from_zip_url(url, target_dir=str(target_dir))\n    \n    # 4. Verify the return type and extraction success\n    assert isinstance(out_dir, Path), f\"Expected Path object, got {type(out_dir)}\"\n    assert out_dir == target_dir\n    assert (target_dir / \"data.txt\").read_text() == \"time series data\"\n    print(\"Successfully extracted local zip via file URI.\")\n```\n\n**L5 FAILURE FORENSICS**\n- The recorded failure `URLError: <urlopen error [Errno 61] Connection refused>` occurred because the previous test harness attempted to use a dummy network URL (likely `http://0.0.0.0/nonexistent_dataset.zip` as seen in the doc entry) to trigger the documented failure mode (returning `None`).\n- However, the documentation is misleading: the function only catches `zipfile.BadZipFile` (line 49). The network download via `urlretrieve(url, local_zip_fname)` occurs at line 39, which is outside the `try` block (line 42). Consequently, network connection failures raise `URLError` directly instead of returning `None`.\n\n**L6 SELF-ASSESSMENT**\n- **INFERENCE:** I inferred that `Path(None)` raises a `TypeError` based on standard Python 3 `pathlib` behavior, which contradicts the docstring's claim that `target_dir=None` is a valid default.\n- **INFERENCE:** I inferred that the previous test used `http://0.0.0.0/...` based on the \"Valid Call Patterns\" section of the provided documentation entry and the specific `[Errno 61] Connection refused` error.\n- **Confidence in L2:** 10/10. The types and return values are clearly visible in the source code, including the discrepancy between the docstring (`str`) and the actual return type (`Path`).\n- **Confidence in L3:** 10/10. The step-by-step execution and exception handling boundaries are explicitly defined in the provided source.\n- **Confidence in L4:** 10/10. The use of a local `file://` URI perfectly satisfies the constraints of avoiding network access while fully exercising the function's logic deterministically.",
+    "report_sha256": "5bcaa62d9f029d003df3c5172320dfd8661903889682038eef2f9f2f2fb01804"
+  },
+  "max_rounds": 5,
+  "stuck_threshold": 2,
+  "stop_reason": null,
+  "semantic_validation": "needs_independent_review",
+  "headline_credit": false,
+  "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v3/tslearn/cb0bd3e4a52cdcc1f6b2a04c4a3d421a184fa727e326281f6e7d770641d49c34/project/.aideal_recovery/8fe8d895bec7f27edd373429d73ef2fb66ba10252ba9cd1caf38c0a7f3382612/recovery.json",
+  "stage": "S_B2",
+  "baseline_cell": "B2"
+}

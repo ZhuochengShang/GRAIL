@@ -1,0 +1,23 @@
+AUDIENCE & TESTABILITY:
+API audience: ADVANCED/LOW-LEVEL
+Harness testability: TESTABLE-WITH-LOW-LEVEL-CONSTRUCTION
+Scoring recommendation: include only in advanced/internal bucket
+
+ROOT CAUSE:
+The documentation contains an error regarding the exact class name of the numpy backend. It incorrectly instructs the user to assert the type name as `"NumpyBackend"` (lowercase 'p'), but the actual class name returned by the library is `"NumPyBackend"` (capital 'P'). 
+
+CORRECT USAGE:
+```python
+backend_ = Backend("numpy")
+actual_backend = backend_.get_backend()
+
+assert actual_backend is not None
+assert type(actual_backend).__name__ == "NumPyBackend"
+```
+
+REQUIRED TYPES & IMPORTS:
+tslearn.backend.Backend
+
+DOC MUST SAY:
+- The exact class name of the numpy backend implementation is `NumPyBackend` (with a capital 'P').
+- When dynamically checking the type name of the returned backend, assert against `"NumPyBackend"`, not `"NumpyBackend"`.

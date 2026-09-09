@@ -1,0 +1,33 @@
+AUDIENCE & TESTABILITY:
+API audience: ADVANCED-LOW-LEVEL.
+Harness testability: TESTABLE.
+Scoring recommendation: include only in advanced/internal bucket.
+
+ROOT CAUSE:
+The documentation incorrectly suggested importing `dtw_barycenter_averaging_one_init` from `tslearn.barycenters`. This function is an advanced helper that is not exposed in the package's `__init__.py` and must be imported directly from its defining submodule, `tslearn.barycenters.dba`.
+
+CORRECT USAGE:
+```python
+X = to_time_series_dataset([
+    [1.0, 2.0, 3.0], 
+    [1.0, 2.0, 2.0], 
+    [2.0, 2.0, 3.0]
+])
+
+barycenter, inertia = dtw_barycenter_averaging_one_init(
+    X=X, 
+    max_iter=10, 
+    tol=1e-4
+)
+
+assert barycenter.shape == (3, 1)
+assert isinstance(inertia, float)
+```
+
+REQUIRED TYPES & IMPORTS:
+tslearn.barycenters.dba.dtw_barycenter_averaging_one_init
+tslearn.utils.to_time_series_dataset
+
+DOC MUST SAY:
+- The function `dtw_barycenter_averaging_one_init` is an advanced helper and is not exposed in the `tslearn.barycenters` namespace.
+- It must be imported directly from the submodule where it is defined: `from tslearn.barycenters.dba import dtw_barycenter_averaging_one_init`.

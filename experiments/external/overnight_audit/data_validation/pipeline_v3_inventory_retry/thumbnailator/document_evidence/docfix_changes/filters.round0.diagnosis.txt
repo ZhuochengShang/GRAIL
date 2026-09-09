@@ -1,0 +1,36 @@
+AUDIENCE & TESTABILITY:
+API audience: ADVANCED/LOW-LEVEL.
+Harness testability: TESTABLE-WITH-LOW-LEVEL-CONSTRUCTION.
+Scoring recommendation: include only in advanced/internal bucket.
+
+ROOT CAUSE:
+The snippet failed with a `cannot find symbol` error because it blindly copied the documentation's "Fix Code Hint" which fabricated a `.size(100, 100)` method on `ThumbnailParameterBuilder`, and it attempted to use `Flip.HORIZONTAL` and `.build()` which are not guaranteed to be in scope. The documentation incorrectly suggests chaining methods that do not exist on this specific builder class and relies on unavailable concrete filter implementations.
+
+CORRECT USAGE:
+```java
+net.coobird.thumbnailator.builders.ThumbnailParameterBuilder builder = new net.coobird.thumbnailator.builders.ThumbnailParameterBuilder();
+
+java.util.List<net.coobird.thumbnailator.filters.ImageFilter> myFilters = java.util.Collections.singletonList(
+    new net.coobird.thumbnailator.filters.ImageFilter() {
+        @Override
+        public java.awt.image.BufferedImage apply(java.awt.image.BufferedImage img) {
+            return img;
+        }
+    }
+);
+
+builder.filters(myFilters);
+```
+
+REQUIRED TYPES & IMPORTS:
+net.coobird.thumbnailator.builders.ThumbnailParameterBuilder
+net.coobird.thumbnailator.filters.ImageFilter
+java.awt.image.BufferedImage
+java.util.List
+java.util.Collections
+
+DOC MUST SAY:
+- `ThumbnailParameterBuilder` does not have a `size(int, int)` method; do not chain fabricated methods when configuring it.
+- Do not assume the presence of concrete filter classes like `Flip` or `Rotation`; if testing the API in isolation, provide an anonymous implementation of the `ImageFilter` interface.
+- Do not call `.build()` or attempt to retrieve state via `.getFilters()` unless those methods are explicitly defined in your available source context.
+- To use the API, instantiate `ThumbnailParameterBuilder` via its no-argument constructor and pass a valid `List<ImageFilter>` to `.filters()`.

@@ -1,0 +1,42 @@
+AUDIENCE & TESTABILITY:
+API audience: USER-FACING.
+Harness testability: TESTABLE.
+Scoring recommendation: include in main user-facing denominator.
+
+ROOT CAUSE:
+The snippet failed due to an environment assumption: it attempted to write mock text files to an `output_dir` path where the underlying directory had not been created, resulting in a `FileNotFoundError` during `open(..., "w")`. Test snippets must use Python's standard `tempfile` module to safely create and manage temporary directories for file I/O rather than relying on undefined or uninitialized global path variables.
+
+CORRECT USAGE:
+```python
+import tempfile
+import os
+import mir_eval
+
+with tempfile.TemporaryDirectory() as tmpdir:
+    ref_file = os.path.join(tmpdir, "ref_pattern.txt")
+    est_file = os.path.join(tmpdir, "est_pattern.txt")
+    
+    with open(ref_file, "w") as f:
+        f.write("pattern 1\n0.5, 1.5\n2.5, 3.5\npattern 2\n4.5, 5.5\n6.5, 7.5\n")
+        
+    with open(est_file, "w") as f:
+        f.write("pattern 1\n0.5, 1.5\n2.5, 3.5\n")
+        
+    ref_patterns = mir_eval.io.load_patterns(ref_file)
+    est_patterns = mir_eval.io.load_patterns(est_file)
+    
+    precision = mir_eval.pattern.first_n_three_layer_P(
+        ref_patterns, 
+        est_patterns, 
+        n=5
+    )
+```
+
+REQUIRED TYPES & IMPORTS:
+`mir_eval`
+`tempfile`
+`os`
+
+DOC MUST SAY:
+- Do not assume the existence of an `output_dir` or any pre-existing writable directory in the test environment.
+- When creating mock text files to pass to `mir_eval.io.load_patterns()`, always use Python's standard `tempfile.TemporaryDirectory()` to guarantee a valid, writable path.

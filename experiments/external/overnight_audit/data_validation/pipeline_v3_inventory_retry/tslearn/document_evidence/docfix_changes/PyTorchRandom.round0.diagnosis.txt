@@ -1,0 +1,42 @@
+AUDIENCE & TESTABILITY:
+API audience: INTERNAL-FRAMEWORK.
+Harness testability: TESTABLE-WITH-LOW-LEVEL-CONSTRUCTION.
+Scoring recommendation: include only in advanced/internal bucket.
+
+ROOT CAUSE:
+The documentation failed to list the available methods and attributes on the `PyTorchRandom` class. Because the prompt explicitly forbade inventing undocumented methods, the snippet writer could not exercise the API to assert a falsifiable property, resulting in an intentional `AssertionError`. The documentation must specify the static methods `normal` and `uniform`, as well as the instance attributes `rand`, `randint`, and `randn`.
+
+CORRECT USAGE:
+```python
+import torch
+from tslearn.backend.pytorch_backend import PyTorchRandom
+
+rng = PyTorchRandom()
+
+# Test instance attributes bound to torch functions
+rand_tensor = rng.rand(2, 2)
+assert isinstance(rand_tensor, torch.Tensor)
+assert rand_tensor.shape == (2, 2)
+
+# Test static method: normal
+norm_tensor = PyTorchRandom.normal(loc=5.0, scale=2.0, size=3)
+assert isinstance(norm_tensor, torch.Tensor)
+assert norm_tensor.shape == (3,)
+
+# Test static method: uniform
+unif_tensor = PyTorchRandom.uniform(low=10.0, high=20.0, size=(4, 1))
+assert isinstance(unif_tensor, torch.Tensor)
+assert unif_tensor.shape == (4, 1)
+assert (unif_tensor >= 10.0).all() and (unif_tensor <= 20.0).all()
+
+print("PyTorchRandom instantiated and methods verified successfully.")
+```
+
+REQUIRED TYPES & IMPORTS:
+`torch`
+`tslearn.backend.pytorch_backend.PyTorchRandom`
+
+DOC MUST SAY:
+- `PyTorchRandom` provides instance attributes `rand`, `randint`, and `randn` which are bound directly to their `torch` equivalents.
+- `PyTorchRandom` provides static methods `normal(loc=0.0, scale=1.0, size=(1,))` and `uniform(low=0.0, high=1.0, size=(1,), dtype=None)` which return `torch.Tensor` objects.
+- To verify the API, instantiate `PyTorchRandom()` and call one of its methods (e.g., `uniform(low=10.0, high=20.0, size=3)`) to generate a tensor and assert its shape or bounds.

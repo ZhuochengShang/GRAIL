@@ -1,10 +1,11 @@
-<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>AIDEAL robustness review</title><style>body{font:16px/1.6 system-ui;max-width:1150px;margin:3rem auto;padding:0 2rem;color:#183047}table{border-collapse:collapse;width:100%;font-size:14px}td,th{border:1px solid #c6d0dc;padding:10px;text-align:left}th{background:#e6eef5}pre{white-space:pre-wrap;background:#eef3f7;padding:15px}a{color:#1760a5}.links{padding:18px;background:#e8f4ef;border-radius:8px}</style><p class="links"><a href="document-recovery.html">Open interactive recovery diagram</a> · <a href="../index.html">Original architecture atlas</a> · <a href="https://github.com/ZhuochengShang/GRAIL/commit/3b072ca">Review committed changes</a></p><h1>AIDEAL robustness review and isolated implementation</h1>
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>AIDEAL robustness review</title><style>body{font:16px/1.6 system-ui;max-width:1150px;margin:3rem auto;padding:0 2rem;color:#183047}table{border-collapse:collapse;width:100%;font-size:14px}td,th{border:1px solid #c6d0dc;padding:10px;text-align:left}th{background:#e6eef5}pre{white-space:pre-wrap;background:#eef3f7;padding:15px}a{color:#1760a5}.links{padding:18px;background:#e8f4ef;border-radius:8px}</style><p class="links"><a href="document-recovery.html">Interactive recovery diagram</a> · <a href="../index.html">Original architecture atlas</a> · <a href="/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_overnight_evidence_audit/experiments/external/overnight_audit/data_validation/provider_operations_v4/REPORT.html">Live native status</a> · <a href="/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_overnight_evidence_audit/experiments/external/overnight_audit/data_validation/pipeline_v3_inventory_retry/REPORT.html">Corrected inventory retry</a></p><h2>Exact committed code references</h2><table><tr><th>Function / class</th><th>Source</th></tr><tr><td>doc_fix_run</td><td><a href="https://github.com/ZhuochengShang/GRAIL/blob/9a045d534a1a1197a5310117cfb0383780baaf0e/grail-agent/src/aideal/docfix.py#L314">grail-agent/src/aideal/docfix.py:314</a></td></tr><tr><td>run</td><td><a href="https://github.com/ZhuochengShang/GRAIL/blob/9a045d534a1a1197a5310117cfb0383780baaf0e/grail-agent/src/aideal/doc_repair.py#L12">grail-agent/src/aideal/doc_repair.py:12</a></td></tr><tr><td>document_lock</td><td><a href="https://github.com/ZhuochengShang/GRAIL/blob/9a045d534a1a1197a5310117cfb0383780baaf0e/grail-agent/src/aideal/repair_journal.py#L43">grail-agent/src/aideal/repair_journal.py:43</a></td></tr><tr><td>RepairJournal</td><td><a href="https://github.com/ZhuochengShang/GRAIL/blob/9a045d534a1a1197a5310117cfb0383780baaf0e/grail-agent/src/aideal/repair_journal.py#L76">grail-agent/src/aideal/repair_journal.py:76</a></td></tr><tr><td>exclusive_work_dir</td><td><a href="https://github.com/ZhuochengShang/GRAIL/blob/9a045d534a1a1197a5310117cfb0383780baaf0e/grail-agent/src/aideal/execution.py#L20">grail-agent/src/aideal/execution.py:20</a></td></tr><tr><td>run_command</td><td><a href="https://github.com/ZhuochengShang/GRAIL/blob/9a045d534a1a1197a5310117cfb0383780baaf0e/grail-agent/src/aideal/execution.py#L37">grail-agent/src/aideal/execution.py:37</a></td></tr><tr><td>prompt_contract</td><td><a href="https://github.com/ZhuochengShang/GRAIL/blob/9a045d534a1a1197a5310117cfb0383780baaf0e/grail-agent/src/aideal/experiment_identity.py#L16">grail-agent/src/aideal/experiment_identity.py:16</a></td></tr><tr><td>transport_contract</td><td><a href="https://github.com/ZhuochengShang/GRAIL/blob/9a045d534a1a1197a5310117cfb0383780baaf0e/grail-agent/src/aideal/experiment_identity.py#L28">grail-agent/src/aideal/experiment_identity.py:28</a></td></tr><tr><td>collect</td><td><a href="https://github.com/ZhuochengShang/GRAIL/blob/9a045d534a1a1197a5310117cfb0383780baaf0e/experiments/external/provider_retry/evidence.py#L29">experiments/external/provider_retry/evidence.py:29</a></td></tr><tr><td>Supervisor</td><td><a href="https://github.com/ZhuochengShang/GRAIL/blob/9a045d534a1a1197a5310117cfb0383780baaf0e/experiments/external/run_condition_watchdog.py#L105">experiments/external/run_condition_watchdog.py:105</a></td></tr></table><h1>AIDEAL robustness review and isolated implementation</h1>
 <p>Date: 2026-09-08, America/Los_Angeles. Branch: <code>aideal/robust-core-v4</code>.
 Historical reference: <code>aideal/external-2x2-infra</code> at <code>3db92a9</code>.</p>
 <p>The current experiment workers remain on their historical code. This branch
 implements and tests the next core revision without changing their treatment,
-restarting them, or rewriting their checkpoints. The only new running service
-is a passive report reader with its own supervisor and output directory.</p>
+restarting them, or rewriting their checkpoints. New services are a passive
+report reader and a separately recorded tslearn inventory retry using the
+unchanged historical v3 engine, each with its own supervisor/output namespace.</p>
 <h2>Findings and reviewable changes</h2>
 <table>
 <thead>
@@ -90,7 +91,7 @@ is a passive report reader with its own supervisor and output directory.</p>
 <tr>
   <td>Document repair orchestration</td>
   <td>Same file</td>
-  <td><code>doc_repair.py</code>, 444 lines</td>
+  <td><code>doc_repair.py</code>, 447 lines</td>
 </tr>
 <tr>
   <td>Durable phase state and exclusive README access</td>
@@ -203,7 +204,32 @@ intentionally rejects this changed source-recovery implementation. Do not update
 that receipt to disguise a v4 run as v3. Deploying a new matched study requires a
 new protocol registration, fresh compatible A2/B2 identities, a defined <code>api-import</code>
 recovery cohort, and host process-cleanup validation. Existing v3 controllers keep
-running from their original worktree. No running job was restarted or deleted.</p>
+running from their original worktree. No pre-existing experiment job was
+restarted or deleted. The newly created inventory-retry service was replaced
+with user-approved network-enabled execution after sandbox connection failures;
+its state and failed-request evidence were retained.</p>
+<h2>Operational correction after B2 completion</h2>
+<p>At 16:49 PDT, tslearn B2 finished with <strong>217/235 native passes</strong>, 13 setup/import
+failures and 5 execution failures. Post-B2 recovery initially recorded all five
+eligible cases as <code>preflight_blocked</code>: its inventory search omitted the full235
+freeze worktree. No code-fix proposal was made in those blocked cases.</p>
+<p>The existing <code>environment_freeze.txt</code> has SHA-256
+<code>7ca2807ace989a2abd86169a3f038cdb7370f04a9ec38930e8478222ff596c60</code>, exactly matching
+the B2 runtime fingerprint. Supplying it through the existing
+<code>AIDEAL_RECOVERY_ENV_INVENTORY</code> setting passed runtime/import and source-treatment
+preflight for <code>TimeSeriesMixin</code>, <code>extract_from_zip_url</code>, <code>is_float</code>, <code>is_float32</code>
+and <code>is_float64</code> without model calls.</p>
+<p><code>post_b2_inventory_retry_watchdog.yaml</code> now runs the unchanged registered v3
+controller with that explicit inventory. The original <code>pipeline_v3</code> output is
+preserved. <code>pipeline_v3_inventory_retry</code> retains compatible completed mir_eval
+and Thumbnailator evidence and retries only those five tslearn cases. The
+shared Gemini admission lock/rate file and five-round/two-stagnant-round policy
+remain unchanged. Initial sandbox connection failures and the authorized
+network-enabled replacement are operational attempts, not new code-fix rounds.</p>
+<p>The retry report is <code>data_validation/pipeline_v3_inventory_retry/REPORT.html</code>.
+The native status observer continues to show the original post-B2 block separately;
+consult this retry report for the corrected continuation. It must not be silently
+substituted for the historical blocked result in the final paper/report.</p>
 <h2>Improvement queue requiring further evidence</h2>
 <table>
 <thead>

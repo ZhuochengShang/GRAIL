@@ -1,0 +1,33 @@
+AUDIENCE & TESTABILITY:
+API audience: ADVANCED/LOW-LEVEL.
+Harness testability: TESTABLE-WITH-LOW-LEVEL-CONSTRUCTION.
+Scoring recommendation: include only in advanced/internal bucket.
+
+ROOT CAUSE:
+The documentation's prompt snippet provided an illustrative example using `new Rotation(90)`, but the exact constructor signature for `Rotation` is not `Rotation(int)` (it likely requires a `double` or is an enum). Because the snippet blindly copied this illustrative code without the actual definition of `Rotation` in context, compilation failed. The correct approach for a standalone test is to provide an anonymous implementation of the `ImageFilter` interface.
+
+CORRECT USAGE:
+```java
+java.awt.image.BufferedImage img = new java.awt.image.BufferedImage(120, 60, java.awt.image.BufferedImage.TYPE_INT_ARGB);
+
+net.coobird.thumbnailator.filters.ImageFilter dummyFilter = new net.coobird.thumbnailator.filters.ImageFilter() {
+    @Override
+    public java.awt.image.BufferedImage apply(java.awt.image.BufferedImage image) {
+        // Perform custom image manipulation here; returning as-is for minimal usage
+        return image;
+    }
+};
+
+net.coobird.thumbnailator.filters.Pipeline pipeline = new net.coobird.thumbnailator.filters.Pipeline(dummyFilter);
+java.awt.image.BufferedImage result = pipeline.apply(img);
+```
+
+REQUIRED TYPES & IMPORTS:
+java.awt.image.BufferedImage
+net.coobird.thumbnailator.filters.Pipeline
+net.coobird.thumbnailator.filters.ImageFilter
+
+DOC MUST SAY:
+- Do not use illustrative concrete filters like `Rotation` or `Watermark` in standalone snippets unless their exact constructors are known; instead, use an anonymous implementation of `ImageFilter`.
+- `Pipeline` accepts instances of `ImageFilter` (via varargs or `List`), which is an interface requiring the implementation of `BufferedImage apply(BufferedImage img)`.
+- `Pipeline.apply(BufferedImage)` returns a `BufferedImage` with all filters applied sequentially.
