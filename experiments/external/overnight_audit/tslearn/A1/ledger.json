@@ -9,12 +9,12 @@
   "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
   "errors": [],
   "failure_categories": {
-    "llm-error": 34,
-    "unknown": 4,
+    "llm-error": 33,
+    "unknown": 5,
     "test/scaffold": 4,
     "api-identity": 2
   },
-  "recorded_provider_errors_all_fingerprints": 146,
+  "recorded_provider_errors_all_fingerprints": 147,
   "observed_fingerprints": [
     "964a2ec0df73c3b53c3966c9213dedb1a12bf7e39ad1b8d7d1ddd561ba53212b",
     "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea"
@@ -10917,6 +10917,92 @@
       "source_other_sites": 0,
       "codebase_frames": null,
       "checkpoint_line": 347
+    },
+    {
+      "name": "mse",
+      "doc_source": "original",
+      "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "llm-error",
+            "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}"
+          }
+        ],
+        "error_category": "llm-error",
+        "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+        "code": "",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_mse/api_test.py",
+        "exit_code": null,
+        "stdout_tail": "",
+        "stderr_tail": ""
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 599.4,
+      "llm_calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "by_model": {},
+      "error_category": "llm-error",
+      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "locus": "",
+      "doc_chars": 85,
+      "document_sha256": "6455331e0b58c89e18ffbf1340950b1cba17163b1182f88b0bf45d15d8ee2bbe",
+      "source": "tslearn/tslearn/metrics/performance.py:83",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 348
+    },
+    {
+      "name": "njit_sakoe_chiba_mask",
+      "doc_source": "original",
+      "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "runtime",
+            "error": "AssertionError: Expected 12 invalid cells, got 0"
+          }
+        ],
+        "error_category": "runtime",
+        "error": "AssertionError: Expected 12 invalid cells, got 0",
+        "code": "from tslearn.metrics.dtw_variants import njit_sakoe_chiba_mask\nimport numpy as np\n\nsz1, sz2 = 5, 5\nradius = 1\n\n# Generate the Sakoe-Chiba band mask\nmask = njit_sakoe_chiba_mask(sz1, sz2, radius)\n\n# Verify the shape of the generated mask\nassert mask.shape == (sz1, sz2), f\"Unexpected shape: {mask.shape}\"\n\n# In tslearn, DTW masks use 0.0 for valid cells and inf for invalid cells.\n# For a 5x5 matrix with radius 1, the valid cells are the diagonal and one cell on each side.\n# Valid cells per row: 2 + 3 + 3 + 3 + 2 = 13.\n# Invalid cells: 25 - 13 = 12.\ninvalid_count = int(np.isinf(mask).sum())\nvalid_count = int((mask == 0.).sum())\n\nassert invalid_count == 12, f\"Expected 12 invalid cells, got {invalid_count}\"\nassert valid_count == 13, f\"Expected 13 valid cells, got {valid_count}\"\n\nprint(f\"__CHECK__ njit_sakoe_chiba_mask {mask.shape} {invalid_count}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_njit_sakoe_chiba_mask/api_test.py",
+        "exit_code": 1,
+        "stdout_tail": "",
+        "stderr_tail": "__RUN_ERR__ AssertionError: Expected 12 invalid cells, got 0\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_njit_sakoe_chiba_mask/api_test.py\", line 65, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_njit_sakoe_chiba_mask/api_test.py\", line 60, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_njit_sakoe_chiba_mask/api_test.py\", line 53, in api_test\n    assert invalid_count == 12, f\"Expected 12 invalid cells, got {invalid_count}\"\nAssertionError: Expected 12 invalid cells, got 0\n"
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 329.0,
+      "llm_calls": 1,
+      "input_tokens": 1379,
+      "output_tokens": 3267,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1379,
+          "output_tokens": 3267
+        }
+      },
+      "error_category": "runtime",
+      "error": "AssertionError: Expected 12 invalid cells, got 0",
+      "locus": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_njit_sakoe_chiba_mask/api_test.py:53",
+      "doc_chars": 103,
+      "document_sha256": "dc0cc3ef4d718b90379890c18ed05d2acad1a3cbef7eb2b1853b3eea134d0d7d",
+      "source": "tslearn/tslearn/metrics/dtw_variants.py:1487",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 349
     }
   ],
   "repair_summary": {
@@ -15332,8 +15418,8 @@
       "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
       "source": "tslearn/tslearn/metrics/performance.py:83",
       "doc_chars": 85,
-      "checkpoint_attempts": 2,
-      "provider_error_attempts": 2,
+      "checkpoint_attempts": 3,
+      "provider_error_attempts": 3,
       "provider_internal_retries": null,
       "recorded_successful_llm_calls": 0,
       "attempt_history": [
@@ -15356,6 +15442,18 @@
           "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
           "attempts": 1,
           "wall_s": 599.7,
+          "llm_calls": 0,
+          "input_tokens": 0,
+          "output_tokens": 0,
+          "pass_round": null
+        },
+        {
+          "checkpoint_line": 348,
+          "status": "fail",
+          "error_category": "llm-error",
+          "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+          "attempts": 1,
+          "wall_s": 599.4,
           "llm_calls": 0,
           "input_tokens": 0,
           "output_tokens": 0,
@@ -15497,16 +15595,16 @@
     {
       "api": "njit_sakoe_chiba_mask",
       "status": "fail",
-      "primary_category": "llm-error",
-      "runner_category": "llm-error",
-      "category_reason": "Provider outcome; retry, never count as a documentation failure.",
-      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "primary_category": "unknown",
+      "runner_category": "runtime",
+      "category_reason": "Observed runtime; doc attribution requires source, document, and snippet review.",
+      "error": "AssertionError: Expected 12 invalid cells, got 0",
       "source": "tslearn/tslearn/metrics/dtw_variants.py:1487",
       "doc_chars": 103,
-      "checkpoint_attempts": 2,
+      "checkpoint_attempts": 3,
       "provider_error_attempts": 2,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
+      "recorded_successful_llm_calls": 1,
       "attempt_history": [
         {
           "checkpoint_line": 274,
@@ -15530,6 +15628,18 @@
           "llm_calls": 0,
           "input_tokens": 0,
           "output_tokens": 0,
+          "pass_round": null
+        },
+        {
+          "checkpoint_line": 349,
+          "status": "fail",
+          "error_category": "runtime",
+          "error": "AssertionError: Expected 12 invalid cells, got 0",
+          "attempts": 1,
+          "wall_s": 329.0,
+          "llm_calls": 1,
+          "input_tokens": 1379,
+          "output_tokens": 3267,
           "pass_round": null
         }
       ],

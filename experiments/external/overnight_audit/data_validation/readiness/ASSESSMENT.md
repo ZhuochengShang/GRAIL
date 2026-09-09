@@ -1,6 +1,6 @@
 # AIDEAL readiness assessment and improvement queue
 
-Updated: 2026-09-08T23:56:39.506532+00:00
+Updated: 2026-09-09T00:11:41.172248+00:00
 
 **Measured scope:** how documentation affects an LLM’s API use under a fixed harness. Overall agent readiness is not yet fully measured; no composite score is assigned.
 
@@ -35,9 +35,9 @@ Provisional counts retain pending and provider-error APIs in the denominator. Fi
 | thumbnailator | input-or-output-path | 4 |
 | thumbnailator | unknown | 47 |
 | tslearn | api-identity-or-version | 19 |
-| tslearn | assertion-or-behavior | 19 |
+| tslearn | assertion-or-behavior | 20 |
 | tslearn | input-contract-or-api-call | 10 |
-| tslearn | provider | 34 |
+| tslearn | provider | 33 |
 | tslearn | unknown | 40 |
 
 ## Reviewable improvements (225)
@@ -103,7 +103,6 @@ Each card separates native failure, diagnosis confidence, proposed action, valid
 | [tslearn: jacobian_product](suggestions/efe13aead9dc33ab2b15.md) | A1 | execution_blocker | high | open |
 | [tslearn: mase](suggestions/d6318ccb7f4952366621.md) | A1 | execution_blocker | high | open |
 | [tslearn: mse](suggestions/3af68a89e69ff9f8ddde.md) | A1 | execution_blocker | high | open |
-| [tslearn: njit_sakoe_chiba_mask](suggestions/fd70f1ac5129406e5761.md) | A1 | execution_blocker | high | open |
 | [tslearn: normal](suggestions/8d62931fe716c65b2b83.md) | A1 | execution_blocker | high | open |
 | [tslearn: partial_fit](suggestions/f0c4cd50ddf3925e7c6a.md) | A1 | execution_blocker | high | open |
 | [tslearn: predict_proba_and_earliness](suggestions/2caa8ac2f3722ae16c2d.md) | A1 | execution_blocker | high | open |
@@ -193,6 +192,7 @@ Each card separates native failure, diagnosis confidence, proposed action, valid
 | [tslearn: get_backend](suggestions/5b561e6f3abaf83879f5.md) | A1 | needs_diagnosis | medium | open |
 | [tslearn: is_array](suggestions/e1024e725bbecccd33ed.md) | A1 | needs_diagnosis | medium | open |
 | [tslearn: njit_lcss_accumulated_matrix](suggestions/82cd652dd43be2a632db.md) | A1 | needs_diagnosis | low | open |
+| [tslearn: njit_sakoe_chiba_mask](suggestions/fd70f1ac5129406e5761.md) | A1 | needs_diagnosis | medium | open |
 | [tslearn: set_weights](suggestions/c6e70a9295e0b43a89cb.md) | A1 | needs_diagnosis | low | open |
 | [tslearn: shapelets_](suggestions/f3bf662dc22f29f79acf.md) | A1 | needs_diagnosis | low | open |
 | [tslearn: BaseModelPackage](suggestions/f995a70ba75a6f818ba5.md) | A2 | needs_diagnosis | medium | open |
