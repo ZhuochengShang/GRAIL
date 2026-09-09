@@ -9,10 +9,10 @@
   "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
   "errors": [],
   "failure_categories": {
-    "unknown": 10,
-    "api-identity": 3,
+    "unknown": 11,
+    "api-identity": 4,
     "test/scaffold": 4,
-    "llm-error": 23
+    "llm-error": 21
   },
   "recorded_provider_errors_all_fingerprints": 151,
   "observed_fingerprints": [
@@ -11607,6 +11607,103 @@
       "source_other_sites": 1,
       "codebase_frames": null,
       "checkpoint_line": 363
+    },
+    {
+      "name": "compute_mask",
+      "doc_source": "original",
+      "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "runtime",
+            "error": "TypeError: object of type 'NoneType' has no len()",
+            "codebase_frames": [
+              "tslearn/tslearn/metrics/_masks.py:288"
+            ]
+          }
+        ],
+        "error_category": "runtime",
+        "error": "TypeError: object of type 'NoneType' has no len()",
+        "code": "import numpy as np\nfrom tslearn.metrics import compute_mask\n\n# compute_mask is a helper function in tslearn.metrics.dtw_variants\n# It takes a mask array (or None) and returns a boolean mask array of shape (sz1, sz2)\n# If mask is None, it returns an array of zeros (meaning no mask, all valid).\n# Let's test it with a mask array and with None.\n\nsz1, sz2 = 5, 5\nmask_none = compute_mask(None, sz1, sz2)\nmask_zeros = compute_mask(np.zeros((sz1, sz2)), sz1, sz2)\n\nassert mask_none.shape == (sz1, sz2), f\"Expected shape {(sz1, sz2)}, got {mask_none.shape}\"\nassert np.all(mask_none == 0), \"Expected all zeros when mask is None\"\nassert mask_zeros.shape == (sz1, sz2), f\"Expected shape {(sz1, sz2)}, got {mask_zeros.shape}\"\nassert np.all(mask_zeros == 0), \"Expected all zeros when mask is zeros\"\n\nprint(f\"__CHECK__ compute_mask {mask_none.sum()}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_compute_mask/api_test.py",
+        "exit_code": 1,
+        "stdout_tail": "",
+        "stderr_tail": "__RUN_ERR__ TypeError: object of type 'NoneType' has no len()\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_compute_mask/api_test.py\", line 60, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_compute_mask/api_test.py\", line 55, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_compute_mask/api_test.py\", line 43, in api_test\n    mask_none = compute_mask(None, sz1, sz2)\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/metrics/_masks.py\", line 288, in compute_mask\n    sz1 = len(s1)\nTypeError: object of type 'NoneType' has no len()\n"
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 390.0,
+      "llm_calls": 1,
+      "input_tokens": 1323,
+      "output_tokens": 63199,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1323,
+          "output_tokens": 63199
+        }
+      },
+      "error_category": "runtime",
+      "error": "TypeError: object of type 'NoneType' has no len()",
+      "locus": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/metrics/_masks.py:288",
+      "doc_chars": 94,
+      "document_sha256": "9742a7a029918f1389db604acf590e8a6aa1545a317d4003bde1abd865a5893c",
+      "source": "tslearn/tslearn/metrics/_masks.py:199",
+      "source_other_sites": 2,
+      "codebase_frames": [
+        "tslearn/tslearn/metrics/_masks.py:288"
+      ],
+      "checkpoint_line": 364
+    },
+    {
+      "name": "compute_var",
+      "doc_source": "original",
+      "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "infra",
+            "error": "missing module/import: cannot import name 'compute_var' from 'tslearn.metrics' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1"
+          }
+        ],
+        "error_category": "infra",
+        "error": "missing module/import: cannot import name 'compute_var' from 'tslearn.metrics' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/metrics/__init__.py)",
+        "code": "import sys\n\ntry:\n    # Attempt to import compute_var from tslearn.metrics or tslearn.utils\n    # Since the exact location is unknown and undocumented, we will deliberately fail\n    # the test as instructed for undocumented/unverifiable contracts.\n    from tslearn.metrics import compute_var\n    \n    # If it somehow imports, we still fail because the contract is unverifiable\n    assert False, \"Contract for compute_var is insufficient to verify the result.\"\nexcept ImportError:\n    # If it doesn't exist, we fail the documentation-comprehension test\n    assert False, \"Contract for compute_var is insufficient to verify the result.\"\n\nprint(\"__CHECK__ compute_var failed_deliberately\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_compute_var/api_test.py",
+        "exit_code": 1,
+        "stdout_tail": "",
+        "stderr_tail": "__RUN_ERR__ AssertionError: Contract for compute_var is insufficient to verify the result.\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_compute_var/api_test.py\", line 40, in api_test\n    from tslearn.metrics import compute_var\nImportError: cannot import name 'compute_var' from 'tslearn.metrics' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/metrics/__init__.py)\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_compute_var/api_test.py\", line 57, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_compute_var/api_test.py\", line 52, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_compute_var/api_test.py\", line 46, in api_test\n    assert False, \"Contract for compute_var is insufficient to verify the result.\"\nAssertionError: Contract for compute_var is insufficient to verify the result.\n"
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 349.6,
+      "llm_calls": 1,
+      "input_tokens": 1323,
+      "output_tokens": 63072,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1323,
+          "output_tokens": 63072
+        }
+      },
+      "error_category": "infra",
+      "error": "missing module/import: cannot import name 'compute_var' from 'tslearn.metrics' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/metrics/__init__.py)",
+      "locus": "",
+      "doc_chars": 93,
+      "document_sha256": "fffa174833b4c41d0455f594bc2b56f24374395928c369406ed4fa1b394aebbc",
+      "source": "tslearn/tslearn/forecasting/_arima.py:21",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 365
     }
   ],
   "repair_summary": {
@@ -13651,16 +13748,16 @@
     {
       "api": "compute_mask",
       "status": "fail",
-      "primary_category": "llm-error",
-      "runner_category": "llm-error",
-      "category_reason": "Provider outcome; retry, never count as a documentation failure.",
-      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "primary_category": "unknown",
+      "runner_category": "runtime",
+      "category_reason": "Observed runtime; doc attribution requires source, document, and snippet review.",
+      "error": "TypeError: object of type 'NoneType' has no len()",
       "source": "tslearn/tslearn/metrics/_masks.py:199",
       "doc_chars": 94,
-      "checkpoint_attempts": 3,
+      "checkpoint_attempts": 4,
       "provider_error_attempts": 3,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
+      "recorded_successful_llm_calls": 1,
       "attempt_history": [
         {
           "checkpoint_line": 250,
@@ -13697,6 +13794,18 @@
           "input_tokens": 0,
           "output_tokens": 0,
           "pass_round": null
+        },
+        {
+          "checkpoint_line": 364,
+          "status": "fail",
+          "error_category": "runtime",
+          "error": "TypeError: object of type 'NoneType' has no len()",
+          "attempts": 1,
+          "wall_s": 390.0,
+          "llm_calls": 1,
+          "input_tokens": 1323,
+          "output_tokens": 63199,
+          "pass_round": null
         }
       ],
       "repair_status": null,
@@ -13726,16 +13835,16 @@
     {
       "api": "compute_var",
       "status": "fail",
-      "primary_category": "llm-error",
-      "runner_category": "llm-error",
-      "category_reason": "Provider outcome; retry, never count as a documentation failure.",
-      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "primary_category": "api-identity",
+      "runner_category": "infra",
+      "category_reason": "Import/member selection failed; the runner's infrastructure label needs review.",
+      "error": "missing module/import: cannot import name 'compute_var' from 'tslearn.metrics' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/metrics/__init__.py)",
       "source": "tslearn/tslearn/forecasting/_arima.py:21",
       "doc_chars": 93,
-      "checkpoint_attempts": 3,
+      "checkpoint_attempts": 4,
       "provider_error_attempts": 3,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
+      "recorded_successful_llm_calls": 1,
       "attempt_history": [
         {
           "checkpoint_line": 251,
@@ -13771,6 +13880,18 @@
           "llm_calls": 0,
           "input_tokens": 0,
           "output_tokens": 0,
+          "pass_round": null
+        },
+        {
+          "checkpoint_line": 365,
+          "status": "fail",
+          "error_category": "infra",
+          "error": "missing module/import: cannot import name 'compute_var' from 'tslearn.metrics' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/metrics/__init__.py)",
+          "attempts": 1,
+          "wall_s": 349.6,
+          "llm_calls": 1,
+          "input_tokens": 1323,
+          "output_tokens": 63072,
           "pass_round": null
         }
       ],

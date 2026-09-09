@@ -3,22 +3,22 @@
     "repository": "tslearn",
     "cell": "A1",
     "api": "compute_mask",
-    "outcome": "Waiting for provider / retry",
-    "test_execution": "No test code executed for this provider attempt",
+    "outcome": "Execution failed",
+    "test_execution": "Test process returned exit code 1; target reach not independently verified",
     "target_api_reached": "Not independently verified",
-    "latest_native_attempt_s": 599.2,
-    "retained_checkpoint_events": 4,
-    "retained_attempt_total_s": 2396.4,
+    "latest_native_attempt_s": 390.0,
+    "retained_checkpoint_events": 5,
+    "retained_attempt_total_s": 2786.4,
     "retained_504_events": 4,
     "retained_cooldown_deferrals": 0,
     "historical_idle_retry_s": null,
-    "measured_provider_invocations": 0,
-    "last_provider_s": null,
+    "measured_provider_invocations": 1,
+    "last_provider_s": 386.98855804197956,
     "last_retry_interval_s": null,
     "next_provider_retry_epoch": null,
-    "transport_policy": "Historical/uninstrumented",
+    "transport_policy": "d3dc72bd6e8ae61bf387f53095432a592ef5ad022245486ca7883f4a0dfff6ed",
     "identity_status": "Final or explicitly migrated evidence",
-    "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+    "error": "TypeError: object of type 'NoneType' has no len()",
     "details": "api_details/479242b6c3ace9773f68.json"
   },
   "native_row": {
@@ -31,37 +31,48 @@
         {
           "round": 0,
           "status": "fail",
-          "category": "llm-error",
-          "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}"
+          "category": "runtime",
+          "error": "TypeError: object of type 'NoneType' has no len()",
+          "codebase_frames": [
+            "tslearn/tslearn/metrics/_masks.py:288"
+          ]
         }
       ],
-      "error_category": "llm-error",
-      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
-      "code": "",
+      "error_category": "runtime",
+      "error": "TypeError: object of type 'NoneType' has no len()",
+      "code": "import numpy as np\nfrom tslearn.metrics import compute_mask\n\n# compute_mask is a helper function in tslearn.metrics.dtw_variants\n# It takes a mask array (or None) and returns a boolean mask array of shape (sz1, sz2)\n# If mask is None, it returns an array of zeros (meaning no mask, all valid).\n# Let's test it with a mask array and with None.\n\nsz1, sz2 = 5, 5\nmask_none = compute_mask(None, sz1, sz2)\nmask_zeros = compute_mask(np.zeros((sz1, sz2)), sz1, sz2)\n\nassert mask_none.shape == (sz1, sz2), f\"Expected shape {(sz1, sz2)}, got {mask_none.shape}\"\nassert np.all(mask_none == 0), \"Expected all zeros when mask is None\"\nassert mask_zeros.shape == (sz1, sz2), f\"Expected shape {(sz1, sz2)}, got {mask_zeros.shape}\"\nassert np.all(mask_zeros == 0), \"Expected all zeros when mask is zeros\"\n\nprint(f\"__CHECK__ compute_mask {mask_none.sum()}\")",
       "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_compute_mask/api_test.py",
-      "exit_code": null,
+      "exit_code": 1,
       "stdout_tail": "",
-      "stderr_tail": ""
+      "stderr_tail": "__RUN_ERR__ TypeError: object of type 'NoneType' has no len()\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_compute_mask/api_test.py\", line 60, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_compute_mask/api_test.py\", line 55, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_compute_mask/api_test.py\", line 43, in api_test\n    mask_none = compute_mask(None, sz1, sz2)\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/metrics/_masks.py\", line 288, in compute_mask\n    sz1 = len(s1)\nTypeError: object of type 'NoneType' has no len()\n"
     },
     "status": "fail",
     "attempts": 1,
     "pass_round": null,
-    "wall_s": 599.2,
-    "llm_calls": 0,
-    "input_tokens": 0,
-    "output_tokens": 0,
-    "by_model": {},
-    "error_category": "llm-error",
-    "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
-    "locus": "",
+    "wall_s": 390.0,
+    "llm_calls": 1,
+    "input_tokens": 1323,
+    "output_tokens": 63199,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 1323,
+        "output_tokens": 63199
+      }
+    },
+    "error_category": "runtime",
+    "error": "TypeError: object of type 'NoneType' has no len()",
+    "locus": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/metrics/_masks.py:288",
     "doc_chars": 94,
     "document_sha256": "9742a7a029918f1389db604acf590e8a6aa1545a317d4003bde1abd865a5893c",
     "source": "tslearn/tslearn/metrics/_masks.py:199",
     "source_other_sites": 2,
-    "codebase_frames": null
+    "codebase_frames": [
+      "tslearn/tslearn/metrics/_masks.py:288"
+    ]
   },
   "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/comprehension_progress.jsonl",
-  "source_sha256": "a5ba0f03079d9d0b2e61f8a05718233ad1d03459afed84a4a77942f44affb329",
+  "source_sha256": "53cc071a6c85b4d8f83fa1a0022ae130f945b514e5b4ddea56cadfb1fe9de8d3",
   "checkpoint_events": [
     {
       "name": "compute_mask",
@@ -200,9 +211,155 @@
       "source": "tslearn/tslearn/metrics/_masks.py:199",
       "source_other_sites": 2,
       "codebase_frames": null
+    },
+    {
+      "name": "compute_mask",
+      "doc_source": "original",
+      "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "runtime",
+            "error": "TypeError: object of type 'NoneType' has no len()",
+            "codebase_frames": [
+              "tslearn/tslearn/metrics/_masks.py:288"
+            ]
+          }
+        ],
+        "error_category": "runtime",
+        "error": "TypeError: object of type 'NoneType' has no len()",
+        "code": "import numpy as np\nfrom tslearn.metrics import compute_mask\n\n# compute_mask is a helper function in tslearn.metrics.dtw_variants\n# It takes a mask array (or None) and returns a boolean mask array of shape (sz1, sz2)\n# If mask is None, it returns an array of zeros (meaning no mask, all valid).\n# Let's test it with a mask array and with None.\n\nsz1, sz2 = 5, 5\nmask_none = compute_mask(None, sz1, sz2)\nmask_zeros = compute_mask(np.zeros((sz1, sz2)), sz1, sz2)\n\nassert mask_none.shape == (sz1, sz2), f\"Expected shape {(sz1, sz2)}, got {mask_none.shape}\"\nassert np.all(mask_none == 0), \"Expected all zeros when mask is None\"\nassert mask_zeros.shape == (sz1, sz2), f\"Expected shape {(sz1, sz2)}, got {mask_zeros.shape}\"\nassert np.all(mask_zeros == 0), \"Expected all zeros when mask is zeros\"\n\nprint(f\"__CHECK__ compute_mask {mask_none.sum()}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_compute_mask/api_test.py",
+        "exit_code": 1,
+        "stdout_tail": "",
+        "stderr_tail": "__RUN_ERR__ TypeError: object of type 'NoneType' has no len()\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_compute_mask/api_test.py\", line 60, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_compute_mask/api_test.py\", line 55, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_compute_mask/api_test.py\", line 43, in api_test\n    mask_none = compute_mask(None, sz1, sz2)\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/metrics/_masks.py\", line 288, in compute_mask\n    sz1 = len(s1)\nTypeError: object of type 'NoneType' has no len()\n"
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 390.0,
+      "llm_calls": 1,
+      "input_tokens": 1323,
+      "output_tokens": 63199,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1323,
+          "output_tokens": 63199
+        }
+      },
+      "error_category": "runtime",
+      "error": "TypeError: object of type 'NoneType' has no len()",
+      "locus": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/metrics/_masks.py:288",
+      "doc_chars": 94,
+      "document_sha256": "9742a7a029918f1389db604acf590e8a6aa1545a317d4003bde1abd865a5893c",
+      "source": "tslearn/tslearn/metrics/_masks.py:199",
+      "source_other_sites": 2,
+      "codebase_frames": [
+        "tslearn/tslearn/metrics/_masks.py:288"
+      ]
     }
   ],
-  "provider_timing": [],
-  "transport_events": [],
+  "provider_timing": [
+    {
+      "id": "64b6d19cfc2e42cc8c5d09b30b4d074b",
+      "start_epoch": 1788919105.212291,
+      "end_epoch": 1788919492.204725,
+      "provider_wall_s": 386.98855804197956,
+      "since_previous_provider_end_s": null,
+      "outcome": "invocation_success",
+      "retry_after_epoch": null,
+      "policy_sha256": "d3dc72bd6e8ae61bf387f53095432a592ef5ad022245486ca7883f4a0dfff6ed"
+    }
+  ],
+  "transport_events": [
+    {
+      "adapter_sha256": "c78fd8935b37fdd9337d9e036be2e4c864195eb052d1335cbff68d5a5fb96697",
+      "api": "compute_mask",
+      "epoch": 1788919105.212291,
+      "event": "invocation_start",
+      "harness_setup_version": "aideal-output-setup-v1",
+      "invocation_id": "64b6d19cfc2e42cc8c5d09b30b4d074b",
+      "model": "google:gemini-3.1-pro-preview",
+      "outer_deadline_s": 630,
+      "pid": 50349,
+      "policy_sha256": "d3dc72bd6e8ae61bf387f53095432a592ef5ad022245486ca7883f4a0dfff6ed",
+      "previous_end_epoch": null,
+      "prompt_chars": 6118,
+      "prompt_sha256": "1cebe112af1bbe3511556f85d1f996b8f7fdf35960f918da38bc889a877b5046",
+      "request_key": "e32be619be529dbc393848a110f2b3241d8851207ed38113a97dbd30cb8a5a41",
+      "request_timeout_s": 600,
+      "sdk_attempts": 1,
+      "transport_version": "aideal-provider-transport-v2"
+    },
+    {
+      "actual_timeout_s": 600.0,
+      "adapter_sha256": "c78fd8935b37fdd9337d9e036be2e4c864195eb052d1335cbff68d5a5fb96697",
+      "api": "compute_mask",
+      "epoch": 1788919106.67767,
+      "event": "sdk_attempt_start",
+      "harness_setup_version": "aideal-output-setup-v1",
+      "invocation_id": "64b6d19cfc2e42cc8c5d09b30b4d074b",
+      "model": "google:gemini-3.1-pro-preview",
+      "outer_deadline_s": 630,
+      "payload_sha256": "22ffee903f8f3780b8ed1c9788f12a513f591b2cdbf764c241ed7c837b3894d6",
+      "pid": 50349,
+      "policy_sha256": "d3dc72bd6e8ae61bf387f53095432a592ef5ad022245486ca7883f4a0dfff6ed",
+      "prompt_chars": 6118,
+      "prompt_sha256": "1cebe112af1bbe3511556f85d1f996b8f7fdf35960f918da38bc889a877b5046",
+      "request_key": "e32be619be529dbc393848a110f2b3241d8851207ed38113a97dbd30cb8a5a41",
+      "request_timeout_s": 600,
+      "sdk_attempt_id": "3dd566f8d6174c0ea69da1d5d2031a61",
+      "sdk_attempts": 1,
+      "server_timeout_s": "600",
+      "transport_version": "aideal-provider-transport-v2"
+    },
+    {
+      "actual_timeout_s": 600.0,
+      "adapter_sha256": "c78fd8935b37fdd9337d9e036be2e4c864195eb052d1335cbff68d5a5fb96697",
+      "api": "compute_mask",
+      "epoch": 1788919492.189607,
+      "event": "sdk_attempt_success",
+      "harness_setup_version": "aideal-output-setup-v1",
+      "invocation_id": "64b6d19cfc2e42cc8c5d09b30b4d074b",
+      "model": "google:gemini-3.1-pro-preview",
+      "outer_deadline_s": 630,
+      "payload_sha256": "22ffee903f8f3780b8ed1c9788f12a513f591b2cdbf764c241ed7c837b3894d6",
+      "pid": 50349,
+      "policy_sha256": "d3dc72bd6e8ae61bf387f53095432a592ef5ad022245486ca7883f4a0dfff6ed",
+      "prompt_chars": 6118,
+      "prompt_sha256": "1cebe112af1bbe3511556f85d1f996b8f7fdf35960f918da38bc889a877b5046",
+      "request_key": "e32be619be529dbc393848a110f2b3241d8851207ed38113a97dbd30cb8a5a41",
+      "request_timeout_s": 600,
+      "sdk_attempt_id": "3dd566f8d6174c0ea69da1d5d2031a61",
+      "sdk_attempts": 1,
+      "server_timeout_s": "600",
+      "transport_version": "aideal-provider-transport-v2",
+      "wall_s": 385.5079310830333
+    },
+    {
+      "adapter_sha256": "c78fd8935b37fdd9337d9e036be2e4c864195eb052d1335cbff68d5a5fb96697",
+      "api": "compute_mask",
+      "epoch": 1788919492.204725,
+      "event": "invocation_success",
+      "harness_setup_version": "aideal-output-setup-v1",
+      "invocation_id": "64b6d19cfc2e42cc8c5d09b30b4d074b",
+      "model": "google:gemini-3.1-pro-preview",
+      "outer_deadline_s": 630,
+      "pid": 50349,
+      "policy_sha256": "d3dc72bd6e8ae61bf387f53095432a592ef5ad022245486ca7883f4a0dfff6ed",
+      "prompt_chars": 6118,
+      "prompt_sha256": "1cebe112af1bbe3511556f85d1f996b8f7fdf35960f918da38bc889a877b5046",
+      "request_key": "e32be619be529dbc393848a110f2b3241d8851207ed38113a97dbd30cb8a5a41",
+      "request_timeout_s": 600,
+      "response_sha256": "314d4300e27f4466088329e968005ba6ad8aa3e665007a5177110aa575583449",
+      "sdk_attempts": 1,
+      "transport_version": "aideal-provider-transport-v2",
+      "wall_s": 386.98855804197956
+    }
+  ],
   "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
 }
