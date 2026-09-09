@@ -3,16 +3,16 @@
   "expected": 235,
   "counts": {
     "pending": 188,
-    "fail": 37,
-    "pass": 10
+    "fail": 36,
+    "pass": 11
   },
   "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
   "errors": [],
   "failure_categories": {
     "unknown": 21,
-    "api-identity": 9,
+    "api-identity": 10,
     "test/scaffold": 4,
-    "llm-error": 3
+    "llm-error": 1
   },
   "recorded_provider_errors_all_fingerprints": 152,
   "observed_fingerprints": [
@@ -12570,6 +12570,94 @@
       "source_other_sites": 1,
       "codebase_frames": null,
       "checkpoint_line": 384
+    },
+    {
+      "name": "predict_proba_and_earliness",
+      "doc_source": "original",
+      "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import numpy as np\nfrom tslearn.early_classification import NonMyopicEarlyClassifier\nfrom tslearn.svm import TimeSeriesSVC\n\n# Initialize a base classifier and the early classifier\nbase_clf = TimeSeriesSVC(kernel=\"gak\", gamma=\"auto\", probability=True, random_state=42)\nearly_clf = NonMyopicEarlyClassifier(\n    n_clusters=2,\n    base_classifier=base_clf,\n    cost_time_parameter=1e-3,\n    random_state=42\n)\n\n# Fit the early classifier on the balanced dataset\nearly_clf.fit(X, y)\n\n# Predict probabilities and earliness for the second dataset\nprobas, earliness = early_clf.predict_proba_and_earliness(X2)\n\n# Verify the results\nassert probas.shape == (X2.shape[0], len(np.unique(y))), f\"Expected probas shape {(X2.shape[0], len(np.unique(y)))}, got {probas.shape}\"\nassert earliness.shape == (X2.shape[0],), f\"Expected earliness shape {(X2.shape[0],)}, got {earliness.shape}\"\nassert np.all(earliness >= 0) and np.all(earliness <= X2.shape[1]), \"Earliness must be between 0 and the length of the time series\"\nassert np.allclose(np.sum(probas, axis=1), 1.0), \"Probabilities must sum to 1 for each sample\"\n\nprint(f\"__CHECK__ predict_proba_and_earliness probas_shape={probas.shape} earliness_mean={np.mean(earliness):.2f}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_predict_proba_and_earliness/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ predict_proba_and_earliness probas_shape=(4, 4) earliness_mean=1.00\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 375.1,
+      "llm_calls": 1,
+      "input_tokens": 1363,
+      "output_tokens": 63307,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1363,
+          "output_tokens": 63307
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 109,
+      "document_sha256": "9533aa1afd9a8d00f96bb8a09c99b5f5ffc171aefa80e1e5391f06fa13942857",
+      "source": "tslearn/tslearn/early_classification/early_classification.py:453",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 385
+    },
+    {
+      "name": "save_dict",
+      "doc_source": "original",
+      "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "infra",
+            "error": "missing module/import: cannot import name 'save_dict' from 'tslearn.utils' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/exp"
+          }
+        ],
+        "error_category": "infra",
+        "error": "missing module/import: cannot import name 'save_dict' from 'tslearn.utils' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/utils/__init__.py)",
+        "code": "import os\nimport json\nfrom tslearn.utils import save_dict, load_dict\n\n# The documentation for save_dict is missing, but it is a utility to save a dictionary to a JSON file.\n# We will create a small dictionary, save it, load it back, and verify the contents.\n\ndict_to_save = {\"a\": 1, \"b\": [1, 2, 3], \"c\": \"test\"}\nfile_path = os.path.join(output_dir, \"test_dict.json\")\n\nsave_dict(dict_to_save, file_path)\n\n# Verify the file was created and contains the correct data\nassert os.path.exists(file_path), \"File was not created by save_dict\"\n\nloaded_dict = load_dict(file_path)\n\nassert loaded_dict == dict_to_save, f\"Loaded dictionary {loaded_dict} does not match saved dictionary {dict_to_save}\"\n\nprint(f\"__CHECK__ save_dict {len(loaded_dict)}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_save_dict/api_test.py",
+        "exit_code": 1,
+        "stdout_tail": "",
+        "stderr_tail": "__RUN_ERR__ ImportError: cannot import name 'save_dict' from 'tslearn.utils' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/utils/__init__.py)\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_save_dict/api_test.py\", line 62, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_save_dict/api_test.py\", line 57, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_save_dict/api_test.py\", line 36, in api_test\n    from tslearn.utils import save_dict, load_dict\nImportError: cannot import name 'save_dict' from 'tslearn.utils' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/utils/__init__.py)\n"
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 393.2,
+      "llm_calls": 1,
+      "input_tokens": 1323,
+      "output_tokens": 63151,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1323,
+          "output_tokens": 63151
+        }
+      },
+      "error_category": "infra",
+      "error": "missing module/import: cannot import name 'save_dict' from 'tslearn.utils' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/utils/__init__.py)",
+      "locus": "",
+      "doc_chars": 91,
+      "document_sha256": "967d7e956ac90c78023514d1fbc4795ca0a8833a0df050fa9443074aa0d3871a",
+      "source": "tslearn/tslearn/hdftools/hdftools.py:8",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 386
     }
   ],
   "repair_summary": {
@@ -17834,17 +17922,17 @@
     },
     {
       "api": "predict_proba_and_earliness",
-      "status": "fail",
-      "primary_category": "llm-error",
-      "runner_category": "llm-error",
-      "category_reason": "Provider outcome; retry, never count as a documentation failure.",
-      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "status": "pass",
+      "primary_category": "pass",
+      "runner_category": null,
+      "category_reason": "",
+      "error": null,
       "source": "tslearn/tslearn/early_classification/early_classification.py:453",
       "doc_chars": 109,
-      "checkpoint_attempts": 3,
+      "checkpoint_attempts": 4,
       "provider_error_attempts": 3,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
+      "recorded_successful_llm_calls": 1,
       "attempt_history": [
         {
           "checkpoint_line": 277,
@@ -17881,6 +17969,18 @@
           "input_tokens": 0,
           "output_tokens": 0,
           "pass_round": null
+        },
+        {
+          "checkpoint_line": 385,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 375.1,
+          "llm_calls": 1,
+          "input_tokens": 1363,
+          "output_tokens": 63307,
+          "pass_round": 0
         }
       ],
       "repair_status": null,
@@ -17948,16 +18048,16 @@
     {
       "api": "save_dict",
       "status": "fail",
-      "primary_category": "llm-error",
-      "runner_category": "llm-error",
-      "category_reason": "Provider outcome; retry, never count as a documentation failure.",
-      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "primary_category": "api-identity",
+      "runner_category": "infra",
+      "category_reason": "Import/member selection failed; the runner's infrastructure label needs review.",
+      "error": "missing module/import: cannot import name 'save_dict' from 'tslearn.utils' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/utils/__init__.py)",
       "source": "tslearn/tslearn/hdftools/hdftools.py:8",
       "doc_chars": 91,
-      "checkpoint_attempts": 3,
+      "checkpoint_attempts": 4,
       "provider_error_attempts": 3,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
+      "recorded_successful_llm_calls": 1,
       "attempt_history": [
         {
           "checkpoint_line": 278,
@@ -17993,6 +18093,18 @@
           "llm_calls": 0,
           "input_tokens": 0,
           "output_tokens": 0,
+          "pass_round": null
+        },
+        {
+          "checkpoint_line": 386,
+          "status": "fail",
+          "error_category": "infra",
+          "error": "missing module/import: cannot import name 'save_dict' from 'tslearn.utils' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/utils/__init__.py)",
+          "attempts": 1,
+          "wall_s": 393.2,
+          "llm_calls": 1,
+          "input_tokens": 1323,
+          "output_tokens": 63151,
           "pass_round": null
         }
       ],

@@ -1,6 +1,6 @@
 # Automation status and deadline forecast
 
-Updated: 2026-09-08T21:14:58.414829-07:00. Hours to Wednesday 11 AM: 13.75.
+Updated: 2026-09-08T21:30:27.251841-07:00. Hours to Wednesday 11 AM: 13.49.
 
 **Whole-pipeline completion time remains unverified.** Estimates below cover remaining comprehension only; generation, document repair, and final validation are additional. Scenarios are not confidence intervals.
 
@@ -14,14 +14,14 @@ Updated: 2026-09-08T21:14:58.414829-07:00. Hours to Wednesday 11 AM: 13.75.
 | thumbnailator/A2 | 0 | complete | 0.00 / 0.00 / 0.00 |
 | thumbnailator/B1 | 149 | insufficient_observations | unknown |
 | thumbnailator/B2 | 0 | complete | 0.00 / 0.00 / 0.00 |
-| tslearn/A1 | 191 | estimated | 19.60 / 20.84 / 43.53 |
+| tslearn/A1 | 189 | estimated | 19.55 / 20.75 / 43.08 |
 | tslearn/A2 | 0 | complete | 0.00 / 0.00 / 0.00 |
 | tslearn/B1 | 235 | insufficient_observations | unknown |
 | tslearn/B2 | 0 | complete | 0.00 / 0.00 / 0.00 |
 
-Failure review queue: 261 entries. Mutable cross-condition path conflicts: 0.
+Failure review queue: 260 entries. Mutable cross-condition path conflicts: 0.
 Deadline risks: tslearn/A1: estimated
-Observation errors: 0. Observer health: `{"results": {"age_seconds": 22.8, "stale": false}, "data": {"age_seconds": 57.0, "stale": false}}`.
+Observation errors: 0. Observer health: `{"results": {"age_seconds": 38.9, "stale": false}, "data": {"age_seconds": 46.1, "stale": false}}`.
 
 - [Failure review queue](failure_review_queue.json): suggested causes, evidence, confidence, attempts and repair rounds.
 - [Resolved configuration bundles](config_bundles.json): actual profile, direct YAML layers, fixture bindings and recorded environments.

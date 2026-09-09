@@ -1,6 +1,6 @@
 # AIDEAL readiness assessment and improvement queue
 
-Updated: 2026-09-09T04:15:08.923467+00:00
+Updated: 2026-09-09T04:30:10.717516+00:00
 
 **Measured scope:** how documentation affects an LLM’s API use under a fixed harness. Overall agent readiness is not yet fully measured; no composite score is assigned.
 
@@ -8,7 +8,7 @@ Updated: 2026-09-09T04:15:08.923467+00:00
 |---|---|---|---|---|---|
 | mir_eval | 77/148 final | 135/148 final | pending (148 APIs) | 137/148 final | WITHHELD/PARTIAL |
 | thumbnailator | 130/149 final | 127/149 final | pending (149 APIs) | 139/149 final | WITHHELD/PARTIAL |
-| tslearn | 10/235 provisional | 175/235 final | pending (235 APIs) | 217/235 final | WITHHELD/PARTIAL |
+| tslearn | 11/235 provisional | 175/235 final | pending (235 APIs) | 217/235 final | WITHHELD/PARTIAL |
 
 Provisional counts retain pending and provider-error APIs in the denominator. Final counts are native pass/all-API results. Cross-cell effects require the separate matched-comparison release checks.
 
@@ -34,23 +34,21 @@ Provisional counts retain pending and provider-error APIs in the denominator. Fi
 | mir_eval | unknown | 10 |
 | thumbnailator | input-or-output-path | 4 |
 | thumbnailator | unknown | 47 |
-| tslearn | api-identity-or-version | 29 |
+| tslearn | api-identity-or-version | 30 |
 | tslearn | assertion-or-behavior | 28 |
 | tslearn | input-contract-or-api-call | 13 |
-| tslearn | provider | 3 |
+| tslearn | provider | 1 |
 | tslearn | unknown | 42 |
 
-## Reviewable improvements (261)
+## Reviewable improvements (260)
 
-Review states: `{'open': 260, 'proposed': 1}`. Observation errors: 0. Inactive reviewed IDs retained: 0.
+Review states: `{'open': 259, 'proposed': 1}`. Observation errors: 0. Inactive reviewed IDs retained: 0.
 
 Each card separates native failure, diagnosis confidence, proposed action, validation and review decisions. Provider barriers concern execution infrastructure; they are not automatically codebase or documentation defects.
 
 | Suggestion | Cell | Priority | Confidence | Review |
 |---|---|---|---|---|
 | [tslearn: from_numpy](suggestions/a9a5f5305a9c56f56d78.md) | A1 | execution_blocker | high | open |
-| [tslearn: predict_proba_and_earliness](suggestions/2caa8ac2f3722ae16c2d.md) | A1 | execution_blocker | high | open |
-| [tslearn: save_dict](suggestions/64042927743239068f2f.md) | A1 | execution_blocker | high | open |
 | [mir_eval: deprecated](suggestions/8c1892028fee0fa4c019.md) | A2 | reviewed_barrier | reviewed | open |
 | [mir_eval: first_n_three_layer_P](suggestions/1350063ad65ccf061962.md) | A2 | reviewed_barrier | reviewed | open |
 | [mir_eval: load_key](suggestions/436854cbe884009d1ba7.md) | A2 | reviewed_barrier | reviewed | open |
@@ -229,6 +227,7 @@ Each card separates native failure, diagnosis confidence, proposed action, valid
 | [tslearn: njit_sakoe_chiba_mask](suggestions/fd70f1ac5129406e5761.md) | A1 | needs_diagnosis | medium | open |
 | [tslearn: normal](suggestions/8d62931fe716c65b2b83.md) | A1 | needs_diagnosis | medium | open |
 | [tslearn: partial_fit](suggestions/f0c4cd50ddf3925e7c6a.md) | A1 | needs_diagnosis | low | open |
+| [tslearn: save_dict](suggestions/64042927743239068f2f.md) | A1 | needs_diagnosis | medium | open |
 | [tslearn: set_weights](suggestions/c6e70a9295e0b43a89cb.md) | A1 | needs_diagnosis | low | open |
 | [tslearn: shapelets_](suggestions/f3bf662dc22f29f79acf.md) | A1 | needs_diagnosis | low | open |
 | [tslearn: BaseModelPackage](suggestions/f995a70ba75a6f818ba5.md) | A2 | needs_diagnosis | medium | open |

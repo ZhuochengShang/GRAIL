@@ -3,22 +3,22 @@
     "repository": "tslearn",
     "cell": "A1",
     "api": "predict_proba_and_earliness",
-    "outcome": "Waiting for provider / retry",
-    "test_execution": "No test code executed for this provider attempt",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
     "target_api_reached": "Not independently verified",
-    "latest_native_attempt_s": 599.7,
-    "retained_checkpoint_events": 4,
-    "retained_attempt_total_s": 2399.1,
+    "latest_native_attempt_s": 375.1,
+    "retained_checkpoint_events": 5,
+    "retained_attempt_total_s": 2774.2,
     "retained_504_events": 4,
     "retained_cooldown_deferrals": 0,
     "historical_idle_retry_s": null,
     "measured_provider_invocations": 1,
-    "last_provider_s": null,
+    "last_provider_s": 371.5134793749894,
     "last_retry_interval_s": null,
     "next_provider_retry_epoch": null,
     "transport_policy": "d3dc72bd6e8ae61bf387f53095432a592ef5ad022245486ca7883f4a0dfff6ed",
     "identity_status": "Final or explicitly migrated evidence",
-    "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+    "error": null,
     "details": "api_details/8d84482d593f2294d67e.json"
   },
   "native_row": {
@@ -26,34 +26,36 @@
     "doc_source": "original",
     "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
     "execution_evidence": {
-      "status": "fail",
+      "status": "pass",
       "rounds": [
         {
           "round": 0,
-          "status": "fail",
-          "category": "llm-error",
-          "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}"
+          "status": "pass"
         }
       ],
-      "error_category": "llm-error",
-      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
-      "code": "",
+      "code": "import numpy as np\nfrom tslearn.early_classification import NonMyopicEarlyClassifier\nfrom tslearn.svm import TimeSeriesSVC\n\n# Initialize a base classifier and the early classifier\nbase_clf = TimeSeriesSVC(kernel=\"gak\", gamma=\"auto\", probability=True, random_state=42)\nearly_clf = NonMyopicEarlyClassifier(\n    n_clusters=2,\n    base_classifier=base_clf,\n    cost_time_parameter=1e-3,\n    random_state=42\n)\n\n# Fit the early classifier on the balanced dataset\nearly_clf.fit(X, y)\n\n# Predict probabilities and earliness for the second dataset\nprobas, earliness = early_clf.predict_proba_and_earliness(X2)\n\n# Verify the results\nassert probas.shape == (X2.shape[0], len(np.unique(y))), f\"Expected probas shape {(X2.shape[0], len(np.unique(y)))}, got {probas.shape}\"\nassert earliness.shape == (X2.shape[0],), f\"Expected earliness shape {(X2.shape[0],)}, got {earliness.shape}\"\nassert np.all(earliness >= 0) and np.all(earliness <= X2.shape[1]), \"Earliness must be between 0 and the length of the time series\"\nassert np.allclose(np.sum(probas, axis=1), 1.0), \"Probabilities must sum to 1 for each sample\"\n\nprint(f\"__CHECK__ predict_proba_and_earliness probas_shape={probas.shape} earliness_mean={np.mean(earliness):.2f}\")",
       "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_predict_proba_and_earliness/api_test.py",
-      "exit_code": null,
-      "stdout_tail": "",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ predict_proba_and_earliness probas_shape=(4, 4) earliness_mean=1.00\n__DONE__\n",
       "stderr_tail": ""
     },
-    "status": "fail",
+    "status": "pass",
     "attempts": 1,
-    "pass_round": null,
-    "wall_s": 599.7,
-    "llm_calls": 0,
-    "input_tokens": 0,
-    "output_tokens": 0,
-    "by_model": {},
-    "error_category": "llm-error",
-    "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
-    "locus": "",
+    "pass_round": 0,
+    "wall_s": 375.1,
+    "llm_calls": 1,
+    "input_tokens": 1363,
+    "output_tokens": 63307,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 1363,
+        "output_tokens": 63307
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
     "doc_chars": 109,
     "document_sha256": "9533aa1afd9a8d00f96bb8a09c99b5f5ffc171aefa80e1e5391f06fa13942857",
     "source": "tslearn/tslearn/early_classification/early_classification.py:453",
@@ -61,7 +63,7 @@
     "codebase_frames": null
   },
   "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/comprehension_progress.jsonl",
-  "source_sha256": "88a6d741456223689f2fd9b072910561fd36a01580bf63f483220399e339cfd8",
+  "source_sha256": "b4287c8dab0477deb5cf496b7e20828b3c324cf40079bad0f9226303a497f1f5",
   "checkpoint_events": [
     {
       "name": "predict_proba_and_earliness",
@@ -200,16 +202,57 @@
       "source": "tslearn/tslearn/early_classification/early_classification.py:453",
       "source_other_sites": 0,
       "codebase_frames": null
+    },
+    {
+      "name": "predict_proba_and_earliness",
+      "doc_source": "original",
+      "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import numpy as np\nfrom tslearn.early_classification import NonMyopicEarlyClassifier\nfrom tslearn.svm import TimeSeriesSVC\n\n# Initialize a base classifier and the early classifier\nbase_clf = TimeSeriesSVC(kernel=\"gak\", gamma=\"auto\", probability=True, random_state=42)\nearly_clf = NonMyopicEarlyClassifier(\n    n_clusters=2,\n    base_classifier=base_clf,\n    cost_time_parameter=1e-3,\n    random_state=42\n)\n\n# Fit the early classifier on the balanced dataset\nearly_clf.fit(X, y)\n\n# Predict probabilities and earliness for the second dataset\nprobas, earliness = early_clf.predict_proba_and_earliness(X2)\n\n# Verify the results\nassert probas.shape == (X2.shape[0], len(np.unique(y))), f\"Expected probas shape {(X2.shape[0], len(np.unique(y)))}, got {probas.shape}\"\nassert earliness.shape == (X2.shape[0],), f\"Expected earliness shape {(X2.shape[0],)}, got {earliness.shape}\"\nassert np.all(earliness >= 0) and np.all(earliness <= X2.shape[1]), \"Earliness must be between 0 and the length of the time series\"\nassert np.allclose(np.sum(probas, axis=1), 1.0), \"Probabilities must sum to 1 for each sample\"\n\nprint(f\"__CHECK__ predict_proba_and_earliness probas_shape={probas.shape} earliness_mean={np.mean(earliness):.2f}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_predict_proba_and_earliness/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ predict_proba_and_earliness probas_shape=(4, 4) earliness_mean=1.00\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 375.1,
+      "llm_calls": 1,
+      "input_tokens": 1363,
+      "output_tokens": 63307,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1363,
+          "output_tokens": 63307
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 109,
+      "document_sha256": "9533aa1afd9a8d00f96bb8a09c99b5f5ffc171aefa80e1e5391f06fa13942857",
+      "source": "tslearn/tslearn/early_classification/early_classification.py:453",
+      "source_other_sites": 0,
+      "codebase_frames": null
     }
   ],
   "provider_timing": [
     {
       "id": "d06c8f3aede349de89aca03798278a37",
       "start_epoch": 1788927089.794807,
-      "end_epoch": null,
-      "provider_wall_s": null,
+      "end_epoch": 1788927461.312751,
+      "provider_wall_s": 371.5134793749894,
       "since_previous_provider_end_s": null,
-      "outcome": "In flight or interrupted: no end recorded",
+      "outcome": "invocation_success",
       "retry_after_epoch": null,
       "policy_sha256": "d3dc72bd6e8ae61bf387f53095432a592ef5ad022245486ca7883f4a0dfff6ed"
     }
@@ -255,6 +298,49 @@
       "sdk_attempts": 1,
       "server_timeout_s": "600",
       "transport_version": "aideal-provider-transport-v2"
+    },
+    {
+      "actual_timeout_s": 600.0,
+      "adapter_sha256": "c78fd8935b37fdd9337d9e036be2e4c864195eb052d1335cbff68d5a5fb96697",
+      "api": "predict_proba_and_earliness",
+      "epoch": 1788927461.30177,
+      "event": "sdk_attempt_success",
+      "harness_setup_version": "aideal-output-setup-v1",
+      "invocation_id": "d06c8f3aede349de89aca03798278a37",
+      "model": "google:gemini-3.1-pro-preview",
+      "outer_deadline_s": 630,
+      "payload_sha256": "384bd034ce864e2ef360afbcb49b82bbda1f03c58e48ccb8081e04832fbd3c69",
+      "pid": 50349,
+      "policy_sha256": "d3dc72bd6e8ae61bf387f53095432a592ef5ad022245486ca7883f4a0dfff6ed",
+      "prompt_chars": 6238,
+      "prompt_sha256": "1289c357b3a6761d23510cb91900e9d9867e16d47b0d9eb9fce60e2867a925c6",
+      "request_key": "30f054e858f20e6be5e4c1e4bb285cdde9a646ee71e650adcc8ab23ec083aabc",
+      "request_timeout_s": 600,
+      "sdk_attempt_id": "5fa2ca9c4c694fa5baa80311783660b9",
+      "sdk_attempts": 1,
+      "server_timeout_s": "600",
+      "transport_version": "aideal-provider-transport-v2",
+      "wall_s": 371.4854526669951
+    },
+    {
+      "adapter_sha256": "c78fd8935b37fdd9337d9e036be2e4c864195eb052d1335cbff68d5a5fb96697",
+      "api": "predict_proba_and_earliness",
+      "epoch": 1788927461.312751,
+      "event": "invocation_success",
+      "harness_setup_version": "aideal-output-setup-v1",
+      "invocation_id": "d06c8f3aede349de89aca03798278a37",
+      "model": "google:gemini-3.1-pro-preview",
+      "outer_deadline_s": 630,
+      "pid": 50349,
+      "policy_sha256": "d3dc72bd6e8ae61bf387f53095432a592ef5ad022245486ca7883f4a0dfff6ed",
+      "prompt_chars": 6238,
+      "prompt_sha256": "1289c357b3a6761d23510cb91900e9d9867e16d47b0d9eb9fce60e2867a925c6",
+      "request_key": "30f054e858f20e6be5e4c1e4bb285cdde9a646ee71e650adcc8ab23ec083aabc",
+      "request_timeout_s": 600,
+      "response_sha256": "dbfefb81806c6fab612e032c744712f1858cd37877013a25d46540c357bb8c69",
+      "sdk_attempts": 1,
+      "transport_version": "aideal-provider-transport-v2",
+      "wall_s": 371.5134793749894
     }
   ],
   "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
