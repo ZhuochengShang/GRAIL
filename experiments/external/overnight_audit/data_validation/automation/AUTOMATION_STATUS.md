@@ -1,12 +1,12 @@
 # Automation status and deadline forecast
 
-Updated: 2026-09-08T20:14:14.430768-07:00. Hours to Wednesday 11 AM: 14.76.
+Updated: 2026-09-08T20:29:40.418771-07:00. Hours to Wednesday 11 AM: 14.51.
 
 **Whole-pipeline completion time remains unverified.** Estimates below cover remaining comprehension only; generation, document repair, and final validation are additional. Scenarios are not confidence intervals.
 
 | Repository/cell | Remaining APIs | State | Optimistic / likely / conservative hours |
 |---|---:|---|---|
-| mir_eval/A1 | 127 | estimated | 13.45 / 26.72 / 70.53 |
+| mir_eval/A1 | 125 | estimated | 13.18 / 22.91 / 62.48 |
 | mir_eval/A2 | 0 | complete | 0.00 / 0.00 / 0.00 |
 | mir_eval/B1 | 148 | insufficient_observations | unknown |
 | mir_eval/B2 | 0 | complete | 0.00 / 0.00 / 0.00 |
@@ -14,14 +14,14 @@ Updated: 2026-09-08T20:14:14.430768-07:00. Hours to Wednesday 11 AM: 14.76.
 | thumbnailator/A2 | 0 | complete | 0.00 / 0.00 / 0.00 |
 | thumbnailator/B1 | 149 | insufficient_observations | unknown |
 | thumbnailator/B2 | 0 | complete | 0.00 / 0.00 / 0.00 |
-| tslearn/A1 | 201 | estimated | 20.98 / 34.78 / 95.65 |
+| tslearn/A1 | 198 | estimated | 20.32 / 28.37 / 82.42 |
 | tslearn/A2 | 0 | complete | 0.00 / 0.00 / 0.00 |
 | tslearn/B1 | 235 | insufficient_observations | unknown |
 | tslearn/B2 | 0 | complete | 0.00 / 0.00 / 0.00 |
 
 Failure review queue: 212 entries. Mutable cross-condition path conflicts: 0.
 Deadline risks: mir_eval/A1: estimated; tslearn/A1: estimated
-Observation errors: 0. Observer health: `{"results": {"age_seconds": 26.8, "stale": false}, "data": {"age_seconds": 45.0, "stale": false}}`.
+Observation errors: 0. Observer health: `{"results": {"age_seconds": 41.0, "stale": false}, "data": {"age_seconds": 31.9, "stale": false}}`.
 
 - [Failure review queue](failure_review_queue.json): suggested causes, evidence, confidence, attempts and repair rounds.
 - [Resolved configuration bundles](config_bundles.json): actual profile, direct YAML layers, fixture bindings and recorded environments.

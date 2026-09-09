@@ -1,32 +1,32 @@
-# get_early_predict_proba_generator: Investigate provider failures and recorded retry behavior
+# get_early_predict_proba_generator: Investigate the observed API-use barrier
 
 ID: `3ae2ab1db15f8c5ceb1e` · tslearn/A1 · **open**
 
-Evidence version: `a56969e9eb269dcfebcad08711b0fa47dcc07d1ef5f3bd078a536a32eb91a407`
+Evidence version: `c89311e73b3bc9e70e59b0c7b5ca0745c375067e0b17d98b981bccc17ca1412d`
 
-Candidate category: **provider**. Confidence: **high**.
+Candidate category: **assertion-or-behavior**. Confidence: **medium**.
 
 ## Barrier and evidence
 
-Recorded provider failure; preserve and retry under existing policy.
+Compare expected value with pinned implementation; do not weaken the assertion.
 
-Source: `tslearn/tslearn/early_classification/early_classification.py:677`. Native category: `llm-error`.
+Source: `tslearn/tslearn/early_classification/early_classification.py:677`. Native category: `runtime`.
 
 ```text
-ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}
+AssertionError: The documented contract is insufficient to verify the result of get_early_predict_proba_generator.
 ```
 
-[Evidence ledger](../../../tslearn/A1/ledger.json) · [Saved evidence](../evidence/a56969e9eb269dcfebcad08711b0fa47dcc07d1ef5f3bd078a536a32eb91a407.json)
+[Evidence ledger](../../../tslearn/A1/ledger.json) · [Saved evidence](../evidence/c89311e73b3bc9e70e59b0c7b5ca0745c375067e0b17d98b981bccc17ca1412d.json)
 
-Recorded attempts: 3; provider errors: 3; document rounds: None.
+Recorded attempts: 4; provider errors: 3; document rounds: None.
 
 ## Proposed action
 
-Check quota/cooldown and error histories; preserve existing retry policy and completed checkpoints.
+Compare expected value with pinned implementation; do not weaken the assertion.
 
 ## Required validation
 
-Reattempt only compatible unresolved requests under authorized policy; report recovery separately from documentation benefit.
+Reproduce in an isolated diagnostic; establish input, call and assertion validity before attributing a documentation or code defect.
 
 Hypothesis only; measure against the pinned baseline before claiming improvement.
 

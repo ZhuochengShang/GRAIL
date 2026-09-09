@@ -1,6 +1,6 @@
 # tslearn · A2-only repair pipeline
 
-2026-09-08T20:14:38.836817-07:00
+2026-09-08T20:29:39.872657-07:00
 
 A1 original README → zero fixes. A2 generated README → zero fixes.
 Frozen A2 failures → source-only snippet repair; independently → generated-README repair → fresh B2.
@@ -8,7 +8,7 @@ Original-README repair (historical B1) is intentionally omitted.
 
 | Cell | State | Native pass | API outcomes | Failure categories |
 |---|---|---:|---:|---|
-| A1 | native partial | 128 | 235 | {'infra': 55, 'runtime': 39, 'unknown': 1, 'llm-error': 12} |
+| A1 | native partial | 128 | 235 | {'infra': 56, 'runtime': 40, 'unknown': 1, 'llm-error': 10} |
 | A2 | native complete | 175 | 235 | {'runtime': 32, 'infra': 28} |
 | B2 | native complete | 217 | 235 | {'infra': 13, 'runtime': 5} |
 

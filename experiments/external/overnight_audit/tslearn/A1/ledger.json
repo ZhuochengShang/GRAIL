@@ -9,10 +9,10 @@
   "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
   "errors": [],
   "failure_categories": {
-    "unknown": 15,
-    "api-identity": 6,
+    "unknown": 16,
+    "api-identity": 7,
     "test/scaffold": 4,
-    "llm-error": 12
+    "llm-error": 10
   },
   "recorded_provider_errors_all_fingerprints": 152,
   "observed_fingerprints": [
@@ -12146,6 +12146,98 @@
       "source_other_sites": 0,
       "codebase_frames": null,
       "checkpoint_line": 375
+    },
+    {
+      "name": "is_float",
+      "doc_source": "original",
+      "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "runtime",
+            "error": "AssertionError: Expected float array to be identified as float"
+          }
+        ],
+        "error_category": "runtime",
+        "error": "AssertionError: Expected float array to be identified as float",
+        "code": "import tslearn.backend\n\ntry:\n    # Attempt to resolve the backend and call is_float\n    backend = tslearn.backend.instantiate_backend(\"numpy\")\n    \n    # Test with a float array\n    float_array = backend.array([1.0, 2.0, 3.0])\n    result_float = backend.is_float(float_array)\n    \n    # Test with an integer array\n    int_array = backend.array([1, 2, 3])\n    result_int = backend.is_float(int_array)\n    \n    assert result_float is True, \"Expected float array to be identified as float\"\n    assert result_int is False, \"Expected integer array to not be identified as float\"\n    \n    print(f\"__CHECK__ is_float {result_float}\")\nexcept AttributeError:\n    assert False, \"The documented contract is insufficient to verify the result or is_float is not exposed as expected.\"",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_is_float/api_test.py",
+        "exit_code": 1,
+        "stdout_tail": "",
+        "stderr_tail": "__RUN_ERR__ AssertionError: Expected float array to be identified as float\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_is_float/api_test.py\", line 62, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_is_float/api_test.py\", line 57, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_is_float/api_test.py\", line 48, in api_test\n    assert result_float is True, \"Expected float array to be identified as float\"\nAssertionError: Expected float array to be identified as float\n"
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 350.5,
+      "llm_calls": 1,
+      "input_tokens": 1323,
+      "output_tokens": 63138,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1323,
+          "output_tokens": 63138
+        }
+      },
+      "error_category": "runtime",
+      "error": "AssertionError: Expected float array to be identified as float",
+      "locus": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_is_float/api_test.py:48",
+      "doc_chars": 90,
+      "document_sha256": "1d18eac4d18675cc6f00bbafca76cff74ac9f7c328e2071d9103bd98a87358e7",
+      "source": "tslearn/tslearn/backend/numpy_backend.py:106",
+      "source_other_sites": 1,
+      "codebase_frames": null,
+      "checkpoint_line": 376
+    },
+    {
+      "name": "is_float32",
+      "doc_source": "original",
+      "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "infra",
+            "error": "missing module/import: cannot import name 'is_float32' from 'tslearn.utils' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/ex"
+          }
+        ],
+        "error_category": "infra",
+        "error": "missing module/import: cannot import name 'is_float32' from 'tslearn.utils' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/utils/__init__.py)",
+        "code": "import numpy as np\nfrom tslearn.utils import is_float32\n\n# Create a float32 array and a float64 array\narr_f32 = np.array([1.0, 2.0, 3.0], dtype=np.float32)\narr_f64 = np.array([1.0, 2.0, 3.0], dtype=np.float64)\n\n# Check the results\nres_f32 = is_float32(arr_f32)\nres_f64 = is_float32(arr_f64)\n\nassert res_f32 is True, \"Expected is_float32 to return True for a float32 array\"\nassert res_f64 is False, \"Expected is_float32 to return False for a float64 array\"\n\nprint(f\"__CHECK__ is_float32 {res_f32}, {res_f64}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_is_float32/api_test.py",
+        "exit_code": 1,
+        "stdout_tail": "",
+        "stderr_tail": "__RUN_ERR__ ImportError: cannot import name 'is_float32' from 'tslearn.utils' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/utils/__init__.py)\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_is_float32/api_test.py\", line 57, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_is_float32/api_test.py\", line 52, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_is_float32/api_test.py\", line 35, in api_test\n    from tslearn.utils import is_float32\nImportError: cannot import name 'is_float32' from 'tslearn.utils' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/utils/__init__.py)\n"
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 372.4,
+      "llm_calls": 1,
+      "input_tokens": 1339,
+      "output_tokens": 63134,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1339,
+          "output_tokens": 63134
+        }
+      },
+      "error_category": "infra",
+      "error": "missing module/import: cannot import name 'is_float32' from 'tslearn.utils' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/utils/__init__.py)",
+      "locus": "",
+      "doc_chars": 92,
+      "document_sha256": "fdf634c555b029b28c37fcd6af35a26a29118f197eecf5f7968e9dfa0355d093",
+      "source": "tslearn/tslearn/backend/numpy_backend.py:110",
+      "source_other_sites": 1,
+      "codebase_frames": null,
+      "checkpoint_line": 377
     }
   ],
   "repair_summary": {
@@ -16103,16 +16195,16 @@
     {
       "api": "is_float",
       "status": "fail",
-      "primary_category": "llm-error",
-      "runner_category": "llm-error",
-      "category_reason": "Provider outcome; retry, never count as a documentation failure.",
-      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "primary_category": "unknown",
+      "runner_category": "runtime",
+      "category_reason": "Observed runtime; doc attribution requires source, document, and snippet review.",
+      "error": "AssertionError: Expected float array to be identified as float",
       "source": "tslearn/tslearn/backend/numpy_backend.py:106",
       "doc_chars": 90,
-      "checkpoint_attempts": 3,
+      "checkpoint_attempts": 4,
       "provider_error_attempts": 3,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
+      "recorded_successful_llm_calls": 1,
       "attempt_history": [
         {
           "checkpoint_line": 266,
@@ -16149,6 +16241,18 @@
           "input_tokens": 0,
           "output_tokens": 0,
           "pass_round": null
+        },
+        {
+          "checkpoint_line": 376,
+          "status": "fail",
+          "error_category": "runtime",
+          "error": "AssertionError: Expected float array to be identified as float",
+          "attempts": 1,
+          "wall_s": 350.5,
+          "llm_calls": 1,
+          "input_tokens": 1323,
+          "output_tokens": 63138,
+          "pass_round": null
         }
       ],
       "repair_status": null,
@@ -16159,16 +16263,16 @@
     {
       "api": "is_float32",
       "status": "fail",
-      "primary_category": "llm-error",
-      "runner_category": "llm-error",
-      "category_reason": "Provider outcome; retry, never count as a documentation failure.",
-      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "primary_category": "api-identity",
+      "runner_category": "infra",
+      "category_reason": "Import/member selection failed; the runner's infrastructure label needs review.",
+      "error": "missing module/import: cannot import name 'is_float32' from 'tslearn.utils' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/utils/__init__.py)",
       "source": "tslearn/tslearn/backend/numpy_backend.py:110",
       "doc_chars": 92,
-      "checkpoint_attempts": 3,
+      "checkpoint_attempts": 4,
       "provider_error_attempts": 3,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
+      "recorded_successful_llm_calls": 1,
       "attempt_history": [
         {
           "checkpoint_line": 267,
@@ -16204,6 +16308,18 @@
           "llm_calls": 0,
           "input_tokens": 0,
           "output_tokens": 0,
+          "pass_round": null
+        },
+        {
+          "checkpoint_line": 377,
+          "status": "fail",
+          "error_category": "infra",
+          "error": "missing module/import: cannot import name 'is_float32' from 'tslearn.utils' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/utils/__init__.py)",
+          "attempts": 1,
+          "wall_s": 372.4,
+          "llm_calls": 1,
+          "input_tokens": 1339,
+          "output_tokens": 63134,
           "pass_round": null
         }
       ],

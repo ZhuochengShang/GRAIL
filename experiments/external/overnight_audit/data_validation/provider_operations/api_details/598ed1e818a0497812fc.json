@@ -3,21 +3,21 @@
     "repository": "tslearn",
     "cell": "A1",
     "api": "get_early_predict_proba_generator",
-    "outcome": "Waiting for provider / retry",
-    "test_execution": "No test code executed for this provider attempt",
+    "outcome": "Execution failed",
+    "test_execution": "Test process returned exit code 1; target reach not independently verified",
     "target_api_reached": "Not independently verified",
-    "latest_native_attempt_s": 599.1,
-    "retained_checkpoint_events": 4,
-    "retained_attempt_total_s": 2398.7,
+    "latest_native_attempt_s": 377.2,
+    "retained_checkpoint_events": 5,
+    "retained_attempt_total_s": 2775.9,
     "retained_504_events": 4,
     "retained_cooldown_deferrals": 0,
     "historical_idle_retry_s": null,
     "measured_provider_invocations": 1,
-    "last_provider_s": null,
+    "last_provider_s": 374.5632094159955,
     "last_retry_interval_s": null,
     "next_provider_retry_epoch": null,
     "transport_policy": "d3dc72bd6e8ae61bf387f53095432a592ef5ad022245486ca7883f4a0dfff6ed",
-    "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+    "error": "AssertionError: The documented contract is insufficient to verify the result of get_early_predict_proba_generator.",
     "details": "api_details/598ed1e818a0497812fc.json"
   },
   "native_row": {
@@ -30,29 +30,35 @@
         {
           "round": 0,
           "status": "fail",
-          "category": "llm-error",
-          "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}"
+          "category": "runtime",
+          "error": "AssertionError: The documented contract is insufficient to verify the result of get_early_predict_proba_generator."
         }
       ],
-      "error_category": "llm-error",
-      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
-      "code": "",
+      "error_category": "runtime",
+      "error": "AssertionError: The documented contract is insufficient to verify the result of get_early_predict_proba_generator.",
+      "code": "import tslearn.early_classification\n\ntry:\n    # The prompt states: \"No code-context section for get_early_predict_proba_generator was found in the configured original documentation.\"\n    # We will attempt to call it if it exists, but deliberately fail the assertion to flag the missing documentation.\n    if hasattr(tslearn.early_classification, \"get_early_predict_proba_generator\"):\n        func = getattr(tslearn.early_classification, \"get_early_predict_proba_generator\")\n        result = func()\n    else:\n        result = None\n    \n    assert False, \"The documented contract is insufficient to verify the result of get_early_predict_proba_generator.\"\nexcept Exception as e:\n    if \"The documented contract is insufficient\" in str(e):\n        raise\n    else:\n        assert False, f\"The documented contract is insufficient to verify the result of get_early_predict_proba_generator. (Failed with: {e})\"",
       "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_get_early_predict_proba_generator/api_test.py",
-      "exit_code": null,
+      "exit_code": 1,
       "stdout_tail": "",
-      "stderr_tail": ""
+      "stderr_tail": "__RUN_ERR__ AssertionError: The documented contract is insufficient to verify the result of get_early_predict_proba_generator.\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_get_early_predict_proba_generator/api_test.py\", line 59, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_get_early_predict_proba_generator/api_test.py\", line 54, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_get_early_predict_proba_generator/api_test.py\", line 45, in api_test\n    assert False, \"The documented contract is insufficient to verify the result of get_early_predict_proba_generator.\"\nAssertionError: The documented contract is insufficient to verify the result of get_early_predict_proba_generator.\n"
     },
     "status": "fail",
     "attempts": 1,
     "pass_round": null,
-    "wall_s": 599.1,
-    "llm_calls": 0,
-    "input_tokens": 0,
-    "output_tokens": 0,
-    "by_model": {},
-    "error_category": "llm-error",
-    "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
-    "locus": "",
+    "wall_s": 377.2,
+    "llm_calls": 1,
+    "input_tokens": 1371,
+    "output_tokens": 63136,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 1371,
+        "output_tokens": 63136
+      }
+    },
+    "error_category": "runtime",
+    "error": "AssertionError: The documented contract is insufficient to verify the result of get_early_predict_proba_generator.",
+    "locus": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_get_early_predict_proba_generator/api_test.py:45",
     "doc_chars": 115,
     "document_sha256": "15ba3f0387c8d478427e374791caaf752c8e4fd4f03887a1a39901b668dd6c08",
     "source": "tslearn/tslearn/early_classification/early_classification.py:677",
@@ -60,7 +66,7 @@
     "codebase_frames": null
   },
   "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/comprehension_progress.jsonl",
-  "source_sha256": "db64352b9da3678751c57f1b1024393993d22dbf72e1007a50a030241e52219b",
+  "source_sha256": "4e4a5aa06dc3d466ec8b3eefb24f62cc40997eeca4fe53fe7372be38f58794b6",
   "checkpoint_events": [
     {
       "name": "get_early_predict_proba_generator",
@@ -199,16 +205,61 @@
       "source": "tslearn/tslearn/early_classification/early_classification.py:677",
       "source_other_sites": 0,
       "codebase_frames": null
+    },
+    {
+      "name": "get_early_predict_proba_generator",
+      "doc_source": "original",
+      "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "runtime",
+            "error": "AssertionError: The documented contract is insufficient to verify the result of get_early_predict_proba_generator."
+          }
+        ],
+        "error_category": "runtime",
+        "error": "AssertionError: The documented contract is insufficient to verify the result of get_early_predict_proba_generator.",
+        "code": "import tslearn.early_classification\n\ntry:\n    # The prompt states: \"No code-context section for get_early_predict_proba_generator was found in the configured original documentation.\"\n    # We will attempt to call it if it exists, but deliberately fail the assertion to flag the missing documentation.\n    if hasattr(tslearn.early_classification, \"get_early_predict_proba_generator\"):\n        func = getattr(tslearn.early_classification, \"get_early_predict_proba_generator\")\n        result = func()\n    else:\n        result = None\n    \n    assert False, \"The documented contract is insufficient to verify the result of get_early_predict_proba_generator.\"\nexcept Exception as e:\n    if \"The documented contract is insufficient\" in str(e):\n        raise\n    else:\n        assert False, f\"The documented contract is insufficient to verify the result of get_early_predict_proba_generator. (Failed with: {e})\"",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_get_early_predict_proba_generator/api_test.py",
+        "exit_code": 1,
+        "stdout_tail": "",
+        "stderr_tail": "__RUN_ERR__ AssertionError: The documented contract is insufficient to verify the result of get_early_predict_proba_generator.\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_get_early_predict_proba_generator/api_test.py\", line 59, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_get_early_predict_proba_generator/api_test.py\", line 54, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_get_early_predict_proba_generator/api_test.py\", line 45, in api_test\n    assert False, \"The documented contract is insufficient to verify the result of get_early_predict_proba_generator.\"\nAssertionError: The documented contract is insufficient to verify the result of get_early_predict_proba_generator.\n"
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 377.2,
+      "llm_calls": 1,
+      "input_tokens": 1371,
+      "output_tokens": 63136,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1371,
+          "output_tokens": 63136
+        }
+      },
+      "error_category": "runtime",
+      "error": "AssertionError: The documented contract is insufficient to verify the result of get_early_predict_proba_generator.",
+      "locus": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_get_early_predict_proba_generator/api_test.py:45",
+      "doc_chars": 115,
+      "document_sha256": "15ba3f0387c8d478427e374791caaf752c8e4fd4f03887a1a39901b668dd6c08",
+      "source": "tslearn/tslearn/early_classification/early_classification.py:677",
+      "source_other_sites": 0,
+      "codebase_frames": null
     }
   ],
   "provider_timing": [
     {
       "id": "c5617b8a155e4b1a924ad0fe806c9d50",
       "start_epoch": 1788923286.029096,
-      "end_epoch": null,
-      "provider_wall_s": null,
+      "end_epoch": 1788923660.592604,
+      "provider_wall_s": 374.5632094159955,
       "since_previous_provider_end_s": null,
-      "outcome": "In flight or interrupted: no end recorded",
+      "outcome": "invocation_success",
       "retry_after_epoch": null,
       "policy_sha256": "d3dc72bd6e8ae61bf387f53095432a592ef5ad022245486ca7883f4a0dfff6ed"
     }
@@ -254,6 +305,49 @@
       "sdk_attempts": 1,
       "server_timeout_s": "600",
       "transport_version": "aideal-provider-transport-v2"
+    },
+    {
+      "actual_timeout_s": 600.0,
+      "adapter_sha256": "c78fd8935b37fdd9337d9e036be2e4c864195eb052d1335cbff68d5a5fb96697",
+      "api": "get_early_predict_proba_generator",
+      "epoch": 1788923660.583027,
+      "event": "sdk_attempt_success",
+      "harness_setup_version": "aideal-output-setup-v1",
+      "invocation_id": "c5617b8a155e4b1a924ad0fe806c9d50",
+      "model": "google:gemini-3.1-pro-preview",
+      "outer_deadline_s": 630,
+      "payload_sha256": "6e96c6e75e271f2289c81e154e1e3706208417362f8e4b69278c31e14bc6cd02",
+      "pid": 50349,
+      "policy_sha256": "d3dc72bd6e8ae61bf387f53095432a592ef5ad022245486ca7883f4a0dfff6ed",
+      "prompt_chars": 6286,
+      "prompt_sha256": "eaec1c23546de48b4fdeaa3959e0cbaec80a69c4ba3f7cb6bf4453af6ded447d",
+      "request_key": "b45030728c742dc74379585210ab1182abff56b692f916b76abbd1682ce15bbb",
+      "request_timeout_s": 600,
+      "sdk_attempt_id": "4547f2f8cab348a3b89205605db8ede0",
+      "sdk_attempts": 1,
+      "server_timeout_s": "600",
+      "transport_version": "aideal-provider-transport-v2",
+      "wall_s": 371.9496670839726
+    },
+    {
+      "adapter_sha256": "c78fd8935b37fdd9337d9e036be2e4c864195eb052d1335cbff68d5a5fb96697",
+      "api": "get_early_predict_proba_generator",
+      "epoch": 1788923660.592604,
+      "event": "invocation_success",
+      "harness_setup_version": "aideal-output-setup-v1",
+      "invocation_id": "c5617b8a155e4b1a924ad0fe806c9d50",
+      "model": "google:gemini-3.1-pro-preview",
+      "outer_deadline_s": 630,
+      "pid": 50349,
+      "policy_sha256": "d3dc72bd6e8ae61bf387f53095432a592ef5ad022245486ca7883f4a0dfff6ed",
+      "prompt_chars": 6286,
+      "prompt_sha256": "eaec1c23546de48b4fdeaa3959e0cbaec80a69c4ba3f7cb6bf4453af6ded447d",
+      "request_key": "b45030728c742dc74379585210ab1182abff56b692f916b76abbd1682ce15bbb",
+      "request_timeout_s": 600,
+      "response_sha256": "48f2829a12736bb9625622d67749fda4b34d7a98297b8a2e212fa14348f803b2",
+      "sdk_attempts": 1,
+      "transport_version": "aideal-provider-transport-v2",
+      "wall_s": 374.5632094159955
     }
   ],
   "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."

@@ -3,22 +3,22 @@
     "repository": "tslearn",
     "cell": "A1",
     "api": "is_float",
-    "outcome": "Waiting for provider / retry",
-    "test_execution": "No test code executed for this provider attempt",
+    "outcome": "Execution failed",
+    "test_execution": "Test process returned exit code 1; target reach not independently verified",
     "target_api_reached": "Not independently verified",
-    "latest_native_attempt_s": 602.0,
-    "retained_checkpoint_events": 4,
-    "retained_attempt_total_s": 2399.4,
+    "latest_native_attempt_s": 350.5,
+    "retained_checkpoint_events": 5,
+    "retained_attempt_total_s": 2749.9,
     "retained_504_events": 4,
     "retained_cooldown_deferrals": 0,
     "historical_idle_retry_s": null,
-    "measured_provider_invocations": 0,
-    "last_provider_s": null,
+    "measured_provider_invocations": 1,
+    "last_provider_s": 348.2641929999809,
     "last_retry_interval_s": null,
     "next_provider_retry_epoch": null,
-    "transport_policy": "Historical/uninstrumented",
+    "transport_policy": "d3dc72bd6e8ae61bf387f53095432a592ef5ad022245486ca7883f4a0dfff6ed",
     "identity_status": "Final or explicitly migrated evidence",
-    "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+    "error": "AssertionError: Expected float array to be identified as float",
     "details": "api_details/c5980418adead552f1d5.json"
   },
   "native_row": {
@@ -31,29 +31,35 @@
         {
           "round": 0,
           "status": "fail",
-          "category": "llm-error",
-          "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}"
+          "category": "runtime",
+          "error": "AssertionError: Expected float array to be identified as float"
         }
       ],
-      "error_category": "llm-error",
-      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
-      "code": "",
+      "error_category": "runtime",
+      "error": "AssertionError: Expected float array to be identified as float",
+      "code": "import tslearn.backend\n\ntry:\n    # Attempt to resolve the backend and call is_float\n    backend = tslearn.backend.instantiate_backend(\"numpy\")\n    \n    # Test with a float array\n    float_array = backend.array([1.0, 2.0, 3.0])\n    result_float = backend.is_float(float_array)\n    \n    # Test with an integer array\n    int_array = backend.array([1, 2, 3])\n    result_int = backend.is_float(int_array)\n    \n    assert result_float is True, \"Expected float array to be identified as float\"\n    assert result_int is False, \"Expected integer array to not be identified as float\"\n    \n    print(f\"__CHECK__ is_float {result_float}\")\nexcept AttributeError:\n    assert False, \"The documented contract is insufficient to verify the result or is_float is not exposed as expected.\"",
       "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_is_float/api_test.py",
-      "exit_code": null,
+      "exit_code": 1,
       "stdout_tail": "",
-      "stderr_tail": ""
+      "stderr_tail": "__RUN_ERR__ AssertionError: Expected float array to be identified as float\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_is_float/api_test.py\", line 62, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_is_float/api_test.py\", line 57, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_is_float/api_test.py\", line 48, in api_test\n    assert result_float is True, \"Expected float array to be identified as float\"\nAssertionError: Expected float array to be identified as float\n"
     },
     "status": "fail",
     "attempts": 1,
     "pass_round": null,
-    "wall_s": 602.0,
-    "llm_calls": 0,
-    "input_tokens": 0,
-    "output_tokens": 0,
-    "by_model": {},
-    "error_category": "llm-error",
-    "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
-    "locus": "",
+    "wall_s": 350.5,
+    "llm_calls": 1,
+    "input_tokens": 1323,
+    "output_tokens": 63138,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 1323,
+        "output_tokens": 63138
+      }
+    },
+    "error_category": "runtime",
+    "error": "AssertionError: Expected float array to be identified as float",
+    "locus": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_is_float/api_test.py:48",
     "doc_chars": 90,
     "document_sha256": "1d18eac4d18675cc6f00bbafca76cff74ac9f7c328e2071d9103bd98a87358e7",
     "source": "tslearn/tslearn/backend/numpy_backend.py:106",
@@ -61,7 +67,7 @@
     "codebase_frames": null
   },
   "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/comprehension_progress.jsonl",
-  "source_sha256": "db64352b9da3678751c57f1b1024393993d22dbf72e1007a50a030241e52219b",
+  "source_sha256": "4e4a5aa06dc3d466ec8b3eefb24f62cc40997eeca4fe53fe7372be38f58794b6",
   "checkpoint_events": [
     {
       "name": "is_float",
@@ -200,9 +206,150 @@
       "source": "tslearn/tslearn/backend/numpy_backend.py:106",
       "source_other_sites": 1,
       "codebase_frames": null
+    },
+    {
+      "name": "is_float",
+      "doc_source": "original",
+      "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "runtime",
+            "error": "AssertionError: Expected float array to be identified as float"
+          }
+        ],
+        "error_category": "runtime",
+        "error": "AssertionError: Expected float array to be identified as float",
+        "code": "import tslearn.backend\n\ntry:\n    # Attempt to resolve the backend and call is_float\n    backend = tslearn.backend.instantiate_backend(\"numpy\")\n    \n    # Test with a float array\n    float_array = backend.array([1.0, 2.0, 3.0])\n    result_float = backend.is_float(float_array)\n    \n    # Test with an integer array\n    int_array = backend.array([1, 2, 3])\n    result_int = backend.is_float(int_array)\n    \n    assert result_float is True, \"Expected float array to be identified as float\"\n    assert result_int is False, \"Expected integer array to not be identified as float\"\n    \n    print(f\"__CHECK__ is_float {result_float}\")\nexcept AttributeError:\n    assert False, \"The documented contract is insufficient to verify the result or is_float is not exposed as expected.\"",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_is_float/api_test.py",
+        "exit_code": 1,
+        "stdout_tail": "",
+        "stderr_tail": "__RUN_ERR__ AssertionError: Expected float array to be identified as float\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_is_float/api_test.py\", line 62, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_is_float/api_test.py\", line 57, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_is_float/api_test.py\", line 48, in api_test\n    assert result_float is True, \"Expected float array to be identified as float\"\nAssertionError: Expected float array to be identified as float\n"
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 350.5,
+      "llm_calls": 1,
+      "input_tokens": 1323,
+      "output_tokens": 63138,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1323,
+          "output_tokens": 63138
+        }
+      },
+      "error_category": "runtime",
+      "error": "AssertionError: Expected float array to be identified as float",
+      "locus": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_is_float/api_test.py:48",
+      "doc_chars": 90,
+      "document_sha256": "1d18eac4d18675cc6f00bbafca76cff74ac9f7c328e2071d9103bd98a87358e7",
+      "source": "tslearn/tslearn/backend/numpy_backend.py:106",
+      "source_other_sites": 1,
+      "codebase_frames": null
     }
   ],
-  "provider_timing": [],
-  "transport_events": [],
+  "provider_timing": [
+    {
+      "id": "8edd6f1632334881b577ed4967750b4c",
+      "start_epoch": 1788923663.208831,
+      "end_epoch": 1788924011.5110452,
+      "provider_wall_s": 348.2641929999809,
+      "since_previous_provider_end_s": null,
+      "outcome": "invocation_success",
+      "retry_after_epoch": null,
+      "policy_sha256": "d3dc72bd6e8ae61bf387f53095432a592ef5ad022245486ca7883f4a0dfff6ed"
+    }
+  ],
+  "transport_events": [
+    {
+      "adapter_sha256": "c78fd8935b37fdd9337d9e036be2e4c864195eb052d1335cbff68d5a5fb96697",
+      "api": "is_float",
+      "epoch": 1788923663.208831,
+      "event": "invocation_start",
+      "harness_setup_version": "aideal-output-setup-v1",
+      "invocation_id": "8edd6f1632334881b577ed4967750b4c",
+      "model": "google:gemini-3.1-pro-preview",
+      "outer_deadline_s": 630,
+      "pid": 50349,
+      "policy_sha256": "d3dc72bd6e8ae61bf387f53095432a592ef5ad022245486ca7883f4a0dfff6ed",
+      "previous_end_epoch": null,
+      "prompt_chars": 6086,
+      "prompt_sha256": "6dd020a241e4009212f8131837d6be42fb82a72cfcd1b51360c7ba045933f036",
+      "request_key": "e6ffcc9eca0d978f30929a9329ffa07a8b5a05d7a5c8a6064521458b58caf8de",
+      "request_timeout_s": 600,
+      "sdk_attempts": 1,
+      "transport_version": "aideal-provider-transport-v2"
+    },
+    {
+      "actual_timeout_s": 600.0,
+      "adapter_sha256": "c78fd8935b37fdd9337d9e036be2e4c864195eb052d1335cbff68d5a5fb96697",
+      "api": "is_float",
+      "epoch": 1788923663.225211,
+      "event": "sdk_attempt_start",
+      "harness_setup_version": "aideal-output-setup-v1",
+      "invocation_id": "8edd6f1632334881b577ed4967750b4c",
+      "model": "google:gemini-3.1-pro-preview",
+      "outer_deadline_s": 630,
+      "payload_sha256": "6af117232853bbfd96ce7b178ef32773a8c99a67fe7638cf8d4e5b8121abcffc",
+      "pid": 50349,
+      "policy_sha256": "d3dc72bd6e8ae61bf387f53095432a592ef5ad022245486ca7883f4a0dfff6ed",
+      "prompt_chars": 6086,
+      "prompt_sha256": "6dd020a241e4009212f8131837d6be42fb82a72cfcd1b51360c7ba045933f036",
+      "request_key": "e6ffcc9eca0d978f30929a9329ffa07a8b5a05d7a5c8a6064521458b58caf8de",
+      "request_timeout_s": 600,
+      "sdk_attempt_id": "fffd551ffba84e76b54f7473967c5ce9",
+      "sdk_attempts": 1,
+      "server_timeout_s": "600",
+      "transport_version": "aideal-provider-transport-v2"
+    },
+    {
+      "actual_timeout_s": 600.0,
+      "adapter_sha256": "c78fd8935b37fdd9337d9e036be2e4c864195eb052d1335cbff68d5a5fb96697",
+      "api": "is_float",
+      "epoch": 1788924011.5009558,
+      "event": "sdk_attempt_success",
+      "harness_setup_version": "aideal-output-setup-v1",
+      "invocation_id": "8edd6f1632334881b577ed4967750b4c",
+      "model": "google:gemini-3.1-pro-preview",
+      "outer_deadline_s": 630,
+      "payload_sha256": "6af117232853bbfd96ce7b178ef32773a8c99a67fe7638cf8d4e5b8121abcffc",
+      "pid": 50349,
+      "policy_sha256": "d3dc72bd6e8ae61bf387f53095432a592ef5ad022245486ca7883f4a0dfff6ed",
+      "prompt_chars": 6086,
+      "prompt_sha256": "6dd020a241e4009212f8131837d6be42fb82a72cfcd1b51360c7ba045933f036",
+      "request_key": "e6ffcc9eca0d978f30929a9329ffa07a8b5a05d7a5c8a6064521458b58caf8de",
+      "request_timeout_s": 600,
+      "sdk_attempt_id": "fffd551ffba84e76b54f7473967c5ce9",
+      "sdk_attempts": 1,
+      "server_timeout_s": "600",
+      "transport_version": "aideal-provider-transport-v2",
+      "wall_s": 348.2376214580145
+    },
+    {
+      "adapter_sha256": "c78fd8935b37fdd9337d9e036be2e4c864195eb052d1335cbff68d5a5fb96697",
+      "api": "is_float",
+      "epoch": 1788924011.5110452,
+      "event": "invocation_success",
+      "harness_setup_version": "aideal-output-setup-v1",
+      "invocation_id": "8edd6f1632334881b577ed4967750b4c",
+      "model": "google:gemini-3.1-pro-preview",
+      "outer_deadline_s": 630,
+      "pid": 50349,
+      "policy_sha256": "d3dc72bd6e8ae61bf387f53095432a592ef5ad022245486ca7883f4a0dfff6ed",
+      "prompt_chars": 6086,
+      "prompt_sha256": "6dd020a241e4009212f8131837d6be42fb82a72cfcd1b51360c7ba045933f036",
+      "request_key": "e6ffcc9eca0d978f30929a9329ffa07a8b5a05d7a5c8a6064521458b58caf8de",
+      "request_timeout_s": 600,
+      "response_sha256": "c1e8ad04f9c04574bd86a948a29c6aee862e4b31b02085ee99f72c0ef9529a1d",
+      "sdk_attempts": 1,
+      "transport_version": "aideal-provider-transport-v2",
+      "wall_s": 348.2641929999809
+    }
+  ],
   "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
 }
