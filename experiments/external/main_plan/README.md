@@ -3,6 +3,11 @@
 Registered September 8, 2026, after the user's review of existing outcomes.
 This is a disclosed protocol amendment, not retrospective preregistration.
 
+**Scheduling amendment, September 8 at 22:40 PDT:** [RDPro before remaining
+MDAnalysis stages](../RDPRO_FIRST_2026-09-08.md). Current MDAnalysis A1/generation
+continue; new MDAnalysis launches wait until RDPro v5 finishes. Existing tslearn
+B2-1 and RDPro workers are preserved.
+
 Reports use [the v5 template](REPORT_TEMPLATE_V5.md), including a required comparison
 of each original README's style, examples and data guidance with the A1 bundle,
 A2 generated document and repaired document. This descriptive audit does not

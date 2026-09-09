@@ -1,0 +1,24 @@
+version: 2
+max_parallel: 1
+retry_delay_seconds: 5
+env:
+  PYTHONPATH: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_robust_core_v4/grail-agent/src:/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_robust_core_v4
+jobs:
+- id: rdpro_before_mdanalysis
+  cwd: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_robust_core_v4
+  branch: aideal/robust-core-v4
+  environment_inventory: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_mdanalysis_v4/environment_v4.json
+  command:
+  - /Users/clockorangezoe/miniconda3/envs/geo_llm_spark/bin/python
+  - -m
+  - experiments.external.queue_priority
+  - --policy
+  - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_robust_core_v4/experiments/external/rdpro_priority_20260908.policy.json
+  - --out
+  - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_rdpro_priority_20260908
+  - --execute
+  result: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_rdpro_priority_20260908/guard.stdout
+  complete:
+    kind: exit_zero
+  max_restarts: 0
+  max_runtime_seconds: 1209600
