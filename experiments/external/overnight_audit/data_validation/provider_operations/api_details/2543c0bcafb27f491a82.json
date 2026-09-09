@@ -3,21 +3,21 @@
     "repository": "tslearn",
     "cell": "A1",
     "api": "mse",
-    "outcome": "Waiting for provider / retry",
-    "test_execution": "No test code executed for this provider attempt",
+    "outcome": "Execution failed",
+    "test_execution": "Test process returned exit code 1; target reach not independently verified",
     "target_api_reached": "Not independently verified",
-    "latest_native_attempt_s": 599.4,
-    "retained_checkpoint_events": 4,
-    "retained_attempt_total_s": 2398.3,
+    "latest_native_attempt_s": 392.4,
+    "retained_checkpoint_events": 5,
+    "retained_attempt_total_s": 2790.7,
     "retained_504_events": 4,
     "retained_cooldown_deferrals": 0,
     "historical_idle_retry_s": null,
-    "measured_provider_invocations": 0,
-    "last_provider_s": null,
+    "measured_provider_invocations": 1,
+    "last_provider_s": 390.43659083300736,
     "last_retry_interval_s": null,
     "next_provider_retry_epoch": null,
-    "transport_policy": "Historical/uninstrumented",
-    "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+    "transport_policy": "d3dc72bd6e8ae61bf387f53095432a592ef5ad022245486ca7883f4a0dfff6ed",
+    "error": "AssertionError: The documented contract for `mse` is insufficient to verify the result or the function does not exist in the expected location.",
     "details": "api_details/2543c0bcafb27f491a82.json"
   },
   "native_row": {
@@ -30,29 +30,35 @@
         {
           "round": 0,
           "status": "fail",
-          "category": "llm-error",
-          "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}"
+          "category": "runtime",
+          "error": "AssertionError: The documented contract for `mse` is insufficient to verify the result or the function does not exist in the expected location."
         }
       ],
-      "error_category": "llm-error",
-      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
-      "code": "",
+      "error_category": "runtime",
+      "error": "AssertionError: The documented contract for `mse` is insufficient to verify the result or the function does not exist in the expected location.",
+      "code": "import tslearn.backend\n\ntry:\n    # Attempt to find mse in the backend module\n    if hasattr(tslearn.backend, \"mse\"):\n        # If it exists, it's likely a backend helper for mean squared error\n        import numpy as np\n        \n        # Create a backend instance\n        be = tslearn.backend.instantiate_backend(\"numpy\")\n        \n        # Create two small arrays\n        a = np.array([1.0, 2.0, 3.0])\n        b = np.array([1.0, 2.0, 4.0])\n        \n        # Call mse\n        result = tslearn.backend.mse(a, b)\n        \n        # Verify the result (MSE between [1,2,3] and [1,2,4] is (0 + 0 + 1)/3 = 1/3)\n        assert np.isclose(result, 1.0 / 3.0), f\"Expected MSE 0.333..., got {result}\"\n        print(f\"__CHECK__ mse {result}\")\n    else:\n        # If it doesn't exist, fail the test as requested for unverifiable contracts\n        assert False, \"The documented contract for `mse` is insufficient to verify the result or the function does not exist in the expected location.\"\nexcept Exception as ",
       "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_mse/api_test.py",
-      "exit_code": null,
+      "exit_code": 1,
       "stdout_tail": "",
-      "stderr_tail": ""
+      "stderr_tail": "__RUN_ERR__ AssertionError: The documented contract for `mse` is insufficient to verify the result or the function does not exist in the expected location.\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_mse/api_test.py\", line 70, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_mse/api_test.py\", line 65, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_mse/api_test.py\", line 57, in api_test\n    assert False, \"The documented contract for `mse` is insufficient to verify the result or the function does not exist in the expected location.\"\nAssertionError: The documented contract for `mse` is insufficient to verify the result or the function does not exist in the expected location.\n"
     },
     "status": "fail",
     "attempts": 1,
     "pass_round": null,
-    "wall_s": 599.4,
-    "llm_calls": 0,
-    "input_tokens": 0,
-    "output_tokens": 0,
-    "by_model": {},
-    "error_category": "llm-error",
-    "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
-    "locus": "",
+    "wall_s": 392.4,
+    "llm_calls": 1,
+    "input_tokens": 1307,
+    "output_tokens": 63263,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 1307,
+        "output_tokens": 63263
+      }
+    },
+    "error_category": "runtime",
+    "error": "AssertionError: The documented contract for `mse` is insufficient to verify the result or the function does not exist in the expected location.",
+    "locus": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_mse/api_test.py:57",
     "doc_chars": 85,
     "document_sha256": "6455331e0b58c89e18ffbf1340950b1cba17163b1182f88b0bf45d15d8ee2bbe",
     "source": "tslearn/tslearn/metrics/performance.py:83",
@@ -60,7 +66,7 @@
     "codebase_frames": null
   },
   "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/comprehension_progress.jsonl",
-  "source_sha256": "da48ae39fd5eca44c1928b18fbb300b0166a3c171f5a1b9871122443b3244526",
+  "source_sha256": "d7eab169420952a7f00a7e8ab46b6206c68f3a068b5e960303384f244ef0f673",
   "checkpoint_events": [
     {
       "name": "mse",
@@ -199,9 +205,150 @@
       "source": "tslearn/tslearn/metrics/performance.py:83",
       "source_other_sites": 0,
       "codebase_frames": null
+    },
+    {
+      "name": "mse",
+      "doc_source": "original",
+      "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "runtime",
+            "error": "AssertionError: The documented contract for `mse` is insufficient to verify the result or the function does not exist in the expected location."
+          }
+        ],
+        "error_category": "runtime",
+        "error": "AssertionError: The documented contract for `mse` is insufficient to verify the result or the function does not exist in the expected location.",
+        "code": "import tslearn.backend\n\ntry:\n    # Attempt to find mse in the backend module\n    if hasattr(tslearn.backend, \"mse\"):\n        # If it exists, it's likely a backend helper for mean squared error\n        import numpy as np\n        \n        # Create a backend instance\n        be = tslearn.backend.instantiate_backend(\"numpy\")\n        \n        # Create two small arrays\n        a = np.array([1.0, 2.0, 3.0])\n        b = np.array([1.0, 2.0, 4.0])\n        \n        # Call mse\n        result = tslearn.backend.mse(a, b)\n        \n        # Verify the result (MSE between [1,2,3] and [1,2,4] is (0 + 0 + 1)/3 = 1/3)\n        assert np.isclose(result, 1.0 / 3.0), f\"Expected MSE 0.333..., got {result}\"\n        print(f\"__CHECK__ mse {result}\")\n    else:\n        # If it doesn't exist, fail the test as requested for unverifiable contracts\n        assert False, \"The documented contract for `mse` is insufficient to verify the result or the function does not exist in the expected location.\"\nexcept Exception as ",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_mse/api_test.py",
+        "exit_code": 1,
+        "stdout_tail": "",
+        "stderr_tail": "__RUN_ERR__ AssertionError: The documented contract for `mse` is insufficient to verify the result or the function does not exist in the expected location.\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_mse/api_test.py\", line 70, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_mse/api_test.py\", line 65, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_mse/api_test.py\", line 57, in api_test\n    assert False, \"The documented contract for `mse` is insufficient to verify the result or the function does not exist in the expected location.\"\nAssertionError: The documented contract for `mse` is insufficient to verify the result or the function does not exist in the expected location.\n"
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 392.4,
+      "llm_calls": 1,
+      "input_tokens": 1307,
+      "output_tokens": 63263,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1307,
+          "output_tokens": 63263
+        }
+      },
+      "error_category": "runtime",
+      "error": "AssertionError: The documented contract for `mse` is insufficient to verify the result or the function does not exist in the expected location.",
+      "locus": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_mse/api_test.py:57",
+      "doc_chars": 85,
+      "document_sha256": "6455331e0b58c89e18ffbf1340950b1cba17163b1182f88b0bf45d15d8ee2bbe",
+      "source": "tslearn/tslearn/metrics/performance.py:83",
+      "source_other_sites": 0,
+      "codebase_frames": null
     }
   ],
-  "provider_timing": [],
-  "transport_events": [],
+  "provider_timing": [
+    {
+      "id": "0979bed29d6e4a4c88667c7e5409cd54",
+      "start_epoch": 1788925926.240246,
+      "end_epoch": 1788926316.681487,
+      "provider_wall_s": 390.43659083300736,
+      "since_previous_provider_end_s": null,
+      "outcome": "invocation_success",
+      "retry_after_epoch": null,
+      "policy_sha256": "d3dc72bd6e8ae61bf387f53095432a592ef5ad022245486ca7883f4a0dfff6ed"
+    }
+  ],
+  "transport_events": [
+    {
+      "adapter_sha256": "c78fd8935b37fdd9337d9e036be2e4c864195eb052d1335cbff68d5a5fb96697",
+      "api": "mse",
+      "epoch": 1788925926.240246,
+      "event": "invocation_start",
+      "harness_setup_version": "aideal-output-setup-v1",
+      "invocation_id": "0979bed29d6e4a4c88667c7e5409cd54",
+      "model": "google:gemini-3.1-pro-preview",
+      "outer_deadline_s": 630,
+      "pid": 50349,
+      "policy_sha256": "d3dc72bd6e8ae61bf387f53095432a592ef5ad022245486ca7883f4a0dfff6ed",
+      "previous_end_epoch": null,
+      "prompt_chars": 6046,
+      "prompt_sha256": "aa6064d16271ffbfb4fcafd00d5da8a646ca0805edbafbe7e545b15983528f2c",
+      "request_key": "c48cbe9556425e6501519685f6d2c3f98a8a413bece01154b9601c1b08b20448",
+      "request_timeout_s": 600,
+      "sdk_attempts": 1,
+      "transport_version": "aideal-provider-transport-v2"
+    },
+    {
+      "actual_timeout_s": 600.0,
+      "adapter_sha256": "c78fd8935b37fdd9337d9e036be2e4c864195eb052d1335cbff68d5a5fb96697",
+      "api": "mse",
+      "epoch": 1788925926.25662,
+      "event": "sdk_attempt_start",
+      "harness_setup_version": "aideal-output-setup-v1",
+      "invocation_id": "0979bed29d6e4a4c88667c7e5409cd54",
+      "model": "google:gemini-3.1-pro-preview",
+      "outer_deadline_s": 630,
+      "payload_sha256": "8ad51c5104a32215bdb770a71bc8cb24485d737e53cb5d2e50d6c4e42a8dc69b",
+      "pid": 50349,
+      "policy_sha256": "d3dc72bd6e8ae61bf387f53095432a592ef5ad022245486ca7883f4a0dfff6ed",
+      "prompt_chars": 6046,
+      "prompt_sha256": "aa6064d16271ffbfb4fcafd00d5da8a646ca0805edbafbe7e545b15983528f2c",
+      "request_key": "c48cbe9556425e6501519685f6d2c3f98a8a413bece01154b9601c1b08b20448",
+      "request_timeout_s": 600,
+      "sdk_attempt_id": "775f25e6093544679d1fe5da530d2cc5",
+      "sdk_attempts": 1,
+      "server_timeout_s": "600",
+      "transport_version": "aideal-provider-transport-v2"
+    },
+    {
+      "actual_timeout_s": 600.0,
+      "adapter_sha256": "c78fd8935b37fdd9337d9e036be2e4c864195eb052d1335cbff68d5a5fb96697",
+      "api": "mse",
+      "epoch": 1788926316.672299,
+      "event": "sdk_attempt_success",
+      "harness_setup_version": "aideal-output-setup-v1",
+      "invocation_id": "0979bed29d6e4a4c88667c7e5409cd54",
+      "model": "google:gemini-3.1-pro-preview",
+      "outer_deadline_s": 630,
+      "payload_sha256": "8ad51c5104a32215bdb770a71bc8cb24485d737e53cb5d2e50d6c4e42a8dc69b",
+      "pid": 50349,
+      "policy_sha256": "d3dc72bd6e8ae61bf387f53095432a592ef5ad022245486ca7883f4a0dfff6ed",
+      "prompt_chars": 6046,
+      "prompt_sha256": "aa6064d16271ffbfb4fcafd00d5da8a646ca0805edbafbe7e545b15983528f2c",
+      "request_key": "c48cbe9556425e6501519685f6d2c3f98a8a413bece01154b9601c1b08b20448",
+      "request_timeout_s": 600,
+      "sdk_attempt_id": "775f25e6093544679d1fe5da530d2cc5",
+      "sdk_attempts": 1,
+      "server_timeout_s": "600",
+      "transport_version": "aideal-provider-transport-v2",
+      "wall_s": 390.4109440000029
+    },
+    {
+      "adapter_sha256": "c78fd8935b37fdd9337d9e036be2e4c864195eb052d1335cbff68d5a5fb96697",
+      "api": "mse",
+      "epoch": 1788926316.681487,
+      "event": "invocation_success",
+      "harness_setup_version": "aideal-output-setup-v1",
+      "invocation_id": "0979bed29d6e4a4c88667c7e5409cd54",
+      "model": "google:gemini-3.1-pro-preview",
+      "outer_deadline_s": 630,
+      "pid": 50349,
+      "policy_sha256": "d3dc72bd6e8ae61bf387f53095432a592ef5ad022245486ca7883f4a0dfff6ed",
+      "prompt_chars": 6046,
+      "prompt_sha256": "aa6064d16271ffbfb4fcafd00d5da8a646ca0805edbafbe7e545b15983528f2c",
+      "request_key": "c48cbe9556425e6501519685f6d2c3f98a8a413bece01154b9601c1b08b20448",
+      "request_timeout_s": 600,
+      "response_sha256": "1e7d3c4d49e999538315c914bd6428a815a57bdbac110863aacdcb6960b054e5",
+      "sdk_attempts": 1,
+      "transport_version": "aideal-provider-transport-v2",
+      "wall_s": 390.43659083300736
+    }
+  ],
   "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
 }

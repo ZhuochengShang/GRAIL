@@ -1,32 +1,32 @@
-# jacobian_product: Investigate provider failures and recorded retry behavior
+# jacobian_product: Investigate the observed API-use barrier
 
 ID: `efe13aead9dc33ab2b15` · tslearn/A1 · **open**
 
-Evidence version: `f78ee207d2fce6ba7092e483494eaee47e3941388aa76373b87a1bfe7c824677`
+Evidence version: `5e89c5bcccb4ecad1797151014e26af2a79eab24ec37dfc655de4faf7221ac24`
 
-Candidate category: **provider**. Confidence: **high**.
+Candidate category: **assertion-or-behavior**. Confidence: **medium**.
 
 ## Barrier and evidence
 
-Recorded provider failure; preserve and retry under existing policy.
+Compare expected value with pinned implementation; do not weaken the assertion.
 
-Source: `tslearn/tslearn/metrics/softdtw_variants.py:1218`. Native category: `llm-error`.
+Source: `tslearn/tslearn/metrics/softdtw_variants.py:1218`. Native category: `runtime`.
 
 ```text
-ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}
+AssertionError: The documented contract for jacobian_product is insufficient to verify the result.
 ```
 
-[Evidence ledger](../../../tslearn/A1/ledger.json) · [Saved evidence](../evidence/f78ee207d2fce6ba7092e483494eaee47e3941388aa76373b87a1bfe7c824677.json)
+[Evidence ledger](../../../tslearn/A1/ledger.json) · [Saved evidence](../evidence/5e89c5bcccb4ecad1797151014e26af2a79eab24ec37dfc655de4faf7221ac24.json)
 
-Recorded attempts: 3; provider errors: 3; document rounds: None.
+Recorded attempts: 4; provider errors: 3; document rounds: None.
 
 ## Proposed action
 
-Check quota/cooldown and error histories; preserve existing retry policy and completed checkpoints.
+Compare expected value with pinned implementation; do not weaken the assertion.
 
 ## Required validation
 
-Reattempt only compatible unresolved requests under authorized policy; report recovery separately from documentation benefit.
+Reproduce in an isolated diagnostic; establish input, call and assertion validity before attributing a documentation or code defect.
 
 Hypothesis only; measure against the pinned baseline before claiming improvement.
 

@@ -1,32 +1,32 @@
-# mse: Investigate provider failures and recorded retry behavior
+# mse: Investigate the observed API-use barrier
 
 ID: `3af68a89e69ff9f8ddde` · tslearn/A1 · **open**
 
-Evidence version: `5e8353aff1be3a5a7e1aed849e22fdc68b6dd9fc8c3aaa98477a04a473fb19fa`
+Evidence version: `efe6c8b72ecca5f490b55e2965f6d545b8f15c89f5c2a6cfea865ff72716052a`
 
-Candidate category: **provider**. Confidence: **high**.
+Candidate category: **assertion-or-behavior**. Confidence: **medium**.
 
 ## Barrier and evidence
 
-Recorded provider failure; preserve and retry under existing policy.
+Compare expected value with pinned implementation; do not weaken the assertion.
 
-Source: `tslearn/tslearn/metrics/performance.py:83`. Native category: `llm-error`.
+Source: `tslearn/tslearn/metrics/performance.py:83`. Native category: `runtime`.
 
 ```text
-ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}
+AssertionError: The documented contract for `mse` is insufficient to verify the result or the function does not exist in the expected location.
 ```
 
-[Evidence ledger](../../../tslearn/A1/ledger.json) · [Saved evidence](../evidence/5e8353aff1be3a5a7e1aed849e22fdc68b6dd9fc8c3aaa98477a04a473fb19fa.json)
+[Evidence ledger](../../../tslearn/A1/ledger.json) · [Saved evidence](../evidence/efe6c8b72ecca5f490b55e2965f6d545b8f15c89f5c2a6cfea865ff72716052a.json)
 
-Recorded attempts: 3; provider errors: 3; document rounds: None.
+Recorded attempts: 4; provider errors: 3; document rounds: None.
 
 ## Proposed action
 
-Check quota/cooldown and error histories; preserve existing retry policy and completed checkpoints.
+Compare expected value with pinned implementation; do not weaken the assertion.
 
 ## Required validation
 
-Reattempt only compatible unresolved requests under authorized policy; report recovery separately from documentation benefit.
+Reproduce in an isolated diagnostic; establish input, call and assertion validity before attributing a documentation or code defect.
 
 Hypothesis only; measure against the pinned baseline before claiming improvement.
 

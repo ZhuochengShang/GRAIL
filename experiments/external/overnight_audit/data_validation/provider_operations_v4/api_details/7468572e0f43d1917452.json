@@ -3,22 +3,22 @@
     "repository": "tslearn",
     "cell": "A1",
     "api": "jacobian_product",
-    "outcome": "Waiting for provider / retry",
-    "test_execution": "No test code executed for this provider attempt",
+    "outcome": "Execution failed",
+    "test_execution": "Test process returned exit code 1; target reach not independently verified",
     "target_api_reached": "Not independently verified",
-    "latest_native_attempt_s": 599.2,
-    "retained_checkpoint_events": 4,
-    "retained_attempt_total_s": 2397.7,
+    "latest_native_attempt_s": 368.8,
+    "retained_checkpoint_events": 5,
+    "retained_attempt_total_s": 2766.5,
     "retained_504_events": 4,
     "retained_cooldown_deferrals": 0,
     "historical_idle_retry_s": null,
     "measured_provider_invocations": 1,
-    "last_provider_s": null,
+    "last_provider_s": 366.6799837499857,
     "last_retry_interval_s": null,
     "next_provider_retry_epoch": null,
     "transport_policy": "d3dc72bd6e8ae61bf387f53095432a592ef5ad022245486ca7883f4a0dfff6ed",
     "identity_status": "Final or explicitly migrated evidence",
-    "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+    "error": "AssertionError: The documented contract for jacobian_product is insufficient to verify the result.",
     "details": "api_details/7468572e0f43d1917452.json"
   },
   "native_row": {
@@ -31,37 +31,48 @@
         {
           "round": 0,
           "status": "fail",
-          "category": "llm-error",
-          "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}"
+          "category": "runtime",
+          "error": "AssertionError: The documented contract for jacobian_product is insufficient to verify the result.",
+          "codebase_frames": [
+            "tslearn/tslearn/backend/backend.py:74"
+          ]
         }
       ],
-      "error_category": "llm-error",
-      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
-      "code": "",
+      "error_category": "runtime",
+      "error": "AssertionError: The documented contract for jacobian_product is insufficient to verify the result.",
+      "code": "import numpy as np\nfrom tslearn.backend import instantiate_backend\n\n# Instantiate the default NumPy backend\nbe = instantiate_backend(\"numpy\", \"numpy\")\n\n# Create a small deterministic matrix\nmatrix = np.array([[1.0, 2.0], [3.0, 4.0]])\n\n# The jacobian_product method in tslearn.backend computes the product of a Jacobian and a vector/matrix.\n# However, since the documentation is missing and the exact signature/contract is unverifiable,\n# we will deliberately fail the test to indicate that the contract is insufficient to verify the result.\ntry:\n    # Attempt to call it with plausible arguments (e.g., a matrix and a vector)\n    # In some contexts, jacobian_product(J, v) computes J^T v or J v.\n    v = np.array([1.0, 1.0])\n    result = be.jacobian_product(matrix, v)\n    \n    # If it succeeds, we still fail because we cannot verify correctness without documentation.\n    assert False, \"The documented contract for jacobian_product is insufficient to verify the result.\"\nexcept AttributeError:\n    ",
       "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_jacobian_product/api_test.py",
-      "exit_code": null,
+      "exit_code": 1,
       "stdout_tail": "",
-      "stderr_tail": ""
+      "stderr_tail": "__RUN_ERR__ AssertionError: The documented contract for jacobian_product is insufficient to verify the result.\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_jacobian_product/api_test.py\", line 50, in api_test\n    result = be.jacobian_product(matrix, v)\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/backend/backend.py\", line 74, in __getattr__\n    return getattr(self.backend, item)\nAttributeError: 'NumPyBackend' object has no attribute 'jacobian_product'\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_jacobian_product/api_test.py\", line 70, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_jacobian_product/api_test.py\", line 65, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_jacobian_product/api_test.py\", line 56, in api_test\n    assert False, \"The documented contract for jacobian_product is insufficient to verify the result.\"\nAssertionError: The documented contract for jacobian_product is insufficient to verify the result.\n"
     },
     "status": "fail",
     "attempts": 1,
     "pass_round": null,
-    "wall_s": 599.2,
-    "llm_calls": 0,
-    "input_tokens": 0,
-    "output_tokens": 0,
-    "by_model": {},
-    "error_category": "llm-error",
-    "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
-    "locus": "",
+    "wall_s": 368.8,
+    "llm_calls": 1,
+    "input_tokens": 1324,
+    "output_tokens": 63300,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 1324,
+        "output_tokens": 63300
+      }
+    },
+    "error_category": "runtime",
+    "error": "AssertionError: The documented contract for jacobian_product is insufficient to verify the result.",
+    "locus": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_jacobian_product/api_test.py:56",
     "doc_chars": 98,
     "document_sha256": "2275f60558c6d10da2c5fcd41f7d6130dabede00404478e6766a4dda88501527",
     "source": "tslearn/tslearn/metrics/softdtw_variants.py:1218",
     "source_other_sites": 0,
-    "codebase_frames": null
+    "codebase_frames": [
+      "tslearn/tslearn/backend/backend.py:74"
+    ]
   },
   "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/comprehension_progress.jsonl",
-  "source_sha256": "da48ae39fd5eca44c1928b18fbb300b0166a3c171f5a1b9871122443b3244526",
+  "source_sha256": "d7eab169420952a7f00a7e8ab46b6206c68f3a068b5e960303384f244ef0f673",
   "checkpoint_events": [
     {
       "name": "jacobian_product",
@@ -200,16 +211,66 @@
       "source": "tslearn/tslearn/metrics/softdtw_variants.py:1218",
       "source_other_sites": 0,
       "codebase_frames": null
+    },
+    {
+      "name": "jacobian_product",
+      "doc_source": "original",
+      "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "runtime",
+            "error": "AssertionError: The documented contract for jacobian_product is insufficient to verify the result.",
+            "codebase_frames": [
+              "tslearn/tslearn/backend/backend.py:74"
+            ]
+          }
+        ],
+        "error_category": "runtime",
+        "error": "AssertionError: The documented contract for jacobian_product is insufficient to verify the result.",
+        "code": "import numpy as np\nfrom tslearn.backend import instantiate_backend\n\n# Instantiate the default NumPy backend\nbe = instantiate_backend(\"numpy\", \"numpy\")\n\n# Create a small deterministic matrix\nmatrix = np.array([[1.0, 2.0], [3.0, 4.0]])\n\n# The jacobian_product method in tslearn.backend computes the product of a Jacobian and a vector/matrix.\n# However, since the documentation is missing and the exact signature/contract is unverifiable,\n# we will deliberately fail the test to indicate that the contract is insufficient to verify the result.\ntry:\n    # Attempt to call it with plausible arguments (e.g., a matrix and a vector)\n    # In some contexts, jacobian_product(J, v) computes J^T v or J v.\n    v = np.array([1.0, 1.0])\n    result = be.jacobian_product(matrix, v)\n    \n    # If it succeeds, we still fail because we cannot verify correctness without documentation.\n    assert False, \"The documented contract for jacobian_product is insufficient to verify the result.\"\nexcept AttributeError:\n    ",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_jacobian_product/api_test.py",
+        "exit_code": 1,
+        "stdout_tail": "",
+        "stderr_tail": "__RUN_ERR__ AssertionError: The documented contract for jacobian_product is insufficient to verify the result.\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_jacobian_product/api_test.py\", line 50, in api_test\n    result = be.jacobian_product(matrix, v)\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/backend/backend.py\", line 74, in __getattr__\n    return getattr(self.backend, item)\nAttributeError: 'NumPyBackend' object has no attribute 'jacobian_product'\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_jacobian_product/api_test.py\", line 70, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_jacobian_product/api_test.py\", line 65, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_jacobian_product/api_test.py\", line 56, in api_test\n    assert False, \"The documented contract for jacobian_product is insufficient to verify the result.\"\nAssertionError: The documented contract for jacobian_product is insufficient to verify the result.\n"
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 368.8,
+      "llm_calls": 1,
+      "input_tokens": 1324,
+      "output_tokens": 63300,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1324,
+          "output_tokens": 63300
+        }
+      },
+      "error_category": "runtime",
+      "error": "AssertionError: The documented contract for jacobian_product is insufficient to verify the result.",
+      "locus": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_jacobian_product/api_test.py:56",
+      "doc_chars": 98,
+      "document_sha256": "2275f60558c6d10da2c5fcd41f7d6130dabede00404478e6766a4dda88501527",
+      "source": "tslearn/tslearn/metrics/softdtw_variants.py:1218",
+      "source_other_sites": 0,
+      "codebase_frames": [
+        "tslearn/tslearn/backend/backend.py:74"
+      ]
     }
   ],
   "provider_timing": [
     {
       "id": "87a84069539d48a2832b8f7b88951b93",
       "start_epoch": 1788925156.421619,
-      "end_epoch": null,
-      "provider_wall_s": null,
+      "end_epoch": 1788925523.106622,
+      "provider_wall_s": 366.6799837499857,
       "since_previous_provider_end_s": null,
-      "outcome": "In flight or interrupted: no end recorded",
+      "outcome": "invocation_success",
       "retry_after_epoch": null,
       "policy_sha256": "d3dc72bd6e8ae61bf387f53095432a592ef5ad022245486ca7883f4a0dfff6ed"
     }
@@ -255,6 +316,49 @@
       "sdk_attempts": 1,
       "server_timeout_s": "600",
       "transport_version": "aideal-provider-transport-v2"
+    },
+    {
+      "actual_timeout_s": 600.0,
+      "adapter_sha256": "c78fd8935b37fdd9337d9e036be2e4c864195eb052d1335cbff68d5a5fb96697",
+      "api": "jacobian_product",
+      "epoch": 1788925523.097047,
+      "event": "sdk_attempt_success",
+      "harness_setup_version": "aideal-output-setup-v1",
+      "invocation_id": "87a84069539d48a2832b8f7b88951b93",
+      "model": "google:gemini-3.1-pro-preview",
+      "outer_deadline_s": 630,
+      "payload_sha256": "e304db3101be36b318ed8400cdef2fa155f6cd66d568cff2291c2a82cb76f5e2",
+      "pid": 50349,
+      "policy_sha256": "d3dc72bd6e8ae61bf387f53095432a592ef5ad022245486ca7883f4a0dfff6ed",
+      "prompt_chars": 6150,
+      "prompt_sha256": "f371cb1d71a09b28fdeaa2898ff1a8459dd798f1fd481e26bee1b1c0c922677a",
+      "request_key": "53adc97c4a6d7cd4ed037cc22094e2305f5d266b34a5d4333d32a97b7c8975e1",
+      "request_timeout_s": 600,
+      "sdk_attempt_id": "d1a50cf2fef945b8a2b44ebd56c235ac",
+      "sdk_attempts": 1,
+      "server_timeout_s": "600",
+      "transport_version": "aideal-provider-transport-v2",
+      "wall_s": 366.65377679100493
+    },
+    {
+      "adapter_sha256": "c78fd8935b37fdd9337d9e036be2e4c864195eb052d1335cbff68d5a5fb96697",
+      "api": "jacobian_product",
+      "epoch": 1788925523.106622,
+      "event": "invocation_success",
+      "harness_setup_version": "aideal-output-setup-v1",
+      "invocation_id": "87a84069539d48a2832b8f7b88951b93",
+      "model": "google:gemini-3.1-pro-preview",
+      "outer_deadline_s": 630,
+      "pid": 50349,
+      "policy_sha256": "d3dc72bd6e8ae61bf387f53095432a592ef5ad022245486ca7883f4a0dfff6ed",
+      "prompt_chars": 6150,
+      "prompt_sha256": "f371cb1d71a09b28fdeaa2898ff1a8459dd798f1fd481e26bee1b1c0c922677a",
+      "request_key": "53adc97c4a6d7cd4ed037cc22094e2305f5d266b34a5d4333d32a97b7c8975e1",
+      "request_timeout_s": 600,
+      "response_sha256": "493c9cf2523341dfd26c61eba7a7c0cb89decb2b5770abfa6296b937e85c1b94",
+      "sdk_attempts": 1,
+      "transport_version": "aideal-provider-transport-v2",
+      "wall_s": 366.6799837499857
     }
   ],
   "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."

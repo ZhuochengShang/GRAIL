@@ -27,12 +27,12 @@ Effects withheld until all four matched final cells and their repair/test eviden
 
 ### A1
 
-Primary failure categories: {"api-identity": 3, "llm-error": 3, "unknown": 16}.
+Primary failure categories: {"api-identity": 3, "llm-error": 1, "unknown": 17}.
 
 Recorded provider-error attempts across all checkpoint fingerprints: 235. Provider-internal retries are not recorded by the existing client and cannot be inferred from the configured limit. Watchdog logs retain process attempts; checkpoint attempts and document-fix rounds are separate ledger fields.
 
 - `IntervalFormatter`: unknown; native=runtime; checkpoint attempts=5; provider-error attempts=4; document rounds=None; repair=None. Source: `source/mir_eval/display.py:478`. Error: `TypeError: IntervalFormatter.__init__() missing 2 required positional arguments: 'base' and 'ticks'`. Review: Observed runtime; doc attribution requires source, document, and snippet review.
-- `absolute_error`: llm-error; native=llm-error; checkpoint attempts=5; provider-error attempts=5; document rounds=None; repair=None. Source: `source/mir_eval/alignment.py:115`. Error: `ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}`. Review: Provider outcome; retry, never count as a documentation failure.
+- `absolute_error`: unknown; native=runtime; checkpoint attempts=6; provider-error attempts=5; document rounds=None; repair=None. Source: `source/mir_eval/alignment.py:115`. Error: `AssertionError: absolute_error is not a documented public API in mir_eval and its contract cannot be verified.`. Review: Observed runtime; doc attribution requires source, document, and snippet review.
 - `compute_accuracy`: unknown; native=runtime; checkpoint attempts=5; provider-error attempts=4; document rounds=None; repair=None. Source: `source/mir_eval/multipitch.py:248`. Error: `TypeError: compute_accuracy() got an unexpected keyword argument 'ref_times'`. Review: Observed runtime; doc attribution requires source, document, and snippet review.
 - `compute_err_score`: unknown; native=runtime; checkpoint attempts=5; provider-error attempts=4; document rounds=None; repair=None. Source: `source/mir_eval/multipitch.py:296`. Error: `AssertionError: The documentation does not support any non-tautological oracle for compute_err_score, and its module location is undocumented.`. Review: Observed runtime; doc attribution requires source, document, and snippet review.
 - `compute_num_true_positives`: unknown; native=runtime; checkpoint attempts=5; provider-error attempts=4; document rounds=None; repair=None. Source: `source/mir_eval/multipitch.py:206`. Error: `ValueError: The truth value of an array with more than one element is ambiguous. Use a.any() or a.all()`. Review: Observed runtime; doc attribution requires source, document, and snippet review.
@@ -52,7 +52,6 @@ Recorded provider-error attempts across all checkpoint fingerprints: 235. Provid
 - `underseg`: unknown; native=runtime; checkpoint attempts=5; provider-error attempts=4; document rounds=None; repair=None. Source: `source/mir_eval/chord.py:1435`. Error: `AttributeError: module 'mir_eval.segment' has no attribute 'underseg'`. Review: Observed runtime; doc attribution requires source, document, and snippet review.
 - `validate_boundary`: unknown; native=runtime; checkpoint attempts=5; provider-error attempts=4; document rounds=None; repair=None. Source: `source/mir_eval/segment.py:86`. Error: `TypeError: validate_boundary() missing 2 required positional arguments: 'estimated_intervals' and 'trim'`. Review: Observed runtime; doc attribution requires source, document, and snippet review.
 - `validate_structure`: unknown; native=runtime; checkpoint attempts=5; provider-error attempts=4; document rounds=None; repair=None. Source: `source/mir_eval/segment.py:121`. Error: `AssertionError: validate_structure should pass for valid intervals and labels`. Review: Observed runtime; doc attribution requires source, document, and snippet review.
-- `vmeasure`: llm-error; native=llm-error; checkpoint attempts=4; provider-error attempts=4; document rounds=None; repair=None. Source: `source/mir_eval/segment.py:1100`. Error: `ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}`. Review: Provider outcome; retry, never count as a documentation failure.
 
 ### A2
 

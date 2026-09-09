@@ -9,10 +9,10 @@
   "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
   "errors": [],
   "failure_categories": {
-    "unknown": 17,
-    "api-identity": 8,
+    "unknown": 19,
+    "api-identity": 9,
     "test/scaffold": 4,
-    "llm-error": 8
+    "llm-error": 5
   },
   "recorded_provider_errors_all_fingerprints": 152,
   "observed_fingerprints": [
@@ -12330,6 +12330,149 @@
       "source_other_sites": 0,
       "codebase_frames": null,
       "checkpoint_line": 379
+    },
+    {
+      "name": "jacobian_product",
+      "doc_source": "original",
+      "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "runtime",
+            "error": "AssertionError: The documented contract for jacobian_product is insufficient to verify the result.",
+            "codebase_frames": [
+              "tslearn/tslearn/backend/backend.py:74"
+            ]
+          }
+        ],
+        "error_category": "runtime",
+        "error": "AssertionError: The documented contract for jacobian_product is insufficient to verify the result.",
+        "code": "import numpy as np\nfrom tslearn.backend import instantiate_backend\n\n# Instantiate the default NumPy backend\nbe = instantiate_backend(\"numpy\", \"numpy\")\n\n# Create a small deterministic matrix\nmatrix = np.array([[1.0, 2.0], [3.0, 4.0]])\n\n# The jacobian_product method in tslearn.backend computes the product of a Jacobian and a vector/matrix.\n# However, since the documentation is missing and the exact signature/contract is unverifiable,\n# we will deliberately fail the test to indicate that the contract is insufficient to verify the result.\ntry:\n    # Attempt to call it with plausible arguments (e.g., a matrix and a vector)\n    # In some contexts, jacobian_product(J, v) computes J^T v or J v.\n    v = np.array([1.0, 1.0])\n    result = be.jacobian_product(matrix, v)\n    \n    # If it succeeds, we still fail because we cannot verify correctness without documentation.\n    assert False, \"The documented contract for jacobian_product is insufficient to verify the result.\"\nexcept AttributeError:\n    ",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_jacobian_product/api_test.py",
+        "exit_code": 1,
+        "stdout_tail": "",
+        "stderr_tail": "__RUN_ERR__ AssertionError: The documented contract for jacobian_product is insufficient to verify the result.\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_jacobian_product/api_test.py\", line 50, in api_test\n    result = be.jacobian_product(matrix, v)\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/backend/backend.py\", line 74, in __getattr__\n    return getattr(self.backend, item)\nAttributeError: 'NumPyBackend' object has no attribute 'jacobian_product'\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_jacobian_product/api_test.py\", line 70, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_jacobian_product/api_test.py\", line 65, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_jacobian_product/api_test.py\", line 56, in api_test\n    assert False, \"The documented contract for jacobian_product is insufficient to verify the result.\"\nAssertionError: The documented contract for jacobian_product is insufficient to verify the result.\n"
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 368.8,
+      "llm_calls": 1,
+      "input_tokens": 1324,
+      "output_tokens": 63300,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1324,
+          "output_tokens": 63300
+        }
+      },
+      "error_category": "runtime",
+      "error": "AssertionError: The documented contract for jacobian_product is insufficient to verify the result.",
+      "locus": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_jacobian_product/api_test.py:56",
+      "doc_chars": 98,
+      "document_sha256": "2275f60558c6d10da2c5fcd41f7d6130dabede00404478e6766a4dda88501527",
+      "source": "tslearn/tslearn/metrics/softdtw_variants.py:1218",
+      "source_other_sites": 0,
+      "codebase_frames": [
+        "tslearn/tslearn/backend/backend.py:74"
+      ],
+      "checkpoint_line": 380
+    },
+    {
+      "name": "mase",
+      "doc_source": "original",
+      "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "infra",
+            "error": "missing module/import: cannot import name 'mase' from 'tslearn.metrics' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experi"
+          }
+        ],
+        "error_category": "infra",
+        "error": "missing module/import: cannot import name 'mase' from 'tslearn.metrics' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/metrics/__init__.py)",
+        "code": "import tslearn\n\ntry:\n    # Attempt to import mase if it exists in a common location\n    from tslearn.metrics import mase\n    \n    # If it exists, we still fail because there's no documentation to verify its contract\n    assert False, \"The documented contract is insufficient to verify the result.\"\nexcept ImportError:\n    assert False, \"The documented contract is insufficient to verify the result.\"\n\nprint(\"__CHECK__ mase unverifiable\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_mase/api_test.py",
+        "exit_code": 1,
+        "stdout_tail": "",
+        "stderr_tail": "__RUN_ERR__ AssertionError: The documented contract is insufficient to verify the result.\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_mase/api_test.py\", line 38, in api_test\n    from tslearn.metrics import mase\nImportError: cannot import name 'mase' from 'tslearn.metrics' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/metrics/__init__.py)\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_mase/api_test.py\", line 54, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_mase/api_test.py\", line 49, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_mase/api_test.py\", line 43, in api_test\n    assert False, \"The documented contract is insufficient to verify the result.\"\nAssertionError: The documented contract is insufficient to verify the result.\n"
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 401.0,
+      "llm_calls": 1,
+      "input_tokens": 1315,
+      "output_tokens": 63045,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1315,
+          "output_tokens": 63045
+        }
+      },
+      "error_category": "infra",
+      "error": "missing module/import: cannot import name 'mase' from 'tslearn.metrics' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/metrics/__init__.py)",
+      "locus": "",
+      "doc_chars": 86,
+      "document_sha256": "f250dff013498fc5bb6ded776fd30b47600d1039414e0018779b347c72ce4ddc",
+      "source": "tslearn/tslearn/metrics/performance.py:153",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 381
+    },
+    {
+      "name": "mse",
+      "doc_source": "original",
+      "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "runtime",
+            "error": "AssertionError: The documented contract for `mse` is insufficient to verify the result or the function does not exist in the expected location."
+          }
+        ],
+        "error_category": "runtime",
+        "error": "AssertionError: The documented contract for `mse` is insufficient to verify the result or the function does not exist in the expected location.",
+        "code": "import tslearn.backend\n\ntry:\n    # Attempt to find mse in the backend module\n    if hasattr(tslearn.backend, \"mse\"):\n        # If it exists, it's likely a backend helper for mean squared error\n        import numpy as np\n        \n        # Create a backend instance\n        be = tslearn.backend.instantiate_backend(\"numpy\")\n        \n        # Create two small arrays\n        a = np.array([1.0, 2.0, 3.0])\n        b = np.array([1.0, 2.0, 4.0])\n        \n        # Call mse\n        result = tslearn.backend.mse(a, b)\n        \n        # Verify the result (MSE between [1,2,3] and [1,2,4] is (0 + 0 + 1)/3 = 1/3)\n        assert np.isclose(result, 1.0 / 3.0), f\"Expected MSE 0.333..., got {result}\"\n        print(f\"__CHECK__ mse {result}\")\n    else:\n        # If it doesn't exist, fail the test as requested for unverifiable contracts\n        assert False, \"The documented contract for `mse` is insufficient to verify the result or the function does not exist in the expected location.\"\nexcept Exception as ",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_mse/api_test.py",
+        "exit_code": 1,
+        "stdout_tail": "",
+        "stderr_tail": "__RUN_ERR__ AssertionError: The documented contract for `mse` is insufficient to verify the result or the function does not exist in the expected location.\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_mse/api_test.py\", line 70, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_mse/api_test.py\", line 65, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_mse/api_test.py\", line 57, in api_test\n    assert False, \"The documented contract for `mse` is insufficient to verify the result or the function does not exist in the expected location.\"\nAssertionError: The documented contract for `mse` is insufficient to verify the result or the function does not exist in the expected location.\n"
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 392.4,
+      "llm_calls": 1,
+      "input_tokens": 1307,
+      "output_tokens": 63263,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1307,
+          "output_tokens": 63263
+        }
+      },
+      "error_category": "runtime",
+      "error": "AssertionError: The documented contract for `mse` is insufficient to verify the result or the function does not exist in the expected location.",
+      "locus": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_mse/api_test.py:57",
+      "doc_chars": 85,
+      "document_sha256": "6455331e0b58c89e18ffbf1340950b1cba17163b1182f88b0bf45d15d8ee2bbe",
+      "source": "tslearn/tslearn/metrics/performance.py:83",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 382
     }
   ],
   "repair_summary": {
@@ -16616,16 +16759,16 @@
     {
       "api": "jacobian_product",
       "status": "fail",
-      "primary_category": "llm-error",
-      "runner_category": "llm-error",
-      "category_reason": "Provider outcome; retry, never count as a documentation failure.",
-      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "primary_category": "unknown",
+      "runner_category": "runtime",
+      "category_reason": "Observed runtime; doc attribution requires source, document, and snippet review.",
+      "error": "AssertionError: The documented contract for jacobian_product is insufficient to verify the result.",
       "source": "tslearn/tslearn/metrics/softdtw_variants.py:1218",
       "doc_chars": 98,
-      "checkpoint_attempts": 3,
+      "checkpoint_attempts": 4,
       "provider_error_attempts": 3,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
+      "recorded_successful_llm_calls": 1,
       "attempt_history": [
         {
           "checkpoint_line": 270,
@@ -16661,6 +16804,18 @@
           "llm_calls": 0,
           "input_tokens": 0,
           "output_tokens": 0,
+          "pass_round": null
+        },
+        {
+          "checkpoint_line": 380,
+          "status": "fail",
+          "error_category": "runtime",
+          "error": "AssertionError: The documented contract for jacobian_product is insufficient to verify the result.",
+          "attempts": 1,
+          "wall_s": 368.8,
+          "llm_calls": 1,
+          "input_tokens": 1324,
+          "output_tokens": 63300,
           "pass_round": null
         }
       ],
@@ -16995,16 +17150,16 @@
     {
       "api": "mase",
       "status": "fail",
-      "primary_category": "llm-error",
-      "runner_category": "llm-error",
-      "category_reason": "Provider outcome; retry, never count as a documentation failure.",
-      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "primary_category": "api-identity",
+      "runner_category": "infra",
+      "category_reason": "Import/member selection failed; the runner's infrastructure label needs review.",
+      "error": "missing module/import: cannot import name 'mase' from 'tslearn.metrics' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/metrics/__init__.py)",
       "source": "tslearn/tslearn/metrics/performance.py:153",
       "doc_chars": 86,
-      "checkpoint_attempts": 3,
+      "checkpoint_attempts": 4,
       "provider_error_attempts": 3,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
+      "recorded_successful_llm_calls": 1,
       "attempt_history": [
         {
           "checkpoint_line": 271,
@@ -17041,6 +17196,18 @@
           "input_tokens": 0,
           "output_tokens": 0,
           "pass_round": null
+        },
+        {
+          "checkpoint_line": 381,
+          "status": "fail",
+          "error_category": "infra",
+          "error": "missing module/import: cannot import name 'mase' from 'tslearn.metrics' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/metrics/__init__.py)",
+          "attempts": 1,
+          "wall_s": 401.0,
+          "llm_calls": 1,
+          "input_tokens": 1315,
+          "output_tokens": 63045,
+          "pass_round": null
         }
       ],
       "repair_status": null,
@@ -17051,16 +17218,16 @@
     {
       "api": "mse",
       "status": "fail",
-      "primary_category": "llm-error",
-      "runner_category": "llm-error",
-      "category_reason": "Provider outcome; retry, never count as a documentation failure.",
-      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "primary_category": "unknown",
+      "runner_category": "runtime",
+      "category_reason": "Observed runtime; doc attribution requires source, document, and snippet review.",
+      "error": "AssertionError: The documented contract for `mse` is insufficient to verify the result or the function does not exist in the expected location.",
       "source": "tslearn/tslearn/metrics/performance.py:83",
       "doc_chars": 85,
-      "checkpoint_attempts": 3,
+      "checkpoint_attempts": 4,
       "provider_error_attempts": 3,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
+      "recorded_successful_llm_calls": 1,
       "attempt_history": [
         {
           "checkpoint_line": 272,
@@ -17096,6 +17263,18 @@
           "llm_calls": 0,
           "input_tokens": 0,
           "output_tokens": 0,
+          "pass_round": null
+        },
+        {
+          "checkpoint_line": 382,
+          "status": "fail",
+          "error_category": "runtime",
+          "error": "AssertionError: The documented contract for `mse` is insufficient to verify the result or the function does not exist in the expected location.",
+          "attempts": 1,
+          "wall_s": 392.4,
+          "llm_calls": 1,
+          "input_tokens": 1307,
+          "output_tokens": 63263,
           "pass_round": null
         }
       ],

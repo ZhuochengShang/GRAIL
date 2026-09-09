@@ -3,22 +3,22 @@
     "repository": "mir_eval",
     "cell": "A1",
     "api": "vmeasure",
-    "outcome": "Waiting for provider / retry",
-    "test_execution": "No test code executed for this provider attempt",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
     "target_api_reached": "Not independently verified",
-    "latest_native_attempt_s": 599.8,
-    "retained_checkpoint_events": 8,
-    "retained_attempt_total_s": 4798.3,
+    "latest_native_attempt_s": 372.7,
+    "retained_checkpoint_events": 9,
+    "retained_attempt_total_s": 5171.0,
     "retained_504_events": 8,
     "retained_cooldown_deferrals": 0,
     "historical_idle_retry_s": null,
     "measured_provider_invocations": 1,
-    "last_provider_s": null,
+    "last_provider_s": 372.02186616603285,
     "last_retry_interval_s": null,
     "next_provider_retry_epoch": null,
     "transport_policy": "e7e9d3691d9e77eea97f97553474e83d5a9dcab174db19cf3cca0c7b102b3742",
     "identity_status": "Final or explicitly migrated evidence",
-    "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+    "error": null,
     "details": "api_details/f897f181185c5fbf6dbc.json"
   },
   "native_row": {
@@ -26,34 +26,36 @@
     "doc_source": "original",
     "experiment_fingerprint": "6f5bcaa71d6a868167732ff1b08ada63654abf63b2bc6f0777aae06911a1e74f",
     "execution_evidence": {
-      "status": "fail",
+      "status": "pass",
       "rounds": [
         {
           "round": 0,
-          "status": "fail",
-          "category": "llm-error",
-          "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}"
+          "status": "pass"
         }
       ],
-      "error_category": "llm-error",
-      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
-      "code": "",
+      "code": "from mir_eval.segment import vmeasure\n\n# vmeasure computes the V-measure, which is the harmonic mean of homogeneity and completeness.\n# It takes reference intervals, reference labels, estimated intervals, and estimated labels.\nv_measure, homogeneity, completeness = vmeasure(\n    ref_intervals, ref_labels, est_intervals, est_labels\n)\n\n# The V-measure, homogeneity, and completeness are all bounded between 0.0 and 1.0.\n# Since we are comparing identical inputs (if we were to pass ref to both) it would be 1.0,\n# but here we compare ref and est, so it should be a valid float in [0, 1].\nassert 0.0 <= v_measure <= 1.0, f\"V-measure {v_measure} is out of bounds [0, 1]\"\nassert 0.0 <= homogeneity <= 1.0, f\"Homogeneity {homogeneity} is out of bounds [0, 1]\"\nassert 0.0 <= completeness <= 1.0, f\"Completeness {completeness} is out of bounds [0, 1]\"\n\nprint(f\"__CHECK__ vmeasure {v_measure:.4f}\")",
       "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_A1/experiments/external/mir_eval/.aideal_exec/A1/run_vmeasure/api_test.py",
-      "exit_code": null,
-      "stdout_tail": "",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ vmeasure 0.9091\n__DONE__\n",
       "stderr_tail": ""
     },
-    "status": "fail",
+    "status": "pass",
     "attempts": 1,
-    "pass_round": null,
-    "wall_s": 599.8,
-    "llm_calls": 0,
-    "input_tokens": 0,
-    "output_tokens": 0,
-    "by_model": {},
-    "error_category": "llm-error",
-    "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
-    "locus": "",
+    "pass_round": 0,
+    "wall_s": 372.7,
+    "llm_calls": 1,
+    "input_tokens": 1332,
+    "output_tokens": 63186,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 1332,
+        "output_tokens": 63186
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
     "doc_chars": 90,
     "document_sha256": "c75b6a3098d75cb5eff39f71754ff3bb104409a18b6e93f9db72167499a9d648",
     "source": "source/mir_eval/segment.py:1100",
@@ -61,7 +63,7 @@
     "codebase_frames": null
   },
   "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_A1/experiments/external/mir_eval/.aideal_exec/A1/comprehension_progress.jsonl",
-  "source_sha256": "1477527b411c19f2a9b3bef69bba25d9aac36ab158173163dcaae10c39e023aa",
+  "source_sha256": "e8eddf13953b5478d8d642dc973c83d08601dac7463b6e94f2f91150d6a8356b",
   "checkpoint_events": [
     {
       "name": "vmeasure",
@@ -302,16 +304,57 @@
       "source": "source/mir_eval/segment.py:1100",
       "source_other_sites": 0,
       "codebase_frames": null
+    },
+    {
+      "name": "vmeasure",
+      "doc_source": "original",
+      "experiment_fingerprint": "6f5bcaa71d6a868167732ff1b08ada63654abf63b2bc6f0777aae06911a1e74f",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "from mir_eval.segment import vmeasure\n\n# vmeasure computes the V-measure, which is the harmonic mean of homogeneity and completeness.\n# It takes reference intervals, reference labels, estimated intervals, and estimated labels.\nv_measure, homogeneity, completeness = vmeasure(\n    ref_intervals, ref_labels, est_intervals, est_labels\n)\n\n# The V-measure, homogeneity, and completeness are all bounded between 0.0 and 1.0.\n# Since we are comparing identical inputs (if we were to pass ref to both) it would be 1.0,\n# but here we compare ref and est, so it should be a valid float in [0, 1].\nassert 0.0 <= v_measure <= 1.0, f\"V-measure {v_measure} is out of bounds [0, 1]\"\nassert 0.0 <= homogeneity <= 1.0, f\"Homogeneity {homogeneity} is out of bounds [0, 1]\"\nassert 0.0 <= completeness <= 1.0, f\"Completeness {completeness} is out of bounds [0, 1]\"\n\nprint(f\"__CHECK__ vmeasure {v_measure:.4f}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_A1/experiments/external/mir_eval/.aideal_exec/A1/run_vmeasure/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ vmeasure 0.9091\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 372.7,
+      "llm_calls": 1,
+      "input_tokens": 1332,
+      "output_tokens": 63186,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1332,
+          "output_tokens": 63186
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 90,
+      "document_sha256": "c75b6a3098d75cb5eff39f71754ff3bb104409a18b6e93f9db72167499a9d648",
+      "source": "source/mir_eval/segment.py:1100",
+      "source_other_sites": 0,
+      "codebase_frames": null
     }
   ],
   "provider_timing": [
     {
       "id": "1818c6a97ea645999fc30e1de96a5e98",
       "start_epoch": 1788925238.933076,
-      "end_epoch": null,
-      "provider_wall_s": null,
+      "end_epoch": 1788925610.960021,
+      "provider_wall_s": 372.02186616603285,
       "since_previous_provider_end_s": null,
-      "outcome": "In flight or interrupted: no end recorded",
+      "outcome": "invocation_success",
       "retry_after_epoch": null,
       "policy_sha256": "e7e9d3691d9e77eea97f97553474e83d5a9dcab174db19cf3cca0c7b102b3742"
     }
@@ -357,6 +400,49 @@
       "sdk_attempts": 1,
       "server_timeout_s": "600",
       "transport_version": "aideal-provider-transport-v2"
+    },
+    {
+      "actual_timeout_s": 600.0,
+      "adapter_sha256": "c78fd8935b37fdd9337d9e036be2e4c864195eb052d1335cbff68d5a5fb96697",
+      "api": "vmeasure",
+      "epoch": 1788925610.954355,
+      "event": "sdk_attempt_success",
+      "harness_setup_version": "aideal-output-setup-v1",
+      "invocation_id": "1818c6a97ea645999fc30e1de96a5e98",
+      "model": "google:gemini-3.1-pro-preview",
+      "outer_deadline_s": 630,
+      "payload_sha256": "69c7b88e5e0e95e762ef74b49120b48e1a54264c7b9796459878ffde78e093b9",
+      "pid": 51361,
+      "policy_sha256": "e7e9d3691d9e77eea97f97553474e83d5a9dcab174db19cf3cca0c7b102b3742",
+      "prompt_chars": 6207,
+      "prompt_sha256": "99cd295555f9eb3cd0c5b773386d8245bca7cac0def029799490b9404942be08",
+      "request_key": "49b0e69b0475ce3c09974b42d084c946c638ce8e98d43c2aecefbc35bdb171d3",
+      "request_timeout_s": 600,
+      "sdk_attempt_id": "c6b3aaac131a48359e3ea18e4941cc06",
+      "sdk_attempts": 1,
+      "server_timeout_s": "600",
+      "transport_version": "aideal-provider-transport-v2",
+      "wall_s": 371.9986864159582
+    },
+    {
+      "adapter_sha256": "c78fd8935b37fdd9337d9e036be2e4c864195eb052d1335cbff68d5a5fb96697",
+      "api": "vmeasure",
+      "epoch": 1788925610.960021,
+      "event": "invocation_success",
+      "harness_setup_version": "aideal-output-setup-v1",
+      "invocation_id": "1818c6a97ea645999fc30e1de96a5e98",
+      "model": "google:gemini-3.1-pro-preview",
+      "outer_deadline_s": 630,
+      "pid": 51361,
+      "policy_sha256": "e7e9d3691d9e77eea97f97553474e83d5a9dcab174db19cf3cca0c7b102b3742",
+      "prompt_chars": 6207,
+      "prompt_sha256": "99cd295555f9eb3cd0c5b773386d8245bca7cac0def029799490b9404942be08",
+      "request_key": "49b0e69b0475ce3c09974b42d084c946c638ce8e98d43c2aecefbc35bdb171d3",
+      "request_timeout_s": 600,
+      "response_sha256": "00131c5a7ab25532cc7fc96c96b1a00a4e166270168acf268145d86787c9f4c3",
+      "sdk_attempts": 1,
+      "transport_version": "aideal-provider-transport-v2",
+      "wall_s": 372.02186616603285
     }
   ],
   "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
