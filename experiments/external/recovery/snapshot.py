@@ -59,16 +59,18 @@ def runtime_environment(base, cfg, result, repo):
             raise ValueError('copied built dependency differs from baseline')
         return env, {'jar_sha256': file_sha(cfg.root / relative),
                      'assertion_policy': 'native unchanged; independent assertions-on replay required'}
-    source_name = 'tslearn' if repo == 'tslearn' else 'source'
+    source_name = {'tslearn': 'tslearn', 'mdanalysis': 'mdanalysis'}.get(repo, 'source')
+    module_name = 'MDAnalysis' if repo == 'mdanalysis' else repo
     probe = ('import importlib,importlib.metadata as m,json; '
-             f'p=importlib.import_module({repo!r}); '
+             f'p=importlib.import_module({module_name!r}); '
              'print(json.dumps({"target":p.__file__,"packages":sorted('
              '(d.metadata["Name"],d.version) for d in m.distributions())}))')
     results = []
     for current in (base, cfg):
         source = current.root / source_name
-        interpreter = (source / '.venv/bin/python') if repo == 'mir_eval' else Path(sys.executable)
-        current_env = dict(env, PYTHONPATH=str(source), MPLBACKEND='Agg',
+        interpreter = (source / '.venv/bin/python') if repo in ('mir_eval', 'mdanalysis') else Path(sys.executable)
+        import_root = source / 'package' if repo == 'mdanalysis' else source
+        current_env = dict(env, PYTHONPATH=str(import_root), MPLBACKEND='Agg',
                            NUMBA_THREADING_LAYER='workqueue', OPENBLAS_NUM_THREADS='1',
                            OMP_NUM_THREADS='1', NUMBA_NUM_THREADS='1')
         output = subprocess.check_output([str(interpreter), '-c', probe],
@@ -81,6 +83,6 @@ def runtime_environment(base, cfg, result, repo):
     # same name/version set and retain raw inventories to expose duplicates.
     if set(map(tuple, results[0]['packages'])) != set(map(tuple, results[1]['packages'])):
         raise ValueError('copied runtime package versions differ from A2 runtime')
-    env['PYTHONPATH'] = str(cfg.root / source_name) + os.pathsep + env.get('PYTHONPATH', '')
+    env['PYTHONPATH'] = str(cfg.root / source_name / 'package' if repo == 'mdanalysis' else cfg.root / source_name) + os.pathsep + env.get('PYTHONPATH', '')
     return env, {'baseline': results[0], 'isolated': results[1],
                  'limitation': 'package/import identity check, not API-specific semantic validation'}

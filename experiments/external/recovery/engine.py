@@ -3,14 +3,19 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 from pathlib import Path
 
 POLICY = Path(__file__).with_name('protocol.yaml')
 
 
+def policy_path():
+    return Path(os.environ.get('AIDEAL_RECOVERY_PROTOCOL', str(POLICY)))
+
+
 def policy():
     import yaml
-    return yaml.safe_load(POLICY.read_text())
+    return yaml.safe_load(policy_path().read_text())
 
 
 def digest(value):

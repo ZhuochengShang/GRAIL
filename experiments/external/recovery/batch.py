@@ -35,9 +35,9 @@ def publish(out, state):
         for r in state['apis'].values()) for n in range(6)}
     state['statuses'] = dict(Counter(r['status'] for r in state['apis'].values()))
     save(out / 'summary.json', state)
-    text = ['# A2 source-only recovery', '',
+    text = [f"# {state.get('baseline_cell', 'A2')} source-only recovery", '',
         f"Updated: {state['updated_at']}", '',
-        f"Fixed eligible-failure denominator: {len(state['apis'])}. A2 is round zero; five new proposals maximum; stuck threshold two.", '',
+        f"Fixed eligible-failure denominator: {len(state['apis'])}. {state.get('baseline_cell', 'A2')} is round zero; five new proposals maximum; stuck threshold two.", '',
         '| API | Status | New code rounds | Evidence / blocker |', '|---|---|---:|---|']
     for api, row in state['apis'].items():
         reason = str(row.get('error') or row.get('report') or '').replace('|', '\\|').replace('\n', ' ')
@@ -47,7 +47,9 @@ def publish(out, state):
     (out / 'REPORT.md').write_text('\n'.join(text) + '\n')
 
 
-def batch(baseline_config, result_path, repo, work, out, *, execute=False):
+def batch(baseline_config, result_path, repo, work, out, *, execute=False, manifest="docs/eval/api_manifest.json", baseline_cell="A2"):
+    if baseline_cell not in ("A2", "B2"):
+        raise ValueError("source recovery accepts only generated-document A2 or B2 baselines")
     out = Path(out)
     out.mkdir(parents=True, exist_ok=True)
     with (out / '.lock').open('a') as lock:
@@ -69,10 +71,11 @@ def batch(baseline_config, result_path, repo, work, out, *, execute=False):
             or any(r.get('status') not in ('pass', 'fail') or r.get('error_category') == 'llm-error'
                    for r in metrics.values())):
             raise ValueError('A2 remains partial or has provider failures')
-        identity = {'protocol': policy(), 'baseline_sha256': file_sha(result_path), 'repo': repo}
+        identity = {'protocol': policy(), 'baseline_sha256': file_sha(result_path), 'repo': repo, **({'baseline_cell': baseline_cell, 'manifest': manifest}
+                    if baseline_cell != 'A2' or manifest != 'docs/eval/api_manifest.json' else {})}
         saved = out / 'summary.json'
         state = json.loads(saved.read_text()) if saved.exists() else {
-            'identity': identity, 'baseline_result': str(result_path), 'baseline_cell': 'A2',
+            'identity': identity, 'baseline_result': str(result_path), 'baseline_cell': baseline_cell,
             'cohort_sha256': digest(names), 'exclusions': exclusions,
             'apis': {name: {'status': 'pending'} for name in names},
             'semantic_validation': 'needs_independent_review', 'headline_credit': False}
@@ -90,7 +93,7 @@ def batch(baseline_config, result_path, repo, work, out, *, execute=False):
                 continue
             try:
                 with environment(env):
-                    row = run(cfg, base, result, name, 'source', 'docs/eval/api_manifest.json', execute=execute)
+                    row = run(cfg, base, result, name, 'source', manifest, execute=execute)
                 state['apis'][name] = {'status': row['status'], 'report': row.get('report'),
                     'code_fix_rounds': len(row.get('rounds', [])),
                     'provider_events': sum(e.get('category') == 'llm-error' for e in row.get('events', [])),

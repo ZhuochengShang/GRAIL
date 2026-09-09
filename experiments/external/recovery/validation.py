@@ -11,7 +11,7 @@ from aideal.doc_checks import (_comprehension_inventory, _execute_sample_data,
                                _load_manifest, _sha256_files)
 from aideal.prompts import DEFAULT_PROMPTS, prompts_dir
 
-from .engine import POLICY, digest, policy
+from .engine import POLICY, digest, policy, policy_path
 from .compatibility import components, engine_files
 
 
@@ -150,7 +150,7 @@ def validate(base, cfg, result, api, manifest):
                 'current_profile_sha256': file_sha(cfg.root / cfg.raw['files']['project_profile']),
                 'upstream_test_context': test_hashes[0],
                 'context_engine': {n: file_sha(directory / n) for n in ('deepdive.py', 'docfix.py')},
-                'protocol_sha256': file_sha(POLICY), 'source': fp['source'],
+                'protocol_sha256': file_sha(policy_path()), 'source': fp['source'],
                 'document_sha256': run['document_sha256'],
                 'script_binding': binding}
     identity['baseline_compatibility'] = migration
