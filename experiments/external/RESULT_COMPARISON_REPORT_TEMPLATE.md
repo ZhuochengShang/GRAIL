@@ -1,15 +1,15 @@
-**Current report:** use the [v3 separated-stage template](post_b2/REPORT_TEMPLATE_V3.md). Report S_A2, README/B2, and S_B2 independently; native B2 and the B2+S_B2 composite have separate fields.
+**Current report:** use the [v5 independent-branch template](main_plan/REPORT_TEMPLATE_V5.md): A1 and A2 zero-fix baselines, independent B2-1 snippet repair and B2-2 source-informed README repair from frozen A2 failures, then fresh full-manifest B2. Each repository must include the original-README style/input comparison in section 1. The [v3 separated-stage template](post_b2/REPORT_TEMPLATE_V3.md) remains historical; S_A2 and S_B2 are supplementary and cannot be relabeled as B2-1.
 
-**Timing and execution amendment:** the current v3 template now requires per-API
+**Timing and execution definitions:** the historical v3 template records per-API
 attempt durations, measured retry intervals, transport-policy provenance and
 explicit execution/provider states. See [reporter and timing definitions](provider_retry/README.md).
 The legacy 2×2 material below is historical, not the active experiment protocol.
 
 # AIDEAL 2×2 experiment comparison report
 
-**Protocol change, September 8:** the user omitted original-README repair.
-Use [the A2-only repair template](recovery/REPORT_TEMPLATE_V2.md) and
-[the active pipeline definition](recovery/PIPELINE_V2.md) for current results.
+**Historical amendment, September 8 (superseded by v5 above):** the user omitted original-README repair.
+The [A2-only repair template](recovery/REPORT_TEMPLATE_V2.md) and
+[v2 pipeline definition](recovery/PIPELINE_V2.md) retain that intermediate design.
 The four-cell tables and interaction formulas below are retained for historical
 2×2 studies, and must not be presented as the revised priority experiment.
 

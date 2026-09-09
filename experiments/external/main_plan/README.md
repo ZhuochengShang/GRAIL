@@ -3,6 +3,11 @@
 Registered September 8, 2026, after the user's review of existing outcomes.
 This is a disclosed protocol amendment, not retrospective preregistration.
 
+Reports use [the v5 template](REPORT_TEMPLATE_V5.md), including a required comparison
+of each original README's style, examples and data guidance with the A1 bundle,
+A2 generated document and repaired document. This descriptive audit does not
+change experiment inputs or establish a causal style effect.
+
 ```mermaid
 flowchart TD
   A1[A1 original documentation: zero-fix control]
@@ -32,7 +37,7 @@ Historical B1 original-document repair remains excluded.
 | Priority B2-2 | Reuse as historical native treatment evidence | Exact inherited A2, all original failure targets, deep-dive-first, 5 doc rounds, zero snippet validation |
 | Fresh test after B2-2 | Reuse native B2 | Full manifest, zero fixes, matching non-document contracts under recorded migrations |
 | MDAnalysis | Preserve ongoing v4 A1/A2 and queued document branch; add B2-1 after its A2 finishes | No baseline restart or duplicate generation |
-| RDPro | Historical mapping only; defer reruns | Different engine, denominators and round-zero sampling |
+| RDPro | Preserve historical evidence; new registered 161-API study queued separately | New matched A2 and both repair branches; no A1 rerun; see `../rdpro_v5/README.md` in the RDPro main-v5 worktree |
 
 `REUSE_AUDIT_2026-09-08.json` records checks, migrations, hashes and limitations.
 No completed snippet is inserted into a native baseline. Structural reuse does
