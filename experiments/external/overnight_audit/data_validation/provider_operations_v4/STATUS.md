@@ -1,18 +1,18 @@
 # Execution status and API timing
 
-2026-09-08T18:27:41.312615-07:00
+2026-09-08T18:42:51.961875-07:00
 
 **No single “partial” label:** each unresolved case has an explicit reason. A finished evaluation can contain real failures. A provider failure is not executed code. A running test does not prove the target API was reached.
 
 | Repository | Cell | Recorded / expected | State | Pass | Compile fail | Execution fail | Setup/import | Provider pending | Other/timeout |
 |---|---|---:|---|---:|---:|---:|---:|---:|---:|
-| mir_eval | A1 | 148/148 | 24 provider cases unresolved | 70 | 0 | 51 | 2 | 24 | 1 |
+| mir_eval | A1 | 148/148 | 22 provider cases unresolved | 70 | 0 | 53 | 2 | 22 | 1 |
 | mir_eval | A2 | 148/148 | Native evaluation finished (failures still count) | 135 | 0 | 13 | 0 | 0 | 0 |
 | mir_eval | B2 | 148/148 | Native evaluation finished (failures still count) | 137 | 0 | 11 | 0 | 0 | 0 |
 | Thumbnailator | A1 | 149/149 | Native evaluation finished (failures still count) | 130 | 8 | 9 | 0 | 0 | 2 |
 | Thumbnailator | A2 | 149/149 | Native evaluation finished (failures still count) | 127 | 14 | 8 | 0 | 0 | 0 |
 | Thumbnailator | B2 | 149/149 | Native evaluation finished (failures still count) | 139 | 7 | 3 | 0 | 0 | 0 |
-| tslearn | A1 | 235/235 | 28 provider cases unresolved | 122 | 0 | 32 | 52 | 28 | 1 |
+| tslearn | A1 | 235/235 | 26 provider cases unresolved | 123 | 0 | 33 | 52 | 26 | 1 |
 | tslearn | A2 | 235/235 | Native evaluation finished (failures still count) | 175 | 0 | 32 | 28 | 0 | 0 |
 | tslearn | B2 | 235/235 | Native evaluation finished (failures still count) | 217 | 0 | 5 | 13 | 0 | 0 |
 

@@ -3,16 +3,16 @@
   "expected": 235,
   "counts": {
     "pending": 188,
-    "fail": 43,
-    "pass": 4
+    "fail": 42,
+    "pass": 5
   },
   "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
   "errors": [],
   "failure_categories": {
-    "unknown": 8,
+    "unknown": 9,
     "api-identity": 3,
     "test/scaffold": 4,
-    "llm-error": 28
+    "llm-error": 26
   },
   "recorded_provider_errors_all_fingerprints": 151,
   "observed_fingerprints": [
@@ -11389,6 +11389,94 @@
       "source_other_sites": 1,
       "codebase_frames": null,
       "checkpoint_line": 358
+    },
+    {
+      "name": "cdist_sax",
+      "doc_source": "original",
+      "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "runtime",
+            "error": "AssertionError: cdist_sax contract is insufficient to verify the result or signature mismatch: cdist_sax() got an unexpected keyword argument 'n_segments'"
+          }
+        ],
+        "error_category": "runtime",
+        "error": "AssertionError: cdist_sax contract is insufficient to verify the result or signature mismatch: cdist_sax() got an unexpected keyword argument 'n_segments'",
+        "code": "from tslearn.metrics import cdist_sax\n\n# The documentation for cdist_sax is missing, but based on tslearn conventions,\n# it computes the cross-distance matrix between two datasets using SAX distance.\n# It typically requires n_segments and alphabet_size_avg as parameters.\n# We will use X and X2 as inputs.\ntry:\n    dist_matrix = cdist_sax(X, X2, n_segments=4, alphabet_size_avg=4)\n    \n    # Verify the output shape matches the expected cross-distance matrix shape\n    assert dist_matrix.shape == (X.shape[0], X2.shape[0]), f\"Expected shape {(X.shape[0], X2.shape[0])}, got {dist_matrix.shape}\"\n    \n    # Verify distances are non-negative\n    assert (dist_matrix >= 0).all(), \"Distance matrix contains negative values\"\n    \n    print(f\"__CHECK__ cdist_sax {dist_matrix.shape}\")\nexcept Exception as e:\n    # If the contract is unverifiable or the function signature is different, fail explicitly\n    assert False, f\"cdist_sax contract is insufficient to verify the result or signature mismatch: {e}\"",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_cdist_sax/api_test.py",
+        "exit_code": 1,
+        "stdout_tail": "",
+        "stderr_tail": "__RUN_ERR__ AssertionError: cdist_sax contract is insufficient to verify the result or signature mismatch: cdist_sax() got an unexpected keyword argument 'n_segments'\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_cdist_sax/api_test.py\", line 41, in api_test\n    dist_matrix = cdist_sax(X, X2, n_segments=4, alphabet_size_avg=4)\nTypeError: cdist_sax() got an unexpected keyword argument 'n_segments'\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_cdist_sax/api_test.py\", line 61, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_cdist_sax/api_test.py\", line 56, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_cdist_sax/api_test.py\", line 52, in api_test\n    assert False, f\"cdist_sax contract is insufficient to verify the result or signature mismatch: {e}\"\nAssertionError: cdist_sax contract is insufficient to verify the result or signature mismatch: cdist_sax() got an unexpected keyword argument 'n_segments'\n"
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 380.6,
+      "llm_calls": 1,
+      "input_tokens": 1331,
+      "output_tokens": 63191,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1331,
+          "output_tokens": 63191
+        }
+      },
+      "error_category": "runtime",
+      "error": "AssertionError: cdist_sax contract is insufficient to verify the result or signature mismatch: cdist_sax() got an unexpected keyword argument 'n_segments'",
+      "locus": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_cdist_sax/api_test.py:52",
+      "doc_chars": 91,
+      "document_sha256": "93bffb5a4aa23ecabbb49c6dc2989b39fc1220ee67a2c024e10a8dda276f5f57",
+      "source": "tslearn/tslearn/metrics/sax.py:10",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 359
+    },
+    {
+      "name": "check_dataset",
+      "doc_source": "original",
+      "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "from tslearn.utils import check_dataset\n\n# check_dataset ensures the input is a valid time-series dataset (n_ts, sz, d)\n# and returns it as a 3D numpy array.\nX_checked = check_dataset(X)\n\nassert X_checked.shape == (8, 40, 1), f\"Expected shape (8, 40, 1), got {X_checked.shape}\"\nassert X_checked.ndim == 3, \"check_dataset should return a 3D array\"\n\nprint(f\"__CHECK__ check_dataset {X_checked.shape}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_check_dataset/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ check_dataset (8, 40, 1)\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 394.0,
+      "llm_calls": 1,
+      "input_tokens": 1323,
+      "output_tokens": 63057,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1323,
+          "output_tokens": 63057
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 95,
+      "document_sha256": "dad418056463fcf1f2f4d7471272350c2829b8d022828ac70a45e37adf1c85dc",
+      "source": "tslearn/tslearn/utils/utils.py:548",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 360
     }
   ],
   "repair_summary": {
@@ -12979,16 +13067,16 @@
     {
       "api": "cdist_sax",
       "status": "fail",
-      "primary_category": "llm-error",
-      "runner_category": "llm-error",
-      "category_reason": "Provider outcome; retry, never count as a documentation failure.",
-      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "primary_category": "unknown",
+      "runner_category": "runtime",
+      "category_reason": "Observed runtime; doc attribution requires source, document, and snippet review.",
+      "error": "AssertionError: cdist_sax contract is insufficient to verify the result or signature mismatch: cdist_sax() got an unexpected keyword argument 'n_segments'",
       "source": "tslearn/tslearn/metrics/sax.py:10",
       "doc_chars": 91,
-      "checkpoint_attempts": 3,
+      "checkpoint_attempts": 4,
       "provider_error_attempts": 3,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
+      "recorded_successful_llm_calls": 1,
       "attempt_history": [
         {
           "checkpoint_line": 245,
@@ -13024,6 +13112,18 @@
           "llm_calls": 0,
           "input_tokens": 0,
           "output_tokens": 0,
+          "pass_round": null
+        },
+        {
+          "checkpoint_line": 359,
+          "status": "fail",
+          "error_category": "runtime",
+          "error": "AssertionError: cdist_sax contract is insufficient to verify the result or signature mismatch: cdist_sax() got an unexpected keyword argument 'n_segments'",
+          "attempts": 1,
+          "wall_s": 380.6,
+          "llm_calls": 1,
+          "input_tokens": 1331,
+          "output_tokens": 63191,
           "pass_round": null
         }
       ],
@@ -13072,17 +13172,17 @@
     },
     {
       "api": "check_dataset",
-      "status": "fail",
-      "primary_category": "llm-error",
-      "runner_category": "llm-error",
-      "category_reason": "Provider outcome; retry, never count as a documentation failure.",
-      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "status": "pass",
+      "primary_category": "pass",
+      "runner_category": null,
+      "category_reason": "",
+      "error": null,
       "source": "tslearn/tslearn/utils/utils.py:548",
       "doc_chars": 95,
-      "checkpoint_attempts": 3,
+      "checkpoint_attempts": 4,
       "provider_error_attempts": 3,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
+      "recorded_successful_llm_calls": 1,
       "attempt_history": [
         {
           "checkpoint_line": 246,
@@ -13119,6 +13219,18 @@
           "input_tokens": 0,
           "output_tokens": 0,
           "pass_round": null
+        },
+        {
+          "checkpoint_line": 360,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 394.0,
+          "llm_calls": 1,
+          "input_tokens": 1323,
+          "output_tokens": 63057,
+          "pass_round": 0
         }
       ],
       "repair_status": null,

@@ -3,21 +3,21 @@
     "repository": "tslearn",
     "cell": "A1",
     "api": "check_dataset",
-    "outcome": "Waiting for provider / retry",
-    "test_execution": "No test code executed for this provider attempt",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
     "target_api_reached": "Not independently verified",
-    "latest_native_attempt_s": 599.5,
-    "retained_checkpoint_events": 4,
-    "retained_attempt_total_s": 2398.7,
+    "latest_native_attempt_s": 394.0,
+    "retained_checkpoint_events": 5,
+    "retained_attempt_total_s": 2792.7,
     "retained_504_events": 4,
     "retained_cooldown_deferrals": 0,
     "historical_idle_retry_s": null,
-    "measured_provider_invocations": 0,
-    "last_provider_s": null,
+    "measured_provider_invocations": 1,
+    "last_provider_s": 391.3508127499954,
     "last_retry_interval_s": null,
     "next_provider_retry_epoch": null,
-    "transport_policy": "Historical/uninstrumented",
-    "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+    "transport_policy": "d3dc72bd6e8ae61bf387f53095432a592ef5ad022245486ca7883f4a0dfff6ed",
+    "error": null,
     "details": "api_details/28fabcf74d6a5c430a2f.json"
   },
   "native_row": {
@@ -25,34 +25,36 @@
     "doc_source": "original",
     "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
     "execution_evidence": {
-      "status": "fail",
+      "status": "pass",
       "rounds": [
         {
           "round": 0,
-          "status": "fail",
-          "category": "llm-error",
-          "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}"
+          "status": "pass"
         }
       ],
-      "error_category": "llm-error",
-      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
-      "code": "",
+      "code": "from tslearn.utils import check_dataset\n\n# check_dataset ensures the input is a valid time-series dataset (n_ts, sz, d)\n# and returns it as a 3D numpy array.\nX_checked = check_dataset(X)\n\nassert X_checked.shape == (8, 40, 1), f\"Expected shape (8, 40, 1), got {X_checked.shape}\"\nassert X_checked.ndim == 3, \"check_dataset should return a 3D array\"\n\nprint(f\"__CHECK__ check_dataset {X_checked.shape}\")",
       "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_check_dataset/api_test.py",
-      "exit_code": null,
-      "stdout_tail": "",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ check_dataset (8, 40, 1)\n__DONE__\n",
       "stderr_tail": ""
     },
-    "status": "fail",
+    "status": "pass",
     "attempts": 1,
-    "pass_round": null,
-    "wall_s": 599.5,
-    "llm_calls": 0,
-    "input_tokens": 0,
-    "output_tokens": 0,
-    "by_model": {},
-    "error_category": "llm-error",
-    "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
-    "locus": "",
+    "pass_round": 0,
+    "wall_s": 394.0,
+    "llm_calls": 1,
+    "input_tokens": 1323,
+    "output_tokens": 63057,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 1323,
+        "output_tokens": 63057
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
     "doc_chars": 95,
     "document_sha256": "dad418056463fcf1f2f4d7471272350c2829b8d022828ac70a45e37adf1c85dc",
     "source": "tslearn/tslearn/utils/utils.py:548",
@@ -60,7 +62,7 @@
     "codebase_frames": null
   },
   "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/comprehension_progress.jsonl",
-  "source_sha256": "4ca70c7e49918ea0255c8c3116fb68f6223e7876008ec19702122502f354febb",
+  "source_sha256": "12b783c5a63c4efda0a09ebd57e8b0702adf4621aae57163960de0212e1bce4c",
   "checkpoint_events": [
     {
       "name": "check_dataset",
@@ -199,9 +201,146 @@
       "source": "tslearn/tslearn/utils/utils.py:548",
       "source_other_sites": 0,
       "codebase_frames": null
+    },
+    {
+      "name": "check_dataset",
+      "doc_source": "original",
+      "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "from tslearn.utils import check_dataset\n\n# check_dataset ensures the input is a valid time-series dataset (n_ts, sz, d)\n# and returns it as a 3D numpy array.\nX_checked = check_dataset(X)\n\nassert X_checked.shape == (8, 40, 1), f\"Expected shape (8, 40, 1), got {X_checked.shape}\"\nassert X_checked.ndim == 3, \"check_dataset should return a 3D array\"\n\nprint(f\"__CHECK__ check_dataset {X_checked.shape}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_check_dataset/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ check_dataset (8, 40, 1)\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 394.0,
+      "llm_calls": 1,
+      "input_tokens": 1323,
+      "output_tokens": 63057,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1323,
+          "output_tokens": 63057
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 95,
+      "document_sha256": "dad418056463fcf1f2f4d7471272350c2829b8d022828ac70a45e37adf1c85dc",
+      "source": "tslearn/tslearn/utils/utils.py:548",
+      "source_other_sites": 0,
+      "codebase_frames": null
     }
   ],
-  "provider_timing": [],
-  "transport_events": [],
+  "provider_timing": [
+    {
+      "id": "52ffff6c49724ad290246e795ac8faec",
+      "start_epoch": 1788917550.589361,
+      "end_epoch": 1788917941.944705,
+      "provider_wall_s": 391.3508127499954,
+      "since_previous_provider_end_s": null,
+      "outcome": "invocation_success",
+      "retry_after_epoch": null,
+      "policy_sha256": "d3dc72bd6e8ae61bf387f53095432a592ef5ad022245486ca7883f4a0dfff6ed"
+    }
+  ],
+  "transport_events": [
+    {
+      "adapter_sha256": "c78fd8935b37fdd9337d9e036be2e4c864195eb052d1335cbff68d5a5fb96697",
+      "api": "check_dataset",
+      "epoch": 1788917550.589361,
+      "event": "invocation_start",
+      "harness_setup_version": "aideal-output-setup-v1",
+      "invocation_id": "52ffff6c49724ad290246e795ac8faec",
+      "model": "google:gemini-3.1-pro-preview",
+      "outer_deadline_s": 630,
+      "pid": 50349,
+      "policy_sha256": "d3dc72bd6e8ae61bf387f53095432a592ef5ad022245486ca7883f4a0dfff6ed",
+      "previous_end_epoch": null,
+      "prompt_chars": 6126,
+      "prompt_sha256": "6f71fccd86da26e47515394b1a9ae555c643eba8bd125e5db4944536b82361d5",
+      "request_key": "a8c9a0dc352e65b0112d172da64ce55dd458f34da0f245821ab703bf6fa5e6ec",
+      "request_timeout_s": 600,
+      "sdk_attempts": 1,
+      "transport_version": "aideal-provider-transport-v2"
+    },
+    {
+      "actual_timeout_s": 600.0,
+      "adapter_sha256": "c78fd8935b37fdd9337d9e036be2e4c864195eb052d1335cbff68d5a5fb96697",
+      "api": "check_dataset",
+      "epoch": 1788917552.896767,
+      "event": "sdk_attempt_start",
+      "harness_setup_version": "aideal-output-setup-v1",
+      "invocation_id": "52ffff6c49724ad290246e795ac8faec",
+      "model": "google:gemini-3.1-pro-preview",
+      "outer_deadline_s": 630,
+      "payload_sha256": "7e559a59d20f10bc1f94df0933b3d9bb4694c9e46c60ee3b96545d839f03b881",
+      "pid": 50349,
+      "policy_sha256": "d3dc72bd6e8ae61bf387f53095432a592ef5ad022245486ca7883f4a0dfff6ed",
+      "prompt_chars": 6126,
+      "prompt_sha256": "6f71fccd86da26e47515394b1a9ae555c643eba8bd125e5db4944536b82361d5",
+      "request_key": "a8c9a0dc352e65b0112d172da64ce55dd458f34da0f245821ab703bf6fa5e6ec",
+      "request_timeout_s": 600,
+      "sdk_attempt_id": "642ae6e3370a4dfda37ffdf3c4b14f7d",
+      "sdk_attempts": 1,
+      "server_timeout_s": "600",
+      "transport_version": "aideal-provider-transport-v2"
+    },
+    {
+      "actual_timeout_s": 600.0,
+      "adapter_sha256": "c78fd8935b37fdd9337d9e036be2e4c864195eb052d1335cbff68d5a5fb96697",
+      "api": "check_dataset",
+      "epoch": 1788917941.938207,
+      "event": "sdk_attempt_success",
+      "harness_setup_version": "aideal-output-setup-v1",
+      "invocation_id": "52ffff6c49724ad290246e795ac8faec",
+      "model": "google:gemini-3.1-pro-preview",
+      "outer_deadline_s": 630,
+      "payload_sha256": "7e559a59d20f10bc1f94df0933b3d9bb4694c9e46c60ee3b96545d839f03b881",
+      "pid": 50349,
+      "policy_sha256": "d3dc72bd6e8ae61bf387f53095432a592ef5ad022245486ca7883f4a0dfff6ed",
+      "prompt_chars": 6126,
+      "prompt_sha256": "6f71fccd86da26e47515394b1a9ae555c643eba8bd125e5db4944536b82361d5",
+      "request_key": "a8c9a0dc352e65b0112d172da64ce55dd458f34da0f245821ab703bf6fa5e6ec",
+      "request_timeout_s": 600,
+      "sdk_attempt_id": "642ae6e3370a4dfda37ffdf3c4b14f7d",
+      "sdk_attempts": 1,
+      "server_timeout_s": "600",
+      "transport_version": "aideal-provider-transport-v2",
+      "wall_s": 389.0366247090278
+    },
+    {
+      "adapter_sha256": "c78fd8935b37fdd9337d9e036be2e4c864195eb052d1335cbff68d5a5fb96697",
+      "api": "check_dataset",
+      "epoch": 1788917941.944705,
+      "event": "invocation_success",
+      "harness_setup_version": "aideal-output-setup-v1",
+      "invocation_id": "52ffff6c49724ad290246e795ac8faec",
+      "model": "google:gemini-3.1-pro-preview",
+      "outer_deadline_s": 630,
+      "pid": 50349,
+      "policy_sha256": "d3dc72bd6e8ae61bf387f53095432a592ef5ad022245486ca7883f4a0dfff6ed",
+      "prompt_chars": 6126,
+      "prompt_sha256": "6f71fccd86da26e47515394b1a9ae555c643eba8bd125e5db4944536b82361d5",
+      "request_key": "a8c9a0dc352e65b0112d172da64ce55dd458f34da0f245821ab703bf6fa5e6ec",
+      "request_timeout_s": 600,
+      "response_sha256": "f22b0423114c90fc786ff3ff2781c9ceb66f160c288d85f36055a3cf44bbf2e5",
+      "sdk_attempts": 1,
+      "transport_version": "aideal-provider-transport-v2",
+      "wall_s": 391.3508127499954
+    }
+  ],
   "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
 }
