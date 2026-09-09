@@ -1,6 +1,6 @@
 # Automation status and deadline forecast
 
-Updated: 2026-09-08T22:16:02.380762-07:00. Hours to Wednesday 11 AM: 12.73.
+Updated: 2026-09-08T22:31:33.983072-07:00. Hours to Wednesday 11 AM: 12.47.
 
 **Whole-pipeline completion time remains unverified.** Estimates below cover remaining comprehension only; generation, document repair, and final validation are additional. Scenarios are not confidence intervals.
 
@@ -21,7 +21,7 @@ Updated: 2026-09-08T22:16:02.380762-07:00. Hours to Wednesday 11 AM: 12.73.
 
 Failure review queue: 330 entries. Mutable cross-condition path conflicts: 0.
 Deadline risks: No estimated comprehension stage exceeds available time; unmeasured stages still prevent a whole-pipeline assurance.
-Observation errors: 0. Observer health: `{"results": {"age_seconds": 35.4, "stale": false}, "data": {"age_seconds": 22.4, "stale": false}}`.
+Observation errors: 0. Observer health: `{"results": {"age_seconds": 54.5, "stale": false}, "data": {"age_seconds": 13.9, "stale": false}}`.
 
 - [Failure review queue](failure_review_queue.json): suggested causes, evidence, confidence, attempts and repair rounds.
 - [Resolved configuration bundles](config_bundles.json): actual profile, direct YAML layers, fixture bindings and recorded environments.
