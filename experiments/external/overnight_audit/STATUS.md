@@ -12,7 +12,7 @@ Deadline: 2026-09-09T11:00:00-07:00. This observer never starts, stops, or resta
 | thumbnailator | A2 | complete | 127 | 22 | 0 | 1 |
 | thumbnailator | B1 | pending | 0 | 0 | 149 | 0 |
 | thumbnailator | B2 | complete | 139 | 10 | 0 | 2 |
-| tslearn | A1 | partial | 11 | 36 | 188 | 152 |
+| tslearn | A1 | complete | 129 | 106 | 0 | 152 |
 | tslearn | A2 | complete | 175 | 60 | 0 | 83 |
 | tslearn | B1 | pending | 0 | 0 | 235 | 0 |
 | tslearn | B2 | complete | 217 | 18 | 0 | 0 |

@@ -2,7 +2,7 @@
 
 ID: `24cec3efaf9a7aad4548` · tslearn/A1 · **open**
 
-Evidence version: `f86c4f197655fbbe954e5e8386376bcfe2b40029027833e709413b45327fa820`
+Evidence version: `eb2fe097064b5cd1e7198a2b24dec40677c611253871bec307cb38c06660b13c`
 
 Candidate category: **unknown**. Confidence: **low**.
 
@@ -16,9 +16,9 @@ Source: `tslearn/tslearn/preprocessing/_synchronizer.py:78`. Native category: `i
 missing module/import: No module named 'keras'
 ```
 
-[Evidence ledger](../../../tslearn/A1/ledger.json) · [Saved evidence](../evidence/f86c4f197655fbbe954e5e8386376bcfe2b40029027833e709413b45327fa820.json)
+[Evidence ledger](../../../tslearn/A1/ledger.json) · [Saved evidence](../evidence/eb2fe097064b5cd1e7198a2b24dec40677c611253871bec307cb38c06660b13c.json)
 
-Recorded attempts: 1; provider errors: 0; document rounds: None.
+Recorded attempts: 0; provider errors: 0; document rounds: None.
 
 ## Proposed action
 

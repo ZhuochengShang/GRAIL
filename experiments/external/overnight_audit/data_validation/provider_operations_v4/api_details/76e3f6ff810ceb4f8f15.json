@@ -22,23 +22,6 @@
     "details": "api_details/76e3f6ff810ceb4f8f15.json"
   },
   "native_row": {
-    "name": "check_variable_length_input",
-    "doc_source": "original",
-    "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
-    "execution_evidence": {
-      "status": "pass",
-      "rounds": [
-        {
-          "round": 0,
-          "status": "pass"
-        }
-      ],
-      "code": "from tslearn.utils import check_variable_length_input\nimport numpy as np\n\n# Create a variable-length input: a list of 1D arrays of different lengths\nvar_len_input = [s1[:10], s2[:20], s1[:30]]\n\n# check_variable_length_input pads the arrays to the maximum length and returns a 3D array\npadded_dataset = check_variable_length_input(var_len_input)\n\n# Verify the output shape: (n_ts, max_sz, d) -> (3, 30, 1)\nassert padded_dataset.shape == (3, 30, 1), f\"Expected shape (3, 30, 1), got {padded_dataset.shape}\"\n\n# Verify that padding was applied correctly (NaNs at the end of shorter series)\nassert np.isnan(padded_dataset[0, 10:, 0]).all(), \"Expected NaNs for padded values in the first series\"\nassert not np.isnan(padded_dataset[0, :10, 0]).any(), \"Expected no NaNs in the original part of the first series\"\n\nprint(f\"__CHECK__ check_variable_length_input shape {padded_dataset.shape}\")",
-      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_check_variable_length_input/api_test.py",
-      "exit_code": 0,
-      "stdout_tail": "__CHECK__ check_variable_length_input shape (3, 30, 1)\n__DONE__\n",
-      "stderr_tail": ""
-    },
     "status": "pass",
     "attempts": 1,
     "pass_round": 0,
@@ -60,10 +43,27 @@
     "document_sha256": "aff7648d1c1a1e8a733f0fac37c954136ce4122dcee2e8c309c74d8110f7dd24",
     "source": "tslearn/tslearn/utils/utils.py:39",
     "source_other_sites": 0,
-    "codebase_frames": null
+    "codebase_frames": null,
+    "evidence_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+    "name": "check_variable_length_input",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "from tslearn.utils import check_variable_length_input\nimport numpy as np\n\n# Create a variable-length input: a list of 1D arrays of different lengths\nvar_len_input = [s1[:10], s2[:20], s1[:30]]\n\n# check_variable_length_input pads the arrays to the maximum length and returns a 3D array\npadded_dataset = check_variable_length_input(var_len_input)\n\n# Verify the output shape: (n_ts, max_sz, d) -> (3, 30, 1)\nassert padded_dataset.shape == (3, 30, 1), f\"Expected shape (3, 30, 1), got {padded_dataset.shape}\"\n\n# Verify that padding was applied correctly (NaNs at the end of shorter series)\nassert np.isnan(padded_dataset[0, 10:, 0]).all(), \"Expected NaNs for padded values in the first series\"\nassert not np.isnan(padded_dataset[0, :10, 0]).any(), \"Expected no NaNs in the original part of the first series\"\n\nprint(f\"__CHECK__ check_variable_length_input shape {padded_dataset.shape}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_check_variable_length_input/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ check_variable_length_input shape (3, 30, 1)\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea"
   },
-  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/comprehension_progress.jsonl",
-  "source_sha256": "b4287c8dab0477deb5cf496b7e20828b3c324cf40079bad0f9226303a497f1f5",
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/docs/eval/A1/comprehension.json",
+  "source_sha256": "2a4d40efff4c3b05dd7ae388c57096087c7d601696af7a4221dbdd75cc944bfa",
   "checkpoint_events": [
     {
       "name": "check_variable_length_input",

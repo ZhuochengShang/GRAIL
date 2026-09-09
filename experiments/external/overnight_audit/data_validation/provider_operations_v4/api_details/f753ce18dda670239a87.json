@@ -22,27 +22,6 @@
     "details": "api_details/f753ce18dda670239a87.json"
   },
   "native_row": {
-    "name": "TimeSeriesDBSCAN",
-    "doc_source": "original",
-    "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
-    "execution_evidence": {
-      "status": "fail",
-      "rounds": [
-        {
-          "round": 0,
-          "status": "fail",
-          "category": "runtime",
-          "error": "TypeError: TimeSeriesDBSCAN.__init__() got an unexpected keyword argument 'min_samples'"
-        }
-      ],
-      "error_category": "runtime",
-      "error": "TypeError: TimeSeriesDBSCAN.__init__() got an unexpected keyword argument 'min_samples'",
-      "code": "from tslearn.clustering import TimeSeriesDBSCAN\n\ndbscan = TimeSeriesDBSCAN(min_samples=2, eps=1.0, metric=\"dtw\")\nlabels = dbscan.fit_predict(X)\n\nassert labels.shape == (len(X),)\nassert hasattr(dbscan, \"labels_\")\nassert hasattr(dbscan, \"core_ts_indices_\")\nassert len(dbscan.labels_) == len(X)\n\nprint(f\"__CHECK__ TimeSeriesDBSCAN {labels.shape}\")",
-      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_TimeSeriesDBSCAN/api_test.py",
-      "exit_code": 1,
-      "stdout_tail": "",
-      "stderr_tail": "__RUN_ERR__ TypeError: TimeSeriesDBSCAN.__init__() got an unexpected keyword argument 'min_samples'\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_TimeSeriesDBSCAN/api_test.py\", line 53, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_TimeSeriesDBSCAN/api_test.py\", line 48, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_TimeSeriesDBSCAN/api_test.py\", line 36, in api_test\n    dbscan = TimeSeriesDBSCAN(min_samples=2, eps=1.0, metric=\"dtw\")\nTypeError: TimeSeriesDBSCAN.__init__() got an unexpected keyword argument 'min_samples'\n"
-    },
     "status": "fail",
     "attempts": 1,
     "pass_round": null,
@@ -64,10 +43,31 @@
     "document_sha256": "571e971b93ebc5187b583b2140946b70c01166714c5bba978b31f539153b8cab",
     "source": "tslearn/tslearn/clustering/dbscan.py:19",
     "source_other_sites": 0,
-    "codebase_frames": null
+    "codebase_frames": null,
+    "evidence_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+    "name": "TimeSeriesDBSCAN",
+    "execution_evidence": {
+      "status": "fail",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "fail",
+          "category": "runtime",
+          "error": "TypeError: TimeSeriesDBSCAN.__init__() got an unexpected keyword argument 'min_samples'"
+        }
+      ],
+      "error_category": "runtime",
+      "error": "TypeError: TimeSeriesDBSCAN.__init__() got an unexpected keyword argument 'min_samples'",
+      "code": "from tslearn.clustering import TimeSeriesDBSCAN\n\ndbscan = TimeSeriesDBSCAN(min_samples=2, eps=1.0, metric=\"dtw\")\nlabels = dbscan.fit_predict(X)\n\nassert labels.shape == (len(X),)\nassert hasattr(dbscan, \"labels_\")\nassert hasattr(dbscan, \"core_ts_indices_\")\nassert len(dbscan.labels_) == len(X)\n\nprint(f\"__CHECK__ TimeSeriesDBSCAN {labels.shape}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_TimeSeriesDBSCAN/api_test.py",
+      "exit_code": 1,
+      "stdout_tail": "",
+      "stderr_tail": "__RUN_ERR__ TypeError: TimeSeriesDBSCAN.__init__() got an unexpected keyword argument 'min_samples'\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_TimeSeriesDBSCAN/api_test.py\", line 53, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_TimeSeriesDBSCAN/api_test.py\", line 48, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_TimeSeriesDBSCAN/api_test.py\", line 36, in api_test\n    dbscan = TimeSeriesDBSCAN(min_samples=2, eps=1.0, metric=\"dtw\")\nTypeError: TimeSeriesDBSCAN.__init__() got an unexpected keyword argument 'min_samples'\n"
+    },
+    "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea"
   },
-  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/comprehension_progress.jsonl",
-  "source_sha256": "b4287c8dab0477deb5cf496b7e20828b3c324cf40079bad0f9226303a497f1f5",
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/docs/eval/A1/comprehension.json",
+  "source_sha256": "2a4d40efff4c3b05dd7ae388c57096087c7d601696af7a4221dbdd75cc944bfa",
   "checkpoint_events": [
     {
       "name": "TimeSeriesDBSCAN",

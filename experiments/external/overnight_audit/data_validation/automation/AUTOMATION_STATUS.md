@@ -1,6 +1,6 @@
 # Automation status and deadline forecast
 
-Updated: 2026-09-08T21:30:27.251841-07:00. Hours to Wednesday 11 AM: 13.49.
+Updated: 2026-09-08T21:44:59.924611-07:00. Hours to Wednesday 11 AM: 13.25.
 
 **Whole-pipeline completion time remains unverified.** Estimates below cover remaining comprehension only; generation, document repair, and final validation are additional. Scenarios are not confidence intervals.
 
@@ -14,14 +14,14 @@ Updated: 2026-09-08T21:30:27.251841-07:00. Hours to Wednesday 11 AM: 13.49.
 | thumbnailator/A2 | 0 | complete | 0.00 / 0.00 / 0.00 |
 | thumbnailator/B1 | 149 | insufficient_observations | unknown |
 | thumbnailator/B2 | 0 | complete | 0.00 / 0.00 / 0.00 |
-| tslearn/A1 | 189 | estimated | 19.55 / 20.75 / 43.08 |
+| tslearn/A1 | 0 | complete | 0.00 / 0.00 / 0.00 |
 | tslearn/A2 | 0 | complete | 0.00 / 0.00 / 0.00 |
 | tslearn/B1 | 235 | insufficient_observations | unknown |
 | tslearn/B2 | 0 | complete | 0.00 / 0.00 / 0.00 |
 
-Failure review queue: 260 entries. Mutable cross-condition path conflicts: 0.
-Deadline risks: tslearn/A1: estimated
-Observation errors: 0. Observer health: `{"results": {"age_seconds": 38.9, "stale": false}, "data": {"age_seconds": 46.1, "stale": false}}`.
+Failure review queue: 330 entries. Mutable cross-condition path conflicts: 0.
+Deadline risks: No estimated comprehension stage exceeds available time; unmeasured stages still prevent a whole-pipeline assurance.
+Observation errors: 0. Observer health: `{"results": {"age_seconds": 58.5, "stale": false}, "data": {"age_seconds": 38.6, "stale": false}}`.
 
 - [Failure review queue](failure_review_queue.json): suggested causes, evidence, confidence, attempts and repair rounds.
 - [Resolved configuration bundles](config_bundles.json): actual profile, direct YAML layers, fixture bindings and recorded environments.

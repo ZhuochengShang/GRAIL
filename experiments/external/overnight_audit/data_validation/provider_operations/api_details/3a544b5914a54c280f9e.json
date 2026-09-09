@@ -21,31 +21,6 @@
     "details": "api_details/3a544b5914a54c280f9e.json"
   },
   "native_row": {
-    "name": "set_weights",
-    "doc_source": "original",
-    "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
-    "execution_evidence": {
-      "status": "fail",
-      "rounds": [
-        {
-          "round": 0,
-          "status": "fail",
-          "category": "infra",
-          "error": "missing module/import: No module named 'keras'",
-          "codebase_frames": [
-            "tslearn/tslearn/__init__.py:14",
-            "tslearn/tslearn/shapelets/shapelets.py:7"
-          ]
-        }
-      ],
-      "error_category": "infra",
-      "error": "missing module/import: No module named 'keras'",
-      "code": "from tslearn.shapelets import LearningShapelets\nimport numpy as np\n\n# Initialize and fit a small LearningShapelets model\nclf = LearningShapelets(n_shapelets_per_size={3: 2}, max_iter=1, batch_size=8, random_state=42)\nclf.fit(X, y)\n\n# Retrieve the current weights\nweights = clf.get_weights()\n\n# Modify the weights and set them back using set_weights\nnew_weights = [w + 1.0 for w in weights]\nclf.set_weights(new_weights)\n\n# Retrieve the updated weights to verify the setter worked\nupdated_weights = clf.get_weights()\n\nassert len(updated_weights) == len(weights), \"Number of weight arrays changed unexpectedly.\"\nassert np.allclose(updated_weights[0], weights[0] + 1.0), \"Weights were not updated correctly by set_weights.\"\n\nprint(f\"__CHECK__ set_weights {len(updated_weights)}\")",
-      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_set_weights/api_test.py",
-      "exit_code": 1,
-      "stdout_tail": "",
-      "stderr_tail": "__RUN_ERR__ ModuleNotFoundError: No module named 'keras'\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_set_weights/api_test.py\", line 63, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_set_weights/api_test.py\", line 58, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_set_weights/api_test.py\", line 34, in api_test\n    from tslearn.shapelets import LearningShapelets\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/shapelets/__init__.py\", line 14, in <module>\n    from .shapelets import (\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/shapelets/shapelets.py\", line 7, in <module>\n    from keras.layers import (\nModuleNotFoundError: No module named 'keras'\n"
-    },
     "status": "fail",
     "attempts": 1,
     "pass_round": null,
@@ -70,10 +45,35 @@
     "codebase_frames": [
       "tslearn/tslearn/__init__.py:14",
       "tslearn/tslearn/shapelets/shapelets.py:7"
-    ]
+    ],
+    "evidence_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+    "name": "set_weights",
+    "execution_evidence": {
+      "status": "fail",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "fail",
+          "category": "infra",
+          "error": "missing module/import: No module named 'keras'",
+          "codebase_frames": [
+            "tslearn/tslearn/__init__.py:14",
+            "tslearn/tslearn/shapelets/shapelets.py:7"
+          ]
+        }
+      ],
+      "error_category": "infra",
+      "error": "missing module/import: No module named 'keras'",
+      "code": "from tslearn.shapelets import LearningShapelets\nimport numpy as np\n\n# Initialize and fit a small LearningShapelets model\nclf = LearningShapelets(n_shapelets_per_size={3: 2}, max_iter=1, batch_size=8, random_state=42)\nclf.fit(X, y)\n\n# Retrieve the current weights\nweights = clf.get_weights()\n\n# Modify the weights and set them back using set_weights\nnew_weights = [w + 1.0 for w in weights]\nclf.set_weights(new_weights)\n\n# Retrieve the updated weights to verify the setter worked\nupdated_weights = clf.get_weights()\n\nassert len(updated_weights) == len(weights), \"Number of weight arrays changed unexpectedly.\"\nassert np.allclose(updated_weights[0], weights[0] + 1.0), \"Weights were not updated correctly by set_weights.\"\n\nprint(f\"__CHECK__ set_weights {len(updated_weights)}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_set_weights/api_test.py",
+      "exit_code": 1,
+      "stdout_tail": "",
+      "stderr_tail": "__RUN_ERR__ ModuleNotFoundError: No module named 'keras'\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_set_weights/api_test.py\", line 63, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_set_weights/api_test.py\", line 58, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_set_weights/api_test.py\", line 34, in api_test\n    from tslearn.shapelets import LearningShapelets\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/shapelets/__init__.py\", line 14, in <module>\n    from .shapelets import (\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/shapelets/shapelets.py\", line 7, in <module>\n    from keras.layers import (\nModuleNotFoundError: No module named 'keras'\n"
+    },
+    "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea"
   },
-  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/comprehension_progress.jsonl",
-  "source_sha256": "b4287c8dab0477deb5cf496b7e20828b3c324cf40079bad0f9226303a497f1f5",
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/docs/eval/A1/comprehension.json",
+  "source_sha256": "2a4d40efff4c3b05dd7ae388c57096087c7d601696af7a4221dbdd75cc944bfa",
   "checkpoint_events": [
     {
       "name": "set_weights",

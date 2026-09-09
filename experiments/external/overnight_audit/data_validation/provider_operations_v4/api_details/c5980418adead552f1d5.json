@@ -22,27 +22,6 @@
     "details": "api_details/c5980418adead552f1d5.json"
   },
   "native_row": {
-    "name": "is_float",
-    "doc_source": "original",
-    "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
-    "execution_evidence": {
-      "status": "fail",
-      "rounds": [
-        {
-          "round": 0,
-          "status": "fail",
-          "category": "runtime",
-          "error": "AssertionError: Expected float array to be identified as float"
-        }
-      ],
-      "error_category": "runtime",
-      "error": "AssertionError: Expected float array to be identified as float",
-      "code": "import tslearn.backend\n\ntry:\n    # Attempt to resolve the backend and call is_float\n    backend = tslearn.backend.instantiate_backend(\"numpy\")\n    \n    # Test with a float array\n    float_array = backend.array([1.0, 2.0, 3.0])\n    result_float = backend.is_float(float_array)\n    \n    # Test with an integer array\n    int_array = backend.array([1, 2, 3])\n    result_int = backend.is_float(int_array)\n    \n    assert result_float is True, \"Expected float array to be identified as float\"\n    assert result_int is False, \"Expected integer array to not be identified as float\"\n    \n    print(f\"__CHECK__ is_float {result_float}\")\nexcept AttributeError:\n    assert False, \"The documented contract is insufficient to verify the result or is_float is not exposed as expected.\"",
-      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_is_float/api_test.py",
-      "exit_code": 1,
-      "stdout_tail": "",
-      "stderr_tail": "__RUN_ERR__ AssertionError: Expected float array to be identified as float\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_is_float/api_test.py\", line 62, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_is_float/api_test.py\", line 57, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_is_float/api_test.py\", line 48, in api_test\n    assert result_float is True, \"Expected float array to be identified as float\"\nAssertionError: Expected float array to be identified as float\n"
-    },
     "status": "fail",
     "attempts": 1,
     "pass_round": null,
@@ -64,10 +43,31 @@
     "document_sha256": "1d18eac4d18675cc6f00bbafca76cff74ac9f7c328e2071d9103bd98a87358e7",
     "source": "tslearn/tslearn/backend/numpy_backend.py:106",
     "source_other_sites": 1,
-    "codebase_frames": null
+    "codebase_frames": null,
+    "evidence_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+    "name": "is_float",
+    "execution_evidence": {
+      "status": "fail",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "fail",
+          "category": "runtime",
+          "error": "AssertionError: Expected float array to be identified as float"
+        }
+      ],
+      "error_category": "runtime",
+      "error": "AssertionError: Expected float array to be identified as float",
+      "code": "import tslearn.backend\n\ntry:\n    # Attempt to resolve the backend and call is_float\n    backend = tslearn.backend.instantiate_backend(\"numpy\")\n    \n    # Test with a float array\n    float_array = backend.array([1.0, 2.0, 3.0])\n    result_float = backend.is_float(float_array)\n    \n    # Test with an integer array\n    int_array = backend.array([1, 2, 3])\n    result_int = backend.is_float(int_array)\n    \n    assert result_float is True, \"Expected float array to be identified as float\"\n    assert result_int is False, \"Expected integer array to not be identified as float\"\n    \n    print(f\"__CHECK__ is_float {result_float}\")\nexcept AttributeError:\n    assert False, \"The documented contract is insufficient to verify the result or is_float is not exposed as expected.\"",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_is_float/api_test.py",
+      "exit_code": 1,
+      "stdout_tail": "",
+      "stderr_tail": "__RUN_ERR__ AssertionError: Expected float array to be identified as float\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_is_float/api_test.py\", line 62, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_is_float/api_test.py\", line 57, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_is_float/api_test.py\", line 48, in api_test\n    assert result_float is True, \"Expected float array to be identified as float\"\nAssertionError: Expected float array to be identified as float\n"
+    },
+    "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea"
   },
-  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/comprehension_progress.jsonl",
-  "source_sha256": "b4287c8dab0477deb5cf496b7e20828b3c324cf40079bad0f9226303a497f1f5",
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/docs/eval/A1/comprehension.json",
+  "source_sha256": "2a4d40efff4c3b05dd7ae388c57096087c7d601696af7a4221dbdd75cc944bfa",
   "checkpoint_events": [
     {
       "name": "is_float",

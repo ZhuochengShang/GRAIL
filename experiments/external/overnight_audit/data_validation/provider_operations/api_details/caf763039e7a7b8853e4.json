@@ -21,27 +21,6 @@
     "details": "api_details/caf763039e7a7b8853e4.json"
   },
   "native_row": {
-    "name": "is_numpy",
-    "doc_source": "original",
-    "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
-    "execution_evidence": {
-      "status": "fail",
-      "rounds": [
-        {
-          "round": 0,
-          "status": "fail",
-          "category": "runtime",
-          "error": "TypeError: 'bool' object is not callable"
-        }
-      ],
-      "error_category": "runtime",
-      "error": "TypeError: 'bool' object is not callable",
-      "code": "import tslearn.utils\n\ntry:\n    result = tslearn.utils.is_numpy(X)\n    assert result is True, \"Expected is_numpy to return True for a NumPy ndarray\"\n    print(f\"__CHECK__ is_numpy {result}\")\nexcept AttributeError:\n    # If it's not in tslearn.utils, it might be in tslearn.backend\n    import tslearn.backend\n    try:\n        result = tslearn.backend.is_numpy(X)\n        assert result is True, \"Expected is_numpy to return True for a NumPy ndarray\"\n        print(f\"__CHECK__ is_numpy {result}\")\n    except AttributeError:\n        # If it's a method on a Backend instance\n        backend = tslearn.backend.instantiate_backend(\"numpy\")\n        result = backend.is_numpy(X)\n        assert result is True, \"Expected is_numpy to return True for a NumPy ndarray\"\n        print(f\"__CHECK__ is_numpy {result}\")",
-      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_is_numpy/api_test.py",
-      "exit_code": 1,
-      "stdout_tail": "",
-      "stderr_tail": "__RUN_ERR__ TypeError: 'bool' object is not callable\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_is_numpy/api_test.py\", line 37, in api_test\n    result = tslearn.utils.is_numpy(X)\nAttributeError: module 'tslearn.utils' has no attribute 'is_numpy'\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_is_numpy/api_test.py\", line 44, in api_test\n    result = tslearn.backend.is_numpy(X)\nAttributeError: module 'tslearn.backend' has no attribute 'is_numpy'\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_is_numpy/api_test.py\", line 61, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_is_numpy/api_test.py\", line 56, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_is_numpy/api_test.py\", line 50, in api_test\n    result = backend.is_numpy(X)\nTypeError: 'bool' object is not callable\n"
-    },
     "status": "fail",
     "attempts": 1,
     "pass_round": null,
@@ -63,10 +42,31 @@
     "document_sha256": "35f8f1f0c54342c1c226b0d665bd195fc2ec91a0aa3939ebc39794008c94d6dc",
     "source": "tslearn/tslearn/backend/backend.py:77",
     "source_other_sites": 0,
-    "codebase_frames": null
+    "codebase_frames": null,
+    "evidence_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+    "name": "is_numpy",
+    "execution_evidence": {
+      "status": "fail",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "fail",
+          "category": "runtime",
+          "error": "TypeError: 'bool' object is not callable"
+        }
+      ],
+      "error_category": "runtime",
+      "error": "TypeError: 'bool' object is not callable",
+      "code": "import tslearn.utils\n\ntry:\n    result = tslearn.utils.is_numpy(X)\n    assert result is True, \"Expected is_numpy to return True for a NumPy ndarray\"\n    print(f\"__CHECK__ is_numpy {result}\")\nexcept AttributeError:\n    # If it's not in tslearn.utils, it might be in tslearn.backend\n    import tslearn.backend\n    try:\n        result = tslearn.backend.is_numpy(X)\n        assert result is True, \"Expected is_numpy to return True for a NumPy ndarray\"\n        print(f\"__CHECK__ is_numpy {result}\")\n    except AttributeError:\n        # If it's a method on a Backend instance\n        backend = tslearn.backend.instantiate_backend(\"numpy\")\n        result = backend.is_numpy(X)\n        assert result is True, \"Expected is_numpy to return True for a NumPy ndarray\"\n        print(f\"__CHECK__ is_numpy {result}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_is_numpy/api_test.py",
+      "exit_code": 1,
+      "stdout_tail": "",
+      "stderr_tail": "__RUN_ERR__ TypeError: 'bool' object is not callable\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_is_numpy/api_test.py\", line 37, in api_test\n    result = tslearn.utils.is_numpy(X)\nAttributeError: module 'tslearn.utils' has no attribute 'is_numpy'\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_is_numpy/api_test.py\", line 44, in api_test\n    result = tslearn.backend.is_numpy(X)\nAttributeError: module 'tslearn.backend' has no attribute 'is_numpy'\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_is_numpy/api_test.py\", line 61, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_is_numpy/api_test.py\", line 56, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_is_numpy/api_test.py\", line 50, in api_test\n    result = backend.is_numpy(X)\nTypeError: 'bool' object is not callable\n"
+    },
+    "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea"
   },
-  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/comprehension_progress.jsonl",
-  "source_sha256": "b4287c8dab0477deb5cf496b7e20828b3c324cf40079bad0f9226303a497f1f5",
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/docs/eval/A1/comprehension.json",
+  "source_sha256": "2a4d40efff4c3b05dd7ae388c57096087c7d601696af7a4221dbdd75cc944bfa",
   "checkpoint_events": [
     {
       "name": "is_numpy",

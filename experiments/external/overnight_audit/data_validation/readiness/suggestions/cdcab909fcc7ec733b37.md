@@ -2,7 +2,7 @@
 
 ID: `cdcab909fcc7ec733b37` · tslearn/A1 · **open**
 
-Evidence version: `44f06adb6bcf85e2b27bd0ba17bb51fe328dfe0f32afa6f8301a26c386c11e7c`
+Evidence version: `9a4ffec8a8e5bf7ca89fe832c21d32d7db8ff74a1a773103681b6881bc66e9d8`
 
 Candidate category: **assertion-or-behavior**. Confidence: **medium**.
 
@@ -16,9 +16,9 @@ Source: `tslearn/tslearn/clustering/utils.py:225`. Native category: `runtime`.
 AssertionError: The documented contract is insufficient to verify the result.
 ```
 
-[Evidence ledger](../../../tslearn/A1/ledger.json) · [Saved evidence](../evidence/44f06adb6bcf85e2b27bd0ba17bb51fe328dfe0f32afa6f8301a26c386c11e7c.json)
+[Evidence ledger](../../../tslearn/A1/ledger.json) · [Saved evidence](../evidence/9a4ffec8a8e5bf7ca89fe832c21d32d7db8ff74a1a773103681b6881bc66e9d8.json)
 
-Recorded attempts: 1; provider errors: 0; document rounds: None.
+Recorded attempts: 0; provider errors: 0; document rounds: None.
 
 ## Proposed action
 

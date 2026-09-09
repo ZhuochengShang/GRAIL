@@ -2,52 +2,6 @@
   "schema_version": 1,
   "cards": [
     {
-      "id": "a9a5f5305a9c56f56d78",
-      "repository": "tslearn",
-      "cell": "A1",
-      "api": "from_numpy",
-      "evidence_version": "7896fd9189de7fc1691a75638f3e79a4dbaba4e9d35089f39d93f8be1f94c649",
-      "evidence": {
-        "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
-        "manifest_sha256": "42dd31265d4fd753eab37f00ea636b5e06bdd2b2203e48be45dc0be6569b967f",
-        "api": "from_numpy",
-        "status": "fail",
-        "native_category": "llm-error",
-        "error": "RemoteProtocolError: peer closed connection without sending complete message body (incomplete chunked read)",
-        "source": "tslearn/tslearn/backend/numpy_backend.py:98",
-        "review_evidence": null,
-        "script_sha256": null
-      },
-      "title": "from_numpy: Investigate provider failures and recorded retry behavior",
-      "change_kind": "execution_infrastructure",
-      "candidate_category": "provider",
-      "confidence": "high",
-      "diagnosis": "Recorded provider failure; preserve and retry under existing policy.",
-      "proposed_action": "Check quota/cooldown and error histories; preserve existing retry policy and completed checkpoints.",
-      "validation_criteria": "Reattempt only compatible unresolved requests under authorized policy; report recovery separately from documentation benefit.",
-      "expected_benefit": "Hypothesis only; measure against the pinned baseline before claiming improvement.",
-      "risks": [
-        "Changing inputs, harness, prompts or code changes the protocol.",
-        "Source-informed review must not leak into the audience treatment."
-      ],
-      "attempts": 4,
-      "provider_error_attempts": 4,
-      "document_rounds": null,
-      "script": null,
-      "allowed_executors": [
-        "human",
-        "agent"
-      ],
-      "default_execution": "disabled",
-      "priority": "execution_blocker",
-      "evidence_ledger": "tslearn/A1/ledger.json",
-      "evidence_ledger_sha256": "a64ca568f6ae1aff287ac2465572ca75afce09755dda6978bd1921413bc3a4a9",
-      "review": {
-        "status": "open",
-        "events": []
-      }
-    },
-    {
       "id": "8c1892028fee0fa4c019",
       "repository": "mir_eval",
       "cell": "A2",
@@ -6834,6 +6788,466 @@
       }
     },
     {
+      "id": "fde0dbe3dea078c863e1",
+      "repository": "tslearn",
+      "cell": "A1",
+      "api": "Backend",
+      "evidence_version": "09bfdc68d9ee557fe1f24abae38083945ff934d1ed4269cede1fd54499b27589",
+      "evidence": {
+        "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+        "manifest_sha256": "42dd31265d4fd753eab37f00ea636b5e06bdd2b2203e48be45dc0be6569b967f",
+        "api": "Backend",
+        "status": "fail",
+        "native_category": "infra",
+        "error": "missing module/import: No module named 'tslearn.backends'",
+        "source": "tslearn/tslearn/backend/backend.py:55",
+        "review_evidence": null,
+        "script_sha256": "4559581ca8c2299306813173a1701790bf0b8cfe6420dc4ff2c19595cb5cf4e6"
+      },
+      "title": "Backend: Investigate the observed API-use barrier",
+      "change_kind": "investigation",
+      "candidate_category": "unknown",
+      "confidence": "low",
+      "diagnosis": "Source, supplied document, and script review required.",
+      "proposed_action": "Source, supplied document, and script review required.",
+      "validation_criteria": "Reproduce in an isolated diagnostic; establish input, call and assertion validity before attributing a documentation or code defect.",
+      "expected_benefit": "Hypothesis only; measure against the pinned baseline before claiming improvement.",
+      "risks": [
+        "Changing inputs, harness, prompts or code changes the protocol.",
+        "Source-informed review must not leak into the audience treatment."
+      ],
+      "attempts": 0,
+      "provider_error_attempts": 0,
+      "document_rounds": null,
+      "script": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_Backend/api_test.py",
+      "allowed_executors": [
+        "human",
+        "agent"
+      ],
+      "default_execution": "disabled",
+      "priority": "needs_diagnosis",
+      "evidence_ledger": "tslearn/A1/ledger.json",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
+      "review": {
+        "status": "open",
+        "events": []
+      }
+    },
+    {
+      "id": "3031292af0c7a888c372",
+      "repository": "tslearn",
+      "cell": "A1",
+      "api": "BaseModelPackage",
+      "evidence_version": "f2e4b644155c6df795f00d08486e35f6114657261560e6e5dbcc38d11eb715a2",
+      "evidence": {
+        "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+        "manifest_sha256": "42dd31265d4fd753eab37f00ea636b5e06bdd2b2203e48be45dc0be6569b967f",
+        "api": "BaseModelPackage",
+        "status": "fail",
+        "native_category": "runtime",
+        "error": "AttributeError: 'DummyModel' object has no attribute 'to_dict'",
+        "source": "tslearn/tslearn/bases/bases.py:78",
+        "review_evidence": null,
+        "script_sha256": "f9700f856e2618a702712ae044d359aa1dd1fa5a892fbaef4a0e70baedca9a16"
+      },
+      "title": "BaseModelPackage: Investigate the observed API-use barrier",
+      "change_kind": "investigation",
+      "candidate_category": "api-identity-or-version",
+      "confidence": "medium",
+      "diagnosis": "Verify intended owner and installed version; not proof of missing dependency.",
+      "proposed_action": "Verify intended owner and installed version; not proof of missing dependency.",
+      "validation_criteria": "Reproduce in an isolated diagnostic; establish input, call and assertion validity before attributing a documentation or code defect.",
+      "expected_benefit": "Hypothesis only; measure against the pinned baseline before claiming improvement.",
+      "risks": [
+        "Changing inputs, harness, prompts or code changes the protocol.",
+        "Source-informed review must not leak into the audience treatment."
+      ],
+      "attempts": 0,
+      "provider_error_attempts": 0,
+      "document_rounds": null,
+      "script": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_BaseModelPackage/api_test.py",
+      "allowed_executors": [
+        "human",
+        "agent"
+      ],
+      "default_execution": "disabled",
+      "priority": "needs_diagnosis",
+      "evidence_ledger": "tslearn/A1/ledger.json",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
+      "review": {
+        "status": "open",
+        "events": []
+      }
+    },
+    {
+      "id": "4adc96ee48fc77032de0",
+      "repository": "tslearn",
+      "cell": "A1",
+      "api": "GlobalArgminPooling1D",
+      "evidence_version": "e362c89a6475dbeb0fce859545555b82f91411725531bd8800ffef558d02de8d",
+      "evidence": {
+        "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+        "manifest_sha256": "42dd31265d4fd753eab37f00ea636b5e06bdd2b2203e48be45dc0be6569b967f",
+        "api": "GlobalArgminPooling1D",
+        "status": "fail",
+        "native_category": "infra",
+        "error": "missing module/import: No module named 'tensorflow'",
+        "source": "tslearn/tslearn/shapelets/shapelets.py:97",
+        "review_evidence": null,
+        "script_sha256": "e10b821c6cae793546554b92453cb15f514369dae0fba45501651ef53ae0e021"
+      },
+      "title": "GlobalArgminPooling1D: Investigate the observed API-use barrier",
+      "change_kind": "investigation",
+      "candidate_category": "unknown",
+      "confidence": "low",
+      "diagnosis": "Source, supplied document, and script review required.",
+      "proposed_action": "Source, supplied document, and script review required.",
+      "validation_criteria": "Reproduce in an isolated diagnostic; establish input, call and assertion validity before attributing a documentation or code defect.",
+      "expected_benefit": "Hypothesis only; measure against the pinned baseline before claiming improvement.",
+      "risks": [
+        "Changing inputs, harness, prompts or code changes the protocol.",
+        "Source-informed review must not leak into the audience treatment."
+      ],
+      "attempts": 0,
+      "provider_error_attempts": 0,
+      "document_rounds": null,
+      "script": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_GlobalArgminPooling1D/api_test.py",
+      "allowed_executors": [
+        "human",
+        "agent"
+      ],
+      "default_execution": "disabled",
+      "priority": "needs_diagnosis",
+      "evidence_ledger": "tslearn/A1/ledger.json",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
+      "review": {
+        "status": "open",
+        "events": []
+      }
+    },
+    {
+      "id": "de3bc03b2f39342c7227",
+      "repository": "tslearn",
+      "cell": "A1",
+      "api": "GlobalMinPooling1D",
+      "evidence_version": "e5dc27ed222ff0fa47f06f25d823182f414dc829aa1f8511cd34eb48a61a1aa6",
+      "evidence": {
+        "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+        "manifest_sha256": "42dd31265d4fd753eab37f00ea636b5e06bdd2b2203e48be45dc0be6569b967f",
+        "api": "GlobalMinPooling1D",
+        "status": "fail",
+        "native_category": "infra",
+        "error": "missing module/import: No module named 'tensorflow'",
+        "source": "tslearn/tslearn/shapelets/shapelets.py:66",
+        "review_evidence": null,
+        "script_sha256": "da521c089da897fbbbfaaece4fd1f1986f40b0e8e1d8bc27e4823ed2c7334184"
+      },
+      "title": "GlobalMinPooling1D: Investigate the observed API-use barrier",
+      "change_kind": "investigation",
+      "candidate_category": "unknown",
+      "confidence": "low",
+      "diagnosis": "Source, supplied document, and script review required.",
+      "proposed_action": "Source, supplied document, and script review required.",
+      "validation_criteria": "Reproduce in an isolated diagnostic; establish input, call and assertion validity before attributing a documentation or code defect.",
+      "expected_benefit": "Hypothesis only; measure against the pinned baseline before claiming improvement.",
+      "risks": [
+        "Changing inputs, harness, prompts or code changes the protocol.",
+        "Source-informed review must not leak into the audience treatment."
+      ],
+      "attempts": 0,
+      "provider_error_attempts": 0,
+      "document_rounds": null,
+      "script": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_GlobalMinPooling1D/api_test.py",
+      "allowed_executors": [
+        "human",
+        "agent"
+      ],
+      "default_execution": "disabled",
+      "priority": "needs_diagnosis",
+      "evidence_ledger": "tslearn/A1/ledger.json",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
+      "review": {
+        "status": "open",
+        "events": []
+      }
+    },
+    {
+      "id": "cc09f29ef1dee034dd63",
+      "repository": "tslearn",
+      "cell": "A1",
+      "api": "KNeighborsTimeSeriesMixin",
+      "evidence_version": "cbc9676101dbf8e342d9d36c0f35da097f893d1071ac096e2204b865d3fb9434",
+      "evidence": {
+        "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+        "manifest_sha256": "42dd31265d4fd753eab37f00ea636b5e06bdd2b2203e48be45dc0be6569b967f",
+        "api": "KNeighborsTimeSeriesMixin",
+        "status": "fail",
+        "native_category": "infra",
+        "error": "missing module/import: cannot import name 'KNeighborsTimeSeriesMixin' from 'tslearn.neighbors' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/neighbors/",
+        "source": "tslearn/tslearn/neighbors/neighbors.py:28",
+        "review_evidence": null,
+        "script_sha256": "2e9a7640bc8593b6927fb548e5c66a2bf5b11fce1fe4ff5be1ab837dd40bb9be"
+      },
+      "title": "KNeighborsTimeSeriesMixin: Investigate the observed API-use barrier",
+      "change_kind": "investigation",
+      "candidate_category": "api-identity-or-version",
+      "confidence": "medium",
+      "diagnosis": "Verify intended owner and installed version; not proof of missing dependency.",
+      "proposed_action": "Verify intended owner and installed version; not proof of missing dependency.",
+      "validation_criteria": "Reproduce in an isolated diagnostic; establish input, call and assertion validity before attributing a documentation or code defect.",
+      "expected_benefit": "Hypothesis only; measure against the pinned baseline before claiming improvement.",
+      "risks": [
+        "Changing inputs, harness, prompts or code changes the protocol.",
+        "Source-informed review must not leak into the audience treatment."
+      ],
+      "attempts": 0,
+      "provider_error_attempts": 0,
+      "document_rounds": null,
+      "script": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_KNeighborsTimeSeriesMixin/api_test.py",
+      "allowed_executors": [
+        "human",
+        "agent"
+      ],
+      "default_execution": "disabled",
+      "priority": "needs_diagnosis",
+      "evidence_ledger": "tslearn/A1/ledger.json",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
+      "review": {
+        "status": "open",
+        "events": []
+      }
+    },
+    {
+      "id": "7b528f6b5e6a582cf4c8",
+      "repository": "tslearn",
+      "cell": "A1",
+      "api": "LearningShapelets",
+      "evidence_version": "9ad45a4e4945670499dfb7c39459dfbb65099724ad4324ef5cddc775b417ec60",
+      "evidence": {
+        "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+        "manifest_sha256": "42dd31265d4fd753eab37f00ea636b5e06bdd2b2203e48be45dc0be6569b967f",
+        "api": "LearningShapelets",
+        "status": "fail",
+        "native_category": "infra",
+        "error": "missing module/import: No module named 'keras'",
+        "source": "tslearn/tslearn/shapelets/shapelets.py:290",
+        "review_evidence": null,
+        "script_sha256": "387347e22fcc751d25063d309fa92a7cd8e2331b3fd9a73ab1de64e237e67d9a"
+      },
+      "title": "LearningShapelets: Investigate the observed API-use barrier",
+      "change_kind": "investigation",
+      "candidate_category": "unknown",
+      "confidence": "low",
+      "diagnosis": "Source, supplied document, and script review required.",
+      "proposed_action": "Source, supplied document, and script review required.",
+      "validation_criteria": "Reproduce in an isolated diagnostic; establish input, call and assertion validity before attributing a documentation or code defect.",
+      "expected_benefit": "Hypothesis only; measure against the pinned baseline before claiming improvement.",
+      "risks": [
+        "Changing inputs, harness, prompts or code changes the protocol.",
+        "Source-informed review must not leak into the audience treatment."
+      ],
+      "attempts": 0,
+      "provider_error_attempts": 0,
+      "document_rounds": null,
+      "script": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_LearningShapelets/api_test.py",
+      "allowed_executors": [
+        "human",
+        "agent"
+      ],
+      "default_execution": "disabled",
+      "priority": "needs_diagnosis",
+      "evidence_ledger": "tslearn/A1/ledger.json",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
+      "review": {
+        "status": "open",
+        "events": []
+      }
+    },
+    {
+      "id": "7e8242c0f6e88aaff9bd",
+      "repository": "tslearn",
+      "cell": "A1",
+      "api": "LocalSquaredDistanceLayer",
+      "evidence_version": "b714764b18220cd2d7d5f8d30d62ea9d9687e1c1ca22d960a4eeae444215af35",
+      "evidence": {
+        "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+        "manifest_sha256": "42dd31265d4fd753eab37f00ea636b5e06bdd2b2203e48be45dc0be6569b967f",
+        "api": "LocalSquaredDistanceLayer",
+        "status": "fail",
+        "native_category": "infra",
+        "error": "missing module/import: No module named 'tensorflow'",
+        "source": "tslearn/tslearn/shapelets/shapelets.py:167",
+        "review_evidence": null,
+        "script_sha256": "77dcb81fbb091a4e7ae1e1d2a6567cd0a202f4283e95b1b71d970b3dd4007b61"
+      },
+      "title": "LocalSquaredDistanceLayer: Investigate the observed API-use barrier",
+      "change_kind": "investigation",
+      "candidate_category": "unknown",
+      "confidence": "low",
+      "diagnosis": "Source, supplied document, and script review required.",
+      "proposed_action": "Source, supplied document, and script review required.",
+      "validation_criteria": "Reproduce in an isolated diagnostic; establish input, call and assertion validity before attributing a documentation or code defect.",
+      "expected_benefit": "Hypothesis only; measure against the pinned baseline before claiming improvement.",
+      "risks": [
+        "Changing inputs, harness, prompts or code changes the protocol.",
+        "Source-informed review must not leak into the audience treatment."
+      ],
+      "attempts": 0,
+      "provider_error_attempts": 0,
+      "document_rounds": null,
+      "script": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_LocalSquaredDistanceLayer/api_test.py",
+      "allowed_executors": [
+        "human",
+        "agent"
+      ],
+      "default_execution": "disabled",
+      "priority": "needs_diagnosis",
+      "evidence_ledger": "tslearn/A1/ledger.json",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
+      "review": {
+        "status": "open",
+        "events": []
+      }
+    },
+    {
+      "id": "2459befdfa5e1206534c",
+      "repository": "tslearn",
+      "cell": "A1",
+      "api": "NumPyBackend",
+      "evidence_version": "ccc2c51a80b63d7084c322b89292c178eb7a996716dccc64509143a60bac928e",
+      "evidence": {
+        "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+        "manifest_sha256": "42dd31265d4fd753eab37f00ea636b5e06bdd2b2203e48be45dc0be6569b967f",
+        "api": "NumPyBackend",
+        "status": "fail",
+        "native_category": "infra",
+        "error": "missing module/import: cannot import name 'NumPyBackend' from 'tslearn.backend' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/backend/__init__.py)",
+        "source": "tslearn/tslearn/backend/numpy_backend.py:22",
+        "review_evidence": null,
+        "script_sha256": "a8e2d41d171d317ff1e28b08306dc51659f84a70f602599636f36f1c903dcd3c"
+      },
+      "title": "NumPyBackend: Investigate the observed API-use barrier",
+      "change_kind": "investigation",
+      "candidate_category": "api-identity-or-version",
+      "confidence": "medium",
+      "diagnosis": "Verify intended owner and installed version; not proof of missing dependency.",
+      "proposed_action": "Verify intended owner and installed version; not proof of missing dependency.",
+      "validation_criteria": "Reproduce in an isolated diagnostic; establish input, call and assertion validity before attributing a documentation or code defect.",
+      "expected_benefit": "Hypothesis only; measure against the pinned baseline before claiming improvement.",
+      "risks": [
+        "Changing inputs, harness, prompts or code changes the protocol.",
+        "Source-informed review must not leak into the audience treatment."
+      ],
+      "attempts": 0,
+      "provider_error_attempts": 0,
+      "document_rounds": null,
+      "script": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_NumPyBackend/api_test.py",
+      "allowed_executors": [
+        "human",
+        "agent"
+      ],
+      "default_execution": "disabled",
+      "priority": "needs_diagnosis",
+      "evidence_ledger": "tslearn/A1/ledger.json",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
+      "review": {
+        "status": "open",
+        "events": []
+      }
+    },
+    {
+      "id": "52fed50fba2e2a006f63",
+      "repository": "tslearn",
+      "cell": "A1",
+      "api": "NumPyLinalg",
+      "evidence_version": "835781cefce62a56f7d23320d200791b93c97e1153ab0d1f688bd9f7baf64750",
+      "evidence": {
+        "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+        "manifest_sha256": "42dd31265d4fd753eab37f00ea636b5e06bdd2b2203e48be45dc0be6569b967f",
+        "api": "NumPyLinalg",
+        "status": "fail",
+        "native_category": "infra",
+        "error": "missing module/import: No module named 'tslearn.backends'",
+        "source": "tslearn/tslearn/backend/numpy_backend.py:126",
+        "review_evidence": null,
+        "script_sha256": "ea14a6ba572d2612cdc95f0072ea39eccf87a0811257864e39d41602ffb40afe"
+      },
+      "title": "NumPyLinalg: Investigate the observed API-use barrier",
+      "change_kind": "investigation",
+      "candidate_category": "unknown",
+      "confidence": "low",
+      "diagnosis": "Source, supplied document, and script review required.",
+      "proposed_action": "Source, supplied document, and script review required.",
+      "validation_criteria": "Reproduce in an isolated diagnostic; establish input, call and assertion validity before attributing a documentation or code defect.",
+      "expected_benefit": "Hypothesis only; measure against the pinned baseline before claiming improvement.",
+      "risks": [
+        "Changing inputs, harness, prompts or code changes the protocol.",
+        "Source-informed review must not leak into the audience treatment."
+      ],
+      "attempts": 0,
+      "provider_error_attempts": 0,
+      "document_rounds": null,
+      "script": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_NumPyLinalg/api_test.py",
+      "allowed_executors": [
+        "human",
+        "agent"
+      ],
+      "default_execution": "disabled",
+      "priority": "needs_diagnosis",
+      "evidence_ledger": "tslearn/A1/ledger.json",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
+      "review": {
+        "status": "open",
+        "events": []
+      }
+    },
+    {
+      "id": "fc5541214312b981da73",
+      "repository": "tslearn",
+      "cell": "A1",
+      "api": "NumPyTesting",
+      "evidence_version": "85d58f0c81895c5f27b5bd608eec593909b78f210589a98f2852fb262678a937",
+      "evidence": {
+        "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+        "manifest_sha256": "42dd31265d4fd753eab37f00ea636b5e06bdd2b2203e48be45dc0be6569b967f",
+        "api": "NumPyTesting",
+        "status": "fail",
+        "native_category": "infra",
+        "error": "missing module/import: No module named 'tslearn.backends'",
+        "source": "tslearn/tslearn/backend/numpy_backend.py:139",
+        "review_evidence": null,
+        "script_sha256": "a1aadce24ec2087aa8b91a14b269c047188c275de854458a3414926f2a70e138"
+      },
+      "title": "NumPyTesting: Investigate the observed API-use barrier",
+      "change_kind": "investigation",
+      "candidate_category": "unknown",
+      "confidence": "low",
+      "diagnosis": "Source, supplied document, and script review required.",
+      "proposed_action": "Source, supplied document, and script review required.",
+      "validation_criteria": "Reproduce in an isolated diagnostic; establish input, call and assertion validity before attributing a documentation or code defect.",
+      "expected_benefit": "Hypothesis only; measure against the pinned baseline before claiming improvement.",
+      "risks": [
+        "Changing inputs, harness, prompts or code changes the protocol.",
+        "Source-informed review must not leak into the audience treatment."
+      ],
+      "attempts": 0,
+      "provider_error_attempts": 0,
+      "document_rounds": null,
+      "script": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_NumPyTesting/api_test.py",
+      "allowed_executors": [
+        "human",
+        "agent"
+      ],
+      "default_execution": "disabled",
+      "priority": "needs_diagnosis",
+      "evidence_ledger": "tslearn/A1/ledger.json",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
+      "review": {
+        "status": "open",
+        "events": []
+      }
+    },
+    {
       "id": "492a7a8c40fbef8c50dd",
       "repository": "tslearn",
       "cell": "A1",
@@ -6873,7 +7287,191 @@
       "default_execution": "disabled",
       "priority": "needs_diagnosis",
       "evidence_ledger": "tslearn/A1/ledger.json",
-      "evidence_ledger_sha256": "a64ca568f6ae1aff287ac2465572ca75afce09755dda6978bd1921413bc3a4a9",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
+      "review": {
+        "status": "open",
+        "events": []
+      }
+    },
+    {
+      "id": "dc08f3328d1d23caabcd",
+      "repository": "tslearn",
+      "cell": "A1",
+      "api": "PyTorchBackend",
+      "evidence_version": "c658485109d2f23832f7f51b40b815e5a228f7eb53dfe033a0680e2a8ba03114",
+      "evidence": {
+        "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+        "manifest_sha256": "42dd31265d4fd753eab37f00ea636b5e06bdd2b2203e48be45dc0be6569b967f",
+        "api": "PyTorchBackend",
+        "status": "fail",
+        "native_category": "infra",
+        "error": "missing module/import: No module named 'tslearn.backends'",
+        "source": "tslearn/tslearn/backend/pytorch_backend.py:37",
+        "review_evidence": null,
+        "script_sha256": "c4184dd62ab48622b312266aed29090b1145aca35ca83af3d2d4216d52ebe24a"
+      },
+      "title": "PyTorchBackend: Investigate the observed API-use barrier",
+      "change_kind": "investigation",
+      "candidate_category": "unknown",
+      "confidence": "low",
+      "diagnosis": "Source, supplied document, and script review required.",
+      "proposed_action": "Source, supplied document, and script review required.",
+      "validation_criteria": "Reproduce in an isolated diagnostic; establish input, call and assertion validity before attributing a documentation or code defect.",
+      "expected_benefit": "Hypothesis only; measure against the pinned baseline before claiming improvement.",
+      "risks": [
+        "Changing inputs, harness, prompts or code changes the protocol.",
+        "Source-informed review must not leak into the audience treatment."
+      ],
+      "attempts": 0,
+      "provider_error_attempts": 0,
+      "document_rounds": null,
+      "script": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_PyTorchBackend/api_test.py",
+      "allowed_executors": [
+        "human",
+        "agent"
+      ],
+      "default_execution": "disabled",
+      "priority": "needs_diagnosis",
+      "evidence_ledger": "tslearn/A1/ledger.json",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
+      "review": {
+        "status": "open",
+        "events": []
+      }
+    },
+    {
+      "id": "82b72baec83cba836ab5",
+      "repository": "tslearn",
+      "cell": "A1",
+      "api": "PyTorchRandom",
+      "evidence_version": "6f75376f01d951ba1232996fa03c1946991fb8a33f63a808854fbea2eccbfb70",
+      "evidence": {
+        "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+        "manifest_sha256": "42dd31265d4fd753eab37f00ea636b5e06bdd2b2203e48be45dc0be6569b967f",
+        "api": "PyTorchRandom",
+        "status": "fail",
+        "native_category": "infra",
+        "error": "missing module/import: cannot import name 'PyTorchRandom' from 'tslearn.backend' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/backend/__init__.py)",
+        "source": "tslearn/tslearn/backend/pytorch_backend.py:243",
+        "review_evidence": null,
+        "script_sha256": "107f5eaf53e77dc8de5170d08c4c307b16614ff93a948331def794f225e38df8"
+      },
+      "title": "PyTorchRandom: Investigate the observed API-use barrier",
+      "change_kind": "investigation",
+      "candidate_category": "api-identity-or-version",
+      "confidence": "medium",
+      "diagnosis": "Verify intended owner and installed version; not proof of missing dependency.",
+      "proposed_action": "Verify intended owner and installed version; not proof of missing dependency.",
+      "validation_criteria": "Reproduce in an isolated diagnostic; establish input, call and assertion validity before attributing a documentation or code defect.",
+      "expected_benefit": "Hypothesis only; measure against the pinned baseline before claiming improvement.",
+      "risks": [
+        "Changing inputs, harness, prompts or code changes the protocol.",
+        "Source-informed review must not leak into the audience treatment."
+      ],
+      "attempts": 0,
+      "provider_error_attempts": 0,
+      "document_rounds": null,
+      "script": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_PyTorchRandom/api_test.py",
+      "allowed_executors": [
+        "human",
+        "agent"
+      ],
+      "default_execution": "disabled",
+      "priority": "needs_diagnosis",
+      "evidence_ledger": "tslearn/A1/ledger.json",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
+      "review": {
+        "status": "open",
+        "events": []
+      }
+    },
+    {
+      "id": "a9f63bcd9c3190301bc6",
+      "repository": "tslearn",
+      "cell": "A1",
+      "api": "PyTorchTesting",
+      "evidence_version": "8910205730d4d12369c23fe6927601064c03e4e82deca4d9d0588407a55966d2",
+      "evidence": {
+        "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+        "manifest_sha256": "42dd31265d4fd753eab37f00ea636b5e06bdd2b2203e48be45dc0be6569b967f",
+        "api": "PyTorchTesting",
+        "status": "fail",
+        "native_category": "infra",
+        "error": "missing module/import: cannot import name 'PyTorchTesting' from 'tslearn.backend' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/backend/__init__.py)",
+        "source": "tslearn/tslearn/backend/pytorch_backend.py:263",
+        "review_evidence": null,
+        "script_sha256": "3eac73bb0314cb4ebf235d4c6fc7c46b36682846f76ec18f0ae57f49b591ebc6"
+      },
+      "title": "PyTorchTesting: Investigate the observed API-use barrier",
+      "change_kind": "investigation",
+      "candidate_category": "api-identity-or-version",
+      "confidence": "medium",
+      "diagnosis": "Verify intended owner and installed version; not proof of missing dependency.",
+      "proposed_action": "Verify intended owner and installed version; not proof of missing dependency.",
+      "validation_criteria": "Reproduce in an isolated diagnostic; establish input, call and assertion validity before attributing a documentation or code defect.",
+      "expected_benefit": "Hypothesis only; measure against the pinned baseline before claiming improvement.",
+      "risks": [
+        "Changing inputs, harness, prompts or code changes the protocol.",
+        "Source-informed review must not leak into the audience treatment."
+      ],
+      "attempts": 0,
+      "provider_error_attempts": 0,
+      "document_rounds": null,
+      "script": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_PyTorchTesting/api_test.py",
+      "allowed_executors": [
+        "human",
+        "agent"
+      ],
+      "default_execution": "disabled",
+      "priority": "needs_diagnosis",
+      "evidence_ledger": "tslearn/A1/ledger.json",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
+      "review": {
+        "status": "open",
+        "events": []
+      }
+    },
+    {
+      "id": "3a7621a36075d20f3bc0",
+      "repository": "tslearn",
+      "cell": "A1",
+      "api": "SoftDTW",
+      "evidence_version": "c9c817d33df20645c046db89039f91503fe51498e29afa89fece16f6e9f10d65",
+      "evidence": {
+        "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+        "manifest_sha256": "42dd31265d4fd753eab37f00ea636b5e06bdd2b2203e48be45dc0be6569b967f",
+        "api": "SoftDTW",
+        "status": "fail",
+        "native_category": "runtime",
+        "error": "AttributeError: type object 'SoftDTW' has no attribute 'apply'",
+        "source": "tslearn/tslearn/metrics/softdtw_variants.py:1068",
+        "review_evidence": null,
+        "script_sha256": "308cb632d577b530e7f94c92002c9387e018959056f6b727681ab6ba0ce5f00e"
+      },
+      "title": "SoftDTW: Investigate the observed API-use barrier",
+      "change_kind": "investigation",
+      "candidate_category": "api-identity-or-version",
+      "confidence": "medium",
+      "diagnosis": "Verify intended owner and installed version; not proof of missing dependency.",
+      "proposed_action": "Verify intended owner and installed version; not proof of missing dependency.",
+      "validation_criteria": "Reproduce in an isolated diagnostic; establish input, call and assertion validity before attributing a documentation or code defect.",
+      "expected_benefit": "Hypothesis only; measure against the pinned baseline before claiming improvement.",
+      "risks": [
+        "Changing inputs, harness, prompts or code changes the protocol.",
+        "Source-informed review must not leak into the audience treatment."
+      ],
+      "attempts": 0,
+      "provider_error_attempts": 0,
+      "document_rounds": null,
+      "script": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_SoftDTW/api_test.py",
+      "allowed_executors": [
+        "human",
+        "agent"
+      ],
+      "default_execution": "disabled",
+      "priority": "needs_diagnosis",
+      "evidence_ledger": "tslearn/A1/ledger.json",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
       "review": {
         "status": "open",
         "events": []
@@ -6919,7 +7517,53 @@
       "default_execution": "disabled",
       "priority": "needs_diagnosis",
       "evidence_ledger": "tslearn/A1/ledger.json",
-      "evidence_ledger_sha256": "a64ca568f6ae1aff287ac2465572ca75afce09755dda6978bd1921413bc3a4a9",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
+      "review": {
+        "status": "open",
+        "events": []
+      }
+    },
+    {
+      "id": "cdcab909fcc7ec733b37",
+      "repository": "tslearn",
+      "cell": "A1",
+      "api": "TimeSeriesCentroidBasedClusteringMixin",
+      "evidence_version": "9a4ffec8a8e5bf7ca89fe832c21d32d7db8ff74a1a773103681b6881bc66e9d8",
+      "evidence": {
+        "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+        "manifest_sha256": "42dd31265d4fd753eab37f00ea636b5e06bdd2b2203e48be45dc0be6569b967f",
+        "api": "TimeSeriesCentroidBasedClusteringMixin",
+        "status": "fail",
+        "native_category": "runtime",
+        "error": "AssertionError: The documented contract is insufficient to verify the result.",
+        "source": "tslearn/tslearn/clustering/utils.py:225",
+        "review_evidence": null,
+        "script_sha256": "db5b819da7a2ff9432df7fa4e6abf59f8f9b34a229bd847845ddf8f197bd6cb2"
+      },
+      "title": "TimeSeriesCentroidBasedClusteringMixin: Investigate the observed API-use barrier",
+      "change_kind": "investigation",
+      "candidate_category": "assertion-or-behavior",
+      "confidence": "medium",
+      "diagnosis": "Compare expected value with pinned implementation; do not weaken the assertion.",
+      "proposed_action": "Compare expected value with pinned implementation; do not weaken the assertion.",
+      "validation_criteria": "Reproduce in an isolated diagnostic; establish input, call and assertion validity before attributing a documentation or code defect.",
+      "expected_benefit": "Hypothesis only; measure against the pinned baseline before claiming improvement.",
+      "risks": [
+        "Changing inputs, harness, prompts or code changes the protocol.",
+        "Source-informed review must not leak into the audience treatment."
+      ],
+      "attempts": 0,
+      "provider_error_attempts": 0,
+      "document_rounds": null,
+      "script": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_TimeSeriesCentroidBasedClusteringMixin/api_test.py",
+      "allowed_executors": [
+        "human",
+        "agent"
+      ],
+      "default_execution": "disabled",
+      "priority": "needs_diagnosis",
+      "evidence_ledger": "tslearn/A1/ledger.json",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
       "review": {
         "status": "open",
         "events": []
@@ -6965,7 +7609,145 @@
       "default_execution": "disabled",
       "priority": "needs_diagnosis",
       "evidence_ledger": "tslearn/A1/ledger.json",
-      "evidence_ledger_sha256": "a64ca568f6ae1aff287ac2465572ca75afce09755dda6978bd1921413bc3a4a9",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
+      "review": {
+        "status": "open",
+        "events": []
+      }
+    },
+    {
+      "id": "e2c8af8b5978d8d3da03",
+      "repository": "tslearn",
+      "cell": "A1",
+      "api": "TimeSeriesMixin",
+      "evidence_version": "c927994a1d59343f9f3d7dd3dfcf26c15903bb4c0709a0b56f34f452d60b69f0",
+      "evidence": {
+        "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+        "manifest_sha256": "42dd31265d4fd753eab37f00ea636b5e06bdd2b2203e48be45dc0be6569b967f",
+        "api": "TimeSeriesMixin",
+        "status": "fail",
+        "native_category": "runtime",
+        "error": "AssertionError: The documented contract is insufficient to verify the result of TimeSeriesMixin.",
+        "source": "tslearn/tslearn/bases/bases.py:53",
+        "review_evidence": null,
+        "script_sha256": "41987c9cc40424575f848c2c4c00bb16b4957454d375efc1b91e3623847e0c47"
+      },
+      "title": "TimeSeriesMixin: Investigate the observed API-use barrier",
+      "change_kind": "investigation",
+      "candidate_category": "assertion-or-behavior",
+      "confidence": "medium",
+      "diagnosis": "Compare expected value with pinned implementation; do not weaken the assertion.",
+      "proposed_action": "Compare expected value with pinned implementation; do not weaken the assertion.",
+      "validation_criteria": "Reproduce in an isolated diagnostic; establish input, call and assertion validity before attributing a documentation or code defect.",
+      "expected_benefit": "Hypothesis only; measure against the pinned baseline before claiming improvement.",
+      "risks": [
+        "Changing inputs, harness, prompts or code changes the protocol.",
+        "Source-informed review must not leak into the audience treatment."
+      ],
+      "attempts": 0,
+      "provider_error_attempts": 0,
+      "document_rounds": null,
+      "script": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_TimeSeriesMixin/api_test.py",
+      "allowed_executors": [
+        "human",
+        "agent"
+      ],
+      "default_execution": "disabled",
+      "priority": "needs_diagnosis",
+      "evidence_ledger": "tslearn/A1/ledger.json",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
+      "review": {
+        "status": "open",
+        "events": []
+      }
+    },
+    {
+      "id": "11d995fc2dd7fbee16b2",
+      "repository": "tslearn",
+      "cell": "A1",
+      "api": "TimeSeriesSVMMixin",
+      "evidence_version": "9c92aa6d0e446832b8f89edeecdbedc09fbd34007bc003835e82a67b811906e9",
+      "evidence": {
+        "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+        "manifest_sha256": "42dd31265d4fd753eab37f00ea636b5e06bdd2b2203e48be45dc0be6569b967f",
+        "api": "TimeSeriesSVMMixin",
+        "status": "fail",
+        "native_category": "runtime",
+        "error": "AttributeError: 'TimeSeriesSVC' object has no attribute 'support_vectors_time_series_'",
+        "source": "tslearn/tslearn/svm/svm.py:20",
+        "review_evidence": null,
+        "script_sha256": "f91a5b12e8560b4df15fb3e3358d2f24f8438c76abd73a51de3826fe0c711c82"
+      },
+      "title": "TimeSeriesSVMMixin: Investigate the observed API-use barrier",
+      "change_kind": "investigation",
+      "candidate_category": "api-identity-or-version",
+      "confidence": "medium",
+      "diagnosis": "Verify intended owner and installed version; not proof of missing dependency.",
+      "proposed_action": "Verify intended owner and installed version; not proof of missing dependency.",
+      "validation_criteria": "Reproduce in an isolated diagnostic; establish input, call and assertion validity before attributing a documentation or code defect.",
+      "expected_benefit": "Hypothesis only; measure against the pinned baseline before claiming improvement.",
+      "risks": [
+        "Changing inputs, harness, prompts or code changes the protocol.",
+        "Source-informed review must not leak into the audience treatment."
+      ],
+      "attempts": 0,
+      "provider_error_attempts": 0,
+      "document_rounds": null,
+      "script": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_TimeSeriesSVMMixin/api_test.py",
+      "allowed_executors": [
+        "human",
+        "agent"
+      ],
+      "default_execution": "disabled",
+      "priority": "needs_diagnosis",
+      "evidence_ledger": "tslearn/A1/ledger.json",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
+      "review": {
+        "status": "open",
+        "events": []
+      }
+    },
+    {
+      "id": "681e82e5b808dbfb1775",
+      "repository": "tslearn",
+      "cell": "A1",
+      "api": "TsLearnTags",
+      "evidence_version": "50608b89ca93303021a1aa847fef2e4eff3a9ef7157ee036acfdd5be2f3ebcf4",
+      "evidence": {
+        "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+        "manifest_sha256": "42dd31265d4fd753eab37f00ea636b5e06bdd2b2203e48be45dc0be6569b967f",
+        "api": "TsLearnTags",
+        "status": "fail",
+        "native_category": "infra",
+        "error": "missing module/import: cannot import name 'TsLearnTags' from 'tslearn.bases' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/bases/__init__.py)",
+        "source": "tslearn/tslearn/bases/bases.py:29",
+        "review_evidence": null,
+        "script_sha256": "77f6ac46239380995ce3591469c684b3d1a1ffa0e7bf847abaf8230a740447bc"
+      },
+      "title": "TsLearnTags: Investigate the observed API-use barrier",
+      "change_kind": "investigation",
+      "candidate_category": "api-identity-or-version",
+      "confidence": "medium",
+      "diagnosis": "Verify intended owner and installed version; not proof of missing dependency.",
+      "proposed_action": "Verify intended owner and installed version; not proof of missing dependency.",
+      "validation_criteria": "Reproduce in an isolated diagnostic; establish input, call and assertion validity before attributing a documentation or code defect.",
+      "expected_benefit": "Hypothesis only; measure against the pinned baseline before claiming improvement.",
+      "risks": [
+        "Changing inputs, harness, prompts or code changes the protocol.",
+        "Source-informed review must not leak into the audience treatment."
+      ],
+      "attempts": 0,
+      "provider_error_attempts": 0,
+      "document_rounds": null,
+      "script": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_TsLearnTags/api_test.py",
+      "allowed_executors": [
+        "human",
+        "agent"
+      ],
+      "default_execution": "disabled",
+      "priority": "needs_diagnosis",
+      "evidence_ledger": "tslearn/A1/ledger.json",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
       "review": {
         "status": "open",
         "events": []
@@ -7011,7 +7793,7 @@
       "default_execution": "disabled",
       "priority": "needs_diagnosis",
       "evidence_ledger": "tslearn/A1/ledger.json",
-      "evidence_ledger_sha256": "a64ca568f6ae1aff287ac2465572ca75afce09755dda6978bd1921413bc3a4a9",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
       "review": {
         "status": "open",
         "events": []
@@ -7057,7 +7839,7 @@
       "default_execution": "disabled",
       "priority": "needs_diagnosis",
       "evidence_ledger": "tslearn/A1/ledger.json",
-      "evidence_ledger_sha256": "a64ca568f6ae1aff287ac2465572ca75afce09755dda6978bd1921413bc3a4a9",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
       "review": {
         "status": "open",
         "events": []
@@ -7103,7 +7885,99 @@
       "default_execution": "disabled",
       "priority": "needs_diagnosis",
       "evidence_ledger": "tslearn/A1/ledger.json",
-      "evidence_ledger_sha256": "a64ca568f6ae1aff287ac2465572ca75afce09755dda6978bd1921413bc3a4a9",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
+      "review": {
+        "status": "open",
+        "events": []
+      }
+    },
+    {
+      "id": "7e11c469f83c17237a28",
+      "repository": "tslearn",
+      "cell": "A1",
+      "api": "build",
+      "evidence_version": "bfefabab37bb6b42ed720e27e0ad5174f7d29a98febe00095cab0608d6a4d54c",
+      "evidence": {
+        "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+        "manifest_sha256": "42dd31265d4fd753eab37f00ea636b5e06bdd2b2203e48be45dc0be6569b967f",
+        "api": "build",
+        "status": "fail",
+        "native_category": "infra",
+        "error": "missing module/import: No module named 'keras'",
+        "source": "tslearn/tslearn/shapelets/shapelets.py:188",
+        "review_evidence": null,
+        "script_sha256": "5d3b0d29a19b905a73d96d3aebbc2a0bfa923384abc70700e568f0b8476e811d"
+      },
+      "title": "build: Investigate the observed API-use barrier",
+      "change_kind": "investigation",
+      "candidate_category": "unknown",
+      "confidence": "low",
+      "diagnosis": "Source, supplied document, and script review required.",
+      "proposed_action": "Source, supplied document, and script review required.",
+      "validation_criteria": "Reproduce in an isolated diagnostic; establish input, call and assertion validity before attributing a documentation or code defect.",
+      "expected_benefit": "Hypothesis only; measure against the pinned baseline before claiming improvement.",
+      "risks": [
+        "Changing inputs, harness, prompts or code changes the protocol.",
+        "Source-informed review must not leak into the audience treatment."
+      ],
+      "attempts": 0,
+      "provider_error_attempts": 0,
+      "document_rounds": null,
+      "script": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_build/api_test.py",
+      "allowed_executors": [
+        "human",
+        "agent"
+      ],
+      "default_execution": "disabled",
+      "priority": "needs_diagnosis",
+      "evidence_ledger": "tslearn/A1/ledger.json",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
+      "review": {
+        "status": "open",
+        "events": []
+      }
+    },
+    {
+      "id": "23caf3a06117c042a923",
+      "repository": "tslearn",
+      "cell": "A1",
+      "api": "cache_all",
+      "evidence_version": "e95093a32c4d756b48758b2260f5b020df1fdc61819399bba05c8d1842e05b20",
+      "evidence": {
+        "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+        "manifest_sha256": "42dd31265d4fd753eab37f00ea636b5e06bdd2b2203e48be45dc0be6569b967f",
+        "api": "cache_all",
+        "status": "fail",
+        "native_category": "runtime",
+        "error": "AttributeError: <tslearn.datasets.ucr_uea.UCR_UEA_datasets object at 0x104204f70> does not have the attribute 'cache_dataset'",
+        "source": "tslearn/tslearn/datasets/ucr_uea.py:376",
+        "review_evidence": null,
+        "script_sha256": "31468531a184991b3edcf3607cf4ad240ce2e49b278ff287facffef5e30aac3a"
+      },
+      "title": "cache_all: Investigate the observed API-use barrier",
+      "change_kind": "investigation",
+      "candidate_category": "unknown",
+      "confidence": "low",
+      "diagnosis": "Source, supplied document, and script review required.",
+      "proposed_action": "Source, supplied document, and script review required.",
+      "validation_criteria": "Reproduce in an isolated diagnostic; establish input, call and assertion validity before attributing a documentation or code defect.",
+      "expected_benefit": "Hypothesis only; measure against the pinned baseline before claiming improvement.",
+      "risks": [
+        "Changing inputs, harness, prompts or code changes the protocol.",
+        "Source-informed review must not leak into the audience treatment."
+      ],
+      "attempts": 0,
+      "provider_error_attempts": 0,
+      "document_rounds": null,
+      "script": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_cache_all/api_test.py",
+      "allowed_executors": [
+        "human",
+        "agent"
+      ],
+      "default_execution": "disabled",
+      "priority": "needs_diagnosis",
+      "evidence_ledger": "tslearn/A1/ledger.json",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
       "review": {
         "status": "open",
         "events": []
@@ -7149,7 +8023,7 @@
       "default_execution": "disabled",
       "priority": "needs_diagnosis",
       "evidence_ledger": "tslearn/A1/ledger.json",
-      "evidence_ledger_sha256": "a64ca568f6ae1aff287ac2465572ca75afce09755dda6978bd1921413bc3a4a9",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
       "review": {
         "status": "open",
         "events": []
@@ -7195,7 +8069,53 @@
       "default_execution": "disabled",
       "priority": "needs_diagnosis",
       "evidence_ledger": "tslearn/A1/ledger.json",
-      "evidence_ledger_sha256": "a64ca568f6ae1aff287ac2465572ca75afce09755dda6978bd1921413bc3a4a9",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
+      "review": {
+        "status": "open",
+        "events": []
+      }
+    },
+    {
+      "id": "49bd3af4a48a4fcf459a",
+      "repository": "tslearn",
+      "cell": "A1",
+      "api": "cdist_normalized_cc",
+      "evidence_version": "197228f7f0645c0a9b2b0f30a2c06d7a7a95ba023db70547ed4a410235b95b75",
+      "evidence": {
+        "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+        "manifest_sha256": "42dd31265d4fd753eab37f00ea636b5e06bdd2b2203e48be45dc0be6569b967f",
+        "api": "cdist_normalized_cc",
+        "status": "fail",
+        "native_category": "runtime",
+        "error": "TypeError: not enough arguments: expected 5, got 2",
+        "source": "tslearn/tslearn/metrics/cycc.py:54",
+        "review_evidence": null,
+        "script_sha256": "0731eb29b48a51af64e54215df11420278066e7e2963192818b872d6318ae372"
+      },
+      "title": "cdist_normalized_cc: Investigate the observed API-use barrier",
+      "change_kind": "investigation",
+      "candidate_category": "input-contract-or-api-call",
+      "confidence": "medium",
+      "diagnosis": "Check signature, dtype, shape, units, and file format.",
+      "proposed_action": "Check signature, dtype, shape, units, and file format.",
+      "validation_criteria": "Reproduce in an isolated diagnostic; establish input, call and assertion validity before attributing a documentation or code defect.",
+      "expected_benefit": "Hypothesis only; measure against the pinned baseline before claiming improvement.",
+      "risks": [
+        "Changing inputs, harness, prompts or code changes the protocol.",
+        "Source-informed review must not leak into the audience treatment."
+      ],
+      "attempts": 0,
+      "provider_error_attempts": 0,
+      "document_rounds": null,
+      "script": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_cdist_normalized_cc/api_test.py",
+      "allowed_executors": [
+        "human",
+        "agent"
+      ],
+      "default_execution": "disabled",
+      "priority": "needs_diagnosis",
+      "evidence_ledger": "tslearn/A1/ledger.json",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
       "review": {
         "status": "open",
         "events": []
@@ -7241,7 +8161,53 @@
       "default_execution": "disabled",
       "priority": "needs_diagnosis",
       "evidence_ledger": "tslearn/A1/ledger.json",
-      "evidence_ledger_sha256": "a64ca568f6ae1aff287ac2465572ca75afce09755dda6978bd1921413bc3a4a9",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
+      "review": {
+        "status": "open",
+        "events": []
+      }
+    },
+    {
+      "id": "6c93adff9b1148b3b1c4",
+      "repository": "tslearn",
+      "cell": "A1",
+      "api": "check_dims",
+      "evidence_version": "050168cdbed0024e8dab3a58fe5223d3947c8f2793b548f3752ad17891409251",
+      "evidence": {
+        "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+        "manifest_sha256": "42dd31265d4fd753eab37f00ea636b5e06bdd2b2203e48be45dc0be6569b967f",
+        "api": "check_dims",
+        "status": "fail",
+        "native_category": "runtime",
+        "error": "AssertionError: Expected 1D series to be expanded to 3D, got 1D",
+        "source": "tslearn/tslearn/utils/utils.py:65",
+        "review_evidence": null,
+        "script_sha256": "a682e0ef4030d7723ebe09ee8e7064094279dd7b548686771fb4332c442184b4"
+      },
+      "title": "check_dims: Investigate the observed API-use barrier",
+      "change_kind": "investigation",
+      "candidate_category": "assertion-or-behavior",
+      "confidence": "medium",
+      "diagnosis": "Compare expected value with pinned implementation; do not weaken the assertion.",
+      "proposed_action": "Compare expected value with pinned implementation; do not weaken the assertion.",
+      "validation_criteria": "Reproduce in an isolated diagnostic; establish input, call and assertion validity before attributing a documentation or code defect.",
+      "expected_benefit": "Hypothesis only; measure against the pinned baseline before claiming improvement.",
+      "risks": [
+        "Changing inputs, harness, prompts or code changes the protocol.",
+        "Source-informed review must not leak into the audience treatment."
+      ],
+      "attempts": 0,
+      "provider_error_attempts": 0,
+      "document_rounds": null,
+      "script": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_check_dims/api_test.py",
+      "allowed_executors": [
+        "human",
+        "agent"
+      ],
+      "default_execution": "disabled",
+      "priority": "needs_diagnosis",
+      "evidence_ledger": "tslearn/A1/ledger.json",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
       "review": {
         "status": "open",
         "events": []
@@ -7287,7 +8253,7 @@
       "default_execution": "disabled",
       "priority": "needs_diagnosis",
       "evidence_ledger": "tslearn/A1/ledger.json",
-      "evidence_ledger_sha256": "a64ca568f6ae1aff287ac2465572ca75afce09755dda6978bd1921413bc3a4a9",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
       "review": {
         "status": "open",
         "events": []
@@ -7333,7 +8299,53 @@
       "default_execution": "disabled",
       "priority": "needs_diagnosis",
       "evidence_ledger": "tslearn/A1/ledger.json",
-      "evidence_ledger_sha256": "a64ca568f6ae1aff287ac2465572ca75afce09755dda6978bd1921413bc3a4a9",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
+      "review": {
+        "status": "open",
+        "events": []
+      }
+    },
+    {
+      "id": "970a6d69666b6677a91c",
+      "repository": "tslearn",
+      "cell": "A1",
+      "api": "compute_output_shape",
+      "evidence_version": "b8f628c8022f5b45d804a48109ef3df60519f35d2bece950d92112d8eb416ad0",
+      "evidence": {
+        "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+        "manifest_sha256": "42dd31265d4fd753eab37f00ea636b5e06bdd2b2203e48be45dc0be6569b967f",
+        "api": "compute_output_shape",
+        "status": "fail",
+        "native_category": "infra",
+        "error": "missing module/import: No module named 'keras'",
+        "source": "tslearn/tslearn/shapelets/shapelets.py:86",
+        "review_evidence": null,
+        "script_sha256": "35a926d8db460b9f6f2730a28e6a5bcf6d92aff002feeb0d3653654b38feed3d"
+      },
+      "title": "compute_output_shape: Investigate the observed API-use barrier",
+      "change_kind": "investigation",
+      "candidate_category": "unknown",
+      "confidence": "low",
+      "diagnosis": "Source, supplied document, and script review required.",
+      "proposed_action": "Source, supplied document, and script review required.",
+      "validation_criteria": "Reproduce in an isolated diagnostic; establish input, call and assertion validity before attributing a documentation or code defect.",
+      "expected_benefit": "Hypothesis only; measure against the pinned baseline before claiming improvement.",
+      "risks": [
+        "Changing inputs, harness, prompts or code changes the protocol.",
+        "Source-informed review must not leak into the audience treatment."
+      ],
+      "attempts": 0,
+      "provider_error_attempts": 0,
+      "document_rounds": null,
+      "script": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_compute_output_shape/api_test.py",
+      "allowed_executors": [
+        "human",
+        "agent"
+      ],
+      "default_execution": "disabled",
+      "priority": "needs_diagnosis",
+      "evidence_ledger": "tslearn/A1/ledger.json",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
       "review": {
         "status": "open",
         "events": []
@@ -7379,7 +8391,99 @@
       "default_execution": "disabled",
       "priority": "needs_diagnosis",
       "evidence_ledger": "tslearn/A1/ledger.json",
-      "evidence_ledger_sha256": "a64ca568f6ae1aff287ac2465572ca75afce09755dda6978bd1921413bc3a4a9",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
+      "review": {
+        "status": "open",
+        "events": []
+      }
+    },
+    {
+      "id": "65781e4d62bb097ff4df",
+      "repository": "tslearn",
+      "cell": "A1",
+      "api": "copy",
+      "evidence_version": "26b903355b92633df29ce2b9f90e2fad5face44faf73451c915ce609537ec3cc",
+      "evidence": {
+        "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+        "manifest_sha256": "42dd31265d4fd753eab37f00ea636b5e06bdd2b2203e48be45dc0be6569b967f",
+        "api": "copy",
+        "status": "fail",
+        "native_category": "runtime",
+        "error": "AttributeError: module 'tslearn.backend.numpy_backend' has no attribute 'copy'",
+        "source": "tslearn/tslearn/backend/numpy_backend.py:94",
+        "review_evidence": null,
+        "script_sha256": "888ee486f72557e11f8c5075926b22d0714c518c89ac099ac3c7cedb12f9ff54"
+      },
+      "title": "copy: Investigate the observed API-use barrier",
+      "change_kind": "investigation",
+      "candidate_category": "api-identity-or-version",
+      "confidence": "medium",
+      "diagnosis": "Verify intended owner and installed version; not proof of missing dependency.",
+      "proposed_action": "Verify intended owner and installed version; not proof of missing dependency.",
+      "validation_criteria": "Reproduce in an isolated diagnostic; establish input, call and assertion validity before attributing a documentation or code defect.",
+      "expected_benefit": "Hypothesis only; measure against the pinned baseline before claiming improvement.",
+      "risks": [
+        "Changing inputs, harness, prompts or code changes the protocol.",
+        "Source-informed review must not leak into the audience treatment."
+      ],
+      "attempts": 0,
+      "provider_error_attempts": 0,
+      "document_rounds": null,
+      "script": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_copy/api_test.py",
+      "allowed_executors": [
+        "human",
+        "agent"
+      ],
+      "default_execution": "disabled",
+      "priority": "needs_diagnosis",
+      "evidence_ledger": "tslearn/A1/ledger.json",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
+      "review": {
+        "status": "open",
+        "events": []
+      }
+    },
+    {
+      "id": "8a1016becc1e0c3e1411",
+      "repository": "tslearn",
+      "cell": "A1",
+      "api": "ctw",
+      "evidence_version": "ab47b4ba9a4ef868042c991d3f5a9a7260bbe622dda7d275bc1648d4be866561",
+      "evidence": {
+        "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+        "manifest_sha256": "42dd31265d4fd753eab37f00ea636b5e06bdd2b2203e48be45dc0be6569b967f",
+        "api": "ctw",
+        "status": "fail",
+        "native_category": "runtime",
+        "error": "TypeError: 'float' object is not subscriptable",
+        "source": "tslearn/tslearn/metrics/ctw.py:200",
+        "review_evidence": null,
+        "script_sha256": "47d42fd1d6db3aab03596f8de4a5d2b3547097c4e6d5018a59b82f2221c9000e"
+      },
+      "title": "ctw: Investigate the observed API-use barrier",
+      "change_kind": "investigation",
+      "candidate_category": "input-contract-or-api-call",
+      "confidence": "medium",
+      "diagnosis": "Check signature, dtype, shape, units, and file format.",
+      "proposed_action": "Check signature, dtype, shape, units, and file format.",
+      "validation_criteria": "Reproduce in an isolated diagnostic; establish input, call and assertion validity before attributing a documentation or code defect.",
+      "expected_benefit": "Hypothesis only; measure against the pinned baseline before claiming improvement.",
+      "risks": [
+        "Changing inputs, harness, prompts or code changes the protocol.",
+        "Source-informed review must not leak into the audience treatment."
+      ],
+      "attempts": 0,
+      "provider_error_attempts": 0,
+      "document_rounds": null,
+      "script": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_ctw/api_test.py",
+      "allowed_executors": [
+        "human",
+        "agent"
+      ],
+      "default_execution": "disabled",
+      "priority": "needs_diagnosis",
+      "evidence_ledger": "tslearn/A1/ledger.json",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
       "review": {
         "status": "open",
         "events": []
@@ -7425,7 +8529,7 @@
       "default_execution": "disabled",
       "priority": "needs_diagnosis",
       "evidence_ledger": "tslearn/A1/ledger.json",
-      "evidence_ledger_sha256": "a64ca568f6ae1aff287ac2465572ca75afce09755dda6978bd1921413bc3a4a9",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
       "review": {
         "status": "open",
         "events": []
@@ -7471,7 +8575,53 @@
       "default_execution": "disabled",
       "priority": "needs_diagnosis",
       "evidence_ledger": "tslearn/A1/ledger.json",
-      "evidence_ledger_sha256": "a64ca568f6ae1aff287ac2465572ca75afce09755dda6978bd1921413bc3a4a9",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
+      "review": {
+        "status": "open",
+        "events": []
+      }
+    },
+    {
+      "id": "6d5242e702503acc5ea7",
+      "repository": "tslearn",
+      "cell": "A1",
+      "api": "cyslopes",
+      "evidence_version": "c090235a9608bb6a35093bfae59472e6a5de0eee89de2c443e0eb7fd5fabb4fb",
+      "evidence": {
+        "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+        "manifest_sha256": "42dd31265d4fd753eab37f00ea636b5e06bdd2b2203e48be45dc0be6569b967f",
+        "api": "cyslopes",
+        "status": "fail",
+        "native_category": "infra",
+        "error": "missing module/import: cannot import name 'cyslopes' from 'tslearn.piecewise' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/piecewise/__init__.py)",
+        "source": "tslearn/tslearn/metrics/cysax.py:107",
+        "review_evidence": null,
+        "script_sha256": "e5d965ad595bff4a2132fb8142fb282918968293eae9ef029b8f6cdf9d074d5f"
+      },
+      "title": "cyslopes: Investigate the observed API-use barrier",
+      "change_kind": "investigation",
+      "candidate_category": "api-identity-or-version",
+      "confidence": "medium",
+      "diagnosis": "Verify intended owner and installed version; not proof of missing dependency.",
+      "proposed_action": "Verify intended owner and installed version; not proof of missing dependency.",
+      "validation_criteria": "Reproduce in an isolated diagnostic; establish input, call and assertion validity before attributing a documentation or code defect.",
+      "expected_benefit": "Hypothesis only; measure against the pinned baseline before claiming improvement.",
+      "risks": [
+        "Changing inputs, harness, prompts or code changes the protocol.",
+        "Source-informed review must not leak into the audience treatment."
+      ],
+      "attempts": 0,
+      "provider_error_attempts": 0,
+      "document_rounds": null,
+      "script": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_cyslopes/api_test.py",
+      "allowed_executors": [
+        "human",
+        "agent"
+      ],
+      "default_execution": "disabled",
+      "priority": "needs_diagnosis",
+      "evidence_ledger": "tslearn/A1/ledger.json",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
       "review": {
         "status": "open",
         "events": []
@@ -7517,7 +8667,237 @@
       "default_execution": "disabled",
       "priority": "needs_diagnosis",
       "evidence_ledger": "tslearn/A1/ledger.json",
-      "evidence_ledger_sha256": "a64ca568f6ae1aff287ac2465572ca75afce09755dda6978bd1921413bc3a4a9",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
+      "review": {
+        "status": "open",
+        "events": []
+      }
+    },
+    {
+      "id": "1897ad90895237cf1464",
+      "repository": "tslearn",
+      "cell": "A1",
+      "api": "distance_1d_sax",
+      "evidence_version": "2e1749c5553d0d07005bd960bc364d8cccd9d6229e88cdc945169d7001de369a",
+      "evidence": {
+        "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+        "manifest_sha256": "42dd31265d4fd753eab37f00ea636b5e06bdd2b2203e48be45dc0be6569b967f",
+        "api": "distance_1d_sax",
+        "status": "fail",
+        "native_category": "runtime",
+        "error": "AssertionError: Documentation for distance_1d_sax is missing; cannot verify contract.",
+        "source": "tslearn/tslearn/piecewise/piecewise.py:726",
+        "review_evidence": null,
+        "script_sha256": "9319a602c6cfad245324cf40664b52e10f863af0912c1d3692ce825236fe18f2"
+      },
+      "title": "distance_1d_sax: Investigate the observed API-use barrier",
+      "change_kind": "investigation",
+      "candidate_category": "assertion-or-behavior",
+      "confidence": "medium",
+      "diagnosis": "Compare expected value with pinned implementation; do not weaken the assertion.",
+      "proposed_action": "Compare expected value with pinned implementation; do not weaken the assertion.",
+      "validation_criteria": "Reproduce in an isolated diagnostic; establish input, call and assertion validity before attributing a documentation or code defect.",
+      "expected_benefit": "Hypothesis only; measure against the pinned baseline before claiming improvement.",
+      "risks": [
+        "Changing inputs, harness, prompts or code changes the protocol.",
+        "Source-informed review must not leak into the audience treatment."
+      ],
+      "attempts": 0,
+      "provider_error_attempts": 0,
+      "document_rounds": null,
+      "script": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_distance_1d_sax/api_test.py",
+      "allowed_executors": [
+        "human",
+        "agent"
+      ],
+      "default_execution": "disabled",
+      "priority": "needs_diagnosis",
+      "evidence_ledger": "tslearn/A1/ledger.json",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
+      "review": {
+        "status": "open",
+        "events": []
+      }
+    },
+    {
+      "id": "9f65eb32431f1c29b145",
+      "repository": "tslearn",
+      "cell": "A1",
+      "api": "distance_sax",
+      "evidence_version": "cb437644ca68b455609c7efac41529138b1cd6b55c1b06ba70f02994d935706d",
+      "evidence": {
+        "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+        "manifest_sha256": "42dd31265d4fd753eab37f00ea636b5e06bdd2b2203e48be45dc0be6569b967f",
+        "api": "distance_sax",
+        "status": "fail",
+        "native_category": "runtime",
+        "error": "TypingError: Failed in nopython mode pipeline (step: nopython frontend)",
+        "source": "tslearn/tslearn/piecewise/piecewise.py:444",
+        "review_evidence": null,
+        "script_sha256": "4ee72a7e45806e00c249d1f8c60217b741bddb9de68823d76ecae89b808d8923"
+      },
+      "title": "distance_sax: Investigate the observed API-use barrier",
+      "change_kind": "investigation",
+      "candidate_category": "unknown",
+      "confidence": "low",
+      "diagnosis": "Source, supplied document, and script review required.",
+      "proposed_action": "Source, supplied document, and script review required.",
+      "validation_criteria": "Reproduce in an isolated diagnostic; establish input, call and assertion validity before attributing a documentation or code defect.",
+      "expected_benefit": "Hypothesis only; measure against the pinned baseline before claiming improvement.",
+      "risks": [
+        "Changing inputs, harness, prompts or code changes the protocol.",
+        "Source-informed review must not leak into the audience treatment."
+      ],
+      "attempts": 0,
+      "provider_error_attempts": 0,
+      "document_rounds": null,
+      "script": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_distance_sax/api_test.py",
+      "allowed_executors": [
+        "human",
+        "agent"
+      ],
+      "default_execution": "disabled",
+      "priority": "needs_diagnosis",
+      "evidence_ledger": "tslearn/A1/ledger.json",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
+      "review": {
+        "status": "open",
+        "events": []
+      }
+    },
+    {
+      "id": "a0d51bb81e801919bb03",
+      "repository": "tslearn",
+      "cell": "A1",
+      "api": "dtw_barycenter_averaging_one_init",
+      "evidence_version": "c29da4c64ccd608b469d172570c5822665f6cc806f30204545cf2808b69c83ec",
+      "evidence": {
+        "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+        "manifest_sha256": "42dd31265d4fd753eab37f00ea636b5e06bdd2b2203e48be45dc0be6569b967f",
+        "api": "dtw_barycenter_averaging_one_init",
+        "status": "fail",
+        "native_category": "infra",
+        "error": "missing module/import: cannot import name 'dtw_barycenter_averaging_one_init' from 'tslearn.barycenters' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/",
+        "source": "tslearn/tslearn/barycenters/dba.py:621",
+        "review_evidence": null,
+        "script_sha256": "4af76f5f236611ed57e8d53296cae3a3c3ec2cfd6b98e1a371abf1897338fff5"
+      },
+      "title": "dtw_barycenter_averaging_one_init: Investigate the observed API-use barrier",
+      "change_kind": "investigation",
+      "candidate_category": "api-identity-or-version",
+      "confidence": "medium",
+      "diagnosis": "Verify intended owner and installed version; not proof of missing dependency.",
+      "proposed_action": "Verify intended owner and installed version; not proof of missing dependency.",
+      "validation_criteria": "Reproduce in an isolated diagnostic; establish input, call and assertion validity before attributing a documentation or code defect.",
+      "expected_benefit": "Hypothesis only; measure against the pinned baseline before claiming improvement.",
+      "risks": [
+        "Changing inputs, harness, prompts or code changes the protocol.",
+        "Source-informed review must not leak into the audience treatment."
+      ],
+      "attempts": 0,
+      "provider_error_attempts": 0,
+      "document_rounds": null,
+      "script": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_dtw_barycenter_averaging_one_init/api_test.py",
+      "allowed_executors": [
+        "human",
+        "agent"
+      ],
+      "default_execution": "disabled",
+      "priority": "needs_diagnosis",
+      "evidence_ledger": "tslearn/A1/ledger.json",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
+      "review": {
+        "status": "open",
+        "events": []
+      }
+    },
+    {
+      "id": "a41b60921e77b0ccd729",
+      "repository": "tslearn",
+      "cell": "A1",
+      "api": "dual_coef_",
+      "evidence_version": "817bc7ab04bdd0ecd6bdeb92af4235c76e5674633bbbf29246e0f8dbbfa4d191",
+      "evidence": {
+        "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+        "manifest_sha256": "42dd31265d4fd753eab37f00ea636b5e06bdd2b2203e48be45dc0be6569b967f",
+        "api": "dual_coef_",
+        "status": "fail",
+        "native_category": "runtime",
+        "error": "InvalidParameterError: The 'kernel' parameter of SVC must be a str among {'precomputed', 'linear', 'sigmoid', 'rbf', 'poly'} or a callable. Got 'euclidean' instead.",
+        "source": "tslearn/tslearn/svm/svm.py:29",
+        "review_evidence": null,
+        "script_sha256": "ba431448c9ccb39a600a67dda4283a1d9a904a71115286348096594a89e99c24"
+      },
+      "title": "dual_coef_: Investigate the observed API-use barrier",
+      "change_kind": "investigation",
+      "candidate_category": "unknown",
+      "confidence": "low",
+      "diagnosis": "Source, supplied document, and script review required.",
+      "proposed_action": "Source, supplied document, and script review required.",
+      "validation_criteria": "Reproduce in an isolated diagnostic; establish input, call and assertion validity before attributing a documentation or code defect.",
+      "expected_benefit": "Hypothesis only; measure against the pinned baseline before claiming improvement.",
+      "risks": [
+        "Changing inputs, harness, prompts or code changes the protocol.",
+        "Source-informed review must not leak into the audience treatment."
+      ],
+      "attempts": 0,
+      "provider_error_attempts": 0,
+      "document_rounds": null,
+      "script": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_dual_coef_/api_test.py",
+      "allowed_executors": [
+        "human",
+        "agent"
+      ],
+      "default_execution": "disabled",
+      "priority": "needs_diagnosis",
+      "evidence_ledger": "tslearn/A1/ledger.json",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
+      "review": {
+        "status": "open",
+        "events": []
+      }
+    },
+    {
+      "id": "18f431a907cd00761972",
+      "repository": "tslearn",
+      "cell": "A1",
+      "api": "early_classification_cost",
+      "evidence_version": "2aa3a730454d3c83251ba7e1353c5eeb2f10656c7cdc013caf5ac40ac689ff52",
+      "evidence": {
+        "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+        "manifest_sha256": "42dd31265d4fd753eab37f00ea636b5e06bdd2b2203e48be45dc0be6569b967f",
+        "api": "early_classification_cost",
+        "status": "fail",
+        "native_category": "infra",
+        "error": "missing module/import: cannot import name 'early_classification_cost' from 'tslearn.early_classification' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn",
+        "source": "tslearn/tslearn/early_classification/early_classification.py:517",
+        "review_evidence": null,
+        "script_sha256": "3cd18dcd7a46d81c6cd3c476d12adb5693904c7b6a2bd0ebe36d66790fe9f499"
+      },
+      "title": "early_classification_cost: Investigate the observed API-use barrier",
+      "change_kind": "investigation",
+      "candidate_category": "api-identity-or-version",
+      "confidence": "medium",
+      "diagnosis": "Verify intended owner and installed version; not proof of missing dependency.",
+      "proposed_action": "Verify intended owner and installed version; not proof of missing dependency.",
+      "validation_criteria": "Reproduce in an isolated diagnostic; establish input, call and assertion validity before attributing a documentation or code defect.",
+      "expected_benefit": "Hypothesis only; measure against the pinned baseline before claiming improvement.",
+      "risks": [
+        "Changing inputs, harness, prompts or code changes the protocol.",
+        "Source-informed review must not leak into the audience treatment."
+      ],
+      "attempts": 0,
+      "provider_error_attempts": 0,
+      "document_rounds": null,
+      "script": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_early_classification_cost/api_test.py",
+      "allowed_executors": [
+        "human",
+        "agent"
+      ],
+      "default_execution": "disabled",
+      "priority": "needs_diagnosis",
+      "evidence_ledger": "tslearn/A1/ledger.json",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
       "review": {
         "status": "open",
         "events": []
@@ -7563,7 +8943,99 @@
       "default_execution": "disabled",
       "priority": "needs_diagnosis",
       "evidence_ledger": "tslearn/A1/ledger.json",
-      "evidence_ledger_sha256": "a64ca568f6ae1aff287ac2465572ca75afce09755dda6978bd1921413bc3a4a9",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
+      "review": {
+        "status": "open",
+        "events": []
+      }
+    },
+    {
+      "id": "74e41bf5593381100866",
+      "repository": "tslearn",
+      "cell": "A1",
+      "api": "from_cesium_dataset",
+      "evidence_version": "466e9bb515ed6c64397bada845a94a5e370eb6fdcc36c02164f3de09d3ac105c",
+      "evidence": {
+        "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+        "manifest_sha256": "42dd31265d4fd753eab37f00ea636b5e06bdd2b2203e48be45dc0be6569b967f",
+        "api": "from_cesium_dataset",
+        "status": "fail",
+        "native_category": "infra",
+        "error": "missing module/import: No module named 'cesium'",
+        "source": "tslearn/tslearn/utils/cast.py:713",
+        "review_evidence": null,
+        "script_sha256": "6ebe8408b077abf23e4fdb54bd28cee6560f000830406bdcd8a078249d132412"
+      },
+      "title": "from_cesium_dataset: Investigate the observed API-use barrier",
+      "change_kind": "investigation",
+      "candidate_category": "unknown",
+      "confidence": "low",
+      "diagnosis": "Source, supplied document, and script review required.",
+      "proposed_action": "Source, supplied document, and script review required.",
+      "validation_criteria": "Reproduce in an isolated diagnostic; establish input, call and assertion validity before attributing a documentation or code defect.",
+      "expected_benefit": "Hypothesis only; measure against the pinned baseline before claiming improvement.",
+      "risks": [
+        "Changing inputs, harness, prompts or code changes the protocol.",
+        "Source-informed review must not leak into the audience treatment."
+      ],
+      "attempts": 0,
+      "provider_error_attempts": 0,
+      "document_rounds": null,
+      "script": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_from_cesium_dataset/api_test.py",
+      "allowed_executors": [
+        "human",
+        "agent"
+      ],
+      "default_execution": "disabled",
+      "priority": "needs_diagnosis",
+      "evidence_ledger": "tslearn/A1/ledger.json",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
+      "review": {
+        "status": "open",
+        "events": []
+      }
+    },
+    {
+      "id": "a9a5f5305a9c56f56d78",
+      "repository": "tslearn",
+      "cell": "A1",
+      "api": "from_numpy",
+      "evidence_version": "c140807c0d551a0f06a4bb9f1aa608a17c57ef080ac2a96a5c9ebe4671142343",
+      "evidence": {
+        "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+        "manifest_sha256": "42dd31265d4fd753eab37f00ea636b5e06bdd2b2203e48be45dc0be6569b967f",
+        "api": "from_numpy",
+        "status": "fail",
+        "native_category": "infra",
+        "error": "missing module/import: cannot import name 'get_backend' from 'tslearn.backend' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/backend/__init__.py)",
+        "source": "tslearn/tslearn/backend/numpy_backend.py:98",
+        "review_evidence": null,
+        "script_sha256": "0c7e078d28e65fdd52af8cb9b77ed9e87532a9033a7b957cd65b6628408f732a"
+      },
+      "title": "from_numpy: Investigate the observed API-use barrier",
+      "change_kind": "investigation",
+      "candidate_category": "api-identity-or-version",
+      "confidence": "medium",
+      "diagnosis": "Verify intended owner and installed version; not proof of missing dependency.",
+      "proposed_action": "Verify intended owner and installed version; not proof of missing dependency.",
+      "validation_criteria": "Reproduce in an isolated diagnostic; establish input, call and assertion validity before attributing a documentation or code defect.",
+      "expected_benefit": "Hypothesis only; measure against the pinned baseline before claiming improvement.",
+      "risks": [
+        "Changing inputs, harness, prompts or code changes the protocol.",
+        "Source-informed review must not leak into the audience treatment."
+      ],
+      "attempts": 5,
+      "provider_error_attempts": 4,
+      "document_rounds": null,
+      "script": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_from_numpy/api_test.py",
+      "allowed_executors": [
+        "human",
+        "agent"
+      ],
+      "default_execution": "disabled",
+      "priority": "needs_diagnosis",
+      "evidence_ledger": "tslearn/A1/ledger.json",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
       "review": {
         "status": "open",
         "events": []
@@ -7609,7 +9081,7 @@
       "default_execution": "disabled",
       "priority": "needs_diagnosis",
       "evidence_ledger": "tslearn/A1/ledger.json",
-      "evidence_ledger_sha256": "a64ca568f6ae1aff287ac2465572ca75afce09755dda6978bd1921413bc3a4a9",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
       "review": {
         "status": "open",
         "events": []
@@ -7655,7 +9127,53 @@
       "default_execution": "disabled",
       "priority": "needs_diagnosis",
       "evidence_ledger": "tslearn/A1/ledger.json",
-      "evidence_ledger_sha256": "a64ca568f6ae1aff287ac2465572ca75afce09755dda6978bd1921413bc3a4a9",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
+      "review": {
+        "status": "open",
+        "events": []
+      }
+    },
+    {
+      "id": "fb7d4835a71492d56456",
+      "repository": "tslearn",
+      "cell": "A1",
+      "api": "get_config",
+      "evidence_version": "1480433aee87ed1029a3153ea0d18a8b3f3b3a663fe27d7fa86e9f32a7e3e1f1",
+      "evidence": {
+        "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+        "manifest_sha256": "42dd31265d4fd753eab37f00ea636b5e06bdd2b2203e48be45dc0be6569b967f",
+        "api": "get_config",
+        "status": "fail",
+        "native_category": "infra",
+        "error": "missing module/import: cannot import name 'get_config' from 'tslearn' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/__init__.py)",
+        "source": "tslearn/tslearn/shapelets/shapelets.py:160",
+        "review_evidence": null,
+        "script_sha256": "15a8a0fba0310fd8e45ae56666e08bdd101f7fc9b7d5fa3d2355a00c72e0e20d"
+      },
+      "title": "get_config: Investigate the observed API-use barrier",
+      "change_kind": "investigation",
+      "candidate_category": "api-identity-or-version",
+      "confidence": "medium",
+      "diagnosis": "Verify intended owner and installed version; not proof of missing dependency.",
+      "proposed_action": "Verify intended owner and installed version; not proof of missing dependency.",
+      "validation_criteria": "Reproduce in an isolated diagnostic; establish input, call and assertion validity before attributing a documentation or code defect.",
+      "expected_benefit": "Hypothesis only; measure against the pinned baseline before claiming improvement.",
+      "risks": [
+        "Changing inputs, harness, prompts or code changes the protocol.",
+        "Source-informed review must not leak into the audience treatment."
+      ],
+      "attempts": 0,
+      "provider_error_attempts": 0,
+      "document_rounds": null,
+      "script": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_get_config/api_test.py",
+      "allowed_executors": [
+        "human",
+        "agent"
+      ],
+      "default_execution": "disabled",
+      "priority": "needs_diagnosis",
+      "evidence_ledger": "tslearn/A1/ledger.json",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
       "review": {
         "status": "open",
         "events": []
@@ -7701,7 +9219,7 @@
       "default_execution": "disabled",
       "priority": "needs_diagnosis",
       "evidence_ledger": "tslearn/A1/ledger.json",
-      "evidence_ledger_sha256": "a64ca568f6ae1aff287ac2465572ca75afce09755dda6978bd1921413bc3a4a9",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
       "review": {
         "status": "open",
         "events": []
@@ -7747,7 +9265,329 @@
       "default_execution": "disabled",
       "priority": "needs_diagnosis",
       "evidence_ledger": "tslearn/A1/ledger.json",
-      "evidence_ledger_sha256": "a64ca568f6ae1aff287ac2465572ca75afce09755dda6978bd1921413bc3a4a9",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
+      "review": {
+        "status": "open",
+        "events": []
+      }
+    },
+    {
+      "id": "83c83dcec847f0d943ac",
+      "repository": "tslearn",
+      "cell": "A1",
+      "api": "get_weights",
+      "evidence_version": "3da506e214a989cba8f365ae8e4165daea4ef6bd271e419b7b311f2521473989",
+      "evidence": {
+        "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+        "manifest_sha256": "42dd31265d4fd753eab37f00ea636b5e06bdd2b2203e48be45dc0be6569b967f",
+        "api": "get_weights",
+        "status": "fail",
+        "native_category": "infra",
+        "error": "missing module/import: No module named 'keras'",
+        "source": "tslearn/tslearn/shapelets/shapelets.py:828",
+        "review_evidence": null,
+        "script_sha256": "78548943eb83f05c03bb3ea7b7bc4686e4d633756e7017518b8b740cada95a8f"
+      },
+      "title": "get_weights: Investigate the observed API-use barrier",
+      "change_kind": "investigation",
+      "candidate_category": "unknown",
+      "confidence": "low",
+      "diagnosis": "Source, supplied document, and script review required.",
+      "proposed_action": "Source, supplied document, and script review required.",
+      "validation_criteria": "Reproduce in an isolated diagnostic; establish input, call and assertion validity before attributing a documentation or code defect.",
+      "expected_benefit": "Hypothesis only; measure against the pinned baseline before claiming improvement.",
+      "risks": [
+        "Changing inputs, harness, prompts or code changes the protocol.",
+        "Source-informed review must not leak into the audience treatment."
+      ],
+      "attempts": 0,
+      "provider_error_attempts": 0,
+      "document_rounds": null,
+      "script": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_get_weights/api_test.py",
+      "allowed_executors": [
+        "human",
+        "agent"
+      ],
+      "default_execution": "disabled",
+      "priority": "needs_diagnosis",
+      "evidence_ledger": "tslearn/A1/ledger.json",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
+      "review": {
+        "status": "open",
+        "events": []
+      }
+    },
+    {
+      "id": "c3cb9b853138fa7c069d",
+      "repository": "tslearn",
+      "cell": "A1",
+      "api": "grabocka_params_to_shapelet_size_dict",
+      "evidence_version": "531696dbdaa1275c2ca063d3859dc97acae0b7fcf867724d77d88b7479d1bd77",
+      "evidence": {
+        "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+        "manifest_sha256": "42dd31265d4fd753eab37f00ea636b5e06bdd2b2203e48be45dc0be6569b967f",
+        "api": "grabocka_params_to_shapelet_size_dict",
+        "status": "fail",
+        "native_category": "infra",
+        "error": "missing module/import: No module named 'keras'",
+        "source": "tslearn/tslearn/shapelets/shapelets.py:235",
+        "review_evidence": null,
+        "script_sha256": "9c32dfc37867bf6ecad575319fc031a561d3174e0efa58a4223f308a74f4090d"
+      },
+      "title": "grabocka_params_to_shapelet_size_dict: Investigate the observed API-use barrier",
+      "change_kind": "investigation",
+      "candidate_category": "unknown",
+      "confidence": "low",
+      "diagnosis": "Source, supplied document, and script review required.",
+      "proposed_action": "Source, supplied document, and script review required.",
+      "validation_criteria": "Reproduce in an isolated diagnostic; establish input, call and assertion validity before attributing a documentation or code defect.",
+      "expected_benefit": "Hypothesis only; measure against the pinned baseline before claiming improvement.",
+      "risks": [
+        "Changing inputs, harness, prompts or code changes the protocol.",
+        "Source-informed review must not leak into the audience treatment."
+      ],
+      "attempts": 0,
+      "provider_error_attempts": 0,
+      "document_rounds": null,
+      "script": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_grabocka_params_to_shapelet_size_dict/api_test.py",
+      "allowed_executors": [
+        "human",
+        "agent"
+      ],
+      "default_execution": "disabled",
+      "priority": "needs_diagnosis",
+      "evidence_ledger": "tslearn/A1/ledger.json",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
+      "review": {
+        "status": "open",
+        "events": []
+      }
+    },
+    {
+      "id": "3282c032f77f266a111b",
+      "repository": "tslearn",
+      "cell": "A1",
+      "api": "in_file_string_replace",
+      "evidence_version": "cb5adf3b36ec9fe21b656ea2b302bbbeb8fe9b1ac4c918d5126f3c7ed9782210",
+      "evidence": {
+        "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+        "manifest_sha256": "42dd31265d4fd753eab37f00ea636b5e06bdd2b2203e48be45dc0be6569b967f",
+        "api": "in_file_string_replace",
+        "status": "fail",
+        "native_category": "infra",
+        "error": "missing module/import: cannot import name 'in_file_string_replace' from 'tslearn.utils' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/utils/__init__.py",
+        "source": "tslearn/tslearn/datasets/datasets.py:57",
+        "review_evidence": null,
+        "script_sha256": "0abb7564d7954e424d8ee4337ff4fa0dfeb408ceebbea059da2ed458bcd053a1"
+      },
+      "title": "in_file_string_replace: Investigate the observed API-use barrier",
+      "change_kind": "investigation",
+      "candidate_category": "api-identity-or-version",
+      "confidence": "medium",
+      "diagnosis": "Verify intended owner and installed version; not proof of missing dependency.",
+      "proposed_action": "Verify intended owner and installed version; not proof of missing dependency.",
+      "validation_criteria": "Reproduce in an isolated diagnostic; establish input, call and assertion validity before attributing a documentation or code defect.",
+      "expected_benefit": "Hypothesis only; measure against the pinned baseline before claiming improvement.",
+      "risks": [
+        "Changing inputs, harness, prompts or code changes the protocol.",
+        "Source-informed review must not leak into the audience treatment."
+      ],
+      "attempts": 0,
+      "provider_error_attempts": 0,
+      "document_rounds": null,
+      "script": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_in_file_string_replace/api_test.py",
+      "allowed_executors": [
+        "human",
+        "agent"
+      ],
+      "default_execution": "disabled",
+      "priority": "needs_diagnosis",
+      "evidence_ledger": "tslearn/A1/ledger.json",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
+      "review": {
+        "status": "open",
+        "events": []
+      }
+    },
+    {
+      "id": "78a1eb5f5696690a735e",
+      "repository": "tslearn",
+      "cell": "A1",
+      "api": "intercept_",
+      "evidence_version": "778fb180201a095de4a990c3e5cb9b9f58067cde935801e0370ff70fcf0505d5",
+      "evidence": {
+        "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+        "manifest_sha256": "42dd31265d4fd753eab37f00ea636b5e06bdd2b2203e48be45dc0be6569b967f",
+        "api": "intercept_",
+        "status": "fail",
+        "native_category": "runtime",
+        "error": "InvalidParameterError: The 'kernel' parameter of SVC must be a str among {'precomputed', 'linear', 'sigmoid', 'rbf', 'poly'} or a callable. Got 'euclidean' instead.",
+        "source": "tslearn/tslearn/svm/svm.py:39",
+        "review_evidence": null,
+        "script_sha256": "9bf49970748848e5f9d44de73207c5ddc52e76459eef02b6f55c4f7f74c41fa3"
+      },
+      "title": "intercept_: Investigate the observed API-use barrier",
+      "change_kind": "investigation",
+      "candidate_category": "unknown",
+      "confidence": "low",
+      "diagnosis": "Source, supplied document, and script review required.",
+      "proposed_action": "Source, supplied document, and script review required.",
+      "validation_criteria": "Reproduce in an isolated diagnostic; establish input, call and assertion validity before attributing a documentation or code defect.",
+      "expected_benefit": "Hypothesis only; measure against the pinned baseline before claiming improvement.",
+      "risks": [
+        "Changing inputs, harness, prompts or code changes the protocol.",
+        "Source-informed review must not leak into the audience treatment."
+      ],
+      "attempts": 0,
+      "provider_error_attempts": 0,
+      "document_rounds": null,
+      "script": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_intercept_/api_test.py",
+      "allowed_executors": [
+        "human",
+        "agent"
+      ],
+      "default_execution": "disabled",
+      "priority": "needs_diagnosis",
+      "evidence_ledger": "tslearn/A1/ledger.json",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
+      "review": {
+        "status": "open",
+        "events": []
+      }
+    },
+    {
+      "id": "cf8546b8ee3ce06e5d54",
+      "repository": "tslearn",
+      "cell": "A1",
+      "api": "inv_transform_1d_sax",
+      "evidence_version": "8300f3727d7fd0ac5d40919beff436cf80011b2989cc52990b7af7ed840895e6",
+      "evidence": {
+        "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+        "manifest_sha256": "42dd31265d4fd753eab37f00ea636b5e06bdd2b2203e48be45dc0be6569b967f",
+        "api": "inv_transform_1d_sax",
+        "status": "fail",
+        "native_category": "infra",
+        "error": "missing module/import: cannot import name 'inv_transform_1d_sax' from 'tslearn.piecewise' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/piecewise/__ini",
+        "source": "tslearn/tslearn/metrics/cysax.py:189",
+        "review_evidence": null,
+        "script_sha256": "cf078aafb70a843669e8ca8d191f8326f01ec8c8e4cae1197293d48c5c0cd3be"
+      },
+      "title": "inv_transform_1d_sax: Investigate the observed API-use barrier",
+      "change_kind": "investigation",
+      "candidate_category": "api-identity-or-version",
+      "confidence": "medium",
+      "diagnosis": "Verify intended owner and installed version; not proof of missing dependency.",
+      "proposed_action": "Verify intended owner and installed version; not proof of missing dependency.",
+      "validation_criteria": "Reproduce in an isolated diagnostic; establish input, call and assertion validity before attributing a documentation or code defect.",
+      "expected_benefit": "Hypothesis only; measure against the pinned baseline before claiming improvement.",
+      "risks": [
+        "Changing inputs, harness, prompts or code changes the protocol.",
+        "Source-informed review must not leak into the audience treatment."
+      ],
+      "attempts": 0,
+      "provider_error_attempts": 0,
+      "document_rounds": null,
+      "script": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_inv_transform_1d_sax/api_test.py",
+      "allowed_executors": [
+        "human",
+        "agent"
+      ],
+      "default_execution": "disabled",
+      "priority": "needs_diagnosis",
+      "evidence_ledger": "tslearn/A1/ledger.json",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
+      "review": {
+        "status": "open",
+        "events": []
+      }
+    },
+    {
+      "id": "a44b4ec0aad52bf06da7",
+      "repository": "tslearn",
+      "cell": "A1",
+      "api": "inv_transform_paa",
+      "evidence_version": "83e4cf77d7aeefea40b1e8884306d5e8c52aa1cc327ac8971e0a03169d3546f7",
+      "evidence": {
+        "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+        "manifest_sha256": "42dd31265d4fd753eab37f00ea636b5e06bdd2b2203e48be45dc0be6569b967f",
+        "api": "inv_transform_paa",
+        "status": "fail",
+        "native_category": "infra",
+        "error": "missing module/import: cannot import name 'inv_transform_paa' from 'tslearn.piecewise' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/piecewise/__init__",
+        "source": "tslearn/tslearn/metrics/cysax.py:11",
+        "review_evidence": null,
+        "script_sha256": "6c01faf17132118a2b949e90e740143bed9caaac6b4379a109e7f590dd498eb8"
+      },
+      "title": "inv_transform_paa: Investigate the observed API-use barrier",
+      "change_kind": "investigation",
+      "candidate_category": "api-identity-or-version",
+      "confidence": "medium",
+      "diagnosis": "Verify intended owner and installed version; not proof of missing dependency.",
+      "proposed_action": "Verify intended owner and installed version; not proof of missing dependency.",
+      "validation_criteria": "Reproduce in an isolated diagnostic; establish input, call and assertion validity before attributing a documentation or code defect.",
+      "expected_benefit": "Hypothesis only; measure against the pinned baseline before claiming improvement.",
+      "risks": [
+        "Changing inputs, harness, prompts or code changes the protocol.",
+        "Source-informed review must not leak into the audience treatment."
+      ],
+      "attempts": 0,
+      "provider_error_attempts": 0,
+      "document_rounds": null,
+      "script": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_inv_transform_paa/api_test.py",
+      "allowed_executors": [
+        "human",
+        "agent"
+      ],
+      "default_execution": "disabled",
+      "priority": "needs_diagnosis",
+      "evidence_ledger": "tslearn/A1/ledger.json",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
+      "review": {
+        "status": "open",
+        "events": []
+      }
+    },
+    {
+      "id": "8b3b78113a8ea76d8445",
+      "repository": "tslearn",
+      "cell": "A1",
+      "api": "inv_transform_sax",
+      "evidence_version": "509901232b366a9e55f89911a6c9e0e05d426080651c9769526a14ba7e70767a",
+      "evidence": {
+        "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+        "manifest_sha256": "42dd31265d4fd753eab37f00ea636b5e06bdd2b2203e48be45dc0be6569b967f",
+        "api": "inv_transform_sax",
+        "status": "fail",
+        "native_category": "infra",
+        "error": "missing module/import: cannot import name 'inv_transform_sax' from 'tslearn.piecewise' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/piecewise/__init__",
+        "source": "tslearn/tslearn/metrics/cysax.py:78",
+        "review_evidence": null,
+        "script_sha256": "82037ef47d894082f564112009ff3b4756cbe452f75b19217b5e06b89dfe9f5b"
+      },
+      "title": "inv_transform_sax: Investigate the observed API-use barrier",
+      "change_kind": "investigation",
+      "candidate_category": "api-identity-or-version",
+      "confidence": "medium",
+      "diagnosis": "Verify intended owner and installed version; not proof of missing dependency.",
+      "proposed_action": "Verify intended owner and installed version; not proof of missing dependency.",
+      "validation_criteria": "Reproduce in an isolated diagnostic; establish input, call and assertion validity before attributing a documentation or code defect.",
+      "expected_benefit": "Hypothesis only; measure against the pinned baseline before claiming improvement.",
+      "risks": [
+        "Changing inputs, harness, prompts or code changes the protocol.",
+        "Source-informed review must not leak into the audience treatment."
+      ],
+      "attempts": 0,
+      "provider_error_attempts": 0,
+      "document_rounds": null,
+      "script": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_inv_transform_sax/api_test.py",
+      "allowed_executors": [
+        "human",
+        "agent"
+      ],
+      "default_execution": "disabled",
+      "priority": "needs_diagnosis",
+      "evidence_ledger": "tslearn/A1/ledger.json",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
       "review": {
         "status": "open",
         "events": []
@@ -7793,7 +9633,7 @@
       "default_execution": "disabled",
       "priority": "needs_diagnosis",
       "evidence_ledger": "tslearn/A1/ledger.json",
-      "evidence_ledger_sha256": "a64ca568f6ae1aff287ac2465572ca75afce09755dda6978bd1921413bc3a4a9",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
       "review": {
         "status": "open",
         "events": []
@@ -7839,7 +9679,7 @@
       "default_execution": "disabled",
       "priority": "needs_diagnosis",
       "evidence_ledger": "tslearn/A1/ledger.json",
-      "evidence_ledger_sha256": "a64ca568f6ae1aff287ac2465572ca75afce09755dda6978bd1921413bc3a4a9",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
       "review": {
         "status": "open",
         "events": []
@@ -7885,7 +9725,53 @@
       "default_execution": "disabled",
       "priority": "needs_diagnosis",
       "evidence_ledger": "tslearn/A1/ledger.json",
-      "evidence_ledger_sha256": "a64ca568f6ae1aff287ac2465572ca75afce09755dda6978bd1921413bc3a4a9",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
+      "review": {
+        "status": "open",
+        "events": []
+      }
+    },
+    {
+      "id": "545702fa480e865ad66f",
+      "repository": "tslearn",
+      "cell": "A1",
+      "api": "is_float64",
+      "evidence_version": "b959a435ac6ce5806db6e6547c09122eb8a7ee3639a1d312eca3a79d388df87d",
+      "evidence": {
+        "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+        "manifest_sha256": "42dd31265d4fd753eab37f00ea636b5e06bdd2b2203e48be45dc0be6569b967f",
+        "api": "is_float64",
+        "status": "fail",
+        "native_category": "infra",
+        "error": "missing module/import: cannot import name 'NumPyBackend' from 'tslearn.backend' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/backend/__init__.py)",
+        "source": "tslearn/tslearn/backend/numpy_backend.py:114",
+        "review_evidence": null,
+        "script_sha256": "4c6a0794a383cf543db33c8d7c08fe851898257b17893d138a32cecc8d73b259"
+      },
+      "title": "is_float64: Investigate the observed API-use barrier",
+      "change_kind": "investigation",
+      "candidate_category": "api-identity-or-version",
+      "confidence": "medium",
+      "diagnosis": "Verify intended owner and installed version; not proof of missing dependency.",
+      "proposed_action": "Verify intended owner and installed version; not proof of missing dependency.",
+      "validation_criteria": "Reproduce in an isolated diagnostic; establish input, call and assertion validity before attributing a documentation or code defect.",
+      "expected_benefit": "Hypothesis only; measure against the pinned baseline before claiming improvement.",
+      "risks": [
+        "Changing inputs, harness, prompts or code changes the protocol.",
+        "Source-informed review must not leak into the audience treatment."
+      ],
+      "attempts": 0,
+      "provider_error_attempts": 0,
+      "document_rounds": null,
+      "script": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_is_float64/api_test.py",
+      "allowed_executors": [
+        "human",
+        "agent"
+      ],
+      "default_execution": "disabled",
+      "priority": "needs_diagnosis",
+      "evidence_ledger": "tslearn/A1/ledger.json",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
       "review": {
         "status": "open",
         "events": []
@@ -7931,7 +9817,53 @@
       "default_execution": "disabled",
       "priority": "needs_diagnosis",
       "evidence_ledger": "tslearn/A1/ledger.json",
-      "evidence_ledger_sha256": "a64ca568f6ae1aff287ac2465572ca75afce09755dda6978bd1921413bc3a4a9",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
+      "review": {
+        "status": "open",
+        "events": []
+      }
+    },
+    {
+      "id": "9abd9792d2738f2a7ece",
+      "repository": "tslearn",
+      "cell": "A1",
+      "api": "is_pytorch",
+      "evidence_version": "4e38fc195ab7a46e7b4a585188ea9354ebbf930bd3d3d70ff4bf50048b9e34ee",
+      "evidence": {
+        "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+        "manifest_sha256": "42dd31265d4fd753eab37f00ea636b5e06bdd2b2203e48be45dc0be6569b967f",
+        "api": "is_pytorch",
+        "status": "fail",
+        "native_category": "infra",
+        "error": "missing module/import: cannot import name 'is_pytorch' from 'tslearn.backend' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/backend/__init__.py)",
+        "source": "tslearn/tslearn/backend/backend.py:81",
+        "review_evidence": null,
+        "script_sha256": "17a0a0ea262a4dfba4c2d78eb605b353a52d4dc1a9fc08cc38f3bce3cc9e1e0c"
+      },
+      "title": "is_pytorch: Investigate the observed API-use barrier",
+      "change_kind": "investigation",
+      "candidate_category": "api-identity-or-version",
+      "confidence": "medium",
+      "diagnosis": "Verify intended owner and installed version; not proof of missing dependency.",
+      "proposed_action": "Verify intended owner and installed version; not proof of missing dependency.",
+      "validation_criteria": "Reproduce in an isolated diagnostic; establish input, call and assertion validity before attributing a documentation or code defect.",
+      "expected_benefit": "Hypothesis only; measure against the pinned baseline before claiming improvement.",
+      "risks": [
+        "Changing inputs, harness, prompts or code changes the protocol.",
+        "Source-informed review must not leak into the audience treatment."
+      ],
+      "attempts": 0,
+      "provider_error_attempts": 0,
+      "document_rounds": null,
+      "script": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_is_pytorch/api_test.py",
+      "allowed_executors": [
+        "human",
+        "agent"
+      ],
+      "default_execution": "disabled",
+      "priority": "needs_diagnosis",
+      "evidence_ledger": "tslearn/A1/ledger.json",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
       "review": {
         "status": "open",
         "events": []
@@ -7977,7 +9909,53 @@
       "default_execution": "disabled",
       "priority": "needs_diagnosis",
       "evidence_ledger": "tslearn/A1/ledger.json",
-      "evidence_ledger_sha256": "a64ca568f6ae1aff287ac2465572ca75afce09755dda6978bd1921413bc3a4a9",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
+      "review": {
+        "status": "open",
+        "events": []
+      }
+    },
+    {
+      "id": "616661edba3331238939",
+      "repository": "tslearn",
+      "cell": "A1",
+      "api": "itakura_mask",
+      "evidence_version": "209e70cbd51f3f8b64dfcab6d4b24a7496cd60d9e14bf21670781116905b819d",
+      "evidence": {
+        "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+        "manifest_sha256": "42dd31265d4fd753eab37f00ea636b5e06bdd2b2203e48be45dc0be6569b967f",
+        "api": "itakura_mask",
+        "status": "fail",
+        "native_category": "runtime",
+        "error": "AssertionError: Expected (0,0) to be valid (0.0)",
+        "source": "tslearn/tslearn/metrics/_masks.py:154",
+        "review_evidence": null,
+        "script_sha256": "5450fcbd21f5bbd6b2ee34d643497ac1976da3b7f41378b9ae2ee0f05111d143"
+      },
+      "title": "itakura_mask: Investigate the observed API-use barrier",
+      "change_kind": "investigation",
+      "candidate_category": "assertion-or-behavior",
+      "confidence": "medium",
+      "diagnosis": "Compare expected value with pinned implementation; do not weaken the assertion.",
+      "proposed_action": "Compare expected value with pinned implementation; do not weaken the assertion.",
+      "validation_criteria": "Reproduce in an isolated diagnostic; establish input, call and assertion validity before attributing a documentation or code defect.",
+      "expected_benefit": "Hypothesis only; measure against the pinned baseline before claiming improvement.",
+      "risks": [
+        "Changing inputs, harness, prompts or code changes the protocol.",
+        "Source-informed review must not leak into the audience treatment."
+      ],
+      "attempts": 0,
+      "provider_error_attempts": 0,
+      "document_rounds": null,
+      "script": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_itakura_mask/api_test.py",
+      "allowed_executors": [
+        "human",
+        "agent"
+      ],
+      "default_execution": "disabled",
+      "priority": "needs_diagnosis",
+      "evidence_ledger": "tslearn/A1/ledger.json",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
       "review": {
         "status": "open",
         "events": []
@@ -8023,7 +10001,237 @@
       "default_execution": "disabled",
       "priority": "needs_diagnosis",
       "evidence_ledger": "tslearn/A1/ledger.json",
-      "evidence_ledger_sha256": "a64ca568f6ae1aff287ac2465572ca75afce09755dda6978bd1921413bc3a4a9",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
+      "review": {
+        "status": "open",
+        "events": []
+      }
+    },
+    {
+      "id": "991948e2bb7e96320036",
+      "repository": "tslearn",
+      "cell": "A1",
+      "api": "lcss_accumulated_matrix",
+      "evidence_version": "51938b1cfea2e92637ece8268bce9812f81570bb456ae48e65db54449ee0af56",
+      "evidence": {
+        "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+        "manifest_sha256": "42dd31265d4fd753eab37f00ea636b5e06bdd2b2203e48be45dc0be6569b967f",
+        "api": "lcss_accumulated_matrix",
+        "status": "fail",
+        "native_category": "infra",
+        "error": "missing module/import: cannot import name 'lcss_accumulated_matrix' from 'tslearn.metrics' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/metrics/__init",
+        "source": "tslearn/tslearn/metrics/dtw_variants.py:2270",
+        "review_evidence": null,
+        "script_sha256": "ed7be9c0e0a2e5efea0a9975a6db54e9b13c06eb75ae1a90020574e99e9d5274"
+      },
+      "title": "lcss_accumulated_matrix: Investigate the observed API-use barrier",
+      "change_kind": "investigation",
+      "candidate_category": "api-identity-or-version",
+      "confidence": "medium",
+      "diagnosis": "Verify intended owner and installed version; not proof of missing dependency.",
+      "proposed_action": "Verify intended owner and installed version; not proof of missing dependency.",
+      "validation_criteria": "Reproduce in an isolated diagnostic; establish input, call and assertion validity before attributing a documentation or code defect.",
+      "expected_benefit": "Hypothesis only; measure against the pinned baseline before claiming improvement.",
+      "risks": [
+        "Changing inputs, harness, prompts or code changes the protocol.",
+        "Source-informed review must not leak into the audience treatment."
+      ],
+      "attempts": 0,
+      "provider_error_attempts": 0,
+      "document_rounds": null,
+      "script": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_lcss_accumulated_matrix/api_test.py",
+      "allowed_executors": [
+        "human",
+        "agent"
+      ],
+      "default_execution": "disabled",
+      "priority": "needs_diagnosis",
+      "evidence_ledger": "tslearn/A1/ledger.json",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
+      "review": {
+        "status": "open",
+        "events": []
+      }
+    },
+    {
+      "id": "f5bb96cdd1d0d8a7962c",
+      "repository": "tslearn",
+      "cell": "A1",
+      "api": "lcss_accumulated_matrix_from_dist_matrix",
+      "evidence_version": "61a0eff466a40427a06aa560b80735cf41f25a6c01cac9bfa3bb265fc2033fdd",
+      "evidence": {
+        "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+        "manifest_sha256": "42dd31265d4fd753eab37f00ea636b5e06bdd2b2203e48be45dc0be6569b967f",
+        "api": "lcss_accumulated_matrix_from_dist_matrix",
+        "status": "fail",
+        "native_category": "infra",
+        "error": "missing module/import: cannot import name 'lcss_accumulated_matrix_from_dist_matrix' from 'tslearn.metrics' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslea",
+        "source": "tslearn/tslearn/metrics/dtw_variants.py:2865",
+        "review_evidence": null,
+        "script_sha256": "e282f3020431a648f0ed6b5950b6fa166781725d27a556ba6fbe52c58d4f8440"
+      },
+      "title": "lcss_accumulated_matrix_from_dist_matrix: Investigate the observed API-use barrier",
+      "change_kind": "investigation",
+      "candidate_category": "api-identity-or-version",
+      "confidence": "medium",
+      "diagnosis": "Verify intended owner and installed version; not proof of missing dependency.",
+      "proposed_action": "Verify intended owner and installed version; not proof of missing dependency.",
+      "validation_criteria": "Reproduce in an isolated diagnostic; establish input, call and assertion validity before attributing a documentation or code defect.",
+      "expected_benefit": "Hypothesis only; measure against the pinned baseline before claiming improvement.",
+      "risks": [
+        "Changing inputs, harness, prompts or code changes the protocol.",
+        "Source-informed review must not leak into the audience treatment."
+      ],
+      "attempts": 0,
+      "provider_error_attempts": 0,
+      "document_rounds": null,
+      "script": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_lcss_accumulated_matrix_from_dist_matrix/api_test.py",
+      "allowed_executors": [
+        "human",
+        "agent"
+      ],
+      "default_execution": "disabled",
+      "priority": "needs_diagnosis",
+      "evidence_ledger": "tslearn/A1/ledger.json",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
+      "review": {
+        "status": "open",
+        "events": []
+      }
+    },
+    {
+      "id": "cf40b090c19e4acb2bbd",
+      "repository": "tslearn",
+      "cell": "A1",
+      "api": "list_cached_datasets",
+      "evidence_version": "1262cc953879f30985ff0b573d4b63368ead2125a62a7a24a930eed392fe74de",
+      "evidence": {
+        "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+        "manifest_sha256": "42dd31265d4fd753eab37f00ea636b5e06bdd2b2203e48be45dc0be6569b967f",
+        "api": "list_cached_datasets",
+        "status": "fail",
+        "native_category": "runtime",
+        "error": "AssertionError: The documented contract is insufficient to verify the result without network access or a configurable cache directory.",
+        "source": "tslearn/tslearn/datasets/ucr_uea.py:236",
+        "review_evidence": null,
+        "script_sha256": "7e38ef82d3ac99938c7597ffa82e16286c345ba9c718a99c6701699a4b3f9211"
+      },
+      "title": "list_cached_datasets: Investigate the observed API-use barrier",
+      "change_kind": "investigation",
+      "candidate_category": "assertion-or-behavior",
+      "confidence": "medium",
+      "diagnosis": "Compare expected value with pinned implementation; do not weaken the assertion.",
+      "proposed_action": "Compare expected value with pinned implementation; do not weaken the assertion.",
+      "validation_criteria": "Reproduce in an isolated diagnostic; establish input, call and assertion validity before attributing a documentation or code defect.",
+      "expected_benefit": "Hypothesis only; measure against the pinned baseline before claiming improvement.",
+      "risks": [
+        "Changing inputs, harness, prompts or code changes the protocol.",
+        "Source-informed review must not leak into the audience treatment."
+      ],
+      "attempts": 0,
+      "provider_error_attempts": 0,
+      "document_rounds": null,
+      "script": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_list_cached_datasets/api_test.py",
+      "allowed_executors": [
+        "human",
+        "agent"
+      ],
+      "default_execution": "disabled",
+      "priority": "needs_diagnosis",
+      "evidence_ledger": "tslearn/A1/ledger.json",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
+      "review": {
+        "status": "open",
+        "events": []
+      }
+    },
+    {
+      "id": "d6a84054031158dccd7c",
+      "repository": "tslearn",
+      "cell": "A1",
+      "api": "load_dict",
+      "evidence_version": "321239a4c7b1149df522f64de2f7e7a302d7294bf88fd41c1da3c98a3828444c",
+      "evidence": {
+        "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+        "manifest_sha256": "42dd31265d4fd753eab37f00ea636b5e06bdd2b2203e48be45dc0be6569b967f",
+        "api": "load_dict",
+        "status": "fail",
+        "native_category": "infra",
+        "error": "missing module/import: cannot import name 'save_dict' from 'tslearn.utils' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/utils/__init__.py)",
+        "source": "tslearn/tslearn/hdftools/hdftools.py:118",
+        "review_evidence": null,
+        "script_sha256": "93bfd5989c64367366432465aa0f5aaa890c9983a5732eb48c866756c8f4efb8"
+      },
+      "title": "load_dict: Investigate the observed API-use barrier",
+      "change_kind": "investigation",
+      "candidate_category": "api-identity-or-version",
+      "confidence": "medium",
+      "diagnosis": "Verify intended owner and installed version; not proof of missing dependency.",
+      "proposed_action": "Verify intended owner and installed version; not proof of missing dependency.",
+      "validation_criteria": "Reproduce in an isolated diagnostic; establish input, call and assertion validity before attributing a documentation or code defect.",
+      "expected_benefit": "Hypothesis only; measure against the pinned baseline before claiming improvement.",
+      "risks": [
+        "Changing inputs, harness, prompts or code changes the protocol.",
+        "Source-informed review must not leak into the audience treatment."
+      ],
+      "attempts": 0,
+      "provider_error_attempts": 0,
+      "document_rounds": null,
+      "script": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_load_dict/api_test.py",
+      "allowed_executors": [
+        "human",
+        "agent"
+      ],
+      "default_execution": "disabled",
+      "priority": "needs_diagnosis",
+      "evidence_ledger": "tslearn/A1/ledger.json",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
+      "review": {
+        "status": "open",
+        "events": []
+      }
+    },
+    {
+      "id": "884c0788395a87c4ac28",
+      "repository": "tslearn",
+      "cell": "A1",
+      "api": "locate",
+      "evidence_version": "6ebecdeb8d2a2b78a9c3467d32d0624b5455dd3f8e0001b3784985b119d23401",
+      "evidence": {
+        "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+        "manifest_sha256": "42dd31265d4fd753eab37f00ea636b5e06bdd2b2203e48be45dc0be6569b967f",
+        "api": "locate",
+        "status": "fail",
+        "native_category": "infra",
+        "error": "missing module/import: No module named 'keras'",
+        "source": "tslearn/tslearn/shapelets/shapelets.py:625",
+        "review_evidence": null,
+        "script_sha256": "471f6e2c926fd5586adf9cd58b72ab4d3608c7bc465d0ae234d94a82706acd03"
+      },
+      "title": "locate: Investigate the observed API-use barrier",
+      "change_kind": "investigation",
+      "candidate_category": "unknown",
+      "confidence": "low",
+      "diagnosis": "Source, supplied document, and script review required.",
+      "proposed_action": "Source, supplied document, and script review required.",
+      "validation_criteria": "Reproduce in an isolated diagnostic; establish input, call and assertion validity before attributing a documentation or code defect.",
+      "expected_benefit": "Hypothesis only; measure against the pinned baseline before claiming improvement.",
+      "risks": [
+        "Changing inputs, harness, prompts or code changes the protocol.",
+        "Source-informed review must not leak into the audience treatment."
+      ],
+      "attempts": 0,
+      "provider_error_attempts": 0,
+      "document_rounds": null,
+      "script": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_locate/api_test.py",
+      "allowed_executors": [
+        "human",
+        "agent"
+      ],
+      "default_execution": "disabled",
+      "priority": "needs_diagnosis",
+      "evidence_ledger": "tslearn/A1/ledger.json",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
       "review": {
         "status": "open",
         "events": []
@@ -8069,7 +10277,7 @@
       "default_execution": "disabled",
       "priority": "needs_diagnosis",
       "evidence_ledger": "tslearn/A1/ledger.json",
-      "evidence_ledger_sha256": "a64ca568f6ae1aff287ac2465572ca75afce09755dda6978bd1921413bc3a4a9",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
       "review": {
         "status": "open",
         "events": []
@@ -8115,7 +10323,145 @@
       "default_execution": "disabled",
       "priority": "needs_diagnosis",
       "evidence_ledger": "tslearn/A1/ledger.json",
-      "evidence_ledger_sha256": "a64ca568f6ae1aff287ac2465572ca75afce09755dda6978bd1921413bc3a4a9",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
+      "review": {
+        "status": "open",
+        "events": []
+      }
+    },
+    {
+      "id": "2b36250d86a6501de6fc",
+      "repository": "tslearn",
+      "cell": "A1",
+      "api": "n_iter_",
+      "evidence_version": "f4bad6a8e4f22b81d070a289b2677315b2e748dfb82959fd0818b28cde81df7a",
+      "evidence": {
+        "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+        "manifest_sha256": "42dd31265d4fd753eab37f00ea636b5e06bdd2b2203e48be45dc0be6569b967f",
+        "api": "n_iter_",
+        "status": "fail",
+        "native_category": "infra",
+        "error": "missing module/import: No module named 'keras'",
+        "source": "tslearn/tslearn/svm/svm.py:279",
+        "review_evidence": null,
+        "script_sha256": "8070effc3864b4669eedf7018303dd907089a9376da24b59f8debf5be2d58e88"
+      },
+      "title": "n_iter_: Investigate the observed API-use barrier",
+      "change_kind": "investigation",
+      "candidate_category": "unknown",
+      "confidence": "low",
+      "diagnosis": "Source, supplied document, and script review required.",
+      "proposed_action": "Source, supplied document, and script review required.",
+      "validation_criteria": "Reproduce in an isolated diagnostic; establish input, call and assertion validity before attributing a documentation or code defect.",
+      "expected_benefit": "Hypothesis only; measure against the pinned baseline before claiming improvement.",
+      "risks": [
+        "Changing inputs, harness, prompts or code changes the protocol.",
+        "Source-informed review must not leak into the audience treatment."
+      ],
+      "attempts": 0,
+      "provider_error_attempts": 0,
+      "document_rounds": null,
+      "script": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_n_iter_/api_test.py",
+      "allowed_executors": [
+        "human",
+        "agent"
+      ],
+      "default_execution": "disabled",
+      "priority": "needs_diagnosis",
+      "evidence_ledger": "tslearn/A1/ledger.json",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
+      "review": {
+        "status": "open",
+        "events": []
+      }
+    },
+    {
+      "id": "0e550abc302b6355626e",
+      "repository": "tslearn",
+      "cell": "A1",
+      "api": "njit_accumulated_matrix",
+      "evidence_version": "724ac16ef17ab51b66c38136453b1dcc159b2c622d85d15499f2cf0b1c7c38d9",
+      "evidence": {
+        "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+        "manifest_sha256": "42dd31265d4fd753eab37f00ea636b5e06bdd2b2203e48be45dc0be6569b967f",
+        "api": "njit_accumulated_matrix",
+        "status": "fail",
+        "native_category": "runtime",
+        "error": "TypeError: not enough arguments: expected 3, got 1",
+        "source": "tslearn/tslearn/metrics/dtw_variants.py:74",
+        "review_evidence": null,
+        "script_sha256": "646d2133a48a3d9d9e5d023cca3ba8be17eb719a7e943fefc7445bec33b013cc"
+      },
+      "title": "njit_accumulated_matrix: Investigate the observed API-use barrier",
+      "change_kind": "investigation",
+      "candidate_category": "input-contract-or-api-call",
+      "confidence": "medium",
+      "diagnosis": "Check signature, dtype, shape, units, and file format.",
+      "proposed_action": "Check signature, dtype, shape, units, and file format.",
+      "validation_criteria": "Reproduce in an isolated diagnostic; establish input, call and assertion validity before attributing a documentation or code defect.",
+      "expected_benefit": "Hypothesis only; measure against the pinned baseline before claiming improvement.",
+      "risks": [
+        "Changing inputs, harness, prompts or code changes the protocol.",
+        "Source-informed review must not leak into the audience treatment."
+      ],
+      "attempts": 0,
+      "provider_error_attempts": 0,
+      "document_rounds": null,
+      "script": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_njit_accumulated_matrix/api_test.py",
+      "allowed_executors": [
+        "human",
+        "agent"
+      ],
+      "default_execution": "disabled",
+      "priority": "needs_diagnosis",
+      "evidence_ledger": "tslearn/A1/ledger.json",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
+      "review": {
+        "status": "open",
+        "events": []
+      }
+    },
+    {
+      "id": "f294249de8aada17af69",
+      "repository": "tslearn",
+      "cell": "A1",
+      "api": "njit_accumulated_matrix_from_dist_matrix",
+      "evidence_version": "3302f8f665e122e79311387891f47c60765a325b136df90cdbee21bbd9f046eb",
+      "evidence": {
+        "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+        "manifest_sha256": "42dd31265d4fd753eab37f00ea636b5e06bdd2b2203e48be45dc0be6569b967f",
+        "api": "njit_accumulated_matrix_from_dist_matrix",
+        "status": "fail",
+        "native_category": "infra",
+        "error": "missing module/import: cannot import name 'njit_accumulated_matrix_from_dist_matrix' from 'tslearn.metrics' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslea",
+        "source": "tslearn/tslearn/metrics/dtw_variants.py:426",
+        "review_evidence": null,
+        "script_sha256": "f34e3c9bcb6596ef68f887df1134a7204d12408df575fc965f270b76f54c8d03"
+      },
+      "title": "njit_accumulated_matrix_from_dist_matrix: Investigate the observed API-use barrier",
+      "change_kind": "investigation",
+      "candidate_category": "api-identity-or-version",
+      "confidence": "medium",
+      "diagnosis": "Verify intended owner and installed version; not proof of missing dependency.",
+      "proposed_action": "Verify intended owner and installed version; not proof of missing dependency.",
+      "validation_criteria": "Reproduce in an isolated diagnostic; establish input, call and assertion validity before attributing a documentation or code defect.",
+      "expected_benefit": "Hypothesis only; measure against the pinned baseline before claiming improvement.",
+      "risks": [
+        "Changing inputs, harness, prompts or code changes the protocol.",
+        "Source-informed review must not leak into the audience treatment."
+      ],
+      "attempts": 0,
+      "provider_error_attempts": 0,
+      "document_rounds": null,
+      "script": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_njit_accumulated_matrix_from_dist_matrix/api_test.py",
+      "allowed_executors": [
+        "human",
+        "agent"
+      ],
+      "default_execution": "disabled",
+      "priority": "needs_diagnosis",
+      "evidence_ledger": "tslearn/A1/ledger.json",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
       "review": {
         "status": "open",
         "events": []
@@ -8161,7 +10507,53 @@
       "default_execution": "disabled",
       "priority": "needs_diagnosis",
       "evidence_ledger": "tslearn/A1/ledger.json",
-      "evidence_ledger_sha256": "a64ca568f6ae1aff287ac2465572ca75afce09755dda6978bd1921413bc3a4a9",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
+      "review": {
+        "status": "open",
+        "events": []
+      }
+    },
+    {
+      "id": "cf58d9000a1035ad27a0",
+      "repository": "tslearn",
+      "cell": "A1",
+      "api": "njit_lcss_accumulated_matrix_from_dist_matrix",
+      "evidence_version": "c6824de0ee30057b6f387882725491a8d5141d414d17cc3ca0873820fdc33704",
+      "evidence": {
+        "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+        "manifest_sha256": "42dd31265d4fd753eab37f00ea636b5e06bdd2b2203e48be45dc0be6569b967f",
+        "api": "njit_lcss_accumulated_matrix_from_dist_matrix",
+        "status": "fail",
+        "native_category": "infra",
+        "error": "missing module/import: cannot import name 'njit_lcss_accumulated_matrix_from_dist_matrix' from 'tslearn.metrics' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/",
+        "source": "tslearn/tslearn/metrics/dtw_variants.py:2831",
+        "review_evidence": null,
+        "script_sha256": "c93c6e03d5e31221078e21260c145fd309a4f273230127463a9a364ec9efe320"
+      },
+      "title": "njit_lcss_accumulated_matrix_from_dist_matrix: Investigate the observed API-use barrier",
+      "change_kind": "investigation",
+      "candidate_category": "api-identity-or-version",
+      "confidence": "medium",
+      "diagnosis": "Verify intended owner and installed version; not proof of missing dependency.",
+      "proposed_action": "Verify intended owner and installed version; not proof of missing dependency.",
+      "validation_criteria": "Reproduce in an isolated diagnostic; establish input, call and assertion validity before attributing a documentation or code defect.",
+      "expected_benefit": "Hypothesis only; measure against the pinned baseline before claiming improvement.",
+      "risks": [
+        "Changing inputs, harness, prompts or code changes the protocol.",
+        "Source-informed review must not leak into the audience treatment."
+      ],
+      "attempts": 0,
+      "provider_error_attempts": 0,
+      "document_rounds": null,
+      "script": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_njit_lcss_accumulated_matrix_from_dist_matrix/api_test.py",
+      "allowed_executors": [
+        "human",
+        "agent"
+      ],
+      "default_execution": "disabled",
+      "priority": "needs_diagnosis",
+      "evidence_ledger": "tslearn/A1/ledger.json",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
       "review": {
         "status": "open",
         "events": []
@@ -8207,7 +10599,7 @@
       "default_execution": "disabled",
       "priority": "needs_diagnosis",
       "evidence_ledger": "tslearn/A1/ledger.json",
-      "evidence_ledger_sha256": "a64ca568f6ae1aff287ac2465572ca75afce09755dda6978bd1921413bc3a4a9",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
       "review": {
         "status": "open",
         "events": []
@@ -8253,7 +10645,53 @@
       "default_execution": "disabled",
       "priority": "needs_diagnosis",
       "evidence_ledger": "tslearn/A1/ledger.json",
-      "evidence_ledger_sha256": "a64ca568f6ae1aff287ac2465572ca75afce09755dda6978bd1921413bc3a4a9",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
+      "review": {
+        "status": "open",
+        "events": []
+      }
+    },
+    {
+      "id": "7b9cdbc1d982d1e04280",
+      "repository": "tslearn",
+      "cell": "A1",
+      "api": "normalized_cc",
+      "evidence_version": "e8e24d8402c21f67e0ac7fae277ea181ee1a3ed6039b64d531fa63c53ea30cb6",
+      "evidence": {
+        "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+        "manifest_sha256": "42dd31265d4fd753eab37f00ea636b5e06bdd2b2203e48be45dc0be6569b967f",
+        "api": "normalized_cc",
+        "status": "fail",
+        "native_category": "infra",
+        "error": "missing module/import: cannot import name 'normalized_cc' from 'tslearn.metrics' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/metrics/__init__.py)",
+        "source": "tslearn/tslearn/metrics/cycc.py:10",
+        "review_evidence": null,
+        "script_sha256": "b23b8065c3fb3701f23fcd93548b8eb86187493aa6839c60136a3c4f556beaa5"
+      },
+      "title": "normalized_cc: Investigate the observed API-use barrier",
+      "change_kind": "investigation",
+      "candidate_category": "api-identity-or-version",
+      "confidence": "medium",
+      "diagnosis": "Verify intended owner and installed version; not proof of missing dependency.",
+      "proposed_action": "Verify intended owner and installed version; not proof of missing dependency.",
+      "validation_criteria": "Reproduce in an isolated diagnostic; establish input, call and assertion validity before attributing a documentation or code defect.",
+      "expected_benefit": "Hypothesis only; measure against the pinned baseline before claiming improvement.",
+      "risks": [
+        "Changing inputs, harness, prompts or code changes the protocol.",
+        "Source-informed review must not leak into the audience treatment."
+      ],
+      "attempts": 0,
+      "provider_error_attempts": 0,
+      "document_rounds": null,
+      "script": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_normalized_cc/api_test.py",
+      "allowed_executors": [
+        "human",
+        "agent"
+      ],
+      "default_execution": "disabled",
+      "priority": "needs_diagnosis",
+      "evidence_ledger": "tslearn/A1/ledger.json",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
       "review": {
         "status": "open",
         "events": []
@@ -8299,7 +10737,99 @@
       "default_execution": "disabled",
       "priority": "needs_diagnosis",
       "evidence_ledger": "tslearn/A1/ledger.json",
-      "evidence_ledger_sha256": "a64ca568f6ae1aff287ac2465572ca75afce09755dda6978bd1921413bc3a4a9",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
+      "review": {
+        "status": "open",
+        "events": []
+      }
+    },
+    {
+      "id": "47b9e17eb225846e80f1",
+      "repository": "tslearn",
+      "cell": "A1",
+      "api": "pdist",
+      "evidence_version": "e80982880898349f3fc9b820ccbd2b52bdb8227454d72f5cdbb4470f861b2896",
+      "evidence": {
+        "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+        "manifest_sha256": "42dd31265d4fd753eab37f00ea636b5e06bdd2b2203e48be45dc0be6569b967f",
+        "api": "pdist",
+        "status": "fail",
+        "native_category": "infra",
+        "error": "missing module/import: cannot import name 'NumPyBackend' from 'tslearn.backend' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/backend/__init__.py)",
+        "source": "tslearn/tslearn/backend/pytorch_backend.py:193",
+        "review_evidence": null,
+        "script_sha256": "209d207c268955e82d81f380946b420db7e2b48153c9ebe16136b11a3e04e735"
+      },
+      "title": "pdist: Investigate the observed API-use barrier",
+      "change_kind": "investigation",
+      "candidate_category": "api-identity-or-version",
+      "confidence": "medium",
+      "diagnosis": "Verify intended owner and installed version; not proof of missing dependency.",
+      "proposed_action": "Verify intended owner and installed version; not proof of missing dependency.",
+      "validation_criteria": "Reproduce in an isolated diagnostic; establish input, call and assertion validity before attributing a documentation or code defect.",
+      "expected_benefit": "Hypothesis only; measure against the pinned baseline before claiming improvement.",
+      "risks": [
+        "Changing inputs, harness, prompts or code changes the protocol.",
+        "Source-informed review must not leak into the audience treatment."
+      ],
+      "attempts": 0,
+      "provider_error_attempts": 0,
+      "document_rounds": null,
+      "script": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_pdist/api_test.py",
+      "allowed_executors": [
+        "human",
+        "agent"
+      ],
+      "default_execution": "disabled",
+      "priority": "needs_diagnosis",
+      "evidence_ledger": "tslearn/A1/ledger.json",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
+      "review": {
+        "status": "open",
+        "events": []
+      }
+    },
+    {
+      "id": "794af5d1beaf4b0923a9",
+      "repository": "tslearn",
+      "cell": "A1",
+      "api": "sakoe_chiba_mask",
+      "evidence_version": "3a55214e4b1fa32b4cbc3e96265dbe3f2d2fc67fc67c0bb284b7666a26bf363a",
+      "evidence": {
+        "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+        "manifest_sha256": "42dd31265d4fd753eab37f00ea636b5e06bdd2b2203e48be45dc0be6569b967f",
+        "api": "sakoe_chiba_mask",
+        "status": "fail",
+        "native_category": "runtime",
+        "error": "AssertionError: Expected 13 valid cells, got 25",
+        "source": "tslearn/tslearn/metrics/_masks.py:42",
+        "review_evidence": null,
+        "script_sha256": "e11812cccb366128ca9943216b54bc63b737256909a48fda938d759e64ba55d7"
+      },
+      "title": "sakoe_chiba_mask: Investigate the observed API-use barrier",
+      "change_kind": "investigation",
+      "candidate_category": "assertion-or-behavior",
+      "confidence": "medium",
+      "diagnosis": "Compare expected value with pinned implementation; do not weaken the assertion.",
+      "proposed_action": "Compare expected value with pinned implementation; do not weaken the assertion.",
+      "validation_criteria": "Reproduce in an isolated diagnostic; establish input, call and assertion validity before attributing a documentation or code defect.",
+      "expected_benefit": "Hypothesis only; measure against the pinned baseline before claiming improvement.",
+      "risks": [
+        "Changing inputs, harness, prompts or code changes the protocol.",
+        "Source-informed review must not leak into the audience treatment."
+      ],
+      "attempts": 0,
+      "provider_error_attempts": 0,
+      "document_rounds": null,
+      "script": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_sakoe_chiba_mask/api_test.py",
+      "allowed_executors": [
+        "human",
+        "agent"
+      ],
+      "default_execution": "disabled",
+      "priority": "needs_diagnosis",
+      "evidence_ledger": "tslearn/A1/ledger.json",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
       "review": {
         "status": "open",
         "events": []
@@ -8345,7 +10875,99 @@
       "default_execution": "disabled",
       "priority": "needs_diagnosis",
       "evidence_ledger": "tslearn/A1/ledger.json",
-      "evidence_ledger_sha256": "a64ca568f6ae1aff287ac2465572ca75afce09755dda6978bd1921413bc3a4a9",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
+      "review": {
+        "status": "open",
+        "events": []
+      }
+    },
+    {
+      "id": "2961207c342b88fd36d0",
+      "repository": "tslearn",
+      "cell": "A1",
+      "api": "select_backend",
+      "evidence_version": "fb1e85d37d3e3e08ac08ab6697c42e70308d84cc21bafdd82f46b1eb6ead8ef1",
+      "evidence": {
+        "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+        "manifest_sha256": "42dd31265d4fd753eab37f00ea636b5e06bdd2b2203e48be45dc0be6569b967f",
+        "api": "select_backend",
+        "status": "fail",
+        "native_category": "runtime",
+        "error": "TypeError: select_backend() takes 1 positional argument but 2 were given",
+        "source": "tslearn/tslearn/backend/backend.py:31",
+        "review_evidence": null,
+        "script_sha256": "e8124d03465e7ebffa3fffc745caaeda07151cc856839a6435e39f53ac289580"
+      },
+      "title": "select_backend: Investigate the observed API-use barrier",
+      "change_kind": "investigation",
+      "candidate_category": "input-contract-or-api-call",
+      "confidence": "medium",
+      "diagnosis": "Check signature, dtype, shape, units, and file format.",
+      "proposed_action": "Check signature, dtype, shape, units, and file format.",
+      "validation_criteria": "Reproduce in an isolated diagnostic; establish input, call and assertion validity before attributing a documentation or code defect.",
+      "expected_benefit": "Hypothesis only; measure against the pinned baseline before claiming improvement.",
+      "risks": [
+        "Changing inputs, harness, prompts or code changes the protocol.",
+        "Source-informed review must not leak into the audience treatment."
+      ],
+      "attempts": 0,
+      "provider_error_attempts": 0,
+      "document_rounds": null,
+      "script": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_select_backend/api_test.py",
+      "allowed_executors": [
+        "human",
+        "agent"
+      ],
+      "default_execution": "disabled",
+      "priority": "needs_diagnosis",
+      "evidence_ledger": "tslearn/A1/ledger.json",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
+      "review": {
+        "status": "open",
+        "events": []
+      }
+    },
+    {
+      "id": "ad3b8b8a985b219f35d1",
+      "repository": "tslearn",
+      "cell": "A1",
+      "api": "set_backend",
+      "evidence_version": "2c9fdfa4a7d492d56609defa1a6b5b55b14f95a3338b8de97d1a49a2c588b8a9",
+      "evidence": {
+        "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+        "manifest_sha256": "42dd31265d4fd753eab37f00ea636b5e06bdd2b2203e48be45dc0be6569b967f",
+        "api": "set_backend",
+        "status": "fail",
+        "native_category": "infra",
+        "error": "missing module/import: cannot import name 'set_backend' from 'tslearn.backend' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/backend/__init__.py)",
+        "source": "tslearn/tslearn/backend/backend.py:87",
+        "review_evidence": null,
+        "script_sha256": "473bb3257a7cc8edd3b6d454502c247f80b57d2370a8f0bd8637e42bca910e87"
+      },
+      "title": "set_backend: Investigate the observed API-use barrier",
+      "change_kind": "investigation",
+      "candidate_category": "api-identity-or-version",
+      "confidence": "medium",
+      "diagnosis": "Verify intended owner and installed version; not proof of missing dependency.",
+      "proposed_action": "Verify intended owner and installed version; not proof of missing dependency.",
+      "validation_criteria": "Reproduce in an isolated diagnostic; establish input, call and assertion validity before attributing a documentation or code defect.",
+      "expected_benefit": "Hypothesis only; measure against the pinned baseline before claiming improvement.",
+      "risks": [
+        "Changing inputs, harness, prompts or code changes the protocol.",
+        "Source-informed review must not leak into the audience treatment."
+      ],
+      "attempts": 0,
+      "provider_error_attempts": 0,
+      "document_rounds": null,
+      "script": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_set_backend/api_test.py",
+      "allowed_executors": [
+        "human",
+        "agent"
+      ],
+      "default_execution": "disabled",
+      "priority": "needs_diagnosis",
+      "evidence_ledger": "tslearn/A1/ledger.json",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
       "review": {
         "status": "open",
         "events": []
@@ -8391,7 +11013,7 @@
       "default_execution": "disabled",
       "priority": "needs_diagnosis",
       "evidence_ledger": "tslearn/A1/ledger.json",
-      "evidence_ledger_sha256": "a64ca568f6ae1aff287ac2465572ca75afce09755dda6978bd1921413bc3a4a9",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
       "review": {
         "status": "open",
         "events": []
@@ -8437,7 +11059,605 @@
       "default_execution": "disabled",
       "priority": "needs_diagnosis",
       "evidence_ledger": "tslearn/A1/ledger.json",
-      "evidence_ledger_sha256": "a64ca568f6ae1aff287ac2465572ca75afce09755dda6978bd1921413bc3a4a9",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
+      "review": {
+        "status": "open",
+        "events": []
+      }
+    },
+    {
+      "id": "f06adb8819276f99434e",
+      "repository": "tslearn",
+      "cell": "A1",
+      "api": "shapelets_as_time_series_",
+      "evidence_version": "05b88829f9f97105d35f19a72060731e72901b21467a381feaad8122bae75e80",
+      "evidence": {
+        "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+        "manifest_sha256": "42dd31265d4fd753eab37f00ea636b5e06bdd2b2203e48be45dc0be6569b967f",
+        "api": "shapelets_as_time_series_",
+        "status": "fail",
+        "native_category": "infra",
+        "error": "missing module/import: No module named 'keras'",
+        "source": "tslearn/tslearn/shapelets/shapelets.py:455",
+        "review_evidence": null,
+        "script_sha256": "8f0eee508fc8750e5e50fe5ec15df3503afa6d8efb665ff85285c7c23afa6e55"
+      },
+      "title": "shapelets_as_time_series_: Investigate the observed API-use barrier",
+      "change_kind": "investigation",
+      "candidate_category": "unknown",
+      "confidence": "low",
+      "diagnosis": "Source, supplied document, and script review required.",
+      "proposed_action": "Source, supplied document, and script review required.",
+      "validation_criteria": "Reproduce in an isolated diagnostic; establish input, call and assertion validity before attributing a documentation or code defect.",
+      "expected_benefit": "Hypothesis only; measure against the pinned baseline before claiming improvement.",
+      "risks": [
+        "Changing inputs, harness, prompts or code changes the protocol.",
+        "Source-informed review must not leak into the audience treatment."
+      ],
+      "attempts": 0,
+      "provider_error_attempts": 0,
+      "document_rounds": null,
+      "script": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_shapelets_as_time_series_/api_test.py",
+      "allowed_executors": [
+        "human",
+        "agent"
+      ],
+      "default_execution": "disabled",
+      "priority": "needs_diagnosis",
+      "evidence_ledger": "tslearn/A1/ledger.json",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
+      "review": {
+        "status": "open",
+        "events": []
+      }
+    },
+    {
+      "id": "7d395854025311aa6d96",
+      "repository": "tslearn",
+      "cell": "A1",
+      "api": "sigma_gak",
+      "evidence_version": "3a1bbeacd4fd596770ac9669484d01c300bb5b2bb125661f04cc112a5e97124b",
+      "evidence": {
+        "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+        "manifest_sha256": "42dd31265d4fd753eab37f00ea636b5e06bdd2b2203e48be45dc0be6569b967f",
+        "api": "sigma_gak",
+        "status": "fail",
+        "native_category": "runtime",
+        "error": "AssertionError: Scaling invariant failed: 22.33320650161996 != 2 * 11.12043399697152",
+        "source": "tslearn/tslearn/metrics/_gak.py:20",
+        "review_evidence": null,
+        "script_sha256": "43033a4a06293212c40c9b6ffaec82d79a6150d90342dd65d1411095d4837877"
+      },
+      "title": "sigma_gak: Investigate the observed API-use barrier",
+      "change_kind": "investigation",
+      "candidate_category": "assertion-or-behavior",
+      "confidence": "medium",
+      "diagnosis": "Compare expected value with pinned implementation; do not weaken the assertion.",
+      "proposed_action": "Compare expected value with pinned implementation; do not weaken the assertion.",
+      "validation_criteria": "Reproduce in an isolated diagnostic; establish input, call and assertion validity before attributing a documentation or code defect.",
+      "expected_benefit": "Hypothesis only; measure against the pinned baseline before claiming improvement.",
+      "risks": [
+        "Changing inputs, harness, prompts or code changes the protocol.",
+        "Source-informed review must not leak into the audience treatment."
+      ],
+      "attempts": 0,
+      "provider_error_attempts": 0,
+      "document_rounds": null,
+      "script": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_sigma_gak/api_test.py",
+      "allowed_executors": [
+        "human",
+        "agent"
+      ],
+      "default_execution": "disabled",
+      "priority": "needs_diagnosis",
+      "evidence_ledger": "tslearn/A1/ledger.json",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
+      "review": {
+        "status": "open",
+        "events": []
+      }
+    },
+    {
+      "id": "3bffa156bd3848d8d745",
+      "repository": "tslearn",
+      "cell": "A1",
+      "api": "to_cesium_dataset",
+      "evidence_version": "fb7833135a7b40919567c97df3db2e44ee0016d542cddae8d805ffc06c7a86b2",
+      "evidence": {
+        "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+        "manifest_sha256": "42dd31265d4fd753eab37f00ea636b5e06bdd2b2203e48be45dc0be6569b967f",
+        "api": "to_cesium_dataset",
+        "status": "fail",
+        "native_category": "infra",
+        "error": "missing module/import: Conversion from/to cesium cannot be performed if cesium is not installed.",
+        "source": "tslearn/tslearn/utils/cast.py:655",
+        "review_evidence": null,
+        "script_sha256": "9e9e0dd930b935395725cabe614643e8b10d26f600793c5fc6d3f06387e5365e"
+      },
+      "title": "to_cesium_dataset: Investigate the observed API-use barrier",
+      "change_kind": "investigation",
+      "candidate_category": "unknown",
+      "confidence": "low",
+      "diagnosis": "Source, supplied document, and script review required.",
+      "proposed_action": "Source, supplied document, and script review required.",
+      "validation_criteria": "Reproduce in an isolated diagnostic; establish input, call and assertion validity before attributing a documentation or code defect.",
+      "expected_benefit": "Hypothesis only; measure against the pinned baseline before claiming improvement.",
+      "risks": [
+        "Changing inputs, harness, prompts or code changes the protocol.",
+        "Source-informed review must not leak into the audience treatment."
+      ],
+      "attempts": 0,
+      "provider_error_attempts": 0,
+      "document_rounds": null,
+      "script": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_to_cesium_dataset/api_test.py",
+      "allowed_executors": [
+        "human",
+        "agent"
+      ],
+      "default_execution": "disabled",
+      "priority": "needs_diagnosis",
+      "evidence_ledger": "tslearn/A1/ledger.json",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
+      "review": {
+        "status": "open",
+        "events": []
+      }
+    },
+    {
+      "id": "bdb5c733f5946d18f9a7",
+      "repository": "tslearn",
+      "cell": "A1",
+      "api": "to_hdf5",
+      "evidence_version": "52975cc1674e8942d094e8d1f6839993e2663c5a93f78e00146da1bf81746a62",
+      "evidence": {
+        "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+        "manifest_sha256": "42dd31265d4fd753eab37f00ea636b5e06bdd2b2203e48be45dc0be6569b967f",
+        "api": "to_hdf5",
+        "status": "fail",
+        "native_category": "runtime",
+        "error": "FileExistsError:",
+        "source": "tslearn/tslearn/bases/bases.py:210",
+        "review_evidence": null,
+        "script_sha256": "95fdb939c61a298d6b1332d2208a5e2bd5c38c5929e5d8b9c176fc2f3e2786b4"
+      },
+      "title": "to_hdf5: Investigate the observed API-use barrier",
+      "change_kind": "investigation",
+      "candidate_category": "unknown",
+      "confidence": "low",
+      "diagnosis": "Source, supplied document, and script review required.",
+      "proposed_action": "Source, supplied document, and script review required.",
+      "validation_criteria": "Reproduce in an isolated diagnostic; establish input, call and assertion validity before attributing a documentation or code defect.",
+      "expected_benefit": "Hypothesis only; measure against the pinned baseline before claiming improvement.",
+      "risks": [
+        "Changing inputs, harness, prompts or code changes the protocol.",
+        "Source-informed review must not leak into the audience treatment."
+      ],
+      "attempts": 0,
+      "provider_error_attempts": 0,
+      "document_rounds": null,
+      "script": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_to_hdf5/api_test.py",
+      "allowed_executors": [
+        "human",
+        "agent"
+      ],
+      "default_execution": "disabled",
+      "priority": "needs_diagnosis",
+      "evidence_ledger": "tslearn/A1/ledger.json",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
+      "review": {
+        "status": "open",
+        "events": []
+      }
+    },
+    {
+      "id": "b46525822e9ee905585b",
+      "repository": "tslearn",
+      "cell": "A1",
+      "api": "to_json",
+      "evidence_version": "a1b15c3a632aa4ac15b00ea87b19e86f2a9decfc46d06e880cbb4f34e7a5687c",
+      "evidence": {
+        "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+        "manifest_sha256": "42dd31265d4fd753eab37f00ea636b5e06bdd2b2203e48be45dc0be6569b967f",
+        "api": "to_json",
+        "status": "fail",
+        "native_category": "runtime",
+        "error": "AssertionError: n_clusters not found in serialized JSON",
+        "source": "tslearn/tslearn/bases/bases.py:259",
+        "review_evidence": null,
+        "script_sha256": "f02c486a9fe1a0ecb1f4e50a17920895ac92c8af0510494a0dd1ae497a0a818a"
+      },
+      "title": "to_json: Investigate the observed API-use barrier",
+      "change_kind": "investigation",
+      "candidate_category": "assertion-or-behavior",
+      "confidence": "medium",
+      "diagnosis": "Compare expected value with pinned implementation; do not weaken the assertion.",
+      "proposed_action": "Compare expected value with pinned implementation; do not weaken the assertion.",
+      "validation_criteria": "Reproduce in an isolated diagnostic; establish input, call and assertion validity before attributing a documentation or code defect.",
+      "expected_benefit": "Hypothesis only; measure against the pinned baseline before claiming improvement.",
+      "risks": [
+        "Changing inputs, harness, prompts or code changes the protocol.",
+        "Source-informed review must not leak into the audience treatment."
+      ],
+      "attempts": 0,
+      "provider_error_attempts": 0,
+      "document_rounds": null,
+      "script": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_to_json/api_test.py",
+      "allowed_executors": [
+        "human",
+        "agent"
+      ],
+      "default_execution": "disabled",
+      "priority": "needs_diagnosis",
+      "evidence_ledger": "tslearn/A1/ledger.json",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
+      "review": {
+        "status": "open",
+        "events": []
+      }
+    },
+    {
+      "id": "b3bae748f28acda78bca",
+      "repository": "tslearn",
+      "cell": "A1",
+      "api": "to_pickle",
+      "evidence_version": "98d2ba0fea0cb6877b2698b6337044045638b4c103abef8b70be15e6a48f51e2",
+      "evidence": {
+        "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+        "manifest_sha256": "42dd31265d4fd753eab37f00ea636b5e06bdd2b2203e48be45dc0be6569b967f",
+        "api": "to_pickle",
+        "status": "fail",
+        "native_category": "runtime",
+        "error": "AttributeError: 'dict' object has no attribute 'n_clusters'",
+        "source": "tslearn/tslearn/bases/bases.py:307",
+        "review_evidence": null,
+        "script_sha256": "30373abcaaeb4f98b399c9927ce4bf060cd74227578a5c0e5b422c89731af6cf"
+      },
+      "title": "to_pickle: Investigate the observed API-use barrier",
+      "change_kind": "investigation",
+      "candidate_category": "api-identity-or-version",
+      "confidence": "medium",
+      "diagnosis": "Verify intended owner and installed version; not proof of missing dependency.",
+      "proposed_action": "Verify intended owner and installed version; not proof of missing dependency.",
+      "validation_criteria": "Reproduce in an isolated diagnostic; establish input, call and assertion validity before attributing a documentation or code defect.",
+      "expected_benefit": "Hypothesis only; measure against the pinned baseline before claiming improvement.",
+      "risks": [
+        "Changing inputs, harness, prompts or code changes the protocol.",
+        "Source-informed review must not leak into the audience treatment."
+      ],
+      "attempts": 0,
+      "provider_error_attempts": 0,
+      "document_rounds": null,
+      "script": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_to_pickle/api_test.py",
+      "allowed_executors": [
+        "human",
+        "agent"
+      ],
+      "default_execution": "disabled",
+      "priority": "needs_diagnosis",
+      "evidence_ledger": "tslearn/A1/ledger.json",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
+      "review": {
+        "status": "open",
+        "events": []
+      }
+    },
+    {
+      "id": "24cec3efaf9a7aad4548",
+      "repository": "tslearn",
+      "cell": "A1",
+      "api": "transform",
+      "evidence_version": "eb2fe097064b5cd1e7198a2b24dec40677c611253871bec307cb38c06660b13c",
+      "evidence": {
+        "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+        "manifest_sha256": "42dd31265d4fd753eab37f00ea636b5e06bdd2b2203e48be45dc0be6569b967f",
+        "api": "transform",
+        "status": "fail",
+        "native_category": "infra",
+        "error": "missing module/import: No module named 'keras'",
+        "source": "tslearn/tslearn/preprocessing/_synchronizer.py:78",
+        "review_evidence": null,
+        "script_sha256": "1ec4934def399f2b096b968ae55d5f9562efd540e191d2127c2671b5742e7d8a"
+      },
+      "title": "transform: Investigate the observed API-use barrier",
+      "change_kind": "investigation",
+      "candidate_category": "unknown",
+      "confidence": "low",
+      "diagnosis": "Source, supplied document, and script review required.",
+      "proposed_action": "Source, supplied document, and script review required.",
+      "validation_criteria": "Reproduce in an isolated diagnostic; establish input, call and assertion validity before attributing a documentation or code defect.",
+      "expected_benefit": "Hypothesis only; measure against the pinned baseline before claiming improvement.",
+      "risks": [
+        "Changing inputs, harness, prompts or code changes the protocol.",
+        "Source-informed review must not leak into the audience treatment."
+      ],
+      "attempts": 0,
+      "provider_error_attempts": 0,
+      "document_rounds": null,
+      "script": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_transform/api_test.py",
+      "allowed_executors": [
+        "human",
+        "agent"
+      ],
+      "default_execution": "disabled",
+      "priority": "needs_diagnosis",
+      "evidence_ledger": "tslearn/A1/ledger.json",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
+      "review": {
+        "status": "open",
+        "events": []
+      }
+    },
+    {
+      "id": "e05bdc1a311e4986ce33",
+      "repository": "tslearn",
+      "cell": "A1",
+      "api": "tril",
+      "evidence_version": "96767e5ea6a73a9ec4254eb99f3565cdc2da0d6053464084f6c19677baac0d6f",
+      "evidence": {
+        "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+        "manifest_sha256": "42dd31265d4fd753eab37f00ea636b5e06bdd2b2203e48be45dc0be6569b967f",
+        "api": "tril",
+        "status": "fail",
+        "native_category": "infra",
+        "error": "missing module/import: cannot import name 'NumPyBackend' from 'tslearn.backend' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/backend/__init__.py)",
+        "source": "tslearn/tslearn/backend/pytorch_backend.py:217",
+        "review_evidence": null,
+        "script_sha256": "b7ae5686cac160e8be5d938ef173c4ab10240e018e0d3c85b3f73d6f32850e4e"
+      },
+      "title": "tril: Investigate the observed API-use barrier",
+      "change_kind": "investigation",
+      "candidate_category": "api-identity-or-version",
+      "confidence": "medium",
+      "diagnosis": "Verify intended owner and installed version; not proof of missing dependency.",
+      "proposed_action": "Verify intended owner and installed version; not proof of missing dependency.",
+      "validation_criteria": "Reproduce in an isolated diagnostic; establish input, call and assertion validity before attributing a documentation or code defect.",
+      "expected_benefit": "Hypothesis only; measure against the pinned baseline before claiming improvement.",
+      "risks": [
+        "Changing inputs, harness, prompts or code changes the protocol.",
+        "Source-informed review must not leak into the audience treatment."
+      ],
+      "attempts": 0,
+      "provider_error_attempts": 0,
+      "document_rounds": null,
+      "script": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_tril/api_test.py",
+      "allowed_executors": [
+        "human",
+        "agent"
+      ],
+      "default_execution": "disabled",
+      "priority": "needs_diagnosis",
+      "evidence_ledger": "tslearn/A1/ledger.json",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
+      "review": {
+        "status": "open",
+        "events": []
+      }
+    },
+    {
+      "id": "74dcb9c00104264d76ff",
+      "repository": "tslearn",
+      "cell": "A1",
+      "api": "tril_indices",
+      "evidence_version": "62553c965849e3d9491fe2f5ce363acfa6ebc0b7da35c9f8e00a80368f121393",
+      "evidence": {
+        "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+        "manifest_sha256": "42dd31265d4fd753eab37f00ea636b5e06bdd2b2203e48be45dc0be6569b967f",
+        "api": "tril_indices",
+        "status": "fail",
+        "native_category": "infra",
+        "error": "missing module/import: cannot import name 'NumPyBackend' from 'tslearn.backend' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/backend/__init__.py)",
+        "source": "tslearn/tslearn/backend/pytorch_backend.py:221",
+        "review_evidence": null,
+        "script_sha256": "20def710218c5eefb0e6a9e5a42fc66f445725a3f2acbda998397f40c8ec85e8"
+      },
+      "title": "tril_indices: Investigate the observed API-use barrier",
+      "change_kind": "investigation",
+      "candidate_category": "api-identity-or-version",
+      "confidence": "medium",
+      "diagnosis": "Verify intended owner and installed version; not proof of missing dependency.",
+      "proposed_action": "Verify intended owner and installed version; not proof of missing dependency.",
+      "validation_criteria": "Reproduce in an isolated diagnostic; establish input, call and assertion validity before attributing a documentation or code defect.",
+      "expected_benefit": "Hypothesis only; measure against the pinned baseline before claiming improvement.",
+      "risks": [
+        "Changing inputs, harness, prompts or code changes the protocol.",
+        "Source-informed review must not leak into the audience treatment."
+      ],
+      "attempts": 0,
+      "provider_error_attempts": 0,
+      "document_rounds": null,
+      "script": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_tril_indices/api_test.py",
+      "allowed_executors": [
+        "human",
+        "agent"
+      ],
+      "default_execution": "disabled",
+      "priority": "needs_diagnosis",
+      "evidence_ledger": "tslearn/A1/ledger.json",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
+      "review": {
+        "status": "open",
+        "events": []
+      }
+    },
+    {
+      "id": "eb410220623eddf2a39d",
+      "repository": "tslearn",
+      "cell": "A1",
+      "api": "triu",
+      "evidence_version": "db1d9aee0b4a899be02bd49f164bd85140312ee02c3c0e881546b91db0e15f3c",
+      "evidence": {
+        "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+        "manifest_sha256": "42dd31265d4fd753eab37f00ea636b5e06bdd2b2203e48be45dc0be6569b967f",
+        "api": "triu",
+        "status": "fail",
+        "native_category": "infra",
+        "error": "missing module/import: cannot import name 'NumPyBackend' from 'tslearn.backend' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/backend/__init__.py)",
+        "source": "tslearn/tslearn/backend/pytorch_backend.py:228",
+        "review_evidence": null,
+        "script_sha256": "7b8de16d020f0795227439a3a5bf3369771867a2e6f7ed0d5de1c78f94dbe5de"
+      },
+      "title": "triu: Investigate the observed API-use barrier",
+      "change_kind": "investigation",
+      "candidate_category": "api-identity-or-version",
+      "confidence": "medium",
+      "diagnosis": "Verify intended owner and installed version; not proof of missing dependency.",
+      "proposed_action": "Verify intended owner and installed version; not proof of missing dependency.",
+      "validation_criteria": "Reproduce in an isolated diagnostic; establish input, call and assertion validity before attributing a documentation or code defect.",
+      "expected_benefit": "Hypothesis only; measure against the pinned baseline before claiming improvement.",
+      "risks": [
+        "Changing inputs, harness, prompts or code changes the protocol.",
+        "Source-informed review must not leak into the audience treatment."
+      ],
+      "attempts": 0,
+      "provider_error_attempts": 0,
+      "document_rounds": null,
+      "script": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_triu/api_test.py",
+      "allowed_executors": [
+        "human",
+        "agent"
+      ],
+      "default_execution": "disabled",
+      "priority": "needs_diagnosis",
+      "evidence_ledger": "tslearn/A1/ledger.json",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
+      "review": {
+        "status": "open",
+        "events": []
+      }
+    },
+    {
+      "id": "2b0c145acb8fe92a71a8",
+      "repository": "tslearn",
+      "cell": "A1",
+      "api": "triu_indices",
+      "evidence_version": "d4b0e9915999971268e996f49cfc1b75e4c9c2c4b5d05b9dcb8558fbb87d5e3f",
+      "evidence": {
+        "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+        "manifest_sha256": "42dd31265d4fd753eab37f00ea636b5e06bdd2b2203e48be45dc0be6569b967f",
+        "api": "triu_indices",
+        "status": "fail",
+        "native_category": "infra",
+        "error": "missing module/import: cannot import name 'NumPyBackend' from 'tslearn.backend' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/backend/__init__.py)",
+        "source": "tslearn/tslearn/backend/pytorch_backend.py:232",
+        "review_evidence": null,
+        "script_sha256": "0199512530ad80502d71e3058a308fcc3c9791f6ccbe975c1872b41398f492be"
+      },
+      "title": "triu_indices: Investigate the observed API-use barrier",
+      "change_kind": "investigation",
+      "candidate_category": "api-identity-or-version",
+      "confidence": "medium",
+      "diagnosis": "Verify intended owner and installed version; not proof of missing dependency.",
+      "proposed_action": "Verify intended owner and installed version; not proof of missing dependency.",
+      "validation_criteria": "Reproduce in an isolated diagnostic; establish input, call and assertion validity before attributing a documentation or code defect.",
+      "expected_benefit": "Hypothesis only; measure against the pinned baseline before claiming improvement.",
+      "risks": [
+        "Changing inputs, harness, prompts or code changes the protocol.",
+        "Source-informed review must not leak into the audience treatment."
+      ],
+      "attempts": 0,
+      "provider_error_attempts": 0,
+      "document_rounds": null,
+      "script": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_triu_indices/api_test.py",
+      "allowed_executors": [
+        "human",
+        "agent"
+      ],
+      "default_execution": "disabled",
+      "priority": "needs_diagnosis",
+      "evidence_ledger": "tslearn/A1/ledger.json",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
+      "review": {
+        "status": "open",
+        "events": []
+      }
+    },
+    {
+      "id": "fe38236ea9ba8c3a2aad",
+      "repository": "tslearn",
+      "cell": "A1",
+      "api": "uniform",
+      "evidence_version": "c8f702b9dddda523a92f4620ad1608eeb56b1a6655710df0330f4496397bd0ef",
+      "evidence": {
+        "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+        "manifest_sha256": "42dd31265d4fd753eab37f00ea636b5e06bdd2b2203e48be45dc0be6569b967f",
+        "api": "uniform",
+        "status": "fail",
+        "native_category": "runtime",
+        "error": "AttributeError: 'NumPyBackend' object has no attribute 'uniform'",
+        "source": "tslearn/tslearn/backend/pytorch_backend.py:256",
+        "review_evidence": null,
+        "script_sha256": "dd72e46e5c44228f8371755b8c1953add398164e09916743af8f4e16bd083bea"
+      },
+      "title": "uniform: Investigate the observed API-use barrier",
+      "change_kind": "investigation",
+      "candidate_category": "api-identity-or-version",
+      "confidence": "medium",
+      "diagnosis": "Verify intended owner and installed version; not proof of missing dependency.",
+      "proposed_action": "Verify intended owner and installed version; not proof of missing dependency.",
+      "validation_criteria": "Reproduce in an isolated diagnostic; establish input, call and assertion validity before attributing a documentation or code defect.",
+      "expected_benefit": "Hypothesis only; measure against the pinned baseline before claiming improvement.",
+      "risks": [
+        "Changing inputs, harness, prompts or code changes the protocol.",
+        "Source-informed review must not leak into the audience treatment."
+      ],
+      "attempts": 0,
+      "provider_error_attempts": 0,
+      "document_rounds": null,
+      "script": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_uniform/api_test.py",
+      "allowed_executors": [
+        "human",
+        "agent"
+      ],
+      "default_execution": "disabled",
+      "priority": "needs_diagnosis",
+      "evidence_ledger": "tslearn/A1/ledger.json",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
+      "review": {
+        "status": "open",
+        "events": []
+      }
+    },
+    {
+      "id": "a116a86c554f8be3af5f",
+      "repository": "tslearn",
+      "cell": "A1",
+      "api": "y_shifted_sbd_vec",
+      "evidence_version": "bf7b7c1d652f7f70e481a98b8e896b7dec2af5cab66eba0ea17f0d75221d17f4",
+      "evidence": {
+        "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+        "manifest_sha256": "42dd31265d4fd753eab37f00ea636b5e06bdd2b2203e48be45dc0be6569b967f",
+        "api": "y_shifted_sbd_vec",
+        "status": "fail",
+        "native_category": "runtime",
+        "error": "TypeError: not enough arguments: expected 4, got 2",
+        "source": "tslearn/tslearn/metrics/cycc.py:99",
+        "review_evidence": null,
+        "script_sha256": "4b75a41172ca2120bbb61794aa261051e27df7102b0d8d7e54753f2ffbd28485"
+      },
+      "title": "y_shifted_sbd_vec: Investigate the observed API-use barrier",
+      "change_kind": "investigation",
+      "candidate_category": "input-contract-or-api-call",
+      "confidence": "medium",
+      "diagnosis": "Check signature, dtype, shape, units, and file format.",
+      "proposed_action": "Check signature, dtype, shape, units, and file format.",
+      "validation_criteria": "Reproduce in an isolated diagnostic; establish input, call and assertion validity before attributing a documentation or code defect.",
+      "expected_benefit": "Hypothesis only; measure against the pinned baseline before claiming improvement.",
+      "risks": [
+        "Changing inputs, harness, prompts or code changes the protocol.",
+        "Source-informed review must not leak into the audience treatment."
+      ],
+      "attempts": 0,
+      "provider_error_attempts": 0,
+      "document_rounds": null,
+      "script": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_y_shifted_sbd_vec/api_test.py",
+      "allowed_executors": [
+        "human",
+        "agent"
+      ],
+      "default_execution": "disabled",
+      "priority": "needs_diagnosis",
+      "evidence_ledger": "tslearn/A1/ledger.json",
+      "evidence_ledger_sha256": "247f4deed5cd8facbd4a8702741faaba3eaa1875c62986ffd59efea3075931c2",
       "review": {
         "status": "open",
         "events": []

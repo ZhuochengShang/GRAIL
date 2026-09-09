@@ -2,7 +2,7 @@
 
 ID: `cf40b090c19e4acb2bbd` · tslearn/A1 · **open**
 
-Evidence version: `a0943fb8be2804bb9f4e57ae1818541865a4e610b6677452326f57b90d5f6293`
+Evidence version: `1262cc953879f30985ff0b573d4b63368ead2125a62a7a24a930eed392fe74de`
 
 Candidate category: **assertion-or-behavior**. Confidence: **medium**.
 
@@ -16,9 +16,9 @@ Source: `tslearn/tslearn/datasets/ucr_uea.py:236`. Native category: `runtime`.
 AssertionError: The documented contract is insufficient to verify the result without network access or a configurable cache directory.
 ```
 
-[Evidence ledger](../../../tslearn/A1/ledger.json) · [Saved evidence](../evidence/a0943fb8be2804bb9f4e57ae1818541865a4e610b6677452326f57b90d5f6293.json)
+[Evidence ledger](../../../tslearn/A1/ledger.json) · [Saved evidence](../evidence/1262cc953879f30985ff0b573d4b63368ead2125a62a7a24a930eed392fe74de.json)
 
-Recorded attempts: 1; provider errors: 0; document rounds: None.
+Recorded attempts: 0; provider errors: 0; document rounds: None.
 
 ## Proposed action
 

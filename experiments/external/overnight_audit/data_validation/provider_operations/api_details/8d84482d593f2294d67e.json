@@ -21,23 +21,6 @@
     "details": "api_details/8d84482d593f2294d67e.json"
   },
   "native_row": {
-    "name": "predict_proba_and_earliness",
-    "doc_source": "original",
-    "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
-    "execution_evidence": {
-      "status": "pass",
-      "rounds": [
-        {
-          "round": 0,
-          "status": "pass"
-        }
-      ],
-      "code": "import numpy as np\nfrom tslearn.early_classification import NonMyopicEarlyClassifier\nfrom tslearn.svm import TimeSeriesSVC\n\n# Initialize a base classifier and the early classifier\nbase_clf = TimeSeriesSVC(kernel=\"gak\", gamma=\"auto\", probability=True, random_state=42)\nearly_clf = NonMyopicEarlyClassifier(\n    n_clusters=2,\n    base_classifier=base_clf,\n    cost_time_parameter=1e-3,\n    random_state=42\n)\n\n# Fit the early classifier on the balanced dataset\nearly_clf.fit(X, y)\n\n# Predict probabilities and earliness for the second dataset\nprobas, earliness = early_clf.predict_proba_and_earliness(X2)\n\n# Verify the results\nassert probas.shape == (X2.shape[0], len(np.unique(y))), f\"Expected probas shape {(X2.shape[0], len(np.unique(y)))}, got {probas.shape}\"\nassert earliness.shape == (X2.shape[0],), f\"Expected earliness shape {(X2.shape[0],)}, got {earliness.shape}\"\nassert np.all(earliness >= 0) and np.all(earliness <= X2.shape[1]), \"Earliness must be between 0 and the length of the time series\"\nassert np.allclose(np.sum(probas, axis=1), 1.0), \"Probabilities must sum to 1 for each sample\"\n\nprint(f\"__CHECK__ predict_proba_and_earliness probas_shape={probas.shape} earliness_mean={np.mean(earliness):.2f}\")",
-      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_predict_proba_and_earliness/api_test.py",
-      "exit_code": 0,
-      "stdout_tail": "__CHECK__ predict_proba_and_earliness probas_shape=(4, 4) earliness_mean=1.00\n__DONE__\n",
-      "stderr_tail": ""
-    },
     "status": "pass",
     "attempts": 1,
     "pass_round": 0,
@@ -59,10 +42,27 @@
     "document_sha256": "9533aa1afd9a8d00f96bb8a09c99b5f5ffc171aefa80e1e5391f06fa13942857",
     "source": "tslearn/tslearn/early_classification/early_classification.py:453",
     "source_other_sites": 0,
-    "codebase_frames": null
+    "codebase_frames": null,
+    "evidence_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+    "name": "predict_proba_and_earliness",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "import numpy as np\nfrom tslearn.early_classification import NonMyopicEarlyClassifier\nfrom tslearn.svm import TimeSeriesSVC\n\n# Initialize a base classifier and the early classifier\nbase_clf = TimeSeriesSVC(kernel=\"gak\", gamma=\"auto\", probability=True, random_state=42)\nearly_clf = NonMyopicEarlyClassifier(\n    n_clusters=2,\n    base_classifier=base_clf,\n    cost_time_parameter=1e-3,\n    random_state=42\n)\n\n# Fit the early classifier on the balanced dataset\nearly_clf.fit(X, y)\n\n# Predict probabilities and earliness for the second dataset\nprobas, earliness = early_clf.predict_proba_and_earliness(X2)\n\n# Verify the results\nassert probas.shape == (X2.shape[0], len(np.unique(y))), f\"Expected probas shape {(X2.shape[0], len(np.unique(y)))}, got {probas.shape}\"\nassert earliness.shape == (X2.shape[0],), f\"Expected earliness shape {(X2.shape[0],)}, got {earliness.shape}\"\nassert np.all(earliness >= 0) and np.all(earliness <= X2.shape[1]), \"Earliness must be between 0 and the length of the time series\"\nassert np.allclose(np.sum(probas, axis=1), 1.0), \"Probabilities must sum to 1 for each sample\"\n\nprint(f\"__CHECK__ predict_proba_and_earliness probas_shape={probas.shape} earliness_mean={np.mean(earliness):.2f}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_predict_proba_and_earliness/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ predict_proba_and_earliness probas_shape=(4, 4) earliness_mean=1.00\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea"
   },
-  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/comprehension_progress.jsonl",
-  "source_sha256": "b4287c8dab0477deb5cf496b7e20828b3c324cf40079bad0f9226303a497f1f5",
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/docs/eval/A1/comprehension.json",
+  "source_sha256": "2a4d40efff4c3b05dd7ae388c57096087c7d601696af7a4221dbdd75cc944bfa",
   "checkpoint_events": [
     {
       "name": "predict_proba_and_earliness",

@@ -22,27 +22,6 @@
     "details": "api_details/b4e7f265acda4e6d2f2d.json"
   },
   "native_row": {
-    "name": "gamma_soft_dtw",
-    "doc_source": "original",
-    "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
-    "execution_evidence": {
-      "status": "fail",
-      "rounds": [
-        {
-          "round": 0,
-          "status": "fail",
-          "category": "runtime",
-          "error": "AssertionError: Documented contract is insufficient to verify gamma_soft_dtw: gamma_soft_dtw() got an unexpected keyword argument 'gamma'"
-        }
-      ],
-      "error_category": "runtime",
-      "error": "AssertionError: Documented contract is insufficient to verify gamma_soft_dtw: gamma_soft_dtw() got an unexpected keyword argument 'gamma'",
-      "code": "import numpy as np\nfrom tslearn.metrics import gamma_soft_dtw\n\n# The documentation for gamma_soft_dtw is missing, but based on tslearn conventions,\n# it computes the Soft-DTW distance between two time series with a specific gamma.\n# However, without explicit documentation, we cannot verify its exact contract.\n# We will call it with two 1-D series and a gamma value, and assert it returns a float.\n# If it fails, it serves as a documentation-comprehension test failure.\n\ntry:\n    result = gamma_soft_dtw(s1, s2, gamma=1.0)\n    \n    # Soft-DTW distance should be a float\n    assert isinstance(result, float), f\"Expected float, got {type(result)}\"\n    \n    # Soft-DTW distance between identical series is not necessarily 0, but it should be deterministic\n    result_self = gamma_soft_dtw(s1, s1, gamma=1.0)\n    assert isinstance(result_self, float), f\"Expected float, got {type(result_self)}\"\n    \n    print(f\"__CHECK__ gamma_soft_dtw {result:.4f}\")\nexcept Exception as e:\n    # Deliberately fail if t",
-      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_gamma_soft_dtw/api_test.py",
-      "exit_code": 1,
-      "stdout_tail": "",
-      "stderr_tail": "__RUN_ERR__ AssertionError: Documented contract is insufficient to verify gamma_soft_dtw: gamma_soft_dtw() got an unexpected keyword argument 'gamma'\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_gamma_soft_dtw/api_test.py\", line 44, in api_test\n    result = gamma_soft_dtw(s1, s2, gamma=1.0)\nTypeError: gamma_soft_dtw() got an unexpected keyword argument 'gamma'\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_gamma_soft_dtw/api_test.py\", line 65, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_gamma_soft_dtw/api_test.py\", line 60, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_gamma_soft_dtw/api_test.py\", line 56, in api_test\n    assert False, f\"Documented contract is insufficient to verify gamma_soft_dtw: {e}\"\nAssertionError: Documented contract is insufficient to verify gamma_soft_dtw: gamma_soft_dtw() got an unexpected keyword argument 'gamma'\n"
-    },
     "status": "fail",
     "attempts": 1,
     "pass_round": null,
@@ -64,10 +43,31 @@
     "document_sha256": "906fc53ed687fe303f6d355aded6293421e4ae91fd6a5eeb08e3c58d83a2495c",
     "source": "tslearn/tslearn/metrics/softdtw_variants.py:474",
     "source_other_sites": 0,
-    "codebase_frames": null
+    "codebase_frames": null,
+    "evidence_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+    "name": "gamma_soft_dtw",
+    "execution_evidence": {
+      "status": "fail",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "fail",
+          "category": "runtime",
+          "error": "AssertionError: Documented contract is insufficient to verify gamma_soft_dtw: gamma_soft_dtw() got an unexpected keyword argument 'gamma'"
+        }
+      ],
+      "error_category": "runtime",
+      "error": "AssertionError: Documented contract is insufficient to verify gamma_soft_dtw: gamma_soft_dtw() got an unexpected keyword argument 'gamma'",
+      "code": "import numpy as np\nfrom tslearn.metrics import gamma_soft_dtw\n\n# The documentation for gamma_soft_dtw is missing, but based on tslearn conventions,\n# it computes the Soft-DTW distance between two time series with a specific gamma.\n# However, without explicit documentation, we cannot verify its exact contract.\n# We will call it with two 1-D series and a gamma value, and assert it returns a float.\n# If it fails, it serves as a documentation-comprehension test failure.\n\ntry:\n    result = gamma_soft_dtw(s1, s2, gamma=1.0)\n    \n    # Soft-DTW distance should be a float\n    assert isinstance(result, float), f\"Expected float, got {type(result)}\"\n    \n    # Soft-DTW distance between identical series is not necessarily 0, but it should be deterministic\n    result_self = gamma_soft_dtw(s1, s1, gamma=1.0)\n    assert isinstance(result_self, float), f\"Expected float, got {type(result_self)}\"\n    \n    print(f\"__CHECK__ gamma_soft_dtw {result:.4f}\")\nexcept Exception as e:\n    # Deliberately fail if t",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_gamma_soft_dtw/api_test.py",
+      "exit_code": 1,
+      "stdout_tail": "",
+      "stderr_tail": "__RUN_ERR__ AssertionError: Documented contract is insufficient to verify gamma_soft_dtw: gamma_soft_dtw() got an unexpected keyword argument 'gamma'\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_gamma_soft_dtw/api_test.py\", line 44, in api_test\n    result = gamma_soft_dtw(s1, s2, gamma=1.0)\nTypeError: gamma_soft_dtw() got an unexpected keyword argument 'gamma'\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_gamma_soft_dtw/api_test.py\", line 65, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_gamma_soft_dtw/api_test.py\", line 60, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_gamma_soft_dtw/api_test.py\", line 56, in api_test\n    assert False, f\"Documented contract is insufficient to verify gamma_soft_dtw: {e}\"\nAssertionError: Documented contract is insufficient to verify gamma_soft_dtw: gamma_soft_dtw() got an unexpected keyword argument 'gamma'\n"
+    },
+    "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea"
   },
-  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/comprehension_progress.jsonl",
-  "source_sha256": "b4287c8dab0477deb5cf496b7e20828b3c324cf40079bad0f9226303a497f1f5",
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/docs/eval/A1/comprehension.json",
+  "source_sha256": "2a4d40efff4c3b05dd7ae388c57096087c7d601696af7a4221dbdd75cc944bfa",
   "checkpoint_events": [
     {
       "name": "gamma_soft_dtw",

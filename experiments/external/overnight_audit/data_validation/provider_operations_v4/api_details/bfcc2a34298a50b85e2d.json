@@ -22,23 +22,6 @@
     "details": "api_details/bfcc2a34298a50b85e2d.json"
   },
   "native_row": {
-    "name": "frechet",
-    "doc_source": "original",
-    "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
-    "execution_evidence": {
-      "status": "pass",
-      "rounds": [
-        {
-          "round": 0,
-          "status": "pass"
-        }
-      ],
-      "code": "import numpy as np\nfrom tslearn.metrics import frechet\n\ntry:\n    # frechet computes the discrete Frechet distance between two time series\n    dist = frechet(s1, s2)\n    \n    # The distance between a series and itself should be 0.0\n    dist_self = frechet(s1, s1)\n    \n    assert isinstance(dist, float), f\"Expected float, got {type(dist)}\"\n    assert dist >= 0.0, \"Frechet distance cannot be negative\"\n    assert np.isclose(dist_self, 0.0), f\"Frechet distance to self should be 0.0, got {dist_self}\"\n    \n    print(f\"__CHECK__ frechet {dist:.4f}\")\nexcept Exception as e:\n    # If frechet is not available or fails, fail the test explicitly\n    assert False, f\"frechet failed or contract unverifiable: {e}\"",
-      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_frechet/api_test.py",
-      "exit_code": 0,
-      "stdout_tail": "__CHECK__ frechet 0.0850\n__DONE__\n",
-      "stderr_tail": ""
-    },
     "status": "pass",
     "attempts": 1,
     "pass_round": 0,
@@ -60,10 +43,27 @@
     "document_sha256": "e96c3f2a860a56747eaf1a0394b9b506501d6ffb6c174bc800ad6f1b65782dc5",
     "source": "tslearn/tslearn/metrics/_frechet.py:30",
     "source_other_sites": 0,
-    "codebase_frames": null
+    "codebase_frames": null,
+    "evidence_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+    "name": "frechet",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "import numpy as np\nfrom tslearn.metrics import frechet\n\ntry:\n    # frechet computes the discrete Frechet distance between two time series\n    dist = frechet(s1, s2)\n    \n    # The distance between a series and itself should be 0.0\n    dist_self = frechet(s1, s1)\n    \n    assert isinstance(dist, float), f\"Expected float, got {type(dist)}\"\n    assert dist >= 0.0, \"Frechet distance cannot be negative\"\n    assert np.isclose(dist_self, 0.0), f\"Frechet distance to self should be 0.0, got {dist_self}\"\n    \n    print(f\"__CHECK__ frechet {dist:.4f}\")\nexcept Exception as e:\n    # If frechet is not available or fails, fail the test explicitly\n    assert False, f\"frechet failed or contract unverifiable: {e}\"",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_frechet/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ frechet 0.0850\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea"
   },
-  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/comprehension_progress.jsonl",
-  "source_sha256": "b4287c8dab0477deb5cf496b7e20828b3c324cf40079bad0f9226303a497f1f5",
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/docs/eval/A1/comprehension.json",
+  "source_sha256": "2a4d40efff4c3b05dd7ae388c57096087c7d601696af7a4221dbdd75cc944bfa",
   "checkpoint_events": [
     {
       "name": "frechet",

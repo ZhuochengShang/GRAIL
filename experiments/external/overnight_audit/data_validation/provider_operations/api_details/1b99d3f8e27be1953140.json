@@ -21,23 +21,6 @@
     "details": "api_details/1b99d3f8e27be1953140.json"
   },
   "native_row": {
-    "name": "to_numpy",
-    "doc_source": "original",
-    "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
-    "execution_evidence": {
-      "status": "pass",
-      "rounds": [
-        {
-          "round": 0,
-          "status": "pass"
-        }
-      ],
-      "code": "from tslearn.backend import instantiate_backend\nimport numpy as np\n\n# Instantiate the backend for the given input type (NumPy ndarray)\nbe = instantiate_backend(X)\n\n# Call to_numpy to ensure the tensor/array is converted to a NumPy ndarray\nres = be.to_numpy(X)\n\n# Verify the result is a NumPy array with the correct shape and content\nassert isinstance(res, np.ndarray), \"Result must be a NumPy ndarray\"\nassert res.shape == X.shape, f\"Expected shape {X.shape}, got {res.shape}\"\nassert np.array_equal(res, X), \"Content mismatch after to_numpy conversion\"\n\nprint(f\"__CHECK__ to_numpy {res.shape}\")",
-      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_to_numpy/api_test.py",
-      "exit_code": 0,
-      "stdout_tail": "__CHECK__ to_numpy (8, 40, 1)\n__DONE__\n",
-      "stderr_tail": ""
-    },
     "status": "pass",
     "attempts": 1,
     "pass_round": 0,
@@ -59,10 +42,27 @@
     "document_sha256": "f371d7060492318ecdefc2435f1efd5165c618cdbddbce7ebe9eebc6b2ee1439",
     "source": "tslearn/tslearn/backend/numpy_backend.py:122",
     "source_other_sites": 1,
-    "codebase_frames": null
+    "codebase_frames": null,
+    "evidence_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+    "name": "to_numpy",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "from tslearn.backend import instantiate_backend\nimport numpy as np\n\n# Instantiate the backend for the given input type (NumPy ndarray)\nbe = instantiate_backend(X)\n\n# Call to_numpy to ensure the tensor/array is converted to a NumPy ndarray\nres = be.to_numpy(X)\n\n# Verify the result is a NumPy array with the correct shape and content\nassert isinstance(res, np.ndarray), \"Result must be a NumPy ndarray\"\nassert res.shape == X.shape, f\"Expected shape {X.shape}, got {res.shape}\"\nassert np.array_equal(res, X), \"Content mismatch after to_numpy conversion\"\n\nprint(f\"__CHECK__ to_numpy {res.shape}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_to_numpy/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ to_numpy (8, 40, 1)\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea"
   },
-  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/comprehension_progress.jsonl",
-  "source_sha256": "b4287c8dab0477deb5cf496b7e20828b3c324cf40079bad0f9226303a497f1f5",
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/docs/eval/A1/comprehension.json",
+  "source_sha256": "2a4d40efff4c3b05dd7ae388c57096087c7d601696af7a4221dbdd75cc944bfa",
   "checkpoint_events": [
     {
       "name": "to_numpy",

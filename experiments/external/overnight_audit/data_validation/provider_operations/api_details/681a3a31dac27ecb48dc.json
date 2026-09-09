@@ -21,27 +21,6 @@
     "details": "api_details/681a3a31dac27ecb48dc.json"
   },
   "native_row": {
-    "name": "njit_sakoe_chiba_mask",
-    "doc_source": "original",
-    "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
-    "execution_evidence": {
-      "status": "fail",
-      "rounds": [
-        {
-          "round": 0,
-          "status": "fail",
-          "category": "runtime",
-          "error": "AssertionError: Expected 12 invalid cells, got 0"
-        }
-      ],
-      "error_category": "runtime",
-      "error": "AssertionError: Expected 12 invalid cells, got 0",
-      "code": "from tslearn.metrics.dtw_variants import njit_sakoe_chiba_mask\nimport numpy as np\n\nsz1, sz2 = 5, 5\nradius = 1\n\n# Generate the Sakoe-Chiba band mask\nmask = njit_sakoe_chiba_mask(sz1, sz2, radius)\n\n# Verify the shape of the generated mask\nassert mask.shape == (sz1, sz2), f\"Unexpected shape: {mask.shape}\"\n\n# In tslearn, DTW masks use 0.0 for valid cells and inf for invalid cells.\n# For a 5x5 matrix with radius 1, the valid cells are the diagonal and one cell on each side.\n# Valid cells per row: 2 + 3 + 3 + 3 + 2 = 13.\n# Invalid cells: 25 - 13 = 12.\ninvalid_count = int(np.isinf(mask).sum())\nvalid_count = int((mask == 0.).sum())\n\nassert invalid_count == 12, f\"Expected 12 invalid cells, got {invalid_count}\"\nassert valid_count == 13, f\"Expected 13 valid cells, got {valid_count}\"\n\nprint(f\"__CHECK__ njit_sakoe_chiba_mask {mask.shape} {invalid_count}\")",
-      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_njit_sakoe_chiba_mask/api_test.py",
-      "exit_code": 1,
-      "stdout_tail": "",
-      "stderr_tail": "__RUN_ERR__ AssertionError: Expected 12 invalid cells, got 0\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_njit_sakoe_chiba_mask/api_test.py\", line 65, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_njit_sakoe_chiba_mask/api_test.py\", line 60, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_njit_sakoe_chiba_mask/api_test.py\", line 53, in api_test\n    assert invalid_count == 12, f\"Expected 12 invalid cells, got {invalid_count}\"\nAssertionError: Expected 12 invalid cells, got 0\n"
-    },
     "status": "fail",
     "attempts": 1,
     "pass_round": null,
@@ -63,10 +42,31 @@
     "document_sha256": "dc0cc3ef4d718b90379890c18ed05d2acad1a3cbef7eb2b1853b3eea134d0d7d",
     "source": "tslearn/tslearn/metrics/dtw_variants.py:1487",
     "source_other_sites": 0,
-    "codebase_frames": null
+    "codebase_frames": null,
+    "evidence_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+    "name": "njit_sakoe_chiba_mask",
+    "execution_evidence": {
+      "status": "fail",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "fail",
+          "category": "runtime",
+          "error": "AssertionError: Expected 12 invalid cells, got 0"
+        }
+      ],
+      "error_category": "runtime",
+      "error": "AssertionError: Expected 12 invalid cells, got 0",
+      "code": "from tslearn.metrics.dtw_variants import njit_sakoe_chiba_mask\nimport numpy as np\n\nsz1, sz2 = 5, 5\nradius = 1\n\n# Generate the Sakoe-Chiba band mask\nmask = njit_sakoe_chiba_mask(sz1, sz2, radius)\n\n# Verify the shape of the generated mask\nassert mask.shape == (sz1, sz2), f\"Unexpected shape: {mask.shape}\"\n\n# In tslearn, DTW masks use 0.0 for valid cells and inf for invalid cells.\n# For a 5x5 matrix with radius 1, the valid cells are the diagonal and one cell on each side.\n# Valid cells per row: 2 + 3 + 3 + 3 + 2 = 13.\n# Invalid cells: 25 - 13 = 12.\ninvalid_count = int(np.isinf(mask).sum())\nvalid_count = int((mask == 0.).sum())\n\nassert invalid_count == 12, f\"Expected 12 invalid cells, got {invalid_count}\"\nassert valid_count == 13, f\"Expected 13 valid cells, got {valid_count}\"\n\nprint(f\"__CHECK__ njit_sakoe_chiba_mask {mask.shape} {invalid_count}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_njit_sakoe_chiba_mask/api_test.py",
+      "exit_code": 1,
+      "stdout_tail": "",
+      "stderr_tail": "__RUN_ERR__ AssertionError: Expected 12 invalid cells, got 0\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_njit_sakoe_chiba_mask/api_test.py\", line 65, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_njit_sakoe_chiba_mask/api_test.py\", line 60, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_njit_sakoe_chiba_mask/api_test.py\", line 53, in api_test\n    assert invalid_count == 12, f\"Expected 12 invalid cells, got {invalid_count}\"\nAssertionError: Expected 12 invalid cells, got 0\n"
+    },
+    "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea"
   },
-  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/comprehension_progress.jsonl",
-  "source_sha256": "b4287c8dab0477deb5cf496b7e20828b3c324cf40079bad0f9226303a497f1f5",
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/docs/eval/A1/comprehension.json",
+  "source_sha256": "2a4d40efff4c3b05dd7ae388c57096087c7d601696af7a4221dbdd75cc944bfa",
   "checkpoint_events": [
     {
       "name": "njit_sakoe_chiba_mask",

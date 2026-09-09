@@ -22,27 +22,6 @@
     "details": "api_details/b91308aae119cfa03622.json"
   },
   "native_row": {
-    "name": "cydist_1d_sax",
-    "doc_source": "original",
-    "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
-    "execution_evidence": {
-      "status": "fail",
-      "rounds": [
-        {
-          "round": 0,
-          "status": "fail",
-          "category": "infra",
-          "error": "missing module/import: cannot import name 'cydist_1d_sax' from 'tslearn.metrics' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_"
-        }
-      ],
-      "error_category": "infra",
-      "error": "missing module/import: cannot import name 'cydist_1d_sax' from 'tslearn.metrics' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/metrics/__init__.py)",
-      "code": "from tslearn.metrics import cydist_1d_sax\nimport numpy as np\n\n# cydist_1d_sax computes the SAX distance between two 1D arrays of integers (SAX symbols)\n# We create two small integer arrays representing SAX symbols\nsax_s1 = np.array([0, 1, 2, 3, 2, 1], dtype=np.int32)\nsax_s2 = np.array([0, 0, 2, 3, 3, 1], dtype=np.int32)\n\n# We need a breakpoints array to compute the distance between symbols\n# For an alphabet of size 4, there are 3 breakpoints (e.g., from a standard normal distribution)\nbreakpoints = np.array([-0.67, 0.0, 0.67], dtype=np.float64)\n\n# Compute the SAX distance\ndist = cydist_1d_sax(sax_s1, sax_s2, breakpoints)\n\n# The distance should be a non-negative float\nassert isinstance(dist, float) and dist >= 0.0, f\"Expected non-negative float distance, got {dist}\"\n\n# For identical sequences, the distance should be exactly 0.0\ndist_self = cydist_1d_sax(sax_s1, sax_s1, breakpoints)\nassert dist_self == 0.0, f\"Expected distance to self to be 0.0, got {dist_self}\"\n\nprint(f\"__CHECK__ cydist",
-      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_cydist_1d_sax/api_test.py",
-      "exit_code": 1,
-      "stdout_tail": "",
-      "stderr_tail": "__RUN_ERR__ ImportError: cannot import name 'cydist_1d_sax' from 'tslearn.metrics' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/metrics/__init__.py)\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_cydist_1d_sax/api_test.py\", line 65, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_cydist_1d_sax/api_test.py\", line 60, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_cydist_1d_sax/api_test.py\", line 34, in api_test\n    from tslearn.metrics import cydist_1d_sax\nImportError: cannot import name 'cydist_1d_sax' from 'tslearn.metrics' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/metrics/__init__.py)\n"
-    },
     "status": "fail",
     "attempts": 1,
     "pass_round": null,
@@ -64,10 +43,31 @@
     "document_sha256": "6ed70e934c30e33de7d0224a0500360de97cf5290fddba5cef22bc4688fd2def",
     "source": "tslearn/tslearn/metrics/cysax.py:135",
     "source_other_sites": 0,
-    "codebase_frames": null
+    "codebase_frames": null,
+    "evidence_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+    "name": "cydist_1d_sax",
+    "execution_evidence": {
+      "status": "fail",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "fail",
+          "category": "infra",
+          "error": "missing module/import: cannot import name 'cydist_1d_sax' from 'tslearn.metrics' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_"
+        }
+      ],
+      "error_category": "infra",
+      "error": "missing module/import: cannot import name 'cydist_1d_sax' from 'tslearn.metrics' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/metrics/__init__.py)",
+      "code": "from tslearn.metrics import cydist_1d_sax\nimport numpy as np\n\n# cydist_1d_sax computes the SAX distance between two 1D arrays of integers (SAX symbols)\n# We create two small integer arrays representing SAX symbols\nsax_s1 = np.array([0, 1, 2, 3, 2, 1], dtype=np.int32)\nsax_s2 = np.array([0, 0, 2, 3, 3, 1], dtype=np.int32)\n\n# We need a breakpoints array to compute the distance between symbols\n# For an alphabet of size 4, there are 3 breakpoints (e.g., from a standard normal distribution)\nbreakpoints = np.array([-0.67, 0.0, 0.67], dtype=np.float64)\n\n# Compute the SAX distance\ndist = cydist_1d_sax(sax_s1, sax_s2, breakpoints)\n\n# The distance should be a non-negative float\nassert isinstance(dist, float) and dist >= 0.0, f\"Expected non-negative float distance, got {dist}\"\n\n# For identical sequences, the distance should be exactly 0.0\ndist_self = cydist_1d_sax(sax_s1, sax_s1, breakpoints)\nassert dist_self == 0.0, f\"Expected distance to self to be 0.0, got {dist_self}\"\n\nprint(f\"__CHECK__ cydist",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_cydist_1d_sax/api_test.py",
+      "exit_code": 1,
+      "stdout_tail": "",
+      "stderr_tail": "__RUN_ERR__ ImportError: cannot import name 'cydist_1d_sax' from 'tslearn.metrics' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/metrics/__init__.py)\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_cydist_1d_sax/api_test.py\", line 65, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_cydist_1d_sax/api_test.py\", line 60, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_cydist_1d_sax/api_test.py\", line 34, in api_test\n    from tslearn.metrics import cydist_1d_sax\nImportError: cannot import name 'cydist_1d_sax' from 'tslearn.metrics' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/metrics/__init__.py)\n"
+    },
+    "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea"
   },
-  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/comprehension_progress.jsonl",
-  "source_sha256": "b4287c8dab0477deb5cf496b7e20828b3c324cf40079bad0f9226303a497f1f5",
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/docs/eval/A1/comprehension.json",
+  "source_sha256": "2a4d40efff4c3b05dd7ae388c57096087c7d601696af7a4221dbdd75cc944bfa",
   "checkpoint_events": [
     {
       "name": "cydist_1d_sax",

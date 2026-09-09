@@ -22,23 +22,6 @@
     "details": "api_details/9af6cbc76ecc56041e9f.json"
   },
   "native_row": {
-    "name": "from_pickle",
-    "doc_source": "original",
-    "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
-    "execution_evidence": {
-      "status": "pass",
-      "rounds": [
-        {
-          "round": 0,
-          "status": "pass"
-        }
-      ],
-      "code": "from tslearn.clustering import TimeSeriesKMeans\nimport os\n\n# Train a small model to serialize\nmodel = TimeSeriesKMeans(n_clusters=2, max_iter=2, random_state=42)\nmodel.fit(X)\n\n# Save the model to a pickle file\npkl_path = os.path.join(output_dir, \"test_from_pickle.pkl\")\nmodel.to_pickle(pkl_path)\n\n# Load the model using from_pickle\nloaded_model = TimeSeriesKMeans.from_pickle(pkl_path)\n\n# Verify the loaded model retains the learned attributes\nassert loaded_model.n_clusters == 2, \"Loaded model has incorrect n_clusters\"\nassert loaded_model.cluster_centers_.shape == model.cluster_centers_.shape, \"Loaded model cluster centers shape mismatch\"\nassert (loaded_model.cluster_centers_ == model.cluster_centers_).all(), \"Loaded model cluster centers values mismatch\"\n\nprint(f\"__CHECK__ from_pickle {loaded_model.cluster_centers_.shape}\")",
-      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_from_pickle/api_test.py",
-      "exit_code": 0,
-      "stdout_tail": "__CHECK__ from_pickle (2, 40, 1)\n__DONE__\n",
-      "stderr_tail": ""
-    },
     "status": "pass",
     "attempts": 1,
     "pass_round": 0,
@@ -60,10 +43,27 @@
     "document_sha256": "94e14516d14a09153c5604f5deb9f1013de60c7ec07135c1dd02d967616fc033",
     "source": "tslearn/tslearn/bases/bases.py:321",
     "source_other_sites": 0,
-    "codebase_frames": null
+    "codebase_frames": null,
+    "evidence_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+    "name": "from_pickle",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "from tslearn.clustering import TimeSeriesKMeans\nimport os\n\n# Train a small model to serialize\nmodel = TimeSeriesKMeans(n_clusters=2, max_iter=2, random_state=42)\nmodel.fit(X)\n\n# Save the model to a pickle file\npkl_path = os.path.join(output_dir, \"test_from_pickle.pkl\")\nmodel.to_pickle(pkl_path)\n\n# Load the model using from_pickle\nloaded_model = TimeSeriesKMeans.from_pickle(pkl_path)\n\n# Verify the loaded model retains the learned attributes\nassert loaded_model.n_clusters == 2, \"Loaded model has incorrect n_clusters\"\nassert loaded_model.cluster_centers_.shape == model.cluster_centers_.shape, \"Loaded model cluster centers shape mismatch\"\nassert (loaded_model.cluster_centers_ == model.cluster_centers_).all(), \"Loaded model cluster centers values mismatch\"\n\nprint(f\"__CHECK__ from_pickle {loaded_model.cluster_centers_.shape}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_from_pickle/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ from_pickle (2, 40, 1)\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea"
   },
-  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/comprehension_progress.jsonl",
-  "source_sha256": "b4287c8dab0477deb5cf496b7e20828b3c324cf40079bad0f9226303a497f1f5",
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/docs/eval/A1/comprehension.json",
+  "source_sha256": "2a4d40efff4c3b05dd7ae388c57096087c7d601696af7a4221dbdd75cc944bfa",
   "checkpoint_events": [
     {
       "name": "from_pickle",

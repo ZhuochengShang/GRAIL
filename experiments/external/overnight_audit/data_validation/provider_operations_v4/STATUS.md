@@ -1,6 +1,6 @@
 # Execution status and API timing
 
-2026-09-08T21:29:56.083521-07:00
+2026-09-08T21:45:06.411531-07:00
 
 **No single “partial” label:** each unresolved case has an explicit reason. A finished evaluation can contain real failures. A provider failure is not executed code. A running test does not prove the target API was reached.
 
@@ -12,7 +12,7 @@
 | Thumbnailator | A1 | 149/149 | Native evaluation finished (failures still count) | 130 | 8 | 9 | 0 | 0 | 2 |
 | Thumbnailator | A2 | 149/149 | Native evaluation finished (failures still count) | 127 | 14 | 8 | 0 | 0 | 0 |
 | Thumbnailator | B2 | 149/149 | Native evaluation finished (failures still count) | 139 | 7 | 3 | 0 | 0 | 0 |
-| tslearn | A1 | 235/235 | 1 provider cases unresolved | 129 | 0 | 44 | 59 | 1 | 2 |
+| tslearn | A1 | 235/235 | Native evaluation finished (failures still count) | 129 | 0 | 44 | 60 | 0 | 2 |
 | tslearn | A2 | 235/235 | Native evaluation finished (failures still count) | 175 | 0 | 32 | 28 | 0 | 0 |
 | tslearn | B2 | 235/235 | Native evaluation finished (failures still count) | 217 | 0 | 5 | 13 | 0 | 0 |
 

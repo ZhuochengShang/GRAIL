@@ -22,27 +22,6 @@
     "details": "api_details/2543c0bcafb27f491a82.json"
   },
   "native_row": {
-    "name": "mse",
-    "doc_source": "original",
-    "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
-    "execution_evidence": {
-      "status": "fail",
-      "rounds": [
-        {
-          "round": 0,
-          "status": "fail",
-          "category": "runtime",
-          "error": "AssertionError: The documented contract for `mse` is insufficient to verify the result or the function does not exist in the expected location."
-        }
-      ],
-      "error_category": "runtime",
-      "error": "AssertionError: The documented contract for `mse` is insufficient to verify the result or the function does not exist in the expected location.",
-      "code": "import tslearn.backend\n\ntry:\n    # Attempt to find mse in the backend module\n    if hasattr(tslearn.backend, \"mse\"):\n        # If it exists, it's likely a backend helper for mean squared error\n        import numpy as np\n        \n        # Create a backend instance\n        be = tslearn.backend.instantiate_backend(\"numpy\")\n        \n        # Create two small arrays\n        a = np.array([1.0, 2.0, 3.0])\n        b = np.array([1.0, 2.0, 4.0])\n        \n        # Call mse\n        result = tslearn.backend.mse(a, b)\n        \n        # Verify the result (MSE between [1,2,3] and [1,2,4] is (0 + 0 + 1)/3 = 1/3)\n        assert np.isclose(result, 1.0 / 3.0), f\"Expected MSE 0.333..., got {result}\"\n        print(f\"__CHECK__ mse {result}\")\n    else:\n        # If it doesn't exist, fail the test as requested for unverifiable contracts\n        assert False, \"The documented contract for `mse` is insufficient to verify the result or the function does not exist in the expected location.\"\nexcept Exception as ",
-      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_mse/api_test.py",
-      "exit_code": 1,
-      "stdout_tail": "",
-      "stderr_tail": "__RUN_ERR__ AssertionError: The documented contract for `mse` is insufficient to verify the result or the function does not exist in the expected location.\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_mse/api_test.py\", line 70, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_mse/api_test.py\", line 65, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_mse/api_test.py\", line 57, in api_test\n    assert False, \"The documented contract for `mse` is insufficient to verify the result or the function does not exist in the expected location.\"\nAssertionError: The documented contract for `mse` is insufficient to verify the result or the function does not exist in the expected location.\n"
-    },
     "status": "fail",
     "attempts": 1,
     "pass_round": null,
@@ -64,10 +43,31 @@
     "document_sha256": "6455331e0b58c89e18ffbf1340950b1cba17163b1182f88b0bf45d15d8ee2bbe",
     "source": "tslearn/tslearn/metrics/performance.py:83",
     "source_other_sites": 0,
-    "codebase_frames": null
+    "codebase_frames": null,
+    "evidence_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+    "name": "mse",
+    "execution_evidence": {
+      "status": "fail",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "fail",
+          "category": "runtime",
+          "error": "AssertionError: The documented contract for `mse` is insufficient to verify the result or the function does not exist in the expected location."
+        }
+      ],
+      "error_category": "runtime",
+      "error": "AssertionError: The documented contract for `mse` is insufficient to verify the result or the function does not exist in the expected location.",
+      "code": "import tslearn.backend\n\ntry:\n    # Attempt to find mse in the backend module\n    if hasattr(tslearn.backend, \"mse\"):\n        # If it exists, it's likely a backend helper for mean squared error\n        import numpy as np\n        \n        # Create a backend instance\n        be = tslearn.backend.instantiate_backend(\"numpy\")\n        \n        # Create two small arrays\n        a = np.array([1.0, 2.0, 3.0])\n        b = np.array([1.0, 2.0, 4.0])\n        \n        # Call mse\n        result = tslearn.backend.mse(a, b)\n        \n        # Verify the result (MSE between [1,2,3] and [1,2,4] is (0 + 0 + 1)/3 = 1/3)\n        assert np.isclose(result, 1.0 / 3.0), f\"Expected MSE 0.333..., got {result}\"\n        print(f\"__CHECK__ mse {result}\")\n    else:\n        # If it doesn't exist, fail the test as requested for unverifiable contracts\n        assert False, \"The documented contract for `mse` is insufficient to verify the result or the function does not exist in the expected location.\"\nexcept Exception as ",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_mse/api_test.py",
+      "exit_code": 1,
+      "stdout_tail": "",
+      "stderr_tail": "__RUN_ERR__ AssertionError: The documented contract for `mse` is insufficient to verify the result or the function does not exist in the expected location.\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_mse/api_test.py\", line 70, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_mse/api_test.py\", line 65, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_mse/api_test.py\", line 57, in api_test\n    assert False, \"The documented contract for `mse` is insufficient to verify the result or the function does not exist in the expected location.\"\nAssertionError: The documented contract for `mse` is insufficient to verify the result or the function does not exist in the expected location.\n"
+    },
+    "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea"
   },
-  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/comprehension_progress.jsonl",
-  "source_sha256": "b4287c8dab0477deb5cf496b7e20828b3c324cf40079bad0f9226303a497f1f5",
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/docs/eval/A1/comprehension.json",
+  "source_sha256": "2a4d40efff4c3b05dd7ae388c57096087c7d601696af7a4221dbdd75cc944bfa",
   "checkpoint_events": [
     {
       "name": "mse",

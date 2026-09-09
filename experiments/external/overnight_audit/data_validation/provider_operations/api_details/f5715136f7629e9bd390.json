@@ -21,27 +21,6 @@
     "details": "api_details/f5715136f7629e9bd390.json"
   },
   "native_row": {
-    "name": "njit_lcss_accumulated_matrix",
-    "doc_source": "original",
-    "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
-    "execution_evidence": {
-      "status": "fail",
-      "rounds": [
-        {
-          "round": 0,
-          "status": "fail",
-          "category": "infra",
-          "error": "missing module/import: No module named 'tslearn.metrics.lcss'"
-        }
-      ],
-      "error_category": "infra",
-      "error": "missing module/import: No module named 'tslearn.metrics.lcss'",
-      "code": "import numpy as np\nfrom tslearn.metrics.lcss import njit_lcss_accumulated_matrix\n\n# Prepare small 2D time series (n_timestamps, n_features)\ns1_small = s1[:5].reshape(-1, 1).astype(np.float64)\ns2_small = s1[:5].reshape(-1, 1).astype(np.float64)\n\n# LCSS uses a mask where finite values indicate valid alignment paths\nmask = np.zeros((5, 5), dtype=np.float64)\neps = 0.5\n\n# Compute the accumulated cost matrix\nacc_mat = njit_lcss_accumulated_matrix(s1_small, s2_small, eps, mask)\n\n# The accumulated matrix should have an extra row and column for base cases\nassert acc_mat.shape == (6, 6), f\"Expected shape (6, 6), got {acc_mat.shape}\"\n\n# Since s1_small and s2_small are identical, the longest common subsequence length should be 5\nlcss_score = acc_mat[-1, -1]\nassert lcss_score == 5.0, f\"Expected LCSS of 5.0 for identical series, got {lcss_score}\"\n\nprint(f\"__CHECK__ njit_lcss_accumulated_matrix {acc_mat.shape} {lcss_score}\")",
-      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_njit_lcss_accumulated_matrix/api_test.py",
-      "exit_code": 1,
-      "stdout_tail": "",
-      "stderr_tail": "__RUN_ERR__ ModuleNotFoundError: No module named 'tslearn.metrics.lcss'\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_njit_lcss_accumulated_matrix/api_test.py\", line 64, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_njit_lcss_accumulated_matrix/api_test.py\", line 59, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_njit_lcss_accumulated_matrix/api_test.py\", line 35, in api_test\n    from tslearn.metrics.lcss import njit_lcss_accumulated_matrix\nModuleNotFoundError: No module named 'tslearn.metrics.lcss'\n"
-    },
     "status": "fail",
     "attempts": 1,
     "pass_round": null,
@@ -63,10 +42,31 @@
     "document_sha256": "88e057294bf301f5211f579b23bfe798d698c62954ec259da1ada9d2f9d5cd9a",
     "source": "tslearn/tslearn/metrics/dtw_variants.py:2233",
     "source_other_sites": 0,
-    "codebase_frames": null
+    "codebase_frames": null,
+    "evidence_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+    "name": "njit_lcss_accumulated_matrix",
+    "execution_evidence": {
+      "status": "fail",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "fail",
+          "category": "infra",
+          "error": "missing module/import: No module named 'tslearn.metrics.lcss'"
+        }
+      ],
+      "error_category": "infra",
+      "error": "missing module/import: No module named 'tslearn.metrics.lcss'",
+      "code": "import numpy as np\nfrom tslearn.metrics.lcss import njit_lcss_accumulated_matrix\n\n# Prepare small 2D time series (n_timestamps, n_features)\ns1_small = s1[:5].reshape(-1, 1).astype(np.float64)\ns2_small = s1[:5].reshape(-1, 1).astype(np.float64)\n\n# LCSS uses a mask where finite values indicate valid alignment paths\nmask = np.zeros((5, 5), dtype=np.float64)\neps = 0.5\n\n# Compute the accumulated cost matrix\nacc_mat = njit_lcss_accumulated_matrix(s1_small, s2_small, eps, mask)\n\n# The accumulated matrix should have an extra row and column for base cases\nassert acc_mat.shape == (6, 6), f\"Expected shape (6, 6), got {acc_mat.shape}\"\n\n# Since s1_small and s2_small are identical, the longest common subsequence length should be 5\nlcss_score = acc_mat[-1, -1]\nassert lcss_score == 5.0, f\"Expected LCSS of 5.0 for identical series, got {lcss_score}\"\n\nprint(f\"__CHECK__ njit_lcss_accumulated_matrix {acc_mat.shape} {lcss_score}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_njit_lcss_accumulated_matrix/api_test.py",
+      "exit_code": 1,
+      "stdout_tail": "",
+      "stderr_tail": "__RUN_ERR__ ModuleNotFoundError: No module named 'tslearn.metrics.lcss'\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_njit_lcss_accumulated_matrix/api_test.py\", line 64, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_njit_lcss_accumulated_matrix/api_test.py\", line 59, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_njit_lcss_accumulated_matrix/api_test.py\", line 35, in api_test\n    from tslearn.metrics.lcss import njit_lcss_accumulated_matrix\nModuleNotFoundError: No module named 'tslearn.metrics.lcss'\n"
+    },
+    "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea"
   },
-  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/comprehension_progress.jsonl",
-  "source_sha256": "b4287c8dab0477deb5cf496b7e20828b3c324cf40079bad0f9226303a497f1f5",
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/docs/eval/A1/comprehension.json",
+  "source_sha256": "2a4d40efff4c3b05dd7ae388c57096087c7d601696af7a4221dbdd75cc944bfa",
   "checkpoint_events": [
     {
       "name": "njit_lcss_accumulated_matrix",
