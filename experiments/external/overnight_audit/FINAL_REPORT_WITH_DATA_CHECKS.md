@@ -4,7 +4,7 @@ Deadline: 2026-09-09T11:00:00-07:00. Values below come from recorded final resul
 
 | Repository | A1 pass/total | A2 pass/total | B1 pass/total | B2 pass/total | Release decision |
 |---|---|---|---|---|---|
-| mir_eval | pending | 135/148 | pending | 137/148 | WITHHELD/PARTIAL |
+| mir_eval | 77/148 | 135/148 | pending | 137/148 | WITHHELD/PARTIAL |
 | thumbnailator | 130/149 | 127/149 | pending | 139/149 | WITHHELD/PARTIAL |
 | tslearn | pending | 175/235 | pending | 217/235 | WITHHELD/PARTIAL |
 

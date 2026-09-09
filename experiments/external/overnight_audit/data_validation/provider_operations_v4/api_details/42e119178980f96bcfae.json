@@ -22,23 +22,6 @@
     "details": "api_details/42e119178980f96bcfae.json"
   },
   "native_row": {
-    "name": "lmeasure",
-    "doc_source": "original",
-    "experiment_fingerprint": "6f5bcaa71d6a868167732ff1b08ada63654abf63b2bc6f0777aae06911a1e74f",
-    "execution_evidence": {
-      "status": "pass",
-      "rounds": [
-        {
-          "round": 0,
-          "status": "pass"
-        }
-      ],
-      "code": "import mir_eval\n\ntry:\n    # lmeasure is part of mir_eval.hierarchy, but wait, the prompt says \"No code-context section for lmeasure was found\".\n    # Let's check mir_eval.hierarchy.lmeasure or mir_eval.segment.lmeasure?\n    # Actually, lmeasure is in mir_eval.hierarchy.\n    # Wait, mir_eval.hierarchy has tmeasure, but does it have lmeasure?\n    # Yes, L-measure is a hierarchical evaluation metric.\n    # Let's try to call it with ref_intervals, ref_labels, est_intervals, est_labels.\n    # Wait, hierarchy metrics usually take lists of intervals and labels for each level.\n    # Let's wrap the intervals and labels in lists to represent a single-level hierarchy.\n    ref_hier_intervals = [ref_intervals]\n    ref_hier_labels = [ref_labels]\n    est_hier_intervals = [est_intervals]\n    est_hier_labels = [est_labels]\n    \n    precision, recall, f_measure = mir_eval.hierarchy.lmeasure(\n        ref_hier_intervals, ref_hier_labels,\n        est_hier_intervals, est_hier_labels\n    )\n    \n    assert 0.0 <= f_measure <= 1.0, f\"F-measure should be in [0, 1], got {f_measure}\"\n    assert 0.0 <= precision <= 1.0, f\"Precision should be in [0, 1], got {precision}\"\n    assert 0.0 <= recall <= 1.0, f\"Recall should be in [0, 1], got {recall}\"\n    \n    print(f\"__CHECK__ lmeasure {f_measure:.4f}\")\nexcept AttributeError:\n    # If lmeasure is not in hierarchy, maybe it's in segment?\n    # Actually, L-measure is a tree distance metric, often used in hierarchy.\n    # Let's fail gracefully if it's not found, but the prompt says \"Use the complete 148-name AIDEAL-discovered public surface\".\n    assert False, \"lmeasure contract is insufficient to verify the result or function not found.\"",
-      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_A1/experiments/external/mir_eval/.aideal_exec/A1/run_lmeasure/api_test.py",
-      "exit_code": 0,
-      "stdout_tail": "__CHECK__ lmeasure 0.8783\n__DONE__\n",
-      "stderr_tail": ""
-    },
     "status": "pass",
     "attempts": 1,
     "pass_round": 0,
@@ -60,10 +43,27 @@
     "document_sha256": "f9bb80d910ddbbcf3c0b34efb7821afd13f673197d731596c0bd0361ad9521c2",
     "source": "source/mir_eval/hierarchy.py:548",
     "source_other_sites": 0,
-    "codebase_frames": null
+    "codebase_frames": null,
+    "evidence_fingerprint": "6f5bcaa71d6a868167732ff1b08ada63654abf63b2bc6f0777aae06911a1e74f",
+    "name": "lmeasure",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "import mir_eval\n\ntry:\n    # lmeasure is part of mir_eval.hierarchy, but wait, the prompt says \"No code-context section for lmeasure was found\".\n    # Let's check mir_eval.hierarchy.lmeasure or mir_eval.segment.lmeasure?\n    # Actually, lmeasure is in mir_eval.hierarchy.\n    # Wait, mir_eval.hierarchy has tmeasure, but does it have lmeasure?\n    # Yes, L-measure is a hierarchical evaluation metric.\n    # Let's try to call it with ref_intervals, ref_labels, est_intervals, est_labels.\n    # Wait, hierarchy metrics usually take lists of intervals and labels for each level.\n    # Let's wrap the intervals and labels in lists to represent a single-level hierarchy.\n    ref_hier_intervals = [ref_intervals]\n    ref_hier_labels = [ref_labels]\n    est_hier_intervals = [est_intervals]\n    est_hier_labels = [est_labels]\n    \n    precision, recall, f_measure = mir_eval.hierarchy.lmeasure(\n        ref_hier_intervals, ref_hier_labels,\n        est_hier_intervals, est_hier_labels\n    )\n    \n    assert 0.0 <= f_measure <= 1.0, f\"F-measure should be in [0, 1], got {f_measure}\"\n    assert 0.0 <= precision <= 1.0, f\"Precision should be in [0, 1], got {precision}\"\n    assert 0.0 <= recall <= 1.0, f\"Recall should be in [0, 1], got {recall}\"\n    \n    print(f\"__CHECK__ lmeasure {f_measure:.4f}\")\nexcept AttributeError:\n    # If lmeasure is not in hierarchy, maybe it's in segment?\n    # Actually, L-measure is a tree distance metric, often used in hierarchy.\n    # Let's fail gracefully if it's not found, but the prompt says \"Use the complete 148-name AIDEAL-discovered public surface\".\n    assert False, \"lmeasure contract is insufficient to verify the result or function not found.\"",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_A1/experiments/external/mir_eval/.aideal_exec/A1/run_lmeasure/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ lmeasure 0.8783\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "6f5bcaa71d6a868167732ff1b08ada63654abf63b2bc6f0777aae06911a1e74f"
   },
-  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_A1/experiments/external/mir_eval/.aideal_exec/A1/comprehension_progress.jsonl",
-  "source_sha256": "e8eddf13953b5478d8d642dc973c83d08601dac7463b6e94f2f91150d6a8356b",
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_A1/experiments/external/mir_eval/docs/eval/A1/comprehension.json",
+  "source_sha256": "e099b0be5eb00a411e7c0a1fafc42f3af4a7e5dd46b05a3ef2c6577f16f18f8e",
   "checkpoint_events": [
     {
       "name": "lmeasure",

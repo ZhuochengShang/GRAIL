@@ -2,7 +2,7 @@
 
 ID: `22787fa4aeff29aba5bc` · mir_eval/A1 · **open**
 
-Evidence version: `831ba04531579435f5d9357afde5525393b2f42961167002da70f3f1fc5d2901`
+Evidence version: `143f61274d9f1c6569ce52c253b3833c5c90d71d6064ab8720d22d8fa31f9ff6`
 
 Candidate category: **input-contract-or-api-call**. Confidence: **medium**.
 
@@ -16,9 +16,9 @@ Source: `source/mir_eval/util.py:74`. Native category: `runtime`.
 ValueError: operands could not be broadcast together with shapes (20,) (3,)
 ```
 
-[Evidence ledger](../../../mir_eval/A1/ledger.json) · [Saved evidence](../evidence/831ba04531579435f5d9357afde5525393b2f42961167002da70f3f1fc5d2901.json)
+[Evidence ledger](../../../mir_eval/A1/ledger.json) · [Saved evidence](../evidence/143f61274d9f1c6569ce52c253b3833c5c90d71d6064ab8720d22d8fa31f9ff6.json)
 
-Recorded attempts: 1; provider errors: 0; document rounds: None.
+Recorded attempts: 0; provider errors: 0; document rounds: None.
 
 ## Proposed action
 

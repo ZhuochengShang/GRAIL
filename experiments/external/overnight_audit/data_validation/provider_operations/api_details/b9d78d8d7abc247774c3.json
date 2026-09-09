@@ -3,21 +3,21 @@
     "repository": "tslearn",
     "cell": "A1",
     "api": "normal",
-    "outcome": "Waiting for provider / retry",
-    "test_execution": "No test code executed for this provider attempt",
+    "outcome": "Execution failed",
+    "test_execution": "Test process returned exit code 1; target reach not independently verified",
     "target_api_reached": "Not independently verified",
-    "latest_native_attempt_s": 599.6,
-    "retained_checkpoint_events": 4,
-    "retained_attempt_total_s": 3663.6,
+    "latest_native_attempt_s": 377.5,
+    "retained_checkpoint_events": 5,
+    "retained_attempt_total_s": 4041.1,
     "retained_504_events": 3,
     "retained_cooldown_deferrals": 0,
     "historical_idle_retry_s": null,
     "measured_provider_invocations": 1,
-    "last_provider_s": null,
+    "last_provider_s": 375.5889734159573,
     "last_retry_interval_s": null,
     "next_provider_retry_epoch": null,
     "transport_policy": "d3dc72bd6e8ae61bf387f53095432a592ef5ad022245486ca7883f4a0dfff6ed",
-    "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+    "error": "AttributeError: 'NumPyBackend' object has no attribute 'normal'",
     "details": "api_details/b9d78d8d7abc247774c3.json"
   },
   "native_row": {
@@ -30,37 +30,48 @@
         {
           "round": 0,
           "status": "fail",
-          "category": "llm-error",
-          "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}"
+          "category": "runtime",
+          "error": "AttributeError: 'NumPyBackend' object has no attribute 'normal'",
+          "codebase_frames": [
+            "tslearn/tslearn/backend/backend.py:74"
+          ]
         }
       ],
-      "error_category": "llm-error",
-      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
-      "code": "",
+      "error_category": "runtime",
+      "error": "AttributeError: 'NumPyBackend' object has no attribute 'normal'",
+      "code": "from tslearn.backend import instantiate_backend\n\nbackend = instantiate_backend(\"numpy\")\nresult = backend.normal(loc=0.0, scale=1.0, size=(3, 4))\n\nassert result.shape == (3, 4), f\"Expected shape (3, 4), got {result.shape}\"\nassert result.dtype.kind == 'f', f\"Expected float dtype, got {result.dtype}\"\n\nprint(f\"__CHECK__ normal {result.shape}\")",
       "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_normal/api_test.py",
-      "exit_code": null,
+      "exit_code": 1,
       "stdout_tail": "",
-      "stderr_tail": ""
+      "stderr_tail": "__RUN_ERR__ AttributeError: 'NumPyBackend' object has no attribute 'normal'\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_normal/api_test.py\", line 51, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_normal/api_test.py\", line 46, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_normal/api_test.py\", line 37, in api_test\n    result = backend.normal(loc=0.0, scale=1.0, size=(3, 4))\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/backend/backend.py\", line 74, in __getattr__\n    return getattr(self.backend, item)\nAttributeError: 'NumPyBackend' object has no attribute 'normal'\n"
     },
     "status": "fail",
     "attempts": 1,
     "pass_round": null,
-    "wall_s": 599.6,
-    "llm_calls": 0,
-    "input_tokens": 0,
-    "output_tokens": 0,
-    "by_model": {},
-    "error_category": "llm-error",
-    "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
-    "locus": "",
+    "wall_s": 377.5,
+    "llm_calls": 1,
+    "input_tokens": 1307,
+    "output_tokens": 63025,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 1307,
+        "output_tokens": 63025
+      }
+    },
+    "error_category": "runtime",
+    "error": "AttributeError: 'NumPyBackend' object has no attribute 'normal'",
+    "locus": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/backend/backend.py:74",
     "doc_chars": 88,
     "document_sha256": "b631b3dac5f2b925d3a96956b6aaca66f065c7dd1b55d7c1621a46dd9cf53c2b",
     "source": "tslearn/tslearn/backend/pytorch_backend.py:250",
     "source_other_sites": 0,
-    "codebase_frames": null
+    "codebase_frames": [
+      "tslearn/tslearn/backend/backend.py:74"
+    ]
   },
   "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/comprehension_progress.jsonl",
-  "source_sha256": "d7eab169420952a7f00a7e8ab46b6206c68f3a068b5e960303384f244ef0f673",
+  "source_sha256": "88a6d741456223689f2fd9b072910561fd36a01580bf63f483220399e339cfd8",
   "checkpoint_events": [
     {
       "name": "normal",
@@ -199,16 +210,66 @@
       "source": "tslearn/tslearn/backend/pytorch_backend.py:250",
       "source_other_sites": 0,
       "codebase_frames": null
+    },
+    {
+      "name": "normal",
+      "doc_source": "original",
+      "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "runtime",
+            "error": "AttributeError: 'NumPyBackend' object has no attribute 'normal'",
+            "codebase_frames": [
+              "tslearn/tslearn/backend/backend.py:74"
+            ]
+          }
+        ],
+        "error_category": "runtime",
+        "error": "AttributeError: 'NumPyBackend' object has no attribute 'normal'",
+        "code": "from tslearn.backend import instantiate_backend\n\nbackend = instantiate_backend(\"numpy\")\nresult = backend.normal(loc=0.0, scale=1.0, size=(3, 4))\n\nassert result.shape == (3, 4), f\"Expected shape (3, 4), got {result.shape}\"\nassert result.dtype.kind == 'f', f\"Expected float dtype, got {result.dtype}\"\n\nprint(f\"__CHECK__ normal {result.shape}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_normal/api_test.py",
+        "exit_code": 1,
+        "stdout_tail": "",
+        "stderr_tail": "__RUN_ERR__ AttributeError: 'NumPyBackend' object has no attribute 'normal'\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_normal/api_test.py\", line 51, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_normal/api_test.py\", line 46, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_normal/api_test.py\", line 37, in api_test\n    result = backend.normal(loc=0.0, scale=1.0, size=(3, 4))\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/backend/backend.py\", line 74, in __getattr__\n    return getattr(self.backend, item)\nAttributeError: 'NumPyBackend' object has no attribute 'normal'\n"
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 377.5,
+      "llm_calls": 1,
+      "input_tokens": 1307,
+      "output_tokens": 63025,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1307,
+          "output_tokens": 63025
+        }
+      },
+      "error_category": "runtime",
+      "error": "AttributeError: 'NumPyBackend' object has no attribute 'normal'",
+      "locus": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/backend/backend.py:74",
+      "doc_chars": 88,
+      "document_sha256": "b631b3dac5f2b925d3a96956b6aaca66f065c7dd1b55d7c1621a46dd9cf53c2b",
+      "source": "tslearn/tslearn/backend/pytorch_backend.py:250",
+      "source_other_sites": 0,
+      "codebase_frames": [
+        "tslearn/tslearn/backend/backend.py:74"
+      ]
     }
   ],
   "provider_timing": [
     {
       "id": "e24e4a016ceb46d186067521e0a855ac",
       "start_epoch": 1788926318.632245,
-      "end_epoch": null,
-      "provider_wall_s": null,
+      "end_epoch": 1788926694.2257202,
+      "provider_wall_s": 375.5889734159573,
       "since_previous_provider_end_s": null,
-      "outcome": "In flight or interrupted: no end recorded",
+      "outcome": "invocation_success",
       "retry_after_epoch": null,
       "policy_sha256": "d3dc72bd6e8ae61bf387f53095432a592ef5ad022245486ca7883f4a0dfff6ed"
     }
@@ -254,6 +315,49 @@
       "sdk_attempts": 1,
       "server_timeout_s": "600",
       "transport_version": "aideal-provider-transport-v2"
+    },
+    {
+      "actual_timeout_s": 600.0,
+      "adapter_sha256": "c78fd8935b37fdd9337d9e036be2e4c864195eb052d1335cbff68d5a5fb96697",
+      "api": "normal",
+      "epoch": 1788926694.2159832,
+      "event": "sdk_attempt_success",
+      "harness_setup_version": "aideal-output-setup-v1",
+      "invocation_id": "e24e4a016ceb46d186067521e0a855ac",
+      "model": "google:gemini-3.1-pro-preview",
+      "outer_deadline_s": 630,
+      "payload_sha256": "1ec49223ce79fb9427d075956ba4ecaf439f6ce3b209e50bc35e44d40f65c924",
+      "pid": 50349,
+      "policy_sha256": "d3dc72bd6e8ae61bf387f53095432a592ef5ad022245486ca7883f4a0dfff6ed",
+      "prompt_chars": 6070,
+      "prompt_sha256": "97ec71a4b999dcc551bb875502b06ce1f0b22240d50d3f5ec37d80ed9424e68e",
+      "request_key": "6ba90679ce455a24dfdb18ac7cc3f93e240391b09efbfd7af611f4dfc330eb82",
+      "request_timeout_s": 600,
+      "sdk_attempt_id": "8864b7cf9ca24a2eb7dedc4ce82a50df",
+      "sdk_attempts": 1,
+      "server_timeout_s": "600",
+      "transport_version": "aideal-provider-transport-v2",
+      "wall_s": 375.56272045796504
+    },
+    {
+      "adapter_sha256": "c78fd8935b37fdd9337d9e036be2e4c864195eb052d1335cbff68d5a5fb96697",
+      "api": "normal",
+      "epoch": 1788926694.2257202,
+      "event": "invocation_success",
+      "harness_setup_version": "aideal-output-setup-v1",
+      "invocation_id": "e24e4a016ceb46d186067521e0a855ac",
+      "model": "google:gemini-3.1-pro-preview",
+      "outer_deadline_s": 630,
+      "pid": 50349,
+      "policy_sha256": "d3dc72bd6e8ae61bf387f53095432a592ef5ad022245486ca7883f4a0dfff6ed",
+      "prompt_chars": 6070,
+      "prompt_sha256": "97ec71a4b999dcc551bb875502b06ce1f0b22240d50d3f5ec37d80ed9424e68e",
+      "request_key": "6ba90679ce455a24dfdb18ac7cc3f93e240391b09efbfd7af611f4dfc330eb82",
+      "request_timeout_s": 600,
+      "response_sha256": "80e2e6f714fa41d866f689a642385946c1a6e511654509c3bd457d479c43b164",
+      "sdk_attempts": 1,
+      "transport_version": "aideal-provider-transport-v2",
+      "wall_s": 375.5889734159573
     }
   ],
   "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."

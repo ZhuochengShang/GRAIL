@@ -21,27 +21,6 @@
     "details": "api_details/69cee958b03d78dbdc1b.json"
   },
   "native_row": {
-    "name": "absolute_error",
-    "doc_source": "original",
-    "experiment_fingerprint": "6f5bcaa71d6a868167732ff1b08ada63654abf63b2bc6f0777aae06911a1e74f",
-    "execution_evidence": {
-      "status": "fail",
-      "rounds": [
-        {
-          "round": 0,
-          "status": "fail",
-          "category": "runtime",
-          "error": "AssertionError: absolute_error is not a documented public API in mir_eval and its contract cannot be verified."
-        }
-      ],
-      "error_category": "runtime",
-      "error": "AssertionError: absolute_error is not a documented public API in mir_eval and its contract cannot be verified.",
-      "code": "import mir_eval\nimport numpy as np\n\ntry:\n    # absolute_error is not a documented public function in mir_eval.\n    # It might be an internal helper or not exist at all.\n    # We will deliberately fail the test as instructed for undocumented/unverifiable APIs.\n    if hasattr(mir_eval, 'absolute_error'):\n        res = mir_eval.absolute_error(ref_events, est_events)\n    elif hasattr(mir_eval.util, 'absolute_error'):\n        res = mir_eval.util.absolute_error(ref_events, est_events)\n    else:\n        res = None\n    \n    assert False, \"absolute_error is not a documented public API in mir_eval and its contract cannot be verified.\"\nexcept AttributeError:\n    assert False, \"absolute_error is not a documented public API in mir_eval and its contract cannot be verified.\"\n\nprint(f\"__CHECK__ absolute_error {res}\")",
-      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_A1/experiments/external/mir_eval/.aideal_exec/A1/run_absolute_error/api_test.py",
-      "exit_code": 1,
-      "stdout_tail": "",
-      "stderr_tail": "__RUN_ERR__ AssertionError: absolute_error is not a documented public API in mir_eval and its contract cannot be verified.\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_A1/experiments/external/mir_eval/.aideal_exec/A1/run_absolute_error/api_test.py\", line 60, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_A1/experiments/external/mir_eval/.aideal_exec/A1/run_absolute_error/api_test.py\", line 55, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_A1/experiments/external/mir_eval/.aideal_exec/A1/run_absolute_error/api_test.py\", line 47, in api_test\n    assert False, \"absolute_error is not a documented public API in mir_eval and its contract cannot be verified.\"\nAssertionError: absolute_error is not a documented public API in mir_eval and its contract cannot be verified.\n"
-    },
     "status": "fail",
     "attempts": 1,
     "pass_round": null,
@@ -63,10 +42,30 @@
     "document_sha256": "64f812618b532b6632a51b99c7318dc2de3f95558dacc9ff7ca105823b8f316f",
     "source": "source/mir_eval/alignment.py:115",
     "source_other_sites": 0,
-    "codebase_frames": null
+    "codebase_frames": null,
+    "name": "absolute_error",
+    "execution_evidence": {
+      "status": "fail",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "fail",
+          "category": "runtime",
+          "error": "AssertionError: absolute_error is not a documented public API in mir_eval and its contract cannot be verified."
+        }
+      ],
+      "error_category": "runtime",
+      "error": "AssertionError: absolute_error is not a documented public API in mir_eval and its contract cannot be verified.",
+      "code": "import mir_eval\nimport numpy as np\n\ntry:\n    # absolute_error is not a documented public function in mir_eval.\n    # It might be an internal helper or not exist at all.\n    # We will deliberately fail the test as instructed for undocumented/unverifiable APIs.\n    if hasattr(mir_eval, 'absolute_error'):\n        res = mir_eval.absolute_error(ref_events, est_events)\n    elif hasattr(mir_eval.util, 'absolute_error'):\n        res = mir_eval.util.absolute_error(ref_events, est_events)\n    else:\n        res = None\n    \n    assert False, \"absolute_error is not a documented public API in mir_eval and its contract cannot be verified.\"\nexcept AttributeError:\n    assert False, \"absolute_error is not a documented public API in mir_eval and its contract cannot be verified.\"\n\nprint(f\"__CHECK__ absolute_error {res}\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_A1/experiments/external/mir_eval/.aideal_exec/A1/run_absolute_error/api_test.py",
+      "exit_code": 1,
+      "stdout_tail": "",
+      "stderr_tail": "__RUN_ERR__ AssertionError: absolute_error is not a documented public API in mir_eval and its contract cannot be verified.\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_A1/experiments/external/mir_eval/.aideal_exec/A1/run_absolute_error/api_test.py\", line 60, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_A1/experiments/external/mir_eval/.aideal_exec/A1/run_absolute_error/api_test.py\", line 55, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_A1/experiments/external/mir_eval/.aideal_exec/A1/run_absolute_error/api_test.py\", line 47, in api_test\n    assert False, \"absolute_error is not a documented public API in mir_eval and its contract cannot be verified.\"\nAssertionError: absolute_error is not a documented public API in mir_eval and its contract cannot be verified.\n"
+    },
+    "experiment_fingerprint": "6f5bcaa71d6a868167732ff1b08ada63654abf63b2bc6f0777aae06911a1e74f"
   },
-  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_A1/experiments/external/mir_eval/.aideal_exec/A1/comprehension_progress.jsonl",
-  "source_sha256": "e8eddf13953b5478d8d642dc973c83d08601dac7463b6e94f2f91150d6a8356b",
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_A1/experiments/external/mir_eval/docs/eval/A1/comprehension.json",
+  "source_sha256": "e099b0be5eb00a411e7c0a1fafc42f3af4a7e5dd46b05a3ef2c6577f16f18f8e",
   "checkpoint_events": [
     {
       "name": "absolute_error",

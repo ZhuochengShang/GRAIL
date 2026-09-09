@@ -9,10 +9,10 @@
   "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
   "errors": [],
   "failure_categories": {
-    "unknown": 19,
+    "unknown": 21,
     "api-identity": 9,
     "test/scaffold": 4,
-    "llm-error": 5
+    "llm-error": 3
   },
   "recorded_provider_errors_all_fingerprints": 152,
   "observed_fingerprints": [
@@ -12473,6 +12473,103 @@
       "source_other_sites": 0,
       "codebase_frames": null,
       "checkpoint_line": 382
+    },
+    {
+      "name": "normal",
+      "doc_source": "original",
+      "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "runtime",
+            "error": "AttributeError: 'NumPyBackend' object has no attribute 'normal'",
+            "codebase_frames": [
+              "tslearn/tslearn/backend/backend.py:74"
+            ]
+          }
+        ],
+        "error_category": "runtime",
+        "error": "AttributeError: 'NumPyBackend' object has no attribute 'normal'",
+        "code": "from tslearn.backend import instantiate_backend\n\nbackend = instantiate_backend(\"numpy\")\nresult = backend.normal(loc=0.0, scale=1.0, size=(3, 4))\n\nassert result.shape == (3, 4), f\"Expected shape (3, 4), got {result.shape}\"\nassert result.dtype.kind == 'f', f\"Expected float dtype, got {result.dtype}\"\n\nprint(f\"__CHECK__ normal {result.shape}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_normal/api_test.py",
+        "exit_code": 1,
+        "stdout_tail": "",
+        "stderr_tail": "__RUN_ERR__ AttributeError: 'NumPyBackend' object has no attribute 'normal'\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_normal/api_test.py\", line 51, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_normal/api_test.py\", line 46, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_normal/api_test.py\", line 37, in api_test\n    result = backend.normal(loc=0.0, scale=1.0, size=(3, 4))\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/backend/backend.py\", line 74, in __getattr__\n    return getattr(self.backend, item)\nAttributeError: 'NumPyBackend' object has no attribute 'normal'\n"
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 377.5,
+      "llm_calls": 1,
+      "input_tokens": 1307,
+      "output_tokens": 63025,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1307,
+          "output_tokens": 63025
+        }
+      },
+      "error_category": "runtime",
+      "error": "AttributeError: 'NumPyBackend' object has no attribute 'normal'",
+      "locus": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/backend/backend.py:74",
+      "doc_chars": 88,
+      "document_sha256": "b631b3dac5f2b925d3a96956b6aaca66f065c7dd1b55d7c1621a46dd9cf53c2b",
+      "source": "tslearn/tslearn/backend/pytorch_backend.py:250",
+      "source_other_sites": 0,
+      "codebase_frames": [
+        "tslearn/tslearn/backend/backend.py:74"
+      ],
+      "checkpoint_line": 383
+    },
+    {
+      "name": "partial_fit",
+      "doc_source": "original",
+      "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "no-correctness-check",
+            "error": "ran without a correctness check: no '__CHECK__' witness printed. End the snippet with require(<result non-degenerate>, ...) then println(\"__CHECK__ partial_fit "
+          }
+        ],
+        "error_category": "no-correctness-check",
+        "error": "ran without a correctness check: no '__CHECK__' witness printed. End the snippet with require(<result non-degenerate>, ...) then println(\"__CHECK__ partial_fit \" + <witness>).",
+        "code": "import numpy as np\nfrom tslearn.preprocessing import TimeSeriesScalerMeanVariance\n\n# TimeSeriesScalerMeanVariance does not have partial_fit.\n# However, tslearn.preprocessing.TimeSeriesScalerMinMax does not either.\n# Wait, tslearn.preprocessing.TimeSeriesScalerMeanVariance does not have partial_fit.\n# Let's check if tslearn.preprocessing.TimeSeriesScalerMeanVariance has partial_fit.\n# Actually, tslearn.preprocessing.TimeSeriesScalerMeanVariance does not have partial_fit.\n# Wait, tslearn.preprocessing.TimeSeriesScalerMeanVariance does not have partial_fit.\n# Let's check if tslearn.preprocessing.TimeSeriesScalerMeanVariance has partial_fit.\n# Actually, tslearn.preprocessing.TimeSeriesScalerMeanVariance does not have partial_fit.\n# Wait, tslearn.preprocessing.TimeSeriesScalerMeanVariance does not have partial_fit.\n# Let's check if tslearn.preprocessing.TimeSeriesScalerMeanVariance has partial_fit.\n# Actually, tslearn.preprocessing.TimeSeriesScalerMeanVariance does not have partial_fit.\n# W",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_partial_fit/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 393.7,
+      "llm_calls": 1,
+      "input_tokens": 1323,
+      "output_tokens": 65532,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1323,
+          "output_tokens": 65532
+        }
+      },
+      "error_category": "no-correctness-check",
+      "error": "ran without a correctness check: no '__CHECK__' witness printed. End the snippet with require(<result non-degenerate>, ...) then println(\"__CHECK__ partial_fit \" + <witness>).",
+      "locus": "",
+      "doc_chars": 93,
+      "document_sha256": "bd321a0d39323e673bde56ae0abc84504d487fe0c2d1f788744932775a0c9127",
+      "source": "tslearn/tslearn/neural_network/neural_network.py:62",
+      "source_other_sites": 1,
+      "codebase_frames": null,
+      "checkpoint_line": 384
     }
   ],
   "repair_summary": {
@@ -17469,16 +17566,16 @@
     {
       "api": "normal",
       "status": "fail",
-      "primary_category": "llm-error",
-      "runner_category": "llm-error",
-      "category_reason": "Provider outcome; retry, never count as a documentation failure.",
-      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "primary_category": "unknown",
+      "runner_category": "runtime",
+      "category_reason": "Observed runtime; doc attribution requires source, document, and snippet review.",
+      "error": "AttributeError: 'NumPyBackend' object has no attribute 'normal'",
       "source": "tslearn/tslearn/backend/pytorch_backend.py:250",
       "doc_chars": 88,
-      "checkpoint_attempts": 3,
+      "checkpoint_attempts": 4,
       "provider_error_attempts": 3,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
+      "recorded_successful_llm_calls": 1,
       "attempt_history": [
         {
           "checkpoint_line": 275,
@@ -17514,6 +17611,18 @@
           "llm_calls": 0,
           "input_tokens": 0,
           "output_tokens": 0,
+          "pass_round": null
+        },
+        {
+          "checkpoint_line": 383,
+          "status": "fail",
+          "error_category": "runtime",
+          "error": "AttributeError: 'NumPyBackend' object has no attribute 'normal'",
+          "attempts": 1,
+          "wall_s": 377.5,
+          "llm_calls": 1,
+          "input_tokens": 1307,
+          "output_tokens": 63025,
           "pass_round": null
         }
       ],
@@ -17563,16 +17672,16 @@
     {
       "api": "partial_fit",
       "status": "fail",
-      "primary_category": "llm-error",
-      "runner_category": "llm-error",
-      "category_reason": "Provider outcome; retry, never count as a documentation failure.",
-      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "primary_category": "unknown",
+      "runner_category": "no-correctness-check",
+      "category_reason": "Observed no-correctness-check; doc attribution requires source, document, and snippet review.",
+      "error": "ran without a correctness check: no '__CHECK__' witness printed. End the snippet with require(<result non-degenerate>, ...) then println(\"__CHECK__ partial_fit \" + <witness>).",
       "source": "tslearn/tslearn/neural_network/neural_network.py:62",
       "doc_chars": 93,
-      "checkpoint_attempts": 3,
+      "checkpoint_attempts": 4,
       "provider_error_attempts": 3,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
+      "recorded_successful_llm_calls": 1,
       "attempt_history": [
         {
           "checkpoint_line": 276,
@@ -17608,6 +17717,18 @@
           "llm_calls": 0,
           "input_tokens": 0,
           "output_tokens": 0,
+          "pass_round": null
+        },
+        {
+          "checkpoint_line": 384,
+          "status": "fail",
+          "error_category": "no-correctness-check",
+          "error": "ran without a correctness check: no '__CHECK__' witness printed. End the snippet with require(<result non-degenerate>, ...) then println(\"__CHECK__ partial_fit \" + <witness>).",
+          "attempts": 1,
+          "wall_s": 393.7,
+          "llm_calls": 1,
+          "input_tokens": 1323,
+          "output_tokens": 65532,
           "pass_round": null
         }
       ],

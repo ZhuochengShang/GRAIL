@@ -21,23 +21,6 @@
     "details": "api_details/76f5b3cc73075225ed3d.json"
   },
   "native_row": {
-    "name": "goto",
-    "doc_source": "original",
-    "experiment_fingerprint": "6f5bcaa71d6a868167732ff1b08ada63654abf63b2bc6f0777aae06911a1e74f",
-    "execution_evidence": {
-      "status": "pass",
-      "rounds": [
-        {
-          "round": 0,
-          "status": "pass"
-        }
-      ],
-      "code": "import mir_eval\n\ntry:\n    # The prompt asks to test a function named `goto` in mir_eval.\n    # However, `goto` is not a public API in mir_eval (it is not in the 148-name public surface).\n    # We will attempt to resolve it, but deliberately fail the assertion as instructed\n    # for an unverifiable contract or non-existent function.\n    if hasattr(mir_eval, 'goto'):\n        result = mir_eval.goto()\n    elif hasattr(mir_eval.display, 'goto'):\n        result = mir_eval.display.goto()\n    else:\n        raise AttributeError(\"mir_eval has no attribute 'goto'\")\n        \n    assert False, \"The documented contract for `goto` is insufficient to verify the result, or the function does not exist.\"\nexcept AttributeError as e:\n    assert \"goto\" in str(e), \"Expected an AttributeError related to the missing 'goto' function.\"\n    print(f\"__CHECK__ goto not_found\")",
-      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_A1/experiments/external/mir_eval/.aideal_exec/A1/run_goto/api_test.py",
-      "exit_code": 0,
-      "stdout_tail": "__CHECK__ goto not_found\n__DONE__\n",
-      "stderr_tail": ""
-    },
     "status": "pass",
     "attempts": 1,
     "pass_round": 0,
@@ -59,10 +42,27 @@
     "document_sha256": "6461b57294e28e109df7cf0c8f992b4d4a311ae12a9ca698755f4b1e6e1bf932",
     "source": "source/mir_eval/beat.py:229",
     "source_other_sites": 0,
-    "codebase_frames": null
+    "codebase_frames": null,
+    "evidence_fingerprint": "6f5bcaa71d6a868167732ff1b08ada63654abf63b2bc6f0777aae06911a1e74f",
+    "name": "goto",
+    "execution_evidence": {
+      "status": "pass",
+      "rounds": [
+        {
+          "round": 0,
+          "status": "pass"
+        }
+      ],
+      "code": "import mir_eval\n\ntry:\n    # The prompt asks to test a function named `goto` in mir_eval.\n    # However, `goto` is not a public API in mir_eval (it is not in the 148-name public surface).\n    # We will attempt to resolve it, but deliberately fail the assertion as instructed\n    # for an unverifiable contract or non-existent function.\n    if hasattr(mir_eval, 'goto'):\n        result = mir_eval.goto()\n    elif hasattr(mir_eval.display, 'goto'):\n        result = mir_eval.display.goto()\n    else:\n        raise AttributeError(\"mir_eval has no attribute 'goto'\")\n        \n    assert False, \"The documented contract for `goto` is insufficient to verify the result, or the function does not exist.\"\nexcept AttributeError as e:\n    assert \"goto\" in str(e), \"Expected an AttributeError related to the missing 'goto' function.\"\n    print(f\"__CHECK__ goto not_found\")",
+      "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_A1/experiments/external/mir_eval/.aideal_exec/A1/run_goto/api_test.py",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ goto not_found\n__DONE__\n",
+      "stderr_tail": ""
+    },
+    "experiment_fingerprint": "6f5bcaa71d6a868167732ff1b08ada63654abf63b2bc6f0777aae06911a1e74f"
   },
-  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_A1/experiments/external/mir_eval/.aideal_exec/A1/comprehension_progress.jsonl",
-  "source_sha256": "e8eddf13953b5478d8d642dc973c83d08601dac7463b6e94f2f91150d6a8356b",
+  "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_A1/experiments/external/mir_eval/docs/eval/A1/comprehension.json",
+  "source_sha256": "e099b0be5eb00a411e7c0a1fafc42f3af4a7e5dd46b05a3ef2c6577f16f18f8e",
   "checkpoint_events": [
     {
       "name": "goto",

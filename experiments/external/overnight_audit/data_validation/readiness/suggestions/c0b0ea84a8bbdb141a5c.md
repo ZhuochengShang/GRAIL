@@ -2,7 +2,7 @@
 
 ID: `c0b0ea84a8bbdb141a5c` · mir_eval/A1 · **open**
 
-Evidence version: `fd894ffc5f5129310e5ea0975291379725e32d0f2f22fc8744618c3f6434bb8f`
+Evidence version: `4ab6a89296cc9756ce0fb2da9c8de0d1ef6da134abf631c66dec791f989cb3a1`
 
 Candidate category: **assertion-or-behavior**. Confidence: **medium**.
 
@@ -16,9 +16,9 @@ Source: `source/mir_eval/chord.py:471`. Native category: `runtime`.
 AssertionError: Expected bass 2 for D:min, got 0
 ```
 
-[Evidence ledger](../../../mir_eval/A1/ledger.json) · [Saved evidence](../evidence/fd894ffc5f5129310e5ea0975291379725e32d0f2f22fc8744618c3f6434bb8f.json)
+[Evidence ledger](../../../mir_eval/A1/ledger.json) · [Saved evidence](../evidence/4ab6a89296cc9756ce0fb2da9c8de0d1ef6da134abf631c66dec791f989cb3a1.json)
 
-Recorded attempts: 1; provider errors: 0; document rounds: None.
+Recorded attempts: 0; provider errors: 0; document rounds: None.
 
 ## Proposed action
 
