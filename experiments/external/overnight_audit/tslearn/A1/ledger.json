@@ -9,10 +9,10 @@
   "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
   "errors": [],
   "failure_categories": {
-    "unknown": 12,
+    "unknown": 15,
     "api-identity": 6,
     "test/scaffold": 4,
-    "llm-error": 15
+    "llm-error": 12
   },
   "recorded_provider_errors_all_fingerprints": 152,
   "observed_fingerprints": [
@@ -12008,6 +12008,144 @@
       "source_other_sites": 1,
       "codebase_frames": null,
       "checkpoint_line": 372
+    },
+    {
+      "name": "gamma_soft_dtw",
+      "doc_source": "original",
+      "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "runtime",
+            "error": "AssertionError: Documented contract is insufficient to verify gamma_soft_dtw: gamma_soft_dtw() got an unexpected keyword argument 'gamma'"
+          }
+        ],
+        "error_category": "runtime",
+        "error": "AssertionError: Documented contract is insufficient to verify gamma_soft_dtw: gamma_soft_dtw() got an unexpected keyword argument 'gamma'",
+        "code": "import numpy as np\nfrom tslearn.metrics import gamma_soft_dtw\n\n# The documentation for gamma_soft_dtw is missing, but based on tslearn conventions,\n# it computes the Soft-DTW distance between two time series with a specific gamma.\n# However, without explicit documentation, we cannot verify its exact contract.\n# We will call it with two 1-D series and a gamma value, and assert it returns a float.\n# If it fails, it serves as a documentation-comprehension test failure.\n\ntry:\n    result = gamma_soft_dtw(s1, s2, gamma=1.0)\n    \n    # Soft-DTW distance should be a float\n    assert isinstance(result, float), f\"Expected float, got {type(result)}\"\n    \n    # Soft-DTW distance between identical series is not necessarily 0, but it should be deterministic\n    result_self = gamma_soft_dtw(s1, s1, gamma=1.0)\n    assert isinstance(result_self, float), f\"Expected float, got {type(result_self)}\"\n    \n    print(f\"__CHECK__ gamma_soft_dtw {result:.4f}\")\nexcept Exception as e:\n    # Deliberately fail if t",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_gamma_soft_dtw/api_test.py",
+        "exit_code": 1,
+        "stdout_tail": "",
+        "stderr_tail": "__RUN_ERR__ AssertionError: Documented contract is insufficient to verify gamma_soft_dtw: gamma_soft_dtw() got an unexpected keyword argument 'gamma'\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_gamma_soft_dtw/api_test.py\", line 44, in api_test\n    result = gamma_soft_dtw(s1, s2, gamma=1.0)\nTypeError: gamma_soft_dtw() got an unexpected keyword argument 'gamma'\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_gamma_soft_dtw/api_test.py\", line 65, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_gamma_soft_dtw/api_test.py\", line 60, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_gamma_soft_dtw/api_test.py\", line 56, in api_test\n    assert False, f\"Documented contract is insufficient to verify gamma_soft_dtw: {e}\"\nAssertionError: Documented contract is insufficient to verify gamma_soft_dtw: gamma_soft_dtw() got an unexpected keyword argument 'gamma'\n"
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 369.4,
+      "llm_calls": 1,
+      "input_tokens": 1347,
+      "output_tokens": 63234,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1347,
+          "output_tokens": 63234
+        }
+      },
+      "error_category": "runtime",
+      "error": "AssertionError: Documented contract is insufficient to verify gamma_soft_dtw: gamma_soft_dtw() got an unexpected keyword argument 'gamma'",
+      "locus": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_gamma_soft_dtw/api_test.py:56",
+      "doc_chars": 96,
+      "document_sha256": "906fc53ed687fe303f6d355aded6293421e4ae91fd6a5eeb08e3c58d83a2495c",
+      "source": "tslearn/tslearn/metrics/softdtw_variants.py:474",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 373
+    },
+    {
+      "name": "get_early_predict_generator",
+      "doc_source": "original",
+      "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "runtime",
+            "error": "AssertionError: Contract is insufficient to verify the result."
+          }
+        ],
+        "error_category": "runtime",
+        "error": "AssertionError: Contract is insufficient to verify the result.",
+        "code": "import tslearn.early_classification\n\ntry:\n    tslearn.early_classification.get_early_predict_generator\n    assert False, \"Contract is insufficient to verify the result.\"\nexcept AttributeError:\n    assert False, \"Contract is insufficient to verify the result.\"",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_get_early_predict_generator/api_test.py",
+        "exit_code": 1,
+        "stdout_tail": "",
+        "stderr_tail": "__RUN_ERR__ AssertionError: Contract is insufficient to verify the result.\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_get_early_predict_generator/api_test.py\", line 37, in api_test\n    tslearn.early_classification.get_early_predict_generator\nAttributeError: module 'tslearn.early_classification' has no attribute 'get_early_predict_generator'\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_get_early_predict_generator/api_test.py\", line 49, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_get_early_predict_generator/api_test.py\", line 44, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_get_early_predict_generator/api_test.py\", line 40, in api_test\n    assert False, \"Contract is insufficient to verify the result.\"\nAssertionError: Contract is insufficient to verify the result.\n"
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 395.0,
+      "llm_calls": 1,
+      "input_tokens": 1355,
+      "output_tokens": 62973,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1355,
+          "output_tokens": 62973
+        }
+      },
+      "error_category": "runtime",
+      "error": "AssertionError: Contract is insufficient to verify the result.",
+      "locus": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_get_early_predict_generator/api_test.py:40",
+      "doc_chars": 109,
+      "document_sha256": "63e48026dcf411cde245f6f4aa5db3b45ada96a15ce35b15613783dc48f5a2d5",
+      "source": "tslearn/tslearn/early_classification/early_classification.py:627",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 374
+    },
+    {
+      "name": "get_early_predict_proba_generator",
+      "doc_source": "original",
+      "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "runtime",
+            "error": "AssertionError: The documented contract is insufficient to verify the result of get_early_predict_proba_generator."
+          }
+        ],
+        "error_category": "runtime",
+        "error": "AssertionError: The documented contract is insufficient to verify the result of get_early_predict_proba_generator.",
+        "code": "import tslearn.early_classification\n\ntry:\n    # The prompt states: \"No code-context section for get_early_predict_proba_generator was found in the configured original documentation.\"\n    # We will attempt to call it if it exists, but deliberately fail the assertion to flag the missing documentation.\n    if hasattr(tslearn.early_classification, \"get_early_predict_proba_generator\"):\n        func = getattr(tslearn.early_classification, \"get_early_predict_proba_generator\")\n        result = func()\n    else:\n        result = None\n    \n    assert False, \"The documented contract is insufficient to verify the result of get_early_predict_proba_generator.\"\nexcept Exception as e:\n    if \"The documented contract is insufficient\" in str(e):\n        raise\n    else:\n        assert False, f\"The documented contract is insufficient to verify the result of get_early_predict_proba_generator. (Failed with: {e})\"",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_get_early_predict_proba_generator/api_test.py",
+        "exit_code": 1,
+        "stdout_tail": "",
+        "stderr_tail": "__RUN_ERR__ AssertionError: The documented contract is insufficient to verify the result of get_early_predict_proba_generator.\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_get_early_predict_proba_generator/api_test.py\", line 59, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_get_early_predict_proba_generator/api_test.py\", line 54, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_get_early_predict_proba_generator/api_test.py\", line 45, in api_test\n    assert False, \"The documented contract is insufficient to verify the result of get_early_predict_proba_generator.\"\nAssertionError: The documented contract is insufficient to verify the result of get_early_predict_proba_generator.\n"
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 377.2,
+      "llm_calls": 1,
+      "input_tokens": 1371,
+      "output_tokens": 63136,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1371,
+          "output_tokens": 63136
+        }
+      },
+      "error_category": "runtime",
+      "error": "AssertionError: The documented contract is insufficient to verify the result of get_early_predict_proba_generator.",
+      "locus": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_get_early_predict_proba_generator/api_test.py:45",
+      "doc_chars": 115,
+      "document_sha256": "15ba3f0387c8d478427e374791caaf752c8e4fd4f03887a1a39901b668dd6c08",
+      "source": "tslearn/tslearn/early_classification/early_classification.py:677",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 375
     }
   ],
   "repair_summary": {
@@ -15469,16 +15607,16 @@
     {
       "api": "gamma_soft_dtw",
       "status": "fail",
-      "primary_category": "llm-error",
-      "runner_category": "llm-error",
-      "category_reason": "Provider outcome; retry, never count as a documentation failure.",
-      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "primary_category": "unknown",
+      "runner_category": "runtime",
+      "category_reason": "Observed runtime; doc attribution requires source, document, and snippet review.",
+      "error": "AssertionError: Documented contract is insufficient to verify gamma_soft_dtw: gamma_soft_dtw() got an unexpected keyword argument 'gamma'",
       "source": "tslearn/tslearn/metrics/softdtw_variants.py:474",
       "doc_chars": 96,
-      "checkpoint_attempts": 3,
+      "checkpoint_attempts": 4,
       "provider_error_attempts": 3,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
+      "recorded_successful_llm_calls": 1,
       "attempt_history": [
         {
           "checkpoint_line": 261,
@@ -15514,6 +15652,18 @@
           "llm_calls": 0,
           "input_tokens": 0,
           "output_tokens": 0,
+          "pass_round": null
+        },
+        {
+          "checkpoint_line": 373,
+          "status": "fail",
+          "error_category": "runtime",
+          "error": "AssertionError: Documented contract is insufficient to verify gamma_soft_dtw: gamma_soft_dtw() got an unexpected keyword argument 'gamma'",
+          "attempts": 1,
+          "wall_s": 369.4,
+          "llm_calls": 1,
+          "input_tokens": 1347,
+          "output_tokens": 63234,
           "pass_round": null
         }
       ],
@@ -15595,16 +15745,16 @@
     {
       "api": "get_early_predict_generator",
       "status": "fail",
-      "primary_category": "llm-error",
-      "runner_category": "llm-error",
-      "category_reason": "Provider outcome; retry, never count as a documentation failure.",
-      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "primary_category": "unknown",
+      "runner_category": "runtime",
+      "category_reason": "Observed runtime; doc attribution requires source, document, and snippet review.",
+      "error": "AssertionError: Contract is insufficient to verify the result.",
       "source": "tslearn/tslearn/early_classification/early_classification.py:627",
       "doc_chars": 109,
-      "checkpoint_attempts": 3,
+      "checkpoint_attempts": 4,
       "provider_error_attempts": 3,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
+      "recorded_successful_llm_calls": 1,
       "attempt_history": [
         {
           "checkpoint_line": 263,
@@ -15641,6 +15791,18 @@
           "input_tokens": 0,
           "output_tokens": 0,
           "pass_round": null
+        },
+        {
+          "checkpoint_line": 374,
+          "status": "fail",
+          "error_category": "runtime",
+          "error": "AssertionError: Contract is insufficient to verify the result.",
+          "attempts": 1,
+          "wall_s": 395.0,
+          "llm_calls": 1,
+          "input_tokens": 1355,
+          "output_tokens": 62973,
+          "pass_round": null
         }
       ],
       "repair_status": null,
@@ -15651,16 +15813,16 @@
     {
       "api": "get_early_predict_proba_generator",
       "status": "fail",
-      "primary_category": "llm-error",
-      "runner_category": "llm-error",
-      "category_reason": "Provider outcome; retry, never count as a documentation failure.",
-      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "primary_category": "unknown",
+      "runner_category": "runtime",
+      "category_reason": "Observed runtime; doc attribution requires source, document, and snippet review.",
+      "error": "AssertionError: The documented contract is insufficient to verify the result of get_early_predict_proba_generator.",
       "source": "tslearn/tslearn/early_classification/early_classification.py:677",
       "doc_chars": 115,
-      "checkpoint_attempts": 3,
+      "checkpoint_attempts": 4,
       "provider_error_attempts": 3,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
+      "recorded_successful_llm_calls": 1,
       "attempt_history": [
         {
           "checkpoint_line": 264,
@@ -15696,6 +15858,18 @@
           "llm_calls": 0,
           "input_tokens": 0,
           "output_tokens": 0,
+          "pass_round": null
+        },
+        {
+          "checkpoint_line": 375,
+          "status": "fail",
+          "error_category": "runtime",
+          "error": "AssertionError: The documented contract is insufficient to verify the result of get_early_predict_proba_generator.",
+          "attempts": 1,
+          "wall_s": 377.2,
+          "llm_calls": 1,
+          "input_tokens": 1371,
+          "output_tokens": 63136,
           "pass_round": null
         }
       ],

@@ -3,22 +3,22 @@
     "repository": "tslearn",
     "cell": "A1",
     "api": "gamma_soft_dtw",
-    "outcome": "Waiting for provider / retry",
-    "test_execution": "No test code executed for this provider attempt",
+    "outcome": "Execution failed",
+    "test_execution": "Test process returned exit code 1; target reach not independently verified",
     "target_api_reached": "Not independently verified",
-    "latest_native_attempt_s": 601.5,
-    "retained_checkpoint_events": 4,
-    "retained_attempt_total_s": 2398.2,
+    "latest_native_attempt_s": 369.4,
+    "retained_checkpoint_events": 5,
+    "retained_attempt_total_s": 2767.6,
     "retained_504_events": 4,
     "retained_cooldown_deferrals": 0,
     "historical_idle_retry_s": null,
     "measured_provider_invocations": 1,
-    "last_provider_s": null,
+    "last_provider_s": 366.7439530410338,
     "last_retry_interval_s": null,
     "next_provider_retry_epoch": null,
     "transport_policy": "d3dc72bd6e8ae61bf387f53095432a592ef5ad022245486ca7883f4a0dfff6ed",
     "identity_status": "Final or explicitly migrated evidence",
-    "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+    "error": "AssertionError: Documented contract is insufficient to verify gamma_soft_dtw: gamma_soft_dtw() got an unexpected keyword argument 'gamma'",
     "details": "api_details/b4e7f265acda4e6d2f2d.json"
   },
   "native_row": {
@@ -31,29 +31,35 @@
         {
           "round": 0,
           "status": "fail",
-          "category": "llm-error",
-          "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}"
+          "category": "runtime",
+          "error": "AssertionError: Documented contract is insufficient to verify gamma_soft_dtw: gamma_soft_dtw() got an unexpected keyword argument 'gamma'"
         }
       ],
-      "error_category": "llm-error",
-      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
-      "code": "",
+      "error_category": "runtime",
+      "error": "AssertionError: Documented contract is insufficient to verify gamma_soft_dtw: gamma_soft_dtw() got an unexpected keyword argument 'gamma'",
+      "code": "import numpy as np\nfrom tslearn.metrics import gamma_soft_dtw\n\n# The documentation for gamma_soft_dtw is missing, but based on tslearn conventions,\n# it computes the Soft-DTW distance between two time series with a specific gamma.\n# However, without explicit documentation, we cannot verify its exact contract.\n# We will call it with two 1-D series and a gamma value, and assert it returns a float.\n# If it fails, it serves as a documentation-comprehension test failure.\n\ntry:\n    result = gamma_soft_dtw(s1, s2, gamma=1.0)\n    \n    # Soft-DTW distance should be a float\n    assert isinstance(result, float), f\"Expected float, got {type(result)}\"\n    \n    # Soft-DTW distance between identical series is not necessarily 0, but it should be deterministic\n    result_self = gamma_soft_dtw(s1, s1, gamma=1.0)\n    assert isinstance(result_self, float), f\"Expected float, got {type(result_self)}\"\n    \n    print(f\"__CHECK__ gamma_soft_dtw {result:.4f}\")\nexcept Exception as e:\n    # Deliberately fail if t",
       "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_gamma_soft_dtw/api_test.py",
-      "exit_code": null,
+      "exit_code": 1,
       "stdout_tail": "",
-      "stderr_tail": ""
+      "stderr_tail": "__RUN_ERR__ AssertionError: Documented contract is insufficient to verify gamma_soft_dtw: gamma_soft_dtw() got an unexpected keyword argument 'gamma'\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_gamma_soft_dtw/api_test.py\", line 44, in api_test\n    result = gamma_soft_dtw(s1, s2, gamma=1.0)\nTypeError: gamma_soft_dtw() got an unexpected keyword argument 'gamma'\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_gamma_soft_dtw/api_test.py\", line 65, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_gamma_soft_dtw/api_test.py\", line 60, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_gamma_soft_dtw/api_test.py\", line 56, in api_test\n    assert False, f\"Documented contract is insufficient to verify gamma_soft_dtw: {e}\"\nAssertionError: Documented contract is insufficient to verify gamma_soft_dtw: gamma_soft_dtw() got an unexpected keyword argument 'gamma'\n"
     },
     "status": "fail",
     "attempts": 1,
     "pass_round": null,
-    "wall_s": 601.5,
-    "llm_calls": 0,
-    "input_tokens": 0,
-    "output_tokens": 0,
-    "by_model": {},
-    "error_category": "llm-error",
-    "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
-    "locus": "",
+    "wall_s": 369.4,
+    "llm_calls": 1,
+    "input_tokens": 1347,
+    "output_tokens": 63234,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 1347,
+        "output_tokens": 63234
+      }
+    },
+    "error_category": "runtime",
+    "error": "AssertionError: Documented contract is insufficient to verify gamma_soft_dtw: gamma_soft_dtw() got an unexpected keyword argument 'gamma'",
+    "locus": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_gamma_soft_dtw/api_test.py:56",
     "doc_chars": 96,
     "document_sha256": "906fc53ed687fe303f6d355aded6293421e4ae91fd6a5eeb08e3c58d83a2495c",
     "source": "tslearn/tslearn/metrics/softdtw_variants.py:474",
@@ -61,7 +67,7 @@
     "codebase_frames": null
   },
   "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/comprehension_progress.jsonl",
-  "source_sha256": "e8114b5bc9ca92b6d1a40a4771fc5b94dd4a8e9649bb3a0d558c51f8d81d9fdf",
+  "source_sha256": "db64352b9da3678751c57f1b1024393993d22dbf72e1007a50a030241e52219b",
   "checkpoint_events": [
     {
       "name": "gamma_soft_dtw",
@@ -200,16 +206,61 @@
       "source": "tslearn/tslearn/metrics/softdtw_variants.py:474",
       "source_other_sites": 0,
       "codebase_frames": null
+    },
+    {
+      "name": "gamma_soft_dtw",
+      "doc_source": "original",
+      "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "runtime",
+            "error": "AssertionError: Documented contract is insufficient to verify gamma_soft_dtw: gamma_soft_dtw() got an unexpected keyword argument 'gamma'"
+          }
+        ],
+        "error_category": "runtime",
+        "error": "AssertionError: Documented contract is insufficient to verify gamma_soft_dtw: gamma_soft_dtw() got an unexpected keyword argument 'gamma'",
+        "code": "import numpy as np\nfrom tslearn.metrics import gamma_soft_dtw\n\n# The documentation for gamma_soft_dtw is missing, but based on tslearn conventions,\n# it computes the Soft-DTW distance between two time series with a specific gamma.\n# However, without explicit documentation, we cannot verify its exact contract.\n# We will call it with two 1-D series and a gamma value, and assert it returns a float.\n# If it fails, it serves as a documentation-comprehension test failure.\n\ntry:\n    result = gamma_soft_dtw(s1, s2, gamma=1.0)\n    \n    # Soft-DTW distance should be a float\n    assert isinstance(result, float), f\"Expected float, got {type(result)}\"\n    \n    # Soft-DTW distance between identical series is not necessarily 0, but it should be deterministic\n    result_self = gamma_soft_dtw(s1, s1, gamma=1.0)\n    assert isinstance(result_self, float), f\"Expected float, got {type(result_self)}\"\n    \n    print(f\"__CHECK__ gamma_soft_dtw {result:.4f}\")\nexcept Exception as e:\n    # Deliberately fail if t",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_gamma_soft_dtw/api_test.py",
+        "exit_code": 1,
+        "stdout_tail": "",
+        "stderr_tail": "__RUN_ERR__ AssertionError: Documented contract is insufficient to verify gamma_soft_dtw: gamma_soft_dtw() got an unexpected keyword argument 'gamma'\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_gamma_soft_dtw/api_test.py\", line 44, in api_test\n    result = gamma_soft_dtw(s1, s2, gamma=1.0)\nTypeError: gamma_soft_dtw() got an unexpected keyword argument 'gamma'\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_gamma_soft_dtw/api_test.py\", line 65, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_gamma_soft_dtw/api_test.py\", line 60, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_gamma_soft_dtw/api_test.py\", line 56, in api_test\n    assert False, f\"Documented contract is insufficient to verify gamma_soft_dtw: {e}\"\nAssertionError: Documented contract is insufficient to verify gamma_soft_dtw: gamma_soft_dtw() got an unexpected keyword argument 'gamma'\n"
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 369.4,
+      "llm_calls": 1,
+      "input_tokens": 1347,
+      "output_tokens": 63234,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1347,
+          "output_tokens": 63234
+        }
+      },
+      "error_category": "runtime",
+      "error": "AssertionError: Documented contract is insufficient to verify gamma_soft_dtw: gamma_soft_dtw() got an unexpected keyword argument 'gamma'",
+      "locus": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_gamma_soft_dtw/api_test.py:56",
+      "doc_chars": 96,
+      "document_sha256": "906fc53ed687fe303f6d355aded6293421e4ae91fd6a5eeb08e3c58d83a2495c",
+      "source": "tslearn/tslearn/metrics/softdtw_variants.py:474",
+      "source_other_sites": 0,
+      "codebase_frames": null
     }
   ],
   "provider_timing": [
     {
       "id": "f4a2fd54b94e4c95918cde265bf6e4e5",
       "start_epoch": 1788922521.5973928,
-      "end_epoch": null,
-      "provider_wall_s": null,
+      "end_epoch": 1788922888.341641,
+      "provider_wall_s": 366.7439530410338,
       "since_previous_provider_end_s": null,
-      "outcome": "In flight or interrupted: no end recorded",
+      "outcome": "invocation_success",
       "retry_after_epoch": null,
       "policy_sha256": "d3dc72bd6e8ae61bf387f53095432a592ef5ad022245486ca7883f4a0dfff6ed"
     }
@@ -255,6 +306,49 @@
       "sdk_attempts": 1,
       "server_timeout_s": "600",
       "transport_version": "aideal-provider-transport-v2"
+    },
+    {
+      "actual_timeout_s": 600.0,
+      "adapter_sha256": "c78fd8935b37fdd9337d9e036be2e4c864195eb052d1335cbff68d5a5fb96697",
+      "api": "gamma_soft_dtw",
+      "epoch": 1788922888.331711,
+      "event": "sdk_attempt_success",
+      "harness_setup_version": "aideal-output-setup-v1",
+      "invocation_id": "f4a2fd54b94e4c95918cde265bf6e4e5",
+      "model": "google:gemini-3.1-pro-preview",
+      "outer_deadline_s": 630,
+      "payload_sha256": "7fb9569d891de8fb01f0d9eb12600b91cf8af9decb9fc0b5c471dee0b7d98cd8",
+      "pid": 50349,
+      "policy_sha256": "d3dc72bd6e8ae61bf387f53095432a592ef5ad022245486ca7883f4a0dfff6ed",
+      "prompt_chars": 6134,
+      "prompt_sha256": "64fb192d869469e690158d58ec0129a81eb4c31a122e755f0aa832efae73252f",
+      "request_key": "243018489b20969ff401f4c7875bef0b2ab742927b2556b9480584dd0feb77bc",
+      "request_timeout_s": 600,
+      "sdk_attempt_id": "6a79ec98003b478d8988c2317a8454cc",
+      "sdk_attempts": 1,
+      "server_timeout_s": "600",
+      "transport_version": "aideal-provider-transport-v2",
+      "wall_s": 366.717545624997
+    },
+    {
+      "adapter_sha256": "c78fd8935b37fdd9337d9e036be2e4c864195eb052d1335cbff68d5a5fb96697",
+      "api": "gamma_soft_dtw",
+      "epoch": 1788922888.341641,
+      "event": "invocation_success",
+      "harness_setup_version": "aideal-output-setup-v1",
+      "invocation_id": "f4a2fd54b94e4c95918cde265bf6e4e5",
+      "model": "google:gemini-3.1-pro-preview",
+      "outer_deadline_s": 630,
+      "pid": 50349,
+      "policy_sha256": "d3dc72bd6e8ae61bf387f53095432a592ef5ad022245486ca7883f4a0dfff6ed",
+      "prompt_chars": 6134,
+      "prompt_sha256": "64fb192d869469e690158d58ec0129a81eb4c31a122e755f0aa832efae73252f",
+      "request_key": "243018489b20969ff401f4c7875bef0b2ab742927b2556b9480584dd0feb77bc",
+      "request_timeout_s": 600,
+      "response_sha256": "87033bdcf007996f48bb931e52e6a7226c3c7a4e2825f34937a173a53d45bce1",
+      "sdk_attempts": 1,
+      "transport_version": "aideal-provider-transport-v2",
+      "wall_s": 366.7439530410338
     }
   ],
   "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
