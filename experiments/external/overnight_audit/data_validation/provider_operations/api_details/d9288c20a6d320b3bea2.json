@@ -3,21 +3,21 @@
     "repository": "tslearn",
     "cell": "A1",
     "api": "belongs_to_backend",
-    "outcome": "Waiting for provider / retry",
-    "test_execution": "No test code executed for this provider attempt",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
     "target_api_reached": "Not independently verified",
-    "latest_native_attempt_s": 599.4,
-    "retained_checkpoint_events": 4,
-    "retained_attempt_total_s": 2397.4,
+    "latest_native_attempt_s": 390.7,
+    "retained_checkpoint_events": 5,
+    "retained_attempt_total_s": 2788.1,
     "retained_504_events": 4,
     "retained_cooldown_deferrals": 0,
     "historical_idle_retry_s": null,
-    "measured_provider_invocations": 0,
-    "last_provider_s": null,
+    "measured_provider_invocations": 1,
+    "last_provider_s": 388.4869779999717,
     "last_retry_interval_s": null,
     "next_provider_retry_epoch": null,
-    "transport_policy": "Historical/uninstrumented",
-    "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+    "transport_policy": "d3dc72bd6e8ae61bf387f53095432a592ef5ad022245486ca7883f4a0dfff6ed",
+    "error": null,
     "details": "api_details/d9288c20a6d320b3bea2.json"
   },
   "native_row": {
@@ -25,34 +25,36 @@
     "doc_source": "original",
     "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
     "execution_evidence": {
-      "status": "fail",
+      "status": "pass",
       "rounds": [
         {
           "round": 0,
-          "status": "fail",
-          "category": "llm-error",
-          "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}"
+          "status": "pass"
         }
       ],
-      "error_category": "llm-error",
-      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
-      "code": "",
+      "code": "from tslearn.backend import instantiate_backend\n\n# Instantiate a backend (e.g., numpy)\nbackend = instantiate_backend(\"numpy\")\n\n# Check if the provided array X belongs to the backend\nresult = backend.belongs_to_backend(X)\n\n# Verify the result is a boolean and is True for a numpy array\nassert isinstance(result, bool), \"Result must be a boolean\"\nassert result is True, \"X should belong to the numpy backend\"\n\nprint(f\"__CHECK__ belongs_to_backend {result}\")",
       "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_belongs_to_backend/api_test.py",
-      "exit_code": null,
-      "stdout_tail": "",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ belongs_to_backend True\n__DONE__\n",
       "stderr_tail": ""
     },
-    "status": "fail",
+    "status": "pass",
     "attempts": 1,
-    "pass_round": null,
-    "wall_s": 599.4,
-    "llm_calls": 0,
-    "input_tokens": 0,
-    "output_tokens": 0,
-    "by_model": {},
-    "error_category": "llm-error",
-    "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
-    "locus": "",
+    "pass_round": 0,
+    "wall_s": 390.7,
+    "llm_calls": 1,
+    "input_tokens": 1339,
+    "output_tokens": 63035,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 1339,
+        "output_tokens": 63035
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
     "doc_chars": 100,
     "document_sha256": "ef848ade21f8fec15e4a567a57314510118945a0ae03bfc83bbf913639d24efc",
     "source": "tslearn/tslearn/backend/numpy_backend.py:86",
@@ -60,7 +62,7 @@
     "codebase_frames": null
   },
   "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/comprehension_progress.jsonl",
-  "source_sha256": "d1577a7f9c3e1e88afbf342a255f3f9e1b4e097dbb0ffd45d6fa5e6fbf51aee3",
+  "source_sha256": "4ca70c7e49918ea0255c8c3116fb68f6223e7876008ec19702122502f354febb",
   "checkpoint_events": [
     {
       "name": "belongs_to_backend",
@@ -199,9 +201,146 @@
       "source": "tslearn/tslearn/backend/numpy_backend.py:86",
       "source_other_sites": 1,
       "codebase_frames": null
+    },
+    {
+      "name": "belongs_to_backend",
+      "doc_source": "original",
+      "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "from tslearn.backend import instantiate_backend\n\n# Instantiate a backend (e.g., numpy)\nbackend = instantiate_backend(\"numpy\")\n\n# Check if the provided array X belongs to the backend\nresult = backend.belongs_to_backend(X)\n\n# Verify the result is a boolean and is True for a numpy array\nassert isinstance(result, bool), \"Result must be a boolean\"\nassert result is True, \"X should belong to the numpy backend\"\n\nprint(f\"__CHECK__ belongs_to_backend {result}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_belongs_to_backend/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ belongs_to_backend True\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 390.7,
+      "llm_calls": 1,
+      "input_tokens": 1339,
+      "output_tokens": 63035,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1339,
+          "output_tokens": 63035
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 100,
+      "document_sha256": "ef848ade21f8fec15e4a567a57314510118945a0ae03bfc83bbf913639d24efc",
+      "source": "tslearn/tslearn/backend/numpy_backend.py:86",
+      "source_other_sites": 1,
+      "codebase_frames": null
     }
   ],
-  "provider_timing": [],
-  "transport_events": [],
+  "provider_timing": [
+    {
+      "id": "cc5121a7b1df4264b6baa7c1ede07c86",
+      "start_epoch": 1788916779.276605,
+      "end_epoch": 1788917167.768082,
+      "provider_wall_s": 388.4869779999717,
+      "since_previous_provider_end_s": null,
+      "outcome": "invocation_success",
+      "retry_after_epoch": null,
+      "policy_sha256": "d3dc72bd6e8ae61bf387f53095432a592ef5ad022245486ca7883f4a0dfff6ed"
+    }
+  ],
+  "transport_events": [
+    {
+      "adapter_sha256": "c78fd8935b37fdd9337d9e036be2e4c864195eb052d1335cbff68d5a5fb96697",
+      "api": "belongs_to_backend",
+      "epoch": 1788916779.276605,
+      "event": "invocation_start",
+      "harness_setup_version": "aideal-output-setup-v1",
+      "invocation_id": "cc5121a7b1df4264b6baa7c1ede07c86",
+      "model": "google:gemini-3.1-pro-preview",
+      "outer_deadline_s": 630,
+      "pid": 50349,
+      "policy_sha256": "d3dc72bd6e8ae61bf387f53095432a592ef5ad022245486ca7883f4a0dfff6ed",
+      "previous_end_epoch": null,
+      "prompt_chars": 6166,
+      "prompt_sha256": "e258ac115a469a336b600023f976bfb591fbe95162cff639ca714b39ddeb5029",
+      "request_key": "885129b3bd9d82c8bd5b533e82d879c95eac4682f76a2f37061a11b93760e5c7",
+      "request_timeout_s": 600,
+      "sdk_attempts": 1,
+      "transport_version": "aideal-provider-transport-v2"
+    },
+    {
+      "actual_timeout_s": 600.0,
+      "adapter_sha256": "c78fd8935b37fdd9337d9e036be2e4c864195eb052d1335cbff68d5a5fb96697",
+      "api": "belongs_to_backend",
+      "epoch": 1788916779.292842,
+      "event": "sdk_attempt_start",
+      "harness_setup_version": "aideal-output-setup-v1",
+      "invocation_id": "cc5121a7b1df4264b6baa7c1ede07c86",
+      "model": "google:gemini-3.1-pro-preview",
+      "outer_deadline_s": 630,
+      "payload_sha256": "e33c1c03dfb6cad3442a6dbe744189d34fe87479dcb408ae82dbcb277f30cb32",
+      "pid": 50349,
+      "policy_sha256": "d3dc72bd6e8ae61bf387f53095432a592ef5ad022245486ca7883f4a0dfff6ed",
+      "prompt_chars": 6166,
+      "prompt_sha256": "e258ac115a469a336b600023f976bfb591fbe95162cff639ca714b39ddeb5029",
+      "request_key": "885129b3bd9d82c8bd5b533e82d879c95eac4682f76a2f37061a11b93760e5c7",
+      "request_timeout_s": 600,
+      "sdk_attempt_id": "1008c3e0d9cf4a779989eb8971c4111f",
+      "sdk_attempts": 1,
+      "server_timeout_s": "600",
+      "transport_version": "aideal-provider-transport-v2"
+    },
+    {
+      "actual_timeout_s": 600.0,
+      "adapter_sha256": "c78fd8935b37fdd9337d9e036be2e4c864195eb052d1335cbff68d5a5fb96697",
+      "api": "belongs_to_backend",
+      "epoch": 1788917167.7604659,
+      "event": "sdk_attempt_success",
+      "harness_setup_version": "aideal-output-setup-v1",
+      "invocation_id": "cc5121a7b1df4264b6baa7c1ede07c86",
+      "model": "google:gemini-3.1-pro-preview",
+      "outer_deadline_s": 630,
+      "payload_sha256": "e33c1c03dfb6cad3442a6dbe744189d34fe87479dcb408ae82dbcb277f30cb32",
+      "pid": 50349,
+      "policy_sha256": "d3dc72bd6e8ae61bf387f53095432a592ef5ad022245486ca7883f4a0dfff6ed",
+      "prompt_chars": 6166,
+      "prompt_sha256": "e258ac115a469a336b600023f976bfb591fbe95162cff639ca714b39ddeb5029",
+      "request_key": "885129b3bd9d82c8bd5b533e82d879c95eac4682f76a2f37061a11b93760e5c7",
+      "request_timeout_s": 600,
+      "sdk_attempt_id": "1008c3e0d9cf4a779989eb8971c4111f",
+      "sdk_attempts": 1,
+      "server_timeout_s": "600",
+      "transport_version": "aideal-provider-transport-v2",
+      "wall_s": 388.4629520419985
+    },
+    {
+      "adapter_sha256": "c78fd8935b37fdd9337d9e036be2e4c864195eb052d1335cbff68d5a5fb96697",
+      "api": "belongs_to_backend",
+      "epoch": 1788917167.768082,
+      "event": "invocation_success",
+      "harness_setup_version": "aideal-output-setup-v1",
+      "invocation_id": "cc5121a7b1df4264b6baa7c1ede07c86",
+      "model": "google:gemini-3.1-pro-preview",
+      "outer_deadline_s": 630,
+      "pid": 50349,
+      "policy_sha256": "d3dc72bd6e8ae61bf387f53095432a592ef5ad022245486ca7883f4a0dfff6ed",
+      "prompt_chars": 6166,
+      "prompt_sha256": "e258ac115a469a336b600023f976bfb591fbe95162cff639ca714b39ddeb5029",
+      "request_key": "885129b3bd9d82c8bd5b533e82d879c95eac4682f76a2f37061a11b93760e5c7",
+      "request_timeout_s": 600,
+      "response_sha256": "fd6c1da1ce4640326d3dd63f8402a1550944e29b50e9deba2a52827eb1398697",
+      "sdk_attempts": 1,
+      "transport_version": "aideal-provider-transport-v2",
+      "wall_s": 388.4869779999717
+    }
+  ],
   "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
 }

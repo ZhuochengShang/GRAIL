@@ -1,6 +1,6 @@
 # AIDEAL readiness assessment and improvement queue
 
-Updated: 2026-09-09T01:12:48.108914+00:00
+Updated: 2026-09-09T01:27:49.777866+00:00
 
 **Measured scope:** how documentation affects an LLM’s API use under a fixed harness. Overall agent readiness is not yet fully measured; no composite score is assigned.
 
@@ -8,7 +8,7 @@ Updated: 2026-09-09T01:12:48.108914+00:00
 |---|---|---|---|---|---|
 | mir_eval | 1/148 provisional | 135/148 final | pending (148 APIs) | 137/148 final | WITHHELD/PARTIAL |
 | thumbnailator | 130/149 final | 127/149 final | pending (149 APIs) | 139/149 final | WITHHELD/PARTIAL |
-| tslearn | 3/235 provisional | 175/235 final | pending (235 APIs) | 217/235 final | WITHHELD/PARTIAL |
+| tslearn | 4/235 provisional | 175/235 final | pending (235 APIs) | 217/235 final | WITHHELD/PARTIAL |
 
 Provisional counts retain pending and provider-error APIs in the denominator. Final counts are native pass/all-API results. Cross-cell effects require the separate matched-comparison release checks.
 
@@ -27,29 +27,28 @@ Provisional counts retain pending and provider-error APIs in the denominator. Fi
 | mir_eval | assertion-or-behavior | 6 |
 | mir_eval | doc-wrong | 2 |
 | mir_eval | example-invalid | 1 |
-| mir_eval | input-contract-or-api-call | 4 |
+| mir_eval | input-contract-or-api-call | 5 |
 | mir_eval | input-or-output-path | 4 |
-| mir_eval | provider | 25 |
+| mir_eval | provider | 24 |
 | mir_eval | test/scaffold | 5 |
 | mir_eval | unknown | 5 |
 | thumbnailator | input-or-output-path | 4 |
 | thumbnailator | unknown | 47 |
-| tslearn | api-identity-or-version | 19 |
-| tslearn | assertion-or-behavior | 20 |
+| tslearn | api-identity-or-version | 20 |
+| tslearn | assertion-or-behavior | 21 |
 | tslearn | input-contract-or-api-call | 11 |
-| tslearn | provider | 31 |
+| tslearn | provider | 28 |
 | tslearn | unknown | 41 |
 
-## Reviewable improvements (225)
+## Reviewable improvements (224)
 
-Review states: `{'open': 224, 'proposed': 1}`. Observation errors: 0. Inactive reviewed IDs retained: 0.
+Review states: `{'open': 223, 'proposed': 1}`. Observation errors: 0. Inactive reviewed IDs retained: 0.
 
 Each card separates native failure, diagnosis confidence, proposed action, validation and review decisions. Provider barriers concern execution infrastructure; they are not automatically codebase or documentation defects.
 
 | Suggestion | Cell | Priority | Confidence | Review |
 |---|---|---|---|---|
 | [mir_eval: absolute_error](suggestions/082799557f3d00ef3959.md) | A1 | execution_blocker | high | open |
-| [mir_eval: compute_accuracy](suggestions/3e452364bc3ce7629a00.md) | A1 | execution_blocker | high | open |
 | [mir_eval: compute_err_score](suggestions/15ea9b007008778fffe3.md) | A1 | execution_blocker | high | open |
 | [mir_eval: compute_num_true_positives](suggestions/a94de7dba8b2518329b0.md) | A1 | execution_blocker | high | open |
 | [mir_eval: deprecated](suggestions/beb42a32875dfb8074a9.md) | A1 | execution_blocker | high | open |
@@ -73,9 +72,6 @@ Each card separates native failure, diagnosis confidence, proposed action, valid
 | [mir_eval: validate_boundary](suggestions/641d57339a66dbb3993a.md) | A1 | execution_blocker | high | open |
 | [mir_eval: validate_structure](suggestions/970d60a4c88d8d112a3e.md) | A1 | execution_blocker | high | open |
 | [mir_eval: vmeasure](suggestions/24f231e5d234a7e41345.md) | A1 | execution_blocker | high | open |
-| [tslearn: accumulated_matrix](suggestions/31932007a7b91d0395d7.md) | A1 | execution_blocker | high | open |
-| [tslearn: accumulated_matrix_from_dist_matrix](suggestions/c873c572383ded07dabd.md) | A1 | execution_blocker | high | open |
-| [tslearn: belongs_to_backend](suggestions/f46ab268890b4c653478.md) | A1 | execution_blocker | high | open |
 | [tslearn: cdist_sax](suggestions/c25207efc332a03acceb.md) | A1 | execution_blocker | high | open |
 | [tslearn: check_dataset](suggestions/a8e4c6f1f84f7f2405c8.md) | A1 | execution_blocker | high | open |
 | [tslearn: check_keras_backend](suggestions/66e5440c2bd6bad1b798.md) | A1 | execution_blocker | high | open |
@@ -118,6 +114,7 @@ Each card separates native failure, diagnosis confidence, proposed action, valid
 | [mir_eval: ticker_pitch](suggestions/f0e1ab94a6656e53a513.md) | A2 | reviewed_barrier | reviewed | proposed |
 | [mir_eval: voicing_recall](suggestions/049822fa462033a54c69.md) | A2 | reviewed_barrier | reviewed | open |
 | [mir_eval: IntervalFormatter](suggestions/43eb9410c759c001a0ca.md) | A1 | needs_diagnosis | medium | open |
+| [mir_eval: compute_accuracy](suggestions/3e452364bc3ce7629a00.md) | A1 | needs_diagnosis | medium | open |
 | [mir_eval: constant_hop_timebase](suggestions/a94d44ba733dc35068c1.md) | A1 | needs_diagnosis | medium | open |
 | [mir_eval: register_colormap](suggestions/d6485c290c7bda782770.md) | A1 | needs_diagnosis | medium | open |
 | [mir_eval: cemgil](suggestions/b787266701666609d246.md) | B2 | needs_diagnosis | medium | open |
@@ -185,6 +182,8 @@ Each card separates native failure, diagnosis confidence, proposed action, valid
 | [tslearn: PatchingLayer](suggestions/492a7a8c40fbef8c50dd.md) | A1 | needs_diagnosis | low | open |
 | [tslearn: SquaredEuclidean](suggestions/9cb2806d53f90d5dc13a.md) | A1 | needs_diagnosis | medium | open |
 | [tslearn: TimeSeriesDBSCAN](suggestions/1268880b6e8ce0e28497.md) | A1 | needs_diagnosis | medium | open |
+| [tslearn: accumulated_matrix](suggestions/31932007a7b91d0395d7.md) | A1 | needs_diagnosis | medium | open |
+| [tslearn: accumulated_matrix_from_dist_matrix](suggestions/c873c572383ded07dabd.md) | A1 | needs_diagnosis | medium | open |
 | [tslearn: baseline_accuracy](suggestions/efc0eaaf68454e1f6b3d.md) | A1 | needs_diagnosis | medium | open |
 | [tslearn: call](suggestions/d9bb728a68e8297ee02c.md) | A1 | needs_diagnosis | low | open |
 | [tslearn: cast](suggestions/965682daafd9a388c930.md) | A1 | needs_diagnosis | medium | open |

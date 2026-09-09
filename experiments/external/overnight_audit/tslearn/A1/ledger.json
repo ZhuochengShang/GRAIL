@@ -3,16 +3,16 @@
   "expected": 235,
   "counts": {
     "pending": 188,
-    "fail": 44,
-    "pass": 3
+    "fail": 43,
+    "pass": 4
   },
   "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
   "errors": [],
   "failure_categories": {
-    "unknown": 7,
-    "llm-error": 31,
+    "unknown": 8,
+    "api-identity": 3,
     "test/scaffold": 4,
-    "api-identity": 2
+    "llm-error": 28
   },
   "recorded_provider_errors_all_fingerprints": 151,
   "observed_fingerprints": [
@@ -11255,6 +11255,140 @@
       "source_other_sites": 0,
       "codebase_frames": null,
       "checkpoint_line": 355
+    },
+    {
+      "name": "accumulated_matrix",
+      "doc_source": "original",
+      "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "runtime",
+            "error": "AssertionError: The documented contract for accumulated_matrix is insufficient to verify the result."
+          }
+        ],
+        "error_category": "runtime",
+        "error": "AssertionError: The documented contract for accumulated_matrix is insufficient to verify the result.",
+        "code": "import numpy as np\nfrom tslearn.metrics import cdist_dtw\n\n# The documentation for `accumulated_matrix` is missing, but it is a known helper\n# in tslearn.metrics. However, since the prompt states \"No code-context section for\n# `accumulated_matrix` was found in the configured original documentation\" and\n# instructs to deliberately fail the assertion if the documented contract is\n# insufficient to verify the result, we will do exactly that.\n\ntry:\n    from tslearn.metrics import accumulated_matrix\n    # If it exists, we can try to call it, but we must fail the assertion.\n    # accumulated_matrix typically takes two time series.\n    acc_mat = accumulated_matrix(s1, s2)\n    witness = acc_mat.shape\nexcept ImportError:\n    witness = \"ImportError\"\n\nassert False, \"The documented contract for accumulated_matrix is insufficient to verify the result.\"\nprint(f\"__CHECK__ accumulated_matrix {witness}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_accumulated_matrix/api_test.py",
+        "exit_code": 1,
+        "stdout_tail": "",
+        "stderr_tail": "__RUN_ERR__ AssertionError: The documented contract for accumulated_matrix is insufficient to verify the result.\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_accumulated_matrix/api_test.py\", line 62, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_accumulated_matrix/api_test.py\", line 57, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_accumulated_matrix/api_test.py\", line 52, in api_test\n    assert False, \"The documented contract for accumulated_matrix is insufficient to verify the result.\"\nAssertionError: The documented contract for accumulated_matrix is insufficient to verify the result.\n"
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 314.8,
+      "llm_calls": 1,
+      "input_tokens": 1330,
+      "output_tokens": 63136,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1330,
+          "output_tokens": 63136
+        }
+      },
+      "error_category": "runtime",
+      "error": "AssertionError: The documented contract for accumulated_matrix is insufficient to verify the result.",
+      "locus": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_accumulated_matrix/api_test.py:52",
+      "doc_chars": 100,
+      "document_sha256": "496e1d8ad12861b48cccb30ef7a708af42a2c77690da1dd07652d87229fb03d2",
+      "source": "tslearn/tslearn/metrics/_dtw.py:286",
+      "source_other_sites": 2,
+      "codebase_frames": null,
+      "checkpoint_line": 356
+    },
+    {
+      "name": "accumulated_matrix_from_dist_matrix",
+      "doc_source": "original",
+      "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "infra",
+            "error": "missing module/import: cannot import name 'accumulated_matrix_from_dist_matrix' from 'tslearn.metrics' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/"
+          }
+        ],
+        "error_category": "infra",
+        "error": "missing module/import: cannot import name 'accumulated_matrix_from_dist_matrix' from 'tslearn.metrics' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/me",
+        "code": "import numpy as np\nfrom tslearn.metrics import accumulated_matrix_from_dist_matrix\n\n# Create a small deterministic distance matrix\ndist_matrix = np.array([\n    [1.0, 2.0, 3.0],\n    [4.0, 5.0, 6.0],\n    [7.0, 8.0, 9.0]\n])\n\n# Compute the accumulated cost matrix\nacc_matrix = accumulated_matrix_from_dist_matrix(dist_matrix)\n\n# The accumulated matrix should have the same shape as the distance matrix\nassert acc_matrix.shape == dist_matrix.shape, f\"Expected shape {dist_matrix.shape}, got {acc_matrix.shape}\"\n\n# The first element should be exactly the first element of the distance matrix\nassert acc_matrix[0, 0] == dist_matrix[0, 0], f\"Expected first element {dist_matrix[0, 0]}, got {acc_matrix[0, 0]}\"\n\n# The element at (1, 1) should be dist_matrix[1, 1] + min(acc_matrix[0, 1], acc_matrix[1, 0], acc_matrix[0, 0])\n# acc_matrix[0, 1] = 1.0 + 2.0 = 3.0\n# acc_matrix[1, 0] = 1.0 + 4.0 = 5.0\n# acc_matrix[0, 0] = 1.0\n# min is 1.0, so acc_matrix[1, 1] = 5.0 + 1.0 = 6.0\nassert acc_matrix[1, 1] == 6.0, f\"",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_accumulated_matrix_from_dist_matrix/api_test.py",
+        "exit_code": 1,
+        "stdout_tail": "",
+        "stderr_tail": "__RUN_ERR__ ImportError: cannot import name 'accumulated_matrix_from_dist_matrix' from 'tslearn.metrics' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/metrics/__init__.py)\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_accumulated_matrix_from_dist_matrix/api_test.py\", line 69, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_accumulated_matrix_from_dist_matrix/api_test.py\", line 64, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_accumulated_matrix_from_dist_matrix/api_test.py\", line 35, in api_test\n    from tslearn.metrics import accumulated_matrix_from_dist_matrix\nImportError: cannot import name 'accumulated_matrix_from_dist_matrix' from 'tslearn.metrics' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/metrics/__init__.py)\n"
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 382.8,
+      "llm_calls": 1,
+      "input_tokens": 1378,
+      "output_tokens": 63371,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1378,
+          "output_tokens": 63371
+        }
+      },
+      "error_category": "infra",
+      "error": "missing module/import: cannot import name 'accumulated_matrix_from_dist_matrix' from 'tslearn.metrics' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/me",
+      "locus": "",
+      "doc_chars": 117,
+      "document_sha256": "a2efdf7ec1f21b79d0b2dd2330aac3b46dd9d66c1af2e782f9896e4dad99aee4",
+      "source": "tslearn/tslearn/metrics/dtw_variants.py:456",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 357
+    },
+    {
+      "name": "belongs_to_backend",
+      "doc_source": "original",
+      "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "from tslearn.backend import instantiate_backend\n\n# Instantiate a backend (e.g., numpy)\nbackend = instantiate_backend(\"numpy\")\n\n# Check if the provided array X belongs to the backend\nresult = backend.belongs_to_backend(X)\n\n# Verify the result is a boolean and is True for a numpy array\nassert isinstance(result, bool), \"Result must be a boolean\"\nassert result is True, \"X should belong to the numpy backend\"\n\nprint(f\"__CHECK__ belongs_to_backend {result}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_belongs_to_backend/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ belongs_to_backend True\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 390.7,
+      "llm_calls": 1,
+      "input_tokens": 1339,
+      "output_tokens": 63035,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1339,
+          "output_tokens": 63035
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 100,
+      "document_sha256": "ef848ade21f8fec15e4a567a57314510118945a0ae03bfc83bbf913639d24efc",
+      "source": "tslearn/tslearn/backend/numpy_backend.py:86",
+      "source_other_sites": 1,
+      "codebase_frames": null,
+      "checkpoint_line": 358
     }
   ],
   "repair_summary": {
@@ -12312,16 +12446,16 @@
     {
       "api": "accumulated_matrix",
       "status": "fail",
-      "primary_category": "llm-error",
-      "runner_category": "llm-error",
-      "category_reason": "Provider outcome; retry, never count as a documentation failure.",
-      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "primary_category": "unknown",
+      "runner_category": "runtime",
+      "category_reason": "Observed runtime; doc attribution requires source, document, and snippet review.",
+      "error": "AssertionError: The documented contract for accumulated_matrix is insufficient to verify the result.",
       "source": "tslearn/tslearn/metrics/_dtw.py:286",
       "doc_chars": 100,
-      "checkpoint_attempts": 3,
+      "checkpoint_attempts": 4,
       "provider_error_attempts": 3,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
+      "recorded_successful_llm_calls": 1,
       "attempt_history": [
         {
           "checkpoint_line": 239,
@@ -12358,6 +12492,18 @@
           "input_tokens": 0,
           "output_tokens": 0,
           "pass_round": null
+        },
+        {
+          "checkpoint_line": 356,
+          "status": "fail",
+          "error_category": "runtime",
+          "error": "AssertionError: The documented contract for accumulated_matrix is insufficient to verify the result.",
+          "attempts": 1,
+          "wall_s": 314.8,
+          "llm_calls": 1,
+          "input_tokens": 1330,
+          "output_tokens": 63136,
+          "pass_round": null
         }
       ],
       "repair_status": null,
@@ -12368,16 +12514,16 @@
     {
       "api": "accumulated_matrix_from_dist_matrix",
       "status": "fail",
-      "primary_category": "llm-error",
-      "runner_category": "llm-error",
-      "category_reason": "Provider outcome; retry, never count as a documentation failure.",
-      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "primary_category": "api-identity",
+      "runner_category": "infra",
+      "category_reason": "Import/member selection failed; the runner's infrastructure label needs review.",
+      "error": "missing module/import: cannot import name 'accumulated_matrix_from_dist_matrix' from 'tslearn.metrics' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/me",
       "source": "tslearn/tslearn/metrics/dtw_variants.py:456",
       "doc_chars": 117,
-      "checkpoint_attempts": 3,
+      "checkpoint_attempts": 4,
       "provider_error_attempts": 3,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
+      "recorded_successful_llm_calls": 1,
       "attempt_history": [
         {
           "checkpoint_line": 240,
@@ -12413,6 +12559,18 @@
           "llm_calls": 0,
           "input_tokens": 0,
           "output_tokens": 0,
+          "pass_round": null
+        },
+        {
+          "checkpoint_line": 357,
+          "status": "fail",
+          "error_category": "infra",
+          "error": "missing module/import: cannot import name 'accumulated_matrix_from_dist_matrix' from 'tslearn.metrics' (/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/tslearn/tslearn/me",
+          "attempts": 1,
+          "wall_s": 382.8,
+          "llm_calls": 1,
+          "input_tokens": 1378,
+          "output_tokens": 63371,
           "pass_round": null
         }
       ],
@@ -12524,17 +12682,17 @@
     },
     {
       "api": "belongs_to_backend",
-      "status": "fail",
-      "primary_category": "llm-error",
-      "runner_category": "llm-error",
-      "category_reason": "Provider outcome; retry, never count as a documentation failure.",
-      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "status": "pass",
+      "primary_category": "pass",
+      "runner_category": null,
+      "category_reason": "",
+      "error": null,
       "source": "tslearn/tslearn/backend/numpy_backend.py:86",
       "doc_chars": 100,
-      "checkpoint_attempts": 3,
+      "checkpoint_attempts": 4,
       "provider_error_attempts": 3,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
+      "recorded_successful_llm_calls": 1,
       "attempt_history": [
         {
           "checkpoint_line": 242,
@@ -12571,6 +12729,18 @@
           "input_tokens": 0,
           "output_tokens": 0,
           "pass_round": null
+        },
+        {
+          "checkpoint_line": 358,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 390.7,
+          "llm_calls": 1,
+          "input_tokens": 1339,
+          "output_tokens": 63035,
+          "pass_round": 0
         }
       ],
       "repair_status": null,
