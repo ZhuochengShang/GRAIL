@@ -345,7 +345,10 @@ def run(cfg: AidealConfig, apis: list[str] | None = None,
             try:
                 retry = journal.phase(rnd, 'validation', validate_draft)
             except Exception as exc:
-                results[name] = {'status': 'llm-error (validation paused)', 'error': str(exc),
+                # This can be provider, harness, or uncertain phase state. Keep
+                # it pending without attributing every pause to the model.
+                results[name] = {'status': 'in-progress (validation paused)', 'error': str(exc),
+                                 'error_type': type(exc).__name__,
                                  'created_from_missing': created, 'doc_rounds': rounds_trail}
                 return _flush(blocked_api=name)
             m = (retry.get("metrics") or {}).get(name, {}) or {}

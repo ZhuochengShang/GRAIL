@@ -28,7 +28,7 @@ unchanged historical v3 engine, each with its own supervisor/output namespace.
 | Responsibility | Historical implementation | This branch |
 |---|---|---|
 | Document editing helpers and public entry | `docfix.py`, 707 lines including loop | `docfix.py`, 333 lines; public signature retained |
-| Document repair orchestration | Same file | `doc_repair.py`, 444 lines |
+| Document repair orchestration | Same file | `doc_repair.py`, 447 lines |
 | Durable phase state and exclusive README access | No separate component | `repair_journal.py`, 122 lines |
 | Local subprocess lifecycle and native writer lock | Inline `subprocess.run` | `execution.py`, 86 lines |
 | Prompt and transport identity | Incomplete inline identity | `experiment_identity.py`, 56 lines |
