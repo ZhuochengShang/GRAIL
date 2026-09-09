@@ -1,0 +1,46 @@
+version: 1
+max_parallel: 1
+retry_delay_seconds: 300
+env:
+  AIDEAL_GOOGLE_MIN_INTERVAL_S: "3"
+  AIDEAL_GOOGLE_RATE_STATE: /tmp/aideal_google_rate_gate.txt
+  AIDEAL_GOOGLE_REQUEST_TIMEOUT_S: "300"
+  AIDEAL_GOOGLE_MAX_RETRIES: "2"
+jobs:
+  - id: mdanalysis_upstream_before
+    cwd: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mdanalysis_full1032_freeze
+    branch: aideal/mdanalysis-full1032-freeze
+    environment_inventory: experiments/mdanalysis/docs/full_1032/setup/environment_freeze.txt
+    command:
+      - /Users/clockorangezoe/miniconda3/envs/geo_llm_spark/bin/python
+      - experiments/mdanalysis/run_pass_to_pass.py
+      - --experiment-root
+      - experiments/mdanalysis
+      - --phase
+      - before
+      - --cell
+      - freeze
+      - --out-dir
+      - experiments/mdanalysis/docs/full_1032/setup
+    result: experiments/mdanalysis/docs/full_1032/setup/PASS_TO_PASS_BEFORE.command.json
+    complete: {kind: exit_zero}
+    max_runtime_seconds: 21600
+    max_restarts: 0
+  - id: mdanalysis_A2_generate
+    depends_on: [mdanalysis_upstream_before]
+    cwd: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mdanalysis_full1032_freeze
+    branch: aideal/mdanalysis-full1032-freeze
+    environment_inventory: experiments/mdanalysis/docs/full_1032/setup/environment_freeze.txt
+    env:
+      PYTHONPATH: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mdanalysis_full1032_freeze/grail-agent/src
+    command:
+      - /Users/clockorangezoe/miniconda3/envs/geo_llm_spark/bin/python
+      - experiments/external/run_resumable_readme.py
+      - --config
+      - experiments/mdanalysis/configs/aideal.full1032.A2.yaml
+      - --limit
+      - "0"
+    result: experiments/mdanalysis/docs/full_1032/A2/generation_result.json
+    complete: {kind: readme_generation}
+    max_runtime_seconds: 259200
+    max_restarts: 0

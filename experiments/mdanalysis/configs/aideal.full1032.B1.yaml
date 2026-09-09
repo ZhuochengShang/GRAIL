@@ -1,0 +1,12 @@
+extends: [python, aideal.yaml, aideal.full1032.yaml]
+
+files:
+  # Intentionally absent before B1. `fix-docs --create-missing` creates only
+  # execution-gated entries for A1 failures; retries read original+aideal.
+  llm_readme: docs/full_1032/B1/LLM_readme.md
+  error_log: logs/full_1032/B1/error_log.jsonl
+
+comprehension:
+  execute:
+    work_dir: .aideal_exec/full_1032/B1
+    output_dir: /tmp/aideal_mdanalysis_full1032_B1_out
