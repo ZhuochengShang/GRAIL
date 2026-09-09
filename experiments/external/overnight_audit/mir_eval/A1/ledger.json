@@ -2,15 +2,15 @@
   "status": "partial",
   "expected": 148,
   "counts": {
-    "fail": 26,
+    "fail": 25,
     "pending": 119,
-    "pass": 3
+    "pass": 4
   },
   "fingerprint": "6f5bcaa71d6a868167732ff1b08ada63654abf63b2bc6f0777aae06911a1e74f",
   "errors": [],
   "failure_categories": {
-    "unknown": 9,
-    "llm-error": 15,
+    "unknown": 10,
+    "llm-error": 13,
     "api-identity": 2
   },
   "recorded_provider_errors_all_fingerprints": 234,
@@ -11106,6 +11106,94 @@
       "source_other_sites": 0,
       "codebase_frames": null,
       "checkpoint_line": 367
+    },
+    {
+      "name": "lmeasure",
+      "doc_source": "original",
+      "experiment_fingerprint": "6f5bcaa71d6a868167732ff1b08ada63654abf63b2bc6f0777aae06911a1e74f",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import mir_eval\n\ntry:\n    # lmeasure is part of mir_eval.hierarchy, but wait, the prompt says \"No code-context section for lmeasure was found\".\n    # Let's check mir_eval.hierarchy.lmeasure or mir_eval.segment.lmeasure?\n    # Actually, lmeasure is in mir_eval.hierarchy.\n    # Wait, mir_eval.hierarchy has tmeasure, but does it have lmeasure?\n    # Yes, L-measure is a hierarchical evaluation metric.\n    # Let's try to call it with ref_intervals, ref_labels, est_intervals, est_labels.\n    # Wait, hierarchy metrics usually take lists of intervals and labels for each level.\n    # Let's wrap the intervals and labels in lists to represent a single-level hierarchy.\n    ref_hier_intervals = [ref_intervals]\n    ref_hier_labels = [ref_labels]\n    est_hier_intervals = [est_intervals]\n    est_hier_labels = [est_labels]\n    \n    precision, recall, f_measure = mir_eval.hierarchy.lmeasure(\n        ref_hier_intervals, ref_hier_labels,\n        est_hier_intervals, est_hier_labels\n    )\n    \n    assert 0.0 <= f_measure <= 1.0, f\"F-measure should be in [0, 1], got {f_measure}\"\n    assert 0.0 <= precision <= 1.0, f\"Precision should be in [0, 1], got {precision}\"\n    assert 0.0 <= recall <= 1.0, f\"Recall should be in [0, 1], got {recall}\"\n    \n    print(f\"__CHECK__ lmeasure {f_measure:.4f}\")\nexcept AttributeError:\n    # If lmeasure is not in hierarchy, maybe it's in segment?\n    # Actually, L-measure is a tree distance metric, often used in hierarchy.\n    # Let's fail gracefully if it's not found, but the prompt says \"Use the complete 148-name AIDEAL-discovered public surface\".\n    assert False, \"lmeasure contract is insufficient to verify the result or function not found.\"",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_A1/experiments/external/mir_eval/.aideal_exec/A1/run_lmeasure/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ lmeasure 0.8783\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 353.7,
+      "llm_calls": 1,
+      "input_tokens": 1332,
+      "output_tokens": 63423,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1332,
+          "output_tokens": 63423
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 90,
+      "document_sha256": "f9bb80d910ddbbcf3c0b34efb7821afd13f673197d731596c0bd0361ad9521c2",
+      "source": "source/mir_eval/hierarchy.py:548",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 368
+    },
+    {
+      "name": "merge_chord_intervals",
+      "doc_source": "original",
+      "experiment_fingerprint": "6f5bcaa71d6a868167732ff1b08ada63654abf63b2bc6f0777aae06911a1e74f",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "runtime",
+            "error": "AssertionError: The documented contract for merge_chord_intervals is insufficient to verify the result."
+          }
+        ],
+        "error_category": "runtime",
+        "error": "AssertionError: The documented contract for merge_chord_intervals is insufficient to verify the result.",
+        "code": "import mir_eval\nimport numpy as np\n\n# The documentation does not provide a contract for `merge_chord_intervals`.\n# However, mir_eval.util.merge_intervals is a known function, but the prompt asks for `merge_chord_intervals`.\n# Let's check if it exists in mir_eval.util or mir_eval.chord.\n# Actually, mir_eval.util.merge_intervals exists, but the prompt specifically asks for `merge_chord_intervals`.\n# Since the documentation is missing, we will deliberately fail the assertion as instructed.\n\ntry:\n    # Attempt to call it if it exists in mir_eval.chord\n    if hasattr(mir_eval.chord, 'merge_chord_intervals'):\n        result = mir_eval.chord.merge_chord_intervals(ref_intervals, ref_labels)\n    elif hasattr(mir_eval.util, 'merge_chord_intervals'):\n        result = mir_eval.util.merge_chord_intervals(ref_intervals, ref_labels)\n    else:\n        result = None\nexcept Exception as e:\n    result = None\n\nassert False, \"The documented contract for merge_chord_intervals is insufficient to verify the r",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_A1/experiments/external/mir_eval/.aideal_exec/A1/run_merge_chord_intervals/api_test.py",
+        "exit_code": 1,
+        "stdout_tail": "",
+        "stderr_tail": "__RUN_ERR__ AssertionError: The documented contract for merge_chord_intervals is insufficient to verify the result.\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_A1/experiments/external/mir_eval/.aideal_exec/A1/run_merge_chord_intervals/api_test.py\", line 63, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_A1/experiments/external/mir_eval/.aideal_exec/A1/run_merge_chord_intervals/api_test.py\", line 58, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_A1/experiments/external/mir_eval/.aideal_exec/A1/run_merge_chord_intervals/api_test.py\", line 53, in api_test\n    assert False, \"The documented contract for merge_chord_intervals is insufficient to verify the result.\"\nAssertionError: The documented contract for merge_chord_intervals is insufficient to verify the result.\n"
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 387.4,
+      "llm_calls": 1,
+      "input_tokens": 1356,
+      "output_tokens": 63198,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1356,
+          "output_tokens": 63198
+        }
+      },
+      "error_category": "runtime",
+      "error": "AssertionError: The documented contract for merge_chord_intervals is insufficient to verify the result.",
+      "locus": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_A1/experiments/external/mir_eval/.aideal_exec/A1/run_merge_chord_intervals/api_test.py:53",
+      "doc_chars": 103,
+      "document_sha256": "d4ed15f21486c2f924907f1a95cdfc15ae2a4471f0d128f95a5ed6100549996c",
+      "source": "source/mir_eval/chord.py:1490",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 369
     }
   ],
   "repair_summary": {
@@ -12896,17 +12984,17 @@
     },
     {
       "api": "lmeasure",
-      "status": "fail",
-      "primary_category": "llm-error",
-      "runner_category": "llm-error",
-      "category_reason": "Provider outcome; retry, never count as a documentation failure.",
-      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "status": "pass",
+      "primary_category": "pass",
+      "runner_category": null,
+      "category_reason": "",
+      "error": null,
       "source": "source/mir_eval/hierarchy.py:548",
       "doc_chars": 90,
-      "checkpoint_attempts": 4,
+      "checkpoint_attempts": 5,
       "provider_error_attempts": 4,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
+      "recorded_successful_llm_calls": 1,
       "attempt_history": [
         {
           "checkpoint_line": 259,
@@ -12955,6 +13043,18 @@
           "input_tokens": 0,
           "output_tokens": 0,
           "pass_round": null
+        },
+        {
+          "checkpoint_line": 368,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 353.7,
+          "llm_calls": 1,
+          "input_tokens": 1332,
+          "output_tokens": 63423,
+          "pass_round": 0
         }
       ],
       "repair_status": null,
@@ -13307,16 +13407,16 @@
     {
       "api": "merge_chord_intervals",
       "status": "fail",
-      "primary_category": "llm-error",
-      "runner_category": "llm-error",
-      "category_reason": "Provider outcome; retry, never count as a documentation failure.",
-      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "primary_category": "unknown",
+      "runner_category": "runtime",
+      "category_reason": "Observed runtime; doc attribution requires source, document, and snippet review.",
+      "error": "AssertionError: The documented contract for merge_chord_intervals is insufficient to verify the result.",
       "source": "source/mir_eval/chord.py:1490",
       "doc_chars": 103,
-      "checkpoint_attempts": 4,
+      "checkpoint_attempts": 5,
       "provider_error_attempts": 4,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
+      "recorded_successful_llm_calls": 1,
       "attempt_history": [
         {
           "checkpoint_line": 260,
@@ -13364,6 +13464,18 @@
           "llm_calls": 0,
           "input_tokens": 0,
           "output_tokens": 0,
+          "pass_round": null
+        },
+        {
+          "checkpoint_line": 369,
+          "status": "fail",
+          "error_category": "runtime",
+          "error": "AssertionError: The documented contract for merge_chord_intervals is insufficient to verify the result.",
+          "attempts": 1,
+          "wall_s": 387.4,
+          "llm_calls": 1,
+          "input_tokens": 1356,
+          "output_tokens": 63198,
           "pass_round": null
         }
       ],

@@ -3,22 +3,22 @@
     "repository": "mir_eval",
     "cell": "A1",
     "api": "merge_chord_intervals",
-    "outcome": "Waiting for provider / retry",
-    "test_execution": "No test code executed for this provider attempt",
+    "outcome": "Execution failed",
+    "test_execution": "Test process returned exit code 1; target reach not independently verified",
     "target_api_reached": "Not independently verified",
-    "latest_native_attempt_s": 599.6,
-    "retained_checkpoint_events": 8,
-    "retained_attempt_total_s": 4795.4,
+    "latest_native_attempt_s": 387.4,
+    "retained_checkpoint_events": 9,
+    "retained_attempt_total_s": 5182.8,
     "retained_504_events": 8,
     "retained_cooldown_deferrals": 0,
     "historical_idle_retry_s": null,
-    "measured_provider_invocations": 0,
-    "last_provider_s": null,
+    "measured_provider_invocations": 1,
+    "last_provider_s": 386.8396123329876,
     "last_retry_interval_s": null,
     "next_provider_retry_epoch": null,
-    "transport_policy": "Historical/uninstrumented",
+    "transport_policy": "e7e9d3691d9e77eea97f97553474e83d5a9dcab174db19cf3cca0c7b102b3742",
     "identity_status": "Final or explicitly migrated evidence",
-    "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+    "error": "AssertionError: The documented contract for merge_chord_intervals is insufficient to verify the result.",
     "details": "api_details/ef9da2a0541f3a299cf6.json"
   },
   "native_row": {
@@ -31,29 +31,35 @@
         {
           "round": 0,
           "status": "fail",
-          "category": "llm-error",
-          "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}"
+          "category": "runtime",
+          "error": "AssertionError: The documented contract for merge_chord_intervals is insufficient to verify the result."
         }
       ],
-      "error_category": "llm-error",
-      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
-      "code": "",
+      "error_category": "runtime",
+      "error": "AssertionError: The documented contract for merge_chord_intervals is insufficient to verify the result.",
+      "code": "import mir_eval\nimport numpy as np\n\n# The documentation does not provide a contract for `merge_chord_intervals`.\n# However, mir_eval.util.merge_intervals is a known function, but the prompt asks for `merge_chord_intervals`.\n# Let's check if it exists in mir_eval.util or mir_eval.chord.\n# Actually, mir_eval.util.merge_intervals exists, but the prompt specifically asks for `merge_chord_intervals`.\n# Since the documentation is missing, we will deliberately fail the assertion as instructed.\n\ntry:\n    # Attempt to call it if it exists in mir_eval.chord\n    if hasattr(mir_eval.chord, 'merge_chord_intervals'):\n        result = mir_eval.chord.merge_chord_intervals(ref_intervals, ref_labels)\n    elif hasattr(mir_eval.util, 'merge_chord_intervals'):\n        result = mir_eval.util.merge_chord_intervals(ref_intervals, ref_labels)\n    else:\n        result = None\nexcept Exception as e:\n    result = None\n\nassert False, \"The documented contract for merge_chord_intervals is insufficient to verify the r",
       "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_A1/experiments/external/mir_eval/.aideal_exec/A1/run_merge_chord_intervals/api_test.py",
-      "exit_code": null,
+      "exit_code": 1,
       "stdout_tail": "",
-      "stderr_tail": ""
+      "stderr_tail": "__RUN_ERR__ AssertionError: The documented contract for merge_chord_intervals is insufficient to verify the result.\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_A1/experiments/external/mir_eval/.aideal_exec/A1/run_merge_chord_intervals/api_test.py\", line 63, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_A1/experiments/external/mir_eval/.aideal_exec/A1/run_merge_chord_intervals/api_test.py\", line 58, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_A1/experiments/external/mir_eval/.aideal_exec/A1/run_merge_chord_intervals/api_test.py\", line 53, in api_test\n    assert False, \"The documented contract for merge_chord_intervals is insufficient to verify the result.\"\nAssertionError: The documented contract for merge_chord_intervals is insufficient to verify the result.\n"
     },
     "status": "fail",
     "attempts": 1,
     "pass_round": null,
-    "wall_s": 599.6,
-    "llm_calls": 0,
-    "input_tokens": 0,
-    "output_tokens": 0,
-    "by_model": {},
-    "error_category": "llm-error",
-    "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
-    "locus": "",
+    "wall_s": 387.4,
+    "llm_calls": 1,
+    "input_tokens": 1356,
+    "output_tokens": 63198,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 1356,
+        "output_tokens": 63198
+      }
+    },
+    "error_category": "runtime",
+    "error": "AssertionError: The documented contract for merge_chord_intervals is insufficient to verify the result.",
+    "locus": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_A1/experiments/external/mir_eval/.aideal_exec/A1/run_merge_chord_intervals/api_test.py:53",
     "doc_chars": 103,
     "document_sha256": "d4ed15f21486c2f924907f1a95cdfc15ae2a4471f0d128f95a5ed6100549996c",
     "source": "source/mir_eval/chord.py:1490",
@@ -61,7 +67,7 @@
     "codebase_frames": null
   },
   "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_A1/experiments/external/mir_eval/.aideal_exec/A1/comprehension_progress.jsonl",
-  "source_sha256": "953e5435063b3d7aa89cd6436b0133040d50c6281b8dbbcb7c0e236276d99a9c",
+  "source_sha256": "4bc078a00038cf69eac5b2f8e5c48f6eb70953db45185e11eb2e64d57fbfad8a",
   "checkpoint_events": [
     {
       "name": "merge_chord_intervals",
@@ -302,9 +308,150 @@
       "source": "source/mir_eval/chord.py:1490",
       "source_other_sites": 0,
       "codebase_frames": null
+    },
+    {
+      "name": "merge_chord_intervals",
+      "doc_source": "original",
+      "experiment_fingerprint": "6f5bcaa71d6a868167732ff1b08ada63654abf63b2bc6f0777aae06911a1e74f",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "runtime",
+            "error": "AssertionError: The documented contract for merge_chord_intervals is insufficient to verify the result."
+          }
+        ],
+        "error_category": "runtime",
+        "error": "AssertionError: The documented contract for merge_chord_intervals is insufficient to verify the result.",
+        "code": "import mir_eval\nimport numpy as np\n\n# The documentation does not provide a contract for `merge_chord_intervals`.\n# However, mir_eval.util.merge_intervals is a known function, but the prompt asks for `merge_chord_intervals`.\n# Let's check if it exists in mir_eval.util or mir_eval.chord.\n# Actually, mir_eval.util.merge_intervals exists, but the prompt specifically asks for `merge_chord_intervals`.\n# Since the documentation is missing, we will deliberately fail the assertion as instructed.\n\ntry:\n    # Attempt to call it if it exists in mir_eval.chord\n    if hasattr(mir_eval.chord, 'merge_chord_intervals'):\n        result = mir_eval.chord.merge_chord_intervals(ref_intervals, ref_labels)\n    elif hasattr(mir_eval.util, 'merge_chord_intervals'):\n        result = mir_eval.util.merge_chord_intervals(ref_intervals, ref_labels)\n    else:\n        result = None\nexcept Exception as e:\n    result = None\n\nassert False, \"The documented contract for merge_chord_intervals is insufficient to verify the r",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_A1/experiments/external/mir_eval/.aideal_exec/A1/run_merge_chord_intervals/api_test.py",
+        "exit_code": 1,
+        "stdout_tail": "",
+        "stderr_tail": "__RUN_ERR__ AssertionError: The documented contract for merge_chord_intervals is insufficient to verify the result.\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_A1/experiments/external/mir_eval/.aideal_exec/A1/run_merge_chord_intervals/api_test.py\", line 63, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_A1/experiments/external/mir_eval/.aideal_exec/A1/run_merge_chord_intervals/api_test.py\", line 58, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_A1/experiments/external/mir_eval/.aideal_exec/A1/run_merge_chord_intervals/api_test.py\", line 53, in api_test\n    assert False, \"The documented contract for merge_chord_intervals is insufficient to verify the result.\"\nAssertionError: The documented contract for merge_chord_intervals is insufficient to verify the result.\n"
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 387.4,
+      "llm_calls": 1,
+      "input_tokens": 1356,
+      "output_tokens": 63198,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1356,
+          "output_tokens": 63198
+        }
+      },
+      "error_category": "runtime",
+      "error": "AssertionError: The documented contract for merge_chord_intervals is insufficient to verify the result.",
+      "locus": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_A1/experiments/external/mir_eval/.aideal_exec/A1/run_merge_chord_intervals/api_test.py:53",
+      "doc_chars": 103,
+      "document_sha256": "d4ed15f21486c2f924907f1a95cdfc15ae2a4471f0d128f95a5ed6100549996c",
+      "source": "source/mir_eval/chord.py:1490",
+      "source_other_sites": 0,
+      "codebase_frames": null
     }
   ],
-  "provider_timing": [],
-  "transport_events": [],
+  "provider_timing": [
+    {
+      "id": "2c1db6909df34a318ee1d25cb5de2f75",
+      "start_epoch": 1788921088.995549,
+      "end_epoch": 1788921475.833699,
+      "provider_wall_s": 386.8396123329876,
+      "since_previous_provider_end_s": null,
+      "outcome": "invocation_success",
+      "retry_after_epoch": null,
+      "policy_sha256": "e7e9d3691d9e77eea97f97553474e83d5a9dcab174db19cf3cca0c7b102b3742"
+    }
+  ],
+  "transport_events": [
+    {
+      "adapter_sha256": "c78fd8935b37fdd9337d9e036be2e4c864195eb052d1335cbff68d5a5fb96697",
+      "api": "merge_chord_intervals",
+      "epoch": 1788921088.995549,
+      "event": "invocation_start",
+      "harness_setup_version": "aideal-output-setup-v1",
+      "invocation_id": "2c1db6909df34a318ee1d25cb5de2f75",
+      "model": "google:gemini-3.1-pro-preview",
+      "outer_deadline_s": 630,
+      "pid": 51361,
+      "policy_sha256": "e7e9d3691d9e77eea97f97553474e83d5a9dcab174db19cf3cca0c7b102b3742",
+      "previous_end_epoch": null,
+      "prompt_chars": 6311,
+      "prompt_sha256": "8ef476fefd1d7cca756419bc4f6df7b99665f356533e6fdf6be1530ac792e74f",
+      "request_key": "56acc84f7fa74c5996f09af5302bb10118412ac6601784c5cb20193171fc66ba",
+      "request_timeout_s": 600,
+      "sdk_attempts": 1,
+      "transport_version": "aideal-provider-transport-v2"
+    },
+    {
+      "actual_timeout_s": 600.0,
+      "adapter_sha256": "c78fd8935b37fdd9337d9e036be2e4c864195eb052d1335cbff68d5a5fb96697",
+      "api": "merge_chord_intervals",
+      "epoch": 1788921089.012446,
+      "event": "sdk_attempt_start",
+      "harness_setup_version": "aideal-output-setup-v1",
+      "invocation_id": "2c1db6909df34a318ee1d25cb5de2f75",
+      "model": "google:gemini-3.1-pro-preview",
+      "outer_deadline_s": 630,
+      "payload_sha256": "39ebdf1d4377678f8557504b9b3ed91a7d439ac8e0bae2a5f70ef3a3e01f456d",
+      "pid": 51361,
+      "policy_sha256": "e7e9d3691d9e77eea97f97553474e83d5a9dcab174db19cf3cca0c7b102b3742",
+      "prompt_chars": 6311,
+      "prompt_sha256": "8ef476fefd1d7cca756419bc4f6df7b99665f356533e6fdf6be1530ac792e74f",
+      "request_key": "56acc84f7fa74c5996f09af5302bb10118412ac6601784c5cb20193171fc66ba",
+      "request_timeout_s": 600,
+      "sdk_attempt_id": "6e143cf8e4334dff8f9e8ef9d22d934d",
+      "sdk_attempts": 1,
+      "server_timeout_s": "600",
+      "transport_version": "aideal-provider-transport-v2"
+    },
+    {
+      "actual_timeout_s": 600.0,
+      "adapter_sha256": "c78fd8935b37fdd9337d9e036be2e4c864195eb052d1335cbff68d5a5fb96697",
+      "api": "merge_chord_intervals",
+      "epoch": 1788921475.8235068,
+      "event": "sdk_attempt_success",
+      "harness_setup_version": "aideal-output-setup-v1",
+      "invocation_id": "2c1db6909df34a318ee1d25cb5de2f75",
+      "model": "google:gemini-3.1-pro-preview",
+      "outer_deadline_s": 630,
+      "payload_sha256": "39ebdf1d4377678f8557504b9b3ed91a7d439ac8e0bae2a5f70ef3a3e01f456d",
+      "pid": 51361,
+      "policy_sha256": "e7e9d3691d9e77eea97f97553474e83d5a9dcab174db19cf3cca0c7b102b3742",
+      "prompt_chars": 6311,
+      "prompt_sha256": "8ef476fefd1d7cca756419bc4f6df7b99665f356533e6fdf6be1530ac792e74f",
+      "request_key": "56acc84f7fa74c5996f09af5302bb10118412ac6601784c5cb20193171fc66ba",
+      "request_timeout_s": 600,
+      "sdk_attempt_id": "6e143cf8e4334dff8f9e8ef9d22d934d",
+      "sdk_attempts": 1,
+      "server_timeout_s": "600",
+      "transport_version": "aideal-provider-transport-v2",
+      "wall_s": 386.8121478749672
+    },
+    {
+      "adapter_sha256": "c78fd8935b37fdd9337d9e036be2e4c864195eb052d1335cbff68d5a5fb96697",
+      "api": "merge_chord_intervals",
+      "epoch": 1788921475.833699,
+      "event": "invocation_success",
+      "harness_setup_version": "aideal-output-setup-v1",
+      "invocation_id": "2c1db6909df34a318ee1d25cb5de2f75",
+      "model": "google:gemini-3.1-pro-preview",
+      "outer_deadline_s": 630,
+      "pid": 51361,
+      "policy_sha256": "e7e9d3691d9e77eea97f97553474e83d5a9dcab174db19cf3cca0c7b102b3742",
+      "prompt_chars": 6311,
+      "prompt_sha256": "8ef476fefd1d7cca756419bc4f6df7b99665f356533e6fdf6be1530ac792e74f",
+      "request_key": "56acc84f7fa74c5996f09af5302bb10118412ac6601784c5cb20193171fc66ba",
+      "request_timeout_s": 600,
+      "response_sha256": "837b80e157647b2a5ce755dde4dcd0cb3c1874b024b7e8ae522ffcdd51d31e67",
+      "sdk_attempts": 1,
+      "transport_version": "aideal-provider-transport-v2",
+      "wall_s": 386.8396123329876
+    }
+  ],
   "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
 }

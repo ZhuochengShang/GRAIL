@@ -3,21 +3,21 @@
     "repository": "tslearn",
     "cell": "A1",
     "api": "distance_paa",
-    "outcome": "Waiting for provider / retry",
-    "test_execution": "No test code executed for this provider attempt",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
     "target_api_reached": "Not independently verified",
-    "latest_native_attempt_s": 599.5,
-    "retained_checkpoint_events": 4,
-    "retained_attempt_total_s": 2397.5,
+    "latest_native_attempt_s": 393.2,
+    "retained_checkpoint_events": 5,
+    "retained_attempt_total_s": 2790.7,
     "retained_504_events": 4,
     "retained_cooldown_deferrals": 0,
     "historical_idle_retry_s": null,
-    "measured_provider_invocations": 0,
-    "last_provider_s": null,
+    "measured_provider_invocations": 1,
+    "last_provider_s": 390.3747924169875,
     "last_retry_interval_s": null,
     "next_provider_retry_epoch": null,
-    "transport_policy": "Historical/uninstrumented",
-    "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+    "transport_policy": "d3dc72bd6e8ae61bf387f53095432a592ef5ad022245486ca7883f4a0dfff6ed",
+    "error": null,
     "details": "api_details/c4d93d407e37176f7b5b.json"
   },
   "native_row": {
@@ -25,34 +25,36 @@
     "doc_source": "original",
     "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
     "execution_evidence": {
-      "status": "fail",
+      "status": "pass",
       "rounds": [
         {
           "round": 0,
-          "status": "fail",
-          "category": "llm-error",
-          "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}"
+          "status": "pass"
         }
       ],
-      "error_category": "llm-error",
-      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
-      "code": "",
+      "code": "import tslearn.piecewise\n\ntry:\n    tslearn.piecewise.distance_paa(s1, s2)\n    assert False, \"Contract is insufficient to verify result; distance_paa is not a documented public API in tslearn.piecewise or tslearn.metrics.\"\nexcept AttributeError:\n    print(\"__CHECK__ distance_paa not_found\")",
       "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_distance_paa/api_test.py",
-      "exit_code": null,
-      "stdout_tail": "",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ distance_paa not_found\n__DONE__\n",
       "stderr_tail": ""
     },
-    "status": "fail",
+    "status": "pass",
     "attempts": 1,
-    "pass_round": null,
-    "wall_s": 599.5,
-    "llm_calls": 0,
-    "input_tokens": 0,
-    "output_tokens": 0,
-    "by_model": {},
-    "error_category": "llm-error",
-    "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
-    "locus": "",
+    "pass_round": 0,
+    "wall_s": 393.2,
+    "llm_calls": 1,
+    "input_tokens": 1331,
+    "output_tokens": 63001,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 1331,
+        "output_tokens": 63001
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
     "doc_chars": 94,
     "document_sha256": "f866403293336e2f62898f1c9971ba8fc64cd6afaab91aac547069a61cab101e",
     "source": "tslearn/tslearn/piecewise/piecewise.py:195",
@@ -60,7 +62,7 @@
     "codebase_frames": null
   },
   "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/comprehension_progress.jsonl",
-  "source_sha256": "25e5b9314d8ad7fa3ac59d1db38372b767df367557039758d3f173c35e273bda",
+  "source_sha256": "64a9c9da78f7d494eb9a0d3b5ac6c70b5cbdd89edd5b6ac637421d92da4f2762",
   "checkpoint_events": [
     {
       "name": "distance_paa",
@@ -199,9 +201,146 @@
       "source": "tslearn/tslearn/piecewise/piecewise.py:195",
       "source_other_sites": 0,
       "codebase_frames": null
+    },
+    {
+      "name": "distance_paa",
+      "doc_source": "original",
+      "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import tslearn.piecewise\n\ntry:\n    tslearn.piecewise.distance_paa(s1, s2)\n    assert False, \"Contract is insufficient to verify result; distance_paa is not a documented public API in tslearn.piecewise or tslearn.metrics.\"\nexcept AttributeError:\n    print(\"__CHECK__ distance_paa not_found\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_distance_paa/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ distance_paa not_found\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 393.2,
+      "llm_calls": 1,
+      "input_tokens": 1331,
+      "output_tokens": 63001,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1331,
+          "output_tokens": 63001
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 94,
+      "document_sha256": "f866403293336e2f62898f1c9971ba8fc64cd6afaab91aac547069a61cab101e",
+      "source": "tslearn/tslearn/piecewise/piecewise.py:195",
+      "source_other_sites": 0,
+      "codebase_frames": null
     }
   ],
-  "provider_timing": [],
-  "transport_events": [],
+  "provider_timing": [
+    {
+      "id": "45c11834dc2940619afd43de0ae22eda",
+      "start_epoch": 1788920990.254883,
+      "end_epoch": 1788921380.628173,
+      "provider_wall_s": 390.3747924169875,
+      "since_previous_provider_end_s": null,
+      "outcome": "invocation_success",
+      "retry_after_epoch": null,
+      "policy_sha256": "d3dc72bd6e8ae61bf387f53095432a592ef5ad022245486ca7883f4a0dfff6ed"
+    }
+  ],
+  "transport_events": [
+    {
+      "adapter_sha256": "c78fd8935b37fdd9337d9e036be2e4c864195eb052d1335cbff68d5a5fb96697",
+      "api": "distance_paa",
+      "epoch": 1788920990.254883,
+      "event": "invocation_start",
+      "harness_setup_version": "aideal-output-setup-v1",
+      "invocation_id": "45c11834dc2940619afd43de0ae22eda",
+      "model": "google:gemini-3.1-pro-preview",
+      "outer_deadline_s": 630,
+      "pid": 50349,
+      "policy_sha256": "d3dc72bd6e8ae61bf387f53095432a592ef5ad022245486ca7883f4a0dfff6ed",
+      "previous_end_epoch": null,
+      "prompt_chars": 6118,
+      "prompt_sha256": "1906675827915597334722710bdf57a74b25d27209dd27c397ba8b44642948a4",
+      "request_key": "4012f3a898bf86fbd59a7bd02cc45d483446175024f17af6f60ec22f50794303",
+      "request_timeout_s": 600,
+      "sdk_attempts": 1,
+      "transport_version": "aideal-provider-transport-v2"
+    },
+    {
+      "actual_timeout_s": 600.0,
+      "adapter_sha256": "c78fd8935b37fdd9337d9e036be2e4c864195eb052d1335cbff68d5a5fb96697",
+      "api": "distance_paa",
+      "epoch": 1788920990.271144,
+      "event": "sdk_attempt_start",
+      "harness_setup_version": "aideal-output-setup-v1",
+      "invocation_id": "45c11834dc2940619afd43de0ae22eda",
+      "model": "google:gemini-3.1-pro-preview",
+      "outer_deadline_s": 630,
+      "payload_sha256": "980ee282935cc2b33c3d855a19872be2bf2073df758b39651a04d97acdfd72dc",
+      "pid": 50349,
+      "policy_sha256": "d3dc72bd6e8ae61bf387f53095432a592ef5ad022245486ca7883f4a0dfff6ed",
+      "prompt_chars": 6118,
+      "prompt_sha256": "1906675827915597334722710bdf57a74b25d27209dd27c397ba8b44642948a4",
+      "request_key": "4012f3a898bf86fbd59a7bd02cc45d483446175024f17af6f60ec22f50794303",
+      "request_timeout_s": 600,
+      "sdk_attempt_id": "34a443633782483ba429166cadfa423b",
+      "sdk_attempts": 1,
+      "server_timeout_s": "600",
+      "transport_version": "aideal-provider-transport-v2"
+    },
+    {
+      "actual_timeout_s": 600.0,
+      "adapter_sha256": "c78fd8935b37fdd9337d9e036be2e4c864195eb052d1335cbff68d5a5fb96697",
+      "api": "distance_paa",
+      "epoch": 1788921380.618112,
+      "event": "sdk_attempt_success",
+      "harness_setup_version": "aideal-output-setup-v1",
+      "invocation_id": "45c11834dc2940619afd43de0ae22eda",
+      "model": "google:gemini-3.1-pro-preview",
+      "outer_deadline_s": 630,
+      "payload_sha256": "980ee282935cc2b33c3d855a19872be2bf2073df758b39651a04d97acdfd72dc",
+      "pid": 50349,
+      "policy_sha256": "d3dc72bd6e8ae61bf387f53095432a592ef5ad022245486ca7883f4a0dfff6ed",
+      "prompt_chars": 6118,
+      "prompt_sha256": "1906675827915597334722710bdf57a74b25d27209dd27c397ba8b44642948a4",
+      "request_key": "4012f3a898bf86fbd59a7bd02cc45d483446175024f17af6f60ec22f50794303",
+      "request_timeout_s": 600,
+      "sdk_attempt_id": "34a443633782483ba429166cadfa423b",
+      "sdk_attempts": 1,
+      "server_timeout_s": "600",
+      "transport_version": "aideal-provider-transport-v2",
+      "wall_s": 390.3483428339823
+    },
+    {
+      "adapter_sha256": "c78fd8935b37fdd9337d9e036be2e4c864195eb052d1335cbff68d5a5fb96697",
+      "api": "distance_paa",
+      "epoch": 1788921380.628173,
+      "event": "invocation_success",
+      "harness_setup_version": "aideal-output-setup-v1",
+      "invocation_id": "45c11834dc2940619afd43de0ae22eda",
+      "model": "google:gemini-3.1-pro-preview",
+      "outer_deadline_s": 630,
+      "pid": 50349,
+      "policy_sha256": "d3dc72bd6e8ae61bf387f53095432a592ef5ad022245486ca7883f4a0dfff6ed",
+      "prompt_chars": 6118,
+      "prompt_sha256": "1906675827915597334722710bdf57a74b25d27209dd27c397ba8b44642948a4",
+      "request_key": "4012f3a898bf86fbd59a7bd02cc45d483446175024f17af6f60ec22f50794303",
+      "request_timeout_s": 600,
+      "response_sha256": "f71c4ce8246c57646d9ab0cea07603d9f6cbc21feaeb4a3b71459cf4120f031e",
+      "sdk_attempts": 1,
+      "transport_version": "aideal-provider-transport-v2",
+      "wall_s": 390.3747924169875
+    }
+  ],
   "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
 }

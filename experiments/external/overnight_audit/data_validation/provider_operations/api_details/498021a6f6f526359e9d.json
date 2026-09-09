@@ -3,21 +3,21 @@
     "repository": "tslearn",
     "cell": "A1",
     "api": "distance",
-    "outcome": "Waiting for provider / retry",
-    "test_execution": "No test code executed for this provider attempt",
+    "outcome": "Execution failed",
+    "test_execution": "Test process returned exit code 1; target reach not independently verified",
     "target_api_reached": "Not independently verified",
-    "latest_native_attempt_s": 600.3,
-    "retained_checkpoint_events": 4,
-    "retained_attempt_total_s": 2400.6,
+    "latest_native_attempt_s": 396.6,
+    "retained_checkpoint_events": 5,
+    "retained_attempt_total_s": 2797.2,
     "retained_504_events": 4,
     "retained_cooldown_deferrals": 0,
     "historical_idle_retry_s": null,
     "measured_provider_invocations": 1,
-    "last_provider_s": null,
+    "last_provider_s": 392.93901287496556,
     "last_retry_interval_s": null,
     "next_provider_retry_epoch": null,
     "transport_policy": "d3dc72bd6e8ae61bf387f53095432a592ef5ad022245486ca7883f4a0dfff6ed",
-    "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+    "error": "AttributeError: 'MatrixProfile' object has no attribute 'distance'",
     "details": "api_details/498021a6f6f526359e9d.json"
   },
   "native_row": {
@@ -30,29 +30,35 @@
         {
           "round": 0,
           "status": "fail",
-          "category": "llm-error",
-          "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}"
+          "category": "runtime",
+          "error": "AttributeError: 'MatrixProfile' object has no attribute 'distance'"
         }
       ],
-      "error_category": "llm-error",
-      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
-      "code": "",
+      "error_category": "runtime",
+      "error": "AttributeError: 'MatrixProfile' object has no attribute 'distance'",
+      "code": "from tslearn.matrix_profile import MatrixProfile\n\nmp = MatrixProfile(subsequence_length=10)\nmp_result = mp.distance(s1)\n\nassert mp_result.shape == (len(s1) - 10 + 1,), f\"Expected shape {(len(s1) - 10 + 1,)}, got {mp_result.shape}\"\nassert mp_result.ndim == 1, \"Matrix profile distance should return a 1D array\"\n\nprint(f\"__CHECK__ distance {mp_result.shape[0]}\")",
       "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_distance/api_test.py",
-      "exit_code": null,
+      "exit_code": 1,
       "stdout_tail": "",
-      "stderr_tail": ""
+      "stderr_tail": "__RUN_ERR__ AttributeError: 'MatrixProfile' object has no attribute 'distance'\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_distance/api_test.py\", line 51, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_distance/api_test.py\", line 46, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_distance/api_test.py\", line 37, in api_test\n    mp_result = mp.distance(s1)\nAttributeError: 'MatrixProfile' object has no attribute 'distance'\n"
     },
     "status": "fail",
     "attempts": 1,
     "pass_round": null,
-    "wall_s": 600.3,
-    "llm_calls": 0,
-    "input_tokens": 0,
-    "output_tokens": 0,
-    "by_model": {},
-    "error_category": "llm-error",
-    "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
-    "locus": "",
+    "wall_s": 396.6,
+    "llm_calls": 1,
+    "input_tokens": 6933,
+    "output_tokens": 63040,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 6933,
+        "output_tokens": 63040
+      }
+    },
+    "error_category": "runtime",
+    "error": "AttributeError: 'MatrixProfile' object has no attribute 'distance'",
+    "locus": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_distance/api_test.py:37",
     "doc_chars": 10239,
     "document_sha256": "6d0b59fd079706ad97c73f778ce3f7bb0f86076b90a2a7e7c7ae301bca72bbaa",
     "source": "tslearn/tslearn/piecewise/piecewise.py:219",
@@ -60,7 +66,7 @@
     "codebase_frames": null
   },
   "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/comprehension_progress.jsonl",
-  "source_sha256": "25e5b9314d8ad7fa3ac59d1db38372b767df367557039758d3f173c35e273bda",
+  "source_sha256": "64a9c9da78f7d494eb9a0d3b5ac6c70b5cbdd89edd5b6ac637421d92da4f2762",
   "checkpoint_events": [
     {
       "name": "distance",
@@ -199,16 +205,61 @@
       "source": "tslearn/tslearn/piecewise/piecewise.py:219",
       "source_other_sites": 2,
       "codebase_frames": null
+    },
+    {
+      "name": "distance",
+      "doc_source": "original",
+      "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "runtime",
+            "error": "AttributeError: 'MatrixProfile' object has no attribute 'distance'"
+          }
+        ],
+        "error_category": "runtime",
+        "error": "AttributeError: 'MatrixProfile' object has no attribute 'distance'",
+        "code": "from tslearn.matrix_profile import MatrixProfile\n\nmp = MatrixProfile(subsequence_length=10)\nmp_result = mp.distance(s1)\n\nassert mp_result.shape == (len(s1) - 10 + 1,), f\"Expected shape {(len(s1) - 10 + 1,)}, got {mp_result.shape}\"\nassert mp_result.ndim == 1, \"Matrix profile distance should return a 1D array\"\n\nprint(f\"__CHECK__ distance {mp_result.shape[0]}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_distance/api_test.py",
+        "exit_code": 1,
+        "stdout_tail": "",
+        "stderr_tail": "__RUN_ERR__ AttributeError: 'MatrixProfile' object has no attribute 'distance'\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_distance/api_test.py\", line 51, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_distance/api_test.py\", line 46, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_distance/api_test.py\", line 37, in api_test\n    mp_result = mp.distance(s1)\nAttributeError: 'MatrixProfile' object has no attribute 'distance'\n"
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 396.6,
+      "llm_calls": 1,
+      "input_tokens": 6933,
+      "output_tokens": 63040,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 6933,
+          "output_tokens": 63040
+        }
+      },
+      "error_category": "runtime",
+      "error": "AttributeError: 'MatrixProfile' object has no attribute 'distance'",
+      "locus": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_distance/api_test.py:37",
+      "doc_chars": 10239,
+      "document_sha256": "6d0b59fd079706ad97c73f778ce3f7bb0f86076b90a2a7e7c7ae301bca72bbaa",
+      "source": "tslearn/tslearn/piecewise/piecewise.py:219",
+      "source_other_sites": 2,
+      "codebase_frames": null
     }
   ],
   "provider_timing": [
     {
       "id": "a591981dd5794ea097dbaeb447d89b63",
       "start_epoch": 1788920593.672199,
-      "end_epoch": null,
-      "provider_wall_s": null,
+      "end_epoch": 1788920986.6097212,
+      "provider_wall_s": 392.93901287496556,
       "since_previous_provider_end_s": null,
-      "outcome": "In flight or interrupted: no end recorded",
+      "outcome": "invocation_success",
       "retry_after_epoch": null,
       "policy_sha256": "d3dc72bd6e8ae61bf387f53095432a592ef5ad022245486ca7883f4a0dfff6ed"
     }
@@ -254,6 +305,49 @@
       "sdk_attempts": 1,
       "server_timeout_s": "600",
       "transport_version": "aideal-provider-transport-v2"
+    },
+    {
+      "actual_timeout_s": 600.0,
+      "adapter_sha256": "c78fd8935b37fdd9337d9e036be2e4c864195eb052d1335cbff68d5a5fb96697",
+      "api": "distance",
+      "epoch": 1788920986.600238,
+      "event": "sdk_attempt_success",
+      "harness_setup_version": "aideal-output-setup-v1",
+      "invocation_id": "a591981dd5794ea097dbaeb447d89b63",
+      "model": "google:gemini-3.1-pro-preview",
+      "outer_deadline_s": 630,
+      "payload_sha256": "584063e7d85da13d1b44de0df15a6b917ce0b6a3d319f5dcf59a2d2a7dd1e9f3",
+      "pid": 50349,
+      "policy_sha256": "d3dc72bd6e8ae61bf387f53095432a592ef5ad022245486ca7883f4a0dfff6ed",
+      "prompt_chars": 16235,
+      "prompt_sha256": "2468e407367d19073eb42f7b2505bc4147f045b9687a237599ec6f5391f993ac",
+      "request_key": "cfa234850e708b24d961a9fa2e2257364879492f23270c2e893f398d55913303",
+      "request_timeout_s": 600,
+      "sdk_attempt_id": "c506ab183baf4a7196b1bbba6bcd9321",
+      "sdk_attempts": 1,
+      "server_timeout_s": "600",
+      "transport_version": "aideal-provider-transport-v2",
+      "wall_s": 392.91319470800227
+    },
+    {
+      "adapter_sha256": "c78fd8935b37fdd9337d9e036be2e4c864195eb052d1335cbff68d5a5fb96697",
+      "api": "distance",
+      "epoch": 1788920986.6097212,
+      "event": "invocation_success",
+      "harness_setup_version": "aideal-output-setup-v1",
+      "invocation_id": "a591981dd5794ea097dbaeb447d89b63",
+      "model": "google:gemini-3.1-pro-preview",
+      "outer_deadline_s": 630,
+      "pid": 50349,
+      "policy_sha256": "d3dc72bd6e8ae61bf387f53095432a592ef5ad022245486ca7883f4a0dfff6ed",
+      "prompt_chars": 16235,
+      "prompt_sha256": "2468e407367d19073eb42f7b2505bc4147f045b9687a237599ec6f5391f993ac",
+      "request_key": "cfa234850e708b24d961a9fa2e2257364879492f23270c2e893f398d55913303",
+      "request_timeout_s": 600,
+      "response_sha256": "14486f4ac0a2dc0520653bedf1b252131953750df94118b42660e98e07908136",
+      "sdk_attempts": 1,
+      "transport_version": "aideal-provider-transport-v2",
+      "wall_s": 392.93901287496556
     }
   ],
   "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
