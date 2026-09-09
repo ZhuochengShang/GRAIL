@@ -1,6 +1,6 @@
 # Execution status and API timing
 
-2026-09-08T17:27:08.772674-07:00
+2026-09-08T17:42:18.995291-07:00
 
 **No single “partial” label:** each unresolved case has an explicit reason. A finished evaluation can contain real failures. A provider failure is not executed code. A running test does not prove the target API was reached.
 

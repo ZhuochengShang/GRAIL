@@ -46,11 +46,35 @@
       "stage": "deep_dive",
       "error": "[Errno 8] nodename nor servname provided, or not known",
       "status": "blocked"
+    },
+    {
+      "status": "fail",
+      "category": "llm-error",
+      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "code": "\"\"\"Shared infrastructure-only scaffold for tslearn's full-surface 2x2.\n\nThis exact file is used in A1, A2, B1, and B2. It intentionally imports no\ntested tslearn API because discovering the public import is part of the\naudience task in every cell.\n\"\"\"\n\nfrom pathlib import Path\nimport sys\nimport traceback\n\nimport numpy as np\n\n\ndef run():\n    # Typed repository fixture path and condition-specific output directory:\n    trace_npz = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v3/tslearn/cb0bd3e4a52cdcc1f6b2a04c4a3d421a184fa727e326281f6e7d770641d49c34/project/tslearn/tslearn/.cached_datasets/Trace.npz\"\n    output_dir = r\"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v3/tslearn/cb0bd3e4a52cdcc1f6b2a04c4a3d421a184fa727e326281f6e7d770641d49c34/project/.aideal_exec/B2/output\"\n\n    # pre-loaded typed inputs (comprehension.execute.preamble)\n    Path(output_dir).mkdir(parents=True, exist_ok=True)\n    _trace = np.load(trace_npz)\n    _balanced = np.array([0, 4, 1, 17, 3, 13, 2, 5], dtype=int)\n    X = _trace[\"X_train\"][_balanced, :40, :]  # type: balanced time-series dataset ndarray (8, 40, 1)\n    X2 = _trace[\"X_test\"][:4, :32, :]  # type: second dataset ndarray (4, 32, 1)\n    s1 = X[0].ravel()  # type: 1-D series ndarray (40,)\n    s2 = X[1].ravel()  # type: 1-D series ndarray (40,)\n    y = _trace[\"y_train\"][_balanced]  # type: four balanced labels, two examples per class\n    tiny_matrix = np.arange(12.0).reshape(3, 4)  # type: deterministic numeric matrix\n\n    # Keep audience imports local so they cannot shadow fixture construction.\n    def api_test():\n        # TODO API_TEST_START\n        import numpy as np\n        from tslearn.backend import instantiate_backend\n\n        be = instantiate_backend(\"numpy\")\n\n        x_64 = s1.astype(np.float64)\n        x_32 = s1.astype(np.float32)\n\n        res_64 = be.is_float64(x_64)\n        res_32 = be.is_float64(x_32)\n\n        assert res_64 is True, \"Failed to identify float64 array.\"\n        assert res_32 is False, \"Incorrectly identified float32 as float64.\"\n\n        print(f\"__CHECK__ is_float64 {res_64}, {res_32}\")\n        # TODO API_TEST_END\n        pass\n\n    api_test()\n\n\nif __name__ == \"__main__\":\n    try:\n        run()\n        print(\"__DONE__\")\n    except Exception as exc:  # noqa: BLE001 - execution boundary\n        sys.stderr.write(\"__RUN_ERR__ \" + type(exc).__name__ + \": \" + str(exc) + \"\\n\")\n        traceback.print_exc()\n        raise SystemExit(1)\n",
+      "native_result": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v3/tslearn/cb0bd3e4a52cdcc1f6b2a04c4a3d421a184fa727e326281f6e7d770641d49c34/project/.aideal_recovery/76a078243a04197e08c3dde6329d6ae8096f9e43dff714d410c1aa95f8634b57/round_01/attempt_0001/native_result.json",
+      "script_sha256": null,
+      "wall_s": 598.9,
+      "llm_calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "code_fix_round": 1
     }
   ],
   "rounds": [],
-  "status": "blocked",
-  "diagnosis": null,
+  "status": "provider_blocked",
+  "diagnosis": {
+    "api": "is_float64",
+    "report": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_recovery_v3/tslearn/cb0bd3e4a52cdcc1f6b2a04c4a3d421a184fa727e326281f6e7d770641d49c34/project/.aideal_recovery/76a078243a04197e08c3dde6329d6ae8096f9e43dff714d410c1aa95f8634b57/deepdive/is_float64.md",
+    "model": "google:gemini-3.1-pro-preview",
+    "tokens": {
+      "in": 2658,
+      "out": 6062
+    },
+    "wall_s": 58.4,
+    "report_text": "",
+    "report_sha256": "b834cb3773b48732252250a5e74743db75b5f5bdbfe0aaea6179f04633282c72"
+  },
   "max_rounds": 5,
   "stuck_threshold": 2,
   "stop_reason": null,
