@@ -335,6 +335,7 @@ object GeoJob {
     // SparkSession accessor name) rather than the harness binding `sc`. Expose
     // both so a correct call doesn't fail on the binding name alone.
     val sparkContext = sc
+    val spark = SparkSession.builder().getOrCreate()
     // Typed sample inputs (from comprehension.execute.sample_data). Use the
     // one(s) whose type matches the API's parameters.
     // AIDEAL_DATA_BINDINGS
@@ -347,7 +348,7 @@ object GeoJob {
 
 object GeoJobMain {
   def main(args: Array[String]): Unit = {
-    val spark = SparkSession.builder().appName("ApiTest").master("local[*]").getOrCreate()
+    val spark = SparkSession.builder().appName("ApiTest").master("local[2]").getOrCreate()
     try {
       GeoJob.run(spark.sparkContext)
       println("__DONE__ object=GeoJob")

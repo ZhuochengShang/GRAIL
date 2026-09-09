@@ -1,0 +1,218 @@
+{
+  "kind": "deterministic harness validation; no LLM",
+  "native": {
+    "check": "comprehension",
+    "mode": "execute",
+    "doc_source": "aideal",
+    "run": {
+      "run_id": "20260909-015918Z",
+      "api_count": 1,
+      "manifest_api_count": 1,
+      "models": {
+        "audience": "google:gemini-3.1-pro-preview",
+        "fixer": "google:gemini-3.1-pro-preview"
+      },
+      "max_fix_rounds": 0,
+      "class_context": false,
+      "timeout_s": 600,
+      "wall_s": 20.4,
+      "usage": {
+        "calls": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "by_model": {}
+      },
+      "checkpoint": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_main_v5/experiments/rdpro/.aideal_exec/smoke_3/comprehension_progress.jsonl",
+      "resumed_apis": 0,
+      "manifest_sha256": "8d9a2a33c5f67d214e68cd466c98c0c98b86a7723582adc72720c745c3338f7b",
+      "document_sha256": "e7398edb8025923c25b04b08b7d2f1fd5ec21f003607c44b7e69e2c5500211f9",
+      "experiment_fingerprint": "6b2bdc35d8d7736f723d279cf1266e0a9a0b9c4e351ca0ac4b71e33b88284cf0",
+      "fingerprint_components": {
+        "schema": 4,
+        "prompt_contract": {
+          "templates": {
+            "comprehension_write_exec": "f557fcc5d4534cdfa6e596066b2106fd4d9f1ed459be8afccb8676070275c501"
+          },
+          "profile_sha256": "1b2a8c27cbbec4ff8c9c959838d0e2557643c5478517c7516cabab45c2aedc71"
+        },
+        "transport_contract": {
+          "temperature": 0.0,
+          "google_request_timeout_s": 300.0,
+          "google_sdk_attempts": 2,
+          "google_outer_deadline_s": 630.0,
+          "adapter_sha256": null,
+          "policy_sha256": null,
+          "setup_policy_sha256": null
+        },
+        "project": "RDPro",
+        "language": "Scala",
+        "doc_source": "aideal",
+        "doc_scope": "relevant",
+        "max_fix_rounds": 0,
+        "manifest_sha256": "8d9a2a33c5f67d214e68cd466c98c0c98b86a7723582adc72720c745c3338f7b",
+        "document_sha256": "e7398edb8025923c25b04b08b7d2f1fd5ec21f003607c44b7e69e2c5500211f9",
+        "models": {
+          "audience": "google:gemini-3.1-pro-preview",
+          "fixer": "google:gemini-3.1-pro-preview"
+        },
+        "class_context": false,
+        "timeout_s": 600,
+        "execute_config": {
+          "execution_context": "A SparkContext `sc`, SparkSession `spark`, `output_dir`, and any configured typed input variables are already in scope. The scaffold already imports the project common classes and operation-object members. Do not create a SparkSession/SparkContext, do not redeclare provided variables, and do not write imports/object/main unless the task explicitly requests them.",
+          "region": [
+            "// TODO API_TEST_START",
+            "// TODO API_TEST_END"
+          ],
+          "strip_snippet_imports": false,
+          "output_tail_chars": 2000,
+          "success_marker": "__DONE__",
+          "error_marker": "__RUN_ERR__",
+          "work_dir": ".aideal_exec/smoke_3",
+          "timeout_seconds": 600,
+          "max_fix_rounds": 0,
+          "auto_report": true,
+          "exec_hints": "Spark specifics: transformations are lazy, so if the result is an RDD / RasterRDD / DataFrame you MUST force it with an action \u2014 .count(), .first(), or .take(1) \u2014 and print that. For an in-memory Array/value, print its size. If the API is a writer, call .coalesce(1) before writing to output_dir to avoid the distributed-write merge error. I/O: read inputs with the high-level library readers on the pre-loaded typed vars (rasterRDD / featuresRDD, or sc.geoTiff / sc.shapefile) \u2014 do NOT open raw Hadoop FileSystem streams (FileSystem.get(conf) causes 'Wrong FS'; if unavoidable use path.getFileSystem(sc.hadoopConfiguration)), and never prepend an extra 'file://' to a path that already has a scheme.",
+          "fixtures_dir": "fixtures",
+          "output_dir": ".aideal_exec/smoke_3/output",
+          "command": "mkdir -p {work}/classes && \"/Library/Java/JavaVirtualMachines/jdk-1.8.jdk/Contents/Home/bin/java\" -cp \"{classpath}\" scala.tools.nsc.Main -classpath \"{classpath}\" -d {work}/classes {scala_file} && ( cd {work}/classes && \"/Library/Java/JavaVirtualMachines/jdk-1.8.jdk/Contents/Home/bin/jar\" cf ../app.jar . ) && SPARK_HOME=\"/Users/clockorangezoe/miniconda3/envs/geo_llm_spark/lib/python3.10/site-packages/pyspark\" \"/Users/clockorangezoe/miniconda3/envs/geo_llm_spark/lib/python3.10/site-packages/pyspark/bin/spark-submit\" --master local[2] --conf spark.ui.enabled=false --class GeoJobMain {repositories} {packages} --jars {jars},{uberjar} {work}/app.jar",
+          "scaffold": "docs/api_test_scaffold.scala",
+          "preamble": "// Pinned: pre-load at the SCALA mixin types the raptor/zonal APIs expect\n// (RasterRDD[T]=RDD[ITile[T]], SpatialRDD=RDD[IFeature]) \u2014 NOT the Java readers\n// (JavaRasterRDD/JavaSpatialRDD) that `auto` grounded on, which forced snippets\n// to invent nonexistent .toRDD/.toRasterRDD adapters. Forms verified by passing\n// rows in logs/error_log.jsonl. Change [Float] if this raster is not 32-bit float.\nval rasterRDD: RasterRDD[Float] = sc.geoTiff[Float](raster_tif)\nval featuresRDD: RDD[IFeature] = sc.shapefile(vector_shapefile)\n",
+          "sample_data": {
+            "raster_tif": "fixtures/nldas_boston_30m.tif",
+            "vector_shapefile": "fixtures/Boston_Neighborhood_Boundaries_sample_grail.shp",
+            "hdf_file": "fixtures/sample.hdf"
+          },
+          "require_correctness": true,
+          "io_hints": "",
+          "jars": "runtime-libs/*.jar",
+          "uberjar": "target/beast-uber-0.10.1.jar",
+          "build_cwd": "beast",
+          "repositories": [
+            "https://repo.osgeo.org/repository/geotools-releases/",
+            "https://repo.osgeo.org/repository/release/"
+          ],
+          "packages": [
+            "org.locationtech.jts:jts-core:1.19.0",
+            "org.geotools:gt-referencing:26.1",
+            "org.geotools:gt-epsg-hsql:26.1",
+            "org.geotools:gt-geotiff:26.1",
+            "org.geotools:gt-coverage:26.1",
+            "it.geosolutions.imageio-ext:imageio-ext-tiff:1.4.14",
+            "com.google.protobuf:protobuf-java:3.21.12",
+            "org.eclipse.jetty:jetty-server:9.4.43.v20210629",
+            "org.eclipse.jetty:jetty-servlet:9.4.43.v20210629"
+          ],
+          "imports": "from-tests",
+          "extra_imports": [
+            "import edu.ucr.cs.bdlab.raptor._"
+          ],
+          "build": "",
+          "spark_jars": "/Users/clockorangezoe/miniconda3/envs/geo_llm_spark/lib/python3.10/site-packages/pyspark/jars/*.jar"
+        },
+        "scaffold": {
+          "sha256": "c29bbe4875b0feba9c8b110258f72aee2b4234758c98aff0db710de902dcd73c",
+          "file_count": 1
+        },
+        "source": {
+          "sha256": "d1a1169a246321336073bda30bc51fd3769bfab6365fe643fcca5fb0ceaf70a9",
+          "file_count": 242
+        },
+        "fixtures": {
+          "sha256": "9327661883d7ac8df3543999af195168e8fa866a7df1b58abb686a7817969f3c",
+          "file_count": 4
+        },
+        "engine": {
+          "sha256": "99ee4c1172b8dfa9f31cb18c54d61367bd141d3cd3f657ea572b252ce8d4148f",
+          "file_count": 10
+        },
+        "interpreter": {
+          "executable": "/Users/clockorangezoe/miniconda3/envs/geo_llm_spark/bin/python",
+          "version": "3.10.19 | packaged by conda-forge | (main, Oct 22 2025, 22:46:49) [Clang 19.1.7 ]",
+          "environment_sha256": ""
+        }
+      },
+      "checkpoint_reuse": {},
+      "doc_scope": "relevant",
+      "full_doc": false,
+      "doc_chars": 3703,
+      "manifest": {
+        "path": "docs/main_v5/api_manifest.json",
+        "apis": 161
+      }
+    },
+    "passed": true,
+    "score": 1.0,
+    "score_with_infra": 1.0,
+    "infra_excluded": 0,
+    "coverage": {
+      "raw_surface": 652,
+      "intended_surface": 161,
+      "surface_filter": "intent_score",
+      "executed": 1,
+      "scored": 1,
+      "infra_excluded": 0,
+      "untested_intended": [
+        "addFeature",
+        "addGeometry",
+        "affineTransform",
+        "append",
+        "bit",
+        "buildIndex",
+        "checkOptions",
+        "computeForFeatures",
+        "computeForFeaturesWithOutputSize",
+        "computePointHistogramSparse",
+        "config",
+        "construct",
+        "count",
+        "create",
+        "createDateFilter",
+        "createPartitioner",
+        "createPartitions",
+        "createSummaryAccumulator",
+        "createTileIDFilter",
+        "crsToSRID"
+      ]
+    },
+    "sample_data_warnings": [],
+    "metrics": {
+      "geoTiff": {
+        "status": "pass",
+        "attempts": 1,
+        "rendered_prompt_sha256": [
+          "fdcfafff28a369ba983fe097ffd7bcddf3bfe1bcac6206be08596dbcc6a5371f"
+        ],
+        "pass_round": 0,
+        "wall_s": 17.2,
+        "llm_calls": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "by_model": {},
+        "error_category": null,
+        "error": null,
+        "locus": null,
+        "doc_chars": 3703,
+        "document_sha256": "431de1a1d4a6b49dfa514ba419f1f05443f571299a743096712b05a538c71bad",
+        "source": "beast/raptor/src/main/scala/edu/ucr/cs/bdlab/raptor/RaptorMixin.scala:40",
+        "source_other_sites": 3,
+        "codebase_frames": null
+      }
+    },
+    "details": {
+      "geoTiff": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "val tileCount = rasterRDD.count()\nval featureCount = featuresRDD.count()\nrequire(tileCount > 0, \"GeoTIFF fixture must contain tiles\")\nrequire(featureCount > 0, \"Shapefile fixture must contain features\")\nrequire(featuresRDD.first().getGeometry.getNumPoints > 0, \"Vector geometry must be nonempty\")\nrequire(spark.sparkContext eq sc, \"SparkSession binding must use the same context\")\nval layer = new edu.ucr.cs.bdlab.davinci.VectorLayerBuilder(256, \"preflight\").build()\nrequire(layer.getFeaturesCount == 0, \"Protobuf compile/runtime linkage must work\")\nprintln(\"__CHECK__ data-smoke tiles=\" + tileCount + \" features=\" + featureCount)",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_main_v5/experiments/rdpro/.aideal_exec/smoke_3/run_geoTiff/ApiTest.scala",
+        "exit_code": 0,
+        "stdout_tail": ":: loading settings :: url = jar:file:/Users/clockorangezoe/miniconda3/envs/geo_llm_spark/lib/python3.10/site-packages/pyspark/jars/ivy-2.5.1.jar!/org/apache/ivy/core/settings/ivysettings.xml\n__CHECK__ data-smoke tiles=9 features=2\n__DONE__ object=GeoJob\n",
+        "stderr_tail": "E_LOCAL, 18604 bytes) \n26/09/08 18:59:37 INFO Executor: Running task 0.0 in stage 2.0 (TID 4)\n26/09/08 18:59:37 INFO SpatialFileRDD: Processing partition file:/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_main_v5/experiments/rdpro/fixtures/Boston_Neighborhood_Boundaries_sample_grail.shp [0,81960)\n26/09/08 18:59:37 INFO Executor: Finished task 0.0 in stage 2.0 (TID 4). 18568 bytes result sent to driver\n26/09/08 18:59:37 INFO TaskSetManager: Finished task 0.0 in stage 2.0 (TID 4) in 42 ms on localhost (executor driver) (1/1)\n26/09/08 18:59:37 INFO TaskSchedulerImpl: Removed TaskSet 2.0, whose tasks have all completed, from pool \n26/09/08 18:59:37 INFO DAGScheduler: ResultStage 2 (first at ApiTest.scala:361) finished in 0.052 s\n26/09/08 18:59:37 INFO DAGScheduler: Job 2 is finished. Cancelling potential speculative or zombie tasks for this job\n26/09/08 18:59:37 INFO TaskSchedulerImpl: Killing all running tasks in stage 2: Stage finished\n26/09/08 18:59:37 INFO DAGScheduler: Job 2 finished: first at ApiTest.scala:361, took 0.056890 s\n26/09/08 18:59:37 INFO SparkContext: SparkContext is stopping with exitCode 0.\n26/09/08 18:59:37 INFO MapOutputTrackerMasterEndpoint: MapOutputTrackerMasterEndpoint stopped!\n26/09/08 18:59:37 INFO MemoryStore: MemoryStore cleared\n26/09/08 18:59:37 INFO BlockManager: BlockManager stopped\n26/09/08 18:59:37 INFO BlockManagerMaster: BlockManagerMaster stopped\n26/09/08 18:59:37 INFO OutputCommitCoordinator$OutputCommitCoordinatorEndpoint: OutputCommitCoordinator stopped!\n26/09/08 18:59:37 INFO SparkContext: Successfully stopped SparkContext\n26/09/08 18:59:37 INFO ShutdownHookManager: Shutdown hook called\n26/09/08 18:59:37 INFO ShutdownHookManager: Deleting directory /private/var/folders/83/6ly5xs5j5ns3gmwbqgjqd7rw0000gn/T/spark-981a4381-9800-4e9e-aef1-8d0863a90f71\n26/09/08 18:59:37 INFO ShutdownHookManager: Deleting directory /private/var/folders/83/6ly5xs5j5ns3gmwbqgjqd7rw0000gn/T/spark-91a8e49f-a708-4c95-93d4-c5927aa114b8\n"
+      }
+    }
+  }
+}

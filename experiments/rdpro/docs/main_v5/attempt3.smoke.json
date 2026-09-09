@@ -1,0 +1,229 @@
+{
+  "kind": "deterministic harness validation; no LLM",
+  "native": {
+    "check": "comprehension",
+    "mode": "execute",
+    "doc_source": "aideal",
+    "run": {
+      "run_id": "20260909-015825Z",
+      "api_count": 1,
+      "manifest_api_count": 1,
+      "models": {
+        "audience": "google:gemini-3.1-pro-preview",
+        "fixer": "google:gemini-3.1-pro-preview"
+      },
+      "max_fix_rounds": 0,
+      "class_context": false,
+      "timeout_s": 600,
+      "wall_s": 14.4,
+      "usage": {
+        "calls": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "by_model": {}
+      },
+      "checkpoint": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_main_v5/experiments/rdpro/.aideal_exec/smoke_2/comprehension_progress.jsonl",
+      "resumed_apis": 0,
+      "manifest_sha256": "8d9a2a33c5f67d214e68cd466c98c0c98b86a7723582adc72720c745c3338f7b",
+      "document_sha256": "e7398edb8025923c25b04b08b7d2f1fd5ec21f003607c44b7e69e2c5500211f9",
+      "experiment_fingerprint": "d0a007d4325ef4654bf99f3cb651fdd7b13ce8f9fa4910438a6b1784ff69c45f",
+      "fingerprint_components": {
+        "schema": 4,
+        "prompt_contract": {
+          "templates": {
+            "comprehension_write_exec": "f557fcc5d4534cdfa6e596066b2106fd4d9f1ed459be8afccb8676070275c501"
+          },
+          "profile_sha256": "1b2a8c27cbbec4ff8c9c959838d0e2557643c5478517c7516cabab45c2aedc71"
+        },
+        "transport_contract": {
+          "temperature": 0.0,
+          "google_request_timeout_s": 300.0,
+          "google_sdk_attempts": 2,
+          "google_outer_deadline_s": 630.0,
+          "adapter_sha256": null,
+          "policy_sha256": null,
+          "setup_policy_sha256": null
+        },
+        "project": "RDPro",
+        "language": "Scala",
+        "doc_source": "aideal",
+        "doc_scope": "relevant",
+        "max_fix_rounds": 0,
+        "manifest_sha256": "8d9a2a33c5f67d214e68cd466c98c0c98b86a7723582adc72720c745c3338f7b",
+        "document_sha256": "e7398edb8025923c25b04b08b7d2f1fd5ec21f003607c44b7e69e2c5500211f9",
+        "models": {
+          "audience": "google:gemini-3.1-pro-preview",
+          "fixer": "google:gemini-3.1-pro-preview"
+        },
+        "class_context": false,
+        "timeout_s": 600,
+        "execute_config": {
+          "execution_context": "A SparkContext `sc`, SparkSession `spark`, `output_dir`, and any configured typed input variables are already in scope. The scaffold already imports the project common classes and operation-object members. Do not create a SparkSession/SparkContext, do not redeclare provided variables, and do not write imports/object/main unless the task explicitly requests them.",
+          "region": [
+            "// TODO API_TEST_START",
+            "// TODO API_TEST_END"
+          ],
+          "strip_snippet_imports": false,
+          "output_tail_chars": 2000,
+          "success_marker": "__DONE__",
+          "error_marker": "__RUN_ERR__",
+          "work_dir": ".aideal_exec/smoke_2",
+          "timeout_seconds": 600,
+          "max_fix_rounds": 0,
+          "auto_report": true,
+          "exec_hints": "Spark specifics: transformations are lazy, so if the result is an RDD / RasterRDD / DataFrame you MUST force it with an action \u2014 .count(), .first(), or .take(1) \u2014 and print that. For an in-memory Array/value, print its size. If the API is a writer, call .coalesce(1) before writing to output_dir to avoid the distributed-write merge error. I/O: read inputs with the high-level library readers on the pre-loaded typed vars (rasterRDD / featuresRDD, or sc.geoTiff / sc.shapefile) \u2014 do NOT open raw Hadoop FileSystem streams (FileSystem.get(conf) causes 'Wrong FS'; if unavoidable use path.getFileSystem(sc.hadoopConfiguration)), and never prepend an extra 'file://' to a path that already has a scheme.",
+          "fixtures_dir": "fixtures",
+          "output_dir": ".aideal_exec/smoke_2/output",
+          "command": "mkdir -p {work}/classes && \"/Library/Java/JavaVirtualMachines/jdk-1.8.jdk/Contents/Home/bin/java\" -cp \"{classpath}\" scala.tools.nsc.Main -classpath \"{classpath}\" -d {work}/classes {scala_file} && ( cd {work}/classes && \"/Library/Java/JavaVirtualMachines/jdk-1.8.jdk/Contents/Home/bin/jar\" cf ../app.jar . ) && SPARK_HOME=\"/Users/clockorangezoe/miniconda3/envs/geo_llm_spark/lib/python3.10/site-packages/pyspark\" \"/Users/clockorangezoe/miniconda3/envs/geo_llm_spark/lib/python3.10/site-packages/pyspark/bin/spark-submit\" --master local[2] --conf spark.ui.enabled=false --class GeoJobMain {repositories} {packages} --jars {jars} {work}/app.jar",
+          "scaffold": "docs/api_test_scaffold.scala",
+          "preamble": "// Pinned: pre-load at the SCALA mixin types the raptor/zonal APIs expect\n// (RasterRDD[T]=RDD[ITile[T]], SpatialRDD=RDD[IFeature]) \u2014 NOT the Java readers\n// (JavaRasterRDD/JavaSpatialRDD) that `auto` grounded on, which forced snippets\n// to invent nonexistent .toRDD/.toRasterRDD adapters. Forms verified by passing\n// rows in logs/error_log.jsonl. Change [Float] if this raster is not 32-bit float.\nval rasterRDD: RasterRDD[Float] = sc.geoTiff[Float](raster_tif)\nval featuresRDD: RDD[IFeature] = sc.shapefile(vector_shapefile)\n",
+          "sample_data": {
+            "raster_tif": "fixtures/nldas_boston_30m.tif",
+            "vector_shapefile": "fixtures/Boston_Neighborhood_Boundaries_sample_grail.shp",
+            "hdf_file": "fixtures/sample.hdf"
+          },
+          "require_correctness": true,
+          "io_hints": "",
+          "jars": "runtime-libs/*.jar",
+          "uberjar": "target/beast-uber-0.10.1.jar",
+          "build_cwd": "beast",
+          "repositories": [
+            "https://repo.osgeo.org/repository/geotools-releases/",
+            "https://repo.osgeo.org/repository/release/"
+          ],
+          "packages": [
+            "org.locationtech.jts:jts-core:1.19.0",
+            "org.geotools:gt-referencing:26.1",
+            "org.geotools:gt-epsg-hsql:26.1",
+            "org.geotools:gt-geotiff:26.1",
+            "org.geotools:gt-coverage:26.1",
+            "it.geosolutions.imageio-ext:imageio-ext-tiff:1.4.14",
+            "com.google.protobuf:protobuf-java:3.21.12"
+          ],
+          "imports": "from-tests",
+          "extra_imports": [
+            "import edu.ucr.cs.bdlab.raptor._"
+          ],
+          "build": "",
+          "spark_jars": "/Users/clockorangezoe/miniconda3/envs/geo_llm_spark/lib/python3.10/site-packages/pyspark/jars/*.jar"
+        },
+        "scaffold": {
+          "sha256": "c29bbe4875b0feba9c8b110258f72aee2b4234758c98aff0db710de902dcd73c",
+          "file_count": 1
+        },
+        "source": {
+          "sha256": "d1a1169a246321336073bda30bc51fd3769bfab6365fe643fcca5fb0ceaf70a9",
+          "file_count": 242
+        },
+        "fixtures": {
+          "sha256": "9327661883d7ac8df3543999af195168e8fa866a7df1b58abb686a7817969f3c",
+          "file_count": 4
+        },
+        "engine": {
+          "sha256": "99ee4c1172b8dfa9f31cb18c54d61367bd141d3cd3f657ea572b252ce8d4148f",
+          "file_count": 10
+        },
+        "interpreter": {
+          "executable": "/Users/clockorangezoe/miniconda3/envs/geo_llm_spark/bin/python",
+          "version": "3.10.19 | packaged by conda-forge | (main, Oct 22 2025, 22:46:49) [Clang 19.1.7 ]",
+          "environment_sha256": ""
+        }
+      },
+      "checkpoint_reuse": {},
+      "doc_scope": "relevant",
+      "full_doc": false,
+      "doc_chars": 3703,
+      "manifest": {
+        "path": "docs/main_v5/api_manifest.json",
+        "apis": 161
+      }
+    },
+    "passed": false,
+    "score": 0.0,
+    "score_with_infra": 0.0,
+    "infra_excluded": 1,
+    "coverage": {
+      "raw_surface": 652,
+      "intended_surface": 161,
+      "surface_filter": "intent_score",
+      "executed": 1,
+      "scored": 0,
+      "infra_excluded": 1,
+      "untested_intended": [
+        "addFeature",
+        "addGeometry",
+        "affineTransform",
+        "append",
+        "bit",
+        "buildIndex",
+        "checkOptions",
+        "computeForFeatures",
+        "computeForFeaturesWithOutputSize",
+        "computePointHistogramSparse",
+        "config",
+        "construct",
+        "count",
+        "create",
+        "createDateFilter",
+        "createPartitioner",
+        "createPartitions",
+        "createSummaryAccumulator",
+        "createTileIDFilter",
+        "crsToSRID"
+      ]
+    },
+    "sample_data_warnings": [],
+    "metrics": {
+      "geoTiff": {
+        "status": "fail",
+        "attempts": 1,
+        "rendered_prompt_sha256": [
+          "fdcfafff28a369ba983fe097ffd7bcddf3bfe1bcac6206be08596dbcc6a5371f"
+        ],
+        "pass_round": null,
+        "wall_s": 11.9,
+        "llm_calls": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "by_model": {},
+        "error_category": "infra",
+        "error": "missing dependency on classpath: org/eclipse/jetty/util/thread/ThreadPool",
+        "locus": "",
+        "doc_chars": 3703,
+        "document_sha256": "431de1a1d4a6b49dfa514ba419f1f05443f571299a743096712b05a538c71bad",
+        "source": "beast/raptor/src/main/scala/edu/ucr/cs/bdlab/raptor/RaptorMixin.scala:40",
+        "source_other_sites": 3,
+        "codebase_frames": [
+          "beast/raptor/src/main/scala/edu/ucr/cs/bdlab/raptor/GeoTiffReader.scala:150",
+          "beast/raptor/src/main/scala/edu/ucr/cs/bdlab/raptor/GeoTiffReader.scala:77",
+          "beast/raptor/src/main/scala/edu/ucr/cs/bdlab/raptor/RasterFileRDD.scala:115"
+        ]
+      }
+    },
+    "details": {
+      "geoTiff": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "infra",
+            "error": "missing dependency on classpath: org/eclipse/jetty/util/thread/ThreadPool",
+            "codebase_frames": [
+              "beast/raptor/src/main/scala/edu/ucr/cs/bdlab/raptor/GeoTiffReader.scala:150",
+              "beast/raptor/src/main/scala/edu/ucr/cs/bdlab/raptor/GeoTiffReader.scala:77",
+              "beast/raptor/src/main/scala/edu/ucr/cs/bdlab/raptor/RasterFileRDD.scala:115"
+            ]
+          }
+        ],
+        "error_category": "infra",
+        "error": "missing dependency on classpath: org/eclipse/jetty/util/thread/ThreadPool",
+        "code": "val tileCount = rasterRDD.count()\nval featureCount = featuresRDD.count()\nrequire(tileCount > 0, \"GeoTIFF fixture must contain tiles\")\nrequire(featureCount > 0, \"Shapefile fixture must contain features\")\nrequire(featuresRDD.first().getGeometry.getNumPoints > 0, \"Vector geometry must be nonempty\")\nrequire(spark.sparkContext eq sc, \"SparkSession binding must use the same context\")\nval layer = new edu.ucr.cs.bdlab.davinci.VectorLayerBuilder(256, \"preflight\").build()\nrequire(layer.getFeaturesCount == 0, \"Protobuf compile/runtime linkage must work\")\nprintln(\"__CHECK__ data-smoke tiles=\" + tileCount + \" features=\" + featureCount)",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_main_v5/experiments/rdpro/.aideal_exec/smoke_2/run_geoTiff/ApiTest.scala",
+        "exit_code": 0,
+        "stdout_tail": ":: loading settings :: url = jar:file:/Users/clockorangezoe/miniconda3/envs/geo_llm_spark/lib/python3.10/site-packages/pyspark/jars/ivy-2.5.1.jar!/org/apache/ivy/core/settings/ivysettings.xml\n",
+        "stderr_tail": "ler.ResultTask.runTask(ResultTask.scala:93)\n\tat org.apache.spark.TaskContext.runTaskWithListeners(TaskContext.scala:166)\n\tat org.apache.spark.scheduler.Task.run(Task.scala:141)\n\tat org.apache.spark.executor.Executor$TaskRunner.$anonfun$run$4(Executor.scala:620)\n\tat org.apache.spark.util.SparkErrorUtils.tryWithSafeFinally(SparkErrorUtils.scala:64)\n\tat org.apache.spark.util.SparkErrorUtils.tryWithSafeFinally$(SparkErrorUtils.scala:61)\n\tat org.apache.spark.util.Utils$.tryWithSafeFinally(Utils.scala:94)\n\tat org.apache.spark.executor.Executor$TaskRunner.run(Executor.scala:623)\n\tat java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)\n\tat java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)\n\tat java.lang.Thread.run(Thread.java:750)\nCaused by: java.lang.ClassNotFoundException: org.eclipse.jetty.util.thread.ThreadPool\n\tat java.net.URLClassLoader.findClass(URLClassLoader.java:387)\n\tat java.lang.ClassLoader.loadClass(ClassLoader.java:418)\n\tat java.lang.ClassLoader.loadClass(ClassLoader.java:351)\n\t... 17 more\n26/09/08 18:58:38 INFO SparkContext: SparkContext is stopping with exitCode 0.\n26/09/08 18:58:38 INFO MapOutputTrackerMasterEndpoint: MapOutputTrackerMasterEndpoint stopped!\n26/09/08 18:58:38 INFO MemoryStore: MemoryStore cleared\n26/09/08 18:58:38 INFO BlockManager: BlockManager stopped\n26/09/08 18:58:38 INFO BlockManagerMaster: BlockManagerMaster stopped\n26/09/08 18:58:38 INFO OutputCommitCoordinator$OutputCommitCoordinatorEndpoint: OutputCommitCoordinator stopped!\n26/09/08 18:58:38 INFO SparkContext: Successfully stopped SparkContext\n26/09/08 18:58:38 INFO ShutdownHookManager: Shutdown hook called\n26/09/08 18:58:38 INFO ShutdownHookManager: Deleting directory /private/var/folders/83/6ly5xs5j5ns3gmwbqgjqd7rw0000gn/T/spark-96ff4dac-5587-45aa-a200-e312af97d26e\n26/09/08 18:58:38 INFO ShutdownHookManager: Deleting directory /private/var/folders/83/6ly5xs5j5ns3gmwbqgjqd7rw0000gn/T/spark-67e561e7-20eb-486f-a584-16b8f1410bbd\n"
+      }
+    }
+  }
+}

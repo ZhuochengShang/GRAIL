@@ -1,0 +1,182 @@
+extends:
+- scala-spark
+project:
+  name: RDPro
+  language: Scala
+codebase:
+  source_globs:
+  - beast/**/src/main/scala/**/*.scala
+  type_context_globs:
+  - beast/**/src/main/java/**/*.java
+  test_globs:
+  - beast/**/src/test/scala/**/*.scala
+  exclude_path_patterns:
+  - (^|/)commontest/
+  surface_filter: intent_score
+  intent:
+    threshold: 5
+    use_llm: false
+    weights:
+      llm_common: 4
+files:
+  project_profile: configs/project_profile.yaml
+  prompts_dir: prompts
+  agents_doc: AGENTS.baseline.md
+  original_readme:
+  - beast/README.md
+  - beast/doc
+  llm_readme: docs/main_v5/LLM_readme.md
+  notes_to_self: docs/main_v5/notes.md
+  integration_tasks: configs/integration_tasks.yaml
+  aliases: aliases/aliases.json
+  error_log: logs/main_v5.jsonl
+models:
+  registry:
+    gpt-4o:
+      provider: openai
+      model: gpt-4o
+    gpt-4o-mini:
+      provider: openai
+      model: gpt-4o-mini
+    codex-5.3:
+      provider: codex
+      model: gpt-5.3-codex
+    gemini-2.5-pro:
+      provider: google
+      model: gemini-2.5-pro
+    gemini-3.1-pro:
+      provider: google
+      model: gemini-3.1-pro-preview
+  roles:
+    author: gemini-3.1-pro
+    audience: gemini-3.1-pro
+    fixer: gemini-3.1-pro
+runtime:
+  target: local
+  local: {}
+checks:
+  required_sections:
+  - Goal
+  - Valid Call Patterns|Valid Access Patterns
+  - LLM Instruction Prompt
+  - Prompt Snippet
+  - Common Failure Modes
+  - Fix Code Hint
+  comprehension_apis_sampled: 5
+docfix:
+  allowed_member_categories:
+  - language_core
+  - spark
+  - geometry_common
+  - raster_common
+  member_categories:
+    geometry_common:
+    - createPoint
+    - createLineString
+    - createPolygon
+    - createMultiPolygon
+    - createGeometryCollection
+    - createLinearRing
+    - setSRID
+    - getSRID
+    - getCoordinate
+    - getCoordinates
+    - getEnvelopeInternal
+    - getArea
+    - getLength
+    - intersects
+    - contains
+    - covers
+    - within
+    - touches
+    - buffer
+    - union
+    - intersection
+    - difference
+    - getX
+    - getY
+    - decode
+    - encode
+    raster_common:
+    - getPixelValueAsFloat
+    - getPixelValueAsDouble
+    - getPixelValueAsInt
+    - getPixelValueAsLong
+comprehension:
+  full_doc: false
+  protocol:
+    id: rdpro-main-v5-public161
+    manifest: docs/main_v5/api_manifest.json
+    manifest_api_count: 161
+    doc_scope: relevant
+    final_snippet_fix_rounds: 0
+  class_context: false
+  execute:
+    work_dir: .aideal_exec/A2
+    scaffold: docs/api_test_scaffold.scala
+    preamble: "// Pinned: pre-load at the SCALA mixin types the raptor/zonal APIs\
+      \ expect\n// (RasterRDD[T]=RDD[ITile[T]], SpatialRDD=RDD[IFeature]) \u2014 NOT\
+      \ the Java readers\n// (JavaRasterRDD/JavaSpatialRDD) that `auto` grounded on,\
+      \ which forced snippets\n// to invent nonexistent .toRDD/.toRasterRDD adapters.\
+      \ Forms verified by passing\n// rows in logs/error_log.jsonl. Change [Float]\
+      \ if this raster is not 32-bit float.\nval rasterRDD: RasterRDD[Float] = sc.geoTiff[Float](raster_tif)\n\
+      val featuresRDD: RDD[IFeature] = sc.shapefile(vector_shapefile)\n"
+    fixtures_dir: fixtures
+    sample_data:
+      raster_tif: fixtures/nldas_boston_30m.tif
+      vector_shapefile: fixtures/Boston_Neighborhood_Boundaries_sample_grail.shp
+      hdf_file: fixtures/sample.hdf
+    output_dir: .aideal_exec/A2/output
+    max_fix_rounds: 0
+    require_correctness: true
+    io_hints: ''
+    jars: runtime-libs/*.jar
+    uberjar: target/beast-uber-0.10.1.jar
+    build_cwd: beast
+    repositories:
+    - https://repo.osgeo.org/repository/geotools-releases/
+    - https://repo.osgeo.org/repository/release/
+    packages:
+    - org.locationtech.jts:jts-core:1.19.0
+    - org.geotools:gt-referencing:26.1
+    - org.geotools:gt-epsg-hsql:26.1
+    - org.geotools:gt-geotiff:26.1
+    - org.geotools:gt-coverage:26.1
+    - it.geosolutions.imageio-ext:imageio-ext-tiff:1.4.14
+    - com.google.protobuf:protobuf-java:3.21.12
+    - org.eclipse.jetty:jetty-server:9.4.43.v20210629
+    - org.eclipse.jetty:jetty-servlet:9.4.43.v20210629
+    imports: from-tests
+    extra_imports:
+    - import edu.ucr.cs.bdlab.raptor._
+    build: ''
+    spark_jars: /Users/clockorangezoe/miniconda3/envs/geo_llm_spark/lib/python3.10/site-packages/pyspark/jars/*.jar
+    command: mkdir -p {work}/classes && "/Library/Java/JavaVirtualMachines/jdk-1.8.jdk/Contents/Home/bin/java"
+      -cp "{classpath}" scala.tools.nsc.Main -classpath "{classpath}" -d {work}/classes
+      {scala_file} && ( cd {work}/classes && "/Library/Java/JavaVirtualMachines/jdk-1.8.jdk/Contents/Home/bin/jar"
+      cf ../app.jar . ) && SPARK_HOME="/Users/clockorangezoe/miniconda3/envs/geo_llm_spark/lib/python3.10/site-packages/pyspark"
+      "/Users/clockorangezoe/miniconda3/envs/geo_llm_spark/lib/python3.10/site-packages/pyspark/bin/spark-submit"
+      --master local[2] --conf spark.ui.enabled=false --class GeoJobMain {repositories}
+      {packages} --jars {jars},{uberjar} {work}/app.jar
+puzzle:
+  cwd: ../../grail-agent/src
+  command: '{python} -m rdpro_section_codegen.puzzle_eval --api-doc {api_doc} --plan
+    {plan} --scaffold {scaffold} --work-dir {work_dir} --tag {tag} --provider {provider}
+    --model {model} --max-retries-per-section {max_retries_per_section} {dry_run}
+    -- {runner_args}'
+  test_bank: configs/puzzle_test_bank.yaml
+  sample_data: configs/puzzle_sample_data.yaml
+  scaffold: ../../grail-agent/outputs/generated_scala/job_scaffold.scala
+  work_dir: results/puzzle_runs
+  num_puzzles: 5
+  num_functions: 5
+  seed: 42
+  max_fix_rounds: 0
+  max_retries_per_section: 2
+  runner_args:
+  - --spark-submit
+  - /Users/clockorangezoe/miniconda3/envs/geo_llm_spark/bin/spark-submit
+  - --env-bin
+  - /Users/clockorangezoe/miniconda3/envs/geo_llm_spark/bin
+  - --rdpro-lib-dir
+  - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/RDPro/target/beast-0.10.2-SNAPSHOT-bin/beast-0.10.2-SNAPSHOT/lib

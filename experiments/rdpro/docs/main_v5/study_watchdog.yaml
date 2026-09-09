@@ -1,0 +1,129 @@
+version: 2
+max_parallel: 1
+retry_delay_seconds: 300
+env:
+  PYTHONPATH: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_main_v5/grail-agent/src:/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_main_v5
+  JAVA_HOME: /Library/Java/JavaVirtualMachines/jdk-1.8.jdk/Contents/Home
+  SPARK_HOME: /Users/clockorangezoe/miniconda3/envs/geo_llm_spark/lib/python3.10/site-packages/pyspark
+  SPARK_LOCAL_IP: 127.0.0.1
+  AIDEAL_GOOGLE_RATE_STATE: /tmp/aideal_google_rate_gate.txt
+  AIDEAL_GOOGLE_MIN_INTERVAL_S: '3'
+  AIDEAL_GOOGLE_REQUEST_TIMEOUT_S: '300'
+  AIDEAL_GOOGLE_MAX_RETRIES: '2'
+  AIDEAL_RECOVERY_PROTOCOL: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_main_v5/experiments/external/rdpro_v5/protocol.yaml
+jobs:
+- id: A2
+  cwd: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_main_v5
+  branch: aideal/rdpro-main-v5
+  environment_inventory: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_main_v5/experiments/rdpro/docs/main_v5/environment.json
+  command:
+  - /Users/clockorangezoe/miniconda3/envs/geo_llm_spark/bin/python
+  - -m
+  - experiments.external.rdpro_v5.worker
+  - A2
+  - --root
+  - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_main_v5/experiments/rdpro
+  - --out
+  - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_overnight_evidence_audit/experiments/external/overnight_audit/data_validation/rdpro_v5
+  - --upstream
+  - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_overnight_evidence_audit/experiments/external/overnight_audit/data_validation/pipeline_v2
+  depends_on: []
+  result: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_overnight_evidence_audit/experiments/external/overnight_audit/data_validation/rdpro_v5/A2.invocation.json
+  complete:
+    kind: json_metrics_no_transient
+  max_restarts: 0
+  max_runtime_seconds: 1209600
+  on_success:
+  - - /Users/clockorangezoe/miniconda3/envs/geo_llm_spark/bin/python
+    - -m
+    - experiments.external.rdpro_v5.archive
+    - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_main_v5/experiments/rdpro
+    - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_overnight_evidence_audit/experiments/external/overnight_audit/data_validation/rdpro_v5
+    - A2
+- id: feedback
+  cwd: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_main_v5
+  branch: aideal/rdpro-main-v5
+  environment_inventory: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_main_v5/experiments/rdpro/docs/main_v5/environment.json
+  command:
+  - /Users/clockorangezoe/miniconda3/envs/geo_llm_spark/bin/python
+  - -m
+  - experiments.external.rdpro_v5.worker
+  - feedback
+  - --root
+  - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_main_v5/experiments/rdpro
+  - --out
+  - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_overnight_evidence_audit/experiments/external/overnight_audit/data_validation/rdpro_v5
+  - --upstream
+  - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_overnight_evidence_audit/experiments/external/overnight_audit/data_validation/pipeline_v2
+  depends_on:
+  - A2
+  result: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_overnight_evidence_audit/experiments/external/overnight_audit/data_validation/rdpro_v5/feedback.invocation.json
+  complete:
+    kind: exit_zero
+  max_restarts: 0
+  max_runtime_seconds: 1209600
+  on_success:
+  - - /Users/clockorangezoe/miniconda3/envs/geo_llm_spark/bin/python
+    - -m
+    - experiments.external.rdpro_v5.archive
+    - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_main_v5/experiments/rdpro
+    - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_overnight_evidence_audit/experiments/external/overnight_audit/data_validation/rdpro_v5
+    - feedback
+- id: repair
+  cwd: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_main_v5
+  branch: aideal/rdpro-main-v5
+  environment_inventory: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_main_v5/experiments/rdpro/docs/main_v5/environment.json
+  command:
+  - /Users/clockorangezoe/miniconda3/envs/geo_llm_spark/bin/python
+  - -m
+  - experiments.external.rdpro_v5.worker
+  - repair
+  - --root
+  - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_main_v5/experiments/rdpro
+  - --out
+  - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_overnight_evidence_audit/experiments/external/overnight_audit/data_validation/rdpro_v5
+  - --upstream
+  - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_overnight_evidence_audit/experiments/external/overnight_audit/data_validation/pipeline_v2
+  depends_on:
+  - A2
+  result: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_overnight_evidence_audit/experiments/external/overnight_audit/data_validation/rdpro_v5/repair.invocation.json
+  complete:
+    kind: docfix
+  max_restarts: 0
+  max_runtime_seconds: 1209600
+  on_success:
+  - - /Users/clockorangezoe/miniconda3/envs/geo_llm_spark/bin/python
+    - -m
+    - experiments.external.rdpro_v5.archive
+    - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_main_v5/experiments/rdpro
+    - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_overnight_evidence_audit/experiments/external/overnight_audit/data_validation/rdpro_v5
+    - repair
+- id: B2
+  cwd: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_main_v5
+  branch: aideal/rdpro-main-v5
+  environment_inventory: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_main_v5/experiments/rdpro/docs/main_v5/environment.json
+  command:
+  - /Users/clockorangezoe/miniconda3/envs/geo_llm_spark/bin/python
+  - -m
+  - experiments.external.rdpro_v5.worker
+  - B2
+  - --root
+  - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_main_v5/experiments/rdpro
+  - --out
+  - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_overnight_evidence_audit/experiments/external/overnight_audit/data_validation/rdpro_v5
+  - --upstream
+  - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_overnight_evidence_audit/experiments/external/overnight_audit/data_validation/pipeline_v2
+  depends_on:
+  - repair
+  result: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_overnight_evidence_audit/experiments/external/overnight_audit/data_validation/rdpro_v5/B2.invocation.json
+  complete:
+    kind: json_metrics_no_transient
+  max_restarts: 0
+  max_runtime_seconds: 1209600
+  on_success:
+  - - /Users/clockorangezoe/miniconda3/envs/geo_llm_spark/bin/python
+    - -m
+    - experiments.external.rdpro_v5.archive
+    - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_rdpro_main_v5/experiments/rdpro
+    - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_overnight_evidence_audit/experiments/external/overnight_audit/data_validation/rdpro_v5
+    - B2
