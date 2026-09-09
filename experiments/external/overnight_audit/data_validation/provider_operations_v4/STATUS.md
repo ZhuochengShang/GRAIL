@@ -1,6 +1,6 @@
 # Execution status and API timing
 
-2026-09-08T17:42:09.678509-07:00
+2026-09-08T17:57:21.474116-07:00
 
 **No single “partial” label:** each unresolved case has an explicit reason. A finished evaluation can contain real failures. A provider failure is not executed code. A running test does not prove the target API was reached.
 
@@ -37,6 +37,6 @@ New workers may use the explicitly registered 600s × 1 transport and output-dir
 
 - mir_eval A1: Installed; awaiting next natural worker start; observed workers [].
 - Thumbnailator A1: New transport observed in worker logs; observed workers [16216].
-- tslearn A1: Installed; awaiting next natural worker start; observed workers [].
+- tslearn A1: New transport observed in worker logs; observed workers [50349].
 - tslearn A2: New transport observed in worker logs; observed workers [12853].
 - tslearn B2: Installed; awaiting next natural worker start; observed workers [].

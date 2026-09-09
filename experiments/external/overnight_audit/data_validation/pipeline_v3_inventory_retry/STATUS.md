@@ -1,6 +1,6 @@
 # AIDEAL: three separate stages
 
-2026-09-08T17:42:27.134006-07:00
+2026-09-08T17:47:55.808227-07:00
 
 A1/A2 are zero-fix controls. S_A2 repairs snippets from A2 failures. Independent README repair produces fresh zero-fix B2. S_B2 repairs only eligible B2 failures.
 
@@ -20,7 +20,7 @@ A1/A2 are zero-fix controls. S_A2 repairs snippets from A2 failures. Independent
 | tslearn | A2 | native complete | 175 | 235 |
 | tslearn | B2 | native complete | 217 | 235 |
 | tslearn | S_A2 | {'recovered_native': 32} | 32 | 32 |
-| tslearn | S_B2 | {'recovered_native': 4, 'provider_blocked': 1} | 4 | 5 |
+| tslearn | S_B2 | {'recovered_native': 4, 'stuck': 1} | 4 | 5 |
 
 Denominators: A1/A2/B2 use the full manifest; S_A2 and S_B2 use different frozen eligible-failure cohorts.
 The composite B2 + S_B2 endpoint is never reported as the native B2 score.
