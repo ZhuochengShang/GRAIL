@@ -3,21 +3,21 @@
     "repository": "mir_eval",
     "cell": "A1",
     "api": "midi_to_hz",
-    "outcome": "Waiting for provider / retry",
-    "test_execution": "No test code executed for this provider attempt",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
     "target_api_reached": "Not independently verified",
-    "latest_native_attempt_s": 599.2,
-    "retained_checkpoint_events": 8,
-    "retained_attempt_total_s": 4793.1,
+    "latest_native_attempt_s": 387.1,
+    "retained_checkpoint_events": 9,
+    "retained_attempt_total_s": 5180.2,
     "retained_504_events": 8,
     "retained_cooldown_deferrals": 0,
     "historical_idle_retry_s": null,
     "measured_provider_invocations": 1,
-    "last_provider_s": null,
+    "last_provider_s": 386.3595036249608,
     "last_retry_interval_s": null,
     "next_provider_retry_epoch": null,
     "transport_policy": "e7e9d3691d9e77eea97f97553474e83d5a9dcab174db19cf3cca0c7b102b3742",
-    "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+    "error": null,
     "details": "api_details/60d11cc2b3ca8e4aae3a.json"
   },
   "native_row": {
@@ -25,34 +25,36 @@
     "doc_source": "original",
     "experiment_fingerprint": "6f5bcaa71d6a868167732ff1b08ada63654abf63b2bc6f0777aae06911a1e74f",
     "execution_evidence": {
-      "status": "fail",
+      "status": "pass",
       "rounds": [
         {
           "round": 0,
-          "status": "fail",
-          "category": "llm-error",
-          "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}"
+          "status": "pass"
         }
       ],
-      "error_category": "llm-error",
-      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
-      "code": "",
+      "code": "import numpy as np\ntry:\n    from mir_eval.multipitch import midi_to_hz\nexcept ImportError:\n    try:\n        from mir_eval.melody import midi_to_hz\n    except ImportError:\n        try:\n            from mir_eval.util import midi_to_hz\n        except ImportError:\n            # If it's not in any of these, we'll fail the documentation comprehension test\n            assert False, \"midi_to_hz not found in expected mir_eval modules\"\n\n# Test with a known MIDI note: 69 is A4, which is 440.0 Hz\nmidi_notes = np.array([69.0, 81.0])\nexpected_hz = np.array([440.0, 880.0])\n\nhz_values = midi_to_hz(midi_notes)\n\nassert np.allclose(hz_values, expected_hz), f\"Expected {expected_hz}, got {hz_values}\"\nprint(f\"__CHECK__ midi_to_hz {hz_values[0]:.1f}\")",
       "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_A1/experiments/external/mir_eval/.aideal_exec/A1/run_midi_to_hz/api_test.py",
-      "exit_code": null,
-      "stdout_tail": "",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ midi_to_hz 440.0\n__DONE__\n",
       "stderr_tail": ""
     },
-    "status": "fail",
+    "status": "pass",
     "attempts": 1,
-    "pass_round": null,
-    "wall_s": 599.2,
-    "llm_calls": 0,
-    "input_tokens": 0,
-    "output_tokens": 0,
-    "by_model": {},
-    "error_category": "llm-error",
-    "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
-    "locus": "",
+    "pass_round": 0,
+    "wall_s": 387.1,
+    "llm_calls": 1,
+    "input_tokens": 1356,
+    "output_tokens": 63163,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 1356,
+        "output_tokens": 63163
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
     "doc_chars": 92,
     "document_sha256": "3facc15e3dcab9f119aba4af58699bd4564ec4b77fcedadb3a3732cd825b5062",
     "source": "source/mir_eval/util.py:930",
@@ -60,7 +62,7 @@
     "codebase_frames": null
   },
   "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_A1/experiments/external/mir_eval/.aideal_exec/A1/comprehension_progress.jsonl",
-  "source_sha256": "4bc078a00038cf69eac5b2f8e5c48f6eb70953db45185e11eb2e64d57fbfad8a",
+  "source_sha256": "8baecef614ca6146bf8812995faf18805e15d75ba314ef952de65b0d10de16e7",
   "checkpoint_events": [
     {
       "name": "midi_to_hz",
@@ -301,16 +303,57 @@
       "source": "source/mir_eval/util.py:930",
       "source_other_sites": 0,
       "codebase_frames": null
+    },
+    {
+      "name": "midi_to_hz",
+      "doc_source": "original",
+      "experiment_fingerprint": "6f5bcaa71d6a868167732ff1b08ada63654abf63b2bc6f0777aae06911a1e74f",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import numpy as np\ntry:\n    from mir_eval.multipitch import midi_to_hz\nexcept ImportError:\n    try:\n        from mir_eval.melody import midi_to_hz\n    except ImportError:\n        try:\n            from mir_eval.util import midi_to_hz\n        except ImportError:\n            # If it's not in any of these, we'll fail the documentation comprehension test\n            assert False, \"midi_to_hz not found in expected mir_eval modules\"\n\n# Test with a known MIDI note: 69 is A4, which is 440.0 Hz\nmidi_notes = np.array([69.0, 81.0])\nexpected_hz = np.array([440.0, 880.0])\n\nhz_values = midi_to_hz(midi_notes)\n\nassert np.allclose(hz_values, expected_hz), f\"Expected {expected_hz}, got {hz_values}\"\nprint(f\"__CHECK__ midi_to_hz {hz_values[0]:.1f}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mir_eval_A1/experiments/external/mir_eval/.aideal_exec/A1/run_midi_to_hz/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ midi_to_hz 440.0\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 387.1,
+      "llm_calls": 1,
+      "input_tokens": 1356,
+      "output_tokens": 63163,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1356,
+          "output_tokens": 63163
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 92,
+      "document_sha256": "3facc15e3dcab9f119aba4af58699bd4564ec4b77fcedadb3a3732cd825b5062",
+      "source": "source/mir_eval/util.py:930",
+      "source_other_sites": 0,
+      "codebase_frames": null
     }
   ],
   "provider_timing": [
     {
       "id": "99288967f4a3469aba34b323be35ba7f",
       "start_epoch": 1788921476.42134,
-      "end_epoch": null,
-      "provider_wall_s": null,
+      "end_epoch": 1788921862.779357,
+      "provider_wall_s": 386.3595036249608,
       "since_previous_provider_end_s": null,
-      "outcome": "In flight or interrupted: no end recorded",
+      "outcome": "invocation_success",
       "retry_after_epoch": null,
       "policy_sha256": "e7e9d3691d9e77eea97f97553474e83d5a9dcab174db19cf3cca0c7b102b3742"
     }
@@ -356,6 +399,49 @@
       "sdk_attempts": 1,
       "server_timeout_s": "600",
       "transport_version": "aideal-provider-transport-v2"
+    },
+    {
+      "actual_timeout_s": 600.0,
+      "adapter_sha256": "c78fd8935b37fdd9337d9e036be2e4c864195eb052d1335cbff68d5a5fb96697",
+      "api": "midi_to_hz",
+      "epoch": 1788921862.77328,
+      "event": "sdk_attempt_success",
+      "harness_setup_version": "aideal-output-setup-v1",
+      "invocation_id": "99288967f4a3469aba34b323be35ba7f",
+      "model": "google:gemini-3.1-pro-preview",
+      "outer_deadline_s": 630,
+      "payload_sha256": "ff9a4f65483c47e73aba690e44e2a7a3567d94b4504e76c8c0ed4e9ae733b837",
+      "pid": 51361,
+      "policy_sha256": "e7e9d3691d9e77eea97f97553474e83d5a9dcab174db19cf3cca0c7b102b3742",
+      "prompt_chars": 6223,
+      "prompt_sha256": "97780eefeda612df4dc1a528abbc1c51685dd8aa8e9da981329e8de056376a05",
+      "request_key": "e8ffca03f85eacb2e249988caf2297db4aa59add8da806be91436ad05a7412aa",
+      "request_timeout_s": 600,
+      "sdk_attempt_id": "0d3c7af306624953afa807a13ad7047e",
+      "sdk_attempts": 1,
+      "server_timeout_s": "600",
+      "transport_version": "aideal-provider-transport-v2",
+      "wall_s": 383.1447065420216
+    },
+    {
+      "adapter_sha256": "c78fd8935b37fdd9337d9e036be2e4c864195eb052d1335cbff68d5a5fb96697",
+      "api": "midi_to_hz",
+      "epoch": 1788921862.779357,
+      "event": "invocation_success",
+      "harness_setup_version": "aideal-output-setup-v1",
+      "invocation_id": "99288967f4a3469aba34b323be35ba7f",
+      "model": "google:gemini-3.1-pro-preview",
+      "outer_deadline_s": 630,
+      "pid": 51361,
+      "policy_sha256": "e7e9d3691d9e77eea97f97553474e83d5a9dcab174db19cf3cca0c7b102b3742",
+      "prompt_chars": 6223,
+      "prompt_sha256": "97780eefeda612df4dc1a528abbc1c51685dd8aa8e9da981329e8de056376a05",
+      "request_key": "e8ffca03f85eacb2e249988caf2297db4aa59add8da806be91436ad05a7412aa",
+      "request_timeout_s": 600,
+      "response_sha256": "d668b715092cfbd60c017bbaaf5d21bf93f6c4c6ef4b14e9f9556b1bd14c76b2",
+      "sdk_attempts": 1,
+      "transport_version": "aideal-provider-transport-v2",
+      "wall_s": 386.3595036249608
     }
   ],
   "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."

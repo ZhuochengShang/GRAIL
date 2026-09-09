@@ -3,21 +3,21 @@
     "repository": "tslearn",
     "cell": "A1",
     "api": "frechet",
-    "outcome": "Waiting for provider / retry",
-    "test_execution": "No test code executed for this provider attempt",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
     "target_api_reached": "Not independently verified",
-    "latest_native_attempt_s": 599.4,
-    "retained_checkpoint_events": 4,
-    "retained_attempt_total_s": 2398.3,
+    "latest_native_attempt_s": 390.7,
+    "retained_checkpoint_events": 5,
+    "retained_attempt_total_s": 2789.0,
     "retained_504_events": 4,
     "retained_cooldown_deferrals": 0,
     "historical_idle_retry_s": null,
     "measured_provider_invocations": 1,
-    "last_provider_s": null,
+    "last_provider_s": 384.78315870900406,
     "last_retry_interval_s": null,
     "next_provider_retry_epoch": null,
     "transport_policy": "d3dc72bd6e8ae61bf387f53095432a592ef5ad022245486ca7883f4a0dfff6ed",
-    "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+    "error": null,
     "details": "api_details/bfcc2a34298a50b85e2d.json"
   },
   "native_row": {
@@ -25,34 +25,36 @@
     "doc_source": "original",
     "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
     "execution_evidence": {
-      "status": "fail",
+      "status": "pass",
       "rounds": [
         {
           "round": 0,
-          "status": "fail",
-          "category": "llm-error",
-          "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}"
+          "status": "pass"
         }
       ],
-      "error_category": "llm-error",
-      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
-      "code": "",
+      "code": "import numpy as np\nfrom tslearn.metrics import frechet\n\ntry:\n    # frechet computes the discrete Frechet distance between two time series\n    dist = frechet(s1, s2)\n    \n    # The distance between a series and itself should be 0.0\n    dist_self = frechet(s1, s1)\n    \n    assert isinstance(dist, float), f\"Expected float, got {type(dist)}\"\n    assert dist >= 0.0, \"Frechet distance cannot be negative\"\n    assert np.isclose(dist_self, 0.0), f\"Frechet distance to self should be 0.0, got {dist_self}\"\n    \n    print(f\"__CHECK__ frechet {dist:.4f}\")\nexcept Exception as e:\n    # If frechet is not available or fails, fail the test explicitly\n    assert False, f\"frechet failed or contract unverifiable: {e}\"",
       "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_frechet/api_test.py",
-      "exit_code": null,
-      "stdout_tail": "",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ frechet 0.0850\n__DONE__\n",
       "stderr_tail": ""
     },
-    "status": "fail",
+    "status": "pass",
     "attempts": 1,
-    "pass_round": null,
-    "wall_s": 599.4,
-    "llm_calls": 0,
-    "input_tokens": 0,
-    "output_tokens": 0,
-    "by_model": {},
-    "error_category": "llm-error",
-    "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
-    "locus": "",
+    "pass_round": 0,
+    "wall_s": 390.7,
+    "llm_calls": 1,
+    "input_tokens": 1315,
+    "output_tokens": 63133,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 1315,
+        "output_tokens": 63133
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
     "doc_chars": 89,
     "document_sha256": "e96c3f2a860a56747eaf1a0394b9b506501d6ffb6c174bc800ad6f1b65782dc5",
     "source": "tslearn/tslearn/metrics/_frechet.py:30",
@@ -60,7 +62,7 @@
     "codebase_frames": null
   },
   "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/comprehension_progress.jsonl",
-  "source_sha256": "64a9c9da78f7d494eb9a0d3b5ac6c70b5cbdd89edd5b6ac637421d92da4f2762",
+  "source_sha256": "e8114b5bc9ca92b6d1a40a4771fc5b94dd4a8e9649bb3a0d558c51f8d81d9fdf",
   "checkpoint_events": [
     {
       "name": "frechet",
@@ -199,16 +201,57 @@
       "source": "tslearn/tslearn/metrics/_frechet.py:30",
       "source_other_sites": 0,
       "codebase_frames": null
+    },
+    {
+      "name": "frechet",
+      "doc_source": "original",
+      "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import numpy as np\nfrom tslearn.metrics import frechet\n\ntry:\n    # frechet computes the discrete Frechet distance between two time series\n    dist = frechet(s1, s2)\n    \n    # The distance between a series and itself should be 0.0\n    dist_self = frechet(s1, s1)\n    \n    assert isinstance(dist, float), f\"Expected float, got {type(dist)}\"\n    assert dist >= 0.0, \"Frechet distance cannot be negative\"\n    assert np.isclose(dist_self, 0.0), f\"Frechet distance to self should be 0.0, got {dist_self}\"\n    \n    print(f\"__CHECK__ frechet {dist:.4f}\")\nexcept Exception as e:\n    # If frechet is not available or fails, fail the test explicitly\n    assert False, f\"frechet failed or contract unverifiable: {e}\"",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_frechet/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ frechet 0.0850\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 390.7,
+      "llm_calls": 1,
+      "input_tokens": 1315,
+      "output_tokens": 63133,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1315,
+          "output_tokens": 63133
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 89,
+      "document_sha256": "e96c3f2a860a56747eaf1a0394b9b506501d6ffb6c174bc800ad6f1b65782dc5",
+      "source": "tslearn/tslearn/metrics/_frechet.py:30",
+      "source_other_sites": 0,
+      "codebase_frames": null
     }
   ],
   "provider_timing": [
     {
       "id": "0df16eadca7141eba3abb6c062351fbe",
       "start_epoch": 1788921744.340058,
-      "end_epoch": null,
-      "provider_wall_s": null,
+      "end_epoch": 1788922129.1360261,
+      "provider_wall_s": 384.78315870900406,
       "since_previous_provider_end_s": null,
-      "outcome": "In flight or interrupted: no end recorded",
+      "outcome": "invocation_success",
       "retry_after_epoch": null,
       "policy_sha256": "d3dc72bd6e8ae61bf387f53095432a592ef5ad022245486ca7883f4a0dfff6ed"
     }
@@ -254,6 +297,49 @@
       "sdk_attempts": 1,
       "server_timeout_s": "600",
       "transport_version": "aideal-provider-transport-v2"
+    },
+    {
+      "actual_timeout_s": 600.0,
+      "adapter_sha256": "c78fd8935b37fdd9337d9e036be2e4c864195eb052d1335cbff68d5a5fb96697",
+      "api": "frechet",
+      "epoch": 1788922129.125912,
+      "event": "sdk_attempt_success",
+      "harness_setup_version": "aideal-output-setup-v1",
+      "invocation_id": "0df16eadca7141eba3abb6c062351fbe",
+      "model": "google:gemini-3.1-pro-preview",
+      "outer_deadline_s": 630,
+      "payload_sha256": "aa2c372c92ea52e8802b071fd41d616dd3892d08995c3cdcc2353c411c81f856",
+      "pid": 50349,
+      "policy_sha256": "d3dc72bd6e8ae61bf387f53095432a592ef5ad022245486ca7883f4a0dfff6ed",
+      "prompt_chars": 6078,
+      "prompt_sha256": "47d9c0bb2c5f47aeb58b428c006b75a2ad491f377600621129b0a43847dd1877",
+      "request_key": "034dfd371315fcda261357c15d94fc51aa7dc5733f685925278f44aab892c4e9",
+      "request_timeout_s": 600,
+      "sdk_attempt_id": "dc3b9d84b4e34e09bb3cfa04510feee2",
+      "sdk_attempts": 1,
+      "server_timeout_s": "600",
+      "transport_version": "aideal-provider-transport-v2",
+      "wall_s": 384.75693112501176
+    },
+    {
+      "adapter_sha256": "c78fd8935b37fdd9337d9e036be2e4c864195eb052d1335cbff68d5a5fb96697",
+      "api": "frechet",
+      "epoch": 1788922129.1360261,
+      "event": "invocation_success",
+      "harness_setup_version": "aideal-output-setup-v1",
+      "invocation_id": "0df16eadca7141eba3abb6c062351fbe",
+      "model": "google:gemini-3.1-pro-preview",
+      "outer_deadline_s": 630,
+      "pid": 50349,
+      "policy_sha256": "d3dc72bd6e8ae61bf387f53095432a592ef5ad022245486ca7883f4a0dfff6ed",
+      "prompt_chars": 6078,
+      "prompt_sha256": "47d9c0bb2c5f47aeb58b428c006b75a2ad491f377600621129b0a43847dd1877",
+      "request_key": "034dfd371315fcda261357c15d94fc51aa7dc5733f685925278f44aab892c4e9",
+      "request_timeout_s": 600,
+      "response_sha256": "06b4f8a1bcdbdc89a3df22995aa9e63d599263a082ba3a62e7242270d7cbeeac",
+      "sdk_attempts": 1,
+      "transport_version": "aideal-provider-transport-v2",
+      "wall_s": 384.78315870900406
     }
   ],
   "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
