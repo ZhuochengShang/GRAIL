@@ -3,16 +3,16 @@
   "expected": 235,
   "counts": {
     "pending": 188,
-    "fail": 42,
-    "pass": 5
+    "fail": 40,
+    "pass": 7
   },
   "fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
   "errors": [],
   "failure_categories": {
-    "unknown": 9,
+    "unknown": 10,
     "api-identity": 3,
     "test/scaffold": 4,
-    "llm-error": 26
+    "llm-error": 23
   },
   "recorded_provider_errors_all_fingerprints": 151,
   "observed_fingerprints": [
@@ -11477,6 +11477,136 @@
       "source_other_sites": 0,
       "codebase_frames": null,
       "checkpoint_line": 360
+    },
+    {
+      "name": "check_keras_backend",
+      "doc_source": "original",
+      "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "runtime",
+            "error": "AssertionError: check_keras_backend failed: module 'tslearn.utils' has no attribute 'check_keras_backend'"
+          }
+        ],
+        "error_category": "runtime",
+        "error": "AssertionError: check_keras_backend failed: module 'tslearn.utils' has no attribute 'check_keras_backend'",
+        "code": "import tslearn.utils\n\ntry:\n    result = tslearn.utils.check_keras_backend()\n    # check_keras_backend() returns a boolean indicating if keras is available\n    assert isinstance(result, bool), f\"Expected boolean, got {type(result)}\"\n    print(f\"__CHECK__ check_keras_backend {result}\")\nexcept Exception as e:\n    assert False, f\"check_keras_backend failed: {e}\"",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_check_keras_backend/api_test.py",
+        "exit_code": 1,
+        "stdout_tail": "",
+        "stderr_tail": "__RUN_ERR__ AssertionError: check_keras_backend failed: module 'tslearn.utils' has no attribute 'check_keras_backend'\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_check_keras_backend/api_test.py\", line 37, in api_test\n    result = tslearn.utils.check_keras_backend()\nAttributeError: module 'tslearn.utils' has no attribute 'check_keras_backend'\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_check_keras_backend/api_test.py\", line 51, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_check_keras_backend/api_test.py\", line 46, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_check_keras_backend/api_test.py\", line 42, in api_test\n    assert False, f\"check_keras_backend failed: {e}\"\nAssertionError: check_keras_backend failed: module 'tslearn.utils' has no attribute 'check_keras_backend'\n"
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 375.8,
+      "llm_calls": 1,
+      "input_tokens": 1339,
+      "output_tokens": 63019,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1339,
+          "output_tokens": 63019
+        }
+      },
+      "error_category": "runtime",
+      "error": "AssertionError: check_keras_backend failed: module 'tslearn.utils' has no attribute 'check_keras_backend'",
+      "locus": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_check_keras_backend/api_test.py:42",
+      "doc_chars": 101,
+      "document_sha256": "22490da12226e1e7fc318bf051c90031793447a3de2aa87277216aa28240da12",
+      "source": "tslearn/tslearn/backend/__init__.py:12",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 361
+    },
+    {
+      "name": "check_variable_length_input",
+      "doc_source": "original",
+      "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "from tslearn.utils import check_variable_length_input\nimport numpy as np\n\n# Create a variable-length input: a list of 1D arrays of different lengths\nvar_len_input = [s1[:10], s2[:20], s1[:30]]\n\n# check_variable_length_input pads the arrays to the maximum length and returns a 3D array\npadded_dataset = check_variable_length_input(var_len_input)\n\n# Verify the output shape: (n_ts, max_sz, d) -> (3, 30, 1)\nassert padded_dataset.shape == (3, 30, 1), f\"Expected shape (3, 30, 1), got {padded_dataset.shape}\"\n\n# Verify that padding was applied correctly (NaNs at the end of shorter series)\nassert np.isnan(padded_dataset[0, 10:, 0]).all(), \"Expected NaNs for padded values in the first series\"\nassert not np.isnan(padded_dataset[0, :10, 0]).any(), \"Expected no NaNs in the original part of the first series\"\n\nprint(f\"__CHECK__ check_variable_length_input shape {padded_dataset.shape}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_check_variable_length_input/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ check_variable_length_input shape (3, 30, 1)\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 397.7,
+      "llm_calls": 1,
+      "input_tokens": 1355,
+      "output_tokens": 63199,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1355,
+          "output_tokens": 63199
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 109,
+      "document_sha256": "aff7648d1c1a1e8a733f0fac37c954136ce4122dcee2e8c309c74d8110f7dd24",
+      "source": "tslearn/tslearn/utils/utils.py:39",
+      "source_other_sites": 0,
+      "codebase_frames": null,
+      "checkpoint_line": 362
+    },
+    {
+      "name": "compute",
+      "doc_source": "original",
+      "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "import tslearn.metrics\n\ntry:\n    # The documentation does not specify a `compute` function or method in tslearn.\n    # We will deliberately fail the test to indicate that the contract is insufficient or missing.\n    assert False, \"No documented `compute` API found in tslearn to verify.\"\nexcept AssertionError as e:\n    print(f\"__CHECK__ compute {e}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_compute/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ compute No documented `compute` API found in tslearn to verify.\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 387.1,
+      "llm_calls": 1,
+      "input_tokens": 1307,
+      "output_tokens": 63004,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1307,
+          "output_tokens": 63004
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 89,
+      "document_sha256": "ddfeefc4e3e16e9ccd8ade86db442cfbe6561de30ed46f527ebe7e4f23ff8b7b",
+      "source": "tslearn/tslearn/metrics/softdtw_variants.py:1111",
+      "source_other_sites": 1,
+      "codebase_frames": null,
+      "checkpoint_line": 363
     }
   ],
   "repair_summary": {
@@ -13279,16 +13409,16 @@
     {
       "api": "check_keras_backend",
       "status": "fail",
-      "primary_category": "llm-error",
-      "runner_category": "llm-error",
-      "category_reason": "Provider outcome; retry, never count as a documentation failure.",
-      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "primary_category": "unknown",
+      "runner_category": "runtime",
+      "category_reason": "Observed runtime; doc attribution requires source, document, and snippet review.",
+      "error": "AssertionError: check_keras_backend failed: module 'tslearn.utils' has no attribute 'check_keras_backend'",
       "source": "tslearn/tslearn/backend/__init__.py:12",
       "doc_chars": 101,
-      "checkpoint_attempts": 3,
+      "checkpoint_attempts": 4,
       "provider_error_attempts": 3,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
+      "recorded_successful_llm_calls": 1,
       "attempt_history": [
         {
           "checkpoint_line": 247,
@@ -13325,6 +13455,18 @@
           "input_tokens": 0,
           "output_tokens": 0,
           "pass_round": null
+        },
+        {
+          "checkpoint_line": 361,
+          "status": "fail",
+          "error_category": "runtime",
+          "error": "AssertionError: check_keras_backend failed: module 'tslearn.utils' has no attribute 'check_keras_backend'",
+          "attempts": 1,
+          "wall_s": 375.8,
+          "llm_calls": 1,
+          "input_tokens": 1339,
+          "output_tokens": 63019,
+          "pass_round": null
         }
       ],
       "repair_status": null,
@@ -13334,17 +13476,17 @@
     },
     {
       "api": "check_variable_length_input",
-      "status": "fail",
-      "primary_category": "llm-error",
-      "runner_category": "llm-error",
-      "category_reason": "Provider outcome; retry, never count as a documentation failure.",
-      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "status": "pass",
+      "primary_category": "pass",
+      "runner_category": null,
+      "category_reason": "",
+      "error": null,
       "source": "tslearn/tslearn/utils/utils.py:39",
       "doc_chars": 109,
-      "checkpoint_attempts": 3,
+      "checkpoint_attempts": 4,
       "provider_error_attempts": 3,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
+      "recorded_successful_llm_calls": 1,
       "attempt_history": [
         {
           "checkpoint_line": 248,
@@ -13381,6 +13523,18 @@
           "input_tokens": 0,
           "output_tokens": 0,
           "pass_round": null
+        },
+        {
+          "checkpoint_line": 362,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 397.7,
+          "llm_calls": 1,
+          "input_tokens": 1355,
+          "output_tokens": 63199,
+          "pass_round": 0
         }
       ],
       "repair_status": null,
@@ -13428,17 +13582,17 @@
     },
     {
       "api": "compute",
-      "status": "fail",
-      "primary_category": "llm-error",
-      "runner_category": "llm-error",
-      "category_reason": "Provider outcome; retry, never count as a documentation failure.",
-      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+      "status": "pass",
+      "primary_category": "pass",
+      "runner_category": null,
+      "category_reason": "",
+      "error": null,
       "source": "tslearn/tslearn/metrics/softdtw_variants.py:1111",
       "doc_chars": 89,
-      "checkpoint_attempts": 3,
+      "checkpoint_attempts": 4,
       "provider_error_attempts": 3,
       "provider_internal_retries": null,
-      "recorded_successful_llm_calls": 0,
+      "recorded_successful_llm_calls": 1,
       "attempt_history": [
         {
           "checkpoint_line": 249,
@@ -13475,6 +13629,18 @@
           "input_tokens": 0,
           "output_tokens": 0,
           "pass_round": null
+        },
+        {
+          "checkpoint_line": 363,
+          "status": "pass",
+          "error_category": null,
+          "error": null,
+          "attempts": 1,
+          "wall_s": 387.1,
+          "llm_calls": 1,
+          "input_tokens": 1307,
+          "output_tokens": 63004,
+          "pass_round": 0
         }
       ],
       "repair_status": null,

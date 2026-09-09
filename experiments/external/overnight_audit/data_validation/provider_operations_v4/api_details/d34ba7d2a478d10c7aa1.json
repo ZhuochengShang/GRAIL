@@ -3,22 +3,22 @@
     "repository": "tslearn",
     "cell": "A1",
     "api": "check_keras_backend",
-    "outcome": "Waiting for provider / retry",
-    "test_execution": "No test code executed for this provider attempt",
+    "outcome": "Execution failed",
+    "test_execution": "Test process returned exit code 1; target reach not independently verified",
     "target_api_reached": "Not independently verified",
-    "latest_native_attempt_s": 599.3,
-    "retained_checkpoint_events": 4,
-    "retained_attempt_total_s": 2399.0,
+    "latest_native_attempt_s": 375.8,
+    "retained_checkpoint_events": 5,
+    "retained_attempt_total_s": 2774.8,
     "retained_504_events": 4,
     "retained_cooldown_deferrals": 0,
     "historical_idle_retry_s": null,
     "measured_provider_invocations": 1,
-    "last_provider_s": null,
+    "last_provider_s": 373.33568858297076,
     "last_retry_interval_s": null,
     "next_provider_retry_epoch": null,
     "transport_policy": "d3dc72bd6e8ae61bf387f53095432a592ef5ad022245486ca7883f4a0dfff6ed",
     "identity_status": "Final or explicitly migrated evidence",
-    "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+    "error": "AssertionError: check_keras_backend failed: module 'tslearn.utils' has no attribute 'check_keras_backend'",
     "details": "api_details/d34ba7d2a478d10c7aa1.json"
   },
   "native_row": {
@@ -31,29 +31,35 @@
         {
           "round": 0,
           "status": "fail",
-          "category": "llm-error",
-          "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}"
+          "category": "runtime",
+          "error": "AssertionError: check_keras_backend failed: module 'tslearn.utils' has no attribute 'check_keras_backend'"
         }
       ],
-      "error_category": "llm-error",
-      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
-      "code": "",
+      "error_category": "runtime",
+      "error": "AssertionError: check_keras_backend failed: module 'tslearn.utils' has no attribute 'check_keras_backend'",
+      "code": "import tslearn.utils\n\ntry:\n    result = tslearn.utils.check_keras_backend()\n    # check_keras_backend() returns a boolean indicating if keras is available\n    assert isinstance(result, bool), f\"Expected boolean, got {type(result)}\"\n    print(f\"__CHECK__ check_keras_backend {result}\")\nexcept Exception as e:\n    assert False, f\"check_keras_backend failed: {e}\"",
       "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_check_keras_backend/api_test.py",
-      "exit_code": null,
+      "exit_code": 1,
       "stdout_tail": "",
-      "stderr_tail": ""
+      "stderr_tail": "__RUN_ERR__ AssertionError: check_keras_backend failed: module 'tslearn.utils' has no attribute 'check_keras_backend'\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_check_keras_backend/api_test.py\", line 37, in api_test\n    result = tslearn.utils.check_keras_backend()\nAttributeError: module 'tslearn.utils' has no attribute 'check_keras_backend'\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_check_keras_backend/api_test.py\", line 51, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_check_keras_backend/api_test.py\", line 46, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_check_keras_backend/api_test.py\", line 42, in api_test\n    assert False, f\"check_keras_backend failed: {e}\"\nAssertionError: check_keras_backend failed: module 'tslearn.utils' has no attribute 'check_keras_backend'\n"
     },
     "status": "fail",
     "attempts": 1,
     "pass_round": null,
-    "wall_s": 599.3,
-    "llm_calls": 0,
-    "input_tokens": 0,
-    "output_tokens": 0,
-    "by_model": {},
-    "error_category": "llm-error",
-    "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
-    "locus": "",
+    "wall_s": 375.8,
+    "llm_calls": 1,
+    "input_tokens": 1339,
+    "output_tokens": 63019,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 1339,
+        "output_tokens": 63019
+      }
+    },
+    "error_category": "runtime",
+    "error": "AssertionError: check_keras_backend failed: module 'tslearn.utils' has no attribute 'check_keras_backend'",
+    "locus": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_check_keras_backend/api_test.py:42",
     "doc_chars": 101,
     "document_sha256": "22490da12226e1e7fc318bf051c90031793447a3de2aa87277216aa28240da12",
     "source": "tslearn/tslearn/backend/__init__.py:12",
@@ -61,7 +67,7 @@
     "codebase_frames": null
   },
   "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/comprehension_progress.jsonl",
-  "source_sha256": "12b783c5a63c4efda0a09ebd57e8b0702adf4621aae57163960de0212e1bce4c",
+  "source_sha256": "a5ba0f03079d9d0b2e61f8a05718233ad1d03459afed84a4a77942f44affb329",
   "checkpoint_events": [
     {
       "name": "check_keras_backend",
@@ -200,16 +206,61 @@
       "source": "tslearn/tslearn/backend/__init__.py:12",
       "source_other_sites": 0,
       "codebase_frames": null
+    },
+    {
+      "name": "check_keras_backend",
+      "doc_source": "original",
+      "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+      "execution_evidence": {
+        "status": "fail",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "fail",
+            "category": "runtime",
+            "error": "AssertionError: check_keras_backend failed: module 'tslearn.utils' has no attribute 'check_keras_backend'"
+          }
+        ],
+        "error_category": "runtime",
+        "error": "AssertionError: check_keras_backend failed: module 'tslearn.utils' has no attribute 'check_keras_backend'",
+        "code": "import tslearn.utils\n\ntry:\n    result = tslearn.utils.check_keras_backend()\n    # check_keras_backend() returns a boolean indicating if keras is available\n    assert isinstance(result, bool), f\"Expected boolean, got {type(result)}\"\n    print(f\"__CHECK__ check_keras_backend {result}\")\nexcept Exception as e:\n    assert False, f\"check_keras_backend failed: {e}\"",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_check_keras_backend/api_test.py",
+        "exit_code": 1,
+        "stdout_tail": "",
+        "stderr_tail": "__RUN_ERR__ AssertionError: check_keras_backend failed: module 'tslearn.utils' has no attribute 'check_keras_backend'\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_check_keras_backend/api_test.py\", line 37, in api_test\n    result = tslearn.utils.check_keras_backend()\nAttributeError: module 'tslearn.utils' has no attribute 'check_keras_backend'\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_check_keras_backend/api_test.py\", line 51, in <module>\n    run()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_check_keras_backend/api_test.py\", line 46, in run\n    api_test()\n  File \"/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_check_keras_backend/api_test.py\", line 42, in api_test\n    assert False, f\"check_keras_backend failed: {e}\"\nAssertionError: check_keras_backend failed: module 'tslearn.utils' has no attribute 'check_keras_backend'\n"
+      },
+      "status": "fail",
+      "attempts": 1,
+      "pass_round": null,
+      "wall_s": 375.8,
+      "llm_calls": 1,
+      "input_tokens": 1339,
+      "output_tokens": 63019,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1339,
+          "output_tokens": 63019
+        }
+      },
+      "error_category": "runtime",
+      "error": "AssertionError: check_keras_backend failed: module 'tslearn.utils' has no attribute 'check_keras_backend'",
+      "locus": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_check_keras_backend/api_test.py:42",
+      "doc_chars": 101,
+      "document_sha256": "22490da12226e1e7fc318bf051c90031793447a3de2aa87277216aa28240da12",
+      "source": "tslearn/tslearn/backend/__init__.py:12",
+      "source_other_sites": 0,
+      "codebase_frames": null
     }
   ],
   "provider_timing": [
     {
       "id": "c852f904c9cf4efd8a32e00558a34adf",
       "start_epoch": 1788917944.6127832,
-      "end_epoch": null,
-      "provider_wall_s": null,
+      "end_epoch": 1788918317.9477189,
+      "provider_wall_s": 373.33568858297076,
       "since_previous_provider_end_s": null,
-      "outcome": "In flight or interrupted: no end recorded",
+      "outcome": "invocation_success",
       "retry_after_epoch": null,
       "policy_sha256": "d3dc72bd6e8ae61bf387f53095432a592ef5ad022245486ca7883f4a0dfff6ed"
     }
@@ -255,6 +306,49 @@
       "sdk_attempts": 1,
       "server_timeout_s": "600",
       "transport_version": "aideal-provider-transport-v2"
+    },
+    {
+      "actual_timeout_s": 600.0,
+      "adapter_sha256": "c78fd8935b37fdd9337d9e036be2e4c864195eb052d1335cbff68d5a5fb96697",
+      "api": "check_keras_backend",
+      "epoch": 1788918317.93796,
+      "event": "sdk_attempt_success",
+      "harness_setup_version": "aideal-output-setup-v1",
+      "invocation_id": "c852f904c9cf4efd8a32e00558a34adf",
+      "model": "google:gemini-3.1-pro-preview",
+      "outer_deadline_s": 630,
+      "payload_sha256": "65aee5179f553430177c78cea5eb9fc937f27aeba1cfd518ec61c839308e0cad",
+      "pid": 50349,
+      "policy_sha256": "d3dc72bd6e8ae61bf387f53095432a592ef5ad022245486ca7883f4a0dfff6ed",
+      "prompt_chars": 6174,
+      "prompt_sha256": "fd16a20a603900115e00ec3b43a65ceb223357837d9ca1201abf52cf4821dc02",
+      "request_key": "43c7a818d7a14867b14383889f74d0cab75bdc1b6731637a3f4625cc6d88ab29",
+      "request_timeout_s": 600,
+      "sdk_attempt_id": "a9cc02a090bb4b7b88c3ff259abbb172",
+      "sdk_attempts": 1,
+      "server_timeout_s": "600",
+      "transport_version": "aideal-provider-transport-v2",
+      "wall_s": 373.30782116699265
+    },
+    {
+      "adapter_sha256": "c78fd8935b37fdd9337d9e036be2e4c864195eb052d1335cbff68d5a5fb96697",
+      "api": "check_keras_backend",
+      "epoch": 1788918317.9477189,
+      "event": "invocation_success",
+      "harness_setup_version": "aideal-output-setup-v1",
+      "invocation_id": "c852f904c9cf4efd8a32e00558a34adf",
+      "model": "google:gemini-3.1-pro-preview",
+      "outer_deadline_s": 630,
+      "pid": 50349,
+      "policy_sha256": "d3dc72bd6e8ae61bf387f53095432a592ef5ad022245486ca7883f4a0dfff6ed",
+      "prompt_chars": 6174,
+      "prompt_sha256": "fd16a20a603900115e00ec3b43a65ceb223357837d9ca1201abf52cf4821dc02",
+      "request_key": "43c7a818d7a14867b14383889f74d0cab75bdc1b6731637a3f4625cc6d88ab29",
+      "request_timeout_s": 600,
+      "response_sha256": "c4a2b3c6491817c92be100af10bb9f9e3815c569314f5bffb458f12d35a465c0",
+      "sdk_attempts": 1,
+      "transport_version": "aideal-provider-transport-v2",
+      "wall_s": 373.33568858297076
     }
   ],
   "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."

@@ -3,22 +3,22 @@
     "repository": "tslearn",
     "cell": "A1",
     "api": "check_variable_length_input",
-    "outcome": "Waiting for provider / retry",
-    "test_execution": "No test code executed for this provider attempt",
+    "outcome": "Passed native checks",
+    "test_execution": "Test process returned exit code 0; target reach not independently verified",
     "target_api_reached": "Not independently verified",
-    "latest_native_attempt_s": 599.8,
-    "retained_checkpoint_events": 4,
-    "retained_attempt_total_s": 2396.8,
+    "latest_native_attempt_s": 397.7,
+    "retained_checkpoint_events": 5,
+    "retained_attempt_total_s": 2794.5,
     "retained_504_events": 4,
     "retained_cooldown_deferrals": 0,
     "historical_idle_retry_s": null,
-    "measured_provider_invocations": 0,
-    "last_provider_s": null,
+    "measured_provider_invocations": 1,
+    "last_provider_s": 392.92035608302103,
     "last_retry_interval_s": null,
     "next_provider_retry_epoch": null,
-    "transport_policy": "Historical/uninstrumented",
+    "transport_policy": "d3dc72bd6e8ae61bf387f53095432a592ef5ad022245486ca7883f4a0dfff6ed",
     "identity_status": "Final or explicitly migrated evidence",
-    "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
+    "error": null,
     "details": "api_details/76e3f6ff810ceb4f8f15.json"
   },
   "native_row": {
@@ -26,34 +26,36 @@
     "doc_source": "original",
     "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
     "execution_evidence": {
-      "status": "fail",
+      "status": "pass",
       "rounds": [
         {
           "round": 0,
-          "status": "fail",
-          "category": "llm-error",
-          "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}"
+          "status": "pass"
         }
       ],
-      "error_category": "llm-error",
-      "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
-      "code": "",
+      "code": "from tslearn.utils import check_variable_length_input\nimport numpy as np\n\n# Create a variable-length input: a list of 1D arrays of different lengths\nvar_len_input = [s1[:10], s2[:20], s1[:30]]\n\n# check_variable_length_input pads the arrays to the maximum length and returns a 3D array\npadded_dataset = check_variable_length_input(var_len_input)\n\n# Verify the output shape: (n_ts, max_sz, d) -> (3, 30, 1)\nassert padded_dataset.shape == (3, 30, 1), f\"Expected shape (3, 30, 1), got {padded_dataset.shape}\"\n\n# Verify that padding was applied correctly (NaNs at the end of shorter series)\nassert np.isnan(padded_dataset[0, 10:, 0]).all(), \"Expected NaNs for padded values in the first series\"\nassert not np.isnan(padded_dataset[0, :10, 0]).any(), \"Expected no NaNs in the original part of the first series\"\n\nprint(f\"__CHECK__ check_variable_length_input shape {padded_dataset.shape}\")",
       "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_check_variable_length_input/api_test.py",
-      "exit_code": null,
-      "stdout_tail": "",
+      "exit_code": 0,
+      "stdout_tail": "__CHECK__ check_variable_length_input shape (3, 30, 1)\n__DONE__\n",
       "stderr_tail": ""
     },
-    "status": "fail",
+    "status": "pass",
     "attempts": 1,
-    "pass_round": null,
-    "wall_s": 599.8,
-    "llm_calls": 0,
-    "input_tokens": 0,
-    "output_tokens": 0,
-    "by_model": {},
-    "error_category": "llm-error",
-    "error": "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}",
-    "locus": "",
+    "pass_round": 0,
+    "wall_s": 397.7,
+    "llm_calls": 1,
+    "input_tokens": 1355,
+    "output_tokens": 63199,
+    "by_model": {
+      "google:gemini-3.1-pro-preview": {
+        "calls": 1,
+        "input_tokens": 1355,
+        "output_tokens": 63199
+      }
+    },
+    "error_category": null,
+    "error": null,
+    "locus": null,
     "doc_chars": 109,
     "document_sha256": "aff7648d1c1a1e8a733f0fac37c954136ce4122dcee2e8c309c74d8110f7dd24",
     "source": "tslearn/tslearn/utils/utils.py:39",
@@ -61,7 +63,7 @@
     "codebase_frames": null
   },
   "source_path": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/comprehension_progress.jsonl",
-  "source_sha256": "12b783c5a63c4efda0a09ebd57e8b0702adf4621aae57163960de0212e1bce4c",
+  "source_sha256": "a5ba0f03079d9d0b2e61f8a05718233ad1d03459afed84a4a77942f44affb329",
   "checkpoint_events": [
     {
       "name": "check_variable_length_input",
@@ -200,9 +202,146 @@
       "source": "tslearn/tslearn/utils/utils.py:39",
       "source_other_sites": 0,
       "codebase_frames": null
+    },
+    {
+      "name": "check_variable_length_input",
+      "doc_source": "original",
+      "experiment_fingerprint": "d56d5a544a2ba19ef8b88ef7fd390e3c24bea013165e493964ac20e1e16c3cea",
+      "execution_evidence": {
+        "status": "pass",
+        "rounds": [
+          {
+            "round": 0,
+            "status": "pass"
+          }
+        ],
+        "code": "from tslearn.utils import check_variable_length_input\nimport numpy as np\n\n# Create a variable-length input: a list of 1D arrays of different lengths\nvar_len_input = [s1[:10], s2[:20], s1[:30]]\n\n# check_variable_length_input pads the arrays to the maximum length and returns a 3D array\npadded_dataset = check_variable_length_input(var_len_input)\n\n# Verify the output shape: (n_ts, max_sz, d) -> (3, 30, 1)\nassert padded_dataset.shape == (3, 30, 1), f\"Expected shape (3, 30, 1), got {padded_dataset.shape}\"\n\n# Verify that padding was applied correctly (NaNs at the end of shorter series)\nassert np.isnan(padded_dataset[0, 10:, 0]).all(), \"Expected NaNs for padded values in the first series\"\nassert not np.isnan(padded_dataset[0, :10, 0]).any(), \"Expected no NaNs in the original part of the first series\"\n\nprint(f\"__CHECK__ check_variable_length_input shape {padded_dataset.shape}\")",
+        "scala_file": "/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_tslearn_full235_A1/experiments/tslearn/.aideal_exec/A1/run_check_variable_length_input/api_test.py",
+        "exit_code": 0,
+        "stdout_tail": "__CHECK__ check_variable_length_input shape (3, 30, 1)\n__DONE__\n",
+        "stderr_tail": ""
+      },
+      "status": "pass",
+      "attempts": 1,
+      "pass_round": 0,
+      "wall_s": 397.7,
+      "llm_calls": 1,
+      "input_tokens": 1355,
+      "output_tokens": 63199,
+      "by_model": {
+        "google:gemini-3.1-pro-preview": {
+          "calls": 1,
+          "input_tokens": 1355,
+          "output_tokens": 63199
+        }
+      },
+      "error_category": null,
+      "error": null,
+      "locus": null,
+      "doc_chars": 109,
+      "document_sha256": "aff7648d1c1a1e8a733f0fac37c954136ce4122dcee2e8c309c74d8110f7dd24",
+      "source": "tslearn/tslearn/utils/utils.py:39",
+      "source_other_sites": 0,
+      "codebase_frames": null
     }
   ],
-  "provider_timing": [],
-  "transport_events": [],
+  "provider_timing": [
+    {
+      "id": "c8e71dd1b2e040b2b4219542a3d525d3",
+      "start_epoch": 1788918320.4054122,
+      "end_epoch": 1788918713.3296902,
+      "provider_wall_s": 392.92035608302103,
+      "since_previous_provider_end_s": null,
+      "outcome": "invocation_success",
+      "retry_after_epoch": null,
+      "policy_sha256": "d3dc72bd6e8ae61bf387f53095432a592ef5ad022245486ca7883f4a0dfff6ed"
+    }
+  ],
+  "transport_events": [
+    {
+      "adapter_sha256": "c78fd8935b37fdd9337d9e036be2e4c864195eb052d1335cbff68d5a5fb96697",
+      "api": "check_variable_length_input",
+      "epoch": 1788918320.4054122,
+      "event": "invocation_start",
+      "harness_setup_version": "aideal-output-setup-v1",
+      "invocation_id": "c8e71dd1b2e040b2b4219542a3d525d3",
+      "model": "google:gemini-3.1-pro-preview",
+      "outer_deadline_s": 630,
+      "pid": 50349,
+      "policy_sha256": "d3dc72bd6e8ae61bf387f53095432a592ef5ad022245486ca7883f4a0dfff6ed",
+      "previous_end_epoch": null,
+      "prompt_chars": 6238,
+      "prompt_sha256": "13015f4bb3a3d65b7158ef7d24496e40d2c811fabf10259dba610d16a9c163d9",
+      "request_key": "a729a297fa9a2da49f6e8730a90a7d96365e66b297260be03e4b1365e6007531",
+      "request_timeout_s": 600,
+      "sdk_attempts": 1,
+      "transport_version": "aideal-provider-transport-v2"
+    },
+    {
+      "actual_timeout_s": 600.0,
+      "adapter_sha256": "c78fd8935b37fdd9337d9e036be2e4c864195eb052d1335cbff68d5a5fb96697",
+      "api": "check_variable_length_input",
+      "epoch": 1788918321.522856,
+      "event": "sdk_attempt_start",
+      "harness_setup_version": "aideal-output-setup-v1",
+      "invocation_id": "c8e71dd1b2e040b2b4219542a3d525d3",
+      "model": "google:gemini-3.1-pro-preview",
+      "outer_deadline_s": 630,
+      "payload_sha256": "a328accacc780477ef5730d44f587bd04da00c99ceab68ba98023ea9d481ae8f",
+      "pid": 50349,
+      "policy_sha256": "d3dc72bd6e8ae61bf387f53095432a592ef5ad022245486ca7883f4a0dfff6ed",
+      "prompt_chars": 6238,
+      "prompt_sha256": "13015f4bb3a3d65b7158ef7d24496e40d2c811fabf10259dba610d16a9c163d9",
+      "request_key": "a729a297fa9a2da49f6e8730a90a7d96365e66b297260be03e4b1365e6007531",
+      "request_timeout_s": 600,
+      "sdk_attempt_id": "9c635d63f5554d328a6bc5e0286b4012",
+      "sdk_attempts": 1,
+      "server_timeout_s": "600",
+      "transport_version": "aideal-provider-transport-v2"
+    },
+    {
+      "actual_timeout_s": 600.0,
+      "adapter_sha256": "c78fd8935b37fdd9337d9e036be2e4c864195eb052d1335cbff68d5a5fb96697",
+      "api": "check_variable_length_input",
+      "epoch": 1788918713.3190799,
+      "event": "sdk_attempt_success",
+      "harness_setup_version": "aideal-output-setup-v1",
+      "invocation_id": "c8e71dd1b2e040b2b4219542a3d525d3",
+      "model": "google:gemini-3.1-pro-preview",
+      "outer_deadline_s": 630,
+      "payload_sha256": "a328accacc780477ef5730d44f587bd04da00c99ceab68ba98023ea9d481ae8f",
+      "pid": 50349,
+      "policy_sha256": "d3dc72bd6e8ae61bf387f53095432a592ef5ad022245486ca7883f4a0dfff6ed",
+      "prompt_chars": 6238,
+      "prompt_sha256": "13015f4bb3a3d65b7158ef7d24496e40d2c811fabf10259dba610d16a9c163d9",
+      "request_key": "a729a297fa9a2da49f6e8730a90a7d96365e66b297260be03e4b1365e6007531",
+      "request_timeout_s": 600,
+      "sdk_attempt_id": "9c635d63f5554d328a6bc5e0286b4012",
+      "sdk_attempts": 1,
+      "server_timeout_s": "600",
+      "transport_version": "aideal-provider-transport-v2",
+      "wall_s": 391.7919927079929
+    },
+    {
+      "adapter_sha256": "c78fd8935b37fdd9337d9e036be2e4c864195eb052d1335cbff68d5a5fb96697",
+      "api": "check_variable_length_input",
+      "epoch": 1788918713.3296902,
+      "event": "invocation_success",
+      "harness_setup_version": "aideal-output-setup-v1",
+      "invocation_id": "c8e71dd1b2e040b2b4219542a3d525d3",
+      "model": "google:gemini-3.1-pro-preview",
+      "outer_deadline_s": 630,
+      "pid": 50349,
+      "policy_sha256": "d3dc72bd6e8ae61bf387f53095432a592ef5ad022245486ca7883f4a0dfff6ed",
+      "prompt_chars": 6238,
+      "prompt_sha256": "13015f4bb3a3d65b7158ef7d24496e40d2c811fabf10259dba610d16a9c163d9",
+      "request_key": "a729a297fa9a2da49f6e8730a90a7d96365e66b297260be03e4b1365e6007531",
+      "request_timeout_s": 600,
+      "response_sha256": "a94838a1cb607be15d4f0f4be3c7c73672d305377044fd4b184a85577850836b",
+      "sdk_attempts": 1,
+      "transport_version": "aideal-provider-transport-v2",
+      "wall_s": 392.92035608302103
+    }
+  ],
   "timing_note": "Native wall_s includes generation and test work for that attempt, not cumulative lifetime duration. Checkpoint events lack timestamps: historical idle waits cannot be reconstructed. New retry intervals include scheduler/admission delays. Missing provider end means in flight or interrupted, never success."
 }
