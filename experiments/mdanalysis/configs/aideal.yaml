@@ -4,6 +4,16 @@ project:
   name: MDAnalysis
   language: Python
 
+provenance:
+  upstream_repository: https://github.com/MDAnalysis/mdanalysis.git
+  source_ref: package-2.9.0
+  source_commit: 81b8ef51e5bc1aa2824294ac6c52818c74975658
+  package_version: "2.9.0"
+  tests_package_version: "2.9.0"
+  python_base_interpreter: /Users/clockorangezoe/miniconda3/envs/geo_llm_spark/bin/python
+  python_runtime: "{root}/mdanalysis/.venv/bin/python (Cython 3.0.12 editable build)"
+  fixture_policy: checked-in MDAnalysisTests 2.9.0 testsuite data only
+
 codebase:
   source_globs:
     - "mdanalysis/package/MDAnalysis/**/*.py"
@@ -48,7 +58,7 @@ files:
   original_readme:
     - mdanalysis/README.rst
     - mdanalysis/package/doc/sphinx/source
-    - .aideal_original_docs/hosted_docs.md
+    - docs/full_1032/setup/hosted_docs_2.9.0.md
   original_doc_archives:
     - label: MDAnalysis User Guide 2.9.0
       url: https://mdanalysisuserguide.readthedocs.io/_/downloads/en/latest/htmlzip/
@@ -72,9 +82,24 @@ comprehension:
   class_context: false
   execute:
     scaffold: docs/api_test_scaffold.py
+    command: >-
+      env PYTHONPATH={root}/mdanalysis/package:{root}/../../grail-agent/src
+      MPLBACKEND=Agg OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1
+      {root}/mdanalysis/.venv/bin/python {test_file}
     local_uris: false
-    output_dir: /tmp/aideal_mdanalysis_out
+    strip_snippet_imports: false
+    execution_context: >-
+      A runnable headless Python test harness is already in scope. The snippet
+      is inserted inside a function and the preamble variables listed under
+      available inputs are already defined. Write executable statements only.
+      Import MDAnalysis submodules or optional dependencies only when the
+      documented public call requires them. Do not define another function or
+      process entry point. Assert a deterministic property and print a compact
+      correctness witness containing a shape, scalar, or length.
+    output_dir: /tmp/aideal_mdanalysis_default_out
     preamble: |
+      MDAnalysis = mda  # type: module
+      numpy = np  # type: module
       universe = mda.Universe(psf_path, dcd_path)  # type: MDAnalysis.Universe
       atoms = universe.atoms  # type: MDAnalysis.core.groups.AtomGroup
       protein = universe.select_atoms("protein")  # type: MDAnalysis.core.groups.AtomGroup
@@ -82,13 +107,18 @@ comprehension:
       trajectory = universe.trajectory  # type: MDAnalysis.coordinates.base.ReaderBase
       timestep = trajectory[0]  # type: MDAnalysis.coordinates.base.Timestep
     sample_data:
-      psf_path:
-        package: MDAnalysisTests
-        resource: data/adk.psf
-      dcd_path:
-        package: MDAnalysisTests
-        resource: data/adk_dims.dcd
+      psf_path: mdanalysis/testsuite/MDAnalysisTests/data/adk.psf
+      dcd_path: mdanalysis/testsuite/MDAnalysisTests/data/adk_dims.dcd
+      pdb_path: mdanalysis/testsuite/MDAnalysisTests/data/adk_open.pdb
+      gro_path: mdanalysis/testsuite/MDAnalysisTests/data/adk_oplsaa.gro
+      xtc_path: mdanalysis/testsuite/MDAnalysisTests/data/adk_oplsaa.xtc
+      mdanalysis_fixture_dir: mdanalysis/testsuite/MDAnalysisTests/data
     max_fix_rounds: 0
     require_correctness: true
     timeout_seconds: 300
     io_hints: ""
+    success_marker: __DONE__
+    error_marker: __RUN_ERR__
+
+docfix:
+  allowed_member_categories: [language_core, python_core]
