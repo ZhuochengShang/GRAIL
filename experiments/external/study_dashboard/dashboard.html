@@ -13,11 +13,11 @@ table{border-collapse:collapse;width:100%;font-size:13px}td,th{text-align:left;p
 @media print{main{max-width:none;padding:0}nav,.toolbar,button,.paging{display:none}.panel,.kpi{break-inside:avoid;box-shadow:none}body{background:white}.grid{display:block}.panel{margin-top:15px}header{background:white;color:var(--ink)}.sub{color:var(--muted)}}
 </style></head><body><main>
 <header><div class="eyebrow">AIDEAL / evidence-backed readiness</div><h1>What finished. What improved. What remains.</h1>
-<p class="sub">Current experiments, separate recovery outcomes, historical RDPro evidence and the planned MDAnalysis study. Native acceptance, replay acceptance and semantic review have distinct meanings.</p>
+<p class="sub">Current experiments, separate recovery outcomes, historical RDPro evidence and the MDAnalysis continuation. Native acceptance, replay acceptance and semantic review have distinct meanings.</p>
 <nav><a href="#current">Native outcomes</a><a href="#repair">Repair stages</a><a href="#protocol">Pipeline</a><a href="#historical">RDPro</a><a href="#mdanalysis">MDAnalysis</a><a href="#lessons">Developer lessons</a><a href="#timing">Timing</a><a href="#ablation">New comparison</a></nav></header>
 <div class="kpis" id="kpis"></div>
 <p class="muted" id="stamp"></p>
-<div class="toolbar"><label for="repo">Current repository</label><select id="repo"><option value="all">All three priority repositories</option><option>mir_eval</option><option>Thumbnailator</option><option>tslearn</option></select><button id="download">Download embedded evidence JSON</button><button onclick="print()">Print / save PDF</button></div>
+<div class="toolbar"><label for="repo">Priority repository</label><select id="repo"><option value="all">All three priority repositories</option><option>mir_eval</option><option>Thumbnailator</option><option>tslearn</option></select><button id="download">Download embedded evidence JSON</button><button onclick="print()">Print / save PDF</button></div>
 
 <section id="current" class="panel"><h2>Fresh native evaluations</h2><p class="muted">Full frozen manifest within each repository. A1 = original documentation; A2 = generated README; B2 = repaired generated README. All three final evaluations use zero snippet-fix rounds.</p>
 <div class="legend" id="legend"></div><div class="chart-title"><h3>Outcome distribution · percentage of the full manifest</h3><button data-export="nativeChart">Save SVG</button></div><div class="chart" id="nativeChart"></div>
@@ -107,7 +107,7 @@ function renderApis(){
 function download(name,text,type){const link=document.createElement('a'),url=URL.createObjectURL(new Blob([text],{type}));link.href=url;link.download=name;link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
 function init(){
  const pending=D.native.reduce((n,c)=>n+(c.statuses['Waiting for provider / retry']||0),0),done=D.native.filter(c=>c.state.startsWith('Native evaluation finished')).length;
- $('kpis').innerHTML=[[done+'/9','Current native cells finished'],[pending,'Provider cases unresolved'],['5','Repositories shown; distinct evidence scopes'],[num(D.hours_remaining)+' h','Until Wednesday 11 AM PDT']].map(([v,l])=>`<div class="kpi"><strong>${v}</strong><span>${l}</span></div>`).join('');
+ $('kpis').innerHTML=[[done+'/9','Priority native cells finished'],[pending,'Provider cases unresolved'],['5','Repositories shown; distinct evidence scopes'],[num(D.hours_remaining)+' h','Until Wednesday 11 AM PDT']].map(([v,l])=>`<div class="kpi"><strong>${v}</strong><span>${l}</span></div>`).join('');
  $('stamp').textContent='Dashboard built '+D.updated_at+' · Native report snapshot '+D.native_snapshot+'. This HTML embeds one snapshot; reload the locally refreshed file for updates.';
  table('replayTable',['Cell','Native pass / N','Assertions off','Assertions on','Unbound retained'],D.replay.cells.map(r=>[r.cell,r.native_pass===undefined?'—':r.native_pass+'/'+r.native_apis,r.assertions_off?r.assertions_off.pass+'/'+r.replayed:'—',r.assertions_on?r.assertions_on.pass+'/'+r.replayed:'—',r.unbound_retained_replays??'—']));
  $('mdProgress').textContent=JSON.stringify({upstream:D.mdanalysis_progress.upstream,generation:D.mdanalysis_progress.generation,jobs:Object.fromEntries(Object.entries(D.mdanalysis_progress.jobs).map(([k,v])=>[k,{status:v.status,attempts:v.attempts,pid:v.pid}]))},null,2);
