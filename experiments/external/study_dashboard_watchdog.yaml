@@ -1,0 +1,24 @@
+version: 2
+max_parallel: 1
+retry_delay_seconds: 60
+env:
+  PYTHONPATH: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_robust_core_v4/grail-agent/src:/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_robust_core_v4
+jobs:
+- id: study_dashboard_passive
+  cwd: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_robust_core_v4
+  branch: aideal/robust-core-v4
+  environment_inventory: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_mdanalysis_v4/environment_v4.json
+  command:
+  - /Users/clockorangezoe/miniconda3/envs/geo_llm_spark/bin/python
+  - -m
+  - experiments.external.study_dashboard
+  - --workspace-parent
+  - /Users/clockorangezoe/Documents/phd_projects/code/geoAI
+  - --out
+  - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_overnight_evidence_audit/experiments/external/overnight_audit/data_validation/study_dashboard_v1
+  - --watch
+  result: .aideal_exec/study_dashboard_v1.stdout
+  complete:
+    kind: exit_zero
+  max_runtime_seconds: 1209600
+  max_restarts: 0

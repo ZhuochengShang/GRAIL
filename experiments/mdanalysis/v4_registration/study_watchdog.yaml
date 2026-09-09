@@ -1,0 +1,376 @@
+version: 2
+max_parallel: 2
+retry_delay_seconds: 300
+env:
+  AIDEAL_GOOGLE_MIN_INTERVAL_S: '3'
+  AIDEAL_GOOGLE_RATE_STATE: /tmp/aideal_google_rate_gate.txt
+  AIDEAL_GOOGLE_REQUEST_TIMEOUT_S: '300'
+  AIDEAL_GOOGLE_MAX_RETRIES: '2'
+jobs:
+- id: preflight_A1
+  cwd: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mdanalysis_full1032_v4_A1
+  branch: aideal/mdanalysis-full1032-v4-A1
+  environment_inventory: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_mdanalysis_v4/environment_v4.json
+  env:
+    PYTHONPATH: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mdanalysis_full1032_v4_A1/grail-agent/src:/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mdanalysis_full1032_v4_A1
+    AIDEAL_RECOVERY_ENV_INVENTORY: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_mdanalysis_v4/environment_v4.json
+    AIDEAL_RECOVERY_PROTOCOL: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mdanalysis_full1032_v4_A1/experiments/mdanalysis/protocol_v4.yaml
+  command:
+  - /Users/clockorangezoe/miniconda3/envs/geo_llm_spark/bin/python
+  - -m
+  - experiments.mdanalysis.study_worker
+  - preflight
+  - --root
+  - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mdanalysis_full1032_v4_A1/experiments/mdanalysis
+  - --upstream-result
+  - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mdanalysis_full1032_freeze/experiments/mdanalysis/docs/full_1032/setup/PASS_TO_PASS_BEFORE.json
+  - --out
+  - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_mdanalysis_v4/A1
+  depends_on: []
+  result: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_mdanalysis_v4/A1/preflight.stdout
+  complete:
+    kind: exit_zero
+  max_runtime_seconds: 604800
+  max_restarts: 0
+- id: preflight_A2
+  cwd: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mdanalysis_full1032_v4_A2
+  branch: aideal/mdanalysis-full1032-v4-A2
+  environment_inventory: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_mdanalysis_v4/environment_v4.json
+  env:
+    PYTHONPATH: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mdanalysis_full1032_v4_A2/grail-agent/src:/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mdanalysis_full1032_v4_A2
+    AIDEAL_RECOVERY_ENV_INVENTORY: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_mdanalysis_v4/environment_v4.json
+    AIDEAL_RECOVERY_PROTOCOL: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mdanalysis_full1032_v4_A2/experiments/mdanalysis/protocol_v4.yaml
+  command:
+  - /Users/clockorangezoe/miniconda3/envs/geo_llm_spark/bin/python
+  - -m
+  - experiments.mdanalysis.study_worker
+  - preflight
+  - --root
+  - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mdanalysis_full1032_v4_A2/experiments/mdanalysis
+  - --upstream-result
+  - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mdanalysis_full1032_freeze/experiments/mdanalysis/docs/full_1032/setup/PASS_TO_PASS_BEFORE.json
+  - --out
+  - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_mdanalysis_v4/A2
+  depends_on: []
+  result: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_mdanalysis_v4/A2/preflight.stdout
+  complete:
+    kind: exit_zero
+  max_runtime_seconds: 604800
+  max_restarts: 0
+- id: preflight_B2
+  cwd: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mdanalysis_full1032_v4_B2
+  branch: aideal/mdanalysis-full1032-v4-B2
+  environment_inventory: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_mdanalysis_v4/environment_v4.json
+  env:
+    PYTHONPATH: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mdanalysis_full1032_v4_B2/grail-agent/src:/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mdanalysis_full1032_v4_B2
+    AIDEAL_RECOVERY_ENV_INVENTORY: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_mdanalysis_v4/environment_v4.json
+    AIDEAL_RECOVERY_PROTOCOL: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mdanalysis_full1032_v4_B2/experiments/mdanalysis/protocol_v4.yaml
+  command:
+  - /Users/clockorangezoe/miniconda3/envs/geo_llm_spark/bin/python
+  - -m
+  - experiments.mdanalysis.study_worker
+  - preflight
+  - --root
+  - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mdanalysis_full1032_v4_B2/experiments/mdanalysis
+  - --upstream-result
+  - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mdanalysis_full1032_freeze/experiments/mdanalysis/docs/full_1032/setup/PASS_TO_PASS_BEFORE.json
+  - --out
+  - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_mdanalysis_v4/B2
+  depends_on: []
+  result: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_mdanalysis_v4/B2/preflight.stdout
+  complete:
+    kind: exit_zero
+  max_runtime_seconds: 604800
+  max_restarts: 0
+- id: generate_A2
+  cwd: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mdanalysis_full1032_v4_A2
+  branch: aideal/mdanalysis-full1032-v4-A2
+  environment_inventory: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_mdanalysis_v4/environment_v4.json
+  env:
+    PYTHONPATH: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mdanalysis_full1032_v4_A2/grail-agent/src:/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mdanalysis_full1032_v4_A2
+    AIDEAL_RECOVERY_ENV_INVENTORY: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_mdanalysis_v4/environment_v4.json
+    AIDEAL_RECOVERY_PROTOCOL: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mdanalysis_full1032_v4_A2/experiments/mdanalysis/protocol_v4.yaml
+  command:
+  - /Users/clockorangezoe/miniconda3/envs/geo_llm_spark/bin/python
+  - experiments/external/run_resumable_readme.py
+  - --config
+  - experiments/mdanalysis/configs/aideal.full1032.A2.yaml
+  - --limit
+  - '0'
+  depends_on:
+  - preflight_A2
+  result: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mdanalysis_full1032_v4_A2/experiments/mdanalysis/docs/full_1032/A2/generation_result.json
+  complete:
+    kind: readme_generation
+  max_runtime_seconds: 604800
+  max_restarts: 0
+  on_success:
+  - - /Users/clockorangezoe/miniconda3/envs/geo_llm_spark/bin/python
+    - -m
+    - experiments.mdanalysis.study_worker
+    - archive
+    - --root
+    - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mdanalysis_full1032_v4_A2/experiments/mdanalysis
+    - --out
+    - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_mdanalysis_v4/A2
+- id: A1_zero
+  cwd: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mdanalysis_full1032_v4_A1
+  branch: aideal/mdanalysis-full1032-v4-A1
+  environment_inventory: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_mdanalysis_v4/environment_v4.json
+  env:
+    PYTHONPATH: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mdanalysis_full1032_v4_A1/grail-agent/src:/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mdanalysis_full1032_v4_A1
+    AIDEAL_RECOVERY_ENV_INVENTORY: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_mdanalysis_v4/environment_v4.json
+    AIDEAL_RECOVERY_PROTOCOL: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mdanalysis_full1032_v4_A1/experiments/mdanalysis/protocol_v4.yaml
+  command:
+  - /Users/clockorangezoe/miniconda3/envs/geo_llm_spark/bin/python
+  - -m
+  - aideal.cli
+  - --config
+  - experiments/mdanalysis/configs/aideal.full1032.A1.yaml
+  - comprehension
+  - --doc
+  - original
+  - --doc-scope
+  - relevant
+  - --manifest
+  - docs/full_1032/api_manifest.json
+  - --execute
+  - --show-code
+  - --max-fix-rounds
+  - '0'
+  - --resume
+  - --timeout
+  - '300'
+  depends_on:
+  - preflight_A1
+  result: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mdanalysis_full1032_v4_A1/experiments/mdanalysis/docs/full_1032/A1/comprehension.json
+  complete:
+    kind: json_metrics_no_transient
+  max_runtime_seconds: 604800
+  max_restarts: 0
+  on_success:
+  - - /Users/clockorangezoe/miniconda3/envs/geo_llm_spark/bin/python
+    - -m
+    - experiments.mdanalysis.study_worker
+    - archive
+    - --root
+    - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mdanalysis_full1032_v4_A1/experiments/mdanalysis
+    - --out
+    - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_mdanalysis_v4/A1
+- id: A2_zero
+  cwd: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mdanalysis_full1032_v4_A2
+  branch: aideal/mdanalysis-full1032-v4-A2
+  environment_inventory: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_mdanalysis_v4/environment_v4.json
+  env:
+    PYTHONPATH: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mdanalysis_full1032_v4_A2/grail-agent/src:/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mdanalysis_full1032_v4_A2
+    AIDEAL_RECOVERY_ENV_INVENTORY: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_mdanalysis_v4/environment_v4.json
+    AIDEAL_RECOVERY_PROTOCOL: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mdanalysis_full1032_v4_A2/experiments/mdanalysis/protocol_v4.yaml
+  command:
+  - /Users/clockorangezoe/miniconda3/envs/geo_llm_spark/bin/python
+  - -m
+  - aideal.cli
+  - --config
+  - experiments/mdanalysis/configs/aideal.full1032.A2.yaml
+  - comprehension
+  - --doc
+  - aideal
+  - --doc-scope
+  - relevant
+  - --manifest
+  - docs/full_1032/api_manifest.json
+  - --execute
+  - --show-code
+  - --max-fix-rounds
+  - '0'
+  - --resume
+  - --timeout
+  - '300'
+  depends_on:
+  - generate_A2
+  result: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mdanalysis_full1032_v4_A2/experiments/mdanalysis/docs/full_1032/A2/comprehension.json
+  complete:
+    kind: json_metrics_no_transient
+  max_runtime_seconds: 604800
+  max_restarts: 0
+  on_success:
+  - - /Users/clockorangezoe/miniconda3/envs/geo_llm_spark/bin/python
+    - -m
+    - experiments.mdanalysis.study_worker
+    - archive
+    - --root
+    - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mdanalysis_full1032_v4_A2/experiments/mdanalysis
+    - --out
+    - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_mdanalysis_v4/A2
+- id: initialize_B2
+  cwd: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mdanalysis_full1032_v4_B2
+  branch: aideal/mdanalysis-full1032-v4-B2
+  environment_inventory: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_mdanalysis_v4/environment_v4.json
+  env:
+    PYTHONPATH: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mdanalysis_full1032_v4_B2/grail-agent/src:/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mdanalysis_full1032_v4_B2
+    AIDEAL_RECOVERY_ENV_INVENTORY: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_mdanalysis_v4/environment_v4.json
+    AIDEAL_RECOVERY_PROTOCOL: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mdanalysis_full1032_v4_B2/experiments/mdanalysis/protocol_v4.yaml
+  command:
+  - /Users/clockorangezoe/miniconda3/envs/geo_llm_spark/bin/python
+  - -m
+  - experiments.mdanalysis.study_worker
+  - copy-doc
+  - --root
+  - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mdanalysis_full1032_v4_B2/experiments/mdanalysis
+  - --baseline-root
+  - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mdanalysis_full1032_v4_A2/experiments/mdanalysis
+  - --out
+  - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_mdanalysis_v4/B2
+  depends_on:
+  - preflight_B2
+  - A2_zero
+  result: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_mdanalysis_v4/B2/initialize.stdout
+  complete:
+    kind: exit_zero
+  max_runtime_seconds: 604800
+  max_restarts: 0
+- id: repair_generated
+  cwd: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mdanalysis_full1032_v4_B2
+  branch: aideal/mdanalysis-full1032-v4-B2
+  environment_inventory: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_mdanalysis_v4/environment_v4.json
+  env:
+    PYTHONPATH: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mdanalysis_full1032_v4_B2/grail-agent/src:/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mdanalysis_full1032_v4_B2
+    AIDEAL_RECOVERY_ENV_INVENTORY: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_mdanalysis_v4/environment_v4.json
+    AIDEAL_RECOVERY_PROTOCOL: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mdanalysis_full1032_v4_B2/experiments/mdanalysis/protocol_v4.yaml
+  command:
+  - /Users/clockorangezoe/miniconda3/envs/geo_llm_spark/bin/python
+  - -m
+  - aideal.cli
+  - --config
+  - experiments/mdanalysis/configs/aideal.full1032.B2.yaml
+  - fix-docs
+  - --from-results
+  - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mdanalysis_full1032_v4_A2/experiments/mdanalysis/docs/full_1032/A2/comprehension.json
+  - --doc
+  - aideal
+  - --doc-scope
+  - relevant
+  - --manifest
+  - docs/full_1032/api_manifest.json
+  - --retry-rounds
+  - '0'
+  - --doc-rounds
+  - '5'
+  - --doc-stuck
+  - '2'
+  - --deep-dive-first
+  - --deep-dive-out
+  - docs/full_1032/B2/deepdive
+  - --report
+  - docs/full_1032/B2/docfix.json
+  depends_on:
+  - initialize_B2
+  result: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mdanalysis_full1032_v4_B2/experiments/mdanalysis/docs/full_1032/B2/docfix.json
+  complete:
+    kind: docfix
+  max_runtime_seconds: 604800
+  max_restarts: 0
+  on_success:
+  - - /Users/clockorangezoe/miniconda3/envs/geo_llm_spark/bin/python
+    - -m
+    - experiments.mdanalysis.study_worker
+    - archive
+    - --root
+    - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mdanalysis_full1032_v4_B2/experiments/mdanalysis
+    - --out
+    - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_mdanalysis_v4/B2
+- id: B2_zero
+  cwd: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mdanalysis_full1032_v4_B2
+  branch: aideal/mdanalysis-full1032-v4-B2
+  environment_inventory: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_mdanalysis_v4/environment_v4.json
+  env:
+    PYTHONPATH: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mdanalysis_full1032_v4_B2/grail-agent/src:/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mdanalysis_full1032_v4_B2
+    AIDEAL_RECOVERY_ENV_INVENTORY: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_mdanalysis_v4/environment_v4.json
+    AIDEAL_RECOVERY_PROTOCOL: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mdanalysis_full1032_v4_B2/experiments/mdanalysis/protocol_v4.yaml
+  command:
+  - /Users/clockorangezoe/miniconda3/envs/geo_llm_spark/bin/python
+  - -m
+  - aideal.cli
+  - --config
+  - experiments/mdanalysis/configs/aideal.full1032.B2.yaml
+  - comprehension
+  - --doc
+  - aideal
+  - --doc-scope
+  - relevant
+  - --manifest
+  - docs/full_1032/api_manifest.json
+  - --execute
+  - --show-code
+  - --max-fix-rounds
+  - '0'
+  - --resume
+  - --timeout
+  - '300'
+  depends_on:
+  - repair_generated
+  result: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mdanalysis_full1032_v4_B2/experiments/mdanalysis/docs/full_1032/B2/comprehension.json
+  complete:
+    kind: json_metrics_no_transient
+  max_runtime_seconds: 604800
+  max_restarts: 0
+  on_success:
+  - - /Users/clockorangezoe/miniconda3/envs/geo_llm_spark/bin/python
+    - -m
+    - experiments.mdanalysis.study_worker
+    - archive
+    - --root
+    - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mdanalysis_full1032_v4_B2/experiments/mdanalysis
+    - --out
+    - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_mdanalysis_v4/B2
+- id: S_A2
+  cwd: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mdanalysis_full1032_v4_A2
+  branch: aideal/mdanalysis-full1032-v4-A2
+  environment_inventory: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_mdanalysis_v4/environment_v4.json
+  env:
+    PYTHONPATH: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mdanalysis_full1032_v4_A2/grail-agent/src:/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mdanalysis_full1032_v4_A2
+    AIDEAL_RECOVERY_ENV_INVENTORY: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_mdanalysis_v4/environment_v4.json
+    AIDEAL_RECOVERY_PROTOCOL: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mdanalysis_full1032_v4_A2/experiments/mdanalysis/protocol_v4.yaml
+  command:
+  - /Users/clockorangezoe/miniconda3/envs/geo_llm_spark/bin/python
+  - -m
+  - experiments.mdanalysis.study_worker
+  - source
+  - --root
+  - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mdanalysis_full1032_v4_A2/experiments/mdanalysis
+  - --baseline-cell
+  - A2
+  - --out
+  - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_mdanalysis_v4/S_A2
+  depends_on:
+  - A2_zero
+  result: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_mdanalysis_v4/S_A2/source.stdout
+  complete:
+    kind: exit_zero
+  max_runtime_seconds: 604800
+  max_restarts: 0
+- id: S_B2
+  cwd: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mdanalysis_full1032_v4_B2
+  branch: aideal/mdanalysis-full1032-v4-B2
+  environment_inventory: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_mdanalysis_v4/environment_v4.json
+  env:
+    PYTHONPATH: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mdanalysis_full1032_v4_B2/grail-agent/src:/Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mdanalysis_full1032_v4_B2
+    AIDEAL_RECOVERY_ENV_INVENTORY: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_mdanalysis_v4/environment_v4.json
+    AIDEAL_RECOVERY_PROTOCOL: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mdanalysis_full1032_v4_B2/experiments/mdanalysis/protocol_v4.yaml
+  command:
+  - /Users/clockorangezoe/miniconda3/envs/geo_llm_spark/bin/python
+  - -m
+  - experiments.mdanalysis.study_worker
+  - source
+  - --root
+  - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/GRAIL_mdanalysis_full1032_v4_B2/experiments/mdanalysis
+  - --baseline-cell
+  - B2
+  - --out
+  - /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_mdanalysis_v4/S_B2
+  depends_on:
+  - B2_zero
+  result: /Users/clockorangezoe/Documents/phd_projects/code/geoAI/AIDEAL_mdanalysis_v4/S_B2/source.stdout
+  complete:
+    kind: exit_zero
+  max_runtime_seconds: 604800
+  max_restarts: 0
